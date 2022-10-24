@@ -7,5 +7,5 @@ cd $(dirname "$(readlink -f "$BASH_SOURCE")")/..
 
 mkdir -p build
 cd build
-cmake ..
-make $@
+cmake .. $@
+make
