@@ -5,7 +5,6 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     container_name: beluga-dev
-    entrypoint: ["fixuid", "/bin/bash"]
     stdin_open: true
     tty: true
     user: ${USERID:-1000}:${GROUPID:-1000}
