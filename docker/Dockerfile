@@ -39,4 +39,4 @@ COPY . /usr/src/ws
 
 ENV WITHIN_DEV 1
 
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["fixuid", "/bin/bash"]
