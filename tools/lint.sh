@@ -16,8 +16,8 @@ function format() {
 }
 
 function lint() {
-  cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-  clang-tidy -p ./build/compile_commands.json $LINT_FILES
+  cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --log-level=ERROR
+  clang-tidy --quiet -p ./build/compile_commands.json $LINT_FILES
 }
 
 if [ ${#LINT_FILES} -gt 0 ]; then
