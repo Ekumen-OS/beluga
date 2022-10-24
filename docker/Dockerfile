@@ -6,13 +6,13 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     apt-transport-https \
     apt-utils \
-    clang-format \
-    clang-tidy \
-    curl \
     bash-completion \
     build-essential \
     ca-certificates \
+    clang-format \
+    clang-tidy \
     cmake \
+    curl \
     git \
     software-properties-common \
     sudo \
