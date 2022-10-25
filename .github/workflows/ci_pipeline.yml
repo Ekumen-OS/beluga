@@ -1,0 +1,35 @@
+name: CI pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.13
+        with:
+          cmake-version: '3.16.x'
+
+      - name: Build
+        run: ./tools/build.sh
+
+      - name: Test
+        run: ./tools/test.sh
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup clang-format
+        run: sudo apt update && sudo apt install -y clang-format
+
+      - name: Lint
+        run: ./tools/lint.sh

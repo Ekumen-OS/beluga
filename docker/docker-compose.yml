@@ -1,0 +1,12 @@
+version: "3"
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: beluga-dev
+    stdin_open: true
+    tty: true
+    user: ${USERID:-1000}:${GROUPID:-1000}
+    volumes:
+      - ..:/ws
