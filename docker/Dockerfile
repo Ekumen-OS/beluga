@@ -33,10 +33,10 @@ RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.
 
 USER $USER:$GROUP
 
-WORKDIR /usr/src/ws
+WORKDIR /ws
 
-COPY . /usr/src/ws
+COPY . /ws
 
 ENV WITHIN_DEV 1
 
-ENTRYPOINT ["fixuid", "/bin/bash"]
+ENTRYPOINT ["fixuid", "-q", "/bin/bash"]
