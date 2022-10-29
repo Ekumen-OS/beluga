@@ -7,6 +7,5 @@ cd $(dirname "$(readlink -f "$BASH_SOURCE")")/..
 
 mkdir -p build
 cd build
-conan install .. --build=missing
-cmake .. $@
+cmake .. -DCMAKE_BUILD_TYPE=Release $@
 cmake --build .
