@@ -14,9 +14,14 @@ RUN apt-get update \
     cmake \
     curl \
     git \
+    python3 \
+    python3-pip \
     software-properties-common \
     sudo \
   && rm -rf /var/lib/apt/lists/*
+
+RUN pip install \
+  conan==1.53.0
 
 ARG USER=developer
 ARG GROUP=ekumen

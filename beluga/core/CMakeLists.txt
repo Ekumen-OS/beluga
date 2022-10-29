@@ -1,5 +1,6 @@
 add_library(core INTERFACE)
 target_include_directories(core INTERFACE include)
+target_link_libraries(core INTERFACE CONAN_PKG::range-v3)
 target_compile_features(core INTERFACE cxx_std_17)
 
 add_executable(core_test)

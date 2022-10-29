@@ -1,3 +1,7 @@
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+
+conan_basic_setup(TARGETS)
+
 include(FetchContent)
 
 FetchContent_Declare(
