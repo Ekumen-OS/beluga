@@ -7,7 +7,10 @@
 
 namespace beluga::core::storage {
 
-template <class StateType>
+template <class T>
+using Vector = std::vector<T, std::allocator<T>>;
+
+template <class StateType, template <class> class InternalContainer = Vector>
 struct ArrayOfStructures {
   struct Particle {
     StateType state;
@@ -17,7 +20,7 @@ struct ArrayOfStructures {
 
   using state_type = StateType;
   using particle_type = Particle;
-  using container_type = std::vector<Particle>;
+  using container_type = InternalContainer<Particle>;
 
   static auto state_view(container_type& container) {
     return container | ranges::views::transform(&Particle::state) | ranges::views::common;
@@ -32,7 +35,7 @@ struct ArrayOfStructures {
   }
 };
 
-template <class StateType>
+template <class StateType, template <class> class InternalContainer = Vector>
 struct StructureOfArrays {
   struct Particle {
     StateType state;
@@ -79,7 +82,7 @@ struct StructureOfArrays {
     }
 
    private:
-    std::tuple<std::vector<state_type>, std::vector<double>, std::vector<std::size_t>> particles_;
+    std::tuple<InternalContainer<state_type>, InternalContainer<double>, InternalContainer<std::size_t>> particles_;
   };
 
   using container_type = Container;
