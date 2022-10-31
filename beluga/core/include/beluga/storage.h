@@ -22,6 +22,10 @@ struct ArrayOfStructures {
   using particle_type = Particle;
   using container_type = InternalContainer<Particle>;
 
+  static auto particle_view(container_type& container) {
+    return container | ranges::views::all | ranges::views::common;
+  }
+
   static auto state_view(container_type& container) {
     return container | ranges::views::transform(&Particle::state) | ranges::views::common;
   }
@@ -92,7 +96,14 @@ struct StructureOfArrays {
     /* implicit */ operator tuple_type() && { return tuple_type{std::move(state), weight, cluster}; }  // NOLINT
   };
 
-  using particle_type = Particle;
+  using particle_type = typename container_type::value_type;
+
+  static auto particle_view(container_type& container) {
+    return ranges::views::zip(
+               std::get<0>(container.particles_), std::get<1>(container.particles_),
+               std::get<2>(container.particles_)) |
+           ranges::views::common;
+  }
 
   static auto state_view(container_type& container) {
     return std::get<0>(container.particles_) | ranges::views::all | ranges::views::common;
