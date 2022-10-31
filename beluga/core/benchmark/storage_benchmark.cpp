@@ -12,6 +12,10 @@ struct State {
 
 constexpr std::size_t kParticleCount = 1'000'000;
 
+double update_weight(const State& state) {
+  return state.x * state.y * state.theta;
+}
+
 void BM_UpdateWeights_Baseline_StructureOfArrays(benchmark::State& state) {
   std::vector<State> states;
   std::vector<double> weights;
@@ -22,7 +26,7 @@ void BM_UpdateWeights_Baseline_StructureOfArrays(benchmark::State& state) {
   auto size = states.size();
   for (auto _ : state) {
     for (std::size_t i = 0; i < size; ++i) {
-      weights[i] = 1.;
+      weights[i] = update_weight(states[i]);
     }
   }
 }
@@ -39,7 +43,8 @@ void BM_UpdateWeights_Baseline_ArrayOfStructures(benchmark::State& state) {
   auto size = particles.size();
   for (auto _ : state) {
     for (std::size_t i = 0; i < size; ++i) {
-      particles[i].weight = 1.;
+      auto& particle = particles[i];
+      particle.weight = update_weight(particle.state);
     }
   }
 }
@@ -52,7 +57,7 @@ void BM_UpdateWeights(benchmark::State& state) {
   for (auto _ : state) {
     auto&& states = StoragePolicy::state_view(container);
     auto&& weights = StoragePolicy::weight_view(container);
-    std::transform(std::begin(states), std::end(states), std::begin(weights), [](const State) { return 1.; });
+    std::transform(std::begin(states), std::end(states), std::begin(weights), update_weight);
   }
 }
 
