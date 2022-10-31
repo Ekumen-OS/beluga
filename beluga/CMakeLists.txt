@@ -1,3 +1,20 @@
+include(cmake/conan.cmake)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
+
+conan_cmake_configure(
+  REQUIRES   range-v3/0.12.0
+  GENERATORS cmake_find_package)
+
+conan_cmake_autodetect(settings)
+
+conan_cmake_install(
+  PATH_OR_REFERENCE .
+  BUILD missing
+  REMOTE conancenter
+  SETTINGS ${settings})
+
 include(FetchContent)
 
 FetchContent_Declare(

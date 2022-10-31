@@ -16,7 +16,7 @@ function format() {
 }
 
 function lint() {
-  cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --log-level=ERROR
+  cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --log-level=ERROR
   clang-tidy --quiet -p ./build/compile_commands.json $LINT_FILES
 }
 

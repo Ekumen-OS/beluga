@@ -17,6 +17,11 @@ jobs:
         with:
           cmake-version: '3.16.x'
 
+      - name: Install conan
+        uses: turtlebrowser/get-conan@v1.1
+        with:
+          version: 1.53.0
+
       - name: Build
         run: ./tools/build.sh
 
@@ -27,6 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install conan
+        uses: turtlebrowser/get-conan@v1.1
+        with:
+          version: 1.53.0
 
       - name: Setup clang-format
         run: sudo apt update && sudo apt install -y clang-format
