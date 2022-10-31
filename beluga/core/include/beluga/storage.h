@@ -37,55 +37,62 @@ struct ArrayOfStructures {
 
 template <class StateType, template <class> class InternalContainer = Vector>
 struct StructureOfArrays {
-  struct Particle {
-    StateType state;
-    double weight;
-    std::size_t cluster;
-  };
-
-  using state_type = StateType;
-  using particle_type = Particle;
-
+  template <class... Types>
   class Container {
    public:
     friend struct StructureOfArrays;
 
-    using value_type = Particle;
+    using value_type = std::tuple<Types...>;
     using size_type = std::size_t;
 
-    [[nodiscard]] bool empty() const noexcept { return std::get<0>(particles_).empty(); }
+    [[nodiscard]] constexpr bool empty() const noexcept { return std::get<0>(particles_).empty(); }
 
-    [[nodiscard]] size_type size() const noexcept { return std::get<0>(particles_).size(); }
+    [[nodiscard]] constexpr size_type size() const noexcept { return std::get<0>(particles_).size(); }
 
-    void clear() noexcept {
+    constexpr void clear() noexcept {
       std::apply([](auto&&... containers) { (containers.clear(), ...); }, particles_);
     }
 
-    void reserve(size_type new_cap) {
+    constexpr void reserve(size_type new_cap) {
       std::apply([new_cap](auto&&... containers) { (containers.reserve(new_cap), ...); }, particles_);
     }
 
-    void resize(size_type count) {
+    constexpr void resize(size_type count) {
       std::apply([count](auto&&... containers) { (containers.resize(count), ...); }, particles_);
     }
 
-    void push_back(const value_type& value) {
-      std::get<0>(particles_).push_back(value.state);
-      std::get<1>(particles_).push_back(value.weight);
-      std::get<2>(particles_).push_back(value.cluster);
+    constexpr void push_back(value_type&& value) {
+      push_back_impl(std::move(value), std::make_integer_sequence<std::size_t, std::tuple_size_v<value_type>>());
     }
 
-    void push_back(value_type&& value) {
-      std::get<0>(particles_).push_back(std::move(value.state));
-      std::get<1>(particles_).push_back(std::move(value.weight));
-      std::get<2>(particles_).push_back(std::move(value.cluster));
+    constexpr void push_back(const value_type& value) {
+      push_back_impl(value, std::make_integer_sequence<std::size_t, std::tuple_size_v<value_type>>());
     }
 
    private:
-    std::tuple<InternalContainer<state_type>, InternalContainer<double>, InternalContainer<std::size_t>> particles_;
+    std::tuple<InternalContainer<Types>...> particles_;
+
+    template <typename T, std::size_t... Ids>
+    constexpr void push_back_impl(T&& value, std::integer_sequence<std::size_t, Ids...>) {
+      (std::get<Ids>(particles_).push_back(std::get<Ids>(std::forward<T>(value))), ...);
+    }
   };
 
-  using container_type = Container;
+  using state_type = StateType;
+  using container_type = Container<StateType, double, std::size_t>;
+
+  struct Particle {
+    StateType state;
+    double weight;
+    std::size_t cluster;
+
+    using tuple_type = typename container_type::value_type;
+
+    /* implicit */ operator tuple_type() & { return tuple_type{state, weight, cluster}; }              // NOLINT
+    /* implicit */ operator tuple_type() && { return tuple_type{std::move(state), weight, cluster}; }  // NOLINT
+  };
+
+  using particle_type = Particle;
 
   static auto state_view(container_type& container) {
     return std::get<0>(container.particles_) | ranges::views::all | ranges::views::common;
