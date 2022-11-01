@@ -5,48 +5,76 @@
 
 namespace {
 
+constexpr std::size_t kParticleCount = 1'000'000;
+
 struct State {
   double x = 0.;
   double y = 0.;
   double theta = 0.;
 };
 
-using StructureOfArrays = beluga::TupleVector<State, double, std::size_t>;
-using ArrayOfStructures = std::vector<std::tuple<State, double, std::size_t>>;
+struct Particle {
+  State state;
+  double weight;
+  std::size_t cluster;
+};
 
-constexpr std::size_t kParticleCount = 1'000'000;
+struct Arrays {
+  std::vector<State> states;
+  std::vector<double> weights;
+  std::vector<std::size_t> clusters;
+
+  [[nodiscard]] std::size_t size() const noexcept { return states.size(); }
+
+  void clear() noexcept {
+    states.clear();
+    weights.clear();
+    clusters.clear();
+  }
+
+  void reserve(std::size_t new_cap) {
+    states.reserve(new_cap);
+    weights.reserve(new_cap);
+    clusters.reserve(new_cap);
+  }
+
+  void resize(std::size_t count) {
+    states.resize(count);
+    weights.resize(count);
+    clusters.resize(count);
+  }
+};
+
+using ParticleTuple = std::tuple<State, double, std::size_t>;
+using StructureOfArrays = beluga::TupleVector<ParticleTuple>;
+using ArrayOfStructures = std::vector<ParticleTuple>;
+
+namespace views {
+
+auto states = beluga::views::elements<0>;
+auto weights = beluga::views::elements<1>;
+
+}  // namespace views
 
 double update_weight(const State& state) {
   return state.x * state.y * state.theta;
 }
 
 void BM_UpdateWeights_Baseline_StructureOfArrays(benchmark::State& state) {
-  std::vector<State> states;
-  std::vector<double> weights;
-  std::vector<std::size_t> clusters;
-  states.resize(kParticleCount);
-  weights.resize(kParticleCount);
-  clusters.resize(kParticleCount);
-  auto size = states.size();
+  Arrays arrays;
+  arrays.resize(kParticleCount);
   for (auto _ : state) {
-    for (std::size_t i = 0; i < size; ++i) {
-      weights[i] = update_weight(states[i]);
+    for (std::size_t i = 0; i < kParticleCount; ++i) {
+      arrays.weights[i] = update_weight(arrays.states[i]);
     }
   }
 }
 
 void BM_UpdateWeights_Baseline_ArrayOfStructures(benchmark::State& state) {
-  struct Particle {
-    State state;
-    double weight;
-    std::size_t cluster;
-  };
-
   std::vector<Particle> particles;
   particles.resize(kParticleCount);
-  auto size = particles.size();
   for (auto _ : state) {
-    for (std::size_t i = 0; i < size; ++i) {
+    for (std::size_t i = 0; i < kParticleCount; ++i) {
       auto& particle = particles[i];
       particle.weight = update_weight(particle.state);
     }
@@ -58,9 +86,8 @@ void BM_UpdateWeights(benchmark::State& state) {
   auto container = Container{};
   container.resize(kParticleCount);
   for (auto _ : state) {
-    auto&& particles = beluga::views::all(container);
-    auto&& states = particles | beluga::views::elements<0>;
-    auto&& weights = particles | beluga::views::elements<1>;
+    auto&& states = beluga::views::all(container) | views::states;
+    auto&& weights = beluga::views::all(container) | views::weights;
     std::transform(std::begin(states), std::end(states), std::begin(weights), update_weight);
   }
 }
@@ -71,102 +98,29 @@ BENCHMARK(BM_UpdateWeights_Baseline_ArrayOfStructures)->MinWarmUpTime(1);
 BENCHMARK(BM_UpdateWeights<ArrayOfStructures>)->MinWarmUpTime(1);
 
 void BM_Resample_PushBack_Baseline_StructureOfArrays(benchmark::State& state) {
-  std::vector<State> states;
-  std::vector<double> weights;
-  std::vector<std::size_t> clusters;
-
-  states.resize(kParticleCount);
-  weights.resize(kParticleCount);
-  clusters.resize(kParticleCount);
-
-  auto size = states.size();
-  std::vector<State> new_states;
-  std::vector<double> new_weights;
-  std::vector<std::size_t> new_clusters;
-
-  new_states.reserve(size);
-  new_weights.reserve(size);
-  new_clusters.reserve(size);
-
+  Arrays arrays;
+  arrays.resize(kParticleCount);
+  Arrays new_arrays;
+  new_arrays.reserve(kParticleCount);
   for (auto _ : state) {
-    new_states.clear();
-    new_weights.clear();
-    new_clusters.clear();
-    for (std::size_t i = 0; i < size; ++i) {
-      new_states.push_back(State{});
-      new_weights.push_back(0);
-      new_clusters.push_back(0);
-    }
-  }
-}
-
-void BM_Resample_Assign_Baseline_StructureOfArrays(benchmark::State& state) {
-  std::vector<State> states;
-  std::vector<double> weights;
-  std::vector<std::size_t> clusters;
-
-  states.resize(kParticleCount);
-  weights.resize(kParticleCount);
-  clusters.resize(kParticleCount);
-
-  auto size = states.size();
-  std::vector<State> new_states;
-  std::vector<double> new_weights;
-  std::vector<std::size_t> new_clusters;
-
-  new_states.resize(size);
-  new_weights.resize(size);
-  new_clusters.resize(size);
-
-  for (auto _ : state) {
-    for (std::size_t i = 0; i < size; ++i) {
-      new_states[i] = State{};
-      new_weights[i] = 0;
-      new_clusters[i] = 0;
+    new_arrays.clear();
+    for (std::size_t i = 0; i < kParticleCount; ++i) {
+      new_arrays.states.push_back(State{});
+      new_arrays.weights.push_back(0);
+      new_arrays.clusters.push_back(0);
     }
   }
 }
 
 void BM_Resample_PushBack_Baseline_ArrayOfStructures(benchmark::State& state) {
-  struct Particle {
-    State state;
-    double weight;
-    std::size_t cluster;
-  };
-
   std::vector<Particle> particles;
   particles.resize(kParticleCount);
-
-  auto size = particles.size();
   std::vector<Particle> new_particles;
-  new_particles.reserve(size);
-
+  new_particles.reserve(kParticleCount);
   for (auto _ : state) {
     new_particles.clear();
-    for (std::size_t i = 0; i < size; ++i) {
-      new_particles.push_back(Particle{State{}, 0, 0});
-    }
-  }
-}
-
-void BM_Resample_Assign_Baseline_ArrayOfStructures(benchmark::State& state) {
-  struct Particle {
-    State state;
-    double weight;
-    std::size_t cluster;
-  };
-
-  std::vector<Particle> particles;
-  particles.resize(kParticleCount);
-
-  auto size = particles.size();
-  std::vector<Particle> new_particles;
-  new_particles.resize(size);
-
-  for (auto _ : state) {
-    new_particles.clear();
-    for (std::size_t i = 0; i < size; ++i) {
-      new_particles[i] = Particle{State{}, 0, 0};
+    for (std::size_t i = 0; i < kParticleCount; ++i) {
+      new_particles.push_back(Particle{particles[i].state, 0, 0});
     }
   }
 }
@@ -174,31 +128,14 @@ void BM_Resample_Assign_Baseline_ArrayOfStructures(benchmark::State& state) {
 template <class Container>
 void BM_Resample_PushBack(benchmark::State& state) {
   auto container = Container{};
-  using Particle = typename Container::value_type;
   container.resize(kParticleCount);
   auto new_container = Container{};
-  new_container.reserve(container.size());
+  new_container.reserve(kParticleCount);
   for (auto _ : state) {
     new_container.clear();
-    auto&& states = beluga::views::all(container) | beluga::views::elements<0>;
-    std::transform(std::begin(states), std::end(states), std::back_inserter(new_container), [](const State&) {
-      return Particle{State{}, 0, 0};
-    });
-  }
-}
-
-template <class Container>
-void BM_Resample_Assign(benchmark::State& state) {
-  auto container = Container{};
-  using Particle = typename Container::value_type;
-  container.resize(kParticleCount);
-  auto new_container = Container{};
-  new_container.resize(container.size());
-  for (auto _ : state) {
-    auto&& states = beluga::views::all(container) | beluga::views::elements<0>;
-    auto&& new_particles = beluga::views::all(new_container);
-    std::transform(std::begin(states), std::end(states), std::begin(new_particles), [](const State&) {
-      return Particle{State{}, 0, 0};
+    auto&& states = beluga::views::all(container) | views::states;
+    std::transform(std::begin(states), std::end(states), std::back_inserter(new_container), [](const State& state) {
+      return std::make_tuple(state, 0, 0);
     });
   }
 }
@@ -207,6 +144,48 @@ BENCHMARK(BM_Resample_PushBack_Baseline_StructureOfArrays)->MinWarmUpTime(1);
 BENCHMARK(BM_Resample_PushBack<StructureOfArrays>)->MinWarmUpTime(1);
 BENCHMARK(BM_Resample_PushBack_Baseline_ArrayOfStructures)->MinWarmUpTime(1);
 BENCHMARK(BM_Resample_PushBack<ArrayOfStructures>)->MinWarmUpTime(1);
+
+void BM_Resample_Assign_Baseline_ArrayOfStructures(benchmark::State& state) {
+  std::vector<Particle> particles;
+  particles.resize(kParticleCount);
+  std::vector<Particle> new_particles;
+  new_particles.resize(kParticleCount);
+  for (auto _ : state) {
+    new_particles.clear();
+    for (std::size_t i = 0; i < kParticleCount; ++i) {
+      new_particles[i] = Particle{particles[i].state, 0, 0};
+    }
+  }
+}
+
+void BM_Resample_Assign_Baseline_StructureOfArrays(benchmark::State& state) {
+  Arrays arrays;
+  arrays.resize(kParticleCount);
+  Arrays new_arrays;
+  new_arrays.resize(kParticleCount);
+  for (auto _ : state) {
+    for (std::size_t i = 0; i < kParticleCount; ++i) {
+      new_arrays.states[i] = arrays.states[i];
+      new_arrays.weights[i] = 0;
+      new_arrays.clusters[i] = 0;
+    }
+  }
+}
+
+template <class Container>
+void BM_Resample_Assign(benchmark::State& state) {
+  auto container = Container{};
+  container.resize(kParticleCount);
+  auto new_container = Container{};
+  new_container.resize(kParticleCount);
+  for (auto _ : state) {
+    auto&& states = beluga::views::all(container) | views::states;
+    auto&& new_particles = beluga::views::all(new_container);
+    std::transform(std::begin(states), std::end(states), std::begin(new_particles), [](const State& state) {
+      return std::make_tuple(state, 0, 0);
+    });
+  }
+}
 
 BENCHMARK(BM_Resample_Assign_Baseline_StructureOfArrays)->MinWarmUpTime(1);
 BENCHMARK(BM_Resample_Assign<StructureOfArrays>)->MinWarmUpTime(1);

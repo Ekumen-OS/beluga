@@ -21,21 +21,28 @@ inline auto StateEq(const State& expected) {
   return AllOf(Field("x", &State::x, DoubleEq(expected.x)), Field("y", &State::y, DoubleEq(expected.y)));
 }
 
-template <typename T>
+template <class T>
 class ContainerTest : public testing::Test {};
 
-using Implementations = testing::
-    Types<beluga::TupleVector<State, double, std::size_t>, std::vector<std::tuple<State, double, std::size_t>>>;
+using Particle = std::tuple<State, double, std::size_t>;
+using StructureOfArrays = beluga::TupleVector<Particle>;
+using ArrayOfStructures = std::vector<Particle>;
+
+using Implementations = testing::Types<StructureOfArrays, ArrayOfStructures>;
 TYPED_TEST_SUITE(ContainerTest, Implementations);
 
 TYPED_TEST(ContainerTest, Resize) {
   auto container = TypeParam{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
-  auto&& states = beluga::views::all(container) | beluga::views::elements<0>;
-  for (auto&& state : states) {
+  int reps = 0;
+  for (auto&& [state, weight, cluster] : beluga::views::all(container)) {
     ASSERT_THAT(state, StateEq(State{}));
+    ASSERT_EQ(weight, double{});
+    ASSERT_EQ(cluster, std::size_t{});
+    ++reps;
   }
+  ASSERT_EQ(reps, 3);
 }
 
 TYPED_TEST(ContainerTest, Clear) {
@@ -48,28 +55,16 @@ TYPED_TEST(ContainerTest, Clear) {
 
 TYPED_TEST(ContainerTest, PushBack) {
   auto container = TypeParam{};
-  constexpr auto kTestState = State{1, 2};
   EXPECT_EQ(container.size(), 0);
-  container.push_back({kTestState, 0, 0});
+  container.push_back({{1, 2}, 3, 4});
   EXPECT_EQ(container.size(), 1);
-  auto&& states = beluga::views::all(container) | beluga::views::elements<0>;
-  EXPECT_THAT(*std::begin(states), StateEq(kTestState));
+  auto&& [state, weight, cluster] = beluga::views::all(container).front();
+  EXPECT_THAT(state, StateEq({1, 2}));
+  EXPECT_EQ(weight, 3);
+  EXPECT_EQ(cluster, 4);
 }
 
-TYPED_TEST(ContainerTest, StateView) {
-  auto container = TypeParam{};
-  container.resize(3);
-  EXPECT_EQ(container.size(), 3);
-  constexpr auto kTestState = State{1, 2};
-  for (auto&& state : beluga::views::all(container) | beluga::views::elements<0>) {
-    state = kTestState;
-  }
-  for (auto&& state : beluga::views::all(container) | beluga::views::elements<0>) {
-    ASSERT_THAT(state, StateEq(kTestState));
-  }
-}
-
-TYPED_TEST(ContainerTest, WeightView) {
+TYPED_TEST(ContainerTest, ElementsView) {
   auto container = TypeParam{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
@@ -82,16 +77,39 @@ TYPED_TEST(ContainerTest, WeightView) {
   }
 }
 
-TYPED_TEST(ContainerTest, ClusterView) {
+TYPED_TEST(ContainerTest, StructuredBinding) {
   auto container = TypeParam{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr std::size_t kTestCluster = 75;
-  for (auto&& cluster_id : beluga::views::all(container) | beluga::views::elements<2>) {
-    cluster_id = kTestCluster;
+  for (auto&& [state, weight, cluster] : beluga::views::all(container)) {
+    cluster = kTestCluster;
   }
-  for (auto&& cluster_id : beluga::views::all(container) | beluga::views::elements<2>) {
-    ASSERT_EQ(cluster_id, kTestCluster);
+  for (auto&& [state, weight, cluster] : beluga::views::all(container)) {
+    ASSERT_EQ(cluster, kTestCluster);
+  }
+}
+
+TEST(TupleVector, SingleElementTuple) {
+  auto container = beluga::TupleVector<std::tuple<int>>{};
+  container.push_back({4});
+  container.push_back({4});
+  container.push_back({4});
+  EXPECT_EQ(container.size(), 3);
+  for (auto&& [value] : beluga::views::all(container)) {
+    ASSERT_EQ(value, 4);
+  }
+}
+
+TEST(TupleVector, DoubleElementTuple) {
+  auto container = beluga::TupleVector<std::tuple<int, float>>{};
+  container.push_back({2, 0.5});
+  container.push_back({2, 0.5});
+  container.push_back({2, 0.5});
+  EXPECT_EQ(container.size(), 3);
+  for (auto&& [integer, real] : beluga::views::all(container)) {
+    ASSERT_EQ(integer, 2);
+    ASSERT_EQ(real, 0.5);
   }
 }
 

@@ -7,8 +7,11 @@
 
 namespace beluga {
 
+template <template <class> class InternalContainer, class Tuple>
+class TupleContainer;
+
 template <template <class> class InternalContainer, class... Types>
-class TupleContainer {
+class TupleContainer<InternalContainer, std::tuple<Types...>> {
  public:
   using value_type = std::tuple<Types...>;
   using size_type = std::size_t;
@@ -52,8 +55,8 @@ class TupleContainer {
 
 namespace views {
 
-template <template <class> class InternalContainer, class... Types>
-inline auto all(TupleContainer<InternalContainer, Types...>& container) {
+template <template <class> class InternalContainer, class Tuple>
+inline auto all(TupleContainer<InternalContainer, Tuple>& container) {
   return container.view_all();
 }
 
@@ -62,7 +65,7 @@ inline auto all(TupleContainer<InternalContainer, Types...>& container) {
 template <class T>
 using Vector = std::vector<T, std::allocator<T>>;
 
-template <class... Types>
-using TupleVector = TupleContainer<Vector, Types...>;
+template <class Tuple>
+using TupleVector = TupleContainer<Vector, Tuple>;
 
 }  // namespace beluga
