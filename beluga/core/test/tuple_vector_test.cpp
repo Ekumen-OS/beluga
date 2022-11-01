@@ -2,7 +2,8 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/storage.h>
+#include <beluga/tuple_vector.h>
+#include <beluga/views.h>
 
 namespace {
 
@@ -24,14 +25,14 @@ template <typename T>
 class ContainerTest : public testing::Test {};
 
 using Implementations = testing::
-    Types<beluga::core::TupleVector<State, double, std::size_t>, std::vector<std::tuple<State, double, std::size_t>>>;
+    Types<beluga::TupleVector<State, double, std::size_t>, std::vector<std::tuple<State, double, std::size_t>>>;
 TYPED_TEST_SUITE(ContainerTest, Implementations);
 
 TYPED_TEST(ContainerTest, Resize) {
   auto container = TypeParam{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
-  auto&& states = beluga::core::view_all(container) | beluga::core::elements_view<0>;
+  auto&& states = beluga::views::all(container) | beluga::views::elements<0>;
   for (auto&& state : states) {
     ASSERT_THAT(state, StateEq(State{}));
   }
@@ -51,7 +52,7 @@ TYPED_TEST(ContainerTest, PushBack) {
   EXPECT_EQ(container.size(), 0);
   container.push_back({kTestState, 0, 0});
   EXPECT_EQ(container.size(), 1);
-  auto&& states = beluga::core::view_all(container) | beluga::core::elements_view<0>;
+  auto&& states = beluga::views::all(container) | beluga::views::elements<0>;
   EXPECT_THAT(*std::begin(states), StateEq(kTestState));
 }
 
@@ -60,10 +61,10 @@ TYPED_TEST(ContainerTest, StateView) {
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr auto kTestState = State{1, 2};
-  for (auto&& state : beluga::core::view_all(container) | beluga::core::elements_view<0>) {
+  for (auto&& state : beluga::views::all(container) | beluga::views::elements<0>) {
     state = kTestState;
   }
-  for (auto&& state : beluga::core::view_all(container) | beluga::core::elements_view<0>) {
+  for (auto&& state : beluga::views::all(container) | beluga::views::elements<0>) {
     ASSERT_THAT(state, StateEq(kTestState));
   }
 }
@@ -73,10 +74,10 @@ TYPED_TEST(ContainerTest, WeightView) {
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr double kTestWeight = 1.25;
-  for (auto&& weight : beluga::core::view_all(container) | beluga::core::elements_view<1>) {
+  for (auto&& weight : beluga::views::all(container) | beluga::views::elements<1>) {
     weight = kTestWeight;
   }
-  for (auto&& weight : beluga::core::view_all(container) | beluga::core::elements_view<1>) {
+  for (auto&& weight : beluga::views::all(container) | beluga::views::elements<1>) {
     ASSERT_EQ(weight, kTestWeight);
   }
 }
@@ -86,10 +87,10 @@ TYPED_TEST(ContainerTest, ClusterView) {
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr std::size_t kTestCluster = 75;
-  for (auto&& cluster_id : beluga::core::view_all(container) | beluga::core::elements_view<2>) {
+  for (auto&& cluster_id : beluga::views::all(container) | beluga::views::elements<2>) {
     cluster_id = kTestCluster;
   }
-  for (auto&& cluster_id : beluga::core::view_all(container) | beluga::core::elements_view<2>) {
+  for (auto&& cluster_id : beluga::views::all(container) | beluga::views::elements<2>) {
     ASSERT_EQ(cluster_id, kTestCluster);
   }
 }

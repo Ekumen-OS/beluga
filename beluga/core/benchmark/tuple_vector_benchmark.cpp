@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 
-#include <beluga/storage.h>
+#include <beluga/tuple_vector.h>
+#include <beluga/views.h>
 
 namespace {
 
@@ -10,7 +11,7 @@ struct State {
   double theta = 0.;
 };
 
-using StructureOfArrays = beluga::core::TupleVector<State, double, std::size_t>;
+using StructureOfArrays = beluga::TupleVector<State, double, std::size_t>;
 using ArrayOfStructures = std::vector<std::tuple<State, double, std::size_t>>;
 
 constexpr std::size_t kParticleCount = 1'000'000;
@@ -57,9 +58,9 @@ void BM_UpdateWeights(benchmark::State& state) {
   auto container = Container{};
   container.resize(kParticleCount);
   for (auto _ : state) {
-    auto&& particles = beluga::core::view_all(container);
-    auto&& states = particles | beluga::core::elements_view<0>;
-    auto&& weights = particles | beluga::core::elements_view<1>;
+    auto&& particles = beluga::views::all(container);
+    auto&& states = particles | beluga::views::elements<0>;
+    auto&& weights = particles | beluga::views::elements<1>;
     std::transform(std::begin(states), std::end(states), std::begin(weights), update_weight);
   }
 }
@@ -178,9 +179,8 @@ void BM_Resample_PushBack(benchmark::State& state) {
   auto new_container = Container{};
   new_container.reserve(container.size());
   for (auto _ : state) {
-    auto&& particles = beluga::core::view_all(container);
-    auto&& states = particles | beluga::core::elements_view<0>;
     new_container.clear();
+    auto&& states = beluga::views::all(container) | beluga::views::elements<0>;
     std::transform(std::begin(states), std::end(states), std::back_inserter(new_container), [](const State&) {
       return Particle{State{}, 0, 0};
     });
@@ -195,9 +195,8 @@ void BM_Resample_Assign(benchmark::State& state) {
   auto new_container = Container{};
   new_container.resize(container.size());
   for (auto _ : state) {
-    auto&& particles = beluga::core::view_all(container);
-    auto&& states = particles | beluga::core::elements_view<0>;
-    auto&& new_particles = beluga::core::view_all(new_container);
+    auto&& states = beluga::views::all(container) | beluga::views::elements<0>;
+    auto&& new_particles = beluga::views::all(new_container);
     std::transform(std::begin(states), std::end(states), std::begin(new_particles), [](const State&) {
       return Particle{State{}, 0, 0};
     });

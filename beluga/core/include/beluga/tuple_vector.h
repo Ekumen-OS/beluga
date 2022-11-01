@@ -3,19 +3,9 @@
 #include <tuple>
 #include <vector>
 
-#include <range/v3/view.hpp>
+#include <beluga/views.h>
 
-namespace beluga::core {
-
-template <std::size_t N>
-inline auto elements_view = ranges::views::transform([](auto&& particle) -> decltype(auto) {
-  return std::get<N>(particle);
-});
-
-template <class Container>
-auto view_all(Container& container) {
-  return container | ranges::views::all | ranges::views::common;
-}
+namespace beluga {
 
 template <template <class> class InternalContainer, class... Types>
 class TupleContainer {
@@ -48,8 +38,7 @@ class TupleContainer {
   }
 
   constexpr auto view_all() {
-    return std::apply(
-        [](auto&&... containers) { return ranges::views::zip(containers...) | ranges::views::common; }, vectors_);
+    return std::apply([](auto&&... containers) { return ranges::views::zip(containers...); }, vectors_);
   }
 
  private:
@@ -61,10 +50,14 @@ class TupleContainer {
   }
 };
 
+namespace views {
+
 template <template <class> class InternalContainer, class... Types>
-auto view_all(TupleContainer<InternalContainer, Types...>& container) {
+inline auto all(TupleContainer<InternalContainer, Types...>& container) {
   return container.view_all();
 }
+
+}  // namespace views
 
 template <class T>
 using Vector = std::vector<T, std::allocator<T>>;
@@ -72,4 +65,4 @@ using Vector = std::vector<T, std::allocator<T>>;
 template <class... Types>
 using TupleVector = TupleContainer<Vector, Types...>;
 
-}  // namespace beluga::core
+}  // namespace beluga
