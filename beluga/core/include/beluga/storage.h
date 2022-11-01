@@ -13,13 +13,8 @@ inline auto elements_view = ranges::views::transform([](auto&& particle) -> decl
 });
 
 template <class Container>
-struct ContainerTraits {
-  static auto view_all(Container& container) { return container | ranges::views::all | ranges::views::common; }
-};
-
-template <class Container>
 auto view_all(Container& container) {
-  return ContainerTraits<Container>::view_all(container);
+  return container | ranges::views::all | ranges::views::common;
 }
 
 template <template <class> class InternalContainer, class... Types>
@@ -67,9 +62,9 @@ class TupleContainer {
 };
 
 template <template <class> class InternalContainer, class... Types>
-struct ContainerTraits<TupleContainer<InternalContainer, Types...>> {
-  static auto view_all(TupleContainer<InternalContainer, Types...>& container) { return container.view_all(); }
-};
+auto view_all(TupleContainer<InternalContainer, Types...>& container) {
+  return container.view_all();
+}
 
 template <class T>
 using Vector = std::vector<T, std::allocator<T>>;
