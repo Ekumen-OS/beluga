@@ -21,86 +21,76 @@ inline auto StateEq(const State& expected) {
 }
 
 template <typename T>
-class StoragePolicyTest : public testing::Test {};
+class ContainerTest : public testing::Test {};
 
-using Implementations =
-    testing::Types<beluga::core::storage::ArrayOfStructures<State>, beluga::core::storage::StructureOfArrays<State>>;
-TYPED_TEST_SUITE(StoragePolicyTest, Implementations);
+using Implementations = testing::
+    Types<beluga::core::TupleVector<State, double, std::size_t>, std::vector<std::tuple<State, double, std::size_t>>>;
+TYPED_TEST_SUITE(ContainerTest, Implementations);
 
-TYPED_TEST(StoragePolicyTest, Resize) {
-  using StoragePolicy = TypeParam;
-  using Container = typename StoragePolicy::container_type;
-  Container container;
+TYPED_TEST(ContainerTest, Resize) {
+  auto container = TypeParam{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
-  for (auto&& state : StoragePolicy::state_view(container)) {
-    EXPECT_THAT(state, StateEq(State{}));
+  auto&& states = beluga::core::view_all(container) | beluga::core::elements_view<0>;
+  for (auto&& state : states) {
+    ASSERT_THAT(state, StateEq(State{}));
   }
 }
 
-TYPED_TEST(StoragePolicyTest, Clear) {
-  using StoragePolicy = TypeParam;
-  using Container = typename StoragePolicy::container_type;
-  Container container;
+TYPED_TEST(ContainerTest, Clear) {
+  auto container = TypeParam{};
   container.resize(15);
   EXPECT_EQ(container.size(), 15);
   container.clear();
   EXPECT_EQ(container.size(), 0);
 }
 
-TYPED_TEST(StoragePolicyTest, PushBack) {
-  using StoragePolicy = TypeParam;
-  using Container = typename StoragePolicy::container_type;
-  Container container;
+TYPED_TEST(ContainerTest, PushBack) {
+  auto container = TypeParam{};
   constexpr auto kTestState = State{1, 2};
   EXPECT_EQ(container.size(), 0);
   container.push_back({kTestState, 0, 0});
   EXPECT_EQ(container.size(), 1);
-  EXPECT_THAT(*std::begin(StoragePolicy::state_view(container)), StateEq(kTestState));
+  auto&& states = beluga::core::view_all(container) | beluga::core::elements_view<0>;
+  EXPECT_THAT(*std::begin(states), StateEq(kTestState));
 }
 
-TYPED_TEST(StoragePolicyTest, StateView) {
-  using StoragePolicy = TypeParam;
-  using Container = typename StoragePolicy::container_type;
-  Container container;
+TYPED_TEST(ContainerTest, StateView) {
+  auto container = TypeParam{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr auto kTestState = State{1, 2};
-  for (auto&& state : StoragePolicy::state_view(container)) {
+  for (auto&& state : beluga::core::view_all(container) | beluga::core::elements_view<0>) {
     state = kTestState;
   }
-  for (auto&& state : StoragePolicy::state_view(container)) {
-    EXPECT_THAT(state, StateEq(kTestState));
+  for (auto&& state : beluga::core::view_all(container) | beluga::core::elements_view<0>) {
+    ASSERT_THAT(state, StateEq(kTestState));
   }
 }
 
-TYPED_TEST(StoragePolicyTest, WeightView) {
-  using StoragePolicy = TypeParam;
-  using Container = typename StoragePolicy::container_type;
-  Container container;
+TYPED_TEST(ContainerTest, WeightView) {
+  auto container = TypeParam{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr double kTestWeight = 1.25;
-  for (auto&& weight : StoragePolicy::weight_view(container)) {
+  for (auto&& weight : beluga::core::view_all(container) | beluga::core::elements_view<1>) {
     weight = kTestWeight;
   }
-  for (auto&& weight : StoragePolicy::weight_view(container)) {
-    EXPECT_EQ(weight, kTestWeight);
+  for (auto&& weight : beluga::core::view_all(container) | beluga::core::elements_view<1>) {
+    ASSERT_EQ(weight, kTestWeight);
   }
 }
 
-TYPED_TEST(StoragePolicyTest, ClusterView) {
-  using StoragePolicy = TypeParam;
-  using Container = typename StoragePolicy::container_type;
-  Container container;
+TYPED_TEST(ContainerTest, ClusterView) {
+  auto container = TypeParam{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr std::size_t kTestCluster = 75;
-  for (auto&& cluster_id : StoragePolicy::cluster_view(container)) {
+  for (auto&& cluster_id : beluga::core::view_all(container) | beluga::core::elements_view<2>) {
     cluster_id = kTestCluster;
   }
-  for (auto&& cluster_id : StoragePolicy::cluster_view(container)) {
-    EXPECT_EQ(cluster_id, kTestCluster);
+  for (auto&& cluster_id : beluga::core::view_all(container) | beluga::core::elements_view<2>) {
+    ASSERT_EQ(cluster_id, kTestCluster);
   }
 }
 

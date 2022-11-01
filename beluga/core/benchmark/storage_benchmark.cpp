@@ -10,6 +10,9 @@ struct State {
   double theta = 0.;
 };
 
+using StructureOfArrays = beluga::core::TupleVector<State, double, std::size_t>;
+using ArrayOfStructures = std::vector<std::tuple<State, double, std::size_t>>;
+
 constexpr std::size_t kParticleCount = 1'000'000;
 
 double update_weight(const State& state) {
@@ -49,22 +52,22 @@ void BM_UpdateWeights_Baseline_ArrayOfStructures(benchmark::State& state) {
   }
 }
 
-template <class StoragePolicy>
+template <class Container>
 void BM_UpdateWeights(benchmark::State& state) {
-  using Container = typename StoragePolicy::container_type;
-  Container container;
+  auto container = Container{};
   container.resize(kParticleCount);
   for (auto _ : state) {
-    auto&& states = StoragePolicy::state_view(container);
-    auto&& weights = StoragePolicy::weight_view(container);
+    auto&& particles = beluga::core::view_all(container);
+    auto&& states = particles | beluga::core::elements_view<0>;
+    auto&& weights = particles | beluga::core::elements_view<1>;
     std::transform(std::begin(states), std::end(states), std::begin(weights), update_weight);
   }
 }
 
 BENCHMARK(BM_UpdateWeights_Baseline_StructureOfArrays)->MinWarmUpTime(1);
-BENCHMARK(BM_UpdateWeights<beluga::core::storage::StructureOfArrays<State>>)->MinWarmUpTime(1);
+BENCHMARK(BM_UpdateWeights<StructureOfArrays>)->MinWarmUpTime(1);
 BENCHMARK(BM_UpdateWeights_Baseline_ArrayOfStructures)->MinWarmUpTime(1);
-BENCHMARK(BM_UpdateWeights<beluga::core::storage::ArrayOfStructures<State>>)->MinWarmUpTime(1);
+BENCHMARK(BM_UpdateWeights<ArrayOfStructures>)->MinWarmUpTime(1);
 
 void BM_Resample_PushBack_Baseline_StructureOfArrays(benchmark::State& state) {
   std::vector<State> states;
@@ -167,16 +170,16 @@ void BM_Resample_Assign_Baseline_ArrayOfStructures(benchmark::State& state) {
   }
 }
 
-template <class StoragePolicy>
+template <class Container>
 void BM_Resample_PushBack(benchmark::State& state) {
-  using Container = typename StoragePolicy::container_type;
-  using Particle = typename StoragePolicy::particle_type;
-  Container container;
+  auto container = Container{};
+  using Particle = typename Container::value_type;
   container.resize(kParticleCount);
-  Container new_container;
+  auto new_container = Container{};
   new_container.reserve(container.size());
   for (auto _ : state) {
-    auto&& states = StoragePolicy::state_view(container);
+    auto&& particles = beluga::core::view_all(container);
+    auto&& states = particles | beluga::core::elements_view<0>;
     new_container.clear();
     std::transform(std::begin(states), std::end(states), std::back_inserter(new_container), [](const State&) {
       return Particle{State{}, 0, 0};
@@ -184,31 +187,31 @@ void BM_Resample_PushBack(benchmark::State& state) {
   }
 }
 
-template <class StoragePolicy>
+template <class Container>
 void BM_Resample_Assign(benchmark::State& state) {
-  using Container = typename StoragePolicy::container_type;
-  using Particle = typename StoragePolicy::particle_type;
-  Container container;
+  auto container = Container{};
+  using Particle = typename Container::value_type;
   container.resize(kParticleCount);
-  Container new_container;
+  auto new_container = Container{};
   new_container.resize(container.size());
   for (auto _ : state) {
-    auto&& states = StoragePolicy::state_view(container);
-    auto&& particles = StoragePolicy::particle_view(new_container);
-    std::transform(std::begin(states), std::end(states), std::begin(particles), [](const State&) {
+    auto&& particles = beluga::core::view_all(container);
+    auto&& states = particles | beluga::core::elements_view<0>;
+    auto&& new_particles = beluga::core::view_all(new_container);
+    std::transform(std::begin(states), std::end(states), std::begin(new_particles), [](const State&) {
       return Particle{State{}, 0, 0};
     });
   }
 }
 
 BENCHMARK(BM_Resample_PushBack_Baseline_StructureOfArrays)->MinWarmUpTime(1);
-BENCHMARK(BM_Resample_PushBack<beluga::core::storage::StructureOfArrays<State>>)->MinWarmUpTime(1);
+BENCHMARK(BM_Resample_PushBack<StructureOfArrays>)->MinWarmUpTime(1);
 BENCHMARK(BM_Resample_PushBack_Baseline_ArrayOfStructures)->MinWarmUpTime(1);
-BENCHMARK(BM_Resample_PushBack<beluga::core::storage::ArrayOfStructures<State>>)->MinWarmUpTime(1);
+BENCHMARK(BM_Resample_PushBack<ArrayOfStructures>)->MinWarmUpTime(1);
 
 BENCHMARK(BM_Resample_Assign_Baseline_StructureOfArrays)->MinWarmUpTime(1);
-BENCHMARK(BM_Resample_Assign<beluga::core::storage::StructureOfArrays<State>>)->MinWarmUpTime(1);
+BENCHMARK(BM_Resample_Assign<StructureOfArrays>)->MinWarmUpTime(1);
 BENCHMARK(BM_Resample_Assign_Baseline_ArrayOfStructures)->MinWarmUpTime(1);
-BENCHMARK(BM_Resample_Assign<beluga::core::storage::ArrayOfStructures<State>>)->MinWarmUpTime(1);
+BENCHMARK(BM_Resample_Assign<ArrayOfStructures>)->MinWarmUpTime(1);
 
 }  // namespace
