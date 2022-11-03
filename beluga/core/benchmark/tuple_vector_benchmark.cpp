@@ -47,7 +47,7 @@ struct Arrays {
 
 using ParticleTuple = std::tuple<State, double, std::size_t>;
 using StructureOfArrays = beluga::TupleVector<ParticleTuple>;
-using ArrayOfStructures = std::vector<ParticleTuple>;
+using ArrayOfStructures = beluga::Vector<ParticleTuple>;
 
 namespace views {
 

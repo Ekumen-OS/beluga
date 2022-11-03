@@ -26,10 +26,15 @@ class ContainerTest : public testing::Test {};
 
 using Particle = std::tuple<State, double, std::size_t>;
 using StructureOfArrays = beluga::TupleVector<Particle>;
-using ArrayOfStructures = std::vector<Particle>;
+using ArrayOfStructures = beluga::Vector<Particle>;
 
 using Implementations = testing::Types<StructureOfArrays, ArrayOfStructures>;
 TYPED_TEST_SUITE(ContainerTest, Implementations);
+
+TYPED_TEST(ContainerTest, Size) {
+  auto container = TypeParam{100};
+  ASSERT_EQ(container.size(), 100);
+}
 
 TYPED_TEST(ContainerTest, Resize) {
   auto container = TypeParam{};

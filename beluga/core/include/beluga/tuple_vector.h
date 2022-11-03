@@ -16,40 +16,46 @@ class TupleContainer<InternalContainer, std::tuple<Types...>> {
   using value_type = std::tuple<Types...>;
   using size_type = std::size_t;
 
-  [[nodiscard]] constexpr bool empty() const noexcept { return std::get<0>(vectors_).empty(); }
+  constexpr TupleContainer() = default;
 
-  [[nodiscard]] constexpr size_type size() const noexcept { return std::get<0>(vectors_).size(); }
+  explicit constexpr TupleContainer(size_type count) : sequences_{((void)sizeof(Types), count)...} {}
+
+  [[nodiscard]] constexpr bool empty() const noexcept { return std::get<0>(sequences_).empty(); }
+
+  [[nodiscard]] constexpr size_type size() const noexcept { return std::get<0>(sequences_).size(); }
+
+  [[nodiscard]] constexpr size_type capacity() const noexcept { return std::get<0>(sequences_).capacity(); }
 
   constexpr void clear() noexcept {
-    std::apply([](auto&&... containers) { (containers.clear(), ...); }, vectors_);
+    std::apply([](auto&&... containers) { (containers.clear(), ...); }, sequences_);
   }
 
   constexpr void reserve(size_type new_cap) {
-    std::apply([new_cap](auto&&... containers) { (containers.reserve(new_cap), ...); }, vectors_);
+    std::apply([new_cap](auto&&... containers) { (containers.reserve(new_cap), ...); }, sequences_);
   }
 
   constexpr void resize(size_type count) {
-    std::apply([count](auto&&... containers) { (containers.resize(count), ...); }, vectors_);
+    std::apply([count](auto&&... containers) { (containers.resize(count), ...); }, sequences_);
   }
 
   constexpr void push_back(value_type&& value) {
-    push_back_impl(std::move(value), std::make_integer_sequence<std::size_t, std::tuple_size_v<value_type>>());
+    push_back_impl(std::move(value), std::make_index_sequence<sizeof...(Types)>());
   }
 
   constexpr void push_back(const value_type& value) {
-    push_back_impl(value, std::make_integer_sequence<std::size_t, std::tuple_size_v<value_type>>());
+    push_back_impl(value, std::make_index_sequence<sizeof...(Types)>());
   }
 
   constexpr auto view_all() {
-    return std::apply([](auto&&... containers) { return ranges::views::zip(containers...); }, vectors_);
+    return std::apply([](auto&&... containers) { return ranges::views::zip(containers...); }, sequences_);
   }
 
  private:
-  std::tuple<InternalContainer<Types>...> vectors_;
+  std::tuple<InternalContainer<Types>...> sequences_;
 
   template <typename T, std::size_t... Ids>
-  constexpr void push_back_impl(T&& value, std::integer_sequence<std::size_t, Ids...>) {
-    (std::get<Ids>(vectors_).push_back(std::get<Ids>(std::forward<T>(value))), ...);
+  constexpr void push_back_impl(T&& value, std::index_sequence<Ids...>) {
+    (std::get<Ids>(sequences_).push_back(std::get<Ids>(std::forward<T>(value))), ...);
   }
 };
 
