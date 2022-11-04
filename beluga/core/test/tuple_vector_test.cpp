@@ -2,6 +2,7 @@
 
 #include <gmock/gmock.h>
 
+#include <beluga/particle_traits.h>
 #include <beluga/tuple_vector.h>
 #include <beluga/views.h>
 
@@ -69,15 +70,23 @@ TYPED_TEST(ContainerTest, PushBack) {
   EXPECT_EQ(cluster, 4);
 }
 
-TYPED_TEST(ContainerTest, ElementsView) {
+TYPED_TEST(ContainerTest, GetterSetter) {
+  auto container = TypeParam{};
+  auto&& view = beluga::views::all(container);
+  container.push_back({{1, 2}, 3, 4});
+  beluga::weight(view.front()) = 5;
+  ASSERT_EQ(beluga::weight(view.front()), 5);
+}
+
+TYPED_TEST(ContainerTest, View) {
   auto container = TypeParam{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr double kTestWeight = 1.25;
-  for (auto&& weight : beluga::views::all(container) | beluga::views::elements<1>) {
+  for (auto&& weight : beluga::views::all(container) | beluga::views::weights<Particle>()) {
     weight = kTestWeight;
   }
-  for (auto&& weight : beluga::views::all(container) | beluga::views::elements<1>) {
+  for (auto&& weight : beluga::views::all(container) | beluga::views::weights<Particle>()) {
     ASSERT_EQ(weight, kTestWeight);
   }
 }
