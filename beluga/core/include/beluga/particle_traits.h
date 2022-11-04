@@ -31,8 +31,8 @@ using decay_tuple_t = typename decay_tuple<T>::type;
 template <class T>
 struct particle_traits {};
 
-template <template <class, class, class> class Tuple, class State>
-struct particle_traits<Tuple<State, double, std::size_t>> {
+template <template <class...> class Tuple, class State, class... Extra>
+struct particle_traits<Tuple<State, double, std::size_t, Extra...>> {
   using value_type = Tuple<State, double, std::size_t>;
 
   template <class T>
