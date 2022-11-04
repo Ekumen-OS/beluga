@@ -2,9 +2,8 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/particle_traits.h>
 #include <beluga/tuple_vector.h>
-#include <beluga/views.h>
+#include <beluga/type_traits.h>
 
 namespace {
 
@@ -83,10 +82,10 @@ TYPED_TEST(ContainerTest, View) {
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr double kTestWeight = 1.25;
-  for (auto&& weight : beluga::views::all(container) | beluga::views::weights<Particle>()) {
+  for (auto&& weight : beluga::views::weights(container)) {
     weight = kTestWeight;
   }
-  for (auto&& weight : beluga::views::all(container) | beluga::views::weights<Particle>()) {
+  for (auto&& weight : beluga::views::weights(container)) {
     ASSERT_EQ(weight, kTestWeight);
   }
 }

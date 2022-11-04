@@ -1,8 +1,9 @@
 #include <benchmark/benchmark.h>
 
-#include <beluga/particle_traits.h>
+#include <range/v3/view.hpp>
+
 #include <beluga/tuple_vector.h>
-#include <beluga/views.h>
+#include <beluga/type_traits.h>
 
 namespace {
 
@@ -74,8 +75,8 @@ void BM_Update(benchmark::State& state) {
   auto container = Container{};
   container.resize(kParticleCount);
   for (auto _ : state) {
-    auto&& states = beluga::views::all(container) | beluga::views::states<Particle>();
-    auto&& weights = beluga::views::all(container) | beluga::views::weights<Particle>();
+    auto&& states = beluga::views::states(container);
+    auto&& weights = beluga::views::weights(container);
     std::transform(std::begin(states), std::end(states), std::begin(weights), update_weight);
   }
 }
@@ -121,7 +122,7 @@ void BM_PushBack(benchmark::State& state) {
   new_container.reserve(kParticleCount);
   for (auto _ : state) {
     new_container.clear();
-    auto&& states = beluga::views::all(container) | beluga::views::states<Particle>();
+    auto&& states = beluga::views::states(container);
     std::transform(std::begin(states), std::end(states), std::back_inserter(new_container), [](const State& state) {
       return std::make_tuple(state, 0, 0);
     });
@@ -167,7 +168,7 @@ void BM_Assign(benchmark::State& state) {
   auto new_container = Container{};
   new_container.resize(kParticleCount);
   for (auto _ : state) {
-    auto&& states = beluga::views::all(container) | beluga::views::states<Particle>();
+    auto&& states = beluga::views::states(container);
     auto&& new_particles = beluga::views::all(new_container);
     std::transform(std::begin(states), std::end(states), std::begin(new_particles), [](const State& state) {
       return std::make_tuple(state, 0, 0);

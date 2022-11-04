@@ -3,7 +3,9 @@
 #include <tuple>
 #include <vector>
 
-#include <beluga/views.h>
+#include <range/v3/view/zip.hpp>
+
+#include <beluga/type_traits.h>
 
 namespace beluga {
 
@@ -59,14 +61,17 @@ class TupleContainer<InternalContainer, std::tuple<Types...>> {
   }
 };
 
-namespace views {
+template <template <class> class InternalContainer, class T>
+struct container_traits<TupleContainer<InternalContainer, T>> {
+  using type = TupleContainer<InternalContainer, T>;
+  using value_type = typename type::value_type;
+  using size_type = typename type::size_type;
 
-template <template <class> class InternalContainer, class Tuple>
-inline auto all(TupleContainer<InternalContainer, Tuple>& container) {
-  return container.view_all();
-}
-
-}  // namespace views
+  template <class U>
+  static constexpr auto view_all(U&& container) {
+    return container.view_all();
+  }
+};
 
 template <class T>
 using Vector = std::vector<T, std::allocator<T>>;

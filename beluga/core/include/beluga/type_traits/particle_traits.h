@@ -3,6 +3,7 @@
 #include <tuple>
 #include <type_traits>
 
+#include <beluga/type_traits/container_traits.h>
 #include <beluga/views.h>
 
 namespace beluga {
@@ -106,6 +107,24 @@ constexpr auto weights() {
 template <class T>
 constexpr auto clusters() {
   return particle_traits<decay_tuple_t<T>>::clusters_view();
+}
+
+template <class Container>
+constexpr auto states(Container&& container) {
+  using T = typename std::decay_t<Container>::value_type;
+  return all(std::forward<Container>(container)) | states<T>();
+}
+
+template <class Container>
+constexpr auto weights(Container&& container) {
+  using T = typename std::decay_t<Container>::value_type;
+  return all(std::forward<Container>(container)) | weights<T>();
+}
+
+template <class Container>
+constexpr auto clusters(Container&& container) {
+  using T = typename std::decay_t<Container>::value_type;
+  return all(std::forward<Container>(container)) | clusters<T>();
 }
 
 }  // namespace views
