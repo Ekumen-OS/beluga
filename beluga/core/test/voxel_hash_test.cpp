@@ -25,7 +25,7 @@ TEST(VoxelHash, Round) {
 TEST(VoxelHash, VoxelSize) {
   using Tuple = std::tuple<double, double>;
   constexpr double kVoxelSize = 0.1;
-  auto hash1 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.3, 5.1), kVoxelSize);
+  auto hash1 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.3, 5.13), kVoxelSize);
   auto hash2 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.33, 5.14), kVoxelSize);
   EXPECT_EQ(hash1, hash2);
   auto hash3 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.0, 5.0), kVoxelSize);
@@ -35,8 +35,8 @@ TEST(VoxelHash, VoxelSize) {
 TEST(VoxelHash, Negative) {
   using Tuple = std::tuple<double, double>;
   constexpr double kVoxelSize = 0.1;
-  auto hash1 = beluga::voxel_hash<Tuple>{}(std::make_tuple(-10.3, -2.1), kVoxelSize);
-  auto hash2 = beluga::voxel_hash<Tuple>{}(std::make_tuple(-10.33, -2.14), kVoxelSize);
+  auto hash1 = beluga::voxel_hash<Tuple>{}(std::make_tuple(-10.3, -2.13), kVoxelSize);
+  auto hash2 = beluga::voxel_hash<Tuple>{}(std::make_tuple(-10.27, -2.14), kVoxelSize);
   EXPECT_EQ(hash1, hash2);
   auto hash3 = beluga::voxel_hash<Tuple>{}(std::make_tuple(-10.0, -2.0), kVoxelSize);
   EXPECT_NE(hash1, hash3);
@@ -46,8 +46,8 @@ TEST(VoxelHash, NoCollisions) {
   using Tuple = std::tuple<double, double, double>;
   constexpr int kLimit = 100;
 
-  // Brute-force search for collisions
-  // With kLimit = 100 and a 3-element tuple, we test 8'120'601 combinations
+  // Brute-force search for collisions.
+  // With kLimit = 100 and a 3-element tuple, we test 8'120'601 combinations.
   auto hashes = ranges::views::cartesian_product(
                     ranges::views::closed_iota(-kLimit, kLimit), ranges::views::closed_iota(-kLimit, kLimit),
                     ranges::views::closed_iota(-kLimit, kLimit)) |
