@@ -7,6 +7,41 @@
 
 namespace {
 
+TEST(VoxelHash, Round) {
+  using Tuple = std::tuple<double, double>;
+  auto hash1 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.3, 5.0));
+  auto hash2 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.0, 5.0));
+  auto hash3 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.0, 5.3));
+  auto hash4 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.1, 5.1));
+  EXPECT_EQ(hash1, hash2);
+  EXPECT_EQ(hash2, hash3);
+  EXPECT_EQ(hash3, hash4);
+  auto hash5 = beluga::voxel_hash<Tuple>{}(std::make_tuple(9.1, 5.1));
+  auto hash6 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.1, 4.1));
+  EXPECT_NE(hash1, hash5);
+  EXPECT_NE(hash1, hash6);
+}
+
+TEST(VoxelHash, VoxelSize) {
+  using Tuple = std::tuple<double, double>;
+  constexpr double kVoxelSize = 0.1;
+  auto hash1 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.3, 5.1), kVoxelSize);
+  auto hash2 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.33, 5.14), kVoxelSize);
+  EXPECT_EQ(hash1, hash2);
+  auto hash3 = beluga::voxel_hash<Tuple>{}(std::make_tuple(10.0, 5.0), kVoxelSize);
+  EXPECT_NE(hash1, hash3);
+}
+
+TEST(VoxelHash, Negative) {
+  using Tuple = std::tuple<double, double>;
+  constexpr double kVoxelSize = 0.1;
+  auto hash1 = beluga::voxel_hash<Tuple>{}(std::make_tuple(-10.3, -2.1), kVoxelSize);
+  auto hash2 = beluga::voxel_hash<Tuple>{}(std::make_tuple(-10.33, -2.14), kVoxelSize);
+  EXPECT_EQ(hash1, hash2);
+  auto hash3 = beluga::voxel_hash<Tuple>{}(std::make_tuple(-10.0, -2.0), kVoxelSize);
+  EXPECT_NE(hash1, hash3);
+}
+
 TEST(VoxelHash, NoCollisions) {
   using Tuple = std::tuple<double, double, double>;
   constexpr int kLimit = 100;
