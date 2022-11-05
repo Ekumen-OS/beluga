@@ -19,8 +19,9 @@ void BM_Hashing(benchmark::State& state) {
 
     auto first = std::begin(hashes);
     auto last = std::end(hashes);
+    std::size_t value;
     while (first != last) {
-      benchmark::DoNotOptimize(++first);
+      benchmark::DoNotOptimize(value = *first++);
     }
   }
 }
