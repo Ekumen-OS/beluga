@@ -34,6 +34,7 @@ struct particle_traits {};
 
 template <template <class...> class Pair, class State, class... Extra>
 struct particle_traits<Pair<State, double, Extra...>> {
+  using state_type = State;
   using value_type = Pair<State, double>;
 
   template <class T>
@@ -53,6 +54,7 @@ struct particle_traits<Pair<State, double, Extra...>> {
 
 template <template <class...> class Tuple, class State, class... Extra>
 struct particle_traits<Tuple<State, double, std::size_t, Extra...>> {
+  using state_type = State;
   using value_type = Tuple<State, double, std::size_t>;
 
   template <class T>
@@ -128,5 +130,12 @@ constexpr auto clusters(Container&& container) {
 }
 
 }  // namespace views
+
+template <class Particle, class T = typename particle_traits<Particle>::state_type>
+constexpr auto make_from_state(T&& value) {
+  auto particle = Particle{};
+  state(particle) = std::forward<T>(value);
+  return particle;
+}
 
 }  // namespace beluga
