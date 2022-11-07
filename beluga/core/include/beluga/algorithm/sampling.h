@@ -67,16 +67,16 @@ auto fixed_resample(Container&& particles, RandomNumberGenerator& random_number_
          ranges::views::take_exactly(params.min_samples);
 }
 
-template <class Container, class RandomSampleGenerator, class RandomNumberGenerator, class Params>
+template <class Container, class RandomStateGenerator, class RandomNumberGenerator, class Params>
 auto fixed_resample(
     Container&& particles,
-    RandomSampleGenerator& random_sample_generator,
+    RandomStateGenerator& random_state_generator,
     RandomNumberGenerator& random_number_generator,
     const Params& params) {
   using particle_type = typename std::decay_t<Container>::value_type;
   return ranges::views::generate(random_select(
-             random_sample_generator, random_sample(states(particles), weights(particles), random_number_generator),
-             random_number_generator, params.random_sample_probability)) |
+             random_state_generator, random_sample(states(particles), weights(particles), random_number_generator),
+             random_number_generator, params.random_state_probability)) |
          ranges::views::transform(make_from_state<particle_type>) | ranges::views::take_exactly(params.min_samples);
 }
 
@@ -91,16 +91,16 @@ auto adaptive_resample(Container&& particles, RandomNumberGenerator& random_numb
          ranges::views::take(params.max_samples);
 }
 
-template <class Container, class RandomSampleGenerator, class RandomNumberGenerator, class Params>
+template <class Container, class RandomStateGenerator, class RandomNumberGenerator, class Params>
 auto adaptive_resample(
     Container&& particles,
-    RandomSampleGenerator& random_sample_generator,
+    RandomStateGenerator& random_state_generator,
     RandomNumberGenerator& random_number_generator,
     const Params& params) {
   using particle_type = typename std::decay_t<Container>::value_type;
   return ranges::views::generate(random_select(
-             random_sample_generator, random_sample(states(particles), weights(particles), random_number_generator),
-             random_number_generator, params.random_sample_probability)) |
+             random_state_generator, random_sample(states(particles), weights(particles), random_number_generator),
+             random_number_generator, params.random_state_probability)) |
          ranges::views::transform(make_from_state<particle_type>) |
          ranges::views::transform(detail::set_cluster(params.voxel_size)) |
          ranges::views::take_while(
