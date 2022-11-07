@@ -1,5 +1,3 @@
-#include <execution>
-
 #include <gtest/gtest.h>
 #include <range/v3/view.hpp>
 
@@ -54,8 +52,8 @@ TEST(VoxelHash, NoCollisions) {
                 ranges::views::transform([](const auto& tuple) { return beluga::voxel_hash<Tuple>{}(tuple); }) |
                 ranges::to<std::vector>;
 
-  std::sort(std::execution::par_unseq, std::begin(hashes), std::end(hashes));
-  auto it = std::adjacent_find(std::execution::par_unseq, std::begin(hashes), std::end(hashes));
+  std::sort(std::begin(hashes), std::end(hashes));
+  auto it = std::adjacent_find(std::begin(hashes), std::end(hashes));
   bool has_duplicates = it != std::end(hashes);
   ASSERT_FALSE(has_duplicates);
 }

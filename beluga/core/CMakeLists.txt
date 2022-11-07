@@ -1,9 +1,8 @@
 find_package(range-v3)
-find_package(TBB)
 
 add_library(core INTERFACE)
 target_include_directories(core INTERFACE include)
-target_link_libraries(core INTERFACE range-v3::range-v3 TBB::tbb)
+target_link_libraries(core INTERFACE range-v3::range-v3)
 target_compile_features(core INTERFACE cxx_std_17)
 
 add_executable(core_benchmark)
