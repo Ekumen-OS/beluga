@@ -60,4 +60,12 @@ TEST(VoxelHash, NoCollisions) {
   ASSERT_FALSE(has_duplicates);
 }
 
+TEST(VoxelHash, Array) {
+  using Array = std::array<double, 3>;
+  using Tuple = std::tuple<double, double, double>;
+  auto hash1 = beluga::voxel_hash<Array>{}({1., 2., 3.});
+  auto hash2 = beluga::voxel_hash<Tuple>{}({1., 2., 3.});
+  EXPECT_EQ(hash1, hash2);
+}
+
 }  // namespace
