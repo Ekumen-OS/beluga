@@ -24,29 +24,29 @@ constexpr std::size_t floor_and_shift(double value) {
 }
 
 template <class T, std::size_t... Ids>
-constexpr std::size_t hash_impl(const T& value, double voxel_size, std::index_sequence<Ids...>) {
+constexpr std::size_t hash_impl(const T& value, double resolution, std::index_sequence<Ids...>) {
   constexpr auto kBits = std::numeric_limits<std::size_t>::digits / sizeof...(Ids);
-  return (detail::floor_and_shift<kBits, Ids>(std::get<Ids>(value) / voxel_size) | ...);
+  return (detail::floor_and_shift<kBits, Ids>(std::get<Ids>(value) / resolution) | ...);
 }
 
 }  // namespace detail
 
 template <class T, typename Enable = void>
-struct voxel_hash {};
+struct spatial_hash {};
 
 template <class T, std::size_t N>
-struct voxel_hash<std::array<T, N>, std::enable_if_t<std::is_arithmetic_v<T>, void>> {
+struct spatial_hash<std::array<T, N>, std::enable_if_t<std::is_arithmetic_v<T>, void>> {
  public:
-  constexpr std::size_t operator()(const std::array<T, N>& array, double voxel_size = 1.) const {
-    return detail::hash_impl(array, voxel_size, std::make_index_sequence<N>());
+  constexpr std::size_t operator()(const std::array<T, N>& array, double resolution = 1.) const {
+    return detail::hash_impl(array, resolution, std::make_index_sequence<N>());
   }
 };
 
 template <template <class...> class Tuple, class... Types>
-struct voxel_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types> && ...), void>> {
+struct spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types> && ...), void>> {
  public:
-  constexpr std::size_t operator()(const Tuple<Types...>& tuple, double voxel_size = 1.) const {
-    return detail::hash_impl(tuple, voxel_size, std::make_index_sequence<sizeof...(Types)>());
+  constexpr std::size_t operator()(const Tuple<Types...>& tuple, double resolution = 1.) const {
+    return detail::hash_impl(tuple, resolution, std::make_index_sequence<sizeof...(Types)>());
   }
 };
 

@@ -2,7 +2,7 @@
 
 #include <range/v3/view.hpp>
 
-#include <beluga/voxel_hash.h>
+#include <beluga/spatial_hash.h>
 
 namespace {
 
@@ -14,7 +14,7 @@ void BM_Hashing(benchmark::State& state) {
 
   for (auto _ : state) {
     auto hashes = ranges::views::generate([]() { return std::make_tuple(1., 2., 3.); }) |
-                  ranges::views::transform([](const auto& tuple) { return beluga::voxel_hash<Tuple>{}(tuple); }) |
+                  ranges::views::transform([](const auto& tuple) { return beluga::spatial_hash<Tuple>{}(tuple); }) |
                   ranges::views::take_exactly(count);
 
     auto first = std::begin(hashes);
