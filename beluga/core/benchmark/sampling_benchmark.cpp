@@ -18,10 +18,10 @@ struct State {
 }  // namespace
 
 template <>
-struct beluga::voxel_hash<State> {
-  std::size_t operator()(const State& state, double voxel_size = 1.) const {
+struct beluga::spatial_hash<State> {
+  std::size_t operator()(const State& state, double resolution = 1.) const {
     const auto pair = std::make_tuple(state.x, state.y);
-    return beluga::voxel_hash<std::decay_t<decltype(pair)>>{}(pair, voxel_size);
+    return beluga::spatial_hash<std::decay_t<decltype(pair)>>{}(pair, resolution);
   }
 };
 
@@ -42,14 +42,12 @@ void BM_FixedResample(benchmark::State& state) {
     weight = 1.;
   }
 
-  struct Params {
-    std::size_t min_samples;
-  };
-
-  auto parameters = Params{.min_samples = static_cast<std::size_t>(particle_count)};
+  std::size_t min_samples = particle_count;
 
   for (auto _ : state) {
-    auto&& samples = beluga::views::fixed_resample(container, generator, parameters) | ranges::views::common;
+    auto&& samples = ranges::views::generate(beluga::random_sample(
+                         beluga::views::all(container), beluga::views::weights(container), generator)) |
+                     ranges::views::take_exactly(min_samples) | ranges::views::common;
     auto first = std::begin(beluga::views::all(new_container));
     auto last = std::copy(std::begin(samples), std::end(samples), first);
     state.counters["SampleSize"] = std::distance(first, last);
@@ -76,23 +74,20 @@ void BM_AdaptiveResample(benchmark::State& state) {
     }
   }
 
-  struct Params {
-    std::size_t min_samples;
-    std::size_t max_samples;
-    double voxel_size;
-    double kld_epsilon;
-    double kld_upper_quantile;
-  };
-
-  auto parameters = Params{
-      .min_samples = 0,
-      .max_samples = particle_count,
-      .voxel_size = 1.,
-      .kld_epsilon = 0.05,
-      .kld_upper_quantile = 0.95};
+  std::size_t min_samples = 0;
+  std::size_t max_samples = particle_count;
+  double resolution = 1.;
+  double kld_epsilon = 0.05;
+  double kld_upper_quantile = 0.95;
 
   for (auto _ : state) {
-    auto&& samples = beluga::views::adaptive_resample(container, generator, parameters) | ranges::views::common;
+    auto&& samples =
+        ranges::views::generate(
+            beluga::random_sample(beluga::views::all(container), beluga::views::weights(container), generator)) |
+        ranges::views::transform(beluga::set_cluster(resolution)) |
+        ranges::views::take_while(
+            beluga::kld_condition(min_samples, kld_epsilon, kld_upper_quantile), beluga::cluster<const Particle&>) |
+        ranges::views::take(max_samples) | ranges::views::common;
     auto first = std::begin(beluga::views::all(new_container));
     auto last = std::copy(std::begin(samples), std::end(samples), first);
     state.counters["SampleSize"] = std::distance(first, last);

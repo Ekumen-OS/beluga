@@ -5,10 +5,8 @@
 #include <unordered_set>
 
 #include <absl/random/discrete_distribution.h>
-#include <range/v3/view.hpp>
-
+#include <beluga/spatial_hash.h>
 #include <beluga/type_traits.h>
-#include <beluga/voxel_hash.h>
 
 namespace beluga {
 
@@ -27,13 +25,11 @@ auto random_sample(const Range& samples, const Weights& weights, RandomNumberGen
   };
 }
 
-namespace detail {
-
-inline auto set_cluster(double voxel_size) {
-  return [voxel_size](auto&& particle) {
+inline auto set_cluster(double resolution) {
+  return [resolution](auto&& particle) {
     using state_type = std::decay_t<decltype(state(particle))>;
     auto new_particle = particle;
-    cluster(new_particle) = voxel_hash<state_type>{}(state(particle), voxel_size);
+    cluster(new_particle) = spatial_hash<state_type>{}(state(particle), resolution);
     return new_particle;
   };
 }
@@ -56,59 +52,5 @@ inline auto kld_condition(std::size_t min, double epsilon = 0.05, double upper_q
     return count < min || target_not_reached;
   };
 }
-
-}  // namespace detail
-
-namespace views {
-
-template <class Container, class RandomNumberGenerator, class Params>
-auto fixed_resample(Container&& particles, RandomNumberGenerator& random_number_generator, const Params& params) {
-  return ranges::views::generate(random_sample(all(particles), weights(particles), random_number_generator)) |
-         ranges::views::take_exactly(params.min_samples);
-}
-
-template <class Container, class RandomStateGenerator, class RandomNumberGenerator, class Params>
-auto fixed_resample(
-    Container&& particles,
-    RandomStateGenerator& random_state_generator,
-    RandomNumberGenerator& random_number_generator,
-    const Params& params) {
-  using particle_type = typename std::decay_t<Container>::value_type;
-  return ranges::views::generate(random_select(
-             random_state_generator, random_sample(states(particles), weights(particles), random_number_generator),
-             random_number_generator, params.random_state_probability)) |
-         ranges::views::transform(make_from_state<particle_type>) | ranges::views::take_exactly(params.min_samples);
-}
-
-template <class Container, class RandomNumberGenerator, class Params>
-auto adaptive_resample(Container&& particles, RandomNumberGenerator& random_number_generator, const Params& params) {
-  using particle_type = typename std::decay_t<Container>::value_type;
-  return ranges::views::generate(random_sample(all(particles), weights(particles), random_number_generator)) |
-         ranges::views::transform(detail::set_cluster(params.voxel_size)) |
-         ranges::views::take_while(
-             detail::kld_condition(params.min_samples, params.kld_epsilon, params.kld_upper_quantile),
-             cluster<const particle_type&>) |
-         ranges::views::take(params.max_samples);
-}
-
-template <class Container, class RandomStateGenerator, class RandomNumberGenerator, class Params>
-auto adaptive_resample(
-    Container&& particles,
-    RandomStateGenerator& random_state_generator,
-    RandomNumberGenerator& random_number_generator,
-    const Params& params) {
-  using particle_type = typename std::decay_t<Container>::value_type;
-  return ranges::views::generate(random_select(
-             random_state_generator, random_sample(states(particles), weights(particles), random_number_generator),
-             random_number_generator, params.random_state_probability)) |
-         ranges::views::transform(make_from_state<particle_type>) |
-         ranges::views::transform(detail::set_cluster(params.voxel_size)) |
-         ranges::views::take_while(
-             detail::kld_condition(params.min_samples, params.kld_epsilon, params.kld_upper_quantile),
-             cluster<const particle_type&>) |
-         ranges::views::take(params.max_samples);
-}
-
-}  // namespace views
 
 }  // namespace beluga

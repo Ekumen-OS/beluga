@@ -56,7 +56,7 @@ class KLDConditionWithParam : public ::testing::TestWithParam<std::pair<std::siz
 TEST_P(KLDConditionWithParam, Minimum) {
   const std::size_t cluster_count = GetParam().first;
   const std::size_t fixed_min_samples = 1'000;
-  auto predicate = beluga::detail::kld_condition(fixed_min_samples);
+  auto predicate = beluga::kld_condition(fixed_min_samples);
   std::size_t cluster = 0;
   for (std::size_t i = 0; i < fixed_min_samples - 1; ++i) {
     ASSERT_TRUE(predicate(cluster)) << "Stopped at " << i + 1 << " samples (Expected: " << fixed_min_samples << ").";
@@ -69,7 +69,7 @@ TEST_P(KLDConditionWithParam, Minimum) {
 TEST_P(KLDConditionWithParam, Limit) {
   const std::size_t cluster_count = GetParam().first;
   const std::size_t min_samples = GetParam().second;
-  auto predicate = beluga::detail::kld_condition(0, 0.05, 0.95);
+  auto predicate = beluga::kld_condition(0, 0.05, 0.95);
   std::size_t cluster = 0;
   for (std::size_t i = 0; i < min_samples - 1; ++i) {
     ASSERT_TRUE(predicate(cluster)) << "Stopped at " << i + 1 << " samples (Expected: " << min_samples << ").";
