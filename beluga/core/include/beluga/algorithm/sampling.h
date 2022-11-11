@@ -12,8 +12,8 @@ namespace beluga {
 
 template <class Function1, class Function2, class RandomNumberGenerator>
 auto random_select(Function1&& first, Function2&& second, RandomNumberGenerator& generator, double probability) {
-  return [&, probability, distribution = std::uniform_real_distribution{}]() mutable {
-    return distribution(generator) < probability ? first() : second();
+  return [&, distribution = std::bernoulli_distribution{probability}]() mutable {
+    return distribution(generator) ? first() : second();
   };
 }
 
