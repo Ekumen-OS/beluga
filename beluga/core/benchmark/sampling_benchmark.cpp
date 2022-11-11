@@ -1,6 +1,5 @@
 #include <benchmark/benchmark.h>
 
-#include <range/v3/algorithm.hpp>
 #include <range/v3/view.hpp>
 
 #include <beluga/algorithm/sampling.h>
