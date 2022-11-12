@@ -35,21 +35,21 @@ inline auto set_cluster(double resolution) {
   };
 }
 
-inline auto kld_condition(std::size_t min, double epsilon, double z = -1.28155156327703) {
+inline auto kld_condition(std::size_t min, double epsilon, double z = 1.28155156327703) {
   // Compute minimum number of samples based on a Kullback-Leibler distance epsilon
   // between the maximum likelihood estimate and the true distribution.
   // Z is the upper_standard normal quantile for (1 - P), where P is the probability
   // that the error in the estimated distribution will be less than epsilon.
   // Here are some examples:
-  //     P = 0.90 -> Z = -1.28155156327703
-  //     P = 0.95 -> Z = -1.64485362793663
-  //     P = 0.99 -> Z = -2.32634787735669
+  //     P = 0.90 -> Z = 1.28155156327703
+  //     P = 0.95 -> Z = 1.64485362793663
+  //     P = 0.99 -> Z = 2.32634787735669
   auto target_size = [two_epsilon = 2 * epsilon, z](std::size_t k) {
     if (k <= 2U) {
       return std::numeric_limits<std::size_t>::max();
     }
     double common = 2. / (9 * (k - 1));
-    double base = 1. - common - std::sqrt(common) * z;
+    double base = 1. - common + std::sqrt(common) * z;
     double result = ((k - 1) / two_epsilon) * base * base * base;
     return static_cast<std::size_t>(std::ceil(result));
   };

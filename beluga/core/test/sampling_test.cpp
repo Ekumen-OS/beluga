@@ -81,8 +81,8 @@ TEST_P(KLDConditionWithParam, Limit) {
   ASSERT_FALSE(predicate(cluster)) << "Didn't stop at " << min_samples << " samples.";
 }
 
-constexpr double kPercentile90th = -1.28155156327703;
-constexpr double kPercentile99th = -2.32634787735669;
+constexpr double kPercentile90th = 1.28155156327703;
+constexpr double kPercentile99th = 2.32634787735669;
 
 INSTANTIATE_TEST_SUITE_P(
     KLDPairs,
