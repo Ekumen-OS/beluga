@@ -78,7 +78,7 @@ void BM_AdaptiveResample(benchmark::State& state) {
   std::size_t max_samples = particle_count;
   double resolution = 1.;
   double kld_epsilon = 0.05;
-  double kld_z = 1.28155156327703;  // P = 0.9
+  double kld_z = 3.;
 
   for (auto _ : state) {
     auto&& samples = ranges::views::generate(beluga::random_sample(
