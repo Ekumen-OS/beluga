@@ -78,16 +78,15 @@ void BM_AdaptiveResample(benchmark::State& state) {
   std::size_t max_samples = particle_count;
   double resolution = 1.;
   double kld_epsilon = 0.05;
-  double kld_upper_quantile = 0.95;
+  double kld_z = -1.28155156327703;  // P = 0.9
 
   for (auto _ : state) {
-    auto&& samples =
-        ranges::views::generate(
-            beluga::random_sample(beluga::views::all(container), beluga::views::weights(container), generator)) |
-        ranges::views::transform(beluga::set_cluster(resolution)) |
-        ranges::views::take_while(
-            beluga::kld_condition(min_samples, kld_epsilon, kld_upper_quantile), beluga::cluster<const Particle&>) |
-        ranges::views::take(max_samples) | ranges::views::common;
+    auto&& samples = ranges::views::generate(beluga::random_sample(
+                         beluga::views::all(container), beluga::views::weights(container), generator)) |
+                     ranges::views::transform(beluga::set_cluster(resolution)) |
+                     ranges::views::take_while(
+                         beluga::kld_condition(min_samples, kld_epsilon, kld_z), beluga::cluster<const Particle&>) |
+                     ranges::views::take(max_samples) | ranges::views::common;
     auto first = std::begin(beluga::views::all(new_container));
     auto last = std::copy(std::begin(samples), std::end(samples), first);
     state.counters["SampleSize"] = std::distance(first, last);

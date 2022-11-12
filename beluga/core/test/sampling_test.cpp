@@ -51,12 +51,12 @@ TEST(RandomSample, Functional) {
   }
 }
 
-class KLDConditionWithParam : public ::testing::TestWithParam<std::pair<std::size_t, std::size_t>> {};
+class KLDConditionWithParam : public ::testing::TestWithParam<std::tuple<double, std::size_t, std::size_t>> {};
 
 TEST_P(KLDConditionWithParam, Minimum) {
-  const std::size_t cluster_count = GetParam().first;
+  const std::size_t cluster_count = std::get<1>(GetParam());
   const std::size_t fixed_min_samples = 1'000;
-  auto predicate = beluga::kld_condition(fixed_min_samples);
+  auto predicate = beluga::kld_condition(fixed_min_samples, 0.01, 0.95);
   std::size_t cluster = 0;
   for (std::size_t i = 0; i < fixed_min_samples - 1; ++i) {
     ASSERT_TRUE(predicate(cluster)) << "Stopped at " << i + 1 << " samples (Expected: " << fixed_min_samples << ").";
@@ -67,9 +67,10 @@ TEST_P(KLDConditionWithParam, Minimum) {
 }
 
 TEST_P(KLDConditionWithParam, Limit) {
-  const std::size_t cluster_count = GetParam().first;
-  const std::size_t min_samples = GetParam().second;
-  auto predicate = beluga::kld_condition(0, 0.05, 0.95);
+  const double kld_k = std::get<0>(GetParam());
+  const std::size_t cluster_count = std::get<1>(GetParam());
+  const std::size_t min_samples = std::get<2>(GetParam());
+  auto predicate = beluga::kld_condition(0, 0.01, kld_k);
   std::size_t cluster = 0;
   for (std::size_t i = 0; i < min_samples - 1; ++i) {
     ASSERT_TRUE(predicate(cluster)) << "Stopped at " << i + 1 << " samples (Expected: " << min_samples << ").";
@@ -80,15 +81,24 @@ TEST_P(KLDConditionWithParam, Limit) {
   ASSERT_FALSE(predicate(cluster)) << "Didn't stop at " << min_samples << " samples.";
 }
 
+constexpr double kPercentile90th = -1.28155156327703;
+constexpr double kPercentile99th = -2.32634787735669;
+
 INSTANTIATE_TEST_SUITE_P(
     KLDPairs,
     KLDConditionWithParam,
     testing::Values(
-        std::make_pair(3, 8),
-        std::make_pair(4, 18),
-        std::make_pair(5, 30),
-        std::make_pair(6, 44),
-        std::make_pair(7, 57),
-        std::make_pair(100, 1'713)));
+        std::make_tuple(kPercentile90th, 3, 228),
+        std::make_tuple(kPercentile90th, 4, 311),
+        std::make_tuple(kPercentile90th, 5, 388),
+        std::make_tuple(kPercentile90th, 6, 461),
+        std::make_tuple(kPercentile90th, 7, 531),
+        std::make_tuple(kPercentile90th, 100, 5871),
+        std::make_tuple(kPercentile99th, 3, 462),
+        std::make_tuple(kPercentile99th, 4, 569),
+        std::make_tuple(kPercentile99th, 5, 666),
+        std::make_tuple(kPercentile99th, 6, 756),
+        std::make_tuple(kPercentile99th, 7, 843),
+        std::make_tuple(kPercentile99th, 100, 6733)));
 
 }  // namespace
