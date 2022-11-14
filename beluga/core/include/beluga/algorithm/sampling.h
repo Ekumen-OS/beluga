@@ -38,7 +38,7 @@ inline auto set_cluster(double resolution) {
 inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
   // Compute minimum number of samples based on a Kullback-Leibler distance epsilon
   // between the maximum likelihood estimate and the true distribution.
-  // Z is the upper_standard normal quantile for (1 - P), where P is the probability
+  // Z is the upper standard normal quantile for P, where P is the probability
   // that the error in the estimated distribution will be less than epsilon.
   // Here are some examples:
   //     P = 0.900 -> Z = 1.28155156327703
