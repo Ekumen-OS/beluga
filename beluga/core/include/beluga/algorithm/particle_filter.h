@@ -14,30 +14,23 @@ template <class Mixin, class Container>
 struct ParticleFilter : public Mixin {
  public:
   template <class... Args>
-  explicit ParticleFilter(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
-
-  auto particles() { return views::all(particles_); }
-
-  void update() {
-    if (particles_.size() == 0) {
-      initialize();
-    } else {
-      sample();
-      resample();
-    }
-  }
-
- private:
-  Container particles_;
-
-  void initialize() {
+  explicit ParticleFilter(Args&&... args) : Mixin(std::forward<Args>(args)...), particles_{this->self().max_samples()} {
     using particle_type = typename Container::value_type;
-    particles_.resize(this->self().max_samples());
     auto first = std::begin(views::all(particles_));
     auto last =
         ranges::copy(this->self().template generate_samples<particle_type>() | this->self().take_samples(), first).out;
     particles_.resize(std::distance(first, last));
   }
+
+  auto particles() { return views::all(particles_); }
+
+  void update() {
+    sample();
+    resample();
+  }
+
+ private:
+  Container particles_;
 
   void sample() {
     auto&& states = views::states(particles_);

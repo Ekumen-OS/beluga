@@ -42,7 +42,6 @@ class MockSensorModel : public Mixin {
 TEST(MCL, InitializeFilter) {
   auto filter =
       beluga::MCL<MockMotionModel, MockSensorModel, double>{beluga::FixedResamplingParam{.max_samples = 1'000}};
-  filter.update();
   ASSERT_EQ(filter.particles().size(), 1'000);
 }
 
@@ -51,7 +50,6 @@ TEST(AMCL, InitializeFilter) {
       beluga::AdaptiveGenerationParam{.alpha_slow = 0.001, .alpha_fast = 0.1},
       beluga::KldResamplingParam{
           .min_samples = 1'000, .max_samples = 2'000, .spatial_resolution = 1., .kld_epsilon = 0.05, .kld_z = 3.}};
-  filter.update();
   ASSERT_GE(filter.particles().size(), 1'000);
 }
 
