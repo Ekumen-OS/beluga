@@ -9,4 +9,4 @@ services:
     tty: true
     user: ${USERID:-1000}:${GROUPID:-1000}
     volumes:
-      - ..:/ws
+      - ..:/ws/src

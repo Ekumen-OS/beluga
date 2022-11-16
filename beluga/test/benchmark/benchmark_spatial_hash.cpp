@@ -26,6 +26,6 @@ void BM_Hashing(benchmark::State& state) {
   }
 }
 
-BENCHMARK(BM_Hashing)->MinWarmUpTime(1)->RangeMultiplier(2)->Range(100'000, 1'000'000)->Complexity();
+BENCHMARK(BM_Hashing)->RangeMultiplier(2)->Range(100'000, 1'000'000)->Complexity();
 
 }  // namespace

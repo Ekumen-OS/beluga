@@ -53,7 +53,7 @@ void BM_FixedResample(benchmark::State& state) {
   }
 }
 
-BENCHMARK(BM_FixedResample)->MinWarmUpTime(1)->RangeMultiplier(2)->Range(128, 1'000'000)->Complexity();
+BENCHMARK(BM_FixedResample)->RangeMultiplier(2)->Range(128, 1'000'000)->Complexity();
 
 void BM_AdaptiveResample(benchmark::State& state) {
   const std::size_t particle_count = state.range(0);
@@ -93,6 +93,6 @@ void BM_AdaptiveResample(benchmark::State& state) {
   }
 }
 
-BENCHMARK(BM_AdaptiveResample)->MinWarmUpTime(1)->RangeMultiplier(2)->Range(128, 1'000'000)->Complexity();
+BENCHMARK(BM_AdaptiveResample)->RangeMultiplier(2)->Range(128, 1'000'000)->Complexity();
 
 }  // namespace
