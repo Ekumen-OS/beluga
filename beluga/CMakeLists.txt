@@ -39,6 +39,10 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 target_link_libraries(${PROJECT_NAME} INTERFACE absl::absl range-v3::range-v3)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 
+add_executable(clang_tidy_findable)
+target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
+target_link_libraries(clang_tidy_findable PRIVATE ${PROJECT_NAME})
+
 find_package(ament_cmake REQUIRED)
 
 if(BUILD_TESTING)
