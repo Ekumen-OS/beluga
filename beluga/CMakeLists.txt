@@ -29,13 +29,13 @@ conan_cmake_install(
   REMOTE conancenter
   SETTINGS ${settings})
 
-find_package(range-v3 REQUIRED)
 find_package(absl REQUIRED)
+find_package(range-v3 REQUIRED)
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-  "$<INSTALL_INTERFACE:include>")
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
 target_link_libraries(${PROJECT_NAME} INTERFACE absl::absl range-v3::range-v3)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 
@@ -51,18 +51,22 @@ if(BUILD_TESTING)
   ament_clang_tidy(${CMAKE_BINARY_DIR} CONFIG_FILE .clang-tidy)
 
   enable_testing()
+  add_subdirectory(test)
 endif()
-
-add_subdirectory(test)
 
 install(
   TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include
 )
 
+ament_export_include_directories("include/${PROJECT_NAME}")
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
 ament_package()
+
+install(
+  DIRECTORY include/
+  DESTINATION include/${PROJECT_NAME}
+)
