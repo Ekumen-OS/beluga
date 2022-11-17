@@ -65,6 +65,7 @@ template <
 struct MCL : public ciabatta::mixin<
                  MCL<MotionModel, SensorModel, State, Container>,
                  ciabatta::curry<BootstrapParticleFilter, Container>::template mixin,
+                 ciabatta::curry<BaselineGeneration>::template mixin,
                  ciabatta::curry<NaiveGeneration>::template mixin,
                  ciabatta::curry<FixedResampling>::template mixin,
                  MotionModel,
@@ -72,6 +73,7 @@ struct MCL : public ciabatta::mixin<
   using ciabatta::mixin<
       MCL<MotionModel, SensorModel, State, Container>,
       ciabatta::curry<BootstrapParticleFilter, Container>::template mixin,
+      ciabatta::curry<BaselineGeneration>::template mixin,
       ciabatta::curry<NaiveGeneration>::template mixin,
       ciabatta::curry<FixedResampling>::template mixin,
       // TODO(nahuel): Add estimate mixin, which given a set of particles
@@ -91,6 +93,7 @@ template <
 struct AMCL : public ciabatta::mixin<
                   AMCL<MotionModel, SensorModel, State, Container>,
                   ciabatta::curry<BootstrapParticleFilter, Container>::template mixin,
+                  ciabatta::curry<BaselineGeneration>::template mixin,
                   ciabatta::curry<AdaptiveGeneration>::template mixin,
                   ciabatta::curry<KldResampling>::template mixin,
                   MotionModel,
@@ -98,6 +101,7 @@ struct AMCL : public ciabatta::mixin<
   using ciabatta::mixin<
       AMCL<MotionModel, SensorModel, State, Container>,
       ciabatta::curry<BootstrapParticleFilter, Container>::template mixin,
+      ciabatta::curry<BaselineGeneration>::template mixin,
       ciabatta::curry<AdaptiveGeneration>::template mixin,
       ciabatta::curry<KldResampling>::template mixin,
       // TODO(nahuel): Add estimate mixin, which given a set of particles

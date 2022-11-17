@@ -69,16 +69,26 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
 }
 
 template <class Mixin, class RandomNumberGenerator = typename std::mt19937>
-struct NaiveGeneration : public Mixin {
+struct BaselineGeneration : public Mixin {
  public:
   template <class... Args>
-  explicit NaiveGeneration(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+  explicit BaselineGeneration(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
   template <class Particle>
   [[nodiscard]] auto generate_samples() {
     return ranges::views::generate([this]() { return this->self().generate_random_state(random_number_generator_); }) |
            ranges::views::transform(make_from_state<Particle>);
   }
+
+ private:
+  RandomNumberGenerator random_number_generator_{std::random_device()()};
+};
+
+template <class Mixin, class RandomNumberGenerator = typename std::mt19937>
+struct NaiveGeneration : public Mixin {
+ public:
+  template <class... Args>
+  explicit NaiveGeneration(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
   template <class Range>
   [[nodiscard]] auto generate_samples(Range&& particles) {
@@ -111,12 +121,6 @@ struct AdaptiveGeneration : public Mixin {
   template <class... Args>
   explicit AdaptiveGeneration(const param_type& parameters, Args&&... rest)
       : Mixin(std::forward<Args>(rest)...), parameters_{parameters} {}
-
-  template <class Particle>
-  [[nodiscard]] auto generate_samples() {
-    return ranges::views::generate([this]() { return this->self().generate_random_state(random_number_generator_); }) |
-           ranges::views::transform(make_from_state<Particle>);
-  }
 
   template <class Range>
   [[nodiscard]] auto generate_samples(Range&& particles) {
