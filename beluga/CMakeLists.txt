@@ -64,7 +64,9 @@ install(
 ament_export_include_directories("include/${PROJECT_NAME}")
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
-ament_package()
+ament_package(CONFIG_EXTRAS
+  ${CMAKE_CURRENT_BINARY_DIR}/Findabsl.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/Findrange-v3.cmake)
 
 install(
   DIRECTORY include/
