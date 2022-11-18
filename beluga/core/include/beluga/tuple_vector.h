@@ -12,10 +12,10 @@ namespace beluga {
 template <template <class> class InternalContainer, class Tuple>
 class TupleContainer;
 
-template <template <class> class InternalContainer, class... Types>
-class TupleContainer<InternalContainer, std::tuple<Types...>> {
+template <template <class> class InternalContainer, template <class...> class Tuple, class... Types>
+class TupleContainer<InternalContainer, Tuple<Types...>> {
  public:
-  using value_type = std::tuple<Types...>;
+  using value_type = Tuple<Types...>;
   using size_type = std::size_t;
 
   constexpr TupleContainer() = default;
