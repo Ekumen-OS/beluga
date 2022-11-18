@@ -70,6 +70,8 @@ install(
 ament_export_include_directories("include/${PROJECT_NAME}")
 ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
+# The following lines make the package rely on a local conan install.
+# TODO(nahuel): Fix this when the time comes to release this package.
 ament_package(CONFIG_EXTRAS
   ${CMAKE_CURRENT_BINARY_DIR}/Findabsl.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/Findrange-v3.cmake)
