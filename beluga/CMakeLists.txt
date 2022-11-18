@@ -1,36 +1,61 @@
-include(cmake/conan.cmake)
+cmake_minimum_required(VERSION 3.16)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
+project(beluga VERSION 1.0)
 
-conan_cmake_configure(
-  REQUIRES   abseil/20220623.0 range-v3/0.12.0
-  GENERATORS cmake_find_package)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-conan_cmake_autodetect(settings)
+if(NOT CMAKE_BUILD_TYPE)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
+endif()
 
-conan_cmake_install(
-  PATH_OR_REFERENCE .
-  BUILD missing
-  REMOTE conancenter
-  SETTINGS ${settings})
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  # TODO(nahuel): Add '-Wpedantic -Wconversion' and fix the code.
+  add_compile_options(-Wall -Werror -Wextra)
+endif()
 
-include(FetchContent)
+find_package(ament_cmake REQUIRED)
+find_package(range-v3 REQUIRED)
 
-FetchContent_Declare(
-  googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG        release-1.11.0)
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+ament_target_dependencies(${PROJECT_NAME} range-v3)
+target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 
-set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Disable testing of the benchmark library.")
+add_executable(clang_tidy_findable)
+target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
+target_link_libraries(clang_tidy_findable PRIVATE ${PROJECT_NAME})
 
-FetchContent_Declare(
-  googlebenchmark
-  GIT_REPOSITORY https://github.com/google/benchmark.git
-  GIT_TAG        v1.7.0)
+if(BUILD_TESTING)
+  message(STATUS "Build testing enabled.")
 
-FetchContent_MakeAvailable(
-  googletest
-  googlebenchmark)
+  find_package(ament_cmake_clang_format REQUIRED)
+  ament_clang_format(CONFIG_FILE .clang-format)
 
-add_subdirectory(core)
+  find_package(ament_cmake_clang_tidy REQUIRED)
+  ament_clang_tidy(${CMAKE_BINARY_DIR} CONFIG_FILE .clang-tidy)
+
+  enable_testing()
+  add_subdirectory(test)
+endif()
+
+install(
+  TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+ament_export_include_directories("include/${PROJECT_NAME}")
+
+ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(range-v3)
+
+ament_package()
+
+install(
+  DIRECTORY include/
+  DESTINATION include/${PROJECT_NAME}
+)

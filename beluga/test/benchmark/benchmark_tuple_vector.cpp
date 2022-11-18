@@ -81,10 +81,10 @@ void BM_Update(benchmark::State& state) {
   }
 }
 
-BENCHMARK(BM_Update_Baseline_StructureOfArrays)->MinWarmUpTime(1);
-BENCHMARK(BM_Update<StructureOfArrays>)->MinWarmUpTime(1);
-BENCHMARK(BM_Update_Baseline_ArrayOfStructures)->MinWarmUpTime(1);
-BENCHMARK(BM_Update<ArrayOfStructures>)->MinWarmUpTime(1);
+BENCHMARK(BM_Update_Baseline_StructureOfArrays);
+BENCHMARK_TEMPLATE(BM_Update, StructureOfArrays);
+BENCHMARK(BM_Update_Baseline_ArrayOfStructures);
+BENCHMARK_TEMPLATE(BM_Update, ArrayOfStructures);
 
 void BM_PushBack_Baseline_StructureOfArrays(benchmark::State& state) {
   Arrays arrays;
@@ -129,10 +129,10 @@ void BM_PushBack(benchmark::State& state) {
   }
 }
 
-BENCHMARK(BM_PushBack_Baseline_StructureOfArrays)->MinWarmUpTime(1);
-BENCHMARK(BM_PushBack<StructureOfArrays>)->MinWarmUpTime(1);
-BENCHMARK(BM_PushBack_Baseline_ArrayOfStructures)->MinWarmUpTime(1);
-BENCHMARK(BM_PushBack<ArrayOfStructures>)->MinWarmUpTime(1);
+BENCHMARK(BM_PushBack_Baseline_StructureOfArrays);
+BENCHMARK_TEMPLATE(BM_PushBack, StructureOfArrays);
+BENCHMARK(BM_PushBack_Baseline_ArrayOfStructures);
+BENCHMARK_TEMPLATE(BM_PushBack, ArrayOfStructures);
 
 void BM_Assign_Baseline_ArrayOfStructures(benchmark::State& state) {
   std::vector<Particle> particles;
@@ -176,9 +176,9 @@ void BM_Assign(benchmark::State& state) {
   }
 }
 
-BENCHMARK(BM_Assign_Baseline_StructureOfArrays)->MinWarmUpTime(1);
-BENCHMARK(BM_Assign<StructureOfArrays>)->MinWarmUpTime(1);
-BENCHMARK(BM_Assign_Baseline_ArrayOfStructures)->MinWarmUpTime(1);
-BENCHMARK(BM_Assign<ArrayOfStructures>)->MinWarmUpTime(1);
+BENCHMARK(BM_Assign_Baseline_StructureOfArrays);
+BENCHMARK_TEMPLATE(BM_Assign, StructureOfArrays);
+BENCHMARK(BM_Assign_Baseline_ArrayOfStructures);
+BENCHMARK_TEMPLATE(BM_Assign, ArrayOfStructures);
 
 }  // namespace

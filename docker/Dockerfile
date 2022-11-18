@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ros:galactic-ros-base-focal
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -10,7 +10,7 @@ RUN apt-get update \
     build-essential \
     ca-certificates \
     clang-format \
-    clang-tidy \
+    clang-tidy-6.0 \
     cmake \
     curl \
     git \
@@ -19,9 +19,6 @@ RUN apt-get update \
     software-properties-common \
     sudo \
   && rm -rf /var/lib/apt/lists/*
-
-RUN pip install \
-  conan==1.53.0
 
 ARG USER=developer
 ARG GROUP=ekumen
@@ -40,8 +37,15 @@ USER $USER:$GROUP
 
 WORKDIR /ws
 
-COPY . /ws
+COPY . /ws/src
+
+RUN sudo chown -R $USER:$GROUP /ws
+
+RUN sudo apt-get update \
+  && rosdep update \
+  && rosdep install -i --from-path src -y \
+  && sudo rm -rf /var/lib/apt/lists/*
 
 ENV WITHIN_DEV 1
 
-ENTRYPOINT ["fixuid", "-q", "/bin/bash"]
+ENTRYPOINT ["fixuid", "-q", "/ros_entrypoint.sh", "/bin/bash"]
