@@ -9,8 +9,10 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
 endif()
 
-# TODO(nahuel): Add '-Wpedantic -Wconversion' and fix the code.
-add_compile_options(-Wall -Werror -Wextra)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  # TODO(nahuel): Add '-Wpedantic -Wconversion' and fix the code.
+  add_compile_options(-Wall -Werror -Wextra)
+endif()
 
 include(cmake/conan.cmake)
 
