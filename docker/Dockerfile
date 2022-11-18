@@ -20,9 +20,6 @@ RUN apt-get update \
     sudo \
   && rm -rf /var/lib/apt/lists/*
 
-RUN pip install \
-  conan==1.53.0
-
 ARG USER=developer
 ARG GROUP=ekumen
 

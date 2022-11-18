@@ -5,7 +5,6 @@
 #include <random>
 #include <unordered_set>
 
-#include <absl/random/discrete_distribution.h>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_exactly.hpp>
@@ -27,7 +26,7 @@ auto random_select(Function1&& first, Function2&& second, RandomNumberGenerator&
 template <class Range, class Weights, class RandomNumberGenerator>
 auto random_sample(const Range& samples, const Weights& weights, RandomNumberGenerator& generator) {
   return [&generator, first = std::begin(samples),
-          distribution = absl::discrete_distribution<std::size_t>{std::begin(weights), std::end(weights)}]() mutable {
+          distribution = std::discrete_distribution<std::size_t>{std::begin(weights), std::end(weights)}]() mutable {
     return *(first + distribution(generator));
   };
 }

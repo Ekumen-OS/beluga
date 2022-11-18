@@ -14,38 +14,19 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Werror -Wextra)
 endif()
 
-include(cmake/conan.cmake)
-
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
-
-conan_cmake_configure(
-  REQUIRES   abseil/20220623.0 range-v3/0.12.0
-  GENERATORS cmake_find_package)
-
-conan_cmake_autodetect(settings)
-
-conan_cmake_install(
-  PATH_OR_REFERENCE .
-  BUILD missing
-  REMOTE conancenter
-  SETTINGS ${settings})
-
-find_package(absl REQUIRED)
+find_package(ament_cmake REQUIRED)
 find_package(range-v3 REQUIRED)
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
-target_link_libraries(${PROJECT_NAME} INTERFACE absl::absl range-v3::range-v3)
+ament_target_dependencies(${PROJECT_NAME} range-v3)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 
 add_executable(clang_tidy_findable)
 target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
 target_link_libraries(clang_tidy_findable PRIVATE ${PROJECT_NAME})
-
-find_package(ament_cmake REQUIRED)
 
 if(BUILD_TESTING)
   message(STATUS "Build testing enabled.")
@@ -68,13 +49,11 @@ install(
 )
 
 ament_export_include_directories("include/${PROJECT_NAME}")
-ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
-# The following lines make the package rely on a local conan install.
-# TODO(nahuel): Fix this when the time comes to release this package.
-ament_package(CONFIG_EXTRAS
-  ${CMAKE_CURRENT_BINARY_DIR}/Findabsl.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/Findrange-v3.cmake)
+ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(range-v3)
+
+ament_package()
 
 install(
   DIRECTORY include/
