@@ -27,3 +27,4 @@ jobs:
         with:
           package-name: beluga
           target-ros2-distro:  ${{ env.ROS_DISTRO }}
+          import-token: ${{ secrets.GITHUB_TOKEN }}
