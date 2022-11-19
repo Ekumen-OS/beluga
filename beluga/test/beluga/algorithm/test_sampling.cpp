@@ -25,7 +25,7 @@ TEST_P(RandomSelectWithParam, Functional) {
       ++two_count;
     }
   }
-  ASSERT_NEAR(probability, static_cast<double>(one_count) / (one_count + two_count), 0.01);
+  ASSERT_NEAR(probability, static_cast<double>(one_count) / static_cast<double>(one_count + two_count), 0.01);
 }
 
 INSTANTIATE_TEST_SUITE_P(Probabilities, RandomSelectWithParam, testing::Values(0.0, 0.2, 0.4, 0.6, 0.8, 1.0));
