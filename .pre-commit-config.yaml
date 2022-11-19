@@ -26,6 +26,7 @@ repos:
       - id: ament_clang_format
         name: Fix C++ Format (clang-format)
         entry: ament_clang_format --config ./beluga/.clang-format --reformat
+        files: beluga\/
         types: [c++]
         language: system
 
