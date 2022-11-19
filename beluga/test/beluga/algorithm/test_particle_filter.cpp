@@ -40,17 +40,23 @@ class MockSensorModel : public Mixin {
 };
 
 TEST(MCL, InitializeFilter) {
-  auto filter =
-      beluga::MCL<MockMotionModel, MockSensorModel, double>{beluga::FixedResamplingParam{.max_samples = 1'000}};
-  ASSERT_EQ(filter.particles().size(), 1'000);
+  constexpr std::size_t kMaxSamples = 1'000;
+  auto filter = beluga::MCL<MockMotionModel, MockSensorModel, double>{beluga::FixedResamplingParam{kMaxSamples}};
+  ASSERT_EQ(filter.particles().size(), kMaxSamples);
 }
 
 TEST(AMCL, InitializeFilter) {
+  constexpr double kAlphaSlow = 0.001;
+  constexpr double kAlphaFast = 0.1;
+  constexpr std::size_t kMinSamples = 2'000;
+  constexpr std::size_t kMaxSamples = 2'000;
+  constexpr double kSpatialResolution = 1.;
+  constexpr double kKldEpsilon = 0.05;
+  constexpr double kKldZ = 3.;
   auto filter = beluga::AMCL<MockMotionModel, MockSensorModel, double>{
-      beluga::AdaptiveGenerationParam{.alpha_slow = 0.001, .alpha_fast = 0.1},
-      beluga::KldResamplingParam{
-          .min_samples = 1'000, .max_samples = 2'000, .spatial_resolution = 1., .kld_epsilon = 0.05, .kld_z = 3.}};
-  ASSERT_GE(filter.particles().size(), 1'000);
+      beluga::AdaptiveGenerationParam{kAlphaSlow, kAlphaFast},
+      beluga::KldResamplingParam{kMinSamples, kMaxSamples, kSpatialResolution, kKldEpsilon, kKldZ}};
+  ASSERT_GE(filter.particles().size(), kMaxSamples);
 }
 
 }  // namespace

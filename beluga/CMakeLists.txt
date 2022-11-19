@@ -10,8 +10,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  # TODO(nahuel): Add '-Wpedantic -Wconversion' and fix the code.
-  add_compile_options(-Wall -Werror -Wextra)
+  add_compile_options(-Wall -Werror -Wextra -Wpedantic)
 endif()
 
 find_package(ament_cmake REQUIRED)
