@@ -1,0 +1,55 @@
+# Run against all the files: pre-commit run -a
+# Install the git hook scripts: pre-commit install
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-yaml
+      - id: check-xml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-executables-have-shebangs
+      - id: no-commit-to-branch
+
+  - repo: local
+    hooks:
+      - id: ament_copyright
+        name: Fix Copyright
+        description: Check if copyright notice is available in all files.
+        entry: ament_copyright
+        types: [c++]
+        language: system
+
+  - repo: local
+    hooks:
+      - id: ament_clang_format
+        name: Fix C++ Format (clang-format)
+        entry: ament_clang_format --config ./beluga/.clang-format --reformat
+        types: [c++]
+        language: system
+
+  - repo: local
+    hooks:
+      - id: colcon_build
+        name: Build (colcon build)
+        entry: colcon build --build-base /tmp/build --install-base /tmp/install
+        fail_fast: true
+        pass_filenames: false
+        language: system
+
+  - repo: local
+    hooks:
+      - id: colcon_test
+        name: Test (colcon test)
+        entry: colcon test --build-base /tmp/build --install-base /tmp/install --ctest-args -L "(gmock|gtest)"
+        pass_filenames: false
+        language: system
+
+  - repo: local
+    hooks:
+      - id: ament_clang_tidy
+        name: Fix C++ Errors (clang-tidy)
+        entry: ament_clang_tidy /tmp/build/beluga --config ./beluga/.clang-tidy --fix-errors
+        pass_filenames: false
+        language: system
