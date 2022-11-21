@@ -15,7 +15,7 @@ repos:
   - repo: local
     hooks:
       - id: ament_copyright
-        name: Fix Copyright
+        name: Fix copyright
         description: Check if copyright notice is available in all files.
         entry: ament_copyright
         types: [c++]
@@ -23,8 +23,20 @@ repos:
 
   - repo: local
     hooks:
+      - id: cmake
+        name: "[beluga] Export compile commands"
+        description: Creates the compile_commands.json required by clang-tidy.
+        entry: cmake -S ./beluga -B /tmp/beluga -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        fail_fast: true
+        files: beluga\/
+        types: [c++]
+        pass_filenames: false
+        language: system
+
+  - repo: local
+    hooks:
       - id: ament_clang_format
-        name: Fix C++ Format (clang-format)
+        name: "[beluga] Fix C++ format (clang-format)"
         entry: ament_clang_format --config ./beluga/.clang-format --reformat
         files: beluga\/
         types: [c++]
@@ -32,25 +44,10 @@ repos:
 
   - repo: local
     hooks:
-      - id: colcon_build
-        name: Build (colcon build)
-        entry: colcon build --build-base /tmp/build --install-base /tmp/install
-        fail_fast: true
-        pass_filenames: false
-        language: system
-
-  - repo: local
-    hooks:
-      - id: colcon_test
-        name: Test (colcon test)
-        entry: colcon test --build-base /tmp/build --install-base /tmp/install --ctest-args -L "(gmock|gtest)"
-        pass_filenames: false
-        language: system
-
-  - repo: local
-    hooks:
       - id: ament_clang_tidy
-        name: Fix C++ Errors (clang-tidy)
-        entry: ament_clang_tidy /tmp/build/beluga --config ./beluga/.clang-tidy --fix-errors
+        name: "[beluga] Fix C++ errors (clang-tidy)"
+        entry: ament_clang_tidy --config ./beluga/.clang-tidy --fix-errors /tmp/beluga/compile_commands.json
+        files: beluga\/
+        types: [c++]
         pass_filenames: false
         language: system
