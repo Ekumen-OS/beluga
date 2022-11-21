@@ -17,8 +17,8 @@ repos:
       - id: ament_copyright
         name: Fix copyright
         description: Check if copyright notice is available in all files.
-        entry: ament_copyright
-        types: [c++]
+        entry: ament_copyright --add-missing "Ekumen, Inc." apache2
+        types_or: [c++, python]
         language: system
 
   - repo: local
