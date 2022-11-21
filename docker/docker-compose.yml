@@ -3,7 +3,7 @@ services:
   dev:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/images/galactic/Dockerfile
     container_name: beluga-dev
     stdin_open: true
     tty: true

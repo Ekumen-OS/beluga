@@ -35,11 +35,13 @@ RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.
 
 USER $USER:$GROUP
 
-WORKDIR /ws
+ENV USER_WS /ws
 
-COPY . /ws/src
+WORKDIR $USER_WS
 
-RUN sudo chown -R $USER:$GROUP /ws
+COPY . $USER_WS/src
+
+RUN sudo chown -R $USER:$GROUP $USER_WS
 
 RUN sudo apt-get update \
   && rosdep update \
