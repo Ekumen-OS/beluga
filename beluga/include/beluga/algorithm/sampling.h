@@ -68,9 +68,9 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
     if (k <= 2U) {
       return std::numeric_limits<std::size_t>::max();
     }
-    double common = 2. / (9 * (k - 1));
+    double common = 2. / static_cast<double>(9 * (k - 1));
     double base = 1. - common + std::sqrt(common) * z;
-    double result = ((k - 1) / two_epsilon) * base * base * base;
+    double result = (static_cast<double>(k - 1) / two_epsilon) * base * base * base;
     return static_cast<std::size_t>(std::ceil(result));
   };
 

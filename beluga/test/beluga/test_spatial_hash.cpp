@@ -63,7 +63,11 @@ TEST(SpatialHash, NoCollisions) {
   auto hashes = ranges::views::cartesian_product(
                     ranges::views::closed_iota(-kLimit, kLimit), ranges::views::closed_iota(-kLimit, kLimit),
                     ranges::views::closed_iota(-kLimit, kLimit)) |
-                ranges::views::transform([](const auto& tuple) { return beluga::spatial_hash<Tuple>{}(tuple); }) |
+                ranges::views::transform([](const auto& tuple) {
+                  return beluga::spatial_hash<Tuple>{}(std::make_tuple(
+                      static_cast<double>(std::get<0>(tuple)), static_cast<double>(std::get<1>(tuple)),
+                      static_cast<double>(std::get<2>(tuple))));
+                }) |
                 ranges::to<std::vector>;
 
   std::sort(std::begin(hashes), std::end(hashes));

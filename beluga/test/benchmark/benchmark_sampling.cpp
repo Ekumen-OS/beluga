@@ -63,7 +63,7 @@ void BM_FixedResample(benchmark::State& state) {
                      ranges::views::take_exactly(min_samples) | ranges::views::common;
     auto first = std::begin(beluga::views::all(new_container));
     auto last = std::copy(std::begin(samples), std::end(samples), first);
-    state.counters["SampleSize"] = std::distance(first, last);
+    state.counters["SampleSize"] = static_cast<double>(std::distance(first, last));
   }
 }
 
@@ -102,8 +102,9 @@ void BM_AdaptiveResample(benchmark::State& state) {
                      ranges::views::take(max_samples) | ranges::views::common;
     auto first = std::begin(beluga::views::all(new_container));
     auto last = std::copy(std::begin(samples), std::end(samples), first);
-    state.counters["SampleSize"] = std::distance(first, last);
-    state.counters["Percentage"] = static_cast<double>(std::distance(first, last)) / particle_count;
+    state.counters["SampleSize"] = static_cast<double>(std::distance(first, last));
+    state.counters["Percentage"] =
+        static_cast<double>(std::distance(first, last)) / static_cast<double>(particle_count);
   }
 }
 
