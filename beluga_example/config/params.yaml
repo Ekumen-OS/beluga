@@ -1,0 +1,13 @@
+amcl:
+  ros__parameters:
+    global_frame_id: map
+    map_topic: map
+    max_particles: 2000
+    min_particles: 500
+    pf_err: 0.05
+    pf_z: 3.0
+    recovery_alpha_fast: 0.1
+    recovery_alpha_slow: 0.001
+    resample_interval: 1
+    update_min_a: 0.2
+    update_min_d: 0.25
