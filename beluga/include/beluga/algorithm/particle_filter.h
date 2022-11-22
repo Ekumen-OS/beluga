@@ -63,7 +63,7 @@ struct BootstrapParticleFilter : public Mixin {
   void resampling() {
     auto new_particles = Container{this->self().max_samples()};
     auto first = std::begin(views::all(new_particles));
-    auto last = ranges::copy(this->self().generate_samples(particles_) | this->self().take_samples(), first).out;
+    auto last = ranges::copy(this->self().generate_samples_from(particles_) | this->self().take_samples(), first).out;
     new_particles.resize(std::distance(first, last));
     particles_ = std::move(new_particles);
   }

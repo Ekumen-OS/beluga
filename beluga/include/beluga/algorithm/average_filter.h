@@ -14,6 +14,22 @@
 
 #pragma once
 
-#include <beluga/algorithm/average_filter.h>
-#include <beluga/algorithm/particle_filter.h>
-#include <beluga/algorithm/sampling.h>
+namespace beluga {
+
+class AverageFilter {
+ public:
+  explicit AverageFilter(double alpha) : alpha_{alpha} {}
+
+  void reset() { average_ = 0.; }
+
+  [[nodiscard]] double operator()(double value) {
+    average_ += (average_ == 0.) ? value : alpha_ * (value - average_);
+    return average_;
+  }
+
+ private:
+  double average_{0.};
+  double alpha_{0.};
+};
+
+}  // namespace beluga
