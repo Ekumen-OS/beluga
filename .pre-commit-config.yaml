@@ -1,0 +1,53 @@
+# Run against all the files: pre-commit run -a
+# Install the git hook scripts: pre-commit install
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-yaml
+      - id: check-xml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-executables-have-shebangs
+      - id: no-commit-to-branch
+
+  - repo: local
+    hooks:
+      - id: ament_copyright
+        name: Fix copyright
+        description: Check if copyright notice is available in all files.
+        entry: ament_copyright --add-missing "Ekumen, Inc." apache2
+        types_or: [c++, python]
+        language: system
+
+  - repo: local
+    hooks:
+      - id: cmake
+        name: "[beluga] Export compile commands"
+        description: Creates the compile_commands.json required by clang-tidy.
+        entry: cmake -S ./beluga -B /tmp/beluga -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        fail_fast: true
+        files: beluga\/
+        types: [c++]
+        pass_filenames: false
+        language: system
+
+  - repo: local
+    hooks:
+      - id: ament_clang_format
+        name: "[beluga] Fix C++ format (clang-format)"
+        entry: ament_clang_format --config ./beluga/.clang-format --reformat
+        files: beluga\/
+        types: [c++]
+        language: system
+
+  - repo: local
+    hooks:
+      - id: ament_clang_tidy
+        name: "[beluga] Fix C++ errors (clang-tidy)"
+        entry: ament_clang_tidy --config ./beluga/.clang-tidy --fix-errors /tmp/beluga/compile_commands.json
+        files: beluga\/
+        types: [c++]
+        pass_filenames: false
+        language: system

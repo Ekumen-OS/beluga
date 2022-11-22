@@ -20,6 +20,9 @@ RUN apt-get update \
     sudo \
   && rm -rf /var/lib/apt/lists/*
 
+RUN pip install \
+  pre-commit==2.20.0
+
 ARG USER=developer
 ARG GROUP=ekumen
 
