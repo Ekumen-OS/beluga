@@ -1,6 +1,7 @@
 find_package(ament_cmake_gmock REQUIRED)
 
 ament_add_gmock(test_beluga
+  algorithm/test_exponential_filter.cpp
   algorithm/test_particle_filter.cpp
   algorithm/test_sampling.cpp
   test_tuple_vector.cpp

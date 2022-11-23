@@ -25,14 +25,16 @@
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/transform.hpp>
 
+#include <beluga/algorithm/exponential_filter.h>
 #include <beluga/spatial_hash.h>
 #include <beluga/type_traits.h>
 
 namespace beluga {
 
 template <class Function1, class Function2, class RandomNumberGenerator>
-auto random_select(Function1&& first, Function2&& second, RandomNumberGenerator& generator, double probability) {
-  return [&, distribution = std::bernoulli_distribution{probability}]() mutable {
+auto random_select(Function1 first, Function2 second, RandomNumberGenerator& generator, double probability) {
+  return [first = std::move(first), second = std::move(second), &generator,
+          distribution = std::bernoulli_distribution{probability}]() mutable {
     return distribution(generator) ? first() : second();
   };
 }
@@ -77,7 +79,7 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
   return [=, count = 0ULL, buckets = std::unordered_set<std::size_t>{}](std::size_t hash) mutable {
     count++;
     buckets.insert(hash);
-    return count < min || count < target_size(buckets.size());
+    return count <= min || count <= target_size(buckets.size());
   };
 }
 
@@ -104,7 +106,7 @@ struct NaiveGeneration : public Mixin {
   explicit NaiveGeneration(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
   template <class Range>
-  [[nodiscard]] auto generate_samples(Range&& particles) {
+  [[nodiscard]] auto generate_samples_from(Range&& particles) {
     return ranges::views::generate(
         random_sample(views::all(particles), views::weights(particles), random_number_generator_));
   }
@@ -133,21 +135,19 @@ struct AdaptiveGeneration : public Mixin {
 
   template <class... Args>
   explicit AdaptiveGeneration(const param_type& parameters, Args&&... rest)
-      : Mixin(std::forward<Args>(rest)...), parameters_{parameters} {}
+      : Mixin(std::forward<Args>(rest)...), slow_filter_{parameters.alpha_slow}, fast_filter_{parameters.alpha_fast} {}
 
   template <class Range>
-  [[nodiscard]] auto generate_samples(Range&& particles) {
+  [[nodiscard]] auto generate_samples_from(Range&& particles) {
     auto&& weights = views::weights(particles);
     double total_weight = std::reduce(std::begin(weights), std::end(weights), 0.);
-    double average_weight = total_weight / weights.size();
-    w_slow_ += parameters_.alpha_slow * (average_weight - w_slow_);
-    w_fast_ += parameters_.alpha_fast * (average_weight - w_fast_);
-    double random_state_probability = std::max(0., 1. - w_fast_ / w_slow_);
+    double average_weight = total_weight / static_cast<double>(weights.size());
+    double random_state_probability = std::max(0., 1. - fast_filter_(average_weight) / slow_filter_(average_weight));
 
     if (random_state_probability > 0.) {
       // Reset averages to avoid spiraling off into complete randomness.
-      w_slow_ = 0.;
-      w_fast_ = 0.;
+      fast_filter_.reset();
+      slow_filter_.reset();
     }
 
     using particle_type = typename std::decay_t<Range>::value_type;
@@ -159,10 +159,9 @@ struct AdaptiveGeneration : public Mixin {
   }
 
  private:
-  param_type parameters_;
   RandomNumberGenerator random_number_generator_{std::random_device()()};
-  double w_slow_{0};
-  double w_fast_{0};
+  ExponentialFilter slow_filter_;
+  ExponentialFilter fast_filter_;
 };
 
 struct FixedResamplingParam {
