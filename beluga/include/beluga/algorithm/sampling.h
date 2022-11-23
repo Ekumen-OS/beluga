@@ -78,7 +78,7 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
   return [=, count = 0ULL, buckets = std::unordered_set<std::size_t>{}](std::size_t hash) mutable {
     count++;
     buckets.insert(hash);
-    return count <= min || count < target_size(buckets.size());
+    return count <= min || count <= target_size(buckets.size());
   };
 }
 

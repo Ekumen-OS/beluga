@@ -14,6 +14,7 @@
 
 #include <gmock/gmock.h>
 
+#include <range/v3/algorithm.hpp>
 #include <range/v3/view.hpp>
 
 #include <beluga/algorithm/sampling.h>
@@ -29,17 +30,8 @@ TEST_P(RandomSelectWithParam, Functional) {
   auto output =
       ranges::views::generate(beluga::random_select([]() { return 1; }, []() { return 2; }, generator, probability)) |
       ranges::views::take_exactly(1'000'000);
-
-  std::size_t one_count = 0;
-  std::size_t two_count = 0;
-  for (auto&& value : output) {
-    if (value == 1) {
-      ++one_count;
-    }
-    if (value == 2) {
-      ++two_count;
-    }
-  }
+  std::size_t one_count = ranges::count(output, 1);
+  std::size_t two_count = ranges::count(output, 2);
   ASSERT_NEAR(probability, static_cast<double>(one_count) / static_cast<double>(one_count + two_count), 0.01);
 }
 
@@ -48,16 +40,14 @@ INSTANTIATE_TEST_SUITE_P(Probabilities, RandomSelectWithParam, testing::Values(0
 template <class Range, class Values, class Weights>
 void AssertWeights(Range&& range, const Values& values, const Weights& weights) {
   auto counters = std::vector<std::size_t>(weights.size(), 0);
-  std::size_t total = 0;
   for (auto state : range) {
     auto it = std::find(std::begin(values), std::end(values), state);
-    ASSERT_NE(it, std::end(values)) << "Unknown value: " << state << " (at index " << total << ")";
+    ASSERT_NE(it, std::end(values)) << "Unknown value: " << state;
     auto& counter = *(std::begin(counters) + std::distance(std::begin(values), it));
     ++counter;
-    ++total;
   }
   for (std::size_t i = 0; i < counters.size(); ++i) {
-    ASSERT_NEAR(*(weights.begin() + i), static_cast<double>(counters[i]) / static_cast<double>(total), 0.01);
+    ASSERT_NEAR(*(weights.begin() + i), static_cast<double>(counters[i]) / static_cast<double>(range.size()), 0.01);
   }
 }
 
@@ -73,32 +63,29 @@ TEST(RandomSample, Functional) {
 
 class KLDConditionWithParam : public ::testing::TestWithParam<std::tuple<double, std::size_t, std::size_t>> {};
 
+auto GenerateDistinctHashes(std::size_t count) {
+  return ranges::views::generate([count, hash = 0UL]() mutable {
+    if (hash < count) {
+      ++hash;
+    }
+    return hash;
+  });
+}
+
 TEST_P(KLDConditionWithParam, Minimum) {
   const std::size_t cluster_count = std::get<1>(GetParam());
-  const std::size_t fixed_min_samples = 1'000;
-  auto predicate = beluga::kld_condition(fixed_min_samples, 0.01, 0.95);
-  std::size_t cluster = 0;
-  for (std::size_t i = 0; i < fixed_min_samples; ++i) {
-    ASSERT_TRUE(predicate(cluster)) << "Stopped at " << i + 1 << " samples (Expected: " << fixed_min_samples << ").";
-    if (cluster < cluster_count - 1) {
-      ++cluster;
-    }
-  }
+  auto output = GenerateDistinctHashes(cluster_count) |
+                ranges::views::take_while(beluga::kld_condition(1'000, 0.01, 0.95)) | ranges::to<std::vector>;
+  ASSERT_GE(output.size(), 1'000);
 }
 
 TEST_P(KLDConditionWithParam, Limit) {
   const double kld_k = std::get<0>(GetParam());
   const std::size_t cluster_count = std::get<1>(GetParam());
   const std::size_t min_samples = std::get<2>(GetParam());
-  auto predicate = beluga::kld_condition(0, 0.01, kld_k);
-  std::size_t cluster = 0;
-  for (std::size_t i = 0; i < min_samples - 1; ++i) {
-    ASSERT_TRUE(predicate(cluster)) << "Stopped at " << i + 1 << " samples (Expected: " << min_samples << ").";
-    if (cluster < cluster_count - 1) {
-      ++cluster;
-    }
-  }
-  ASSERT_FALSE(predicate(cluster)) << "Didn't stop at " << min_samples << " samples.";
+  auto output = GenerateDistinctHashes(cluster_count) |
+                ranges::views::take_while(beluga::kld_condition(0, 0.01, kld_k)) | ranges::to<std::vector>;
+  ASSERT_EQ(output.size(), min_samples);
 }
 
 constexpr double kPercentile90th = 1.28155156327703;
@@ -178,15 +165,7 @@ TEST_P(AdaptiveGenerationWithParam, RandomParticleCount) {
   };
 
   auto random_particle_percentage = [](const auto& range) {
-    std::size_t random = 0;
-    std::size_t total = 0;
-    for (auto state : range) {
-      if (state == 5) {
-        ++random;
-      }
-      ++total;
-    }
-    return static_cast<double>(random) / static_cast<double>(total);
+    return static_cast<double>(ranges::count(range, 5)) / static_cast<double>(range.size());
   };
 
   auto generate_samples = [&particles, &instance]() {
@@ -245,7 +224,7 @@ TEST(KldResampling, TakeLimit) {
                 ranges::views::intersperse(Particle{{2., 2.}, 2., 0}) |
                 ranges::views::intersperse(Particle{{3., 3.}, 2., 0}) | instance.take_samples() |
                 ranges::to<std::vector>;
-  ASSERT_EQ(output.size(), 134);
+  ASSERT_EQ(output.size(), 135);
 }
 
 TEST(KldResampling, TakeMinimum) {
