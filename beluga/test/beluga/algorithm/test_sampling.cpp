@@ -121,8 +121,8 @@ TEST(BaselineGeneration, InstantiateAndCall) {
   auto output = instance.generate_samples<std::pair<double, double>>() | ranges::views::take_exactly(50) |
                 ranges::to<std::vector>;
   ASSERT_EQ(output.size(), 50);
-  for (auto&& pair : output) {
-    ASSERT_EQ(std::get<0>(pair), 1.5);
+  for (auto [state, _] : output) {
+    ASSERT_EQ(state, 1.5);
   }
 }
 
