@@ -16,19 +16,19 @@
 
 namespace beluga {
 
-class AverageFilter {
+class ExponentialFilter {
  public:
-  explicit AverageFilter(double alpha) : alpha_{alpha} {}
+  explicit ExponentialFilter(double alpha) : alpha_{alpha} {}
 
-  void reset() { average_ = 0.; }
+  void reset() { output_ = 0.; }
 
-  [[nodiscard]] double operator()(double value) {
-    average_ += (average_ == 0.) ? value : alpha_ * (value - average_);
-    return average_;
+  [[nodiscard]] double operator()(double input) {
+    output_ += (output_ == 0.) ? input : alpha_ * (input - output_);
+    return output_;
   }
 
  private:
-  double average_{0.};
+  double output_{0.};
   double alpha_{0.};
 };
 

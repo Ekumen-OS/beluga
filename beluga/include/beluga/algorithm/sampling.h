@@ -25,7 +25,7 @@
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/transform.hpp>
 
-#include <beluga/algorithm/average_filter.h>
+#include <beluga/algorithm/exponential_filter.h>
 #include <beluga/spatial_hash.h>
 #include <beluga/type_traits.h>
 
@@ -159,8 +159,8 @@ struct AdaptiveGeneration : public Mixin {
 
  private:
   RandomNumberGenerator random_number_generator_{std::random_device()()};
-  AverageFilter slow_filter_;
-  AverageFilter fast_filter_;
+  ExponentialFilter slow_filter_;
+  ExponentialFilter fast_filter_;
 };
 
 struct FixedResamplingParam {

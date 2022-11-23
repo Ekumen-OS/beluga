@@ -14,32 +14,32 @@
 
 #include <gtest/gtest.h>
 
-#include <beluga/algorithm/average_filter.h>
+#include <beluga/algorithm/exponential_filter.h>
 
 namespace {
 
-TEST(AverageFilter, Update) {
-  auto filter = beluga::AverageFilter{0.1};
+TEST(ExponentialFilter, Update) {
+  auto filter = beluga::ExponentialFilter{0.1};
   ASSERT_NEAR(1.000, filter(1), 0.00001);
   ASSERT_NEAR(1.100, filter(2), 0.00001);
   ASSERT_NEAR(1.290, filter(3), 0.00001);
   ASSERT_NEAR(1.161, filter(0), 0.00001);
 }
 
-TEST(AverageFilter, Passthrough) {
-  auto filter = beluga::AverageFilter{1.};
+TEST(ExponentialFilter, Passthrough) {
+  auto filter = beluga::ExponentialFilter{1.};
   ASSERT_NEAR(1.0, filter(1), 0.00001);
   ASSERT_NEAR(2.0, filter(2), 0.00001);
   ASSERT_NEAR(3.0, filter(3), 0.00001);
   ASSERT_NEAR(0.0, filter(0), 0.00001);
 }
 
-TEST(AverageFilter, Reset) {
-  auto filter = beluga::AverageFilter{0.1};
-  ASSERT_NEAR(1.000, filter(1), 0.00001);
-  ASSERT_NEAR(1.100, filter(2), 0.00001);
+TEST(ExponentialFilter, Reset) {
+  auto filter = beluga::ExponentialFilter{0.1};
+  ASSERT_NEAR(1.0, filter(1), 0.00001);
+  ASSERT_NEAR(1.1, filter(2), 0.00001);
   filter.reset();
-  ASSERT_NEAR(3.000, filter(3), 0.00001);
+  ASSERT_NEAR(3.0, filter(3), 0.00001);
 }
 
 }  // namespace

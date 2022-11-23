@@ -14,6 +14,6 @@
 
 #pragma once
 
-#include <beluga/algorithm/average_filter.h>
+#include <beluga/algorithm/exponential_filter.h>
 #include <beluga/algorithm/particle_filter.h>
 #include <beluga/algorithm/sampling.h>
