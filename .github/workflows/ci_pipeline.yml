@@ -10,7 +10,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      ROS_DISTRO: galactic
+      ROS_DISTRO: humble
     steps:
       - uses: actions/checkout@v3
 
