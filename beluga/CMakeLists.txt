@@ -26,6 +26,11 @@ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 add_executable(clang_tidy_findable)
 target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
 target_link_libraries(clang_tidy_findable PRIVATE ${PROJECT_NAME})
+# Setting this so clang-tidy can detect the standard version from the compile commands.
+# CMake may omit the -std= flag if the compiler's default standard level is at least
+# that of the requested feature.
+# https://cmake.org/cmake/help/v3.23/manual/cmake-compile-features.7.html#requiring-language-standards
+target_compile_options(clang_tidy_findable PRIVATE -std=c++17)
 
 if(BUILD_TESTING)
   message(STATUS "Build testing enabled.")
