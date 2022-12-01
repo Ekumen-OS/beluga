@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/*
+ * Note: the contents of this file should probably be moved to the
+ * core library or replaced with external libraries (state representation).
+ */
+
 #ifndef BELUGA_AMCL__MODELS_HPP_
 #define BELUGA_AMCL__MODELS_HPP_
 
@@ -29,6 +34,8 @@
 namespace beluga_amcl
 {
 
+// TODO(nahuel): Replace this short-term solution with a fully-featured
+// vector state representation.
 struct Pose
 {
   double x;
@@ -49,6 +56,7 @@ struct Pose
   }
 };
 
+// TODO(nahuel): Replace this with a real motion model.
 template<class Mixin>
 class MockMotionModel : public Mixin
 {
@@ -60,6 +68,8 @@ public:
   [[nodiscard]] auto apply_motion(const Pose & state) {return state;}
 };
 
+// TODO(nahuel): Move this to the core package once it doesn't depend on
+// ROS message types, or if we decide to add that dependecy to the core.
 template<class Mixin>
 class LikelihoodSensorModel : public Mixin
 {
@@ -83,7 +93,7 @@ public:
 
   [[nodiscard]] double importance_weight(const Pose &)
   {
-    // TODO(nahuel): Implement likelihood estimation
+    // TODO(nahuel): Implement likelihood estimation.
     return 1.;
   }
 
