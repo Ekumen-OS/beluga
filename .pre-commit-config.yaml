@@ -51,3 +51,19 @@ repos:
         types: [c++]
         pass_filenames: false
         language: system
+
+  - repo: local
+    hooks:
+      - id: ament_uncrustify
+        name: "[others] Fix C++ format (uncrustify)"
+        entry: ament_uncrustify --reformat
+        files: ^(?!beluga\/).*
+        types: [c++]
+        language: system
+
+  - repo: https://github.com/psf/black
+    rev:  22.10.0
+    hooks:
+      - id: black
+        name: "[others] Fix Python format (black)"
+        files: ^(?!beluga\/).*
