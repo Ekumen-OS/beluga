@@ -1,4 +1,4 @@
-FROM ros:galactic-ros-base-focal
+FROM ros:humble-ros-base-jammy
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -10,7 +10,7 @@ RUN apt-get update \
     build-essential \
     ca-certificates \
     clang-format \
-    clang-tidy-6.0 \
+    clang-tidy \
     cmake \
     curl \
     git \

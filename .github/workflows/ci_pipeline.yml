@@ -8,22 +8,22 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
-      ROS_DISTRO: galactic
+      ROS_DISTRO: humble
     steps:
       - uses: actions/checkout@v3
 
       - name: Install clang-tidy
-        run: sudo apt update && sudo apt install clang-tidy-6.0 -y
+        run: sudo apt update && sudo apt install clang-tidy -y
 
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@v0.2
+        uses: ros-tooling/setup-ros@0.4.1
         with:
           required-ros-distributions: ${{ env.ROS_DISTRO }}
 
       - name: Build and test
-        uses: ros-tooling/action-ros-ci@v0.2
+        uses: ros-tooling/action-ros-ci@0.2.7
         with:
           package-name: beluga
           target-ros2-distro:  ${{ env.ROS_DISTRO }}
