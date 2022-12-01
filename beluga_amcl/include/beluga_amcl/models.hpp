@@ -16,14 +16,15 @@
 #define BELUGA_AMCL__MODELS_HPP_
 
 #include <beluga/spatial_hash.h>
-#include <geometry_msgs/msg/pose.hpp>
-#include <nav_msgs/msg/occupancy_grid.hpp>
 
 #include <cmath>
 #include <random>
 #include <tuple>
 #include <utility>
 #include <vector>
+
+#include <geometry_msgs/msg/pose.hpp>
+#include <nav_msgs/msg/occupancy_grid.hpp>
 
 namespace beluga_amcl
 {
@@ -128,7 +129,7 @@ public:
     const beluga_amcl::Pose & pose,
     double resolution = 1.) const
   {
-    return spatial_hash<std::tuple<double, double>>{} (
+    return spatial_hash<std::tuple<double, double>>{}(
       std::make_tuple(pose.x, pose.y),
       resolution);
   }

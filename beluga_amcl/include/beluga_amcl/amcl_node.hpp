@@ -15,15 +15,15 @@
 #ifndef BELUGA_AMCL__AMCL_NODE_HPP_
 #define BELUGA_AMCL__AMCL_NODE_HPP_
 
-#include <beluga_amcl/models.hpp>
+#include <beluga/algorithm/particle_filter.h>
 
-#include <beluga/beluga.h>
+#include <memory>
+
+#include <beluga_amcl/models.hpp>
 #include <bondcpp/bond.hpp>
 #include <nav2_msgs/msg/particle_cloud.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
-
-#include <memory>
 
 namespace beluga_amcl
 {

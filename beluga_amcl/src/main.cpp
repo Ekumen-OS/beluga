@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <rclcpp/executors.hpp>
+#include <memory>
 
 #include <beluga_amcl/amcl_node.hpp>
-
-#include <memory>
+#include <rclcpp/executors.hpp>
 
 int main(int argc, char ** argv)
 {

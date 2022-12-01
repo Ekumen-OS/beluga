@@ -14,12 +14,12 @@
 
 #include <beluga_amcl/amcl_node.hpp>
 
-#include <lifecycle_msgs/msg/state.hpp>
-#include <rclcpp_components/register_node_macro.hpp>
-
 #include <chrono>
 #include <limits>
 #include <memory>
+
+#include <lifecycle_msgs/msg/state.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
 
 namespace beluga_amcl
 {
