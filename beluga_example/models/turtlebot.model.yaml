@@ -1,0 +1,50 @@
+bodies:
+  - name: base
+    pose: [0, 0, 0]
+    type: dynamic
+    color: [1, 1, 1, 0.75]
+    footprints:
+      - type: circle
+        radius: 0.5
+        center: [-1, 0.0]
+        density: 1.0
+
+      - type: polygon
+        sensor: true
+        points: [[-.45, -.05], [-.45, 0.05], [-.35, 0.05], [-.35, -0.05]]
+        layers: []
+        density: 1.0
+
+      - type: polygon
+        sensor: true
+        points: [[-.125, -.4], [-.125, -.3], [.125, -.3], [.125, -.4]]
+        density: 1.0
+
+      - type: polygon
+        sensor: true
+        points: [[-.125, .4], [-.125, .3], [.125, .3], [.125, .4]]
+        density: 100000
+
+plugins:
+  - type: DiffDrive
+    name: turtlebot_drive
+    body: base
+    twist_sub: cmd_vel
+    odom_frame_id: map
+    pub_rate: 10
+
+  - type: ModelTfPublisher
+    name: tf_publisher
+    publish_tf_world: true
+
+  - type: Laser
+    name: laser_front
+    frame: laser_front
+    topic: scan
+    body: base
+    broadcast_tf: true
+    origin: [0.28, 0, 0]
+    range: 20
+    angle: {min: -2.356194490192345, max: 2.356194490192345, increment: 0.004363323129985824}
+    noise_std_dev: 0.02
+    update_rate: 40
