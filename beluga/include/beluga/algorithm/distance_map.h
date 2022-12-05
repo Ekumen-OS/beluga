@@ -19,7 +19,7 @@
 
 template <class Range, class DistanceFunction, class NeighborsFunction>
 auto nearest_obstacle_distance_map(
-    Range&& map,
+    Range&& obstacle_map,
     DistanceFunction&& distance_function,
     NeighborsFunction&& neighbors_function) {
   struct IndexPair {
@@ -28,16 +28,16 @@ auto nearest_obstacle_distance_map(
   };
 
   using DistanceType = std::invoke_result_t<DistanceFunction, std::size_t, std::size_t>;
-  auto distance_map = std::vector<DistanceType>(map.size());
-  auto visited = std::vector<bool>(map.size(), false);
+  auto distance_map = std::vector<DistanceType>(obstacle_map.size());
+  auto visited = std::vector<bool>(obstacle_map.size(), false);
 
   auto compare = [&distance_map](const IndexPair& first, const IndexPair& second) {
     return distance_map[first.index] > distance_map[second.index];
   };
   auto queue = std::priority_queue<IndexPair, std::vector<IndexPair>, decltype(compare)>{compare};
 
-  auto begin = map.begin();
-  for (std::size_t index = 0; index < map.size(); ++index) {
+  auto begin = obstacle_map.begin();
+  for (std::size_t index = 0; index < obstacle_map.size(); ++index) {
     bool is_obstacle = *(begin + index);
     if (is_obstacle) {
       visited[index] = true;
