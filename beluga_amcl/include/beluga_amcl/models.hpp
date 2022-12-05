@@ -155,9 +155,11 @@ private:
     const LikelihoodSensorModelParam & params,
     const nav_msgs::msg::OccupancyGrid & map)
   {
-    auto && obstacle_map = map.data | ranges::views::transform(
+    auto obstacle_map = map.data | ranges::views::transform(
       [](std::int8_t value) -> bool {
-        return value > 65;
+        // Map server occupied output value
+        // https://wiki.ros.org/map_server#Value_Interpretation
+        return value == 100;
       });
 
     auto squared_distance =
