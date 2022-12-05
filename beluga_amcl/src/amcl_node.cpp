@@ -241,12 +241,6 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
     "likelihood_field",
     rclcpp::SystemDefaultsQoS());
 
-  map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
-    get_parameter("map_topic").as_string(),
-    rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
-    std::bind(&AmclNode::map_callback, this, std::placeholders::_1));
-
-  RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
   return CallbackReturn::SUCCESS;
 }
 
@@ -263,6 +257,13 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
   bond_->setHeartbeatTimeout(4.0);
   bond_->start();
 
+  map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
+    get_parameter("map_topic").as_string(),
+    rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
+    std::bind(&AmclNode::map_callback, this, std::placeholders::_1));
+
+  RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
+
   return CallbackReturn::SUCCESS;
 }
 
@@ -271,6 +272,7 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State &
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
   likelihood_field_pub_->on_deactivate();
+  map_sub_.reset();
   bond_.reset();
 
   return CallbackReturn::SUCCESS;
@@ -281,7 +283,6 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   likelihood_field_pub_.reset();
-  map_sub_.reset();
   return CallbackReturn::SUCCESS;
 }
 
@@ -319,6 +320,14 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   RCLCPP_INFO(
     get_logger(), "Particle filter initialized with %ld particles",
     particle_filter_->particles().size());
+
+  {
+    auto message = particle_filter_->get_likelihood_field_as_gridmap();
+    message.header.stamp = now();
+    message.header.frame_id = get_parameter("global_frame_id").as_string();
+    RCLCPP_INFO(get_logger(), "Publishing likelihood field");
+    likelihood_field_pub_->publish(message);
+  }
 }
 
 void AmclNode::timer_callback()
@@ -341,14 +350,6 @@ void AmclNode::timer_callback()
       });
     RCLCPP_INFO(get_logger(), "Publishing %ld particles", message.particles.size());
     particle_cloud_pub_->publish(message);
-  }
-
-  {
-    auto message = particle_filter_->get_likelihood_field_as_gridmap();
-    message.header.stamp = now();
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
-    RCLCPP_INFO(get_logger(), "Publishing likelihood field");
-    likelihood_field_pub_->publish(message);
   }
 }
 
