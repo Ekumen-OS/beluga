@@ -1,0 +1,9 @@
+properties: {}
+
+layers:
+  - name: "map"
+    map: "../maps/turtlebot3_world.yaml"
+models:
+  - name: turtlebot
+    model: "../models/turtlebot.model.yaml"
+    pose: [0, 2, 0]

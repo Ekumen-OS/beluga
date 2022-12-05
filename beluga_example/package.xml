@@ -13,8 +13,9 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
   <build_depend>launch_ros</build_depend>
 
-  <exec_depend>launch_ros</exec_depend>
   <exec_depend>beluga_amcl</exec_depend>
+  <exec_depend>flatland_server</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
   <exec_depend>nav2_lifecycle_manager</exec_depend>
   <exec_depend>nav2_map_server</exec_depend>
   <exec_depend>nav2_rviz_plugins</exec_depend>

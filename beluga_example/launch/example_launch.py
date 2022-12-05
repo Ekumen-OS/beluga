@@ -74,6 +74,23 @@ def generate_launch_description():
                     {"node_names": ["map_server", "amcl"]},
                 ],
             ),
+            Node(
+                package="flatland_server",
+                executable="flatland_server",
+                output="screen",
+                parameters=[
+                    {
+                        "world_path": os.path.join(
+                            example_dir, "worlds", "turtlebot3_world.yaml"
+                        )
+                    },
+                    {"update_rate": 200.0},
+                    {"step_size": 0.005},
+                    {"show_viz": False},
+                    {"viz_pub_rate": 30.0},
+                    {"use_sim_time": True},
+                ],
+            ),
         ]
     )
 
