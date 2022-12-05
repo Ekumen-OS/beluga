@@ -13,6 +13,8 @@ find_package(nav2_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 add_executable(amcl_node)
 target_sources(amcl_node PUBLIC src/main.cpp src/amcl_node.cpp)
@@ -26,7 +28,9 @@ ament_target_dependencies(amcl_node PUBLIC
   nav2_msgs
   rclcpp
   rclcpp_components
-  rclcpp_lifecycle)
+  rclcpp_lifecycle
+  sensor_msgs
+  tf2_geometry_msgs)
 
 install(TARGETS amcl_node
   DESTINATION lib/${PROJECT_NAME})

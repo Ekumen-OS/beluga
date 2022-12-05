@@ -14,12 +14,18 @@
 
 #include <beluga_amcl/amcl_node.hpp>
 
+#include <tf2/convert.h>
+#include <tf2/utils.h>
+#include <tf2_ros/create_timer_ros.h>
+
 #include <chrono>
 #include <limits>
 #include <memory>
 
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 namespace beluga_amcl
 {
@@ -38,9 +44,28 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "The name of the coordinate frame to use for odometry.";
+    declare_parameter("odom_frame_id", rclcpp::ParameterValue("odom"), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "The name of the coordinate frame to use for the robot base.";
+    declare_parameter("base_frame_id", rclcpp::ParameterValue("base_footprint"), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
       "Topic to subscribe to in order to receive the map to localize on.";
     declare_parameter("map_topic", rclcpp::ParameterValue("map"), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Topic to subscribe to in order to receive the laser scan for localization.";
+    declare_parameter("scan_topic", rclcpp::ParameterValue("scan"), descriptor);
   }
 
   {
@@ -264,6 +289,27 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
 
   RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
 
+  tf_buffer_ = std::make_unique<tf2_ros::Buffer>(get_clock());
+  tf_buffer_->setCreateTimerInterface(
+    std::make_shared<tf2_ros::CreateTimerROS>(
+      get_node_base_interface(),
+      get_node_timers_interface()));
+  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(shared_from_this());
+  tf_listener_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_);
+
+  laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
+      rclcpp_lifecycle::LifecycleNode>>(
+    shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data);
+
+  laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
+    *laser_scan_sub_, *tf_buffer_, get_parameter("base_frame_id").as_string(), 50,
+    get_node_logging_interface(),
+    get_node_clock_interface(),
+    tf2::durationFromSec(1.0));
+
+  laser_scan_connection_ = laser_scan_filter_->registerCallback(
+    std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
+
   return CallbackReturn::SUCCESS;
 }
 
@@ -272,9 +318,12 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State &
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
   likelihood_field_pub_->on_deactivate();
+  laser_scan_sub_.reset();
   map_sub_.reset();
   bond_.reset();
-
+  tf_listener_.reset();
+  tf_broadcaster_.reset();
+  tf_buffer_.reset();
   return CallbackReturn::SUCCESS;
 }
 
@@ -309,6 +358,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
   auto likelihood_model_params = LikelihoodSensorModelParam{
     get_parameter("laser_likelihood_max_dist").as_double(),
+    get_parameter("laser_min_range").as_double(),
     get_parameter("laser_max_range").as_double(),
     get_parameter("z_hit").as_double(),
     get_parameter("z_rand").as_double(),
@@ -350,6 +400,26 @@ void AmclNode::timer_callback()
       });
     RCLCPP_INFO(get_logger(), "Publishing %ld particles", message.particles.size());
     particle_cloud_pub_->publish(message);
+  }
+}
+
+void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
+{
+  if (!particle_filter_) {
+    return;
+  }
+
+  try {
+    using namespace std::chrono_literals;
+    auto transform_stamped = tf_buffer_->lookupTransform(
+      get_parameter("base_frame_id").as_string(),
+      laser_scan->header.frame_id,
+      laser_scan->header.stamp,
+      0s);
+    particle_filter_->update_sensor(*laser_scan, transform_stamped);
+    particle_filter_->update();
+  } catch (const tf2::TransformException & error) {
+    RCLCPP_ERROR(get_logger(), "Could not transform laser: %s", error.what());
   }
 }
 

@@ -15,6 +15,12 @@
 #ifndef BELUGA_AMCL__AMCL_NODE_HPP_
 #define BELUGA_AMCL__AMCL_NODE_HPP_
 
+#include <message_filters/subscriber.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/message_filter.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/transform_listener.h>
+
 #include <beluga/algorithm/particle_filter.h>
 
 #include <memory>
@@ -24,6 +30,7 @@
 #include <nav2_msgs/msg/particle_cloud.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
 
 namespace beluga_amcl
 {
@@ -32,7 +39,7 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode
 {
 public:
   using rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
-  using ParticleFilter = beluga::AMCL<MockMotionModel, LikelihoodSensorModel, Pose>;
+  using ParticleFilter = beluga::AMCL<StationaryMotionModel, LikelihoodSensorModel, Pose>;
 
   explicit AmclNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
   virtual ~AmclNode();
@@ -46,6 +53,7 @@ protected:
 
   void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
   void timer_callback();
+  void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
 
   std::unique_ptr<ParticleFilter> particle_filter_;
   std::unique_ptr<bond::Bond> bond_;
@@ -56,6 +64,14 @@ protected:
   rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr
     likelihood_field_pub_;
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
+
+  std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
+  std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>> laser_scan_filter_;
+  std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
+    rclcpp_lifecycle::LifecycleNode>> laser_scan_sub_;
+  message_filters::Connection laser_scan_connection_;
 };
 
 }  // namespace beluga_amcl

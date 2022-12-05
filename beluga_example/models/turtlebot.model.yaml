@@ -9,29 +9,14 @@ bodies:
         center: [-1, 0.0]
         density: 1.0
 
-      - type: polygon
-        sensor: true
-        points: [[-.45, -.05], [-.45, 0.05], [-.35, 0.05], [-.35, -0.05]]
-        layers: []
-        density: 1.0
-
-      - type: polygon
-        sensor: true
-        points: [[-.125, -.4], [-.125, -.3], [.125, -.3], [.125, -.4]]
-        density: 1.0
-
-      - type: polygon
-        sensor: true
-        points: [[-.125, .4], [-.125, .3], [.125, .3], [.125, .4]]
-        density: 100000
-
 plugins:
   - type: DiffDrive
     name: turtlebot_drive
     body: base
     twist_sub: cmd_vel
-    odom_frame_id: map
+    odom_frame_id: odom
     pub_rate: 10
+    enable_odom_pub: true
 
   - type: ModelTfPublisher
     name: tf_publisher
