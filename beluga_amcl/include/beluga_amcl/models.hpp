@@ -163,13 +163,12 @@ private:
       });
 
     auto squared_distance =
-      [height = map.info.height,
-        width = map.info.width,
+      [width = map.info.width,
         squared_resolution = map.info.resolution * map.info.resolution,
         squared_max_distance = params.max_obstacle_distance * params.max_obstacle_distance
       ](std::size_t first, std::size_t second) {
         auto delta_x =
-          static_cast<std::intmax_t>(first % height) - static_cast<std::intmax_t>(second % height);
+          static_cast<std::intmax_t>(first % width) - static_cast<std::intmax_t>(second % width);
         auto delta_y =
           static_cast<std::intmax_t>(first / width) - static_cast<std::intmax_t>(second / width);
         return std::min(
@@ -179,16 +178,16 @@ private:
 
     auto neighbors = [&map](std::size_t index) {
         auto result = std::vector<std::size_t>{};
-        if (index / map.info.width < map.info.height - 1) {
-          result.push_back(index + map.info.height);
+        if (index / map.info.width < (map.info.height - 1)) {
+          result.push_back(index + map.info.width);
         }
         if (index / map.info.width > 0) {
-          result.push_back(index - map.info.height);
+          result.push_back(index - map.info.width);
         }
-        if (index % map.info.height < map.info.width - 1) {
+        if (index % map.info.width < (map.info.width - 1)) {
           result.push_back(index + 1);
         }
-        if (index % map.info.height > 0) {
+        if (index % map.info.width > 0) {
           result.push_back(index - 1);
         }
         return result;
@@ -210,7 +209,7 @@ private:
     std::size_t index)
   {
     return std::make_pair(
-      (static_cast<double>(index % info.height) + 0.5) * info.resolution + info.origin.position.x,
+      (static_cast<double>(index % info.width) + 0.5) * info.resolution + info.origin.position.x,
       (static_cast<double>(index / info.width) + 0.5) * info.resolution + info.origin.position.y);
   }
 };
