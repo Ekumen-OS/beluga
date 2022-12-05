@@ -151,6 +151,67 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("update_min_d", rclcpp::ParameterValue(0.25), descriptor);
   }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Maximum distance to do obstacle inflation on map, used in likelihood field model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("laser_likelihood_max_dist", rclcpp::ParameterValue(2.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Maximum scan range to be considered.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("laser_max_range", rclcpp::ParameterValue(100.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Minimum scan range to be considered.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("laser_min_range", rclcpp::ParameterValue(0.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Mixin weight for the probability of hitting an obstacle.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("z_hit", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Mixin weight for the probability of getting random measurements.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("z_rand", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Standard deviation of the hit distribution.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("sigma_hit", rclcpp::ParameterValue(0.2), descriptor);
+  }
 }
 
 AmclNode::~AmclNode()
@@ -176,6 +237,10 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
     "particle_cloud",
     rclcpp::SensorDataQoS());
 
+  likelihood_field_pub_ = create_publisher<nav_msgs::msg::OccupancyGrid>(
+    "likelihood_field",
+    rclcpp::SystemDefaultsQoS());
+
   map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
     get_parameter("map_topic").as_string(),
     rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
@@ -189,6 +254,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Activating");
   particle_cloud_pub_->on_activate();
+  likelihood_field_pub_->on_activate();
 
   RCLCPP_INFO(get_logger(), "Creating bond (%s) to lifecycle manager.", get_name());
 
@@ -204,6 +270,7 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State &
 {
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
+  likelihood_field_pub_->on_deactivate();
   bond_.reset();
 
   return CallbackReturn::SUCCESS;
@@ -213,6 +280,7 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
+  likelihood_field_pub_.reset();
   map_sub_.reset();
   return CallbackReturn::SUCCESS;
 }
@@ -238,8 +306,15 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     get_parameter("pf_err").as_double(),
     get_parameter("pf_z").as_double()};
 
+  auto likelihood_model_params = LikelihoodSensorModelParam{
+    get_parameter("laser_likelihood_max_dist").as_double(),
+    get_parameter("laser_max_range").as_double(),
+    get_parameter("z_hit").as_double(),
+    get_parameter("z_rand").as_double(),
+    get_parameter("sigma_hit").as_double()};
+
   particle_filter_ = std::make_unique<ParticleFilter>(
-    generation_params, kld_resampling_params, *map);
+    generation_params, kld_resampling_params, likelihood_model_params, *map);
 
   RCLCPP_INFO(
     get_logger(), "Particle filter initialized with %ld particles",
@@ -252,22 +327,29 @@ void AmclNode::timer_callback()
     return;
   }
 
-  auto message = nav2_msgs::msg::ParticleCloud{};
-  message.header.stamp = now();
-  message.header.frame_id = get_parameter("global_frame_id").as_string();
+  {
+    auto message = nav2_msgs::msg::ParticleCloud{};
+    message.header.stamp = now();
+    message.header.frame_id = get_parameter("global_frame_id").as_string();
+    message.particles.resize(particle_filter_->particles().size());
+    ranges::transform(
+      particle_filter_->particles(), std::begin(message.particles), [](const auto & particle) {
+        auto message = nav2_msgs::msg::Particle{};
+        message.pose = geometry_msgs::msg::Pose{beluga::state(particle)};
+        message.weight = beluga::weight(particle);
+        return message;
+      });
+    RCLCPP_INFO(get_logger(), "Publishing %ld particles", message.particles.size());
+    particle_cloud_pub_->publish(message);
+  }
 
-  message.particles.resize(particle_filter_->particles().size());
-
-  ranges::transform(
-    particle_filter_->particles(), std::begin(message.particles), [](const auto & particle) {
-      auto message = nav2_msgs::msg::Particle{};
-      message.pose = geometry_msgs::msg::Pose{beluga::state(particle)};
-      message.weight = beluga::weight(particle);
-      return message;
-    });
-
-  RCLCPP_INFO(get_logger(), "Publishing %ld particles", message.particles.size());
-  particle_cloud_pub_->publish(message);
+  {
+    auto message = particle_filter_->get_likelihood_field_as_gridmap();
+    message.header.stamp = now();
+    message.header.frame_id = get_parameter("global_frame_id").as_string();
+    RCLCPP_INFO(get_logger(), "Publishing likelihood field");
+    likelihood_field_pub_->publish(message);
+  }
 }
 
 }  // namespace beluga_amcl

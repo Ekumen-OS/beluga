@@ -53,6 +53,8 @@ protected:
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp_lifecycle::LifecyclePublisher<nav2_msgs::msg::ParticleCloud>::SharedPtr
     particle_cloud_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr
+    likelihood_field_pub_;
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
 };
 
