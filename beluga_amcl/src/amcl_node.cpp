@@ -208,7 +208,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.description = "Standard deviation of the hit distribution.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("sigma_hit", rclcpp::ParameterValue(0.2), descriptor);
   }
