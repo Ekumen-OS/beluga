@@ -3,7 +3,7 @@ services:
   dev:
     build:
       context: ..
-      dockerfile: docker/images/galactic/Dockerfile
+      dockerfile: docker/images/humble/Dockerfile
     container_name: beluga-dev
     environment:
       - DISPLAY

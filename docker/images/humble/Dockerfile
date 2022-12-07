@@ -4,20 +4,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
-    apt-transport-https \
-    apt-utils \
-    bash-completion \
-    build-essential \
-    ca-certificates \
-    clang-format \
-    clang-tidy \
-    cmake \
     curl \
-    git \
-    python3 \
     python3-pip \
-    software-properties-common \
-    sudo \
   && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
