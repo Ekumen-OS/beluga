@@ -123,17 +123,16 @@ public:
 
   [[nodiscard]] double importance_weight(const Pose & pose) const
   {
-    const auto x_offset = pose.x - map_metadata_.origin.position.x;
-    const auto y_offset = pose.y - map_metadata_.origin.position.y;
+    // Compute offset in scaled map coordinates
+    const auto x_offset = (pose.x - map_metadata_.origin.position.x) / map_metadata_.resolution;
+    const auto y_offset = (pose.y - map_metadata_.origin.position.y) / map_metadata_.resolution;
     const auto lock = std::shared_lock<std::shared_mutex>(points_mutex_);
     /* *INDENT-OFF* Avoid uncrustify reformat */
     return std::transform_reduce(
       points_.cbegin(), points_.cend(), 0.0, std::plus{},
       [this, pose, x_offset, y_offset](const auto & point) {
-        auto x = point.first * std::cos(pose.theta) - point.second * std::sin(pose.theta);
-        auto y = point.first * std::sin(pose.theta) + point.second * std::cos(pose.theta);
-        x = (x + x_offset) / map_metadata_.resolution;
-        y = (y + y_offset) / map_metadata_.resolution;
+        const auto x = point.first * std::cos(pose.theta) - point.second * std::sin(pose.theta) + x_offset;
+        const auto y = point.first * std::sin(pose.theta) + point.second * std::cos(pose.theta) + y_offset;
         const auto x_index = static_cast<std::intmax_t>(std::floor(x));
         const auto y_index = static_cast<std::intmax_t>(std::floor(y));
         if (x_index >= map_metadata_.width || y_index >= map_metadata_.height) {
@@ -161,10 +160,10 @@ public:
 
   void update_sensor(
     const sensor_msgs::msg::LaserScan & laser_scan,
-    const geometry_msgs::msg::TransformStamped & laser_transform)
+    const geometry_msgs::msg::TransformStamped & base_to_laser_stamped)
   {
-    auto base_transform = tf2::Transform{};
-    tf2::convert(laser_transform.transform, base_transform);
+    auto base_to_laser_transform = tf2::Transform{};
+    tf2::convert(base_to_laser_stamped.transform, base_to_laser_transform);
     const float range_min =
       std::max(laser_scan.range_min, static_cast<float>(params_.min_laser_distance));
     const float range_max =
@@ -176,14 +175,16 @@ public:
       if (std::isnan(range) || range < range_min || range > range_max) {
         continue;
       }
-      // Store points in the robot's reference frame
+      // Store points in the robot's reference frame with scaled coordinates
       const float angle = laser_scan.angle_min +
         static_cast<float>(index) * laser_scan.angle_increment;
-      const auto point = base_transform * tf2::Vector3{
+      const auto point = base_to_laser_transform * tf2::Vector3{
         range * std::cos(angle),
         range * std::sin(angle),
         0.0};
-      point_buffer.emplace_back(point.x(), point.y());
+      point_buffer.emplace_back(
+        point.x() / map_metadata_.resolution,
+        point.y() / map_metadata_.resolution);
     }
     const auto lock = std::lock_guard<std::shared_mutex>(points_mutex_);
     points_ = std::move(point_buffer);
@@ -205,7 +206,6 @@ private:
   LikelihoodSensorModelParam params_;
   nav_msgs::msg::MapMetaData map_metadata_;
   std::vector<std::size_t> free_cells_;
-
   std::vector<double> likelihood_field_;
 
   // TODO(nahuel): Create a mixin type to ensure thread safety for sensor and motion models.
@@ -275,8 +275,7 @@ private:
       };
 
     const auto distance_map = nearest_obstacle_distance_map(
-      obstacle_map, squared_distance,
-      neighbors);
+      obstacle_map, squared_distance, neighbors);
     return distance_map | ranges::views::transform(to_likelihood) | ranges::to<std::vector>;
   }
 };

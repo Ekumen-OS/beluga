@@ -411,12 +411,12 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   try {
     using namespace std::chrono_literals;
-    auto transform_stamped = tf_buffer_->lookupTransform(
+    const auto laser_transform = tf_buffer_->lookupTransform(
       get_parameter("base_frame_id").as_string(),
       laser_scan->header.frame_id,
       laser_scan->header.stamp,
       0s);
-    particle_filter_->update_sensor(*laser_scan, transform_stamped);
+    particle_filter_->update_sensor(*laser_scan, laser_transform);
     particle_filter_->update();
   } catch (const tf2::TransformException & error) {
     RCLCPP_ERROR(get_logger(), "Could not transform laser: %s", error.what());
