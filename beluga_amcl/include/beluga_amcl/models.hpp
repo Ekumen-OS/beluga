@@ -123,19 +123,19 @@ public:
 
   [[nodiscard]] double importance_weight(const Pose & pose) const
   {
-    auto x_offset = pose.x - map_metadata_.origin.position.x;
-    auto y_offset = pose.y - map_metadata_.origin.position.y;
+    const auto x_offset = pose.x - map_metadata_.origin.position.x;
+    const auto y_offset = pose.y - map_metadata_.origin.position.y;
     const auto lock = std::shared_lock<std::shared_mutex>(points_mutex_);
     /* *INDENT-OFF* Avoid uncrustify reformat */
     return std::transform_reduce(
       points_.cbegin(), points_.cend(), 0.0, std::plus{},
       [this, pose, x_offset, y_offset](const auto & point) {
-        auto x = point.first * std::cos(pose.theta) + point.second * std::sin(pose.theta);
+        auto x = point.first * std::cos(pose.theta) - point.second * std::sin(pose.theta);
         auto y = point.first * std::sin(pose.theta) + point.second * std::cos(pose.theta);
         x = (x + x_offset) / map_metadata_.resolution;
         y = (y + y_offset) / map_metadata_.resolution;
-        auto x_index = static_cast<std::intmax_t>(std::floor(x));
-        auto y_index = static_cast<std::intmax_t>(std::floor(y));
+        const auto x_index = static_cast<std::intmax_t>(std::floor(x));
+        const auto y_index = static_cast<std::intmax_t>(std::floor(y));
         if (x_index >= map_metadata_.width || y_index >= map_metadata_.height) {
           return 0.;
         }
@@ -150,7 +150,7 @@ public:
     auto index_distribution = std::uniform_int_distribution<std::size_t>{0, free_cells_.size() - 1};
     auto theta_distribution = std::uniform_real_distribution<double>{-M_PI, M_PI};
     auto pose = Pose{};
-    auto index = free_cells_[index_distribution(generator)];
+    const auto index = free_cells_[index_distribution(generator)];
     pose.x = static_cast<double>(index % map_metadata_.width) + 0.5;
     pose.y = static_cast<double>(index / map_metadata_.width) + 0.5;
     pose.x = pose.x * map_metadata_.resolution + map_metadata_.origin.position.x;
@@ -165,20 +165,21 @@ public:
   {
     auto base_transform = tf2::Transform{};
     tf2::convert(laser_transform.transform, base_transform);
-    auto range_min = std::max(laser_scan.range_min, static_cast<float>(params_.min_laser_distance));
-    auto range_max = std::min(laser_scan.range_max, static_cast<float>(params_.max_laser_distance));
+    const float range_min =
+      std::max(laser_scan.range_min, static_cast<float>(params_.min_laser_distance));
+    const float range_max =
+      std::min(laser_scan.range_max, static_cast<float>(params_.max_laser_distance));
     auto point_buffer = decltype(points_) {};
     point_buffer.reserve(laser_scan.ranges.size());
     for (std::size_t index = 0; index < laser_scan.ranges.size(); ++index) {
-      auto range = laser_scan.ranges[index];
+      float range = laser_scan.ranges[index];
       if (std::isnan(range) || range < range_min || range > range_max) {
         continue;
       }
       // Store points in the robot's reference frame
-      using ScalarType = decltype(laser_scan.angle_increment);
-      auto angle = laser_scan.angle_min + static_cast<ScalarType>(index) *
-        laser_scan.angle_increment;
-      auto point = base_transform * tf2::Vector3{
+      const float angle = laser_scan.angle_min +
+        static_cast<float>(index) * laser_scan.angle_increment;
+      const auto point = base_transform * tf2::Vector3{
         range * std::cos(angle),
         range * std::sin(angle),
         0.0};
@@ -206,6 +207,8 @@ private:
   std::vector<std::size_t> free_cells_;
 
   std::vector<double> likelihood_field_;
+
+  // TODO(nahuel): Create a mixin type to ensure thread safety for sensor and motion models.
   std::vector<std::pair<double, double>> points_;
   mutable std::shared_mutex points_mutex_;
 
@@ -238,9 +241,9 @@ private:
         squared_resolution = map.info.resolution * map.info.resolution,
         squared_max_distance = params.max_obstacle_distance * params.max_obstacle_distance
       ](std::size_t first, std::size_t second) {
-        auto delta_x =
+        const auto delta_x =
           static_cast<std::intmax_t>(first % width) - static_cast<std::intmax_t>(second % width);
-        auto delta_y =
+        const auto delta_y =
           static_cast<std::intmax_t>(first / width) - static_cast<std::intmax_t>(second / width);
         return std::min(
           static_cast<double>(delta_x * delta_x + delta_y * delta_y) * squared_resolution,
@@ -271,7 +274,9 @@ private:
         return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
       };
 
-    auto distance_map = nearest_obstacle_distance_map(obstacle_map, squared_distance, neighbors);
+    const auto distance_map = nearest_obstacle_distance_map(
+      obstacle_map, squared_distance,
+      neighbors);
     return distance_map | ranges::views::transform(to_likelihood) | ranges::to<std::vector>;
   }
 };
