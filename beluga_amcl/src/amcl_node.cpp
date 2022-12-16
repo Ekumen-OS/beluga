@@ -24,6 +24,7 @@
 
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
@@ -345,18 +346,18 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 {
   RCLCPP_INFO(get_logger(), "A new map was received");
 
-  auto generation_params = beluga::AdaptiveGenerationParam{
+  const auto generation_params = beluga::AdaptiveGenerationParam{
     get_parameter("recovery_alpha_slow").as_double(),
     get_parameter("recovery_alpha_fast").as_double()};
 
-  auto kld_resampling_params = beluga::KldResamplingParam{
+  const auto kld_resampling_params = beluga::KldResamplingParam{
     static_cast<std::size_t>(get_parameter("min_particles").as_int()),
     static_cast<std::size_t>(get_parameter("max_particles").as_int()),
     get_parameter("spatial_resolution").as_double(),
     get_parameter("pf_err").as_double(),
     get_parameter("pf_z").as_double()};
 
-  auto likelihood_model_params = LikelihoodSensorModelParam{
+  const auto likelihood_field_model_params = beluga::LikelihoodFieldModelParam{
     get_parameter("laser_likelihood_max_dist").as_double(),
     get_parameter("laser_min_range").as_double(),
     get_parameter("laser_max_range").as_double(),
@@ -365,16 +366,25 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     get_parameter("sigma_hit").as_double()};
 
   particle_filter_ = std::make_unique<ParticleFilter>(
-    generation_params, kld_resampling_params, likelihood_model_params, *map);
+    generation_params,
+    kld_resampling_params,
+    likelihood_field_model_params,
+    OccupancyGrid{map});
 
   RCLCPP_INFO(
     get_logger(), "Particle filter initialized with %ld particles",
     particle_filter_->particles().size());
 
   {
-    auto message = particle_filter_->get_likelihood_field_as_gridmap();
+    const auto & likelihood_field = particle_filter_->likelihood_field();
+    auto message = nav_msgs::msg::OccupancyGrid{};
     message.header.stamp = now();
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
+    message.header.frame_id = map->header.frame_id;
+    message.info = map->info;
+    message.data.resize(likelihood_field.size());
+    for (std::size_t index = 0; index < message.data.size(); ++index) {
+      message.data[index] = static_cast<std::int8_t>(likelihood_field[index] * 100);
+    }
     RCLCPP_INFO(get_logger(), "Publishing likelihood field");
     likelihood_field_pub_->publish(message);
   }
@@ -393,8 +403,16 @@ void AmclNode::timer_callback()
     message.particles.resize(particle_filter_->particles().size());
     ranges::transform(
       particle_filter_->particles(), std::begin(message.particles), [](const auto & particle) {
+        const auto state = beluga::state(particle);
+        const double theta = state.so2().log();
         auto message = nav2_msgs::msg::Particle{};
-        message.pose = geometry_msgs::msg::Pose{beluga::state(particle)};
+        message.pose.position.x = state.translation().x();
+        message.pose.position.y = state.translation().y();
+        message.pose.position.z = 0;
+        message.pose.orientation.w = std::cos(theta / 2.);
+        message.pose.orientation.x = 0;
+        message.pose.orientation.y = 0;
+        message.pose.orientation.z = std::sin(theta / 2.);
         message.weight = beluga::weight(particle);
         return message;
       });
@@ -410,13 +428,38 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   }
 
   try {
-    using namespace std::chrono_literals;
-    const auto laser_transform = tf_buffer_->lookupTransform(
-      get_parameter("base_frame_id").as_string(),
-      laser_scan->header.frame_id,
-      laser_scan->header.stamp,
-      0s);
-    particle_filter_->update_sensor(*laser_scan, laser_transform);
+    auto base_to_laser_transform = tf2::Transform{};
+    tf2::convert(
+      tf_buffer_->lookupTransform(
+        get_parameter("base_frame_id").as_string(),
+        laser_scan->header.frame_id,
+        laser_scan->header.stamp,
+        std::chrono::seconds(1)).transform, base_to_laser_transform);
+    const float range_min =
+      std::max(
+      laser_scan->range_min,
+      static_cast<float>(get_parameter("laser_min_range").as_double()));
+    const float range_max =
+      std::min(
+      laser_scan->range_max,
+      static_cast<float>(get_parameter("laser_max_range").as_double()));
+    auto points = std::vector<std::pair<double, double>>{};
+    points.reserve(laser_scan->ranges.size());
+    for (std::size_t index = 0; index < laser_scan->ranges.size(); ++index) {
+      const float range = laser_scan->ranges[index];
+      if (std::isnan(range) || range < range_min || range > range_max) {
+        continue;
+      }
+      // Store points in the robot's reference frame
+      const float angle = laser_scan->angle_min +
+        static_cast<float>(index) * laser_scan->angle_increment;
+      const auto point = base_to_laser_transform * tf2::Vector3{
+        range * std::cos(angle),
+        range * std::sin(angle),
+        0.0};
+      points.emplace_back(point.x(), point.y());
+    }
+    particle_filter_->update_sensor(points);
     particle_filter_->update();
   } catch (const tf2::TransformException & error) {
     RCLCPP_ERROR(get_logger(), "Could not transform laser: %s", error.what());
