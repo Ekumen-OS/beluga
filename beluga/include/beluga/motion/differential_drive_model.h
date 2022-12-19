@@ -24,10 +24,10 @@
 namespace beluga {
 
 struct DifferentialDriveModelParam {
-  double alpha1;
-  double alpha2;
-  double alpha3;
-  double alpha4;
+  double rotation_noise_from_rotation;
+  double rotation_noise_from_translation;
+  double translation_noise_from_translation;
+  double translation_noise_from_rotation;
   double distance_threshold = 0.01; /* Distance threshold to detect in-place rotation */
 };
 
@@ -41,16 +41,14 @@ class DifferentialDriveModel : public Mixin {
       : Mixin(std::forward<Args>(args)...), params_{params} {}
 
   [[nodiscard]] Sophus::SE2d apply_motion(const Sophus::SE2d& state) const {
-    static thread_local std::mt19937 generator{std::random_device()()};
-    auto distribution = std::normal_distribution<double>{};
-    using Eigen::Vector2d;
-    using Sophus::SE2d;
-    using Sophus::SO2d;
+    static thread_local auto generator = std::mt19937{std::random_device()()};
+    static thread_local auto distribution = std::normal_distribution<double>{};
+
     const auto lock = std::shared_lock<std::shared_mutex>{params_mutex_};
-    const auto first_rotation = SO2d{distribution(generator, first_rotation_params_)};
-    const auto translation = Vector2d{distribution(generator, translation_params_), 0.0};
-    const auto second_rotation = SO2d{distribution(generator, second_rotation_params_)};
-    return state * SE2d{first_rotation, Vector2d{0.0, 0.0}} * SE2d{second_rotation, translation};
+    const auto first_rotation = Sophus::SO2d{distribution(generator, first_rotation_params_)};
+    const auto translation = Eigen::Vector2d{distribution(generator, translation_params_), 0.0};
+    const auto second_rotation = Sophus::SO2d{distribution(generator, second_rotation_params_)};
+    return state * Sophus::SE2d{first_rotation, Eigen::Vector2d{0.0, 0.0}} * Sophus::SE2d{second_rotation, translation};
   }
 
   void update_motion(const Sophus::SE2d& pose) {
@@ -68,16 +66,21 @@ class DifferentialDriveModel : public Mixin {
       const auto second_rotation = current_orientation * previous_orientation.inverse() * first_rotation.inverse();
       const auto combined_rotation = first_rotation * second_rotation;
 
-      const auto lock = std::lock_guard<std::shared_mutex>{params_mutex_};
-      first_rotation_params_ = DistributionParam{
-          first_rotation.log(),
-          std::sqrt(params_.alpha1 * rotation_variance(first_rotation) + params_.alpha2 * distance_variance)};
-      translation_params_ = DistributionParam{
-          distance,
-          std::sqrt(params_.alpha3 * distance_variance + params_.alpha4 * rotation_variance(combined_rotation))};
-      second_rotation_params_ = DistributionParam{
-          second_rotation.log(),
-          std::sqrt(params_.alpha1 * rotation_variance(second_rotation) + params_.alpha2 * distance_variance)};
+      {
+        const auto lock = std::lock_guard<std::shared_mutex>{params_mutex_};
+        first_rotation_params_ = DistributionParam{
+            first_rotation.log(), std::sqrt(
+                                      params_.rotation_noise_from_rotation * rotation_variance(first_rotation) +
+                                      params_.rotation_noise_from_translation * distance_variance)};
+        translation_params_ = DistributionParam{
+            distance, std::sqrt(
+                          params_.translation_noise_from_translation * distance_variance +
+                          params_.translation_noise_from_rotation * rotation_variance(combined_rotation))};
+        second_rotation_params_ = DistributionParam{
+            second_rotation.log(), std::sqrt(
+                                       params_.rotation_noise_from_rotation * rotation_variance(second_rotation) +
+                                       params_.rotation_noise_from_translation * distance_variance)};
+      }
     }
     last_pose_ = pose;
   }
