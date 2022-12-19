@@ -15,6 +15,8 @@
 #ifndef BELUGA_AMCL__AMCL_NODE_HPP_
 #define BELUGA_AMCL__AMCL_NODE_HPP_
 
+#include <beluga/motion/stationary_model.h>
+#include <beluga/sensor/likelihood_field_model.h>
 #include <message_filters/subscriber.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/message_filter.h>
@@ -25,7 +27,7 @@
 
 #include <memory>
 
-#include <beluga_amcl/models.hpp>
+#include <beluga_amcl/occupancy_grid.hpp>
 #include <bondcpp/bond.hpp>
 #include <nav2_msgs/msg/particle_cloud.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
@@ -38,8 +40,13 @@ namespace beluga_amcl
 class AmclNode : public rclcpp_lifecycle::LifecycleNode
 {
 public:
+  template<class Mixin>
+  using SensorModel = typename beluga::LikelihoodFieldModel<Mixin, OccupancyGrid>;
+
   using rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
-  using ParticleFilter = beluga::AMCL<StationaryMotionModel, LikelihoodSensorModel, Pose>;
+
+  // TODO(nahuel): Use a real motion model.
+  using ParticleFilter = beluga::AMCL<beluga::StationaryModel, SensorModel, Sophus::SE2d>;
 
   explicit AmclNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
   virtual ~AmclNode();

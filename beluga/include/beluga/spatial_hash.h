@@ -22,6 +22,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <sophus/se2.hpp>
+
 namespace beluga {
 
 namespace detail {
@@ -61,6 +63,15 @@ struct spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Type
  public:
   constexpr std::size_t operator()(const Tuple<Types...>& tuple, double resolution = 1.) const {
     return detail::hash_impl(tuple, resolution, std::make_index_sequence<sizeof...(Types)>());
+  }
+};
+
+template <>
+struct spatial_hash<Sophus::SE2d, void> {
+ public:
+  std::size_t operator()(const Sophus::SE2d& state, double resolution = 1.) const {
+    const auto& position = state.translation();
+    return spatial_hash<std::tuple<double, double>>{}(std::make_tuple(position.x(), position.y()), resolution);
   }
 };
 

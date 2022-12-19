@@ -14,10 +14,4 @@
 
 #pragma once
 
-#include <beluga/algorithm.h>
-#include <beluga/motion.h>
-#include <beluga/sensor.h>
-#include <beluga/spatial_hash.h>
-#include <beluga/tuple_vector.h>
-#include <beluga/type_traits.h>
-#include <beluga/views.h>
+#include <beluga/sensor/likelihood_field_model.h>

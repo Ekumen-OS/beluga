@@ -14,6 +14,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
 add_executable(amcl_node)
@@ -30,6 +31,7 @@ ament_target_dependencies(amcl_node PUBLIC
   rclcpp_components
   rclcpp_lifecycle
   sensor_msgs
+  tf2_eigen
   tf2_geometry_msgs)
 
 install(TARGETS amcl_node
