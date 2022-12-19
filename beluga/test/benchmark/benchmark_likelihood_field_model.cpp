@@ -26,9 +26,9 @@ void BM_PointTransform_Baseline(benchmark::State& state) {
   const auto count = state.range(0);
   state.SetComplexityN(count);
   const auto particles = std::vector<Sophus::SE2d>{kNumParticles};
+  const auto points = std::vector<std::pair<double, double>>(count);
+  const auto origin = Sophus::SE2d{};
   for (auto _ : state) {
-    const auto points = std::vector<std::pair<double, double>>(count);
-    const auto origin = Sophus::SE2d{};
     for (const auto& pose : particles) {
       const auto transform = origin * pose;
       const double x_offset = transform.translation().x();
@@ -48,9 +48,9 @@ void BM_PointTransform_EigenSophus(benchmark::State& state) {
   const auto count = state.range(0);
   state.SetComplexityN(count);
   const auto particles = std::vector<Sophus::SE2d>{kNumParticles};
+  const auto points = std::vector<Eigen::Vector2d>(count);
+  const auto origin = Sophus::SE2d{};
   for (auto _ : state) {
-    const auto points = std::vector<Eigen::Vector2d>(count);
-    const auto origin = Sophus::SE2d{};
     for (const auto& pose : particles) {
       const auto transform = origin * pose;
       for (const auto& point : points) {
