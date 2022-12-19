@@ -459,7 +459,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
         0.0};
       points.emplace_back(point.x(), point.y());
     }
-    particle_filter_->update_sensor(points);
+    particle_filter_->update_sensor(std::move(points));
     particle_filter_->update();
   } catch (const tf2::TransformException & error) {
     RCLCPP_ERROR(get_logger(), "Could not transform laser: %s", error.what());
