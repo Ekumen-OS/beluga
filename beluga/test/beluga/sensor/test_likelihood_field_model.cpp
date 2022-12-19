@@ -60,16 +60,18 @@ class StaticOccupancyGrid {
 
   auto neighbors(std::size_t index) const {
     auto result = std::vector<std::size_t>{};
-    if (index / width() < (height() - 1)) {
+    const std::size_t row = index / width();
+    const std::size_t col = index % width();
+    if (row < (height() - 1)) {
       result.push_back(index + width());
     }
-    if (index / width() > 0) {
+    if (row > 0) {
       result.push_back(index - width());
     }
-    if (index % width() < (width() - 1)) {
+    if (col < (width() - 1)) {
       result.push_back(index + 1);
     }
-    if (index % width() > 0) {
+    if (col > 0) {
       result.push_back(index - 1);
     }
     return result;
