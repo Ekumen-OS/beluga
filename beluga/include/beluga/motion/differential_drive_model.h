@@ -24,11 +24,11 @@
 namespace beluga {
 
 struct DifferentialDriveModelParam {
-  double rotation_noise_from_rotation;
-  double rotation_noise_from_translation;
-  double translation_noise_from_translation;
-  double translation_noise_from_rotation;
-  double distance_threshold = 0.01; /* Distance threshold to detect in-place rotation */
+  double rotation_noise_from_rotation;        // alpha1
+  double rotation_noise_from_translation;     // alpha2
+  double translation_noise_from_translation;  // alpha3
+  double translation_noise_from_rotation;     // alpha4
+  double distance_threshold = 0.01;           // distance threshold to detect in-place rotation
 };
 
 template <class Mixin>
