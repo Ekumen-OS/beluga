@@ -14,4 +14,5 @@
 
 #pragma once
 
+#include <beluga/motion/differential_drive_model.h>
 #include <beluga/motion/stationary_model.h>
