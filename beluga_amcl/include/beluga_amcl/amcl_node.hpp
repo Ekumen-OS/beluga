@@ -28,6 +28,7 @@
 #include <beluga/algorithm/particle_filter.hpp>
 #include <beluga_amcl/occupancy_grid.hpp>
 #include <bondcpp/bond.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <nav2_msgs/msg/particle_cloud.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
@@ -69,6 +70,8 @@ protected:
     particle_cloud_pub_;
   rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr
     likelihood_field_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
+    pose_pub_;
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;

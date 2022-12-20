@@ -22,6 +22,7 @@
 #include <limits>
 #include <memory>
 
+#include <beluga_amcl/convert.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
 #include <range/v3/range/conversion.hpp>
@@ -267,6 +268,10 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
     "likelihood_field",
     rclcpp::SystemDefaultsQoS());
 
+  pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
+    "pose",
+    rclcpp::SystemDefaultsQoS());
+
   return CallbackReturn::SUCCESS;
 }
 
@@ -275,6 +280,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
   RCLCPP_INFO(get_logger(), "Activating");
   particle_cloud_pub_->on_activate();
   likelihood_field_pub_->on_activate();
+  pose_pub_->on_activate();
 
   RCLCPP_INFO(get_logger(), "Creating bond (%s) to lifecycle manager.", get_name());
 
@@ -319,6 +325,7 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State &
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
   likelihood_field_pub_->on_deactivate();
+  pose_pub_->on_deactivate();
   laser_scan_sub_.reset();
   map_sub_.reset();
   bond_.reset();
@@ -333,6 +340,7 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   likelihood_field_pub_.reset();
+  pose_pub_.reset();
   return CallbackReturn::SUCCESS;
 }
 
@@ -403,21 +411,27 @@ void AmclNode::timer_callback()
     message.particles.resize(particle_filter_->particles().size());
     ranges::transform(
       particle_filter_->particles(), std::begin(message.particles), [](const auto & particle) {
-        const auto state = beluga::state(particle);
-        const double theta = state.so2().log();
         auto message = nav2_msgs::msg::Particle{};
-        message.pose.position.x = state.translation().x();
-        message.pose.position.y = state.translation().y();
-        message.pose.position.z = 0;
-        message.pose.orientation.w = std::cos(theta / 2.);
-        message.pose.orientation.x = 0;
-        message.pose.orientation.y = 0;
-        message.pose.orientation.z = std::sin(theta / 2.);
+        message.pose = toMsg(beluga::state(particle));
         message.weight = beluga::weight(particle);
         return message;
       });
     RCLCPP_INFO(get_logger(), "Publishing %ld particles", message.particles.size());
     particle_cloud_pub_->publish(message);
+  }
+
+  {
+    const auto [pose, covariance] = particle_filter_->estimated_pose();
+    auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
+    message.header.stamp = now();
+    message.header.frame_id = get_parameter("global_frame_id").as_string();
+    message.pose.pose = toMsg(pose);
+    message.pose.covariance[0] = covariance.coeff(0, 0);
+    message.pose.covariance[1] = covariance.coeff(0, 1);
+    message.pose.covariance[6] = covariance.coeff(1, 0);
+    message.pose.covariance[7] = covariance.coeff(1, 1);
+    message.pose.covariance[35] = covariance.coeff(2, 2);
+    pose_pub_->publish(message);
   }
 }
 
