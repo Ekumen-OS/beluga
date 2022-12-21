@@ -14,7 +14,7 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/algorithm/particle_filter.h>
+#include <beluga/algorithm/particle_filter.hpp>
 
 namespace beluga {
 

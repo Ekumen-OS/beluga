@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-#include <beluga/algorithm/exponential_filter.h>
+#include <beluga/algorithm/exponential_filter.hpp>
 
 namespace {
 

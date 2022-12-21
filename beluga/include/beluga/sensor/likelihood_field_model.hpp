@@ -14,14 +14,13 @@
 
 #pragma once
 
-#include <beluga/algorithm/distance_map.h>
-
 #include <algorithm>
 #include <cmath>
 #include <random>
 #include <shared_mutex>
 #include <vector>
 
+#include <beluga/algorithm/distance_map.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>

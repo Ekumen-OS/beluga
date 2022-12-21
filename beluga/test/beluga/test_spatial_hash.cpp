@@ -13,9 +13,12 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
-#include <range/v3/view.hpp>
 
-#include <beluga/spatial_hash.h>
+#include <beluga/spatial_hash.hpp>
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/cartesian_product.hpp>
+#include <range/v3/view/iota.hpp>
+#include <range/v3/view/transform.hpp>
 
 namespace {
 

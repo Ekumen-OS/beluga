@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <iostream>
-
 #include <gmock/gmock.h>
 
-#include <beluga/tuple_vector.h>
-#include <beluga/type_traits.h>
+#include <beluga/tuple_vector.hpp>
+#include <beluga/type_traits.hpp>
 
 namespace {
 

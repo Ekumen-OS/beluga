@@ -14,4 +14,7 @@
 
 #pragma once
 
-#include <beluga/sensor/likelihood_field_model.h>
+#include <beluga/algorithm/distance_map.hpp>
+#include <beluga/algorithm/exponential_filter.hpp>
+#include <beluga/algorithm/particle_filter.hpp>
+#include <beluga/algorithm/sampling.hpp>

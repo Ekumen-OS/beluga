@@ -19,15 +19,14 @@
 #include <random>
 #include <unordered_set>
 
+#include <beluga/algorithm/exponential_filter.hpp>
+#include <beluga/spatial_hash.hpp>
+#include <beluga/type_traits.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/transform.hpp>
-
-#include <beluga/algorithm/exponential_filter.h>
-#include <beluga/spatial_hash.h>
-#include <beluga/type_traits.h>
 
 namespace beluga {
 

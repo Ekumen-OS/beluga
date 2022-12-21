@@ -17,8 +17,8 @@
 #include <tuple>
 #include <type_traits>
 
-#include <beluga/type_traits/container_traits.h>
-#include <beluga/views.h>
+#include <beluga/type_traits/container_traits.hpp>
+#include <beluga/views.hpp>
 
 namespace beluga {
 

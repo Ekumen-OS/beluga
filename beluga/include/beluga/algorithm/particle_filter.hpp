@@ -14,13 +14,12 @@
 
 #pragma once
 
+#include <beluga/algorithm/sampling.hpp>
+#include <beluga/tuple_vector.hpp>
+#include <beluga/type_traits.hpp>
+#include <ciabatta/ciabatta.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/transform.hpp>
-
-#include <beluga/algorithm/sampling.h>
-#include <beluga/tuple_vector.h>
-#include <beluga/type_traits.h>
-#include <ciabatta/ciabatta.h>
 
 namespace beluga {
 

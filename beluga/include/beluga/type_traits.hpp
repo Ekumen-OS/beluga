@@ -14,7 +14,5 @@
 
 #pragma once
 
-#include <beluga/algorithm/distance_map.h>
-#include <beluga/algorithm/exponential_filter.h>
-#include <beluga/algorithm/particle_filter.h>
-#include <beluga/algorithm/sampling.h>
+#include <beluga/type_traits/container_traits.hpp>
+#include <beluga/type_traits/particle_traits.hpp>

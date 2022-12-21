@@ -14,11 +14,14 @@
 
 #include <gmock/gmock.h>
 
-#include <range/v3/algorithm.hpp>
-#include <range/v3/view.hpp>
-
-#include <beluga/algorithm/sampling.h>
-#include <ciabatta/ciabatta.h>
+#include <beluga/algorithm/sampling.hpp>
+#include <ciabatta/ciabatta.hpp>
+#include <range/v3/algorithm/count.hpp>
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/generate.hpp>
+#include <range/v3/view/intersperse.hpp>
+#include <range/v3/view/take_exactly.hpp>
+#include <range/v3/view/take_while.hpp>
 
 namespace {
 
