@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_VIEWS_HPP
+#define BELUGA_VIEWS_HPP
 
 #include <tuple>
 
@@ -26,3 +27,5 @@ inline auto elements = ranges::views::transform([](auto&& particle) -> decltype(
 });
 
 }  // namespace beluga::views
+
+#endif

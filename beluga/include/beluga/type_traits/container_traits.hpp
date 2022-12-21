@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_TYPE_TRAITS_CONTAINER_TRAITS_HPP
+#define BELUGA_TYPE_TRAITS_CONTAINER_TRAITS_HPP
 
 #include <type_traits>
 
@@ -41,3 +42,5 @@ constexpr auto all(T&& container) {
 }  // namespace views
 
 }  // namespace beluga
+
+#endif

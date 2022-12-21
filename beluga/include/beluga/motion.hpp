@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_MOTION_HPP
+#define BELUGA_MOTION_HPP
 
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
+
+#endif

@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_SENSOR_HPP
+#define BELUGA_SENSOR_HPP
 
 #include <beluga/sensor/likelihood_field_model.hpp>
+
+#endif

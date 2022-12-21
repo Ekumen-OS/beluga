@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
+#define BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 
 #include <beluga/algorithm/sampling.hpp>
 #include <beluga/tuple_vector.hpp>
@@ -125,3 +126,5 @@ struct AMCL : public ciabatta::mixin<
 };
 
 }  // namespace beluga
+
+#endif

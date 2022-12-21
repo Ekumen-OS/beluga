@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_HPP
+#define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_HPP
 
 #include <algorithm>
 #include <cmath>
@@ -122,3 +123,5 @@ class LikelihoodFieldModel : public Mixin {
 };
 
 }  // namespace beluga
+
+#endif

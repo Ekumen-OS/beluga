@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_MOTION_STATIONARY_MODEL_HPP
+#define BELUGA_MOTION_STATIONARY_MODEL_HPP
 
 #include <random>
 
@@ -37,3 +38,5 @@ class StationaryModel : public Mixin {
 };
 
 }  // namespace beluga
+
+#endif

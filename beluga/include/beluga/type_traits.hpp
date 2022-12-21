@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_TYPE_TRAITS_HPP
+#define BELUGA_TYPE_TRAITS_HPP
 
 #include <beluga/type_traits/container_traits.hpp>
 #include <beluga/type_traits/particle_traits.hpp>
+
+#endif

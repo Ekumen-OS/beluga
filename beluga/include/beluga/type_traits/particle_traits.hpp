@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_TYPE_TRAITS_PARTICLE_TRAITS_HPP
+#define BELUGA_TYPE_TRAITS_PARTICLE_TRAITS_HPP
 
 #include <tuple>
 #include <type_traits>
@@ -153,3 +154,5 @@ constexpr auto make_from_state(T&& value) {
 }
 
 }  // namespace beluga
+
+#endif

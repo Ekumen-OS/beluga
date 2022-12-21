@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_MOTION_DIFFERENTIAL_DRIVE_MODEL_HPP
+#define BELUGA_MOTION_DIFFERENTIAL_DRIVE_MODEL_HPP
 
 #include <optional>
 #include <random>
@@ -103,3 +104,5 @@ class DifferentialDriveModel : public Mixin {
 };
 
 }  // namespace beluga
+
+#endif

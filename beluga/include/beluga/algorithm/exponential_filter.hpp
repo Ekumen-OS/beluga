@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_ALGORITHM_EXPONENTIAL_FILTER_HPP
+#define BELUGA_ALGORITHM_EXPONENTIAL_FILTER_HPP
 
 namespace beluga {
 
@@ -33,3 +34,5 @@ class ExponentialFilter {
 };
 
 }  // namespace beluga
+
+#endif
