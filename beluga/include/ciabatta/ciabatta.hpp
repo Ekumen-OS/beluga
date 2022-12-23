@@ -14,7 +14,6 @@
 
 /*
  * CHANGELOG:
- * - Use #pragma once as include guard.
  * - Add explicit keyword to mixin constructor and remove
  *   default constructor and assignment operators.
  * - Remove macro usage.
@@ -22,9 +21,8 @@
  *   support default template parameters.
  */
 
-#pragma once
-
-#include <type_traits>
+#ifndef CIABATTA_CIABATTA_HPP
+#define CIABATTA_CIABATTA_HPP
 
 namespace ciabatta {
 
@@ -86,3 +84,5 @@ struct provides : Base, Interface {
 }  // namespace mixins
 
 }  // namespace ciabatta
+
+#endif
