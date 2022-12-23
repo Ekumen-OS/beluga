@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <initializer_list>
-
 #include <gmock/gmock.h>
 
-#include <beluga/sensor/likelihood_field_model.h>
-#include <ciabatta/ciabatta.h>
+#include <beluga/sensor/likelihood_field_model.hpp>
+#include <ciabatta/ciabatta.hpp>
 
 namespace {
 

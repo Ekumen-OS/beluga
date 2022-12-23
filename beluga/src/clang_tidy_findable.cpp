@@ -20,6 +20,6 @@
  * library.
  */
 
-#include <beluga/beluga.h>
+#include <beluga/beluga.hpp>
 
 int main() {}

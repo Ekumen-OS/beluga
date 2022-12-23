@@ -12,9 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_ALGORITHM_EXPONENTIAL_FILTER_HPP
+#define BELUGA_ALGORITHM_EXPONENTIAL_FILTER_HPP
 
-#include <beluga/algorithm/distance_map.h>
-#include <beluga/algorithm/exponential_filter.h>
-#include <beluga/algorithm/particle_filter.h>
-#include <beluga/algorithm/sampling.h>
+namespace beluga {
+
+class ExponentialFilter {
+ public:
+  explicit ExponentialFilter(double alpha) : alpha_{alpha} {}
+
+  void reset() { output_ = 0.; }
+
+  [[nodiscard]] double operator()(double input) {
+    output_ += (output_ == 0.) ? input : alpha_ * (input - output_);
+    return output_;
+  }
+
+ private:
+  double output_{0.};
+  double alpha_{0.};
+};
+
+}  // namespace beluga
+
+#endif

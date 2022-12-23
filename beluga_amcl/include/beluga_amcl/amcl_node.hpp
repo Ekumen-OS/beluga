@@ -15,18 +15,17 @@
 #ifndef BELUGA_AMCL__AMCL_NODE_HPP_
 #define BELUGA_AMCL__AMCL_NODE_HPP_
 
-#include <beluga/motion/stationary_model.h>
-#include <beluga/sensor/likelihood_field_model.h>
 #include <message_filters/subscriber.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/message_filter.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 
-#include <beluga/algorithm/particle_filter.h>
-
 #include <memory>
 
+#include <beluga/motion/stationary_model.hpp>
+#include <beluga/sensor/likelihood_field_model.hpp>
+#include <beluga/algorithm/particle_filter.hpp>
 #include <beluga_amcl/occupancy_grid.hpp>
 #include <bondcpp/bond.hpp>
 #include <nav2_msgs/msg/particle_cloud.hpp>

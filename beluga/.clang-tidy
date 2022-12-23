@@ -6,6 +6,8 @@ Checks: >
   abseil-*,
   bugprone-*,
   google-*,
+  llvm-header-guard,
+  llvm-include-order,
   misc-*,
   modernize-*,
   performance-*,

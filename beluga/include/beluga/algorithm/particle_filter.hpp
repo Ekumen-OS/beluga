@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
+#define BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 
+#include <beluga/algorithm/sampling.hpp>
+#include <beluga/tuple_vector.hpp>
+#include <beluga/type_traits.hpp>
+#include <ciabatta/ciabatta.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/transform.hpp>
-
-#include <beluga/algorithm/sampling.h>
-#include <beluga/tuple_vector.h>
-#include <beluga/type_traits.h>
-#include <ciabatta/ciabatta.h>
 
 namespace beluga {
 
@@ -126,3 +126,5 @@ struct AMCL : public ciabatta::mixin<
 };
 
 }  // namespace beluga
+
+#endif

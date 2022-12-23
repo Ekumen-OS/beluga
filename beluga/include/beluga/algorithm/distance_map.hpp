@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_ALGORITHM_DISTANCE_MAP_HPP
+#define BELUGA_ALGORITHM_DISTANCE_MAP_HPP
 
 #include <queue>
 #include <vector>
@@ -60,3 +61,5 @@ auto nearest_obstacle_distance_map(
 
   return distance_map;
 }
+
+#endif

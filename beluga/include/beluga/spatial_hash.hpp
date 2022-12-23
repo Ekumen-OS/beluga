@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_SPATIAL_HASH_HPP
+#define BELUGA_SPATIAL_HASH_HPP
 
 #include <bitset>
 #include <cmath>
@@ -76,3 +77,5 @@ struct spatial_hash<Sophus::SE2d, void> {
 };
 
 }  // namespace beluga
+
+#endif

@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <beluga/algorithm/distance_map.h>
+#ifndef BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_HPP
+#define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_HPP
 
 #include <algorithm>
 #include <cmath>
@@ -22,6 +21,7 @@
 #include <shared_mutex>
 #include <vector>
 
+#include <beluga/algorithm/distance_map.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
@@ -123,3 +123,5 @@ class LikelihoodFieldModel : public Mixin {
 };
 
 }  // namespace beluga
+
+#endif

@@ -12,12 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_VIEWS_HPP
+#define BELUGA_VIEWS_HPP
 
-#include <beluga/algorithm.h>
-#include <beluga/motion.h>
-#include <beluga/sensor.h>
-#include <beluga/spatial_hash.h>
-#include <beluga/tuple_vector.h>
-#include <beluga/type_traits.h>
-#include <beluga/views.h>
+#include <tuple>
+
+#include <range/v3/view/transform.hpp>
+
+namespace beluga::views {
+
+template <std::size_t N>
+inline auto elements = ranges::views::transform([](auto&& particle) -> decltype(auto) {
+  return std::get<N>(std::forward<decltype(particle)>(particle));
+});
+
+}  // namespace beluga::views
+
+#endif

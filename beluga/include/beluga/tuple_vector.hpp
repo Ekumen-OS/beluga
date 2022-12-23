@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_TUPLE_VECTOR_HPP
+#define BELUGA_TUPLE_VECTOR_HPP
 
 #include <tuple>
 #include <vector>
 
+#include <beluga/type_traits.hpp>
 #include <range/v3/view/zip.hpp>
-
-#include <beluga/type_traits.h>
 
 namespace beluga {
 
@@ -94,3 +94,5 @@ template <class Tuple>
 using TupleVector = TupleContainer<Vector, Tuple>;
 
 }  // namespace beluga
+
+#endif

@@ -14,8 +14,8 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/motion/differential_drive_model.h>
-#include <ciabatta/ciabatta.h>
+#include <beluga/motion/differential_drive_model.hpp>
+#include <ciabatta/ciabatta.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>

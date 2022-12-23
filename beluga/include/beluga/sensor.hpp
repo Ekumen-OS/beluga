@@ -12,17 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_SENSOR_HPP
+#define BELUGA_SENSOR_HPP
 
-#include <tuple>
+#include <beluga/sensor/likelihood_field_model.hpp>
 
-#include <range/v3/view/transform.hpp>
-
-namespace beluga::views {
-
-template <std::size_t N>
-inline auto elements = ranges::views::transform([](auto&& particle) -> decltype(auto) {
-  return std::get<N>(std::forward<decltype(particle)>(particle));
-});
-
-}  // namespace beluga::views
+#endif

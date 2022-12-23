@@ -12,7 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_BELUGA_HPP
+#define BELUGA_BELUGA_HPP
 
-#include <beluga/type_traits/container_traits.h>
-#include <beluga/type_traits/particle_traits.h>
+#include <beluga/algorithm.hpp>
+#include <beluga/motion.hpp>
+#include <beluga/sensor.hpp>
+#include <beluga/spatial_hash.hpp>
+#include <beluga/tuple_vector.hpp>
+#include <beluga/type_traits.hpp>
+#include <beluga/views.hpp>
+
+#endif

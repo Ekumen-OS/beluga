@@ -14,7 +14,7 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/algorithm/distance_map.h>
+#include <beluga/algorithm/distance_map.hpp>
 
 namespace {
 

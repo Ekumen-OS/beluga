@@ -14,11 +14,10 @@
 
 #include <benchmark/benchmark.h>
 
+#include <beluga/algorithm/sampling.hpp>
+#include <beluga/tuple_vector.hpp>
+#include <beluga/type_traits.hpp>
 #include <range/v3/view.hpp>
-
-#include <beluga/algorithm/sampling.h>
-#include <beluga/tuple_vector.h>
-#include <beluga/type_traits.h>
 
 namespace {
 

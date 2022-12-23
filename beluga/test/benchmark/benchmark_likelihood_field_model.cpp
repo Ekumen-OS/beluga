@@ -15,6 +15,7 @@
 #include <vector>
 
 #include <benchmark/benchmark.h>
+
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 

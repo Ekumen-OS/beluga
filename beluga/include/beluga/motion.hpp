@@ -12,24 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_MOTION_HPP
+#define BELUGA_MOTION_HPP
 
-namespace beluga {
+#include <beluga/motion/differential_drive_model.hpp>
+#include <beluga/motion/stationary_model.hpp>
 
-class ExponentialFilter {
- public:
-  explicit ExponentialFilter(double alpha) : alpha_{alpha} {}
-
-  void reset() { output_ = 0.; }
-
-  [[nodiscard]] double operator()(double input) {
-    output_ += (output_ == 0.) ? input : alpha_ * (input - output_);
-    return output_;
-  }
-
- private:
-  double output_{0.};
-  double alpha_{0.};
-};
-
-}  // namespace beluga
+#endif
