@@ -40,13 +40,13 @@ struct BootstrapParticleFilter : public Mixin {
   }
 
   auto particles() { return views::all(particles_); }
-  auto particles() const { return views::all(particles_) | ranges::view::const_; }
+  auto particles() const { return views::all(particles_) | ranges::views::const_; }
 
   auto states() { return views::states(particles_); }
-  auto states() const { return views::states(particles_) | ranges::view::const_; }
+  auto states() const { return views::states(particles_) | ranges::views::const_; }
 
   auto weights() { return views::weights(particles_); }
-  auto weights() const { return views::weights(particles_) | ranges::view::const_; }
+  auto weights() const { return views::weights(particles_) | ranges::views::const_; }
 
   void update() {
     sampling();
