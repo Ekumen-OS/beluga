@@ -15,12 +15,14 @@
 #ifndef BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 #define BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 
+#include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/sampling.hpp>
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
 #include <ciabatta/ciabatta.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/transform.hpp>
+#include <range/v3/view/const.hpp>
 
 namespace beluga {
 
@@ -38,6 +40,13 @@ struct BootstrapParticleFilter : public Mixin {
   }
 
   auto particles() { return views::all(particles_); }
+  auto particles() const { return views::all(particles_) | ranges::views::const_; }
+
+  auto states() { return views::states(particles_); }
+  auto states() const { return views::states(particles_) | ranges::views::const_; }
+
+  auto weights() { return views::weights(particles_); }
+  auto weights() const { return views::weights(particles_) | ranges::views::const_; }
 
   void update() {
     sampling();
@@ -82,6 +91,7 @@ struct MCL : public ciabatta::mixin<
                  ciabatta::curry<BaselineGeneration>::template mixin,
                  ciabatta::curry<NaiveGeneration>::template mixin,
                  ciabatta::curry<FixedResampling>::template mixin,
+                 ciabatta::curry<SimpleEstimation>::template mixin,
                  MotionModel,
                  SensorModel> {
   using ciabatta::mixin<
@@ -90,9 +100,7 @@ struct MCL : public ciabatta::mixin<
       ciabatta::curry<BaselineGeneration>::template mixin,
       ciabatta::curry<NaiveGeneration>::template mixin,
       ciabatta::curry<FixedResampling>::template mixin,
-      // TODO(nahuel): Add estimate mixin, which given a set of particles
-      // provides the interface to obtain the best estimate of the state
-      // together with a covariance.
+      ciabatta::curry<SimpleEstimation>::template mixin,
       MotionModel,
       SensorModel>::mixin;
 };
@@ -110,6 +118,7 @@ struct AMCL : public ciabatta::mixin<
                   ciabatta::curry<BaselineGeneration>::template mixin,
                   ciabatta::curry<AdaptiveGeneration>::template mixin,
                   ciabatta::curry<KldResampling>::template mixin,
+                  ciabatta::curry<SimpleEstimation>::template mixin,
                   MotionModel,
                   SensorModel> {
   using ciabatta::mixin<
@@ -118,9 +127,7 @@ struct AMCL : public ciabatta::mixin<
       ciabatta::curry<BaselineGeneration>::template mixin,
       ciabatta::curry<AdaptiveGeneration>::template mixin,
       ciabatta::curry<KldResampling>::template mixin,
-      // TODO(nahuel): Add estimate mixin, which given a set of particles
-      // provides the interface to obtain the best estimate of the state
-      // together with a covariance.
+      ciabatta::curry<SimpleEstimation>::template mixin,
       MotionModel,
       SensorModel>::mixin;
 };

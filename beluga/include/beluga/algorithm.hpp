@@ -16,6 +16,7 @@
 #define BELUGA_ALGORITHM_HPP
 
 #include <beluga/algorithm/distance_map.hpp>
+#include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/exponential_filter.hpp>
 #include <beluga/algorithm/particle_filter.hpp>
 #include <beluga/algorithm/sampling.hpp>
