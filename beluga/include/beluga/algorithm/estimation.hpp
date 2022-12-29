@@ -65,9 +65,12 @@ class SimpleEstimation : public Mixin {
     // Compute the circular variance and re-normalize the rotation component.
     if (mean.so2().unit_complex().norm() < std::numeric_limits<double>::epsilon()) {
       // Handle the case where both averages are too close to zero.
+      // Return zero yaw and infinite variance.
       covariance_matrix.coeffRef(2, 2) = std::numeric_limits<double>::infinity();
       mean.so2() = Sophus::SO2d{0.0};
     } else {
+      // See circular standard deviation in
+      // https://en.wikipedia.org/wiki/Directional_statistics#Dispersion.
       covariance_matrix.coeffRef(2, 2) = -2.0 * std::log(mean.so2().unit_complex().norm());
       mean.so2().normalize();
     }
