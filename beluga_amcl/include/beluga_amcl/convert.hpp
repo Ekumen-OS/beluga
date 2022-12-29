@@ -18,10 +18,11 @@
 #include <geometry_msgs/msg/pose.hpp>
 #include <sophus/se2.hpp>
 
-namespace beluga_amcl
+namespace Sophus
 {
 
-inline geometry_msgs::msg::Pose toMsg(const Sophus::SE2d & pose)
+template<class Scalar>
+geometry_msgs::msg::Pose toMsg(const Sophus::SE2<Scalar> & pose)
 {
   auto message = geometry_msgs::msg::Pose{};
   const double theta = pose.so2().log();
@@ -35,6 +36,6 @@ inline geometry_msgs::msg::Pose toMsg(const Sophus::SE2d & pose)
   return message;
 }
 
-}  // namespace beluga_amcl
+}  // namespace Sophus
 
 #endif  // BELUGA_AMCL__CONVERT_HPP_

@@ -412,7 +412,7 @@ void AmclNode::timer_callback()
     ranges::transform(
       particle_filter_->particles(), std::begin(message.particles), [](const auto & particle) {
         auto message = nav2_msgs::msg::Particle{};
-        message.pose = toMsg(beluga::state(particle));
+        tf2::convert(beluga::state(particle), message.pose);
         message.weight = beluga::weight(particle);
         return message;
       });
@@ -425,7 +425,7 @@ void AmclNode::timer_callback()
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
     message.header.stamp = now();
     message.header.frame_id = get_parameter("global_frame_id").as_string();
-    message.pose.pose = toMsg(pose);
+    tf2::convert(pose, message.pose.pose);
     message.pose.covariance[0] = covariance.coeff(0, 0);
     message.pose.covariance[1] = covariance.coeff(0, 1);
     message.pose.covariance[6] = covariance.coeff(1, 0);
