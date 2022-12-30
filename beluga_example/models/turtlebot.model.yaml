@@ -5,8 +5,8 @@ bodies:
     color: [1, 1, 1, 0.75]
     footprints:
       - type: circle
-        radius: 0.5
-        center: [-1, 0.0]
+        radius: 0.3
+        center: [0.0, 0.0]
         density: 1.0
 
 plugins:
@@ -32,4 +32,4 @@ plugins:
     range: 20
     angle: {min: -2.356194490192345, max: 2.356194490192345, increment: 0.004363323129985824}
     noise_std_dev: 0.02
-    update_rate: 40
+    update_rate: 10
