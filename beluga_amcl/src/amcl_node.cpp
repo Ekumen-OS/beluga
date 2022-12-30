@@ -162,6 +162,18 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
+      "Time with which to post-date the transform that is published, "
+      "to indicate that this transform is valid into the future";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("transform_tolerance", rclcpp::ParameterValue(1.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
       "Rotation noise from rotation for the differential drive model.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
@@ -490,7 +502,8 @@ void AmclNode::timer_callback()
     // TODO(nahuel): Publish estimated map to odom transform.
     auto message = geometry_msgs::msg::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
-    message.header.stamp = now() + tf2::durationFromSec(1.0);
+    message.header.stamp = now() +
+      tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     message.child_frame_id = get_parameter("odom_frame_id").as_string();
     message.transform.rotation.x = 0;
