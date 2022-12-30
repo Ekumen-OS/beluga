@@ -469,7 +469,6 @@ void AmclNode::timer_callback()
         message.weight = beluga::weight(particle);
         return message;
       });
-    RCLCPP_INFO(get_logger(), "Publishing %ld particles", message.particles.size());
     particle_cloud_pub_->publish(message);
   }
 
@@ -490,6 +489,7 @@ void AmclNode::timer_callback()
   {
     // TODO(nahuel): Publish estimated map to odom transform.
     auto message = geometry_msgs::msg::TransformStamped{};
+    // Sending a transform that is valid into the future so that odom can be used.
     message.header.stamp = now() + tf2::durationFromSec(1.0);
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     message.child_frame_id = get_parameter("odom_frame_id").as_string();
@@ -528,6 +528,9 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
         // To avoid loss of diversity in the particle population, don't
         // resample when the state is known to be static.
         // See 'Probabilistics Robotics, Chapter 4.2.4'.
+        RCLCPP_INFO_THROTTLE(
+          get_logger(), *get_clock(), 2000,
+          "Skipping the particle filter update as the robot is not moving");
         return;
       }
       particle_filter_->update_motion(odom_to_base_transform);
