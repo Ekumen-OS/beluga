@@ -23,9 +23,9 @@
 
 #include <memory>
 
-#include <beluga/motion/stationary_model.hpp>
-#include <beluga/sensor/likelihood_field_model.hpp>
 #include <beluga/algorithm/particle_filter.hpp>
+#include <beluga/motion/differential_drive_model.hpp>
+#include <beluga/sensor/likelihood_field_model.hpp>
 #include <beluga_amcl/occupancy_grid.hpp>
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
@@ -42,11 +42,9 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode
 public:
   template<class Mixin>
   using SensorModel = typename beluga::LikelihoodFieldModel<Mixin, OccupancyGrid>;
+  using ParticleFilter = beluga::AMCL<beluga::DifferentialDriveModel, SensorModel, Sophus::SE2d>;
 
   using rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
-
-  // TODO(nahuel): Use a real motion model.
-  using ParticleFilter = beluga::AMCL<beluga::StationaryModel, SensorModel, Sophus::SE2d>;
 
   explicit AmclNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
   virtual ~AmclNode();
