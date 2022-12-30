@@ -161,6 +161,62 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Time with which to post-date the transform that is published, "
+      "to indicate that this transform is valid into the future";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("transform_tolerance", rclcpp::ParameterValue(1.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Rotation noise from rotation for the differential drive model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("alpha1", rclcpp::ParameterValue(0.2), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Rotation noise from translation for the differential drive model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("alpha2", rclcpp::ParameterValue(0.2), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Translation noise from translation for the differential drive model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("alpha3", rclcpp::ParameterValue(0.2), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Translation noise from rotation for the differential drive model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("alpha4", rclcpp::ParameterValue(0.2), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Rotational movement required before performing a filter update.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
@@ -308,8 +364,10 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
       rclcpp_lifecycle::LifecycleNode>>(
     shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data);
 
+  // Message filter that caches laser scan readings until it is possible to transform
+  // from laser frame to odom frame and update the particle filter.
   laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
-    *laser_scan_sub_, *tf_buffer_, get_parameter("base_frame_id").as_string(), 50,
+    *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 50,
     get_node_logging_interface(),
     get_node_clock_interface(),
     tf2::durationFromSec(1.0));
@@ -373,9 +431,16 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     get_parameter("z_rand").as_double(),
     get_parameter("sigma_hit").as_double()};
 
+  const auto differential_drive_model_params = beluga::DifferentialDriveModelParam{
+    get_parameter("alpha1").as_double(),
+    get_parameter("alpha2").as_double(),
+    get_parameter("alpha3").as_double(),
+    get_parameter("alpha4").as_double()};
+
   particle_filter_ = std::make_unique<ParticleFilter>(
     generation_params,
     kld_resampling_params,
+    differential_drive_model_params,
     likelihood_field_model_params,
     OccupancyGrid{map});
 
@@ -416,7 +481,6 @@ void AmclNode::timer_callback()
         message.weight = beluga::weight(particle);
         return message;
       });
-    RCLCPP_INFO(get_logger(), "Publishing %ld particles", message.particles.size());
     particle_cloud_pub_->publish(message);
   }
 
@@ -433,6 +497,21 @@ void AmclNode::timer_callback()
     message.pose.covariance[35] = covariance.coeff(2, 2);
     pose_pub_->publish(message);
   }
+
+  {
+    // TODO(nahuel): Publish estimated map to odom transform.
+    auto message = geometry_msgs::msg::TransformStamped{};
+    // Sending a transform that is valid into the future so that odom can be used.
+    message.header.stamp = now() +
+      tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
+    message.header.frame_id = get_parameter("global_frame_id").as_string();
+    message.child_frame_id = get_parameter("odom_frame_id").as_string();
+    message.transform.rotation.x = 0;
+    message.transform.rotation.y = 0;
+    message.transform.rotation.z = 0;
+    message.transform.rotation.w = 1;
+    tf_broadcaster_->sendTransform(message);
+  }
 }
 
 void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
@@ -443,13 +522,42 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   try {
     {
+      auto odom_to_base_transform = Sophus::SE2d{};
+      tf2::convert(
+        tf_buffer_->lookupTransform(
+          get_parameter("odom_frame_id").as_string(),
+          get_parameter("base_frame_id").as_string(),
+          laser_scan->header.stamp,
+          std::chrono::seconds(1)).transform,
+        odom_to_base_transform);
+
+      const auto delta = odom_to_base_transform * particle_filter_->last_pose().inverse();
+      const bool has_moved =
+        std::abs(delta.translation().x()) > get_parameter("update_min_d").as_double() ||
+        std::abs(delta.translation().y()) > get_parameter("update_min_d").as_double() ||
+        std::abs(delta.so2().log()) > get_parameter("update_min_a").as_double();
+
+      if (!has_moved) {
+        // To avoid loss of diversity in the particle population, don't
+        // resample when the state is known to be static.
+        // See 'Probabilistics Robotics, Chapter 4.2.4'.
+        RCLCPP_INFO_THROTTLE(
+          get_logger(), *get_clock(), 2000,
+          "Skipping the particle filter update as the robot is not moving");
+        return;
+      }
+      particle_filter_->update_motion(odom_to_base_transform);
+    }
+
+    {
       auto base_to_laser_transform = tf2::Transform{};
       tf2::convert(
         tf_buffer_->lookupTransform(
           get_parameter("base_frame_id").as_string(),
           laser_scan->header.frame_id,
           laser_scan->header.stamp,
-          std::chrono::seconds(1)).transform, base_to_laser_transform);
+          std::chrono::seconds(1)).transform,
+        base_to_laser_transform);
       const float range_min =
         std::max(
         laser_scan->range_min,

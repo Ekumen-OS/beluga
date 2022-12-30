@@ -132,9 +132,10 @@ Visualization Manager:
       Show Names: true
       Tree:
         map:
-          base:
-            laser_front:
-              {}
+          odom:
+            base:
+              laser_front:
+                {}
       Update Interval: 0
       Value: true
     - Alpha: 1

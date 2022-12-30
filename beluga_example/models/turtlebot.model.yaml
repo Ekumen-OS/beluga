@@ -20,7 +20,7 @@ plugins:
 
   - type: ModelTfPublisher
     name: tf_publisher
-    publish_tf_world: true
+    publish_tf_world: false
 
   - type: Laser
     name: laser_front

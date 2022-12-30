@@ -15,7 +15,10 @@
 #ifndef BELUGA_AMCL__CONVERT_HPP_
 #define BELUGA_AMCL__CONVERT_HPP_
 
+#include <tf2/utils.h>
+
 #include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/transform.hpp>
 #include <sophus/se2.hpp>
 
 namespace Sophus
@@ -34,6 +37,13 @@ geometry_msgs::msg::Pose toMsg(const Sophus::SE2<Scalar> & pose)
   message.orientation.y = 0;
   message.orientation.z = std::sin(theta / 2.);
   return message;
+}
+
+template<class Scalar>
+void fromMsg(const geometry_msgs::msg::Transform & message, Sophus::SE2<Scalar> & transform)
+{
+  transform.translation() = Eigen::Vector2d{message.translation.x, message.translation.y};
+  transform.so2() = Sophus::SO2<Scalar>{tf2::getYaw(message.rotation)};
 }
 
 }  // namespace Sophus
