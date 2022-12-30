@@ -17,13 +17,14 @@ find_package(ament_cmake REQUIRED)
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
+find_package(TBB REQUIRED)
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
 ament_target_dependencies(${PROJECT_NAME} range-v3)
-target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen Sophus::Sophus)
+target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen Sophus::Sophus TBB::tbb)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG SOPHUS_USE_BASIC_LOGGING)
 
@@ -65,7 +66,8 @@ ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(
   Eigen3
   range-v3
-  Sophus)
+  Sophus
+  TBB)
 
 ament_package()
 

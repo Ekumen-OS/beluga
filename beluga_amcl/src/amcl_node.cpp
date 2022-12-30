@@ -442,39 +442,57 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   }
 
   try {
-    auto base_to_laser_transform = tf2::Transform{};
-    tf2::convert(
-      tf_buffer_->lookupTransform(
-        get_parameter("base_frame_id").as_string(),
-        laser_scan->header.frame_id,
-        laser_scan->header.stamp,
-        std::chrono::seconds(1)).transform, base_to_laser_transform);
-    const float range_min =
-      std::max(
-      laser_scan->range_min,
-      static_cast<float>(get_parameter("laser_min_range").as_double()));
-    const float range_max =
-      std::min(
-      laser_scan->range_max,
-      static_cast<float>(get_parameter("laser_max_range").as_double()));
-    auto points = std::vector<std::pair<double, double>>{};
-    points.reserve(laser_scan->ranges.size());
-    for (std::size_t index = 0; index < laser_scan->ranges.size(); ++index) {
-      const float range = laser_scan->ranges[index];
-      if (std::isnan(range) || range < range_min || range > range_max) {
-        continue;
+    {
+      auto base_to_laser_transform = tf2::Transform{};
+      tf2::convert(
+        tf_buffer_->lookupTransform(
+          get_parameter("base_frame_id").as_string(),
+          laser_scan->header.frame_id,
+          laser_scan->header.stamp,
+          std::chrono::seconds(1)).transform, base_to_laser_transform);
+      const float range_min =
+        std::max(
+        laser_scan->range_min,
+        static_cast<float>(get_parameter("laser_min_range").as_double()));
+      const float range_max =
+        std::min(
+        laser_scan->range_max,
+        static_cast<float>(get_parameter("laser_max_range").as_double()));
+      auto points = std::vector<std::pair<double, double>>{};
+      points.reserve(laser_scan->ranges.size());
+      for (std::size_t index = 0; index < laser_scan->ranges.size(); ++index) {
+        const float range = laser_scan->ranges[index];
+        if (std::isnan(range) || range < range_min || range > range_max) {
+          continue;
+        }
+        // Store points in the robot's reference frame
+        const float angle = laser_scan->angle_min +
+          static_cast<float>(index) * laser_scan->angle_increment;
+        const auto point = base_to_laser_transform * tf2::Vector3{
+          range * std::cos(angle),
+          range * std::sin(angle),
+          0.0};
+        points.emplace_back(point.x(), point.y());
       }
-      // Store points in the robot's reference frame
-      const float angle = laser_scan->angle_min +
-        static_cast<float>(index) * laser_scan->angle_increment;
-      const auto point = base_to_laser_transform * tf2::Vector3{
-        range * std::cos(angle),
-        range * std::sin(angle),
-        0.0};
-      points.emplace_back(point.x(), point.y());
+      particle_filter_->update_sensor(std::move(points));
     }
-    particle_filter_->update_sensor(std::move(points));
-    particle_filter_->update();
+
+    const auto time1 = std::chrono::high_resolution_clock::now();
+    particle_filter_->sample();
+    const auto time2 = std::chrono::high_resolution_clock::now();
+    particle_filter_->importance_sample();
+    const auto time3 = std::chrono::high_resolution_clock::now();
+    particle_filter_->resample();
+    const auto time4 = std::chrono::high_resolution_clock::now();
+
+    RCLCPP_INFO_THROTTLE(
+      get_logger(), *get_clock(), 2000,
+      "Filter update statistics: %ld particles %ld points - %.3fms %.3fms %.3fms",
+      particle_filter_->particles().size(),
+      laser_scan->ranges.size(),
+      std::chrono::duration<double, std::milli>(time2 - time1).count(),
+      std::chrono::duration<double, std::milli>(time3 - time2).count(),
+      std::chrono::duration<double, std::milli>(time4 - time3).count());
   } catch (const tf2::TransformException & error) {
     RCLCPP_ERROR(get_logger(), "Could not transform laser: %s", error.what());
   }

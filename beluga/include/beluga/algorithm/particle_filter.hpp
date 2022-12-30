@@ -15,6 +15,8 @@
 #ifndef BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 #define BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 
+#include <execution>
+
 #include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/sampling.hpp>
 #include <beluga/tuple_vector.hpp>
@@ -49,33 +51,34 @@ struct BootstrapParticleFilter : public Mixin {
   auto weights() const { return views::weights(particles_) | ranges::views::const_; }
 
   void update() {
-    sampling();
-    importance_sampling();
-    resampling();
+    sample();
+    importance_sample();
+    resample();
   }
 
- private:
-  Container particles_;
-
-  void sampling() {
-    auto&& states = views::states(particles_);
+  void sample() {
+    auto states = views::states(particles_);
     ranges::transform(
         states, std::begin(states), [this](const auto& state) { return this->self().apply_motion(state); });
   }
 
-  void importance_sampling() {
-    ranges::transform(views::states(particles_), std::begin(views::weights(particles_)), [this](const auto& state) {
-      return this->self().importance_weight(state);
-    });
+  void importance_sample() {
+    const auto states = views::states(particles_);
+    std::transform(
+        std::execution::par_unseq, states.begin(), states.end(), views::weights(particles_).begin(),
+        [this](const auto& state) { return this->self().importance_weight(state); });
   }
 
-  void resampling() {
+  void resample() {
     auto new_particles = Container{this->self().max_samples()};
     auto first = std::begin(views::all(new_particles));
     auto last = ranges::copy(this->self().generate_samples_from(particles_) | this->self().take_samples(), first).out;
     new_particles.resize(std::distance(first, last));
     particles_ = std::move(new_particles);
   }
+
+ private:
+  Container particles_;
 };
 
 template <
