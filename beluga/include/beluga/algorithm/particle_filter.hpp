@@ -57,15 +57,16 @@ struct BootstrapParticleFilter : public Mixin {
   }
 
   void sample() {
-    auto states = views::states(particles_);
-    ranges::transform(
-        states, std::begin(states), [this](const auto& state) { return this->self().apply_motion(state); });
+    const auto states = views::states(particles_);
+    std::transform(
+        std::execution::par, std::begin(states), std::end(states), std::begin(states),
+        [this](const auto& state) { return this->self().apply_motion(state); });
   }
 
   void importance_sample() {
     const auto states = views::states(particles_);
     std::transform(
-        std::execution::par, states.begin(), states.end(), views::weights(particles_).begin(),
+        std::execution::par, std::begin(states), std::end(states), std::begin(views::weights(particles_)),
         [this](const auto& state) { return this->self().importance_weight(state); });
   }
 
