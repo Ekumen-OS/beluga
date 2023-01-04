@@ -48,7 +48,9 @@ std::vector<std::pair<double, double>> pre_process_points(
     if (std::isnan(range) || range <= range_min || range >= range_max) {
       continue;
     }
-    // Store points in the robot's reference frame
+    // Store points in the robot's reference frame.
+    // Assume that laser scanning is instantaneous and no compensation is
+    // needed for robot speed vs. scan speed.
     const float angle = laser_scan.angle_min +
       static_cast<float>(index) * laser_scan.angle_increment;
     const auto point = laser_transform * Eigen::Vector3d{
