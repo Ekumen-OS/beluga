@@ -38,9 +38,12 @@ namespace
 std::vector<std::pair<double, double>> pre_process_points(
   const sensor_msgs::msg::LaserScan & laser_scan,
   const Sophus::SE3d & laser_transform,
-  double range_min,
-  double range_max)
+  float range_min,
+  float range_max)
 {
+  range_min = std::max(laser_scan.range_min, range_min);
+  range_max = std::min(laser_scan.range_max, range_max);
+
   auto points = std::vector<std::pair<double, double>>{};
   points.reserve(laser_scan.ranges.size());
   for (std::size_t index = 0; index < laser_scan.ranges.size(); ++index) {
@@ -584,18 +587,12 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
           std::chrono::seconds(1)).transform,
         base_to_laser_transform);
 
-      const float range_min = std::max(
-        laser_scan->range_min,
-        static_cast<float>(get_parameter("laser_min_range").as_double()));
-      const float range_max = std::min(
-        laser_scan->range_max,
-        static_cast<float>(get_parameter("laser_max_range").as_double()));
       particle_filter_->update_sensor(
         pre_process_points(
           *laser_scan,
           base_to_laser_transform,
-          range_min,
-          range_max));
+          static_cast<float>(get_parameter("laser_min_range").as_double()),
+          static_cast<float>(get_parameter("laser_max_range").as_double())));
     }
 
     const auto time1 = std::chrono::high_resolution_clock::now();
