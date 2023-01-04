@@ -9,6 +9,7 @@ amcl:
     base_frame_id: base
     map_topic: map
     scan_topic: scan
+    initial_pose_topic: initialpose
     max_particles: 2000
     min_particles: 500
     pf_err: 0.05

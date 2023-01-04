@@ -59,6 +59,7 @@ protected:
   void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
   void timer_callback();
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
+  void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
 
   std::unique_ptr<ParticleFilter> particle_filter_;
   std::unique_ptr<bond::Bond> bond_;
@@ -70,6 +71,8 @@ protected:
     likelihood_field_pub_;
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
     pose_pub_;
+  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
+    initial_pose_sub_;
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
