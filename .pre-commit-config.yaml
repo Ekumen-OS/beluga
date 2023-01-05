@@ -57,7 +57,7 @@ repos:
       - id: ament_uncrustify
         name: "[others] Fix C++ format (uncrustify)"
         entry: ament_uncrustify --reformat
-        files: ^(?!beluga\/).*
+        exclude: beluga\/
         types: [c++]
         language: system
 
@@ -66,4 +66,4 @@ repos:
     hooks:
       - id: black
         name: "[others] Fix Python format (black)"
-        files: ^(?!beluga\/).*
+        entry: black --skip-string-normalization

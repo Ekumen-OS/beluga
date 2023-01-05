@@ -7,15 +7,20 @@ on:
     branches: [ master ]
 
 jobs:
-  build-and-test:
+  build-test-lint:
     runs-on: ubuntu-22.04
     env:
       ROS_DISTRO: humble
+    strategy:
+      fail-fast: false
     steps:
       - uses: actions/checkout@v3
 
       - name: Install clang-tidy
         run: sudo apt update && sudo apt install clang-tidy -y
+
+      - name: Install python packages
+        run: pip install pre-commit==2.20.0 pydocstyle==6.1.1
 
       - name: Setup ROS
         uses: ros-tooling/setup-ros@0.4.1
@@ -25,6 +30,11 @@ jobs:
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.2.7
         with:
-          package-name: beluga
+          package-name: beluga beluga_amcl
           target-ros2-distro:  ${{ env.ROS_DISTRO }}
           import-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lint
+        run: |
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
+          pre-commit run --all-files --verbose --show-diff-on-failure
