@@ -531,6 +531,8 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
           std::chrono::seconds(1)).transform,
         odom_to_base_transform);
 
+      // TODO(ivanpauno): Should this check be done internally by the particle filter.
+      // It sounds like something that could be done in the motion model implementation.
       const auto delta = odom_to_base_transform * particle_filter_->last_pose().inverse();
       const bool has_moved =
         std::abs(delta.translation().x()) > get_parameter("update_min_d").as_double() ||
