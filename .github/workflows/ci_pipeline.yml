@@ -30,7 +30,7 @@ jobs:
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.2.7
         with:
-          package-name: beluga beluga_amcl beluga_example
+          package-name: beluga beluga_amcl
           target-ros2-distro:  ${{ env.ROS_DISTRO }}
           import-token: ${{ secrets.GITHUB_TOKEN }}
 
