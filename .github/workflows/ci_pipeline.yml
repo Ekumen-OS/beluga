@@ -11,21 +11,20 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ROS_DISTRO: humble
+    container:
+      image: ros:humble-ros-base-jammy
     strategy:
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install clang-tidy
-        run: sudo apt update && sudo apt install clang-tidy -y
+      - name: Install debian packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install clang-tidy python3-colcon-coveragepy-result python3-pip -y
 
       - name: Install python packages
-        run: pip install pre-commit==2.20.0 pydocstyle==6.1.1
-
-      - name: Setup ROS
-        uses: ros-tooling/setup-ros@0.4.1
-        with:
-          required-ros-distributions: ${{ env.ROS_DISTRO }}
+        run: pip install pre-commit==2.20.0
 
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.2.7
@@ -35,6 +34,8 @@ jobs:
           import-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint
+        shell: bash
         run: |
+          git config --global --add safe.directory $PWD
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
