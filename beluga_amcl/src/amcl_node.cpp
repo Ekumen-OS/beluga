@@ -22,7 +22,7 @@
 #include <limits>
 #include <memory>
 
-#include <beluga_amcl/convert.hpp>
+#include <beluga_amcl/tf2_sophus.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
 #include <range/v3/range/conversion.hpp>
@@ -31,6 +31,41 @@
 
 namespace beluga_amcl
 {
+
+namespace
+{
+
+std::vector<std::pair<double, double>> pre_process_points(
+  const sensor_msgs::msg::LaserScan & laser_scan,
+  const Sophus::SE3d & laser_transform,
+  float range_min,
+  float range_max)
+{
+  range_min = std::max(laser_scan.range_min, range_min);
+  range_max = std::min(laser_scan.range_max, range_max);
+
+  auto points = std::vector<std::pair<double, double>>{};
+  points.reserve(laser_scan.ranges.size());
+  for (std::size_t index = 0; index < laser_scan.ranges.size(); ++index) {
+    const float range = laser_scan.ranges[index];
+    if (std::isnan(range) || range <= range_min || range >= range_max) {
+      continue;
+    }
+    // Store points in the robot's reference frame.
+    // Assume that laser scanning is instantaneous and no compensation is
+    // needed for robot speed vs. scan speed.
+    const float angle = laser_scan.angle_min +
+      static_cast<float>(index) * laser_scan.angle_increment;
+    const auto point = laser_transform * Eigen::Vector3d{
+      range * std::cos(angle),
+      range * std::sin(angle),
+      0.0};
+    points.emplace_back(point.x(), point.y());
+  }
+  return points;
+}
+
+}  // namespace
 
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 : rclcpp_lifecycle::LifecycleNode{"amcl", "", options}
@@ -477,7 +512,7 @@ void AmclNode::timer_callback()
     ranges::transform(
       particle_filter_->particles(), std::begin(message.particles), [](const auto & particle) {
         auto message = nav2_msgs::msg::Particle{};
-        tf2::convert(beluga::state(particle), message.pose);
+        tf2::toMsg(beluga::state(particle), message.pose);
         message.weight = beluga::weight(particle);
         return message;
       });
@@ -489,12 +524,8 @@ void AmclNode::timer_callback()
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
     message.header.stamp = now();
     message.header.frame_id = get_parameter("global_frame_id").as_string();
-    tf2::convert(pose, message.pose.pose);
-    message.pose.covariance[0] = covariance.coeff(0, 0);
-    message.pose.covariance[1] = covariance.coeff(0, 1);
-    message.pose.covariance[6] = covariance.coeff(1, 0);
-    message.pose.covariance[7] = covariance.coeff(1, 1);
-    message.pose.covariance[35] = covariance.coeff(2, 2);
+    tf2::toMsg(pose, message.pose.pose);
+    message.pose.covariance = tf2::covarianceToRowMajor(covariance);
     pose_pub_->publish(message);
   }
 
@@ -506,10 +537,7 @@ void AmclNode::timer_callback()
       tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     message.child_frame_id = get_parameter("odom_frame_id").as_string();
-    message.transform.rotation.x = 0;
-    message.transform.rotation.y = 0;
-    message.transform.rotation.z = 0;
-    message.transform.rotation.w = 1;
+    message.transform = tf2::toMsg(Sophus::SE2d{});
     tf_broadcaster_->sendTransform(message);
   }
 }
@@ -550,7 +578,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     }
 
     {
-      auto base_to_laser_transform = tf2::Transform{};
+      auto base_to_laser_transform = Sophus::SE3d{};
       tf2::convert(
         tf_buffer_->lookupTransform(
           get_parameter("base_frame_id").as_string(),
@@ -558,31 +586,13 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
           laser_scan->header.stamp,
           std::chrono::seconds(1)).transform,
         base_to_laser_transform);
-      const float range_min =
-        std::max(
-        laser_scan->range_min,
-        static_cast<float>(get_parameter("laser_min_range").as_double()));
-      const float range_max =
-        std::min(
-        laser_scan->range_max,
-        static_cast<float>(get_parameter("laser_max_range").as_double()));
-      auto points = std::vector<std::pair<double, double>>{};
-      points.reserve(laser_scan->ranges.size());
-      for (std::size_t index = 0; index < laser_scan->ranges.size(); ++index) {
-        const float range = laser_scan->ranges[index];
-        if (std::isnan(range) || range < range_min || range > range_max) {
-          continue;
-        }
-        // Store points in the robot's reference frame
-        const float angle = laser_scan->angle_min +
-          static_cast<float>(index) * laser_scan->angle_increment;
-        const auto point = base_to_laser_transform * tf2::Vector3{
-          range * std::cos(angle),
-          range * std::sin(angle),
-          0.0};
-        points.emplace_back(point.x(), point.y());
-      }
-      particle_filter_->update_sensor(std::move(points));
+
+      particle_filter_->update_sensor(
+        pre_process_points(
+          *laser_scan,
+          base_to_laser_transform,
+          static_cast<float>(get_parameter("laser_min_range").as_double()),
+          static_cast<float>(get_parameter("laser_max_range").as_double())));
     }
 
     const auto time1 = std::chrono::high_resolution_clock::now();
