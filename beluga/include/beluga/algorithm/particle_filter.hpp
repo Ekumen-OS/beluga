@@ -45,9 +45,9 @@
  * - ::beluga::particle_traits<T>::state_type is a valid type.
  * - ::beluga::particle_traits<T>::state(p) is a valid expression and returns an instance of
  *   ::beluga::particle_traits<T>::state_type.
- * - ::beluga::particle_traits<T>::weight(p) is a valid expression and the return type is an arithmetic type (that is, an integral type or a floating-point type).
- * <--TODO(ivanpauno): Add particle_traits<T>::weight_type?? (or scalar_type?)-->
- * <--TODO(ivanpauno): Add particle_traits<T>::covariance_type??, or maybe that should be specified by State.-->
+ * - ::beluga::particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
+ *   type or a floating-point type).
+ * - ::beluga::particle_traits<T>::weight(p) is a valid expression and the return type is an arithmetic type.
  */
 
 /**
@@ -62,47 +62,40 @@
  */
 
 /**
- * \page ParticleFilterRequirements beluga named requirements: ParticleFilter.
- * What an implementation of a particle filter in beluga should provide.
- * This is satisfied for example by beluga::MCL<U, M, S, C> and beluga::AMCL<U, M, S, C>.
- * for any valid U, M, S, C (see respective docs for detail).
+ * \page BaseParticleFilterRequirements beluga named requirements: BaseParticleFilter.
+ * Base requirements of a particle filter in beluga.
  *
  * \section Requirements
- * T is a ParticleFilter if given an instance of T p, the following is satisfied:
- * <!--TODO(ivanpauno): Add named requirements links when documented-->
- * - T also satisfies the SensorModel named requirements. <!--update_sensor()-->
- *   <!--
- *   I'm not sure about likelihood_field() ...
- *   Maybe something that gives a occupancy grid from the sensor model is fine.
- *   Even if the sensor model is implemented in another way e.g. NDT transform,
- *   a conversion to an occupancy grid should be possible.
- *   -->
- * - T also satisfies the MotionModel named requirements.  <!--update_motion() and last_pose()-->
- * - T also satisfies the MotionModel named requirements.
- * - T also satisfies the StateEstimation named requirements.
- * - p.particles() is valid and returns a type that satisfies the
+ * T is a BaseParticleFilter if given an instance of T p, the following is satisfied:
+ * - p.particles() is valid and returns a view to a container that satisfies the
  *   \ref ParticleContainerRequirements "ParticleContainer" requirements.
  * - p.sample() updates the particle filter particles based on the last motion update.
  * - p.importance_sample() updates the particle filter particles weight.
  * - p.resample() updates the particle filter, generating new particles from the old ones
  *   based on their importance weights.
  * - p.update() shorthand for executing the above three steps.
+ */
+
+/**
+ * \page ParticleFilterRequirements beluga named requirements: ParticleFilter.
+ * What an implementation of a particle filter in beluga should provide.
+ * This is satisfied for example by beluga::MCL<U, M, S, C> and beluga::AMCL<U, M, S, C>.
+ * for any valid U, M, S, C (see respective docs for detail).
  *
- * <!--TODO(ivanpauno):
- * Minor API discussion:
- *
- * - Should p.update_motion() be called p.update_last_pose() and p.sample() called p.update_motion()?
- *   Or maybe p.update_particles_using_motion_model()?
- * -->
+ * \section Requirements
+ * T is a ParticleFilter if:
+ * - T satisfies the \ref BaseParticleFilterRequirements "BaseParticleFilter" named requirements.
+ * <!--TODO(ivanpauno): Add named requirements links when documented-->
+ * - T satisfies the SensorModel named requirements. <!--update_sensor()-->
+ * - T satisfies the MotionModel named requirements.  <!--update_motion() and last_pose()-->
+ * - T satisfies the StateEstimation named requirements.
  */
 namespace beluga {
-
 
 /// Base implementation of a particle filter.
 /**
  * BootstrapParticleFilter<Mixin, Container> is an implementation of the
- * \ref ParticleFilterRequirements "ParticleFilter" named requirements, except it
- * does not satisfy the StateEstimator requirement. <!--TODO(ivanpauno): add link-->
+ * \ref BaseParticleFilterRequirements "BaseParticleFilter" named requirements.
  *
  * \tparam Mixin must also satisfy the named requirements:
  * <!--TODO(ivanpauno): Add links when documented.-->

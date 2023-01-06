@@ -50,6 +50,7 @@ struct particle_traits {};
 template <template <class...> class Pair, class State, class... Extra>
 struct particle_traits<Pair<State, double, Extra...>> {
   using state_type = State;
+  using weight_type = double;
   using value_type = Pair<State, double>;
 
   template <class T>
@@ -70,6 +71,7 @@ struct particle_traits<Pair<State, double, Extra...>> {
 template <template <class...> class Tuple, class State, class... Extra>
 struct particle_traits<Tuple<State, double, std::size_t, Extra...>> {
   using state_type = State;
+  using weight_type = double;
   using value_type = Tuple<State, double, std::size_t>;
 
   template <class T>
