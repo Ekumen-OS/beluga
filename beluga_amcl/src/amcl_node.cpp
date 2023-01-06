@@ -673,10 +673,14 @@ void AmclNode::initial_pose_callback(
     RCLCPP_INFO(get_logger(), "Initial pose received");
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "Position: " << pose.translation().format(eigen_format) << " Angle: " << pose.so2().log());
-    RCLCPP_INFO_STREAM(
+      "Position: " << pose.translation().format(eigen_format) <<
+        " - Angle: " << pose.so2().log() <<
+        " - Covariance coefficients: " << covariance.format(eigen_format));
+
+    RCLCPP_WARN(
       get_logger(),
-      "Covariance coefficients: " << covariance.format(eigen_format));
+      "The functionality to initialize the particle filter "
+      "with an initial pose has not been implemented");
   }
 }
 
