@@ -22,6 +22,16 @@
 
 namespace beluga {
 
+/// Calculates the covariance of a range given its mean.
+/**
+ * \tparam Range A [Container](https://en.cppreference.com/w/cpp/named_req/Container) whose
+ *  Range::value_type is Eigen::Vector2<Scalar>.
+ * \tparam Scalar An scalar type, e.g. double or float.
+ * \param range Range to be used to calculate the covariance.
+ * \param mean The previously calculated mean of range. The value must be correct for the resulting
+ *  covariance to be correct.
+ * \return The calculated covariance, as a Eigen::Matrix2<Scalar>.
+ */
 template <class Range, class Scalar>
 Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scalar>& mean) {
   Eigen::Vector3<Scalar> coefficients = std::transform_reduce(
@@ -39,12 +49,36 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
   return covariance_matrix;
 }
 
+/**
+ * \page StateEstimationRequirements beluga named requirements: StateEstimation
+ * The requirements that a state estimator must satisfy.
+ *
+ * \section Requirements
+ * T is a StateEstimation if given a const T p, the following is satisfied:
+ * - p.estimated_pose() is a valid expression.
+ * - std::get<0>(p.estimated_pose()) is valid.
+ *   decltype(std::get<0>(p.estimated_pose())) represents the estimated state.
+ * - std::get<1>(p.estimated_pose()) is valid.
+ *   decltype(std::get<1>(p.estimated_pose())) represents the covariance of the estimation.
+*/
+
+/// A estimator that uses the mean and covariance of all particles.
+/**
+ * \tparam Mixin Must also satisfy the \ref ParticleFilterBaseRequirements ParticleFilterBase
+ *  named requirements.
+ */
 template <class Mixin>
 class SimpleEstimation : public Mixin {
  public:
+  /// Constructs a SimpleEsstimation.
+  /**
+   * \tparam ...Args Arguments types for the remaining mixin constructors.
+   * \param ...args arguments that are not used by this part of the mixin, but by others.
+   */
   template <class... Args>
   explicit SimpleEstimation(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
+  /// Returns a pair consisting of the estimated pose and its covariance.
   [[nodiscard]] std::pair<Sophus::SE2d, Eigen::Matrix3d> estimated_pose() const {
     const auto poses_view = this->self().states() | ranges::views::common;
     const auto translation_view =

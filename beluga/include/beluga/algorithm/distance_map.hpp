@@ -18,6 +18,27 @@
 #include <queue>
 #include <vector>
 
+/// Returns a map where each cell values is the distance to the nearest obstacle.
+/**
+ * The algorithm uses O(N) time and memory, where N=obstacle_map.size().
+ *
+ * \tparam Range A [Container](https://en.cppreference.com/w/cpp/named_req/Container) where
+ *  T::value is bool. Its iterator must be random access.
+ * \tparam DistanceFunction A callable type, its prototype must be
+ *  (size_t, size_t) -> DistanceType. DistanceType must be an scalar type.
+ * \tparam NeighborsFunction A callabe type, its prototype must be
+ *  (size_t) -> NeighborsT, where NeighborsT is a
+ *    [Container](https://en.cppreference.com/w/cpp/named_req/Container)
+ *    where NeighborsT::value is size_t.
+ * \param obstacle_map A map that represents obstacles in an environment.
+ *  If the value of a cell is True, the cell has an obstacle.
+ * \param distance_function Given the indexes of two cells in the map i and j,
+ *  obstacle_map(i, j) must return the distance between the two cells.
+ * \param neighbors_function Given the index i of one cell in the map,
+ *  neighbors_function(i) returns the cell indexes of neighbor cells in a
+ *  container.
+ * \return A map where each cell value is the distance to the nearest object.
+ */
 template <class Range, class DistanceFunction, class NeighborsFunction>
 auto nearest_obstacle_distance_map(
     Range&& obstacle_map,
