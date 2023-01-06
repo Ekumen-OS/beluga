@@ -65,6 +65,16 @@ std::vector<std::pair<double, double>> pre_process_points(
   return points;
 }
 
+Eigen::IOFormat make_eigen_comma_format()
+{
+  return Eigen::IOFormat{
+    Eigen::StreamPrecision,
+    Eigen::DontAlignCols,
+    ", ",  // coefficient separator
+    ", ",  // row separator
+  };
+}
+
 }  // namespace
 
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
@@ -96,6 +106,13 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.description =
       "Topic to subscribe to in order to receive the map to localize on.";
     declare_parameter("map_topic", rclcpp::ParameterValue("map"), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Topic to subscribe to in order to receive the initial pose of the robot.";
+    declare_parameter("initial_pose_topic", rclcpp::ParameterValue("initial_pose"), descriptor);
   }
 
   {
@@ -387,6 +404,16 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
 
   RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
 
+  initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
+    get_parameter("initial_pose_topic").as_string(),
+    rclcpp::SystemDefaultsQoS(),
+    std::bind(&AmclNode::initial_pose_callback, this, std::placeholders::_1));
+
+  RCLCPP_INFO(
+    get_logger(),
+    "Subscribed to initial_pose_topic: %s",
+    initial_pose_sub_->get_topic_name());
+
   tf_buffer_ = std::make_unique<tf2_ros::Buffer>(get_clock());
   tf_buffer_->setCreateTimerInterface(
     std::make_shared<tf2_ros::CreateTimerROS>(
@@ -410,6 +437,8 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
   laser_scan_connection_ = laser_scan_filter_->registerCallback(
     std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
 
+  RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
+
   return CallbackReturn::SUCCESS;
 }
 
@@ -421,6 +450,7 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State &
   pose_pub_->on_deactivate();
   laser_scan_sub_.reset();
   map_sub_.reset();
+  initial_pose_sub_.reset();
   bond_.reset();
   tf_listener_.reset();
   tf_broadcaster_.reset();
@@ -525,7 +555,7 @@ void AmclNode::timer_callback()
     message.header.stamp = now();
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     tf2::toMsg(pose, message.pose.pose);
-    message.pose.covariance = tf2::covarianceToRowMajor(covariance);
+    message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
     pose_pub_->publish(message);
   }
 
@@ -613,6 +643,44 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
       std::chrono::duration<double, std::milli>(time4 - time3).count());
   } catch (const tf2::TransformException & error) {
     RCLCPP_ERROR(get_logger(), "Could not transform laser: %s", error.what());
+  }
+}
+
+void AmclNode::initial_pose_callback(
+  geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message)
+{
+  if (!particle_filter_) {
+    return;
+  }
+
+  const auto global_frame_id = get_parameter("global_frame_id").as_string();
+  if (message->header.frame_id != global_frame_id) {
+    RCLCPP_WARN(
+      get_logger(),
+      "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\"",
+      message->header.frame_id.c_str(),
+      global_frame_id.c_str());
+  }
+
+  auto pose = Sophus::SE2d{};
+  tf2::convert(message->pose.pose, pose);
+
+  auto covariance = Eigen::Matrix3d{};
+  tf2::covarianceRowMajorToEigen(message->pose.covariance, covariance);
+
+  {
+    const auto eigen_format = make_eigen_comma_format();
+    RCLCPP_INFO(get_logger(), "Initial pose received");
+    RCLCPP_INFO_STREAM(
+      get_logger(),
+      "Position: " << pose.translation().format(eigen_format) <<
+        " - Angle: " << pose.so2().log() <<
+        " - Covariance coefficients: " << covariance.format(eigen_format));
+
+    RCLCPP_WARN(
+      get_logger(),
+      "The functionality to initialize the particle filter "
+      "with an initial pose has not been implemented");
   }
 }
 

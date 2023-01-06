@@ -153,13 +153,53 @@ inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scala
 }
 
 /**
+ * @brief Convert a Pose message type to a Sophus-specific SE2 type.
+ * This function is a specialization of the fromMsg template defined in tf2/convert.h
+ * @param msg The Pose message to convert.
+ * @param out The pose converted to a Sophus SE2.
+ */
+template<class Scalar>
+inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE2<Scalar> & out)
+{
+  out.translation() = Eigen::Vector2<Scalar>{
+    msg.position.x,
+    msg.position.y,
+  };
+  out.so2() = Sophus::SO2<Scalar>{tf2::getYaw(msg.orientation)};
+}
+
+/**
+ * @brief Convert a Pose message type to a Sophus-specific SE3 type.
+ * This function is a specialization of the fromMsg template defined in tf2/convert.h
+ * @param msg The Pose message to convert.
+ * @param out The pose converted to a Sophus SE3.
+ */
+template<class Scalar>
+inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE3<Scalar> & out)
+{
+  out.translation() = Eigen::Vector3<Scalar>{
+    msg.position.x,
+    msg.position.y,
+    msg.position.z,
+  };
+  out.so3() = Sophus::SO3<Scalar>{
+    Eigen::Quaternion<Scalar>{
+      msg.orientation.w,
+      msg.orientation.x,
+      msg.orientation.y,
+      msg.orientation.z,
+    }
+  };
+}
+
+/**
  * @brief Function that converts from an Eigen 3x3 matrix representation of a 2D
  * covariance matrix to a 6x6 row-major representation in 3D.
  * @param in An Eigen 3x3 matrix representation of a 2D covariance.
  * @return A row-major array of 36 covariance values.
  */
 template<class Scalar>
-inline std::array<Scalar, 36> covarianceToRowMajor(const Eigen::Matrix3<Scalar> & in)
+inline std::array<Scalar, 36> covarianceEigenToRowMajor(const Eigen::Matrix3<Scalar> & in)
 {
   auto covariance = std::array<Scalar, 36>{};
   covariance.fill(0);
@@ -173,6 +213,30 @@ inline std::array<Scalar, 36> covarianceToRowMajor(const Eigen::Matrix3<Scalar> 
   covariance[31] = in.coeff(2, 1);
   covariance[35] = in.coeff(2, 2);
   return covariance;
+}
+
+/**
+ * @brief Function that converts from row-major array representing a 3D
+ * covariance matrix to an Eigen 3x3 matrix.
+ * @param in A row-major array of 36 covariance values.
+ * @param out An Eigen 3x3 matrix representation of a 2D covariance.
+ * @return An Eigen 3x3 matrix representation of a 2D covariance.
+ */
+template<class Scalar>
+inline Eigen::Matrix3<Scalar> & covarianceRowMajorToEigen(
+  const std::array<Scalar, 36> & in,
+  Eigen::Matrix3<Scalar> & out)
+{
+  out.coeffRef(0, 0) = in[0];
+  out.coeffRef(0, 1) = in[1];
+  out.coeffRef(0, 2) = in[5];
+  out.coeffRef(1, 0) = in[6];
+  out.coeffRef(1, 1) = in[7];
+  out.coeffRef(1, 2) = in[11];
+  out.coeffRef(2, 0) = in[30];
+  out.coeffRef(2, 1) = in[31];
+  out.coeffRef(2, 2) = in[35];
+  return out;
 }
 
 }  // namespace tf2
@@ -202,6 +266,18 @@ inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE2<Scala
 
 template<class Scalar>
 inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scalar> & out)
+{
+  tf2::fromMsg(msg, out);
+}
+
+template<class Scalar>
+inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE2<Scalar> & out)
+{
+  tf2::fromMsg(msg, out);
+}
+
+template<class Scalar>
+inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE3<Scalar> & out)
 {
   tf2::fromMsg(msg, out);
 }
