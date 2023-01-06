@@ -1,0 +1,7 @@
+PROJECT_NAME           = "beluga"
+PROJECT_BRIEF          = "An extensible Monte Carlo based localization library."
+OUTPUT_DIRECTORY       = ../generated_docs
+INPUT                  = ../include ./README.md
+RECURSIVE              = YES
+USE_MDFILE_AS_MAINPAGE = ./README.md
+GENERATE_LATEX         = NO
