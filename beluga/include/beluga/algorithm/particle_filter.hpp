@@ -31,8 +31,8 @@
  * \brief Implementation of particle filters.
  *
  * Contains:
- * - A configurable beluga::MCL implementation of montecarlo localization.
- * - A configurable beluga::AMCL implementation of adaptive montecarlo localization.
+ * - A configurable beluga::MCL implementation of Monte Carlo localization.
+ * - A configurable beluga::AMCL implementation of adaptive Monte Carlo localization.
  */
 
 // TODO(ivanpauno): Maybe just use one page for all requirements, and use sections and subsections....
@@ -194,7 +194,7 @@ struct BootstrapParticleFilter : public Mixin {
   Container particles_;
 };
 
-/// An implementation of monte carlo localization.
+/// An implementation of Monte Carlo localization.
 /**
  * MCL<U, M, S, C> is an implementation of the \ref ParticleFilterRequirements "ParticleFilter"
  * named requirements.
@@ -232,7 +232,7 @@ struct MCL : public ciabatta::mixin<
       SensorModel>::mixin;
 };
 
-/// An implementation of adaptive monte carlo localization.
+/// An implementation of adaptive Monte Carlo localization.
 /**
  * AMCL<U, M, S, C> is an implementation of the \ref ParticleFilterRequirements "ParticleFilter"
  * named requirements.
