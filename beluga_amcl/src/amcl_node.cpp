@@ -65,6 +65,16 @@ std::vector<std::pair<double, double>> pre_process_points(
   return points;
 }
 
+Eigen::IOFormat make_eigen_comma_format()
+{
+  return Eigen::IOFormat{
+    Eigen::StreamPrecision,
+    Eigen::DontAlignCols,
+    ", ",  // coefficient separator
+    ", ",  // row separator
+  };
+}
+
 }  // namespace
 
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
@@ -659,20 +669,14 @@ void AmclNode::initial_pose_callback(
   tf2::covarianceRowMajorToEigen(message->pose.covariance, covariance);
 
   {
-    const auto comma_format = Eigen::IOFormat{
-      Eigen::StreamPrecision,
-      Eigen::DontAlignCols,
-      ", ",  // coefficient separator
-      ", ",  // row separator
-    };
-
+    const auto eigen_format = make_eigen_comma_format();
     RCLCPP_INFO(get_logger(), "Initial pose received");
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "Position: " << pose.translation().format(comma_format) << " Angle: " << pose.so2().log());
+      "Position: " << pose.translation().format(eigen_format) << " Angle: " << pose.so2().log());
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "Covariance coefficients: " << covariance.format(comma_format));
+      "Covariance coefficients: " << covariance.format(eigen_format));
   }
 }
 
