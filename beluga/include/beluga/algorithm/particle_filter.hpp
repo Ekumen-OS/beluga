@@ -42,10 +42,10 @@
  *
  * \section Requirements
  * T is a Particle if, for a given instance p of T:
- * - ::beluga::particle_traits::state_type<T> is a valid type.
- * - ::beluga::state(p) is a valid expression and an instance of
- *   ::beluga::particle_traits::state_type<T>.
- * - ::beluga::weigth(p) is a valid expression, the return type must be a scalar (e.g. double).
+ * - ::beluga::particle_traits<T>::state_type is a valid type.
+ * - ::beluga::particle_traits<T>::state(p) is a valid expression and returns an instance of
+ *   ::beluga::particle_traits<T>::state_type.
+ * - ::beluga::particle_traits<T>::weight(p) is a valid expression and the return type is an arithmetic type (that is, an integral type or a floating-point type).
  * <--TODO(ivanpauno): Add particle_traits<T>::weight_type?? (or scalar_type?)-->
  * <--TODO(ivanpauno): Add particle_traits<T>::covariance_type??, or maybe that should be specified by State.-->
  */
