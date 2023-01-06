@@ -1,5 +1,5 @@
 PROJECT_NAME           = "beluga"
-PROJECT_BRIEF          = "An extensible montecarlo based localization library."
+PROJECT_BRIEF          = "An extensible Monte Carlo based localization library."
 OUTPUT_DIRECTORY       = ../generated_docs
 INPUT                  = ../include ./README.md
 RECURSIVE              = YES

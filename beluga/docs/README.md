@@ -1,4 +1,4 @@
-This library provides implementations for montecarlo based localization.
+This library provides implementations for Monte Carlo based localization.
 The existing implementations are:
 
 - beluga::MCL: Monte carlo localization using a fixed number of particles.
