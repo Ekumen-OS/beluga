@@ -66,7 +66,13 @@
  * Base requirements of a particle filter in beluga.
  *
  * \section Requirements
- * T is a BaseParticleFilter if given an instance of T p, the following is satisfied:
+ * B is a BaseParticleFilter if given
+ * - T, the type named by `B::particle_type`
+ * - S, the type named by `T::state_type`
+ * - V, a range view whose elements are of the same type as S
+ * - p, a value of type B
+ * - x, (possibly const) value of type V
+ * The following is satisfied:
  * - p.particles() is valid and returns a view to a container that satisfies the
  *   \ref ParticleContainerRequirements "ParticleContainer" requirements.
  * - p.sample() updates the particle filter particles based on the last motion update.
@@ -74,6 +80,7 @@
  * - p.resample() updates the particle filter, generating new particles from the old ones
  *   based on their importance weights.
  * - p.update() shorthand for executing the above three steps.
+ * - p.reinitialize(x) is valid and reinitializes the particles with the given range view values.
  */
 
 /**
@@ -110,6 +117,8 @@ namespace beluga {
 template <class Mixin, class Container>
 struct BootstrapParticleFilter : public Mixin {
  public:
+  using particle_type = typename Container::value_type;
+
   /// Constructs a BootstrapParticleFilter.
   /**
    * The initial particles are generated using the ParticleBaselineGeneration implementation of
@@ -120,13 +129,9 @@ struct BootstrapParticleFilter : public Mixin {
    */
   template <class... Args>
   explicit BootstrapParticleFilter(Args&&... args)
-      : Mixin(std::forward<Args>(args)...), particles_{this->self().max_samples()} {
-    using particle_type = typename Container::value_type;
-    auto first = std::begin(views::all(particles_));
-    auto last =
-        ranges::copy(this->self().template generate_samples<particle_type>() | this->self().take_samples(), first).out;
-    particles_.resize(std::distance(first, last));
-  }
+      : Mixin(std::forward<Args>(args)...),
+        particles_{initialize_container(
+            this->self().template generate_samples<particle_type>() | this->self().take_samples())} {}
 
   /// Returns a view of the particles container.
   auto particles() { return views::all(particles_); }
@@ -142,6 +147,19 @@ struct BootstrapParticleFilter : public Mixin {
   auto weights() { return views::weights(particles_); }
   /// Returns a const view of the particles weight.
   auto weights() const { return views::weights(particles_) | ranges::views::const_; }
+
+  /// Reinitializes the filter with a given range view to the new particle states.
+  /**
+   * The particle filter will be initialized with the first `max_samples` states of the range,
+   * determined by the ParticleResampling named requirements.
+   *
+   * \tparam View Range view type whose elements are of the same type as `particle_type::state_type`.
+   * \param states A state range view to reinitialize the filter.
+   */
+  template <class View>
+  void reinitialize(View states) {
+    particles_ = initialize_container(states | ranges::views::transform(beluga::make_from_state<particle_type>));
+  }
 
   /// Runs all the sampling steps.
   /**
@@ -183,15 +201,29 @@ struct BootstrapParticleFilter : public Mixin {
    * ParticleResampling named requirements.
    */
   void resample() {
-    auto new_particles = Container{this->self().max_samples()};
-    auto first = std::begin(views::all(new_particles));
-    auto last = ranges::copy(this->self().generate_samples_from(particles_) | this->self().take_samples(), first).out;
-    new_particles.resize(std::distance(first, last));
-    particles_ = std::move(new_particles);
+    particles_ = initialize_container(this->self().generate_samples_from(particles_) | this->self().take_samples());
   }
 
  private:
   Container particles_;
+
+  /// Initializes a new particle container from an input view.
+  /**
+   * The size of the container will be at most `max_samples`, determined by the ParticleResampling
+   * named requirements.
+   *
+   * \tparam View Range view type whose elements are of the same type as `Container::value_type`.
+   * \param input A particle range view to initialize the container.
+   */
+  template <class View>
+  [[nodiscard]] Container initialize_container(View input) const {
+    const std::size_t size = this->self().max_samples();
+    auto container = Container{size};
+    const auto first = std::begin(views::all(container));
+    const auto last = ranges::copy(input | ranges::views::take(size), first).out;
+    container.resize(std::distance(first, last));
+    return container;
+  }
 };
 
 /// An implementation of Monte Carlo localization.
