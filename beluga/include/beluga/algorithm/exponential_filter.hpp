@@ -17,7 +17,7 @@
 
 namespace beluga {
 
-/// Class whose instances are callable objects implementing an exponential filter.
+/// Callable type implementing an exponential filter.
 class ExponentialFilter {
  public:
   /// Construct a exponential filter.

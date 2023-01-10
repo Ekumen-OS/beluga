@@ -64,13 +64,14 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
 
 /// A estimator that uses the mean and covariance of all particles.
 /**
- * \tparam Mixin Must also satisfy the \ref ParticleFilterBaseRequirements ParticleFilterBase
- *  named requirements.
+ * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
+ *  m.self(). The return type of m.self() must satisfy the
+ *  \ref ParticleFilterBaseRequirements ParticleFilterBase named requirements.
  */
 template <class Mixin>
 class SimpleEstimation : public Mixin {
  public:
-  /// Constructs a SimpleEsstimation.
+  /// Constructs a SimpleEstimation instance.
   /**
    * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param ...args arguments that are not used by this part of the mixin, but by others.
