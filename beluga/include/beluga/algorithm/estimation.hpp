@@ -66,7 +66,7 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
 /**
  * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
  *  m.self(). The return type of m.self() must satisfy the
- *  \ref ParticleFilterBasePage ParticleFilterBase named requirements.
+ *  \ref BaseParticleFilterPage BaseParticleFilter named requirements.
  */
 template <class Mixin>
 class SimpleEstimation : public Mixin {
