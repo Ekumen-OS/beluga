@@ -70,7 +70,7 @@ namespace beluga {
  * - A type P that satisfies the \ref ParticlePage Particle named requirements.
  *   Particular implementations may have extra requirements on P.
  * - A [range](https://en.cppreference.com/w/cpp/ranges/range) R with value type P.
- * - An instance t of T.
+ * - A possibly const instance t of T.
  * Then:
  * - t.take_samples() returns a [range adaptor object](
  *   https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject).

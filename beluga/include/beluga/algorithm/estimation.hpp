@@ -54,7 +54,7 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
  * The requirements that a state estimator must satisfy.
  *
  * \section StateEstimationRequirements
- * T is a StateEstimation if given a const T p, the following is satisfied:
+ * T is a StateEstimation if given a (possibly const) instance of p, the following is satisfied:
  * - p.estimated_pose() is a valid expression.
  * - std::get<0>(p.estimated_pose()) is valid.
  *   decltype(std::get<0>(p.estimated_pose())) represents the estimated state.
