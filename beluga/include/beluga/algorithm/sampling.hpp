@@ -32,26 +32,26 @@
 namespace beluga {
 
 /**
- * \page ParticleBaselineGenerationRequirements beluga named requirements: ParticleBaselineGeneration
+ * \page ParticleBaselineGenerationPage beluga named requirements: ParticleBaselineGeneration
  * Classes satisfying the ParticleBaselineGeneration requirements can be used in a particle filter
  * to generate the initial set of particles.
  *
- * \section Requirements
+ * \section ParticleBaselineGenerationRequirements Requirements
  * A type T satisfies the ParticleBaselineGeneration requirements if given:
- * - A type P that satisfies the \ref ParticleRequirements Particle named requirements.
+ * - A type P that satisfies the \ref ParticlePage Particle named requirements.
  * - An instance g of T.
  * Then:
  * - g.generate_samples() returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles P.
  */
 
 /**
- * \page ParticleSampledGenerationRequirements beluga named requirements: ParticleSampledGeneration
+ * \page ParticleSampledGenerationPage beluga named requirements: ParticleSampledGeneration
  * Classes satisfying the ParticleSampledGeneration requirements can be used in a particle filter
  * to generate new particles from the previous particles set.
  *
- * \section Requirements
+ * \section ParticleSampledGenerationRequirements Requirements
  * A type T satisfies the ParticleSampledGeneration requirements if given:
- * - A type P that satisfies the \ref ParticleRequirements Particle named requirements.
+ * - A type P that satisfies the \ref ParticlePage Particle named requirements.
  * - An instance p of a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles of
  *   type P.
  * - An instance g of T.
@@ -61,13 +61,13 @@ namespace beluga {
  */
 
 /**
- * \page ParticleResamplingRequirements beluga named requirements: ParticleResampling
+ * \page ParticleResamplingPage beluga named requirements: ParticleResampling
  * Classes satisfying the ParticleResampling can be used in the particle filter to provide a policy
  * of how the previous particles are resampled.
  *
- * \section Requirements
+ * \section ParticleResamplingRequirements Requirements
  * A type T satisfies the ParticleResampling requirements if given:
- * - A type P that satisfies the \ref ParticleRequirements Particle named requirements.
+ * - A type P that satisfies the \ref ParticlePage Particle named requirements.
  *   Particular implementations may have extra requirements on P.
  * - A [range](https://en.cppreference.com/w/cpp/ranges/range) R with value type P.
  * - An instance t of T.
@@ -132,7 +132,7 @@ auto random_sample(const Range& samples, const Weights& weights, RandomNumberGen
 /**
  * \param resolution The size along any axis of the spatial cluster cell.
  * \return A callable object with prototype (ParticleT && p) -> ParticleT.
- *  ParticleT must satisfy the \ref ParticleRequirements named requirements.
+ *  ParticleT must satisfy the \ref ParticlePage named requirements.
  *  The expression ::beluga::particle_traits<ParticleT>::cluster(p) must also
  *  be valid and return a `size_t &`.
  *  After the returned object is applied to a particle p, cluster(p) will be updated
@@ -193,7 +193,7 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
 
 /// A particle generator.
 /**
- * An implementation of the \ref ParticleBaselineGenerationRequirements ParticleBaselineGeneration
+ * An implementation of the \ref ParticleBaselineGenerationPage ParticleBaselineGeneration
  * named requirements.
  *
  * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
@@ -218,7 +218,7 @@ struct BaselineGeneration : public Mixin {
    * The particles are generated randomly according to the `generate_random_state()` method provided by the sensor model.
    * See SensorModel. <!--TODO(ivanpauno): Add link-->
    *
-   * \tparam Particle The particle type, must satisfy the \ref ParticleRequirements Particle named requirements.
+   * \tparam Particle The particle type, must satisfy the \ref ParticlePage Particle named requirements.
    * \return range with the generated particles.
    */
   template <class Particle>
@@ -252,7 +252,7 @@ struct NaiveGeneration : public Mixin {
   /// Generates new particles from the given input particles.
   /**
    * \tparam Range A range of particles. The value type of the range must satisfy the
-   *  \ref ParticleRequirements Particle named requirements.
+   *  \ref ParticlePage Particle named requirements.
    * \param particles The input particles from where the output particles are sampled.
    * \return The range of sampled particles.
    */
@@ -315,7 +315,7 @@ struct AdaptiveGeneration : public Mixin {
    * The filters are reset if P > 0 for the next iteration, to avoid spiraling off into complete randomness.
    *
    * \tparam Range A range of particles. The value type of the range must satisfy the
-   *  \ref ParticleRequirements Particle named requirements.
+   *  \ref ParticlePage Particle named requirements.
    * \param particles The input particles from where the output particles are sampled.
    * \return The range of sampled particles.
    */
@@ -461,7 +461,7 @@ struct KldResampling : public Mixin {
   /**
    * The returned range adaptor object can be composed with a particle range.
    * It can only be composed with a range whose value type satisfies:
-   * - The \ref ParticleRequirements Particle named requirements.
+   * - The \ref ParticlePage Particle named requirements.
    * - Given P the range value type and p an instance of p, the expression
    *   particle_traits<P>::cluster(p) is a reference to a size_t value that
    *   represents the spatial hash of the particle p.

@@ -50,10 +50,10 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
 }
 
 /**
- * \page StateEstimationRequirements beluga named requirements: StateEstimation
+ * \page StateEstimationPage beluga named requirements: StateEstimation
  * The requirements that a state estimator must satisfy.
  *
- * \section Requirements
+ * \section StateEstimationRequirements
  * T is a StateEstimation if given a const T p, the following is satisfied:
  * - p.estimated_pose() is a valid expression.
  * - std::get<0>(p.estimated_pose()) is valid.
@@ -66,7 +66,7 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
 /**
  * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
  *  m.self(). The return type of m.self() must satisfy the
- *  \ref ParticleFilterBaseRequirements ParticleFilterBase named requirements.
+ *  \ref ParticleFilterBasePage ParticleFilterBase named requirements.
  */
 template <class Mixin>
 class SimpleEstimation : public Mixin {
