@@ -95,8 +95,13 @@ class MultivariateNormalDistribution {
     Matrix transform_{Matrix::Zero()};
 
     [[nodiscard]] static Matrix make_transform(const Matrix& covariance) {
+      // For more information about the method used to generate correlated normal vectors
+      // from independent normal distributions, see:
+      // https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Drawing_values_from_the_distribution
+      // Gentle, J. E. (2009). Computational Statistics. Statistics and Computing. New York: Springer. pp. 315–316.
+      // https://doi.org/10.1007%2F978-0-387-98144-4
       if (!covariance.isApprox(covariance.transpose())) {
-        throw std::runtime_error("Invalid covariance matrix, it is non-symmetric.");
+        throw std::runtime_error("Invalid covariance matrix, it is not symmetric.");
       }
       const auto solver = Eigen::SelfAdjointEigenSolver<Matrix>{covariance};
       if (solver.info() != Eigen::Success) {
