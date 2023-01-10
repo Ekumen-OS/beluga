@@ -193,6 +193,7 @@ class MultivariateNormalDistribution {
   /// Compares this object with other distribution object.
   /**
    * Two distribution objects are equal when parameter values and internal state is the same.
+   * In other words, if they are invoked with equal generators, they generate the same sequence.
    *
    * \param other Distribution object to compare against.
    * \return true if the objects are equal, false otherwise.
@@ -204,6 +205,7 @@ class MultivariateNormalDistribution {
   /// Compares this object with other distribution object.
   /**
    * Two distribution objects are equal when parameter values and internal state is the same.
+   * In other words, if they are invoked with equal generators, they generate the same sequence.
    *
    * \param other Distribution object to compare against.
    * \return true if the objects are not equal, false otherwise.
