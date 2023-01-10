@@ -53,7 +53,7 @@ class MultivariateNormalDistribution {
     /// Constructs a parameter set instance.
     /**
      * \tparam InputType The input type derived from EigenBase.
-     * \param covariance Selfadjoint matrix that represents the covariance of the random variable.
+     * \param covariance Real symmetric matrix that represents the covariance of the random variable.
      *
      * \throw std::runtime_error If the provided covariance is invalid.
      */
@@ -64,7 +64,7 @@ class MultivariateNormalDistribution {
     /**
      * \tparam InputType The input type derived from EigenBase.
      * \param mean A vector that represents the mean value of the random variable.
-     * \param covariance Self-adjoint matrix that represents the covariance of the random variable.
+     * \param covariance Real symmetric matrix that represents the covariance of the random variable.
      *
      * \throw std::runtime_error If the provided covariance is invalid.
      */
@@ -128,7 +128,7 @@ class MultivariateNormalDistribution {
   /// Constructs a MultivariateNormalDistribution with zero mean and the given covariance.
   /**
    * \tparam InputType The input type derived from EigenBase.
-   * \param covariance Selfadjoint matrix that represents the covariance of the random variable.
+   * \param covariance Real symmetric matrix that represents the covariance of the random variable.
    *
    * \throw std::runtime_error If the provided covariance is invalid.
    */
@@ -139,7 +139,7 @@ class MultivariateNormalDistribution {
   /**
    * \tparam InputType The input type derived from EigenBase.
    * \param mean A vector that represents the mean value of the random variable.
-   * \param covariance Self-adjoint matrix that represents the covariance of the random variable.
+   * \param covariance Real symmetric matrix that represents the covariance of the random variable.
    *
    * \throw std::runtime_error If the provided covariance is invalid.
    */
