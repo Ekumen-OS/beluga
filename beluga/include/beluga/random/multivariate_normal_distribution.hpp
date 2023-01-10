@@ -160,6 +160,8 @@ class MultivariateNormalDistribution {
 
   /// Sets the associated parameter set to params.
   /**
+   * This doesn't reset the internal state of the distribution.
+   *
    * \param params New contents of the associated parameter set.
    */
   void param(const param_type& params) { params_ = params; }
