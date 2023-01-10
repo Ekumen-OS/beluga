@@ -7,6 +7,7 @@ ament_add_gmock(test_beluga
   algorithm/test_particle_filter.cpp
   algorithm/test_sampling.cpp
   motion/test_differential_drive_model.cpp
+  random/test_multivariate_normal_distribution.cpp
   sensor/test_likelihood_field_model.cpp
   test_tuple_vector.cpp
   test_spatial_hash.cpp)
