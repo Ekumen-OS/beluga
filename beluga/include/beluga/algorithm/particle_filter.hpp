@@ -35,19 +35,25 @@
  * - A configurable beluga::AMCL implementation of adaptive Monte Carlo localization.
  */
 
-// TODO(ivanpauno): Maybe just use one page for all requirements, and use sections and subsections....
 /**
  * \page ParticleRequirements beluga named requirements: Particle.
  * What an implementation of a particle in beluga should provide.
  *
  * \section Requirements
  * T is a Particle if, for a given instance p of T:
- * - ::beluga::particle_traits<T>::state_type is a valid type.
- * - ::beluga::particle_traits<T>::state(p) is a valid expression and returns an instance of
- *   ::beluga::particle_traits<T>::state_type.
- * - ::beluga::particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
+ * - particle_traits<T>::state_type is a valid type.
+ * - particle_traits<T>::state(p) is a valid expression and returns a reference to an instance of
+ *   particle_traits<T>::state_type.
+ *   The return type will be a l-value reference if p is a l-value, and a r-value reference if p
+ *   is a r-value.
+ *   The return type will be const if p is const.
+ * - particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
  *   type or a floating-point type).
- * - ::beluga::particle_traits<T>::weight(p) is a valid expression and the return type is an arithmetic type.
+ * - particle_traits<T>::weight(p) is a valid expression and the return type is a reference to an
+ *   arithmetic type.
+ *   The return type will be a l-value reference if p is a l-value, and a r-value reference if p
+ *   is a r-value.
+ *   The return type will be const if p is const.
  */
 
 /**
@@ -95,7 +101,7 @@
  * <!--TODO(ivanpauno): Add named requirements links when documented-->
  * - T satisfies the SensorModel named requirements. <!--update_sensor()-->
  * - T satisfies the MotionModel named requirements.  <!--update_motion() and last_pose()-->
- * - T satisfies the StateEstimation named requirements.
+ * - T satisfies the \ref StateEstimationRequirements StateEstimation named requirements.
  */
 namespace beluga {
 
@@ -104,11 +110,12 @@ namespace beluga {
  * BootstrapParticleFilter<Mixin, Container> is an implementation of the
  * \ref BaseParticleFilterRequirements "BaseParticleFilter" named requirements.
  *
- * \tparam Mixin must also satisfy the named requirements:
+ * \tparam The mixed-in type. An instance m of Mixin must provide a protected method,
+ *  m.self(). The return type of m.self() must satisfy:
+ * - \ref ParticleResamplingRequirements ParticleResampling
+ * - \ref ParticleBaselineGenerationRequirements ParticleBaselineGeneration
+ * - \ref ParticleSampledGenerationRequirements ParticleSampledGeneration
  * <!--TODO(ivanpauno): Add links when documented.-->
- * - ParticleResampling <!--for max_samples(), take_samples()-->
- * - ParticleBaselineGeneration <!--for generate_samples()-->
- * - ParticleSampledGeneration <!--for generate_samples_from()-->
  * - MotionModel <!-- for apply_motion()-->
  * - SensorModel <!-- for importance_weight()-->
  * \tparam Container The particle container type.
