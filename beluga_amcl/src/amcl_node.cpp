@@ -22,6 +22,7 @@
 #include <limits>
 #include <memory>
 
+#include <beluga/random/multivariate_normal_distribution.hpp>
 #include <beluga_amcl/tf2_sophus.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
@@ -668,19 +669,28 @@ void AmclNode::initial_pose_callback(
   auto covariance = Eigen::Matrix3d{};
   tf2::covarianceRowMajorToEigen(message->pose.covariance, covariance);
 
+  const auto mean =
+    Eigen::Vector3d{pose.translation().x(), pose.translation().y(), pose.so2().log()};
+
   {
     const auto eigen_format = make_eigen_comma_format();
     RCLCPP_INFO(get_logger(), "Initial pose received");
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "Position: " << pose.translation().format(eigen_format) <<
-        " - Angle: " << pose.so2().log() <<
+      "Mean value: " << mean.format(eigen_format) <<
         " - Covariance coefficients: " << covariance.format(eigen_format));
+  }
 
-    RCLCPP_WARN(
-      get_logger(),
-      "The functionality to initialize the particle filter "
-      "with an initial pose has not been implemented");
+  try {
+    particle_filter_->reinitialize(
+      ranges::views::generate(
+        [distribution = beluga::MultivariateNormalDistribution{mean, covariance}]() mutable {
+          static auto generator = std::mt19937{std::random_device()()};
+          const auto sample = distribution(generator);
+          return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
+        }));
+  } catch (const std::runtime_error & error) {
+    RCLCPP_ERROR(get_logger(), "Could not generate particles: %s", error.what());
   }
 }
 

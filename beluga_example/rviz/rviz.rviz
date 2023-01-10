@@ -224,7 +224,7 @@ Visualization Manager:
     - Class: rviz_default_plugins/SetInitialPose
       Covariance x: 0.25
       Covariance y: 0.25
-      Covariance yaw: 0.06853891909122467
+      Covariance yaw: 1.57
       Topic:
         Depth: 5
         Durability Policy: Volatile

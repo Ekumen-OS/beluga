@@ -37,19 +37,19 @@ class MockMixin : public ciabatta::mixin<MockMixin<Mixin>, Mixin> {
   MOCK_METHOD(double, apply_motion, (double state));
   MOCK_METHOD(double, importance_weight, (double state));
 
-  std::size_t max_samples() { return 10.; }
+  std::size_t max_samples() const { return 10.; }
 
   template <class Particle>
-  auto generate_samples() {
+  auto generate_samples() const {
     return ranges::views::generate([]() { return std::make_pair(1., 1.); });
   }
 
   template <class Range>
-  auto generate_samples_from(Range&& range) {
+  auto generate_samples_from(Range&& range) const {
     return range | ranges::views::all;
   }
 
-  auto take_samples() { return ranges::views::take_exactly(max_samples()); }
+  auto take_samples() const { return ranges::views::take_exactly(max_samples()); }
 };
 
 template <class Mixin>
