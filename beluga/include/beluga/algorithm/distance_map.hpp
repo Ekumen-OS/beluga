@@ -28,7 +28,7 @@
 
 /// Returns a map where each cell values is the distance to the nearest obstacle.
 /**
- * The algorithm uses O(N) time and memory, where N=obstacle_map.size().
+ * The algorithm uses O(N) time and memory, where `N=ranges::size(obstacle_map)`.
  *
  * \tparam Range A [sized](https://en.cppreference.com/w/cpp/ranges/sized_range)
  *  [random access](https://en.cppreference.com/w/cpp/ranges/random_access_range) range.

@@ -62,17 +62,19 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
  * \page StateEstimationPage beluga named requirements: StateEstimation
  * The requirements that a state estimator must satisfy.
  *
- * \section StateEstimationRequirements
- * T is a StateEstimation if given a (possibly const) instance of p, the following is satisfied:
- * - p.estimated_pose() is a valid expression.
- * - std::get<0>(p.estimated_pose()) is valid.
- *   decltype(std::get<0>(p.estimated_pose())) represents the estimated state.
- * - std::get<1>(p.estimated_pose()) is valid.
- *   decltype(std::get<1>(p.estimated_pose())) represents the covariance of the estimation.
+ * \section StateEstimationRequirements Requirements
+ * `T` is a `StateEstimation` if given a (possibly const) instance `p` of `T`, the following is satisfied:
+ * - `p.estimated_pose()` is a valid expression.
+ * - `std::get<0>(p.estimated_pose())` is valid.
+ *   `decltype(std::get<0>(p.estimated_pose()))` represents the estimated state.
+ * - `std::get<1>(p.estimated_pose())` is valid.
+ *   `decltype(std::get<1>(p.estimated_pose()))` represents the covariance of the estimation.
  */
 
 /// An estimator that uses the mean and covariance of all particles.
 /**
+ * This class satisfies the \ref StateEstimationPage "StateEstimation" named requirements.
+ *
  * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
  *  m.self(). The return type of m.self() must satisfy the
  *  \ref BaseParticleFilterPage BaseParticleFilter named requirements.

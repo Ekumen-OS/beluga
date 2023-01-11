@@ -40,22 +40,22 @@
  * What an implementation of a particle in beluga should provide.
  *
  * \section ParticleRequirements Requirements
- * T is a Particle if given:
- * - An instance p of T.
- * - A possibly const instance cp of T.
+ * `T` is a `Particle` if given:
+ * - An instance `p` of `T`.
+ * - A possibly const instance `cp` of `T`.
  *
  * The following is satisfied:
- * - particle_traits<T>::state_type is a valid type.
- * - particle_traits<T>::state(cp) returns an instance of particle_traits<T>::state_type.
- * - Given s an instance of particle_traits<T>::state_type, `particle_traits<T>::state(p) = s`
- *   is a valid expression and assigns the state s to the particle p.
+ * - `particle_traits<T>::state_type` is a valid type.
+ * - `particle_traits<T>::state(cp)` returns an instance of `particle_traits<T>::state_type`.
+ * - Given `s` an instance of `particle_traits<T>::state_type`, `particle_traits<T>::state(p) = s`
+ *   is a valid expression and assigns the state `s` to the particle `p`.
  *   i.e. after the assignment `s == particle_traits<T>::state(p)` is `true`.
- * - particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
+ * - `particle_traits<T>::weight_type` is a valid arithmetic type (that is, an integral
  *   type or a floating-point type).
- * - particle_traits<T>::weight(cp) is a valid expression and the return type is
- *   particle_traits<T>::weight_type.
- * - Given w an instance of particle_traits<T>::weight_type, `particle_traits<T>::weight(p) = w`
- *   is a valid expression and assigns the weight w to the particle p.
+ * - `particle_traits<T>::weight(cp)` is a valid expression and the return type is
+ *   `particle_traits<T>::weight_type`.
+ * - Given `w` an instance of `particle_traits<T>::weight_type`, `particle_traits<T>::weight(p) = w`
+ *   is a valid expression and assigns the weight `w` to the particle `p`.
  *   i.e. after the assignment `w == particle_traits<T>::weight(p)` is `true`.
  */
 
@@ -64,48 +64,48 @@
  * What an implementation of a particle container in beluga should provide.
  *
  * \section ParticleContainerRequirements Requirements
- * T is a ParticleContainer if:
- * - T satisfies the [Container](https://en.cppreference.com/w/cpp/named_req/Container)
+ * `T` is a `ParticleContainer` if:
+ * - `T` satisfies the [Container](https://en.cppreference.com/w/cpp/named_req/Container)
  *   c++ named requirements.
- * - T::value_type satisfies the beluga named requirements \ref ParticlePage "Particle".
+ * - `T::value_type` satisfies the beluga named requirements \ref ParticlePage "Particle".
  */
 
 /**
  * \page BaseParticleFilterPage beluga named requirements: BaseParticleFilter
  * Base requirements of a particle filter in beluga.
  *
- * \section BaseParticleFilterRequirements
- * B is a BaseParticleFilter if given
- * - T, the type named by `B::particle_type`
- * - S, the type named by `T::state_type`
- * - V, a range view whose elements are of the same type as S
- * - p, a value of type B
- * - x, (possibly const) value of type V
+ * \section BaseParticleFilterRequirements Requirements
+ * `B` is a `BaseParticleFilter` if given
+ * - `T`, the type named by `B::particle_type`.
+ * - `S`, the type named by `T::state_type`.
+ * - `V`, a range view whose elements are of the same type as `S`.
+ * - `p`, a value of type `B`.
+ * - `x`, possibly const value of type `V`.
  *
  * The following is satisfied:
- * - p.particles() is valid and returns a view to a container that satisfies the
+ * - `p.particles()` is valid and returns a view to a container that satisfies the
  *   \ref ParticleContainerPage "ParticleContainer" requirements.
- * - p.sample() updates the particle filter particles based on the last motion update.
- * - p.importance_sample() updates the particle filter particles weight.
- * - p.resample() updates the particle filter, generating new particles from the old ones
+ * - `p.sample()` updates the particle filter particles based on the last motion update.
+ * - `p.importance_sample()` updates the particle filter particles weight.
+ * - `p.resample()` updates the particle filter, generating new particles from the old ones
  *   based on their importance weights.
- * - p.update() shorthand for executing the above three steps.
- * - p.reinitialize(x) is valid and reinitializes the particles with the given range view values.
+ * - `p.update()` shorthand for executing the above three steps.
+ * - `p.reinitialize(x)` is valid and reinitializes the particles with the given range view values.
  */
 
 /**
  * \page ParticleFilterPage beluga named requirements: ParticleFilter
  * What an implementation of a particle filter in beluga should provide.
- * This is satisfied for example by beluga::MCL<U, M, S, C> and beluga::AMCL<U, M, S, C>.
- * for any valid U, M, S, C (see respective docs for detail).
+ * This is satisfied for example by `beluga::MCL<U, M, S, C>` and `beluga::AMCL<U, M, S, C>`,
+ * for any valid `U`, `M`, `S`, `C` (see respective docs for detail).
  *
  * \section ParticleFilterRequirements Requirements
- * T is a ParticleFilter if:
- * - T satisfies the \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
+ * `T` is a `ParticleFilter` if:
+ * - `T` satisfies the \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
  * <!--TODO(ivanpauno): Add named requirements links when documented-->
- * - T satisfies the SensorModel named requirements. <!--update_sensor()-->
- * - T satisfies the MotionModel named requirements.  <!--update_motion() and last_pose()-->
- * - T satisfies the \ref StateEstimationPage StateEstimation named requirements.
+ * - `T` satisfies the `SensorModel` named requirements. <!--update_sensor()-->
+ * - `T` satisfies the `MotionModel` named requirements.  <!--update_motion() and last_pose()-->
+ * - `T` satisfies the \ref StateEstimationPage "StateEstimation" named requirements.
  */
 namespace beluga {
 
@@ -115,13 +115,13 @@ namespace beluga {
  * \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
  *
  * \tparam The mixed-in type. An instance m of Mixin must provide a protected method,
- *  m.self(). The return type of m.self() must satisfy:
- * - \ref ParticleResamplingPage ParticleResampling
- * - \ref ParticleBaselineGenerationPage ParticleBaselineGeneration
- * - \ref ParticleSampledGenerationPage ParticleSampledGeneration
+ *  `m.self()`. The return type of `m.self()` must satisfy:
+ * - \ref ParticleResamplingPage "ParticleResampling"
+ * - \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
+ * - \ref ParticleSampledGenerationPage "ParticleSampledGeneration"
  * <!--TODO(ivanpauno): Add links when documented.-->
- * - MotionModel <!-- for apply_motion()-->
- * - SensorModel <!-- for importance_weight()-->
+ * - `MotionModel` <!-- for apply_motion()-->
+ * - `SensorModel` <!-- for importance_weight()-->
  *
  * \tparam Container The particle container type.
  *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.

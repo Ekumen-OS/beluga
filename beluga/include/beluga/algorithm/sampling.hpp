@@ -39,54 +39,54 @@ namespace beluga {
 
 /**
  * \page ParticleBaselineGenerationPage beluga named requirements: ParticleBaselineGeneration
- * Classes satisfying the ParticleBaselineGeneration requirements can be used in a particle filter
+ * Classes satisfying the `ParticleBaselineGeneration` requirements can be used in a particle filter
  * to generate the initial set of particles.
  *
  * \section ParticleBaselineGenerationRequirements Requirements
- * A type T satisfies the ParticleBaselineGeneration requirements if given:
- * - A type P that satisfies the \ref ParticlePage Particle named requirements.
- * - An instance g of T.
+ * A type `T` satisfies the `ParticleBaselineGeneration` requirements if given:
+ * - A type `P` that satisfies the \ref ParticlePage "Particle" named requirements.
+ * - An instance `g` of `T`.
  *
  * Then:
- * - g.generate_samples() returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles P.
+ * - `g.generate_samples<P>()` returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles `P`.
  */
 
 /**
  * \page ParticleSampledGenerationPage beluga named requirements: ParticleSampledGeneration
- * Classes satisfying the ParticleSampledGeneration requirements can be used in a particle filter
+ * Classes satisfying the `ParticleSampledGeneration` requirements can be used in a particle filter
  * to generate new particles from the previous particles set.
  *
  * \section ParticleSampledGenerationRequirements Requirements
- * A type T satisfies the ParticleSampledGeneration requirements if given:
- * - A type P that satisfies the \ref ParticlePage Particle named requirements.
- * - An instance p of a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles of
- *   type P.
- * - An instance g of T.
+ * A type `T` satisfies the `ParticleSampledGeneration` requirements if given:
+ * - A type `P` that satisfies the \ref ParticlePage "Particle" named requirements.
+ * - An instance `p` of a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles of
+ *   type `P`.
+ * - An instance `g` of `T`.
  *
  * Then:
- * - g.generate_samples_from(p) returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles P.
- *   The input range p may be used as a base to generate the particles in the returned range.
+ * - `g.generate_samples_from(p)` returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles `P`.
+ *   The input range `p` may be used as a base to generate the particles in the returned range.
  */
 
 /**
  * \page ParticleResamplingPage beluga named requirements: ParticleResampling
- * Classes satisfying the ParticleResampling can be used in the particle filter to provide a policy
+ * Classes satisfying the `ParticleResampling` can be used in the particle filter to provide a policy
  * of how the previous particles are resampled.
  *
  * \section ParticleResamplingRequirements Requirements
- * A type T satisfies the ParticleResampling requirements if given:
- * - A type P that satisfies the \ref ParticlePage Particle named requirements.
- *   Particular implementations may have extra requirements on P.
- * - A [range](https://en.cppreference.com/w/cpp/ranges/range) R with value type P.
- * - A possibly const instance t of T.
+ * A type `T` satisfies the `ParticleResampling` requirements if given:
+ * - A type `P` that satisfies the \ref ParticlePage "Particle" named requirements.
+ *   Particular implementations may have extra requirements on `P`.
+ * - A [range](https://en.cppreference.com/w/cpp/ranges/range) `R` with value type `P`.
+ * - A possibly const instance `t` of `T`.
  *
  * Then:
- * - t.take_samples() returns a [range adaptor object](
+ * - `t.take_samples()` returns a [range adaptor object](
  *   https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject).
- * - If r is an instance of R and v the return values of t.take_samples(),
- *   the expression r | v is valid and results in a range view of particles.
- *   This range view contains the particles that result of resampling r according
- *   to the policy of T.
+ * - If `r` is an instance of `R` and `v` the return values of `t.take_samples()`,
+ *   the expression `r | v` is valid and results in a range view of particles.
+ *   This range view contains the particles that result of resampling `r` according
+ *   to the policy of `T`.
  */
 
 /// Selects between executing one function or another randomly.
@@ -141,8 +141,8 @@ auto random_sample(const Range& samples, const Weights& weights, RandomNumberGen
 /**
  * \param resolution The size along any axis of the spatial cluster cell.
  * \return A callable object with prototype (ParticleT && p) -> ParticleT.
- *  ParticleT must satisfy the \ref ParticlePage named requirements.
- *  The expression ::beluga::particle_traits<ParticleT>::cluster(p) must also
+ *  ParticleT must satisfy the \ref ParticlePage "Particle" named requirements.
+ *  The expression particle_traits<ParticleT>::cluster(p) must also
  *  be valid and return a `size_t &`.
  *  After the returned object is applied to a particle p, cluster(p) will be updated
  *  with the calculated spatial hash according to the specified resolution.
@@ -202,7 +202,7 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
 
 /// A particle generator.
 /**
- * An implementation of the \ref ParticleBaselineGenerationPage ParticleBaselineGeneration
+ * An implementation of the \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
  * named requirements.
  *
  * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
@@ -227,7 +227,7 @@ struct BaselineGeneration : public Mixin {
    * The particles are generated randomly according to the `generate_random_state()` method provided by the sensor
    * model. See SensorModel. <!--TODO(ivanpauno): Add link-->
    *
-   * \tparam Particle The particle type, must satisfy the \ref ParticlePage Particle named requirements.
+   * \tparam Particle The particle type, must satisfy the \ref ParticlePage "Particle" named requirements.
    * \return range with the generated particles.
    */
   template <class Particle>
@@ -261,7 +261,7 @@ struct NaiveGeneration : public Mixin {
   /// Generates new particles from the given input particles.
   /**
    * \tparam Range A range of particles. The value type of the range must satisfy the
-   *  \ref ParticlePage Particle named requirements.
+   *  \ref ParticlePage "Particle" named requirements.
    * \param particles The input particles from where the output particles are sampled.
    * \return The range of sampled particles.
    */
@@ -324,7 +324,7 @@ struct AdaptiveGeneration : public Mixin {
    * The filters are reset if P > 0 for the next iteration, to avoid spiraling off into complete randomness.
    *
    * \tparam Range A range of particles. The value type of the range must satisfy the
-   *  \ref ParticlePage Particle named requirements.
+   *  \ref ParticlePage "Particle" named requirements.
    * \param particles The input particles from where the output particles are sampled.
    * \return The range of sampled particles.
    */
@@ -470,12 +470,12 @@ struct KldResampling : public Mixin {
   /**
    * The returned range adaptor object can be composed with a particle range.
    * It can only be composed with a range whose value type satisfies:
-   * - The \ref ParticlePage Particle named requirements.
-   * - Given P the range value type, p an instance of P, cp a possibly const instance of P.
-   *   The expression particle_traits<P>::cluster(cp) returns a size_t that represents the spatial
-   *   hash of the particle cp.
-   *   Given a size_t hash, the expression `particle_traits<P>::cluster(p) = hash` is valid and
-   *   assigns the cluster hash to the particle p.
+   * - The \ref ParticlePage "Particle" named requirements.
+   * - Given `P` the range value type, `p` an instance of `P`, `cp` a possibly const instance of `P`.
+   *   The expression `particle_traits<P>::cluster(cp)` returns a `size_t` that represents the spatial
+   *   hash of the particle `cp`.
+   *   Given a `size_t` hash, the expression `particle_traits<P>::cluster(p) = hash` is valid and
+   *   assigns the cluster hash to the particle `p`.
    *   i.e. after the assignment `hash == particle_traits<P>::cluster(p)` is `true`.
    */
   [[nodiscard]] auto take_samples() const {
