@@ -40,20 +40,22 @@
  * What an implementation of a particle in beluga should provide.
  *
  * \section ParticleRequirements Requirements
- * T is a Particle if, for a given instance p of T:
+ * T is a Particle if given:
+ * - An instance p of T.
+ * - A possibly const instance cp of T.
+ * The following is satisfied:
  * - particle_traits<T>::state_type is a valid type.
- * - particle_traits<T>::state(p) is a valid expression and returns a reference to an instance of
- *   particle_traits<T>::state_type.
- *   The return type will be a l-value reference if p is a l-value, and a r-value reference if p
- *   is a r-value.
- *   The return type will be const if p is const.
+ * - particle_traits<T>::state(cp) returns an instance of particle_traits<T>::state_type.
+ * - Given s an instance of particle_traits<T>::state_type, `particle_traits<T>::state(p) = s`
+ *   is a valid expression and assigns the state s to the particle p.
+ *   i.e. after the assignment `s == particle_traits<T>::state(p)` is `true`.
  * - particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
  *   type or a floating-point type).
- * - particle_traits<T>::weight(p) is a valid expression and the return type is a reference to an
- *   arithmetic type.
- *   The return type will be a l-value reference if p is a l-value, and a r-value reference if p
- *   is a r-value.
- *   The return type will be const if p is const.
+ * - particle_traits<T>::weight(cp) is a valid expression and the return type is
+ *   particle_traits<T>::weight_type.
+ * - Given w an instance of particle_traits<T>::weight_type, `particle_traits<T>::weight(p) = w`
+ *   is a valid expression and assigns the weight w to the particle p.
+ *   i.e. after the assignment `w == particle_traits<T>::weight(p)` is `true`.
  */
 
 /**

@@ -468,12 +468,12 @@ struct KldResampling : public Mixin {
    * The returned range adaptor object can be composed with a particle range.
    * It can only be composed with a range whose value type satisfies:
    * - The \ref ParticlePage Particle named requirements.
-   * - Given P the range value type and p an instance of p, the expression
-   *   particle_traits<P>::cluster(p) is a reference to a size_t value that
-   *   represents the spatial hash of the particle p.
-   *   The return type will be a l-value reference if p is a l-value, and a r-value reference if p
-   *   is a r-value.
-   *   The return type will be const if p is const.
+   * - Given P the range value type, p an instance of P, cp a possibly const instance of P.
+   *   The expression particle_traits<P>::cluster(cp) returns a size_t that represents the spatial
+   *   hash of the particle cp.
+   *   Given a size_t hash, the expression `particle_traits<P>::cluster(p) = hash` is valid and
+   *   assigns the cluster hash to the particle p.
+   *   i.e. after the assignment `hash == particle_traits<P>::cluster(p)` is `true`.
    */
   [[nodiscard]] auto take_samples() const {
     return ranges::views::transform(set_cluster(parameters_.spatial_resolution)) |
