@@ -18,6 +18,9 @@
 #include <queue>
 #include <vector>
 
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
+
 /**
  * \file
  * \brief Implementation of algorithm to calculate distance from obstacles.
@@ -27,8 +30,9 @@
 /**
  * The algorithm uses O(N) time and memory, where N=obstacle_map.size().
  *
- * \tparam Range A [Container](https://en.cppreference.com/w/cpp/named_req/Container) where
- *  T::value is bool. Its iterator must be random access.
+ * \tparam Range A [sized](https://en.cppreference.com/w/cpp/ranges/sized_range)
+ *  [random access](https://en.cppreference.com/w/cpp/ranges/random_access_range) range.
+ *  Its value type must be bool.
  * \tparam DistanceFunction A callable type, its prototype must be
  *  (size_t, size_t) -> DistanceType. DistanceType must be an scalar type.
  * \tparam NeighborsFunction A callabe type, its prototype must be
@@ -55,16 +59,16 @@ auto nearest_obstacle_distance_map(
   };
 
   using DistanceType = std::invoke_result_t<DistanceFunction, std::size_t, std::size_t>;
-  auto distance_map = std::vector<DistanceType>(obstacle_map.size());
-  auto visited = std::vector<bool>(obstacle_map.size(), false);
+  auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_map));
+  auto visited = std::vector<bool>(ranges::size(obstacle_map), false);
 
   auto compare = [&distance_map](const IndexPair& first, const IndexPair& second) {
     return distance_map[first.index] > distance_map[second.index];
   };
   auto queue = std::priority_queue<IndexPair, std::vector<IndexPair>, decltype(compare)>{compare};
 
-  auto begin = obstacle_map.begin();
-  for (std::size_t index = 0; index < obstacle_map.size(); ++index) {
+  auto begin = ranges::begin(obstacle_map);
+  for (std::size_t index = 0; index < ranges::size(obstacle_map); ++index) {
     bool is_obstacle = *(begin + index);
     if (is_obstacle) {
       visited[index] = true;
