@@ -20,6 +20,12 @@
 #include <range/v3/view/transform.hpp>
 #include <sophus/se2.hpp>
 
+/**
+ * \file
+ * \brief Implementation of algorithms that allow calculating the estimated state of
+ *  a particle filter.
+ */
+
 namespace beluga {
 
 /// Calculates the covariance of a range given its mean.

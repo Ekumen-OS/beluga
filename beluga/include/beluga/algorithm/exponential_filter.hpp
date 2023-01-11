@@ -15,6 +15,11 @@
 #ifndef BELUGA_ALGORITHM_EXPONENTIAL_FILTER_HPP
 #define BELUGA_ALGORITHM_EXPONENTIAL_FILTER_HPP
 
+/**
+ * \file
+ * \brief Implementation of an exponential filter.
+ */
+
 namespace beluga {
 
 /// Callable type implementing an exponential filter.

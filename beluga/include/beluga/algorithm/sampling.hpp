@@ -29,6 +29,12 @@
 #include <range/v3/view/take_while.hpp>
 #include <range/v3/view/transform.hpp>
 
+/**
+ * \file
+ * \brief Implementation of algorithms related to generation, sampling and resampling
+ *  of particles.
+ */
+
 namespace beluga {
 
 /**

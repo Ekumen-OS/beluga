@@ -18,6 +18,11 @@
 #include <queue>
 #include <vector>
 
+/**
+ * \file
+ * \brief Implementation of algorithm to calculate distance from obstacles.
+ */
+
 /// Returns a map where each cell values is the distance to the nearest obstacle.
 /**
  * The algorithm uses O(N) time and memory, where N=obstacle_map.size().
