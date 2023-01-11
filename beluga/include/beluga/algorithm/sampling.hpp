@@ -46,6 +46,7 @@ namespace beluga {
  * A type T satisfies the ParticleBaselineGeneration requirements if given:
  * - A type P that satisfies the \ref ParticlePage Particle named requirements.
  * - An instance g of T.
+ *
  * Then:
  * - g.generate_samples() returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles P.
  */
@@ -61,6 +62,7 @@ namespace beluga {
  * - An instance p of a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles of
  *   type P.
  * - An instance g of T.
+ *
  * Then:
  * - g.generate_samples_from(p) returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles P.
  *   The input range p may be used as a base to generate the particles in the returned range.
@@ -77,6 +79,7 @@ namespace beluga {
  *   Particular implementations may have extra requirements on P.
  * - A [range](https://en.cppreference.com/w/cpp/ranges/range) R with value type P.
  * - A possibly const instance t of T.
+ *
  * Then:
  * - t.take_samples() returns a [range adaptor object](
  *   https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject).

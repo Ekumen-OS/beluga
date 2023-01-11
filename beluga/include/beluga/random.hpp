@@ -30,7 +30,8 @@
  * The type D satisfies _RandomStateDistribution_ if:
  * - D satisfies [CopyConstructible](https://en.cppreference.com/w/cpp/named_req/CopyConstructible)
  * - D satisfies [CopyAssignable](https://en.cppreference.com/w/cpp/named_req/CopyAssignable)
- * Given
+ *
+ * Given:
  * - T, the type named by `D::result_type`
  * - P, the type named by `D::param_type`, which
  *   - satisfies [CopyConstructible](https://en.cppreference.com/w/cpp/named_req/CopyConstructible)
@@ -46,7 +47,8 @@
  * - p, a (possibly const) value of type P
  * - g, lvalue of a type satisfying
  *   [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
- * The following expressions must be valid and have their specified effects
+ *
+ * The following expressions must be valid and have their specified effects:
  * - D::result_type
  * - D::param_type
  * - D() creates a distribution indistinguishable from any other default-constructed D

@@ -43,6 +43,7 @@
  * T is a Particle if given:
  * - An instance p of T.
  * - A possibly const instance cp of T.
+ *
  * The following is satisfied:
  * - particle_traits<T>::state_type is a valid type.
  * - particle_traits<T>::state(cp) returns an instance of particle_traits<T>::state_type.
@@ -80,6 +81,7 @@
  * - V, a range view whose elements are of the same type as S
  * - p, a value of type B
  * - x, (possibly const) value of type V
+ *
  * The following is satisfied:
  * - p.particles() is valid and returns a view to a container that satisfies the
  *   \ref ParticleContainerPage "ParticleContainer" requirements.
@@ -120,6 +122,7 @@ namespace beluga {
  * <!--TODO(ivanpauno): Add links when documented.-->
  * - MotionModel <!-- for apply_motion()-->
  * - SensorModel <!-- for importance_weight()-->
+ *
  * \tparam Container The particle container type.
  *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.
  */
