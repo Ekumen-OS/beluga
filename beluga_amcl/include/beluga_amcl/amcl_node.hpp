@@ -59,6 +59,10 @@ protected:
   void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
   void timer_callback();
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
+    /*
+   * @brief Publish TF transformation from map to odom
+   */
+  void sendMapToOdomTransform();
 
   std::unique_ptr<ParticleFilter> particle_filter_;
   std::unique_ptr<bond::Bond> bond_;
@@ -79,6 +83,11 @@ protected:
   std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
     rclcpp_lifecycle::LifecycleNode>> laser_scan_sub_;
   message_filters::Connection laser_scan_connection_;
+  
+  bool latest_tf_valid_{false};
+  tf2::Transform latest_tf_;
+
+
 };
 
 }  // namespace beluga_amcl

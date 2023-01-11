@@ -175,6 +175,25 @@ inline std::array<Scalar, 36> covarianceToRowMajor(const Eigen::Matrix3<Scalar> 
   return covariance;
 }
 
+/**
+ * @brief Convert a Sophus SE2 type to a tf2::Transform .
+ 
+ * @param in The Sophus SE2 to convert.
+ * @return The transform converted to a tf2::Transform 
+ */
+template<class Scalar>
+inline tf2::Transform toTF(const Sophus::SE2<Scalar> & in)
+{
+  const double theta = in.so2().log();
+  tf2::Quaternion q;
+  q.setRPY(0, 0, theta);
+  tf2::Transform tmp_tf(q, tf2::Vector3(
+        in.translation().x(),
+        in.translation().y(),
+        0.0));
+  return tmp_tf;
+}
+
 }  // namespace tf2
 
 namespace Sophus
@@ -204,6 +223,12 @@ template<class Scalar>
 inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scalar> & out)
 {
   tf2::fromMsg(msg, out);
+}
+
+template<class Scalar>
+inline tf2::Transform toTF(const Sophus::SE2<Scalar> & in)
+{
+  return tf2::toTF(in);
 }
 
 }  // namespace Sophus
