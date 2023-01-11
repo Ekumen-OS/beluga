@@ -71,7 +71,7 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
  *   decltype(std::get<1>(p.estimated_pose())) represents the covariance of the estimation.
  */
 
-/// A estimator that uses the mean and covariance of all particles.
+/// An estimator that uses the mean and covariance of all particles.
 /**
  * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
  *  m.self(). The return type of m.self() must satisfy the

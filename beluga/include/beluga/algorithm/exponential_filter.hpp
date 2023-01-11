@@ -25,16 +25,16 @@ namespace beluga {
 /// Callable type implementing an exponential filter.
 class ExponentialFilter {
  public:
-  /// Construct a exponential filter.
+  /// Constructs a exponential filter.
   /**
    * \param alpha The exponential filter smoothing factor.
    */
   explicit ExponentialFilter(double alpha) : alpha_{alpha} {}
 
-  /// Reset the output of the exponential filter to zero.
+  /// Resets the output of the exponential filter to zero.
   void reset() { output_ = 0.; }
 
-  /// Update the exponential filter output given an input.
+  /// Updates the exponential filter output given an input.
   /**
    * \param input Next value to be exponentially filtered.
    */
