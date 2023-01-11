@@ -36,7 +36,7 @@
  */
 
 /**
- * \page ParticlePage beluga named requirements: Particle.
+ * \page ParticlePage beluga named requirements: Particle
  * What an implementation of a particle in beluga should provide.
  *
  * \section ParticleRequirements Requirements
@@ -59,7 +59,7 @@
  */
 
 /**
- * \page ParticleContainerPage beluga named requirements: ParticleContainer.
+ * \page ParticleContainerPage beluga named requirements: ParticleContainer
  * What an implementation of a particle container in beluga should provide.
  *
  * \section ParticleContainerRequirements Requirements
@@ -70,7 +70,7 @@
  */
 
 /**
- * \page BaseParticleFilterPage beluga named requirements: BaseParticleFilter.
+ * \page BaseParticleFilterPage beluga named requirements: BaseParticleFilter
  * Base requirements of a particle filter in beluga.
  *
  * \section BaseParticleFilterRequirements
@@ -92,7 +92,7 @@
  */
 
 /**
- * \page ParticleFilterPage beluga named requirements: ParticleFilter.
+ * \page ParticleFilterPage beluga named requirements: ParticleFilter
  * What an implementation of a particle filter in beluga should provide.
  * This is satisfied for example by beluga::MCL<U, M, S, C> and beluga::AMCL<U, M, S, C>.
  * for any valid U, M, S, C (see respective docs for detail).

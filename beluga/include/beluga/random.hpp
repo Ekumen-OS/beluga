@@ -18,7 +18,7 @@
 #include <beluga/random/multivariate_normal_distribution.hpp>
 
 /**
- * \page RandomStateDistributionRequirements beluga named requirements: RandomStateDistribution.
+ * \page RandomStateDistributionRequirements beluga named requirements: RandomStateDistribution
  * A RandomStateDistribution is a function object returning random states according to a probability
  * density function p(x) or a discrete probability distribution P(xi).
  *
