@@ -81,9 +81,9 @@
  * The following is satisfied:
  * - p.particles() is valid and returns a view to a container that satisfies the
  *   \ref ParticleContainerPage "ParticleContainer" requirements.
- * - t.sample() updates the particle filter particles based on the last motion update.
- * - t.importance_sample() updates the particle filter particles weight.
- * - t.resample() updates the particle filter, generating new particles from the old ones
+ * - p.sample() updates the particle filter particles based on the last motion update.
+ * - p.importance_sample() updates the particle filter particles weight.
+ * - p.resample() updates the particle filter, generating new particles from the old ones
  *   based on their importance weights.
  * - p.update() shorthand for executing the above three steps.
  * - p.reinitialize(x) is valid and reinitializes the particles with the given range view values.
