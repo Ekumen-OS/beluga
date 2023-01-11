@@ -16,6 +16,8 @@
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
 #include <beluga/type_traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/transform.hpp>
 #include <sophus/se2.hpp>
@@ -30,7 +32,7 @@ namespace beluga {
 
 /// Calculates the covariance of a range given its mean.
 /**
- * \tparam Range A [Container](https://en.cppreference.com/w/cpp/named_req/Container) whose
+ * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
  *  Range::value_type is Eigen::Vector2<Scalar>.
  * \tparam Scalar An scalar type, e.g. double or float.
  * \param range Range to be used to calculate the covariance.
@@ -41,7 +43,8 @@ namespace beluga {
 template <class Range, class Scalar>
 Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scalar>& mean) {
   Eigen::Vector3<Scalar> coefficients = std::transform_reduce(
-      range.begin(), range.end(), Eigen::Vector3<Scalar>::Zero().eval(), std::plus{}, [mean](const auto& value) {
+      ranges::begin(range), ranges::end(range), Eigen::Vector3<Scalar>::Zero().eval(), std::plus{},
+      [mean](const auto& value) {
         const auto centered = value - mean;
         return Eigen::Vector3<Scalar>{
             centered.x() * centered.x(),
@@ -49,7 +52,7 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
             centered.y() * centered.y(),
         };
       });
-  coefficients /= (static_cast<Scalar>(range.size() - 1));
+  coefficients /= (static_cast<Scalar>(ranges::size(range) - 1));
   auto covariance_matrix = Eigen::Matrix2<Scalar>{};
   covariance_matrix << coefficients(0), coefficients(1), coefficients(1), coefficients(2);
   return covariance_matrix;
