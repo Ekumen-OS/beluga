@@ -71,7 +71,7 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
  *   `decltype(std::get<1>(p.estimated_pose()))` represents the covariance of the estimation.
  */
 
-/// An estimator that uses the mean and covariance of all particles.
+/// An estimator that calculates the estimated pose mean and covariance using all the particles.
 /**
  * This class satisfies the \ref StateEstimationPage "StateEstimation" named requirements.
  *

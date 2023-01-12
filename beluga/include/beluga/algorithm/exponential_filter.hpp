@@ -25,7 +25,7 @@ namespace beluga {
 /// Callable type implementing an exponential filter.
 class ExponentialFilter {
  public:
-  /// Constructs a exponential filter.
+  /// Constructs an exponential filter.
   /**
    * \param alpha The exponential filter smoothing factor.
    */

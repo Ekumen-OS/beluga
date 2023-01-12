@@ -26,7 +26,7 @@
  * \brief Implementation of algorithm to calculate distance from obstacles.
  */
 
-/// Returns a map where each cell values is the distance to the nearest obstacle.
+/// Returns a map where the value of each cell is the distance to the nearest obstacle.
 /**
  * The algorithm uses O(N) time and memory, where `N=ranges::size(obstacle_map)`.
  *
@@ -34,18 +34,18 @@
  *  [random access](https://en.cppreference.com/w/cpp/ranges/random_access_range) range.
  *  Its value type must be bool.
  * \tparam DistanceFunction A callable type, its prototype must be
- *  (size_t, size_t) -> DistanceType. DistanceType must be an scalar type.
+ *  (std::size_t, std::size_t) -> DistanceType. DistanceType must be an scalar type.
  * \tparam NeighborsFunction A callabe type, its prototype must be
- *  (size_t) -> NeighborsT, where NeighborsT is a
- *    [Container](https://en.cppreference.com/w/cpp/named_req/Container)
- *    where NeighborsT::value is size_t.
+ *  (std::size_t) -> NeighborsT, where NeighborsT is a
+ *    [Range](https://en.cppreference.com/w/cpp/ranges/range)
+ *    with value type std::size_t.
  * \param obstacle_map A map that represents obstacles in an environment.
  *  If the value of a cell is True, the cell has an obstacle.
  * \param distance_function Given the indexes of two cells in the map i and j,
  *  obstacle_map(i, j) must return the distance between the two cells.
  * \param neighbors_function Given the index i of one cell in the map,
- *  neighbors_function(i) returns the cell indexes of neighbor cells in a
- *  container.
+ *  neighbors_function(i) returns the cell indexes of neighbor cells in the
+ *  obstacle map.
  * \return A map where each cell value is the distance to the nearest object.
  */
 template <class Range, class DistanceFunction, class NeighborsFunction>

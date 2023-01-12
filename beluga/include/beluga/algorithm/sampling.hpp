@@ -93,13 +93,13 @@ namespace beluga {
 /**
  * \tparam Function1 Callable type, with prototype () -> Ret.
  * \tparam Function2 Callable type, with prototype () -> Ret.
- *   The return type for both Function1 and Function 2 must be the same.
+ *   The return type of both Function1 and Function2 must be the same.
  * \tparam RandomNumberGenerator Must meet the requirements of
  *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator).
  * \param first The first function to be called.
  * \param second The second function to be called.
  * \param generator The random number generator used.
- * \param probability The function first will be called with the probability specified here.
+ * \param probability The first function will be called with the probability specified here.
  *  In the rest of the cases, second is called.
  *  A Bernoully distribution is used.
  * \return The result of the called function.
@@ -127,7 +127,7 @@ auto random_select(Function1 first, Function2 second, RandomNumberGenerator& gen
  *  For a sample samples[i], its weight is weights[i].
  * \param generator The random number generator used.
  * \return The picked sample.
- *  Its type is the same as the Range type.
+ *  Its type is the same as the Range value type.
  */
 template <class Range, class Weights, class RandomNumberGenerator>
 auto random_sample(const Range& samples, const Weights& weights, RandomNumberGenerator& generator) {
@@ -163,10 +163,10 @@ inline auto set_cluster(double resolution) {
  * Z is the upper standard normal quantile for P, where P is the probability
  * that the error in the estimated distribution will be less than epsilon.
  * Here are some examples:
- *     P = 0.900 -> Z = 1.28155156327703
- *     P = 0.950 -> Z = 1.64485362793663
- *     P = 0.990 -> Z = 2.32634787735669
- *     P = 0.999 -> Z = 3.09023224677087
+ * - P = 0.900 -> Z = 1.28155156327703
+ * - P = 0.950 -> Z = 1.64485362793663
+ * - P = 0.990 -> Z = 2.32634787735669
+ * - P = 0.999 -> Z = 3.09023224677087
  * If the computed value is less than what the min argument specifies, then min will be returned.
  *
  * \param min Minimum number of particles that the callable object will return.

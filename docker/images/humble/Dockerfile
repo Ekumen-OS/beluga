@@ -5,8 +5,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     curl \
-    python3-pip \
     doxygen \
+    python3-pip \
   && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
