@@ -143,7 +143,7 @@ auto random_sample(const Range& samples, const Weights& weights, RandomNumberGen
  * \return A callable object with prototype (ParticleT && p) -> ParticleT.
  *  ParticleT must satisfy the \ref ParticlePage "Particle" named requirements.
  *  The expression particle_traits<ParticleT>::cluster(p) must also
- *  be valid and return a `size_t &`.
+ *  be valid and return a `std::size_t &`.
  *  After the returned object is applied to a particle p, cluster(p) will be updated
  *  with the calculated spatial hash according to the specified resolution.
  */
@@ -167,6 +167,7 @@ inline auto set_cluster(double resolution) {
  * - P = 0.950 -> Z = 1.64485362793663
  * - P = 0.990 -> Z = 2.32634787735669
  * - P = 0.999 -> Z = 3.09023224677087
+ *
  * If the computed value is less than what the min argument specifies, then min will be returned.
  *
  * \param min Minimum number of particles that the callable object will return.
@@ -174,7 +175,7 @@ inline auto set_cluster(double resolution) {
  *  distrubution.
  * \param z Upper standard normal quantile for the probability that the error in the
  *  estimated distribution is less than epsilon.
- * \return A callable object with prototype (size_t hash) -> bool.
+ * \return A callable object with prototype (std::size_t hash) -> bool.
  *  hash is the spatial hash of the particle being added.
  *  The returned callable object is stateful, tracking the total number of particles and
  *  the particle clusters based on the spatial hash.
@@ -472,9 +473,9 @@ struct KldResampling : public Mixin {
    * It can only be composed with a range whose value type satisfies:
    * - The \ref ParticlePage "Particle" named requirements.
    * - Given `P` the range value type, `p` an instance of `P`, `cp` a possibly const instance of `P`.
-   *   The expression `particle_traits<P>::cluster(cp)` returns a `size_t` that represents the spatial
+   *   The expression `particle_traits<P>::cluster(cp)` returns a `std::size_t` that represents the spatial
    *   hash of the particle `cp`.
-   *   Given a `size_t` hash, the expression `particle_traits<P>::cluster(p) = hash` is valid and
+   *   Given a `std::size_t` hash, the expression `particle_traits<P>::cluster(p) = hash` is valid and
    *   assigns the cluster hash to the particle `p`.
    *   i.e. after the assignment `hash == particle_traits<P>::cluster(p)` is `true`.
    */
