@@ -22,20 +22,6 @@
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
-/**
- * \page MotionModelPage beluga named requirements: ParticleBaselineGeneration
- * Classes satisfying the `ParticleBaselineGeneration` requirements can be used in a particle filter
- * to generate the initial set of particles.
- *
- * \section ParticleBaselineGenerationRequirements Requirements
- * A type `T` satisfies the `ParticleBaselineGeneration` requirements if given:
- * - A type `P` that satisfies the \ref ParticlePage "Particle" named requirements.
- * - An instance `g` of `T`.
- *
- * Then:
- * - `g.generate_samples<P>()` returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles `P`.
- */
-
 namespace beluga {
 
 /// Parameters to construct a DifferentialDriveModel instance.
@@ -62,6 +48,11 @@ struct DifferentialDriveModelParam {
 template <class Mixin>
 class DifferentialDriveModel : public Mixin {
  public:
+  /// Update type of the motion model, same as the state_type in the odometry model.
+  using update_type = Sophus::SE2d;
+  /// State type of a particle.
+  using state_type = Sophus::SE2d;
+
   /// Parameter type that the constructor uses to configure the motion model.
   using param_type = DifferentialDriveModelParam;
 

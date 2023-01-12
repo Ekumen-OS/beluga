@@ -17,4 +17,28 @@
 
 #include <beluga/sensor/likelihood_field_model.hpp>
 
+/**
+ * \page SensorModelPage beluga named requirements: SensorModel
+ * Requirements for a sensor model to be used in a beluga `ParticleFilter`.
+ *
+ * \section SensorModelRequirements Requirements
+ * A type `T` satisfies the `SensorModel` requirements if the following is satisfied:
+ * - `T::state_type` is a valid type, representing a particle state.
+ * - `T::weight_type` is an arithmetic type, representing a particle weight.
+ * - `T::measurement_type` is a valid type, representing a sensor measurement.
+ *
+ * Given:
+ * - An instance `p` of `T`.
+ * - A possibly const instance `cp` of `T`.
+ * - A possibly const instance of `T::measurement_type` `m`.
+ * - A possibly const instance of `T::state_type` `s`.
+ *
+ * Then:
+ * - `p.update_sensor(m)` will update the sensor model with `p`.
+ *   This will not actually update the particle weights, but the update done here
+ *   will be used in the nexts `importance_weight()` method calls.
+ * - `cp.importance_weight(s)` returns a `T::weight_type` instance representing the weight of the particle.
+ * - `cp.generate_random_state()` returns a `T::state_type` instance.
+ */
+
 #endif

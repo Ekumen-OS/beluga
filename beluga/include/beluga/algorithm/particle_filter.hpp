@@ -114,14 +114,18 @@ namespace beluga {
  * BootstrapParticleFilter<Mixin, Container> is an implementation of the
  * \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
  *
+ * `particle_traits<typename Container::value_type>::state_type` must be the same as
+ * the state_type of the sensor and motion model.
+ * particle_traits<typename Container::value_type>::weight_type` must be the same as the weight
+ * type used in the sensor mode.
+ *
  * \tparam The mixed-in type. An instance m of Mixin must provide a protected method,
  *  `m.self()`. The return type of `m.self()` must satisfy:
  * - \ref ParticleResamplingPage "ParticleResampling"
  * - \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
  * - \ref ParticleSampledGenerationPage "ParticleSampledGeneration"
- * <!--TODO(ivanpauno): Add links when documented.-->
- * - `MotionModel` <!-- for apply_motion()-->
- * - `SensorModel` <!-- for importance_weight()-->
+ * - \ref MotionModelPage "MotionModel"
+ * - \ref SensorModelPage "SensorModel"
  *
  * \tparam Container The particle container type.
  *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.

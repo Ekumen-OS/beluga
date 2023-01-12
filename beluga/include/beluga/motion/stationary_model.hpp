@@ -22,12 +22,35 @@
 
 namespace beluga {
 
+/// A stationary motion model.
+/**
+ * This class satisfies the \ref MotionModelPage "MotionModel" requirements.
+ *
+ * \tparam Mixin The mixed-in type.
+ */
 template <class Mixin>
 class StationaryModel : public Mixin {
  public:
+  /// Update type of the motion model.
+  using update_type = Sophus::SE2d;
+  /// State type of a particle.
+  using state_type = Sophus::SE2d;
+
+  /// Constructs a StationaryModel instance.
+  /**
+   * \tparam ...Args Arguments types for the remaining mixin constructors.
+   * \param ...args arguments that are not used by this part of the mixin, but by others.
+   */
   template <class... Args>
   explicit StationaryModel(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
+  /// Applies motion to a particle.
+  /**
+   * The updated state will be centered around `state` with some covariance.
+   *
+   * \param state The particle state to apply the motion to.
+   * \return The updated paticle state.
+   */
   [[nodiscard]] Sophus::SE2d apply_motion(const Sophus::SE2d& state) const {
     static thread_local std::mt19937 generator{std::random_device()()};
     auto distribution = std::normal_distribution<>{0, 0.02};
@@ -35,6 +58,12 @@ class StationaryModel : public Mixin {
                        Sophus::SO2d{distribution(generator)},
                        Eigen::Vector2d{distribution(generator), distribution(generator)}};
   }
+
+  /// Updates motion model.
+  /**
+   * For the stationary model, updates are ignored.
+   */
+  void update_motion(const Sophus::SE2d&) {}
 };
 
 }  // namespace beluga
