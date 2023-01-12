@@ -22,25 +22,68 @@
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
+/**
+ * \page MotionModelPage beluga named requirements: ParticleBaselineGeneration
+ * Classes satisfying the `ParticleBaselineGeneration` requirements can be used in a particle filter
+ * to generate the initial set of particles.
+ *
+ * \section ParticleBaselineGenerationRequirements Requirements
+ * A type `T` satisfies the `ParticleBaselineGeneration` requirements if given:
+ * - A type `P` that satisfies the \ref ParticlePage "Particle" named requirements.
+ * - An instance `g` of `T`.
+ *
+ * Then:
+ * - `g.generate_samples<P>()` returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles `P`.
+ */
+
 namespace beluga {
 
+/// Parameters to construct a DifferentialDriveModel instance.
+/**
+ * See 'Probabilistics Robotics, Chapter 5.4.2', particularly table `5.6`.
+ */
 struct DifferentialDriveModelParam {
-  double rotation_noise_from_rotation;        // alpha1
-  double rotation_noise_from_translation;     // alpha2
-  double translation_noise_from_translation;  // alpha3
-  double translation_noise_from_rotation;     // alpha4
-  double distance_threshold = 0.01;           // distance threshold to detect in-place rotation
+  /// alpha1, how much rotation noise the relative rotation between the last two odometries contributes.
+  double rotation_noise_from_rotation;
+  /// alpha2, how much rotation noise the relative translation between the last two odometries contributes.
+  double rotation_noise_from_translation;
+  /// alpha3, how much translation noise the relative translation between the last two odometries contributes.
+  double translation_noise_from_translation;
+  /// alpha3, how much translation noise the relative rotation between the last two odometries contributes.
+  double translation_noise_from_rotation;
+  /// Distance threshold to detect in-place rotation.
+  double distance_threshold = 0.01;
 };
 
+/// Sampled odometry model for a differential drive.
+/**
+ * \tparam Mixin The mixed-in type.
+ */
 template <class Mixin>
 class DifferentialDriveModel : public Mixin {
  public:
+  /// Parameter type that the constructor uses to configure the motion model.
+  using param_type = DifferentialDriveModelParam;
+
+  // TODO(ivanpauno): Make this private?
   using DistributionParam = typename std::normal_distribution<double>::param_type;
 
+  /// Constructs a DifferentialDriveModel instance.
+  /**
+   * \tparam ...Args Arguments types for the remaining mixin constructors.
+   * \param params Parameters to configure this instance.
+   *  See beluga::DifferentialDriveModelParam for details.
+   * \param ...args arguments that are not used by this part of the mixin, but by others.
+   */
   template <class... Args>
   explicit DifferentialDriveModel(const DifferentialDriveModelParam& params, Args&&... args)
       : Mixin(std::forward<Args>(args)...), params_{params} {}
 
+  /// Applies the last update to the particle state given.
+  /**
+   * \param state The particle state to apply the motion to.
+   * \return The updated paticle state.
+   */
   [[nodiscard]] Sophus::SE2d apply_motion(const Sophus::SE2d& state) const {
     static thread_local auto generator = std::mt19937{std::random_device()()};
     static thread_local auto distribution = std::normal_distribution<double>{};
@@ -52,8 +95,17 @@ class DifferentialDriveModel : public Mixin {
     return state * Sophus::SE2d{first_rotation, Eigen::Vector2d{0.0, 0.0}} * Sophus::SE2d{second_rotation, translation};
   }
 
+  /// Gets the last update.
   Sophus::SE2d last_pose() const { return last_pose_ ? last_pose_.value() : Sophus::SE2d{}; }
 
+  /// Updates the motion model.
+  /**
+   * This will not update particles.
+   * That is done by the particle filter using the apply_motion() method
+   * provided by this class.
+   *
+   * \param pose Last odometry udpate.
+   */
   void update_motion(const Sophus::SE2d& pose) {
     if (last_pose_) {
       const auto translation = pose.translation() - last_pose_.value().translation();
