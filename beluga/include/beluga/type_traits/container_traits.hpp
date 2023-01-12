@@ -19,13 +19,24 @@
 
 #include <range/v3/view/all.hpp>
 
+/**
+ * \file Useful traits for containers.
+ */
+
 namespace beluga {
 
+/// Useful traits for a [Container](https://en.cppreference.com/w/cpp/named_req/Container).
+/**
+ * \tparam T Container type.
+ */
 template <class T>
 struct container_traits {
+  /// Value type of the container.
   using value_type = typename T::value_type;
+  /// Size type of the container.
   using size_type = typename T::size_type;
 
+  /// Returns a view of all elements of the container.
   template <class U>
   static constexpr auto view_all(U&& container) {
     return container | ranges::views::all;
@@ -34,6 +45,7 @@ struct container_traits {
 
 namespace views {
 
+/// Returns a view of all elements of the container.
 template <class T>
 constexpr auto all(T&& container) {
   return container_traits<std::decay_t<T>>::view_all(container);
