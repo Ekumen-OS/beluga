@@ -15,14 +15,29 @@
 #ifndef BELUGA_ALGORITHM_EXPONENTIAL_FILTER_HPP
 #define BELUGA_ALGORITHM_EXPONENTIAL_FILTER_HPP
 
+/**
+ * \file
+ * \brief Implementation of an exponential filter.
+ */
+
 namespace beluga {
 
+/// Callable type implementing an exponential filter.
 class ExponentialFilter {
  public:
+  /// Constructs an exponential filter.
+  /**
+   * \param alpha The exponential filter smoothing factor.
+   */
   explicit ExponentialFilter(double alpha) : alpha_{alpha} {}
 
+  /// Resets the output of the exponential filter to zero.
   void reset() { output_ = 0.; }
 
+  /// Updates the exponential filter output given an input.
+  /**
+   * \param input Next value to be exponentially filtered.
+   */
   [[nodiscard]] double operator()(double input) {
     output_ += (output_ == 0.) ? input : alpha_ * (input - output_);
     return output_;

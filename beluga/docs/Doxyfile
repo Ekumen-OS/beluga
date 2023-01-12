@@ -5,3 +5,6 @@ INPUT                  = ../include ./README.md
 RECURSIVE              = YES
 USE_MDFILE_AS_MAINPAGE = ./README.md
 GENERATE_LATEX         = NO
+# TODO(ivanpauno): Reenable this when everything is documented.
+WARN_IF_UNDOCUMENTED   = NO
+HTML_EXTRA_STYLESHEET  = doxygen_extra.css

@@ -35,84 +35,96 @@
  * - A configurable beluga::AMCL implementation of adaptive Monte Carlo localization.
  */
 
-// TODO(ivanpauno): Maybe just use one page for all requirements, and use sections and subsections....
 /**
- * \page ParticleRequirements beluga named requirements: Particle.
+ * \page ParticlePage beluga named requirements: Particle
  * What an implementation of a particle in beluga should provide.
  *
- * \section Requirements
- * T is a Particle if, for a given instance p of T:
- * - ::beluga::particle_traits<T>::state_type is a valid type.
- * - ::beluga::particle_traits<T>::state(p) is a valid expression and returns an instance of
- *   ::beluga::particle_traits<T>::state_type.
- * - ::beluga::particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
+ * \section ParticleRequirements Requirements
+ * `T` is a `Particle` if given:
+ * - An instance `p` of `T`.
+ * - A possibly const instance `cp` of `T`.
+ *
+ * The following is satisfied:
+ * - `particle_traits<T>::state_type` is a valid type.
+ * - `particle_traits<T>::state(cp)` returns an instance of `particle_traits<T>::state_type`.
+ * - Given `s` an instance of `particle_traits<T>::state_type`, `particle_traits<T>::state(p) = s`
+ *   is a valid expression and assigns the state `s` to the particle `p`.
+ *   i.e. after the assignment `s == particle_traits<T>::state(p)` is `true`.
+ * - `particle_traits<T>::weight_type` is a valid arithmetic type (that is, an integral
  *   type or a floating-point type).
- * - ::beluga::particle_traits<T>::weight(p) is a valid expression and the return type is an arithmetic type.
+ * - `particle_traits<T>::weight(cp)` is a valid expression and the return type is
+ *   `particle_traits<T>::weight_type`.
+ * - Given `w` an instance of `particle_traits<T>::weight_type`, `particle_traits<T>::weight(p) = w`
+ *   is a valid expression and assigns the weight `w` to the particle `p`.
+ *   i.e. after the assignment `w == particle_traits<T>::weight(p)` is `true`.
  */
 
 /**
- * \page ParticleContainerRequirements beluga named requirements: ParticleContainer.
+ * \page ParticleContainerPage beluga named requirements: ParticleContainer
  * What an implementation of a particle container in beluga should provide.
  *
- * \section Requirements
- * T is a ParticleContainer if:
- * - T satisfies the [Container](https://en.cppreference.com/w/cpp/named_req/Container)
+ * \section ParticleContainerRequirements Requirements
+ * `T` is a `ParticleContainer` if:
+ * - `T` satisfies the [Container](https://en.cppreference.com/w/cpp/named_req/Container)
  *   c++ named requirements.
- * - T::value_type satisfies the beluga named requirements \ref ParticleRequirements "Particle".
+ * - `T::value_type` satisfies the beluga named requirements \ref ParticlePage "Particle".
  */
 
 /**
- * \page BaseParticleFilterRequirements beluga named requirements: BaseParticleFilter.
+ * \page BaseParticleFilterPage beluga named requirements: BaseParticleFilter
  * Base requirements of a particle filter in beluga.
  *
- * \section Requirements
- * B is a BaseParticleFilter if given
- * - T, the type named by `B::particle_type`
- * - S, the type named by `T::state_type`
- * - V, a range view whose elements are of the same type as S
- * - p, a value of type B
- * - x, (possibly const) value of type V
+ * \section BaseParticleFilterRequirements Requirements
+ * `B` is a `BaseParticleFilter` if given
+ * - `T`, the type named by `B::particle_type`.
+ * - `S`, the type named by `T::state_type`.
+ * - `V`, a range view whose elements are of the same type as `S`.
+ * - `p`, a value of type `B`.
+ * - `x`, possibly const value of type `V`.
+ *
  * The following is satisfied:
- * - p.particles() is valid and returns a view to a container that satisfies the
- *   \ref ParticleContainerRequirements "ParticleContainer" requirements.
- * - p.sample() updates the particle filter particles based on the last motion update.
- * - p.importance_sample() updates the particle filter particles weight.
- * - p.resample() updates the particle filter, generating new particles from the old ones
+ * - `p.particles()` is valid and returns a view to a container that satisfies the
+ *   \ref ParticleContainerPage "ParticleContainer" requirements.
+ * - `p.sample()` updates the particle filter particles based on the last motion update.
+ * - `p.importance_sample()` updates the particle filter particles weight.
+ * - `p.resample()` updates the particle filter, generating new particles from the old ones
  *   based on their importance weights.
- * - p.update() shorthand for executing the above three steps.
- * - p.reinitialize(x) is valid and reinitializes the particles with the given range view values.
+ * - `p.update()` shorthand for executing the above three steps.
+ * - `p.reinitialize(x)` is valid and reinitializes the particles with the given range view values.
  */
 
 /**
- * \page ParticleFilterRequirements beluga named requirements: ParticleFilter.
+ * \page ParticleFilterPage beluga named requirements: ParticleFilter
  * What an implementation of a particle filter in beluga should provide.
- * This is satisfied for example by beluga::MCL<U, M, S, C> and beluga::AMCL<U, M, S, C>.
- * for any valid U, M, S, C (see respective docs for detail).
+ * This is satisfied for example by `beluga::MCL<U, M, S, C>` and `beluga::AMCL<U, M, S, C>`,
+ * for any valid `U`, `M`, `S`, `C` (see respective docs for detail).
  *
- * \section Requirements
- * T is a ParticleFilter if:
- * - T satisfies the \ref BaseParticleFilterRequirements "BaseParticleFilter" named requirements.
+ * \section ParticleFilterRequirements Requirements
+ * `T` is a `ParticleFilter` if:
+ * - `T` satisfies the \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
  * <!--TODO(ivanpauno): Add named requirements links when documented-->
- * - T satisfies the SensorModel named requirements. <!--update_sensor()-->
- * - T satisfies the MotionModel named requirements.  <!--update_motion() and last_pose()-->
- * - T satisfies the StateEstimation named requirements.
+ * - `T` satisfies the `SensorModel` named requirements. <!--update_sensor()-->
+ * - `T` satisfies the `MotionModel` named requirements.  <!--update_motion() and last_pose()-->
+ * - `T` satisfies the \ref StateEstimationPage "StateEstimation" named requirements.
  */
 namespace beluga {
 
 /// Base implementation of a particle filter.
 /**
  * BootstrapParticleFilter<Mixin, Container> is an implementation of the
- * \ref BaseParticleFilterRequirements "BaseParticleFilter" named requirements.
+ * \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
  *
- * \tparam Mixin must also satisfy the named requirements:
+ * \tparam The mixed-in type. An instance m of Mixin must provide a protected method,
+ *  `m.self()`. The return type of `m.self()` must satisfy:
+ * - \ref ParticleResamplingPage "ParticleResampling"
+ * - \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
+ * - \ref ParticleSampledGenerationPage "ParticleSampledGeneration"
  * <!--TODO(ivanpauno): Add links when documented.-->
- * - ParticleResampling <!--for max_samples(), take_samples()-->
- * - ParticleBaselineGeneration <!--for generate_samples()-->
- * - ParticleSampledGeneration <!--for generate_samples_from()-->
- * - MotionModel <!-- for apply_motion()-->
- * - SensorModel <!-- for importance_weight()-->
+ * - `MotionModel` <!-- for apply_motion()-->
+ * - `SensorModel` <!-- for importance_weight()-->
+ *
  * \tparam Container The particle container type.
- *  It must satisfy the \ref ParticleContainerRequirements "ParticleContainer" named requirements.
+ *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.
  */
 template <class Mixin, class Container>
 struct BootstrapParticleFilter : public Mixin {
@@ -228,14 +240,14 @@ struct BootstrapParticleFilter : public Mixin {
 
 /// An implementation of Monte Carlo localization.
 /**
- * MCL<U, M, S, C> is an implementation of the \ref ParticleFilterRequirements "ParticleFilter"
+ * MCL<U, M, S, C> is an implementation of the \ref ParticleFilterPage "ParticleFilter"
  * named requirements.
  *
  * \tparam MotionModel MotionModel<MCL> must implement the MotionModel named requirement.
  * \tparam SensorModel MotionModel<MCL> must implement the SensorModel named requirement.
  * \tparam State The state of the particle type.
  * \tparam Container The particle container type.
- *  It must satisfy the \ref ParticleContainerRequirements "ParticleContainer" named requirements.
+ *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.
  */
 template <
     template <class>
@@ -266,14 +278,14 @@ struct MCL : public ciabatta::mixin<
 
 /// An implementation of adaptive Monte Carlo localization.
 /**
- * AMCL<U, M, S, C> is an implementation of the \ref ParticleFilterRequirements "ParticleFilter"
+ * AMCL<U, M, S, C> is an implementation of the \ref ParticleFilterPage "ParticleFilter"
  * named requirements.
  *
  * \tparam MotionModel MotionModel<AMCL> must implement the MotionModel named requirement.
  * \tparam SensorModel MotionModel<AMCL> must implement the SensorModel named requirement.
  * \tparam State The state of the particle type.
  * \tparam Container The particle container type.
- *  It must satisfy the \ref ParticleContainerRequirements "ParticleContainer" named requirements.
+ *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.
  */
 template <
     template <class>

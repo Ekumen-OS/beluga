@@ -16,16 +16,35 @@
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
 #include <beluga/type_traits.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/transform.hpp>
 #include <sophus/se2.hpp>
 
+/**
+ * \file
+ * \brief Implementation of algorithms that allow calculating the estimated state of
+ *  a particle filter.
+ */
+
 namespace beluga {
 
+/// Calculates the covariance of a range given its mean.
+/**
+ * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
+ *  Range::value_type is Eigen::Vector2<Scalar>.
+ * \tparam Scalar An scalar type, e.g. double or float.
+ * \param range Range to be used to calculate the covariance.
+ * \param mean The previously calculated mean of range. The value must be correct for the resulting
+ *  covariance to be correct.
+ * \return The calculated covariance, as a Eigen::Matrix2<Scalar>.
+ */
 template <class Range, class Scalar>
 Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scalar>& mean) {
   Eigen::Vector3<Scalar> coefficients = std::transform_reduce(
-      range.begin(), range.end(), Eigen::Vector3<Scalar>::Zero().eval(), std::plus{}, [mean](const auto& value) {
+      ranges::begin(range), ranges::end(range), Eigen::Vector3<Scalar>::Zero().eval(), std::plus{},
+      [mean](const auto& value) {
         const auto centered = value - mean;
         return Eigen::Vector3<Scalar>{
             centered.x() * centered.x(),
@@ -33,18 +52,45 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
             centered.y() * centered.y(),
         };
       });
-  coefficients /= (static_cast<Scalar>(range.size() - 1));
+  coefficients /= (static_cast<Scalar>(ranges::size(range) - 1));
   auto covariance_matrix = Eigen::Matrix2<Scalar>{};
   covariance_matrix << coefficients(0), coefficients(1), coefficients(1), coefficients(2);
   return covariance_matrix;
 }
 
+/**
+ * \page StateEstimationPage beluga named requirements: StateEstimation
+ * The requirements that a state estimator must satisfy.
+ *
+ * \section StateEstimationRequirements Requirements
+ * `T` is a `StateEstimation` if given a (possibly const) instance `p` of `T`, the following is satisfied:
+ * - `p.estimated_pose()` is a valid expression.
+ * - `std::get<0>(p.estimated_pose())` is valid.
+ *   `decltype(std::get<0>(p.estimated_pose()))` represents the estimated state.
+ * - `std::get<1>(p.estimated_pose())` is valid.
+ *   `decltype(std::get<1>(p.estimated_pose()))` represents the covariance of the estimation.
+ */
+
+/// An estimator that calculates the estimated pose mean and covariance using all the particles.
+/**
+ * This class satisfies the \ref StateEstimationPage "StateEstimation" named requirements.
+ *
+ * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
+ *  m.self(). The return type of m.self() must satisfy the
+ *  \ref BaseParticleFilterPage BaseParticleFilter named requirements.
+ */
 template <class Mixin>
 class SimpleEstimation : public Mixin {
  public:
+  /// Constructs a SimpleEstimation instance.
+  /**
+   * \tparam ...Args Arguments types for the remaining mixin constructors.
+   * \param ...args arguments that are not used by this part of the mixin, but by others.
+   */
   template <class... Args>
   explicit SimpleEstimation(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
+  /// Returns a pair consisting of the estimated pose and its covariance.
   [[nodiscard]] std::pair<Sophus::SE2d, Eigen::Matrix3d> estimated_pose() const {
     const auto poses_view = this->self().states() | ranges::views::common;
     const auto translation_view =
