@@ -18,6 +18,10 @@
 #include <beluga/sensor/likelihood_field_model.hpp>
 
 /**
+ * \file Includes all beluga sensor models.
+ */
+
+/**
  * \page SensorModelPage beluga named requirements: SensorModel
  * Requirements for a sensor model to be used in a beluga `ParticleFilter`.
  *

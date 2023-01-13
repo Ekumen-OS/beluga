@@ -20,6 +20,10 @@
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
+/**
+ * \file Implementation of a stationary motion model.
+ */
+
 namespace beluga {
 
 /// A stationary motion model.

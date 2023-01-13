@@ -22,6 +22,10 @@
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
+/**
+ * \file Implementation of a differential drive odometry motion model.
+ */
+
 namespace beluga {
 
 /// Parameters to construct a DifferentialDriveModel instance.

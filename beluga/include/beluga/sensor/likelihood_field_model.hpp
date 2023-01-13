@@ -28,6 +28,10 @@
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
+/**
+ * \file Implementation of a likelihood field sensor model for range finders.
+ */
+
 namespace beluga {
 
 /// Parameters used to construct a LikelihoodFieldModel instance.

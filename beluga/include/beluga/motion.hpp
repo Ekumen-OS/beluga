@@ -19,6 +19,10 @@
 #include <beluga/motion/stationary_model.hpp>
 
 /**
+ * \file Includes all beluga motion models.
+ */
+
+/**
  * \page MotionModelPage beluga named requirements: MotionModel
  * Requirements for a motion model to be used in a beluga `ParticleFilter`.
  *
