@@ -116,7 +116,8 @@ namespace beluga {
  *
  * `particle_traits<typename Container::value_type>::state_type` must be the same as
  * the state_type of the sensor and motion model.
- * particle_traits<typename Container::value_type>::weight_type` must be the same as the weight
+ *
+ * `particle_traits<typename Container::value_type>::weight_type` must be the same as the weight
  * type used in the sensor mode.
  *
  * \tparam The mixed-in type. An instance m of Mixin must provide a protected method,

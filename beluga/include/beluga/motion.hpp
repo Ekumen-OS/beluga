@@ -19,7 +19,8 @@
 #include <beluga/motion/stationary_model.hpp>
 
 /**
- * \file Includes all beluga motion models.
+ * \file
+ * \brief Includes all beluga motion models.
  */
 
 /**
@@ -40,7 +41,7 @@
  * Then:
  * - `p.update_motion(u)` will update the motion model with `u`.
  *   This will not actually update the particle states, but the update done here
- *   will be used in the nexts `apply_motion()` method calls.
+ *   will be used in subsequent calls to the `apply_motion()` method.
  * - `cp.apply_motion(s)` returns a `T::state_type`, that is the result of applying the motion model
  *   to `s` based on the updates.
  */

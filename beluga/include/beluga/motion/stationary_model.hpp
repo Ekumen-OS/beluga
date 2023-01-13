@@ -21,7 +21,8 @@
 #include <sophus/so2.hpp>
 
 /**
- * \file Implementation of a stationary motion model.
+ * \file
+ * \brief Implementation of a stationary motion model.
  */
 
 namespace beluga {

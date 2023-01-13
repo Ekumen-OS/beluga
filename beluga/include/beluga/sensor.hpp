@@ -18,7 +18,8 @@
 #include <beluga/sensor/likelihood_field_model.hpp>
 
 /**
- * \file Includes all beluga sensor models.
+ * \file
+ * \brief Includes all beluga sensor models.
  */
 
 /**

@@ -29,7 +29,8 @@
 #include <sophus/so2.hpp>
 
 /**
- * \file Implementation of a likelihood field sensor model for range finders.
+ * \file
+ * \brief Implementation of a likelihood field sensor model for range finders.
  */
 
 namespace beluga {
@@ -42,9 +43,6 @@ struct LikelihoodFieldModelParam {
   /// When creating a distance map, if the distance to an obstacle is higher than the value specified here,
   /// then this value will be used.
   double max_obstacle_distance;
-  /// Minimum distance of a laser ray to an obstacle. Measurements that are closer will be ignored.
-  // TODO(ivanpauno): unused? remove it?
-  double min_laser_distance;
   /// Maximum range of a laser ray.
   double max_laser_distance;
   /// Weight used to combine the probability of hitting an obstacle.
@@ -95,7 +93,8 @@ class LikelihoodFieldModel : public Mixin {
   // and that part could be used to generate the random state.
   /// Generates a random particle state.
   /**
-   * The generated state is an unoccupied cell of the grid.
+   * The generated state is an unoccupied cell of the grid, any free cell is sampled uniformly.
+   * The rotation is as well sampled uniformly.
    *
    * \tparam Generator A type satisfying the [UniformRandomBitGenerator](
    *  https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator) requirements.
@@ -138,7 +137,7 @@ class LikelihoodFieldModel : public Mixin {
    * This will not update the particle filter particles weights.
    * For that, the importance_weight() method provided here is used by the particle filter.
    *
-   * \param points The sensor measurement.
+   * \param points The range finder points in the reference frame of the particle.
    */
   void update_sensor(std::vector<std::pair<double, double>> points) {
     const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
