@@ -27,12 +27,12 @@ namespace tf2
 {
 
 /**
- * @brief Convert a Sophus SE2 type to a Pose message.
- * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * @param in The Sophus SE2 to convert.
- * @param out The pose converted to a Pose message.
- * @return The pose converted to a Pose message.
- */
+   * @brief Convert a Sophus SE2 type to a Pose message.
+   * This function is a specialization of the toMsg template defined in tf2/convert.h.
+   * @param in The Sophus SE2 to convert.
+   * @param out The pose converted to a Pose message.
+   * @return The pose converted to a Pose message.
+   */
 template<class Scalar>
 inline geometry_msgs::msg::Pose & toMsg(
   const Sophus::SE2<Scalar> & in,
@@ -50,12 +50,12 @@ inline geometry_msgs::msg::Pose & toMsg(
 }
 
 /**
- * @brief Convert a Sophus SE3 type to a Pose message.
- * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * @param in The Sophus SE3 to convert.
- * @param out The pose converted to a Pose message.
- * @return The pose converted to a Pose message.
- */
+   * @brief Convert a Sophus SE3 type to a Pose message.
+   * This function is a specialization of the toMsg template defined in tf2/convert.h.
+   * @param in The Sophus SE3 to convert.
+   * @param out The pose converted to a Pose message.
+   * @return The pose converted to a Pose message.
+   */
 template<class Scalar>
 inline geometry_msgs::msg::Pose & toMsg(
   const Sophus::SE3<Scalar> & in,
@@ -72,11 +72,11 @@ inline geometry_msgs::msg::Pose & toMsg(
 }
 
 /**
- * @brief Convert a Sophus SE2 type to a Transform message.
- * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * @param in The Sophus SE2 to convert.
- * @return The transform converted to a Transform message.
- */
+   * @brief Convert a Sophus SE2 type to a Transform message.
+   * This function is a specialization of the toMsg template defined in tf2/convert.h.
+   * @param in The Sophus SE2 to convert.
+   * @return The transform converted to a Transform message.
+   */
 template<class Scalar>
 inline geometry_msgs::msg::Transform toMsg(const Sophus::SE2<Scalar> & in)
 {
@@ -93,11 +93,11 @@ inline geometry_msgs::msg::Transform toMsg(const Sophus::SE2<Scalar> & in)
 }
 
 /**
- * @brief Convert a Sophus SE3 type to a Transform message.
- * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * @param in The Sophus SE3 to convert.
- * @return The transform converted to a Transform message.
- */
+   * @brief Convert a Sophus SE3 type to a Transform message.
+   * This function is a specialization of the toMsg template defined in tf2/convert.h.
+   * @param in The Sophus SE3 to convert.
+   * @return The transform converted to a Transform message.
+   */
 template<class Scalar>
 inline geometry_msgs::msg::Transform toMsg(const Sophus::SE3<Scalar> & in)
 {
@@ -113,11 +113,11 @@ inline geometry_msgs::msg::Transform toMsg(const Sophus::SE3<Scalar> & in)
 }
 
 /**
- * @brief Convert a Transform message type to a Sophus-specific SE2 type.
- * This function is a specialization of the fromMsg template defined in tf2/convert.h
- * @param msg The Transform message to convert.
- * @param out The transform converted to a Sophus SE2.
- */
+   * @brief Convert a Transform message type to a Sophus-specific SE2 type.
+   * This function is a specialization of the fromMsg template defined in tf2/convert.h
+   * @param msg The Transform message to convert.
+   * @param out The transform converted to a Sophus SE2.
+   */
 template<class Scalar>
 inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE2<Scalar> & out)
 {
@@ -129,11 +129,11 @@ inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE2<Scala
 }
 
 /**
- * @brief Convert a Transform message type to a Sophus-specific SE3 type.
- * This function is a specialization of the fromMsg template defined in tf2/convert.h
- * @param msg The Transform message to convert.
- * @param out The transform converted to a Sophus SE3.
- */
+   * @brief Convert a Transform message type to a Sophus-specific SE3 type.
+   * This function is a specialization of the fromMsg template defined in tf2/convert.h
+   * @param msg The Transform message to convert.
+   * @param out The transform converted to a Sophus SE3.
+   */
 template<class Scalar>
 inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scalar> & out)
 {
@@ -148,16 +148,15 @@ inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scala
       msg.rotation.x,
       msg.rotation.y,
       msg.rotation.z,
-    }
-  };
+    }};
 }
 
 /**
- * @brief Function that converts from an Eigen 3x3 matrix representation of a 2D
- * covariance matrix to a 6x6 row-major representation in 3D.
- * @param in An Eigen 3x3 matrix representation of a 2D covariance.
- * @return A row-major array of 36 covariance values.
- */
+   * @brief Function that converts from an Eigen 3x3 matrix representation of a 2D
+   * covariance matrix to a 6x6 row-major representation in 3D.
+   * @param in An Eigen 3x3 matrix representation of a 2D covariance.
+   * @return A row-major array of 36 covariance values.
+   */
 template<class Scalar>
 inline std::array<Scalar, 36> covarianceToRowMajor(const Eigen::Matrix3<Scalar> & in)
 {
@@ -176,11 +175,11 @@ inline std::array<Scalar, 36> covarianceToRowMajor(const Eigen::Matrix3<Scalar> 
 }
 
 /**
- * @brief Convert a Sophus SE2 type to a tf2::Transform .
- 
- * @param in The Sophus SE2 to convert.
- * @return The transform converted to a tf2::Transform 
- */
+   * @brief Convert a Sophus SE2 type to a tf2::Transform .
+
+   * @param in The Sophus SE2 to convert.
+   * @return The transform converted to a tf2::Transform
+   */
 template<class Scalar>
 inline tf2::Transform toTF(const Sophus::SE2<Scalar> & in)
 {
@@ -188,13 +187,13 @@ inline tf2::Transform toTF(const Sophus::SE2<Scalar> & in)
   tf2::Quaternion q;
   q.setRPY(0, 0, theta);
   tf2::Transform tmp_tf(q, tf2::Vector3(
-        in.translation().x(),
-        in.translation().y(),
-        0.0));
+      in.translation().x(),
+      in.translation().y(),
+      0.0));
   return tmp_tf;
 }
 
-}  // namespace tf2
+} // namespace tf2
 
 namespace Sophus
 {
@@ -231,6 +230,6 @@ inline tf2::Transform toTF(const Sophus::SE2<Scalar> & in)
   return tf2::toTF(in);
 }
 
-}  // namespace Sophus
+} // namespace Sophus
 
-#endif  // BELUGA_AMCL__TF2_SOPHUS_HPP_
+#endif // BELUGA_AMCL__TF2_SOPHUS_HPP_

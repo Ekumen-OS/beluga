@@ -65,7 +65,7 @@ std::vector<std::pair<double, double>> pre_process_points(
   return points;
 }
 
-}  // namespace
+}   // namespace
 
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 : rclcpp_lifecycle::LifecycleNode{"amcl", "", options}
@@ -332,9 +332,9 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
   }
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = 
-                "Set this to false to prevent amcl from publishing the transform "
-                "between the global frame and the odometry frame";
+    descriptor.description =
+      "Set this to false to prevent amcl from publishing the transform "
+      "between the global frame and the odometry frame";
     declare_parameter("tf_broadcast", rclcpp::ParameterValue(true), descriptor);
   }
 }
@@ -517,7 +517,8 @@ void AmclNode::timer_callback()
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     message.particles.resize(particle_filter_->particles().size());
     ranges::transform(
-      particle_filter_->particles(), std::begin(message.particles), [](const auto & particle) {
+      particle_filter_->particles(), std::begin(message.particles), [](const auto & particle)
+      {
         auto message = nav2_msgs::msg::Particle{};
         tf2::toMsg(beluga::state(particle), message.pose);
         message.weight = beluga::weight(particle);
@@ -535,39 +536,32 @@ void AmclNode::timer_callback()
     message.pose.covariance = tf2::covarianceToRowMajor(covariance);
     pose_pub_->publish(message);
 
-    if (get_parameter("tf_broadcast").as_bool())
-    {
-      //TODO(olmerg): when to publish!!! covariance lower than??
-      if (true)
-      {
-      // calculateMaptoOdomTransform
-      geometry_msgs::msg::PoseStamped odom_to_map;
-      try
-      {
-        // It is required to work in tf?
-        tf2::Transform tmp_tf = tf2::toTF(pose);
-        geometry_msgs::msg::PoseStamped tmp_tf_stamped;
-        tmp_tf_stamped.header.frame_id = get_parameter("base_frame_id").as_string();
-        // TODO(olmerg): what happen if the data is not available ??, in nav2_amcl use laser_scan->header.stamp;
-        tmp_tf_stamped.header.stamp = now();
-        tf2::toMsg(tmp_tf.inverse(), tmp_tf_stamped.pose);
+    if (get_parameter("tf_broadcast").as_bool()) {
+      // TODO(olmerg): when to publish!!! covariance lower than??
+      if (true) {
+        // calculateMaptoOdomTransform
+        geometry_msgs::msg::PoseStamped odom_to_map;
+        try {
 
-        tf_buffer_->transform(tmp_tf_stamped, odom_to_map, 
-                    get_parameter("odom_frame_id").as_string());
-        tf2::impl::Converter<true, false>::convert(odom_to_map.pose, latest_tf_);
-        latest_tf_valid_ = true;
-        sendMapToOdomTransform();
-      }
-      catch (tf2::TransformException &e)
-      {
-        RCLCPP_DEBUG(get_logger(), "Failed to subtract base to odom transform: (%s)", e.what());
-        return;
-      }
-      }
-      else if (latest_tf_valid_)
-      {
-        if (get_parameter("tf_broadcast").as_bool())
-        {
+          tf2::Transform tmp_tf = tf2::toTF(pose);
+          geometry_msgs::msg::PoseStamped tmp_tf_stamped;
+          tmp_tf_stamped.header.frame_id = get_parameter("base_frame_id").as_string();
+          // TODO(olmerg): what happen if the data is not available ??, in nav2_amcl use laser_scan->header.stamp;
+          tmp_tf_stamped.header.stamp = now();
+          tf2::toMsg(tmp_tf.inverse(), tmp_tf_stamped.pose);
+
+          tf_buffer_->transform(
+            tmp_tf_stamped, odom_to_map,
+            get_parameter("odom_frame_id").as_string());
+          tf2::impl::Converter<true, false>::convert(odom_to_map.pose, latest_tf_);
+          latest_tf_valid_ = true;
+          sendMapToOdomTransform();
+        } catch (tf2::TransformException & e) {
+          RCLCPP_DEBUG(get_logger(), "Failed to subtract base to odom transform: (%s)", e.what());
+          return;
+        }
+      } else if (latest_tf_valid_) {
+        if (get_parameter("tf_broadcast").as_bool()) {
           // Nothing changed, so we'll just republish the last transform, to keep
           // everybody happy.
           sendMapToOdomTransform();
@@ -583,7 +577,7 @@ AmclNode::sendMapToOdomTransform()
   auto message = geometry_msgs::msg::TransformStamped{};
   // Sending a transform that is valid into the future so that odom can be used.
   message.header.stamp = now() +
-                         tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
+    tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
   message.header.frame_id = get_parameter("global_frame_id").as_string();
   message.child_frame_id = get_parameter("odom_frame_id").as_string();
   tf2::impl::Converter<false, true>::convert(latest_tf_.inverse(), message.transform);
@@ -604,7 +598,8 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
           get_parameter("odom_frame_id").as_string(),
           get_parameter("base_frame_id").as_string(),
           laser_scan->header.stamp,
-          std::chrono::seconds(1)).transform,
+          std::chrono::seconds(1))
+        .transform,
         odom_to_base_transform);
 
       const auto delta = odom_to_base_transform * particle_filter_->last_pose().inverse();
@@ -632,7 +627,8 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
           get_parameter("base_frame_id").as_string(),
           laser_scan->header.frame_id,
           laser_scan->header.stamp,
-          std::chrono::seconds(1)).transform,
+          std::chrono::seconds(1))
+        .transform,
         base_to_laser_transform);
 
       particle_filter_->update_sensor(
@@ -664,6 +660,6 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   }
 }
 
-}  // namespace beluga_amcl
+} // namespace beluga_amcl
 
 RCLCPP_COMPONENTS_REGISTER_NODE(beluga_amcl::AmclNode)
