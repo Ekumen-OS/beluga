@@ -9,4 +9,4 @@ cd $(dirname "$(readlink -f "$BASH_SOURCE")")
 [[ ! -z "${WITHIN_DEV}" ]] && echo "Already in the development environment!" && exit 1
 
 [[ "${1}" == "--build" ]] && docker-compose build dev
-USERID=$(id -u) GROUPID=$(id -g) docker compose run --rm dev
+USERID=$(id -u) GROUPID=$(id -g) docker-compose run --rm dev
