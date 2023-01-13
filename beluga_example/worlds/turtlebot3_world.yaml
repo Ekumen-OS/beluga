@@ -6,4 +6,4 @@ layers:
 models:
   - name: turtlebot
     model: "../models/turtlebot.model.yaml"
-    pose: [0, 2, 0]
+    pose: [0, 0.3, 0]
