@@ -4,6 +4,7 @@ project(beluga_example)
 find_package(ament_cmake REQUIRED)
 find_package(beluga_amcl REQUIRED)
 
+install(DIRECTORY bags DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY maps DESTINATION share/${PROJECT_NAME})
