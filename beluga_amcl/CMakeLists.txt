@@ -17,13 +17,13 @@ find_package(sensor_msgs REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
-add_executable(amcl_node)
-target_sources(amcl_node PUBLIC src/main.cpp src/amcl_node.cpp)
-target_include_directories(amcl_node PUBLIC
+add_library(amcl_node_component SHARED)
+target_sources(amcl_node_component PUBLIC src/amcl_node.cpp)
+target_include_directories(amcl_node_component PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_features(amcl_node PUBLIC cxx_std_17)
-ament_target_dependencies(amcl_node PUBLIC
+target_compile_features(amcl_node_component PUBLIC cxx_std_17)
+ament_target_dependencies(amcl_node_component PUBLIC
   beluga
   bondcpp
   nav2_msgs
@@ -33,6 +33,19 @@ ament_target_dependencies(amcl_node PUBLIC
   sensor_msgs
   tf2_eigen
   tf2_geometry_msgs)
+rclcpp_components_register_nodes(amcl_node_component "beluga_amcl::AmclNode")
+
+add_executable(amcl_node)
+target_sources(amcl_node PUBLIC src/main.cpp)
+target_link_libraries(amcl_node PUBLIC amcl_node_component)
+target_compile_features(amcl_node PUBLIC cxx_std_17)
+ament_target_dependencies(amcl_node PUBLIC rclcpp)
+
+install(TARGETS
+  amcl_node_component
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
 
 install(TARGETS amcl_node
   DESTINATION lib/${PROJECT_NAME})
