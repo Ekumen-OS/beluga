@@ -28,29 +28,82 @@
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
+/**
+ * \file
+ * \brief Implementation of a likelihood field sensor model for range finders.
+ */
+
 namespace beluga {
 
+/// Parameters used to construct a LikelihoodFieldModel instance.
+/**
+ * See Probabilistic Robotics \cite thrun2005probabilistic Chapter `6.4`, particularly Table `6.3`.
+ */
 struct LikelihoodFieldModelParam {
+  /// When creating a distance map, if the distance to an obstacle is higher than the value specified here,
+  /// then this value will be used.
   double max_obstacle_distance;
-  double min_laser_distance;
+  /// Maximum range of a laser ray.
   double max_laser_distance;
+  /// Weight used to combine the probability of hitting an obstacle.
   double z_hit;
+  /// Weight used to combine the probability of random noise in perception.
   double z_random;
+  /// Standard deviation of a gaussian centered arounds obstacles, used to calculate the
+  /// probability of the obstacle being hit.
   double sigma_hit;
 };
 
+/// Likelihood field sensor model for range finders.
+/**
+ * \tparam Mixin The mixed-in type.
+ * \tparam OccupancyGrid Type representing an occupancy grid.
+ *  It must satisfy the OccupancyGrid requirements. <!--TODO(ivanpauno): link to requirements-->
+ */
 template <class Mixin, class OccupancyGrid>
 class LikelihoodFieldModel : public Mixin {
  public:
+  /// State type of a particle.
+  using state_type = Sophus::SE2d;
+  /// Weight type of the particle.
+  using weight_type = double;
+  /// Measurement type of the sensor: a point cloud for the range finder.
+  using measurement_type = std::vector<std::pair<double, double>>;
+
+  /// Parameter type that the constructor uses to configure the likelihood field model.
+  using param_type = LikelihoodFieldModelParam;
+
+  /// Constructs a LikelihoodFieldModel instance.
+  /**
+   * \tparam ...Args Arguments types for the remaining mixin constructors.
+   * \param params Parameters to configure this instance.
+   *  See beluga::LikelihoodFieldModelParam for details.
+   * \param grid Occupancy grid representing the static map.
+   * \param ...rest arguments that are not used by this part of the mixin, but by others.
+   */
   template <class... Args>
-  explicit LikelihoodFieldModel(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid, Args&&... rest)
+  explicit LikelihoodFieldModel(const param_type& params, const OccupancyGrid& grid, Args&&... rest)
       : Mixin(std::forward<Args>(rest)...),
         grid_{grid},
         free_cells_{make_free_cells_vector(grid)},
         likelihood_field_{make_likelihood_field(params, grid)} {}
 
+  /// Returns the likelihood field, constructed from the provided map.
   const auto& likelihood_field() const { return likelihood_field_; }
 
+  // TODO(ivanpauno): is sensor model the best place for this?
+  // Maybe the map could be provided by a different part of the mixin,
+  // and that part could be used to generate the random state.
+  /// Generates a random particle state.
+  /**
+   * The generated state is an unoccupied cell of the grid, any free cell is sampled uniformly.
+   * The rotation is as well sampled uniformly.
+   *
+   * \tparam Generator A type satisfying the [UniformRandomBitGenerator](
+   *  https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator) requirements.
+   * \param generator A `Generator` instance, used as a random bit generator to generate the random state.
+   * \return The generated random state.
+   */
   template <class Generator>
   [[nodiscard]] Sophus::SE2d generate_random_state(Generator& generator) const {
     auto index_distribution = std::uniform_int_distribution<std::size_t>{0, free_cells_.size() - 1};
@@ -59,7 +112,12 @@ class LikelihoodFieldModel : public Mixin {
         grid_.origin() * grid_.point(free_cells_[index_distribution(generator)])};
   }
 
-  [[nodiscard]] double importance_weight(const Sophus::SE2d& state) const {
+  /// Gets the importance weight for a particle with the provided state.
+  /**
+   * \param state State of the particle to calculate its importance weight.
+   * \return Calculated importance weight.
+   */
+  [[nodiscard]] weight_type importance_weight(const state_type& state) const {
     const auto transform = grid_.origin().inverse() * state;
     const auto lock = std::shared_lock<std::shared_mutex>{points_mutex_};
     return std::transform_reduce(
@@ -77,7 +135,14 @@ class LikelihoodFieldModel : public Mixin {
         });
   }
 
-  void update_sensor(std::vector<std::pair<double, double>> points) {
+  /// Update the sensor model with the measured points.
+  /**
+   * This will not update the particle filter particles weights.
+   * For that, the importance_weight() method provided here is used by the particle filter.
+   *
+   * \param points The range finder points in the reference frame of the particle.
+   */
+  void update_sensor(measurement_type points) {
     const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
     points_ = std::move(points);
   }
