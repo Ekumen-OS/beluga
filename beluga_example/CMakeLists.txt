@@ -4,12 +4,15 @@ project(beluga_example)
 find_package(ament_cmake REQUIRED)
 find_package(beluga_amcl REQUIRED)
 
-install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY maps DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY models DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY rviz DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY worlds DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY
+  bags
+  config
+  launch
+  maps
+  models
+  rviz
+  worlds
+  DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
