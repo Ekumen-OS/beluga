@@ -70,6 +70,9 @@ class LikelihoodFieldModel : public Mixin {
   /// Measurement type of the sensor: a point cloud for the range finder.
   using measurement_type = std::vector<std::pair<double, double>>;
 
+  /// Parameter type that the constructor uses to configure the likelihood field model.
+  using param_type = LikelihoodFieldModelParam;
+
   /// Constructs a LikelihoodFieldModel instance.
   /**
    * \tparam ...Args Arguments types for the remaining mixin constructors.
@@ -79,7 +82,7 @@ class LikelihoodFieldModel : public Mixin {
    * \param ...rest arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit LikelihoodFieldModel(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid, Args&&... rest)
+  explicit LikelihoodFieldModel(const param_type& params, const OccupancyGrid& grid, Args&&... rest)
       : Mixin(std::forward<Args>(rest)...),
         grid_{grid},
         free_cells_{make_free_cells_vector(grid)},
@@ -114,7 +117,7 @@ class LikelihoodFieldModel : public Mixin {
    * \param state State of the particle to calculate its importance weight.
    * \return Calculated importance weight.
    */
-  [[nodiscard]] double importance_weight(const Sophus::SE2d& state) const {
+  [[nodiscard]] weight_type importance_weight(const state_type& state) const {
     const auto transform = grid_.origin().inverse() * state;
     const auto lock = std::shared_lock<std::shared_mutex>{points_mutex_};
     return std::transform_reduce(
@@ -139,7 +142,7 @@ class LikelihoodFieldModel : public Mixin {
    *
    * \param points The range finder points in the reference frame of the particle.
    */
-  void update_sensor(std::vector<std::pair<double, double>> points) {
+  void update_sensor(measurement_type points) {
     const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
     points_ = std::move(points);
   }

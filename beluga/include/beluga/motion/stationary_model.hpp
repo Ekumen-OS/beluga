@@ -56,7 +56,7 @@ class StationaryModel : public Mixin {
    * \param state The particle state to apply the motion to.
    * \return The updated paticle state.
    */
-  [[nodiscard]] Sophus::SE2d apply_motion(const Sophus::SE2d& state) const {
+  [[nodiscard]] state_type apply_motion(const state_type& state) const {
     static thread_local std::mt19937 generator{std::random_device()()};
     auto distribution = std::normal_distribution<>{0, 0.02};
     return state * Sophus::SE2d{
@@ -68,7 +68,7 @@ class StationaryModel : public Mixin {
   /**
    * For the stationary model, updates are ignored.
    */
-  void update_motion(const Sophus::SE2d&) {}
+  void update_motion(const update_type&) {}
 };
 
 }  // namespace beluga

@@ -70,7 +70,7 @@ class DifferentialDriveModel : public Mixin {
    * \param ...args arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit DifferentialDriveModel(const DifferentialDriveModelParam& params, Args&&... args)
+  explicit DifferentialDriveModel(const param_type& params, Args&&... args)
       : Mixin(std::forward<Args>(args)...), params_{params} {}
 
   /// Applies the last update to the particle state given.
@@ -78,7 +78,7 @@ class DifferentialDriveModel : public Mixin {
    * \param state The particle state to apply the motion to.
    * \return The updated paticle state.
    */
-  [[nodiscard]] Sophus::SE2d apply_motion(const Sophus::SE2d& state) const {
+  [[nodiscard]] state_type apply_motion(const state_type& state) const {
     static thread_local auto generator = std::mt19937{std::random_device()()};
     static thread_local auto distribution = std::normal_distribution<double>{};
 
@@ -100,7 +100,7 @@ class DifferentialDriveModel : public Mixin {
    *
    * \param pose Last odometry udpate.
    */
-  void update_motion(const Sophus::SE2d& pose) {
+  void update_motion(const update_type& pose) {
     if (last_pose_) {
       const auto translation = pose.translation() - last_pose_.value().translation();
       const double distance = translation.norm();
