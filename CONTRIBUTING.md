@@ -53,7 +53,7 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    ros2 launch beluga_example example_launch.py
    ```
    You can use `teleop_twist_keyboard` to control the simulated turtlebot. In a separate terminal run:
-   ```
+   ```bash
    cd /ws
    source install/setup.bash
    ros2 run teleop_twist_keyboard teleop_twist_keyboard
