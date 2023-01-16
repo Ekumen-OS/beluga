@@ -22,7 +22,8 @@
 #include <beluga/views.hpp>
 
 /**
- * \file Implementation of traits for particle types, see the \ref ParticlePage "Particle" named requirements.
+ * \file
+ * \brief Implementation of traits for particle types, see the \ref ParticlePage "Particle" named requirements.
  */
 
 namespace beluga {

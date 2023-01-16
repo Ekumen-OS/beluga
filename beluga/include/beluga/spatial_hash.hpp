@@ -26,7 +26,8 @@
 #include <sophus/se2.hpp>
 
 /**
- * \file Implementation of a spatial hash for N dimensional states.
+ * \file
+ * \brief Implementation of a spatial hash for N dimensional states.
  */
 // TODO(ivanpauno): Move to algorithm?
 

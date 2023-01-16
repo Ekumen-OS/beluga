@@ -18,4 +18,9 @@
 #include <beluga/type_traits/container_traits.hpp>
 #include <beluga/type_traits/particle_traits.hpp>
 
+/**
+ * \file
+ * \brief Includes all beluga type traits.
+ */
+
 #endif

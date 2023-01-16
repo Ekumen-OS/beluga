@@ -15,6 +15,11 @@
 #ifndef BELUGA_RANDOM_HPP
 #define BELUGA_RANDOM_HPP
 
+/**
+ * \file
+ * \brief Includes all beluga random distributions.
+ */
+
 #include <beluga/random/multivariate_normal_distribution.hpp>
 
 /**

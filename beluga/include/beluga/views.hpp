@@ -19,8 +19,19 @@
 
 #include <range/v3/view/transform.hpp>
 
+/**
+ * \file
+ * \brief Implementation of useful container views.
+ */
+
 namespace beluga::views {
 
+/// Returns [range adaptor object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject) that
+/// will apply std::get<N> to each value in the range lazely.
+/**
+ * \tparam N Element to get from the array or tuple.
+ * \param particle Tuple or array instance, with at least `N + 1` elements.
+ */
 template <std::size_t N>
 inline auto elements = ranges::views::transform([](auto&& particle) -> decltype(auto) {
   return std::get<N>(std::forward<decltype(particle)>(particle));

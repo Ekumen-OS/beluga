@@ -20,7 +20,8 @@
 #include <range/v3/view/all.hpp>
 
 /**
- * \file Useful traits for containers.
+ * \file
+ * \brief Useful traits for containers.
  */
 
 namespace beluga {

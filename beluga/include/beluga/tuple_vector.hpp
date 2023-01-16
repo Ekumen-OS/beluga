@@ -23,7 +23,8 @@
 #include <range/v3/view/zip.hpp>
 
 /**
- * \file Implementation of a tuple of containers.
+ * \file
+ * \brief Implementation of a tuple of containers.
  */
 
 namespace beluga {

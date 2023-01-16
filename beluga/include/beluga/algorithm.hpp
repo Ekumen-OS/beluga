@@ -15,6 +15,11 @@
 #ifndef BELUGA_ALGORITHM_HPP
 #define BELUGA_ALGORITHM_HPP
 
+/**
+ * \file
+ * \brief Includes all beluga algorithms.
+ */
+
 #include <beluga/algorithm/distance_map.hpp>
 #include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/exponential_filter.hpp>
