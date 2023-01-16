@@ -8,6 +8,7 @@ RUN apt-get update \
     doxygen \
     perl \
     python3-pip \
+    texlive-base \
     texlive-binaries \
   && rm -rf /var/lib/apt/lists/*
 
