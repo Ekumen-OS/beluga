@@ -115,7 +115,7 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
   };
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = MockMixin<SensorModel>{params, grid};
   ASSERT_THAT(mixin.likelihood_field(), testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
 }
@@ -132,7 +132,7 @@ TEST(LikelihoodFieldModel, ImportanceWeight) {
     kResolution};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = MockMixin<SensorModel>{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{1.25, 1.25}});
@@ -164,7 +164,7 @@ TEST(LikelihoodFieldModel, GridWithOffset) {
     Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{-5, -5}}};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = MockMixin<SensorModel>{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{4.5, 4.5}});
@@ -187,7 +187,7 @@ TEST(LikelihoodFieldModel, GridWithRotation) {
     Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2}, Eigen::Vector2d{0.0, 0.0}}};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = MockMixin<SensorModel>{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{-9.5, 9.5}});
@@ -213,7 +213,7 @@ TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
     origin};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = MockMixin<SensorModel>{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{-4.5, 4.5}});
