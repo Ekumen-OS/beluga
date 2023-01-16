@@ -449,13 +449,15 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State &
   particle_cloud_pub_->on_deactivate();
   likelihood_field_pub_->on_deactivate();
   pose_pub_->on_deactivate();
-  laser_scan_sub_.reset();
   map_sub_.reset();
   initial_pose_sub_.reset();
-  bond_.reset();
+  laser_scan_connection_.disconnect();
+  laser_scan_filter_.reset();
+  laser_scan_sub_.reset();
   tf_listener_.reset();
   tf_broadcaster_.reset();
   tf_buffer_.reset();
+  bond_.reset();
   return CallbackReturn::SUCCESS;
 }
 
