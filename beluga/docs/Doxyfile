@@ -8,3 +8,4 @@ GENERATE_LATEX         = NO
 # TODO(ivanpauno): Reenable this when everything is documented.
 WARN_IF_UNDOCUMENTED   = NO
 HTML_EXTRA_STYLESHEET  = doxygen_extra.css
+CITE_BIB_FILES         = ./doxygen_cites.bib

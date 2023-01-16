@@ -491,7 +491,6 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
   const auto likelihood_field_model_params = beluga::LikelihoodFieldModelParam{
     get_parameter("laser_likelihood_max_dist").as_double(),
-    get_parameter("laser_min_range").as_double(),
     get_parameter("laser_max_range").as_double(),
     get_parameter("z_hit").as_double(),
     get_parameter("z_rand").as_double(),
@@ -599,7 +598,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
       if (!has_moved) {
         // To avoid loss of diversity in the particle population, don't
         // resample when the state is known to be static.
-        // See 'Probabilistics Robotics, Chapter 4.2.4'.
+        // See 'Probabilistic Robotics, Chapter 4.2.4'.
         RCLCPP_INFO_THROTTLE(
           get_logger(), *get_clock(), 2000,
           "Skipping the particle filter update as the robot is not moving");

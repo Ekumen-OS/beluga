@@ -290,7 +290,7 @@ struct AdaptiveGenerationParam {
  * The addition of random samples allows the filter to recover.
  * It determines how many random particles to add by averaging the weights of the particles.
  * The estimate used considers a short-term and a long-term average.
- * See 'Probabilistics Robotics, Chapter 8.3.3'.
+ * See Probabilistic Robotics \cite thrun2005probabilistic, Chapter `8.3.3`.
  *
  * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
  *  m.self(). The return type of m.self() must satisfy the SensorModel named requirements.

@@ -37,7 +37,7 @@ namespace beluga {
 
 /// Parameters used to construct a LikelihoodFieldModel instance.
 /**
- * See 'Probabilistics Robotics, Chapter 6.4', particularly `Table 6.3`.
+ * See Probabilistic Robotics \cite thrun2005probabilistic Chapter `6.4`, particularly Table `6.3`.
  */
 struct LikelihoodFieldModelParam {
   /// When creating a distance map, if the distance to an obstacle is higher than the value specified here,
