@@ -478,35 +478,35 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 {
   RCLCPP_INFO(get_logger(), "A new map was received");
 
-  const auto generation_params = beluga::AdaptiveGenerationParam{
-    get_parameter("recovery_alpha_slow").as_double(),
-    get_parameter("recovery_alpha_fast").as_double()};
+  auto generation_params = beluga::AdaptiveGenerationParam{};
+  generation_params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
+  generation_params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
 
-  const auto kld_resampling_params = beluga::KldResamplingParam{
-    static_cast<std::size_t>(get_parameter("min_particles").as_int()),
-    static_cast<std::size_t>(get_parameter("max_particles").as_int()),
-    get_parameter("spatial_resolution").as_double(),
-    get_parameter("pf_err").as_double(),
-    get_parameter("pf_z").as_double()};
+  auto resampling_params = beluga::KldResamplingParam{};
+  resampling_params.min_samples = static_cast<std::size_t>(get_parameter("min_particles").as_int());
+  resampling_params.max_samples = static_cast<std::size_t>(get_parameter("max_particles").as_int());
+  resampling_params.spatial_resolution = get_parameter("spatial_resolution").as_double();
+  resampling_params.kld_epsilon = get_parameter("pf_err").as_double();
+  resampling_params.kld_z = get_parameter("pf_z").as_double();
 
-  const auto likelihood_field_model_params = beluga::LikelihoodFieldModelParam{
-    get_parameter("laser_likelihood_max_dist").as_double(),
-    get_parameter("laser_max_range").as_double(),
-    get_parameter("z_hit").as_double(),
-    get_parameter("z_rand").as_double(),
-    get_parameter("sigma_hit").as_double()};
+  auto sensor_params = beluga::LikelihoodFieldModelParam{};
+  sensor_params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
+  sensor_params.max_laser_distance = get_parameter("laser_max_range").as_double();
+  sensor_params.z_hit = get_parameter("z_hit").as_double();
+  sensor_params.z_random = get_parameter("z_rand").as_double();
+  sensor_params.sigma_hit = get_parameter("sigma_hit").as_double();
 
-  const auto differential_drive_model_params = beluga::DifferentialDriveModelParam{
-    get_parameter("alpha1").as_double(),
-    get_parameter("alpha2").as_double(),
-    get_parameter("alpha3").as_double(),
-    get_parameter("alpha4").as_double()};
+  auto motion_params = beluga::DifferentialDriveModelParam{};
+  motion_params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
+  motion_params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
+  motion_params.translation_noise_from_translation = get_parameter("alpha3").as_double();
+  motion_params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
 
   particle_filter_ = std::make_unique<ParticleFilter>(
     generation_params,
-    kld_resampling_params,
-    differential_drive_model_params,
-    likelihood_field_model_params,
+    resampling_params,
+    motion_params,
+    sensor_params,
     OccupancyGrid{map});
 
   RCLCPP_INFO(
