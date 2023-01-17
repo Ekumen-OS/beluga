@@ -35,9 +35,9 @@ namespace beluga {
 
 namespace detail {
 
-/// Returns the floor of a value and shift it.
+/// Returns the floor of a value shifted.
 /**
- * \tparam N Number of bits to be used in the result, the least significant will be used.
+ * \tparam N Number of bits to be used from the integer result, the least significant will be used.
  * \tparam I Result will be shifted by I*N.
  * \param value Input value to be floored and shifted.
  * \return The calculated result.
@@ -105,11 +105,6 @@ struct spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Type
   }
 };
 
-// TODO(ivanpauno): One may want to use a different spatial_hash for the same type, e.g. for SE2d
-// one may also want to consider the rotation.
-// Instead of using spatial_hash<> directly in KldResampling and specialization here, the spatial hash to be used
-// could be specified as a template parameter.
-/// Specialization for Sophus::SE2d.
 /**
  * Will calculate the spatial hash based on the translation, the rotation is not used.
  */

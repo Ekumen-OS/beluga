@@ -27,7 +27,7 @@
 namespace beluga::views {
 
 /// Returns [range adaptor object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject) that
-/// will apply std::get<N> to each value in the range lazely.
+/// will apply std::get<N> to each value in the range lazily.
 /**
  * \tparam N Element to get from the array or tuple.
  * \param particle Tuple or array instance, with at least `N + 1` elements.

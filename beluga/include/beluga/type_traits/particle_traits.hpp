@@ -28,7 +28,7 @@
 
 namespace beluga {
 
-/// std::decay is applied to  all tuple element types if T is a tuple.
+/// std::decay is applied to all tuple element types if T is a tuple.
 template <class T>
 struct decay_tuple_types {
   /// Decayed type.
@@ -237,7 +237,7 @@ constexpr auto clusters(Container&& container) {
 
 }  // namespace views
 
-/// Returns a new particle from the give state.
+/// Returns a new particle from the given state.
 /**
  * \tparam Particle The particle type to be used.
  * \tparam T The particle state type.
