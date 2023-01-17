@@ -64,8 +64,8 @@ constexpr std::size_t floor_and_shift(double value) {
  * \return The calculated hash.
  */
 template <class T, std::size_t... Ids>
-constexpr std::size_t hash_impl(const T& value, double resolution, std::index_sequence<Ids...> index_sequence) {
-  (void)index_sequence;
+constexpr std::size_t
+hash_impl(const T& value, double resolution, [[maybe_unused]] std::index_sequence<Ids...> index_sequence) {
   constexpr auto kBits = std::numeric_limits<std::size_t>::digits / sizeof...(Ids);
   return (detail::floor_and_shift<kBits, Ids>(std::get<Ids>(value) / resolution) | ...);
 }
