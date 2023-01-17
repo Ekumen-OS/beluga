@@ -20,6 +20,11 @@
 #include <Eigen/Core>
 #include <Eigen/Eigenvalues>
 
+/**
+ * \file
+ * \brief Implementation of a multivariate normal distribution.
+ */
+
 namespace beluga {
 
 /// Multivariate normal distribution.

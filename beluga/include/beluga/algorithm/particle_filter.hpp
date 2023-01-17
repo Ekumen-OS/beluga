@@ -102,9 +102,8 @@
  * \section ParticleFilterRequirements Requirements
  * `T` is a `ParticleFilter` if:
  * - `T` satisfies the \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
- * <!--TODO(ivanpauno): Add named requirements links when documented-->
- * - `T` satisfies the `SensorModel` named requirements. <!--update_sensor()-->
- * - `T` satisfies the `MotionModel` named requirements.  <!--update_motion() and last_pose()-->
+ * - `T` satisfies the \ref SensorModelPage "SensorModel" named requirements.
+ * - `T` satisfies the \ref MotionModelPage "MotionModel" named requirements.
  * - `T` satisfies the \ref StateEstimationPage "StateEstimation" named requirements.
  */
 namespace beluga {
@@ -134,6 +133,7 @@ namespace beluga {
 template <class Mixin, class Container>
 struct BootstrapParticleFilter : public Mixin {
  public:
+  /// The particle type.
   using particle_type = typename Container::value_type;
 
   /// Constructs a BootstrapParticleFilter.

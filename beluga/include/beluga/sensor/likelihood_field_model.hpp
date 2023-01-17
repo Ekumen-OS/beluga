@@ -54,11 +54,36 @@ struct LikelihoodFieldModelParam {
   double sigma_hit;
 };
 
+/**
+ * \page OccupancyGrid2dPage beluga named requirements: OccupancyGrid2d
+ *
+ * A type `G` satisfies the `OccupancyGrid2d` requirements if.
+ * Given `g` a possible const instance of `G`:
+ * - `g.size()` returns a `std::size_t`, representing the occupancy grid size.
+ * - `g.data()` returns a const [rancom access range](https://en.cppreference.com/w/cpp/ranges/random_access_range),
+ *   with value type `C`.
+ * - `g.neighbors()` returns a range with value type std::size_t.
+ *   The elements of the range are valid cell indexes, i.e. for each `i` of the returned range `i < g.size()` is true
+ *   and `g.data()[i]` is valid.
+ * - `g.origin()` return the occupancy grid origin as a `Sophus::SE2d`.
+ * - Given a possibly const `std::size_t` `i` less than `g.size()`, `g.point(i)` returns the
+ *   coordinates of the cell of index `i` as a `Eigen::Vector2d`.
+ * - Give possibly const values `x` and `y` of type `double`, `g.index(x, y)` returns a `std::size`,
+ *   representing the index of the cell.
+ * - Give a possibly const `Eigen::Vector2d` `p`, `g.index(p)` is equivalent to `g.index(p.x(), p.y())`.
+ *
+ * Given c a possible const instance of C:
+ * - OccupancyGrid::Traits::is_free(c) returns true if the cell is free, false if not.
+ * - OccupancyGrid::Traits::is_occupied(c) returns true if the cell is occupied, false if not.
+ * - OccupancyGrid::Traits::is_unknown(c) returns true if it is unknown whether the cell is occupied or not,
+ *   else false.
+ */
+
 /// Likelihood field sensor model for range finders.
 /**
  * \tparam Mixin The mixed-in type.
  * \tparam OccupancyGrid Type representing an occupancy grid.
- *  It must satisfy the OccupancyGrid requirements. <!--TODO(ivanpauno): link to requirements-->
+ *  It must satisfy the \ref OccupancyGrid2dPage OccupancyGrid2d requirements.
  */
 template <class Mixin, class OccupancyGrid>
 class LikelihoodFieldModel : public Mixin {

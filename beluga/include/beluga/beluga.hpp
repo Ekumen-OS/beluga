@@ -15,6 +15,11 @@
 #ifndef BELUGA_BELUGA_HPP
 #define BELUGA_BELUGA_HPP
 
+/**
+ * \file
+ * \brief Includes all the beluga API.
+ */
+
 #include <beluga/algorithm.hpp>
 #include <beluga/motion.hpp>
 #include <beluga/sensor.hpp>

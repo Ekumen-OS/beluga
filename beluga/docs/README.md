@@ -5,9 +5,8 @@ The existing implementations are:
 - beluga::AMCL: Adaptive Monte Carlo localization, the number of particles is defined using the KLD criteria.
 
 The library is extensible, allowing to:
-<!--TODO(ivanpauno): When docs are completed, are links here-->
-- Provide a different sensor or motion model.
-- Provide a way to resample particles.
-- Provide a way of getting the estimated pose based on the particles.
-- Provide a way of generating the initial particles.
-- Provide a way of resampling particles.
+- Provide a different [sensor](@ref SensorModelPage) or [motion](@ref MotionModelPage) model.
+- Provide a way of getting the [estimated pose](@ref StateEstimationPage) based on the particles.
+- Provide a way of [generating the initial particles](@ref ParticleBaselineGenerationPage).
+- Provide a way of [generating particles samples](@ref ParticleSampledGenerationPage) from the previous particle set.
+- Provide a way to [resample](@ref ParticleResamplingPage) particles.
