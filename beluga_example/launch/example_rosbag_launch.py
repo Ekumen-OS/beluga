@@ -66,13 +66,6 @@ def generate_launch_description():
                 output='screen',
                 parameters=[os.path.join(example_dir, 'config', 'params.yaml')],
                 arguments=['--ros-args', '--log-level', 'info'],
-                # TODO(nahuel): Investigate node shutdown process.
-                # On shutdown, the system escalates to SIGTERM to stop amcl_node.
-                # This is after the lifecycle node is destroyed.
-                # Incrementing the SIGTERM timeout doesn't help.
-                # This might be a problem if we want to use a command prefix
-                # to measure performance later on (e.g., time, timemory).
-                sigterm_timeout='10',
             ),
         ]
     )
