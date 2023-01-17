@@ -226,7 +226,7 @@ struct BaselineGeneration : public Mixin {
   /// Returns a range containing the generated particles.
   /**
    * The particles are generated randomly according to the `generate_random_state()` method provided by the sensor
-   * model. See SensorModel. <!--TODO(ivanpauno): Add link-->
+   * model. See \ref SensorModelPage "SensorModel".
    *
    * \tparam Particle The particle type, must satisfy the \ref ParticlePage "Particle" named requirements.
    * \return range with the generated particles.
