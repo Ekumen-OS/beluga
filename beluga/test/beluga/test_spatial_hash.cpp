@@ -14,7 +14,7 @@
 
 #include <gtest/gtest.h>
 
-#include <beluga/spatial_hash.hpp>
+#include <beluga/algorithm/spatial_hash.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/iota.hpp>

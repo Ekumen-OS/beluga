@@ -14,7 +14,7 @@
 
 #include <benchmark/benchmark.h>
 
-#include <beluga/spatial_hash.hpp>
+#include <beluga/algorithm/spatial_hash.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
