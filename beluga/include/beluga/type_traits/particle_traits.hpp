@@ -38,6 +38,7 @@ struct decay_tuple_types {
 /// Specialization for tuples.
 template <template <class...> class Tuple, class... Types>
 struct decay_tuple_types<Tuple<Types...>> {
+  /// Decayed type.
   using type = Tuple<std::decay_t<Types>...>;
 };
 
@@ -48,6 +49,7 @@ using decay_tuple_types_t = typename decay_tuple_types<T>::type;
 /// std::decay is applied to T, and to all tuple element types if T is a tuple.
 template <class T>
 struct decay_tuple {
+  /// Decayed type.
   using type = decay_tuple_types_t<std::decay_t<T>>;
 };
 

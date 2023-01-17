@@ -60,11 +60,12 @@ constexpr std::size_t floor_and_shift(double value) {
  * \tparam ...Ids Indexes of the array/tuple to be used to calculate the hash.
  * \param value The array/tuple to be hashed.
  * \param resolution The resolution to be used.
- * \param  Index sequence, only to allow unpacking ...Ids.
+ * \param index_sequence Unused, only to allow unpacking `...Ids`.
  * \return The calculated hash.
  */
 template <class T, std::size_t... Ids>
-constexpr std::size_t hash_impl(const T& value, double resolution, std::index_sequence<Ids...>) {
+constexpr std::size_t hash_impl(const T& value, double resolution, std::index_sequence<Ids...> index_sequence) {
+  (void)index_sequence;
   constexpr auto kBits = std::numeric_limits<std::size_t>::digits / sizeof...(Ids);
   return (detail::floor_and_shift<kBits, Ids>(std::get<Ids>(value) / resolution) | ...);
 }

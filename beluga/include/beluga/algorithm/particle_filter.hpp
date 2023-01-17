@@ -134,6 +134,7 @@ namespace beluga {
 template <class Mixin, class Container>
 struct BootstrapParticleFilter : public Mixin {
  public:
+  /// The particle type.
   using particle_type = typename Container::value_type;
 
   /// Constructs a BootstrapParticleFilter.

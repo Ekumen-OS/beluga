@@ -24,6 +24,8 @@
 #ifndef CIABATTA_CIABATTA_HPP
 #define CIABATTA_CIABATTA_HPP
 
+/// \cond ciabatta
+
 namespace ciabatta {
 
 template <typename MostDerived>
@@ -84,5 +86,7 @@ struct provides : Base, Interface {
 }  // namespace mixins
 
 }  // namespace ciabatta
+
+/// \endcond
 
 #endif
