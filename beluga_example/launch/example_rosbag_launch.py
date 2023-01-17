@@ -18,6 +18,9 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import GroupAction
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import PathJoinSubstitution
 from launch.actions import ExecuteProcess
 from launch.actions import Shutdown
 from launch_ros.actions import Node
@@ -30,30 +33,31 @@ def generate_launch_description():
     load_nodes = GroupAction(
         actions=[
             SetParameter('use_sim_time', True),
-            Node(
-                package='rviz2',
-                executable='rviz2',
-                name='rviz2',
-                output='own_log',
-                arguments=[
-                    '--display-config',
-                    os.path.join(example_dir, 'rviz', 'rviz.rviz'),
-                ],
-            ),
-            Node(
-                package='nav2_map_server',
-                executable='map_server',
-                name='map_server',
-                respawn=True,
-                respawn_delay=2.0,
-                parameters=[
-                    {
-                        'yaml_filename': os.path.join(
-                            example_dir, 'maps', 'turtlebot3_world.yaml'
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    [
+                        PathJoinSubstitution(
+                            [
+                                example_dir,
+                                'launch',
+                                'utils',
+                                'common_nodes_launch.py',
+                            ]
                         )
-                    }
+                    ]
+                )
+            ),
+            ExecuteProcess(
+                cmd=[
+                    'ros2',
+                    'bag',
+                    'play',
+                    os.path.join(example_dir, 'bags', 'perfect_odometry'),
+                    '--rate',
+                    '3',
                 ],
-                arguments=['--ros-args', '--log-level', 'info'],
+                output='own_log',
+                on_exit=[Shutdown()],
             ),
             Node(
                 package='beluga_amcl',
@@ -69,29 +73,6 @@ def generate_launch_description():
                 # This might be a problem if we want to use a command prefix
                 # to measure performance later on (e.g., time, timemory).
                 sigterm_timeout='10',
-            ),
-            Node(
-                package='nav2_lifecycle_manager',
-                executable='lifecycle_manager',
-                name='lifecycle_manager_localization',
-                output='screen',
-                arguments=['--ros-args', '--log-level', 'info'],
-                parameters=[
-                    {'autostart': True},
-                    {'node_names': ['map_server', 'amcl']},
-                ],
-            ),
-            ExecuteProcess(
-                cmd=[
-                    'ros2',
-                    'bag',
-                    'play',
-                    os.path.join(example_dir, 'bags', 'perfect_odometry'),
-                    '--rate',
-                    '3',
-                ],
-                output='own_log',
-                on_exit=[Shutdown()],
             ),
         ]
     )
