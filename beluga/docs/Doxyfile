@@ -1,9 +1,13 @@
 PROJECT_NAME           = "beluga"
 PROJECT_BRIEF          = "An extensible Monte Carlo based localization library."
-OUTPUT_DIRECTORY       = ../generated_docs
+OUTPUT_DIRECTORY       = $(DOXYGEN_OUTPUT_DIRECTORY)
 INPUT                  = ../include ./README.md
 RECURSIVE              = YES
 USE_MDFILE_AS_MAINPAGE = ./README.md
+GENERATE_HTML          = YES
 GENERATE_LATEX         = NO
-HTML_EXTRA_STYLESHEET  = doxygen_extra.css
+HTML_OUTPUT            = $(DOXYGEN_HTML_OUTPUT)
+HTML_EXTRA_STYLESHEET  = ./doxygen_extra.css
 CITE_BIB_FILES         = ./doxygen_cites.bib
+# TODO(nahuel): Reenable this when there are no warnings.
+WARN_AS_ERROR          = NO

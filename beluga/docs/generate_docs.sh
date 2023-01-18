@@ -1,3 +1,6 @@
 #!/bin/sh
-SCRIPT_PATH=$(dirname "$(readlink -f -- "$0")")
-cd $SCRIPT_PATH && doxygen ./Doxyfile && cd -
+
+# Generate documentation using doxygen.
+
+cd $(dirname "$(readlink -f -- "$0")")
+doxygen ./Doxyfile

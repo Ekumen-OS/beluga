@@ -39,3 +39,40 @@ jobs:
           git config --global --add safe.directory $PWD
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
+
+  build-docs:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-22.04
+    env:
+      REPOSITORY_CHECKOUT_PATH: ${{ github.workspace }}/repository
+      DOXYGEN_HTML_OUTPUT: ${{ github.workspace }}/docs
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: ${{ env.REPOSITORY_CHECKOUT_PATH }}
+
+      - uses: actions/checkout@v3
+        with:
+          path: ${{ env.DOXYGEN_HTML_OUTPUT }}
+          ref: gh-pages
+
+      - name: Install debian packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
+
+      - name: Generate documentation
+        working-directory: ${{ env.REPOSITORY_CHECKOUT_PATH }}
+        run: beluga/docs/generate_docs.sh
+
+      - name: Deploy documentation
+        working-directory: ${{ env.DOXYGEN_HTML_OUTPUT }}
+        env:
+          COMMIT_MESSAGE: "Triggered by commit ${{ github.sha }}."
+          COMMIT_CO_AUTHOR: "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "Update documentation" -m "${{ env.COMMIT_MESSAGE }}" -m "${{ env.COMMIT_CO_AUTHOR }}" || true
+          git push
