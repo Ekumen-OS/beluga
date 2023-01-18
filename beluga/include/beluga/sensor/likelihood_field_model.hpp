@@ -37,11 +37,14 @@ namespace beluga {
 
 /// Parameters used to construct a LikelihoodFieldModel instance.
 /**
- * See Probabilistic Robotics \cite thrun2005probabilistic Chapter `6.4`, particularly Table `6.3`.
+ * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4, particularly Table 6.3.
  */
 struct LikelihoodFieldModelParam {
-  /// When creating a distance map, if the distance to an obstacle is higher than the value specified here,
-  /// then this value will be used.
+  /// Maximum distance to obstacle.
+  /**
+   * When creating a distance map, if the distance to an obstacle is higher than the value specified here,
+   * then this value will be used.
+   */
   double max_obstacle_distance;
   /// Maximum range of a laser ray.
   double max_laser_distance;
@@ -49,8 +52,10 @@ struct LikelihoodFieldModelParam {
   double z_hit;
   /// Weight used to combine the probability of random noise in perception.
   double z_random;
-  /// Standard deviation of a gaussian centered arounds obstacles, used to calculate the
-  /// probability of the obstacle being hit.
+  /// Standard deviation of a gaussian centered arounds obstacles.
+  /**
+   * Used to calculate the probability of the obstacle being hit.
+   */
   double sigma_hit;
 };
 

@@ -35,8 +35,8 @@ class TupleContainer;
 
 /// An implementation of a tuple of containers, with an interface that looks like a container of tuples.
 /**
- * i.e. though this is implemented internally as a Tuple<InternalContainer<Types>...>, the interface looks like
- * a InternalContainer<Tuple<Types>...>.
+ * i.e. though this is implemented internally as a `Tuple<InternalContainer<Types>...>`, the interface looks like
+ * an `InternalContainer<Tuple<Types>...>`.
  * It provides the convenience of the second, but when iterating over only one of the elements of the tuple in the
  * container it has better performance (because of cache locality).
  * To that end, use for example `views::all(tuple_container) | views::elements<0>` to iterate over the first element of
