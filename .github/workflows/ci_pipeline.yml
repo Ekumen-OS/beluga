@@ -39,3 +39,26 @@ jobs:
           git config --global --add safe.directory $PWD
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
+
+  build-docs:
+    runs-on: ubuntu-22.04
+    env:
+      DOXYGEN_OUTPUT_DIRECTORY: ./docs
+      DOXYGEN_HTML_OUTPUT: .
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: base
+
+      - uses: actions/checkout@v3
+        with:
+          path: ${{ env.DOXYGEN_OUTPUT_DIRECTORY }}
+          ref: gh-pages
+
+      - name: Install debian packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
+
+      - name: Generate documentation
+        run: base/beluga/docs/generate_docs.sh
