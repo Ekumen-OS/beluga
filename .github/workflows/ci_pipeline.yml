@@ -41,6 +41,7 @@ jobs:
           pre-commit run --all-files --verbose --show-diff-on-failure
 
   build-docs:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-22.04
     env:
       REPOSITORY_CHECKOUT_PATH: ${{ github.workspace }}/repository
@@ -64,8 +65,7 @@ jobs:
         working-directory: ${{ env.REPOSITORY_CHECKOUT_PATH }}
         run: beluga/docs/generate_docs.sh
 
-      - if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        name: Deploy documentation
+      - name: Deploy documentation
         working-directory: ${{ env.DOXYGEN_HTML_OUTPUT }}
         env:
           COMMIT_MESSAGE: "Triggered by commit ${{ github.sha }}."
