@@ -43,16 +43,16 @@ jobs:
   build-docs:
     runs-on: ubuntu-22.04
     env:
-      DOXYGEN_OUTPUT_DIRECTORY: ./docs
-      DOXYGEN_HTML_OUTPUT: .
+      REPOSITORY_CHECKOUT_PATH: ${{ github.workspace }}/repository
+      DOXYGEN_HTML_OUTPUT: ${{ github.workspace }}/docs
     steps:
       - uses: actions/checkout@v3
         with:
-          path: base
+          path: ${{ env.REPOSITORY_CHECKOUT_PATH }}
 
       - uses: actions/checkout@v3
         with:
-          path: ${{ env.DOXYGEN_OUTPUT_DIRECTORY }}
+          path: ${{ env.DOXYGEN_HTML_OUTPUT }}
           ref: gh-pages
 
       - name: Install debian packages
@@ -61,16 +61,18 @@ jobs:
           sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
 
       - name: Generate documentation
-        run: base/beluga/docs/generate_docs.sh
+        working-directory: ${{ env.REPOSITORY_CHECKOUT_PATH }}
+        run: beluga/docs/generate_docs.sh
 
-      - if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      - # if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         name: Deploy documentation
-        working-directory: ${{ env.DOXYGEN_OUTPUT_DIRECTORY }}
+        working-directory: ${{ env.DOXYGEN_HTML_OUTPUT }}
         env:
-          COMMIT_CO_AUTHOR: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          COMMIT_MESSAGE: "Triggered by commit ${{ github.sha }}."
+          COMMIT_CO_AUTHOR: "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
-          git commit -m "Update documentation" -m "Co-authored-by: ${{ env.COMMIT_CO_AUTHOR }}" || true
+          git commit -m "Update documentation" -m "${{ env.COMMIT_MESSAGE }}" -m "${{ env.COMMIT_CO_AUTHOR }}" || true
           git push
