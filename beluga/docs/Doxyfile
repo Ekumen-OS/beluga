@@ -10,4 +10,4 @@ HTML_OUTPUT            = $(DOXYGEN_HTML_OUTPUT)
 HTML_EXTRA_STYLESHEET  = ./doxygen_extra.css
 CITE_BIB_FILES         = ./doxygen_cites.bib
 # TODO(nahuel): Reenable this when there are no warnings.
-WARN_AS_ERROR          = NO
+WARN_AS_ERROR          = YES
