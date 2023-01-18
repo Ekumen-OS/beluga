@@ -62,3 +62,15 @@ jobs:
 
       - name: Generate documentation
         run: base/beluga/docs/generate_docs.sh
+
+      - name: Deploy documentation
+        # TODO(nahuel): Add condition to run only on master merge
+        working-directory: ${{ env.DOXYGEN_OUTPUT_DIRECTORY }}
+        env:
+          COMMIT_CO_AUTHOR: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "Update documentation" -m "Co-authored-by: ${{ env.COMMIT_CO_AUTHOR }}" || true
+          git push
