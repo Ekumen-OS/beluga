@@ -18,10 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install debian packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install clang-tidy python3-colcon-coveragepy-result python3-pip -y
+      - name: Install cache-apt-pkgs dependencies
+        run: sudo apt-get update && sudo apt-get install curl wget -y
+
+      - uses: awalsh128/cache-apt-pkgs-action@v1.2.1
+        with:
+          packages: clang-tidy python3-colcon-coveragepy-result python3-pip
 
       - name: Install python packages
         run: pip install pre-commit==2.20.0
@@ -41,7 +43,6 @@ jobs:
           pre-commit run --all-files --verbose --show-diff-on-failure
 
   build-docs:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-22.04
     env:
       REPOSITORY_CHECKOUT_PATH: ${{ github.workspace }}/repository
@@ -56,16 +57,16 @@ jobs:
           path: ${{ env.DOXYGEN_HTML_OUTPUT }}
           ref: gh-pages
 
-      - name: Install debian packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
+      - uses: awalsh128/cache-apt-pkgs-action@v1.2.1
+        with:
+          packages: doxygen graphviz perl texlive-base texlive-binaries
 
       - name: Generate documentation
         working-directory: ${{ env.REPOSITORY_CHECKOUT_PATH }}
         run: beluga/docs/generate_docs.sh
 
-      - name: Deploy documentation
+      - if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        name: Deploy documentation
         working-directory: ${{ env.DOXYGEN_HTML_OUTPUT }}
         env:
           COMMIT_MESSAGE: "Triggered by commit ${{ github.sha }}."
