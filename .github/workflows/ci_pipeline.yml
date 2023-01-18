@@ -64,7 +64,7 @@ jobs:
         working-directory: ${{ env.REPOSITORY_CHECKOUT_PATH }}
         run: beluga/docs/generate_docs.sh
 
-      - # if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      - if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         name: Deploy documentation
         working-directory: ${{ env.DOXYGEN_HTML_OUTPUT }}
         env:
