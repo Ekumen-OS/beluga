@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SPATIAL_HASH_HPP
-#define BELUGA_SPATIAL_HASH_HPP
+#ifndef BELUGA_ALGORITHM_SPATIAL_HASH_HPP
+#define BELUGA_ALGORITHM_SPATIAL_HASH_HPP
 
 #include <bitset>
 #include <cmath>
@@ -29,7 +29,6 @@
  * \file
  * \brief Implementation of a spatial hash for N dimensional states.
  */
-// TODO(ivanpauno): Move to algorithm?
 
 namespace beluga {
 

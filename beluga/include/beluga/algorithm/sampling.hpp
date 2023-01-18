@@ -21,7 +21,7 @@
 #include <unordered_set>
 
 #include <beluga/algorithm/exponential_filter.hpp>
-#include <beluga/spatial_hash.hpp>
+#include <beluga/algorithm/spatial_hash.hpp>
 #include <beluga/type_traits.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take.hpp>
