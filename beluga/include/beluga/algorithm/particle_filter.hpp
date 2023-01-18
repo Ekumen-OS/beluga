@@ -45,18 +45,18 @@
  * - A possibly const instance `cp` of `T`.
  *
  * The following is satisfied:
- * - `particle_traits<T>::state_type` is a valid type.
- * - `particle_traits<T>::state(cp)` returns an instance of `particle_traits<T>::state_type`.
- * - Given `s` an instance of `particle_traits<T>::state_type`, `particle_traits<T>::state(p) = s`
- *   is a valid expression and assigns the state `s` to the particle `p`.
- *   i.e. after the assignment `s == particle_traits<T>::state(p)` is `true`.
- * - `particle_traits<T>::weight_type` is a valid arithmetic type (that is, an integral
+ * - \c particle_traits<T>::state_type is a valid type.
+ * - \c particle_traits<T>::state(cp) returns an instance of \c particle_traits<T>::state_type.
+ * - Given `s` an instance of \c particle_traits<T>::state_type, \c particle_traits<T>::state(p) = `s`
+ *   is a valid expression and assigns the state `s` to the particle `p`. \n
+ *   i.e. after the assignment `s` == \c particle_traits<T>::state(p) is `true`.
+ * - \c particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
  *   type or a floating-point type).
- * - `particle_traits<T>::weight(cp)` is a valid expression and the return type is
- *   `particle_traits<T>::weight_type`.
- * - Given `w` an instance of `particle_traits<T>::weight_type`, `particle_traits<T>::weight(p) = w`
- *   is a valid expression and assigns the weight `w` to the particle `p`.
- *   i.e. after the assignment `w == particle_traits<T>::weight(p)` is `true`.
+ * - \c particle_traits<T>::weight(cp) is a valid expression and the return type is
+ *   \c particle_traits<T>::weight_type.
+ * - Given `w` an instance of \c particle_traits<T>::weight_type, \c particle_traits<T>::weight(p) = `w`
+ *   is a valid expression and assigns the weight `w` to the particle `p`. \n
+ *   i.e. after the assignment `w` == \c particle_traits<T>::weight(p) is `true`.
  */
 
 /**
@@ -113,13 +113,14 @@ namespace beluga {
  * BootstrapParticleFilter<Mixin, Container> is an implementation of the
  * \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
  *
- * `particle_traits<typename Container::value_type>::state_type` must be the same as
- * the state_type of the sensor and motion model.
+ * Given `T`, the type named by \c Container::value_type,
+ * - \c particle_traits<T>::state_type must be the same as the `state_type` of the sensor
+ *   and motion model.
  *
- * `particle_traits<typename Container::value_type>::weight_type` must be the same as the weight
- * type used in the sensor mode.
+ * - \c particle_traits<T>::weight_type must be the same as the `weight_type` used in the
+ *   sensor mode.
  *
- * \tparam The mixed-in type. An instance m of Mixin must provide a protected method,
+ * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
  *  `m.self()`. The return type of `m.self()` must satisfy:
  * - \ref ParticleResamplingPage "ParticleResampling"
  * - \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"

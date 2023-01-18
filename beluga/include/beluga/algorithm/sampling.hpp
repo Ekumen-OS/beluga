@@ -176,11 +176,11 @@ inline auto set_cluster(double resolution) {
  * \param z Upper standard normal quantile for the probability that the error in the
  *  estimated distribution is less than epsilon.
  * \return A callable object with prototype (std::size_t hash) -> bool.
- *  hash is the spatial hash of the particle being added.
+ *  hash is the spatial hash of the particle being added. \n
  *  The returned callable object is stateful, tracking the total number of particles and
- *  the particle clusters based on the spatial hash.
- *  The return value will be false when the number of particles is more than the minimum
- *  and the kld condition is satisfied, if not it will be true.
+ *  the particle clusters based on the spatial hash. \n
+ *  The return value of the callable will be false when the number of particles is more than the minimum
+ *  and the kld condition is satisfied, if not it will be true. \n
  *  i.e. A return value of true means that you need to keep sampling to satisfy the condition.
  */
 inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
@@ -473,11 +473,11 @@ struct KldResampling : public Mixin {
    * It can only be composed with a range whose value type satisfies:
    * - The \ref ParticlePage "Particle" named requirements.
    * - Given `P` the range value type, `p` an instance of `P`, `cp` a possibly const instance of `P`.
-   *   The expression `particle_traits<P>::cluster(cp)` returns a `std::size_t` that represents the spatial
-   *   hash of the particle `cp`.
-   *   Given a `std::size_t` hash, the expression `particle_traits<P>::cluster(p) = hash` is valid and
-   *   assigns the cluster hash to the particle `p`.
-   *   i.e. after the assignment `hash == particle_traits<P>::cluster(p)` is `true`.
+   *   - The expression \c particle_traits<P>::cluster(cp) returns a `std::size_t` that represents the spatial
+   *     hash of the particle `cp`.
+   *   - Given a `std::size_t` hash, the expression \c particle_traits<P>::cluster(p) = hash is valid and
+   *     assigns the cluster hash to the particle `p`. \n
+   *     i.e. after the assignment hash == \c particle_traits<P>::cluster(p) is `true`.
    */
   [[nodiscard]] auto take_samples() const {
     return ranges::views::transform(set_cluster(parameters_.spatial_resolution)) |
