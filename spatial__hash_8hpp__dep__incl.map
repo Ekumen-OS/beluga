@@ -1,7 +1,7 @@
-<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/spatial_hash.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/spatial_hash.hpp">
-<area shape="rect" id="node1" title="Implementation of a spatial hash for N dimensional states." alt="" coords="143,5,378,61"/>
-<area shape="rect" id="node2" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="97,109,291,180"/>
-<area shape="rect" id="node5" href="$beluga_8hpp.html" title="Includes all the beluga API." alt="" coords="157,451,354,507"/>
-<area shape="rect" id="node3" href="$particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="5,228,199,299"/>
-<area shape="rect" id="node4" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="75,347,291,403"/>
+<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm/spatial_hash.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm/spatial_hash.hpp">
+<area shape="rect" id="node1" title="Implementation of a spatial hash for N dimensional states." alt="" coords="123,5,316,76"/>
+<area shape="rect" id="node2" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="56,124,249,195"/>
+<area shape="rect" id="node4" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="129,361,345,417"/>
+<area shape="rect" id="node3" href="$particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="5,243,199,313"/>
+<area shape="rect" id="node5" href="$beluga_8hpp.html" title="Includes all the beluga API." alt="" coords="138,465,335,521"/>
 </map>

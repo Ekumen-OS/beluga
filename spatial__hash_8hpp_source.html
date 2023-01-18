@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/spatial_hash.hpp Source File</title>
+<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm/spatial_hash.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1ad523cfdb7a3d7d09cddf672d6cd478.html">beluga</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1ad523cfdb7a3d7d09cddf672d6cd478.html">beluga</a></li><li class="navelem"><a class="el" href="dir_634c6b228f937c8a89fa81bc2f240134.html">algorithm</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -85,8 +85,8 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// See the License for the specific language governing permissions and</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// limitations under the License.</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_SPATIAL_HASH_HPP</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_SPATIAL_HASH_HPP</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_ALGORITHM_SPATIAL_HASH_HPP</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ALGORITHM_SPATIAL_HASH_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;bitset&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span></div>
@@ -98,75 +98,73 @@ $(function() {
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// TODO(ivanpauno): Move to algorithm?</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>beluga {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span>detail {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> N, std::<span class="keywordtype">size_t</span> I&gt;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="spatial__hash_8hpp.html#a65f08b6a6a0d1263bd7cce2ada16195d">   46</a></span>&#160;constexpr std::size_t <a class="code" href="spatial__hash_8hpp.html#a65f08b6a6a0d1263bd7cce2ada16195d">floor_and_shift</a>(<span class="keywordtype">double</span> value) {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="comment">// Compute the largest integer value not greater than value.</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keyword">auto</span> signed_value = <span class="keyword">static_cast&lt;</span>std::intmax_t<span class="keyword">&gt;</span>(std::floor(value));</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="comment">// Compute the smallest unsigned integer equal to the source value modulo 2^n</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="comment">// (where n is the number of bits used to represent the destination type).</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keyword">auto</span> unsigned_value = <span class="keyword">static_cast&lt;</span>std::uintmax_t<span class="keyword">&gt;</span>(signed_value);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="comment">// Create a fixed-size sequence of N bits and perform a binary shift left I * N positions.</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keywordflow">return</span> std::bitset&lt;N&gt;{unsigned_value}.to_ullong() &lt;&lt; (I * N);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>T, std::size_t... Ids&gt;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;constexpr std::size_t</div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="spatial__hash_8hpp.html#a8c5ede0d0680fb8129afdd407c46fdcf">   68</a></span>&#160;<a class="code" href="spatial__hash_8hpp.html#a8c5ede0d0680fb8129afdd407c46fdcf">hash_impl</a>(<span class="keyword">const</span> T&amp; value, <span class="keywordtype">double</span> resolution, [[maybe_unused]] std::index_sequence&lt;Ids...&gt; index_sequence) {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  constexpr <span class="keyword">auto</span> kBits = std::numeric_limits&lt;std::size_t&gt;::digits / <span class="keyword">sizeof</span>...(Ids);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keywordflow">return</span> (detail::floor_and_shift&lt;kBits, Ids&gt;(std::get&lt;Ids&gt;(value) / resolution) | ...);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}  <span class="comment">// namespace detail</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">typename</span> Enable = <span class="keywordtype">void</span>&gt;</div>
-<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash.html">   77</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a> {};</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, std::<span class="keywordtype">size_t</span> N&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d.html">   81</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a>&lt;std::array&lt;T, N&gt;, std::enable_if_t&lt;std::is_arithmetic_v&lt;T&gt;, void&gt;&gt; {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d.html#a5869e7815f454d8eabf7ae32a5a237b7">   89</a></span>&#160;  constexpr std::size_t <a class="code" href="structbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d.html#a5869e7815f454d8eabf7ae32a5a237b7">operator()</a>(<span class="keyword">const</span> std::array&lt;T, N&gt;&amp; array, <span class="keywordtype">double</span> resolution = 1.)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">return</span> detail::hash_impl(array, resolution, std::make_index_sequence&lt;N&gt;());</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  }</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>Tuple, <span class="keyword">class</span>... Types&gt;</div>
-<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f.html">   96</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a>&lt;Tuple&lt;Types...&gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt;Types&gt; &amp;&amp; ...), void&gt;&gt; {</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f.html#ae1e93679e540a31105df0c037c44a9c5">  104</a></span>&#160;  constexpr std::size_t <a class="code" href="structbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f.html#ae1e93679e540a31105df0c037c44a9c5">operator()</a>(<span class="keyword">const</span> Tuple&lt;Types...&gt;&amp; tuple, <span class="keywordtype">double</span> resolution = 1.)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">return</span> detail::hash_impl(tuple, resolution, std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(Types)&gt;());</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  }</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;};</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html">  113</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a>&lt;Sophus::SE2d, void&gt; {</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#a5fbe18a2b02c7eda8b180f54d64ec794">  121</a></span>&#160;  std::size_t <a class="code" href="structbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#a5fbe18a2b02c7eda8b180f54d64ec794">operator()</a>(<span class="keyword">const</span> Sophus::SE2d&amp; state, <span class="keywordtype">double</span> resolution = 1.)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; position = <a class="code" href="particle__traits_8hpp.html#ac3c1a0c8eb406538bb4e6bcc1d1066d5">state</a>.translation();</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash&lt;std::tuple&lt;double, double&gt;</a>&gt;{}(std::make_tuple(position.x(), position.y()), resolution);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  }</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>beluga {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> N, std::<span class="keywordtype">size_t</span> I&gt;</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="spatial__hash_8hpp.html#a65f08b6a6a0d1263bd7cce2ada16195d">   45</a></span>&#160;constexpr std::size_t <a class="code" href="spatial__hash_8hpp.html#a65f08b6a6a0d1263bd7cce2ada16195d">floor_and_shift</a>(<span class="keywordtype">double</span> value) {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="comment">// Compute the largest integer value not greater than value.</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keyword">auto</span> signed_value = <span class="keyword">static_cast&lt;</span>std::intmax_t<span class="keyword">&gt;</span>(std::floor(value));</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="comment">// Compute the smallest unsigned integer equal to the source value modulo 2^n</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="comment">// (where n is the number of bits used to represent the destination type).</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">auto</span> unsigned_value = <span class="keyword">static_cast&lt;</span>std::uintmax_t<span class="keyword">&gt;</span>(signed_value);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="comment">// Create a fixed-size sequence of N bits and perform a binary shift left I * N positions.</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keywordflow">return</span> std::bitset&lt;N&gt;{unsigned_value}.to_ullong() &lt;&lt; (I * N);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>T, std::size_t... Ids&gt;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;constexpr std::size_t</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="spatial__hash_8hpp.html#a8c5ede0d0680fb8129afdd407c46fdcf">   67</a></span>&#160;<a class="code" href="spatial__hash_8hpp.html#a8c5ede0d0680fb8129afdd407c46fdcf">hash_impl</a>(<span class="keyword">const</span> T&amp; value, <span class="keywordtype">double</span> resolution, [[maybe_unused]] std::index_sequence&lt;Ids...&gt; index_sequence) {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  constexpr <span class="keyword">auto</span> kBits = std::numeric_limits&lt;std::size_t&gt;::digits / <span class="keyword">sizeof</span>...(Ids);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordflow">return</span> (detail::floor_and_shift&lt;kBits, Ids&gt;(std::get&lt;Ids&gt;(value) / resolution) | ...);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">typename</span> Enable = <span class="keywordtype">void</span>&gt;</div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash.html">   76</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a> {};</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, std::<span class="keywordtype">size_t</span> N&gt;</div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d.html">   80</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a>&lt;std::array&lt;T, N&gt;, std::enable_if_t&lt;std::is_arithmetic_v&lt;T&gt;, void&gt;&gt; {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d.html#a5869e7815f454d8eabf7ae32a5a237b7">   88</a></span>&#160;  constexpr std::size_t <a class="code" href="structbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d.html#a5869e7815f454d8eabf7ae32a5a237b7">operator()</a>(<span class="keyword">const</span> std::array&lt;T, N&gt;&amp; array, <span class="keywordtype">double</span> resolution = 1.)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">return</span> detail::hash_impl(array, resolution, std::make_index_sequence&lt;N&gt;());</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>Tuple, <span class="keyword">class</span>... Types&gt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f.html">   95</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a>&lt;Tuple&lt;Types...&gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt;Types&gt; &amp;&amp; ...), void&gt;&gt; {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f.html#ae1e93679e540a31105df0c037c44a9c5">  103</a></span>&#160;  constexpr std::size_t <a class="code" href="structbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f.html#ae1e93679e540a31105df0c037c44a9c5">operator()</a>(<span class="keyword">const</span> Tuple&lt;Types...&gt;&amp; tuple, <span class="keywordtype">double</span> resolution = 1.)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">return</span> detail::hash_impl(tuple, resolution, std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(Types)&gt;());</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;};</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html">  112</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a>&lt;Sophus::SE2d, void&gt; {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="structbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#a5fbe18a2b02c7eda8b180f54d64ec794">  120</a></span>&#160;  std::size_t <a class="code" href="structbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#a5fbe18a2b02c7eda8b180f54d64ec794">operator()</a>(<span class="keyword">const</span> Sophus::SE2d&amp; state, <span class="keywordtype">double</span> resolution = 1.)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; position = <a class="code" href="particle__traits_8hpp.html#ac3c1a0c8eb406538bb4e6bcc1d1066d5">state</a>.translation();</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash&lt;std::tuple&lt;double, double&gt;</a>&gt;{}(std::make_tuple(position.x(), position.y()), resolution);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  }</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;};</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aparticle__traits_8hpp_html_ac3c1a0c8eb406538bb4e6bcc1d1066d5"><div class="ttname"><a href="particle__traits_8hpp.html#ac3c1a0c8eb406538bb4e6bcc1d1066d5">beluga::state</a></div><div class="ttdeci">constexpr decltype(auto) state(T &amp;&amp;particle)</div><div class="ttdoc">Gets the state of a particle.</div><div class="ttdef"><b>Definition:</b> particle_traits.hpp:143</div></div>
-<div class="ttc" id="aspatial__hash_8hpp_html_a65f08b6a6a0d1263bd7cce2ada16195d"><div class="ttname"><a href="spatial__hash_8hpp.html#a65f08b6a6a0d1263bd7cce2ada16195d">beluga::detail::floor_and_shift</a></div><div class="ttdeci">constexpr std::size_t floor_and_shift(double value)</div><div class="ttdoc">Returns the floor of a value shifted.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:46</div></div>
-<div class="ttc" id="aspatial__hash_8hpp_html_a8c5ede0d0680fb8129afdd407c46fdcf"><div class="ttname"><a href="spatial__hash_8hpp.html#a8c5ede0d0680fb8129afdd407c46fdcf">beluga::detail::hash_impl</a></div><div class="ttdeci">constexpr std::size_t hash_impl(const T &amp;value, double resolution, [[maybe_unused]] std::index_sequence&lt; Ids... &gt; index_sequence)</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:68</div></div>
-<div class="ttc" id="astructbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4_html_a5fbe18a2b02c7eda8b180f54d64ec794"><div class="ttname"><a href="structbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#a5fbe18a2b02c7eda8b180f54d64ec794">beluga::spatial_hash&lt; Sophus::SE2d, void &gt;::operator()</a></div><div class="ttdeci">std::size_t operator()(const Sophus::SE2d &amp;state, double resolution=1.) const</div><div class="ttdoc">Calculates the tuple hash, using the given resolution for both the x and y translation coordinates.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:121</div></div>
-<div class="ttc" id="astructbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f_html_ae1e93679e540a31105df0c037c44a9c5"><div class="ttname"><a href="structbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f.html#ae1e93679e540a31105df0c037c44a9c5">beluga::spatial_hash&lt; Tuple&lt; Types... &gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt; Types &gt; &amp;&amp;...), void &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr std::size_t operator()(const Tuple&lt; Types... &gt; &amp;tuple, double resolution=1.) const</div><div class="ttdoc">Calculates the tuple hash, using the given resolution in all axes.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:104</div></div>
-<div class="ttc" id="astructbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d_html_a5869e7815f454d8eabf7ae32a5a237b7"><div class="ttname"><a href="structbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d.html#a5869e7815f454d8eabf7ae32a5a237b7">beluga::spatial_hash&lt; std::array&lt; T, N &gt;, std::enable_if_t&lt; std::is_arithmetic_v&lt; T &gt;, void &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr std::size_t operator()(const std::array&lt; T, N &gt; &amp;array, double resolution=1.) const</div><div class="ttdoc">Calculates the array hash, using the given resolution in all axes.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:89</div></div>
-<div class="ttc" id="astructbeluga_1_1spatial__hash_html"><div class="ttname"><a href="structbeluga_1_1spatial__hash.html">beluga::spatial_hash</a></div><div class="ttdoc">Callable class, allowing to calculate the hash of a particle state.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:77</div></div>
+<div class="ttc" id="aspatial__hash_8hpp_html_a65f08b6a6a0d1263bd7cce2ada16195d"><div class="ttname"><a href="spatial__hash_8hpp.html#a65f08b6a6a0d1263bd7cce2ada16195d">beluga::detail::floor_and_shift</a></div><div class="ttdeci">constexpr std::size_t floor_and_shift(double value)</div><div class="ttdoc">Returns the floor of a value shifted.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:45</div></div>
+<div class="ttc" id="aspatial__hash_8hpp_html_a8c5ede0d0680fb8129afdd407c46fdcf"><div class="ttname"><a href="spatial__hash_8hpp.html#a8c5ede0d0680fb8129afdd407c46fdcf">beluga::detail::hash_impl</a></div><div class="ttdeci">constexpr std::size_t hash_impl(const T &amp;value, double resolution, [[maybe_unused]] std::index_sequence&lt; Ids... &gt; index_sequence)</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:67</div></div>
+<div class="ttc" id="astructbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4_html_a5fbe18a2b02c7eda8b180f54d64ec794"><div class="ttname"><a href="structbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#a5fbe18a2b02c7eda8b180f54d64ec794">beluga::spatial_hash&lt; Sophus::SE2d, void &gt;::operator()</a></div><div class="ttdeci">std::size_t operator()(const Sophus::SE2d &amp;state, double resolution=1.) const</div><div class="ttdoc">Calculates the tuple hash, using the given resolution for both the x and y translation coordinates.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:120</div></div>
+<div class="ttc" id="astructbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f_html_ae1e93679e540a31105df0c037c44a9c5"><div class="ttname"><a href="structbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1f57d58cb18dc126fae09a260d9d5548f.html#ae1e93679e540a31105df0c037c44a9c5">beluga::spatial_hash&lt; Tuple&lt; Types... &gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt; Types &gt; &amp;&amp;...), void &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr std::size_t operator()(const Tuple&lt; Types... &gt; &amp;tuple, double resolution=1.) const</div><div class="ttdoc">Calculates the tuple hash, using the given resolution in all axes.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:103</div></div>
+<div class="ttc" id="astructbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d_html_a5869e7815f454d8eabf7ae32a5a237b7"><div class="ttname"><a href="structbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01s61d7c21e45759b442cf64355d3d5683d.html#a5869e7815f454d8eabf7ae32a5a237b7">beluga::spatial_hash&lt; std::array&lt; T, N &gt;, std::enable_if_t&lt; std::is_arithmetic_v&lt; T &gt;, void &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr std::size_t operator()(const std::array&lt; T, N &gt; &amp;array, double resolution=1.) const</div><div class="ttdoc">Calculates the array hash, using the given resolution in all axes.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:88</div></div>
+<div class="ttc" id="astructbeluga_1_1spatial__hash_html"><div class="ttname"><a href="structbeluga_1_1spatial__hash.html">beluga::spatial_hash</a></div><div class="ttdoc">Callable class, allowing to calculate the hash of a particle state.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:76</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
