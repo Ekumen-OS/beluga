@@ -1,0 +1,14 @@
+<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/tuple_vector.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/tuple_vector.hpp">
+<area shape="rect" id="node1" title="Implementation of a tuple of containers." alt="" coords="151,5,384,61"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,363,60,389"/>
+<area shape="rect" id="node3" title=" " alt="" coords="96,109,159,136"/>
+<area shape="rect" id="node4" href="$type__traits_8hpp.html" title="Includes all beluga type traits." alt="" coords="183,109,351,136"/>
+<area shape="rect" id="node11" title=" " alt="" coords="375,109,557,136"/>
+<area shape="rect" id="node12" title=" " alt="" coords="581,109,746,136"/>
+<area shape="rect" id="node5" href="$container__traits_8hpp.html" title="Useful traits for containers." alt="" coords="332,273,488,315"/>
+<area shape="rect" id="node8" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="195,184,339,225"/>
+<area shape="rect" id="node6" title=" " alt="" coords="319,363,411,389"/>
+<area shape="rect" id="node7" title=" " alt="" coords="435,363,598,389"/>
+<area shape="rect" id="node9" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="121,281,257,307"/>
+<area shape="rect" id="node10" title=" " alt="" coords="83,363,294,389"/>
+</map>

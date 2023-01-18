@@ -1,0 +1,14 @@
+/* Highlight inline code in paragraphs and description list elements */
+p > code, dd > code {
+    background-color: #ecedf0;
+    border-radius: .5rem;
+    padding: 0 .3rem;
+}
+
+/* Highlight multiline code fragments */
+div.fragment {
+    background-color: #ecedf0;
+    border-radius: .5rem;
+    padding: 0 .3rem;
+    border: unset;
+}
