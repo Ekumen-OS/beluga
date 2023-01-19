@@ -45,18 +45,18 @@
  * - A possibly const instance `cp` of `T`.
  *
  * The following is satisfied:
- * - `particle_traits<T>::state_type` is a valid type.
- * - `particle_traits<T>::state(cp)` returns an instance of `particle_traits<T>::state_type`.
- * - Given `s` an instance of `particle_traits<T>::state_type`, `particle_traits<T>::state(p) = s`
- *   is a valid expression and assigns the state `s` to the particle `p`.
- *   i.e. after the assignment `s == particle_traits<T>::state(p)` is `true`.
- * - `particle_traits<T>::weight_type` is a valid arithmetic type (that is, an integral
+ * - \c particle_traits<T>::state_type is a valid type.
+ * - \c particle_traits<T>::state(cp) returns an instance of \c particle_traits<T>::state_type.
+ * - Given `s` an instance of \c particle_traits<T>::state_type, \c particle_traits<T>::state(p) = `s`
+ *   is a valid expression and assigns the state `s` to the particle `p`. \n
+ *   i.e. after the assignment `s` == \c particle_traits<T>::state(p) is `true`.
+ * - \c particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
  *   type or a floating-point type).
- * - `particle_traits<T>::weight(cp)` is a valid expression and the return type is
- *   `particle_traits<T>::weight_type`.
- * - Given `w` an instance of `particle_traits<T>::weight_type`, `particle_traits<T>::weight(p) = w`
- *   is a valid expression and assigns the weight `w` to the particle `p`.
- *   i.e. after the assignment `w == particle_traits<T>::weight(p)` is `true`.
+ * - \c particle_traits<T>::weight(cp) is a valid expression and the return type is
+ *   \c particle_traits<T>::weight_type.
+ * - Given `w` an instance of \c particle_traits<T>::weight_type, \c particle_traits<T>::weight(p) = `w`
+ *   is a valid expression and assigns the weight `w` to the particle `p`. \n
+ *   i.e. after the assignment `w` == \c particle_traits<T>::weight(p) is `true`.
  */
 
 /**
@@ -113,13 +113,14 @@ namespace beluga {
  * BootstrapParticleFilter<Mixin, Container> is an implementation of the
  * \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
  *
- * `particle_traits<typename Container::value_type>::state_type` must be the same as
- * the state_type of the sensor and motion model.
+ * Given `T`, the type named by \c Container::value_type,
+ * - \c particle_traits<T>::state_type must be the same as the `state_type` of the sensor
+ *   and motion model.
  *
- * `particle_traits<typename Container::value_type>::weight_type` must be the same as the weight
- * type used in the sensor mode.
+ * - \c particle_traits<T>::weight_type must be the same as the `weight_type` used in the
+ *   sensor mode.
  *
- * \tparam The mixed-in type. An instance m of Mixin must provide a protected method,
+ * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
  *  `m.self()`. The return type of `m.self()` must satisfy:
  * - \ref ParticleResamplingPage "ParticleResampling"
  * - \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
@@ -138,8 +139,8 @@ struct BootstrapParticleFilter : public Mixin {
 
   /// Constructs a BootstrapParticleFilter.
   /**
-   * The initial particles are generated using the ParticleBaselineGeneration implementation of
-   * Mixin.
+   * The initial particles are generated using the \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
+   * implementation of `Mixin`.
    *
    * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param ...args arguments that are not used by this part of the mixin, but by others.
@@ -168,7 +169,7 @@ struct BootstrapParticleFilter : public Mixin {
   /// Reinitializes the filter with a given range view to the new particle states.
   /**
    * The particle filter will be initialized with the first `max_samples` states of the range,
-   * determined by the ParticleResampling named requirements.
+   * determined by the \ref ParticleResamplingPage "ParticleResampling" named requirements.
    *
    * \tparam View Range view type whose elements are of the same type as `particle_type::state_type`.
    * \param states A state range view to reinitialize the filter.
@@ -190,8 +191,8 @@ struct BootstrapParticleFilter : public Mixin {
 
   /// Update the particles states based on the motion model and the last pose update.
   /**
-   * The update will be done based on the Mixin implementation of the MotionModel named
-   * requirement.
+   * The update will be done based on the `Mixin` implementation of the
+   * \ref MotionModelPage "MotionModel" named requirement.
    */
   void sample() {
     const auto states = views::states(particles_);
@@ -202,8 +203,8 @@ struct BootstrapParticleFilter : public Mixin {
 
   /// Update the particle weights based on the sensor model.
   /**
-   * The update will be done based on the Mixin implementation of the SensorModel named
-   * requirement.
+   * The update will be done based on the `Mixin` implementation of the \ref SensorModelPage "SensorModel"
+   * named requirement.
    */
   void importance_sample() {
     const auto states = views::states(particles_);
@@ -214,8 +215,9 @@ struct BootstrapParticleFilter : public Mixin {
 
   /// Resample particles based on ther weights and the resampling policy used.
   /**
-   * The update will be done based on the Mixin implementation of the ParticleSampledGeneration and
-   * ParticleResampling named requirements.
+   * The update will be done based on the Mixin implementation of the
+   * \ref ParticleSampledGenerationPage "ParticleSampledGeneration" and
+   * \ref ParticleResamplingPage "ParticleResampling" named requirements.
    */
   void resample() {
     particles_ = initialize_container(this->self().generate_samples_from(particles_) | this->self().take_samples());
@@ -248,8 +250,8 @@ struct BootstrapParticleFilter : public Mixin {
  * MCL<U, M, S, C> is an implementation of the \ref ParticleFilterPage "ParticleFilter"
  * named requirements.
  *
- * \tparam MotionModel MotionModel<MCL> must implement the MotionModel named requirement.
- * \tparam SensorModel MotionModel<MCL> must implement the SensorModel named requirement.
+ * \tparam MotionModel MotionModel<AMCL> must implement the \ref MotionModelPage "MotionModel" named requirement.
+ * \tparam SensorModel MotionModel<AMCL> must implement the \ref SensorModelPage "SensorModel" named requirement.
  * \tparam State The state of the particle type.
  * \tparam Container The particle container type.
  *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.
@@ -286,8 +288,8 @@ struct MCL : public ciabatta::mixin<
  * AMCL<U, M, S, C> is an implementation of the \ref ParticleFilterPage "ParticleFilter"
  * named requirements.
  *
- * \tparam MotionModel MotionModel<AMCL> must implement the MotionModel named requirement.
- * \tparam SensorModel MotionModel<AMCL> must implement the SensorModel named requirement.
+ * \tparam MotionModel MotionModel<AMCL> must implement the \ref MotionModelPage "MotionModel" named requirement.
+ * \tparam SensorModel MotionModel<AMCL> must implement the \ref SensorModelPage "SensorModel" named requirement.
  * \tparam State The state of the particle type.
  * \tparam Container The particle container type.
  *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.

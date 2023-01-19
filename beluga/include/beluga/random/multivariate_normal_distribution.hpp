@@ -29,7 +29,7 @@ namespace beluga {
 
 /// Multivariate normal distribution.
 /**
- * MultivariateNormalDistribution<Matrix> is an implementation of the
+ * `MultivariateNormalDistribution<Matrix>` is an implementation of the
  * \ref RandomStateDistributionRequirements "RandomStateDistribution" named requirements that
  * represents a multi-dimensional normal distribution of real-valued random variables.
  *
@@ -57,7 +57,7 @@ class MultivariateNormalDistribution {
 
     /// Constructs a parameter set instance.
     /**
-     * \tparam InputType The input type derived from EigenBase.
+     * \tparam InputType The input type derived from `EigenBase`.
      * \param covariance Real symmetric matrix that represents the covariance of the random variable.
      *
      * \throw std::runtime_error If the provided covariance is invalid.
@@ -67,7 +67,7 @@ class MultivariateNormalDistribution {
 
     /// Constructs a parameter set instance.
     /**
-     * \tparam InputType The input type derived from EigenBase.
+     * \tparam InputType The input type derived from `EigenBase`.
      * \param mean A vector that represents the mean value of the random variable.
      * \param covariance Real symmetric matrix that represents the covariance of the random variable.
      *
@@ -80,7 +80,7 @@ class MultivariateNormalDistribution {
     /// Compares this object with other parameter set object.
     /**
      * \param other Parameter set object to compare against.
-     * \return true if the objects are equal, false otherwise.
+     * \return True if the objects are equal, false otherwise.
      */
     [[nodiscard]] bool operator==(const Param& other) const {
       return mean_ == other.mean_ && transform_ == other.transform_;
@@ -89,7 +89,7 @@ class MultivariateNormalDistribution {
     /// Compares this object with other parameter set object.
     /**
      * \param other Parameter set object to compare against.
-     * \return true if the objects are not equal, false otherwise.
+     * \return True if the objects are not equal, false otherwise.
      */
     [[nodiscard]] bool operator!=(const Param& other) const { return !(*this == other); }
 
@@ -137,7 +137,7 @@ class MultivariateNormalDistribution {
 
   /// Constructs a MultivariateNormalDistribution with zero mean and the given covariance.
   /**
-   * \tparam InputType The input type derived from EigenBase.
+   * \tparam InputType The input type derived from `EigenBase`.
    * \param covariance Real symmetric matrix that represents the covariance of the random variable.
    *
    * \throw std::runtime_error If the provided covariance is invalid.
@@ -147,7 +147,7 @@ class MultivariateNormalDistribution {
 
   /// Constructs a MultivariateNormalDistribution with the given mean and covariance.
   /**
-   * \tparam InputType The input type derived from EigenBase.
+   * \tparam InputType The input type derived from `EigenBase`.
    * \param mean A vector that represents the mean value of the random variable.
    * \param covariance Real symmetric matrix that represents the covariance of the random variable.
    *
@@ -203,7 +203,7 @@ class MultivariateNormalDistribution {
    * In other words, if they are invoked with equal generators, they generate the same sequence.
    *
    * \param other Distribution object to compare against.
-   * \return true if the objects are equal, false otherwise.
+   * \return True if the objects are equal, false otherwise.
    */
   [[nodiscard]] bool operator==(const MultivariateNormalDistribution<Matrix>& other) const {
     return params_ == other.params_ && distribution_ == other.distribution_;
@@ -215,7 +215,7 @@ class MultivariateNormalDistribution {
    * In other words, if they are invoked with equal generators, they generate the same sequence.
    *
    * \param other Distribution object to compare against.
-   * \return true if the objects are not equal, false otherwise.
+   * \return True if the objects are not equal, false otherwise.
    */
   [[nodiscard]] bool operator!=(const MultivariateNormalDistribution<Matrix>& other) const { return !(*this == other); }
 

@@ -33,12 +33,12 @@ namespace beluga {
 /// Calculates the covariance of a range given its mean.
 /**
  * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
- *  Range::value_type is Eigen::Vector2<Scalar>.
+ *  `Range::value_type` is `Eigen::Vector2<Scalar>`.
  * \tparam Scalar An scalar type, e.g. double or float.
  * \param range Range to be used to calculate the covariance.
  * \param mean The previously calculated mean of range. The value must be correct for the resulting
  *  covariance to be correct.
- * \return The calculated covariance, as a Eigen::Matrix2<Scalar>.
+ * \return The calculated covariance, as a `Eigen::Matrix2<Scalar>`.
  */
 template <class Range, class Scalar>
 Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scalar>& mean) {
@@ -76,7 +76,7 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
  * This class satisfies the \ref StateEstimationPage "StateEstimation" named requirements.
  *
  * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
- *  m.self(). The return type of m.self() must satisfy the
+ *  `m.self()`. The return type of `m.self()` must satisfy the
  *  \ref BaseParticleFilterPage BaseParticleFilter named requirements.
  */
 template <class Mixin>

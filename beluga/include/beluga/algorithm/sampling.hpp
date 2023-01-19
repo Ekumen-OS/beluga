@@ -91,8 +91,8 @@ namespace beluga {
 
 /// Selects between executing one function or another randomly.
 /**
- * \tparam Function1 Callable type, with prototype () -> Ret.
- * \tparam Function2 Callable type, with prototype () -> Ret.
+ * \tparam Function1 Callable type, with prototype `() -> Ret`.
+ * \tparam Function2 Callable type, with prototype `() -> Ret`.
  *   The return type of both Function1 and Function2 must be the same.
  * \tparam RandomNumberGenerator Must meet the requirements of
  *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator).
@@ -103,7 +103,7 @@ namespace beluga {
  *  In the rest of the cases, second is called.
  *  A Bernoully distribution is used.
  * \return The result of the called function.
- *  The return type is decltype(first()).
+ *  The return type is `decltype(first())`.
  */
 template <class Function1, class Function2, class RandomNumberGenerator>
 auto random_select(Function1 first, Function2 second, RandomNumberGenerator& generator, double probability) {
@@ -124,10 +124,10 @@ auto random_select(Function1 first, Function2 second, RandomNumberGenerator& gen
  * \param samples The container of samples to be picked.
  * \param weights The weights of the samples to be picked.
  *  The size of the container must be the same as the size of samples.
- *  For a sample samples[i], its weight is weights[i].
+ *  For a sample `samples[i]`, its weight is `weights[i]`.
  * \param generator The random number generator used.
  * \return The picked sample.
- *  Its type is the same as the Range value type.
+ *  Its type is the same as the `Range` value type.
  */
 template <class Range, class Weights, class RandomNumberGenerator>
 auto random_sample(const Range& samples, const Weights& weights, RandomNumberGenerator& generator) {
@@ -140,11 +140,11 @@ auto random_sample(const Range& samples, const Weights& weights, RandomNumberGen
 /// Returns a callable object that allows setting the cluster of a particle.
 /**
  * \param resolution The size along any axis of the spatial cluster cell.
- * \return A callable object with prototype (ParticleT && p) -> ParticleT.
- *  ParticleT must satisfy the \ref ParticlePage "Particle" named requirements.
- *  The expression particle_traits<ParticleT>::cluster(p) must also
- *  be valid and return a `std::size_t &`.
- *  After the returned object is applied to a particle p, cluster(p) will be updated
+ * \return A callable object with prototype `(ParticleT && p) -> ParticleT`. \n
+ *  `ParticleT` must satisfy the \ref ParticlePage "Particle" named requirements. \n
+ *  The expression \c particle_traits<ParticleT>::cluster(p) must also
+ *  be valid and return a `std::size_t &`. \n
+ *  After the returned object is applied to a particle `p`, \c cluster(p) will be updated
  *  with the calculated spatial hash according to the specified resolution.
  */
 inline auto set_cluster(double resolution) {
@@ -159,14 +159,17 @@ inline auto set_cluster(double resolution) {
 /// Returns a callable object that verifies if the kld condition is being satisfied.
 /**
  * The callable object will compute the minimum number of samples based on a Kullback-Leibler
- * distance epsilon between the maximum likelihood estimate and the true distribution.
+ * distance epsilon between the maximum likelihood estimate and the true distribution. \n
  * Z is the upper standard normal quantile for P, where P is the probability
  * that the error in the estimated distribution will be less than epsilon.
+ *
  * Here are some examples:
- * - P = 0.900 -> Z = 1.28155156327703
- * - P = 0.950 -> Z = 1.64485362793663
- * - P = 0.990 -> Z = 2.32634787735669
- * - P = 0.999 -> Z = 3.09023224677087
+ * | P     | Z                |
+ * |-------|------------------|
+ * | 0.900 | 1.28155156327703 |
+ * | 0.950 | 1.64485362793663 |
+ * | 0.990 | 2.32634787735669 |
+ * | 0.999 | 3.09023224677087 |
  *
  * If the computed value is less than what the min argument specifies, then min will be returned.
  *
@@ -175,12 +178,12 @@ inline auto set_cluster(double resolution) {
  *  distrubution.
  * \param z Upper standard normal quantile for the probability that the error in the
  *  estimated distribution is less than epsilon.
- * \return A callable object with prototype (std::size_t hash) -> bool.
- *  hash is the spatial hash of the particle being added.
+ * \return A callable object with prototype `(std::size_t hash) -> bool`.
+ *  `hash` is the spatial hash of the particle being added. \n
  *  The returned callable object is stateful, tracking the total number of particles and
- *  the particle clusters based on the spatial hash.
- *  The return value will be false when the number of particles is more than the minimum
- *  and the kld condition is satisfied, if not it will be true.
+ *  the particle clusters based on the spatial hash. \n
+ *  The return value of the callable will be false when the number of particles is more than the minimum
+ *  and the kld condition is satisfied, if not it will be true. \n
  *  i.e. A return value of true means that you need to keep sampling to satisfy the condition.
  */
 inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
@@ -206,8 +209,9 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
  * An implementation of the \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
  * named requirements.
  *
- * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
- *  m.self(). The return type of m.self() must satisfy the SensorModel named requirements.
+ * \tparam Mixin The mixed-in type. An instance `m` of `Mixin` must provide a protected method,
+ *  `m.self()`. The return type of `m.self()` must satisfy the \ref SensorModelPage "SensorModel"
+ *  named requirements.
  * \tparam RandomNumberGenerator A random number generator, must satisfy the
  *  [UniformRandomBitGenerator](
  *  https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator) requirements.
@@ -229,7 +233,7 @@ struct BaselineGeneration : public Mixin {
    * model. See \ref SensorModelPage "SensorModel".
    *
    * \tparam Particle The particle type, must satisfy the \ref ParticlePage "Particle" named requirements.
-   * \return range with the generated particles.
+   * \return A range with the generated particles.
    */
   template <class Particle>
   [[nodiscard]] auto generate_samples() {
@@ -290,10 +294,10 @@ struct AdaptiveGenerationParam {
  * The addition of random samples allows the filter to recover.
  * It determines how many random particles to add by averaging the weights of the particles.
  * The estimate used considers a short-term and a long-term average.
- * See Probabilistic Robotics \cite thrun2005probabilistic, Chapter `8.3.3`.
+ * See Probabilistic Robotics \cite thrun2005probabilistic, Chapter 8.3.3.
  *
  * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
- *  m.self(). The return type of m.self() must satisfy the SensorModel named requirements.
+ *  `m.self()`. The return type of `m.self()` must satisfy the \ref SensorModelPage "SensorModel" named requirements.
  * \tparam RandomNumberGenerator A random number generator, must satisfy the
  *  [UniformRandomBitGenerator](
  *  https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator) requirements.
@@ -318,7 +322,7 @@ struct AdaptiveGeneration : public Mixin {
   /// Generates new particles from the given input particles.
   /**
    * A random state will be generated with a probability of
-   * P = max(0, 1 - fast_filter_average / slow_filter_average)
+   * `P = max(0, 1 - fast_filter_average / slow_filter_average)`
    * where the filters are configured according to param_type specified in the constructor.
    * If not, a previous particle will be sampled.
    *
@@ -385,7 +389,7 @@ struct FixedResampling : public Mixin {
   /// Returns the minimum number of particles to be sampled.
   /**
    * This policy uses a fixed number of particles, so the return value is equal
-   * to this->max_samples() and also to FixedResamplingParam::max_samples parameter
+   * to max_samples() and also to FixedResamplingParam::max_samples parameter
    * specified in the constructor.
    *
    * \return Minimum number of particles to be sampled.
@@ -394,7 +398,7 @@ struct FixedResampling : public Mixin {
   /// Returns the maximum number of particles to be sampled.
   /**
    * This policy uses a fixed number of particles, so the return value is equal
-   * to this->min_samples() and also to FixedResamplingParam::max_samples parameter
+   * to min_samples() and also to FixedResamplingParam::max_samples parameter
    * specified in the constructor.
    *
    * \return Maximum number of particles to be sampled.
@@ -473,11 +477,11 @@ struct KldResampling : public Mixin {
    * It can only be composed with a range whose value type satisfies:
    * - The \ref ParticlePage "Particle" named requirements.
    * - Given `P` the range value type, `p` an instance of `P`, `cp` a possibly const instance of `P`.
-   *   The expression `particle_traits<P>::cluster(cp)` returns a `std::size_t` that represents the spatial
-   *   hash of the particle `cp`.
-   *   Given a `std::size_t` hash, the expression `particle_traits<P>::cluster(p) = hash` is valid and
-   *   assigns the cluster hash to the particle `p`.
-   *   i.e. after the assignment `hash == particle_traits<P>::cluster(p)` is `true`.
+   *   - The expression \c particle_traits<P>::cluster(cp) returns a `std::size_t` that represents the spatial
+   *     hash of the particle `cp`.
+   *   - Given a `std::size_t hash`, the expression \c particle_traits<P>::cluster(p) = `hash` is valid and
+   *     assigns the cluster hash to the particle `p`. \n
+   *     i.e. after the assignment `hash` == \c particle_traits<P>::cluster(p) is true.
    */
   [[nodiscard]] auto take_samples() const {
     return ranges::views::transform(set_cluster(parameters_.spatial_resolution)) |

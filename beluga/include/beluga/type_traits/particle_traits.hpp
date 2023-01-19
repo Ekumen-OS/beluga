@@ -42,7 +42,7 @@ struct decay_tuple_types<Tuple<Types...>> {
   using type = Tuple<std::decay_t<Types>...>;
 };
 
-/// Same as `decay_tuple_types<T>::type`.
+/// Same as decay_tuple_types<T>::type.
 template <class T>
 using decay_tuple_types_t = typename decay_tuple_types<T>::type;
 
@@ -53,7 +53,7 @@ struct decay_tuple {
   using type = decay_tuple_types_t<std::decay_t<T>>;
 };
 
-/// Same as `decay_tuple<T>::type`.
+/// Same as decay_tuple<T>::type.
 template <class T>
 using decay_tuple_t = typename decay_tuple<T>::type;
 
@@ -243,7 +243,7 @@ constexpr auto clusters(Container&& container) {
 /**
  * \tparam Particle The particle type to be used.
  * \tparam T The particle state type.
- *  T must be convertible to `particle_traits<Particle>::state_type`.
+ *  T must be convertible to \c particle_traits<Particle>::state_type.
  * \param value The state to make the particle from.
  * \return The new particle, created from the given state.
  */
