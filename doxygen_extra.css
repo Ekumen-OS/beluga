@@ -1,8 +1,9 @@
-/* Highlight inline code in paragraphs and description list elements */
-p > code, dd > code {
+/* Highlight inline code in paragraphs, tables and list elements */
+p > code, dd > code, li > code, td > code {
     background-color: #ecedf0;
     border-radius: .5rem;
     padding: 0 .3rem;
+    font-size: 0.8rem;
 }
 
 /* Highlight multiline code fragments */

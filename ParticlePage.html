@@ -77,10 +77,12 @@ Requirements</h1>
 <p>The following is satisfied:</p><ul>
 <li><code>particle_traits&lt;T&gt;::state_type</code> is a valid type.</li>
 <li><code>particle_traits&lt;T&gt;::state(cp)</code> returns an instance of <code>particle_traits&lt;T&gt;::state_type</code>.</li>
-<li>Given <code>s</code> an instance of <code>particle_traits&lt;T&gt;::state_type</code>, <code>particle_traits&lt;T&gt;::state(p) = s</code> is a valid expression and assigns the state <code>s</code> to the particle <code>p</code>. i.e. after the assignment <code>s == particle_traits&lt;T&gt;::state(p)</code> is <code>true</code>.</li>
+<li>Given <code>s</code> an instance of <code>particle_traits&lt;T&gt;::state_type</code>, <code>particle_traits&lt;T&gt;::state(p)</code> = <code>s</code> is a valid expression and assigns the state <code>s</code> to the particle <code>p</code>. <br  />
+ i.e. after the assignment <code>s</code> == <code>particle_traits&lt;T&gt;::state(p)</code> is <code>true</code>.</li>
 <li><code>particle_traits&lt;T&gt;::weight_type</code> is a valid arithmetic type (that is, an integral type or a floating-point type).</li>
 <li><code>particle_traits&lt;T&gt;::weight(cp)</code> is a valid expression and the return type is <code>particle_traits&lt;T&gt;::weight_type</code>.</li>
-<li>Given <code>w</code> an instance of <code>particle_traits&lt;T&gt;::weight_type</code>, <code>particle_traits&lt;T&gt;::weight(p) = w</code> is a valid expression and assigns the weight <code>w</code> to the particle <code>p</code>. i.e. after the assignment <code>w == particle_traits&lt;T&gt;::weight(p)</code> is <code>true</code>. </li>
+<li>Given <code>w</code> an instance of <code>particle_traits&lt;T&gt;::weight_type</code>, <code>particle_traits&lt;T&gt;::weight(p)</code> = <code>w</code> is a valid expression and assigns the weight <code>w</code> to the particle <code>p</code>. <br  />
+ i.e. after the assignment <code>w</code> == <code>particle_traits&lt;T&gt;::weight(p)</code> is <code>true</code>. </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

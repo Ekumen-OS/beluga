@@ -159,11 +159,13 @@ struct beluga::BootstrapParticleFilter&lt; Mixin, Container &gt;</h3>
 
 <p>Base implementation of a particle filter. </p>
 <p>BootstrapParticleFilter&lt;Mixin, Container&gt; is an implementation of the <a class="el" href="BaseParticleFilterPage.html">BaseParticleFilter</a> named requirements.</p>
-<p><code><a class="el" href="structbeluga_1_1particle__traits.html" title="Common traits of all particle types. See Page requirements as well.">particle_traits</a>&lt;typename Container::value_type&gt;::state_type</code> must be the same as the state_type of the sensor and motion model.</p>
-<p><code><a class="el" href="structbeluga_1_1particle__traits.html" title="Common traits of all particle types. See Page requirements as well.">particle_traits</a>&lt;typename Container::value_type&gt;::weight_type</code> must be the same as the weight type used in the sensor mode.</p>
+<p>Given <code>T</code>, the type named by <code>Container::value_type</code>,</p><ul>
+<li><code>particle_traits&lt;T&gt;::state_type</code> must be the same as the <code>state_type</code> of the sensor and motion model.</li>
+<li><code>particle_traits&lt;T&gt;::weight_type</code> must be the same as the <code>weight_type</code> used in the sensor mode.</li>
+</ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">The</td><td>mixed-in type. An instance m of Mixin must provide a protected method, <code>m.self()</code>. The return type of <code>m.self()</code> must satisfy:<ul>
+    <tr><td class="paramname">Mixin</td><td>The mixed-in type. An instance m of Mixin must provide a protected method, <code>m.self()</code>. The return type of <code>m.self()</code> must satisfy:<ul>
 <li><a class="el" href="ParticleResamplingPage.html">ParticleResampling</a></li>
 <li><a class="el" href="ParticleBaselineGenerationPage.html">ParticleBaselineGeneration</a></li>
 <li><a class="el" href="ParticleSampledGenerationPage.html">ParticleSampledGeneration</a></li>
@@ -205,7 +207,7 @@ template&lt;class... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>Constructs a <a class="el" href="structbeluga_1_1BootstrapParticleFilter.html" title="Base implementation of a particle filter.">BootstrapParticleFilter</a>. </p>
-<p>The initial particles are generated using the ParticleBaselineGeneration implementation of Mixin.</p>
+<p>The initial particles are generated using the <a class="el" href="ParticleBaselineGenerationPage.html">ParticleBaselineGeneration</a> implementation of <code>Mixin</code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">...Args</td><td>Arguments types for the remaining mixin constructors. </td></tr>
@@ -248,7 +250,7 @@ template&lt;class Mixin , class Container &gt; </div>
 </div><div class="memdoc">
 
 <p>Update the particle weights based on the sensor model. </p>
-<p>The update will be done based on the Mixin implementation of the SensorModel named requirement. </p>
+<p>The update will be done based on the <code>Mixin</code> implementation of the <a class="el" href="SensorModelPage.html">SensorModel</a> named requirement. </p>
 
 </div>
 </div>
@@ -281,7 +283,7 @@ template&lt;class View &gt; </div>
 </div><div class="memdoc">
 
 <p>Reinitializes the filter with a given range view to the new particle states. </p>
-<p>The particle filter will be initialized with the first <code>max_samples</code> states of the range, determined by the ParticleResampling named requirements.</p>
+<p>The particle filter will be initialized with the first <code>max_samples</code> states of the range, determined by the <a class="el" href="ParticleResamplingPage.html">ParticleResampling</a> named requirements.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">View</td><td>Range view type whose elements are of the same type as <code>particle_type::state_type</code>. </td></tr>
@@ -323,7 +325,7 @@ template&lt;class Mixin , class Container &gt; </div>
 </div><div class="memdoc">
 
 <p>Resample particles based on ther weights and the resampling policy used. </p>
-<p>The update will be done based on the Mixin implementation of the ParticleSampledGeneration and ParticleResampling named requirements. </p>
+<p>The update will be done based on the Mixin implementation of the <a class="el" href="ParticleSampledGenerationPage.html">ParticleSampledGeneration</a> and <a class="el" href="ParticleResamplingPage.html">ParticleResampling</a> named requirements. </p>
 
 </div>
 </div>
@@ -353,7 +355,7 @@ template&lt;class Mixin , class Container &gt; </div>
 </div><div class="memdoc">
 
 <p>Update the particles states based on the motion model and the last pose update. </p>
-<p>The update will be done based on the Mixin implementation of the MotionModel named requirement. </p>
+<p>The update will be done based on the <code>Mixin</code> implementation of the <a class="el" href="MotionModelPage.html">MotionModel</a> named requirement. </p>
 
 </div>
 </div>

@@ -118,10 +118,10 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><h3>template&lt;class Mixin, class RandomNumberGenerator = typename std::mt19937&gt;<br />
 struct beluga::AdaptiveGeneration&lt; Mixin, RandomNumberGenerator &gt;</h3>
 
-<p>Generation of samples from input particles, adding random particles if all remaining particles are not close to the correct state. The addition of random samples allows the filter to recover. It determines how many random particles to add by averaging the weights of the particles. The estimate used considers a short-term and a long-term average. See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[1]</a>, Chapter <code>8.3.3</code>.</p>
+<p>Generation of samples from input particles, adding random particles if all remaining particles are not close to the correct state. The addition of random samples allows the filter to recover. It determines how many random particles to add by averaging the weights of the particles. The estimate used considers a short-term and a long-term average. See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[1]</a>, Chapter 8.3.3.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mixin</td><td>The mixed-in type. An instance m of Mixin must provide a protected method, m.self(). The return type of m.self() must satisfy the SensorModel named requirements. </td></tr>
+    <tr><td class="paramname">Mixin</td><td>The mixed-in type. An instance m of Mixin must provide a protected method, <code>m.self()</code>. The return type of <code>m.self()</code> must satisfy the <a class="el" href="SensorModelPage.html">SensorModel</a> named requirements. </td></tr>
     <tr><td class="paramname">RandomNumberGenerator</td><td>A random number generator, must satisfy the <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a> requirements. </td></tr>
   </table>
   </dd>
@@ -212,7 +212,7 @@ template&lt;class Range &gt; </div>
 </div><div class="memdoc">
 
 <p>Generates new particles from the given input particles. </p>
-<p>A random state will be generated with a probability of P = max(0, 1 - fast_filter_average / slow_filter_average) where the filters are configured according to param_type specified in the constructor. If not, a previous particle will be sampled.</p>
+<p>A random state will be generated with a probability of <code>P = max(0, 1 - fast_filter_average / slow_filter_average)</code> where the filters are configured according to param_type specified in the constructor. If not, a previous particle will be sampled.</p>
 <p>The filters are reset if P &gt; 0 for the next iteration, to avoid spiraling off into complete randomness.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">

@@ -277,7 +277,12 @@ template&lt;class Mixin &gt; </div>
 </div><div class="memdoc">
 <p>Returns a <a href="https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject">RangeAdaptorObject</a>, that will sample until the kld condition is satisfied. The returned range adaptor object can be composed with a particle range. It can only be composed with a range whose value type satisfies:</p><ul>
 <li>The <a class="el" href="ParticlePage.html">Particle</a> named requirements.</li>
-<li>Given <code>P</code> the range value type, <code>p</code> an instance of <code>P</code>, <code>cp</code> a possibly const instance of <code>P</code>. The expression <code><a class="el" href="structbeluga_1_1particle__traits.html" title="Common traits of all particle types. See Page requirements as well.">particle_traits</a>&lt;P&gt;::cluster(cp)</code> returns a <code>std::size_t</code> that represents the spatial hash of the particle <code>cp</code>. Given a <code>std::size_t</code> hash, the expression <code><a class="el" href="structbeluga_1_1particle__traits.html" title="Common traits of all particle types. See Page requirements as well.">particle_traits</a>&lt;P&gt;::cluster(p) = hash</code> is valid and assigns the cluster hash to the particle <code>p</code>. i.e. after the assignment <code>hash == <a class="el" href="structbeluga_1_1particle__traits.html" title="Common traits of all particle types. See Page requirements as well.">particle_traits</a>&lt;P&gt;::cluster(p)</code> is <code>true</code>. </li>
+<li>Given <code>P</code> the range value type, <code>p</code> an instance of <code>P</code>, <code>cp</code> a possibly const instance of <code>P</code>.<ul>
+<li>The expression <code>particle_traits&lt;P&gt;::cluster(cp)</code> returns a <code>std::size_t</code> that represents the spatial hash of the particle <code>cp</code>.</li>
+<li>Given a <code>std::size_t hash</code>, the expression <code>particle_traits&lt;P&gt;::cluster(p)</code> = <code>hash</code> is valid and assigns the cluster hash to the particle <code>p</code>. <br  />
+ i.e. after the assignment <code>hash</code> == <code>particle_traits&lt;P&gt;::cluster(p)</code> is true. </li>
+</ul>
+</li>
 </ul>
 
 </div>

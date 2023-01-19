@@ -221,12 +221,20 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns a callable object that verifies if the kld condition is being satisfied. </p>
-<p>The callable object will compute the minimum number of samples based on a Kullback-Leibler distance epsilon between the maximum likelihood estimate and the true distribution. Z is the upper standard normal quantile for P, where P is the probability that the error in the estimated distribution will be less than epsilon. Here are some examples:</p><ul>
-<li>P = 0.900 -&gt; Z = 1.28155156327703</li>
-<li>P = 0.950 -&gt; Z = 1.64485362793663</li>
-<li>P = 0.990 -&gt; Z = 2.32634787735669</li>
-<li>P = 0.999 -&gt; Z = 3.09023224677087</li>
-</ul>
+<p>The callable object will compute the minimum number of samples based on a Kullback-Leibler distance epsilon between the maximum likelihood estimate and the true distribution. <br  />
+Z is the upper standard normal quantile for P, where P is the probability that the error in the estimated distribution will be less than epsilon.</p>
+<p>Here are some examples: </p><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">P   </th><th class="markdownTableHeadNone">Z    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">0.900   </td><td class="markdownTableBodyNone">1.28155156327703    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">0.950   </td><td class="markdownTableBodyNone">1.64485362793663    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">0.990   </td><td class="markdownTableBodyNone">2.32634787735669    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">0.999   </td><td class="markdownTableBodyNone">3.09023224677087   </td></tr>
+</table>
 <p>If the computed value is less than what the min argument specifies, then min will be returned.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -236,7 +244,10 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A callable object with prototype (std::size_t hash) -&gt; bool. hash is the spatial hash of the particle being added. The returned callable object is stateful, tracking the total number of particles and the particle clusters based on the spatial hash. The return value will be false when the number of particles is more than the minimum and the kld condition is satisfied, if not it will be true. i.e. A return value of true means that you need to keep sampling to satisfy the condition. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A callable object with prototype <code>(std::size_t hash) -&gt; bool</code>. <code>hash</code> is the spatial hash of the particle being added. <br  />
+ The returned callable object is stateful, tracking the total number of particles and the particle clusters based on the spatial hash. <br  />
+ The return value of the callable will be false when the number of particles is more than the minimum and the kld condition is satisfied, if not it will be true. <br  />
+ i.e. A return value of true means that you need to keep sampling to satisfy the condition. </dd></dl>
 
 </div>
 </div>
@@ -286,12 +297,12 @@ template&lt;class Range , class Weights , class RandomNumberGenerator &gt; </div
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">samples</td><td>The container of samples to be picked. </td></tr>
-    <tr><td class="paramname">weights</td><td>The weights of the samples to be picked. The size of the container must be the same as the size of samples. For a sample samples[i], its weight is weights[i]. </td></tr>
+    <tr><td class="paramname">weights</td><td>The weights of the samples to be picked. The size of the container must be the same as the size of samples. For a sample <code>samples[i]</code>, its weight is <code>weights[i]</code>. </td></tr>
     <tr><td class="paramname">generator</td><td>The random number generator used. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The picked sample. Its type is the same as the Range value type. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The picked sample. Its type is the same as the <code>Range</code> value type. </dd></dl>
 
 </div>
 </div>
@@ -338,8 +349,8 @@ template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt;
 <p>Selects between executing one function or another randomly. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Function1</td><td>Callable type, with prototype () -&gt; Ret. </td></tr>
-    <tr><td class="paramname">Function2</td><td>Callable type, with prototype () -&gt; Ret. The return type of both Function1 and Function2 must be the same. </td></tr>
+    <tr><td class="paramname">Function1</td><td>Callable type, with prototype <code>() -&gt; Ret</code>. </td></tr>
+    <tr><td class="paramname">Function2</td><td>Callable type, with prototype <code>() -&gt; Ret</code>. The return type of both Function1 and Function2 must be the same. </td></tr>
     <tr><td class="paramname">RandomNumberGenerator</td><td>Must meet the requirements of <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a>. </td></tr>
   </table>
   </dd>
@@ -353,7 +364,7 @@ template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt;
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The result of the called function. The return type is decltype(first()). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The result of the called function. The return type is <code>decltype(first())</code>. </dd></dl>
 
 </div>
 </div>
@@ -388,7 +399,10 @@ template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt;
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A callable object with prototype (ParticleT &amp;&amp; p) -&gt; ParticleT. ParticleT must satisfy the <a class="el" href="ParticlePage.html">Particle</a> named requirements. The expression particle_traits&lt;ParticleT&gt;::cluster(p) must also be valid and return a <code>std::size_t &amp;</code>. After the returned object is applied to a particle p, cluster(p) will be updated with the calculated spatial hash according to the specified resolution. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A callable object with prototype <code>(ParticleT &amp;&amp; p) -&gt; ParticleT</code>. <br  />
+ <code>ParticleT</code> must satisfy the <a class="el" href="ParticlePage.html">Particle</a> named requirements. <br  />
+ The expression <code>particle_traits&lt;ParticleT&gt;::cluster(p)</code> must also be valid and return a <code>std::size_t &amp;</code>. <br  />
+ After the returned object is applied to a particle <code>p</code>, <code>cluster(p)</code> will be updated with the calculated spatial hash according to the specified resolution. </dd></dl>
 
 </div>
 </div>
