@@ -25,16 +25,22 @@ jobs:
       - name: Install python packages
         run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
 
+      - name: Cache
+        uses: hendrikmuhs/ccache-action@v1.2.8
+        with:
+          key: ${{ github.job }}
+          verbose: 2
+
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.2.7
         with:
           package-name: beluga beluga_amcl
-          target-ros2-distro:  ${{ env.ROS_DISTRO }}
+          target-ros2-distro: ${{ env.ROS_DISTRO }}
           import-token: ${{ secrets.GITHUB_TOKEN }}
           colcon-defaults: |
             {
               "build": {
-                "mixin": ["coverage-gcc", "coverage-pytest"]
+                "mixin": ["ccache", "coverage-gcc", "coverage-pytest"]
               },
               "test": {
                 "mixin": ["coverage-pytest"]
