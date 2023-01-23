@@ -51,7 +51,11 @@ jobs:
           colcon-defaults: |
             {
               "build": {
-                "mixin": ["ccache", "coverage-gcc", "coverage-pytest"]
+                "mixin": ["coverage-gcc", "coverage-pytest"],
+                "cmake-args": [
+                  "-DCMAKE_C_COMPILER_LAUNCHER=ccache;-o;hash_dir=false;-o;debug=true;&&;ccache;-p;&&;ccache",
+                  "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache;-o;hash_dir=false;-o;debug=true;&&;ccache;-p;&&;ccache"
+                ]
               },
               "test": {
                 "mixin": ["coverage-pytest"]
@@ -68,6 +72,8 @@ jobs:
       - name: Lint
         shell: bash
         run: |
+          cat ros_ws/build/compile_commands.json
+          ls -la ros_ws/src
           ccache --print-stats
           git config --global --add safe.directory $PWD
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
