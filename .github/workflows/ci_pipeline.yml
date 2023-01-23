@@ -38,7 +38,7 @@ jobs:
           # See https://ccache.dev/manual/latest.html#config_hash_dir.
           ccache_options: |
             hash_dir=false
-            sloppiness=
+            sloppiness=system_headers,time_macros,pch_defines,include_file_ctime,include_file_mtime
 
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.2.7
