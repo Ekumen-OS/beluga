@@ -57,6 +57,12 @@ jobs:
             }
           colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
 
+      - name: Upload cache as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ccache
+          path: /github/home/.cache/ccache
+
       - name: Lint
         shell: bash
         run: |
