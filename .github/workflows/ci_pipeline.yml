@@ -32,15 +32,6 @@ jobs:
           api_token: ${{ secrets.GITHUB_TOKEN }}
           update_packager_index: false
           remove_stale_cache: false
-          # Disable hashing of the current working directory to avoid cache misses
-          # when building in two different directories.
-          # This might be an issue if we use the same cache storage for
-          # debug and release builds.
-          # See https://ccache.dev/manual/latest.html#config_hash_dir.
-          ccache_options: |
-            debug=true
-            hash_dir=false
-            sloppiness=system_headers,time_macros,pch_defines,include_file_ctime,include_file_mtime
 
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.2.7
@@ -53,8 +44,8 @@ jobs:
               "build": {
                 "mixin": ["coverage-gcc", "coverage-pytest"],
                 "cmake-args": [
-                  "-DCMAKE_C_COMPILER_LAUNCHER=ccache;-o;hash_dir=false;-o;debug=true;&&;ccache;-p;&&;ccache",
-                  "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache;-o;hash_dir=false;-o;debug=true;&&;ccache;-p;&&;ccache"
+                  "-DCMAKE_C_COMPILER_LAUNCHER=/__w/beluga/beluga/.github/scripts/ccache_with_fix.sh",
+                  "-DCMAKE_CXX_COMPILER_LAUNCHER=/__w/beluga/beluga/.github/scripts/ccache_with_fix.sh"
                 ]
               },
               "test": {
@@ -72,9 +63,6 @@ jobs:
       - name: Lint
         shell: bash
         run: |
-          cat ros_ws/build/compile_commands.json
-          ls -la ros_ws/src
-          ccache --print-stats
           git config --global --add safe.directory $PWD
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
