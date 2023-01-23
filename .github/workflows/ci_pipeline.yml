@@ -26,10 +26,19 @@ jobs:
         run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
 
       - name: Cache
-        uses: hendrikmuhs/ccache-action@v1.2.8
+        uses: Chocobo1/setup-ccache-action@v1
         with:
-          key: ${{ github.job }}
-          verbose: 2
+          api_token: ${{ secrets.GITHUB_TOKEN }}
+          update_packager_index: false
+          remove_stale_cache: false
+          # Disable hashing of the current working directory to avoid cache misses
+          # when building in two different directories.
+          # This might be an issue if we use the same cache storage for
+          # debug and release builds.
+          # See https://ccache.dev/manual/latest.html#config_hash_dir.
+          ccache_options: |
+            hash_dir=false
+            sloppiness=
 
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.2.7
@@ -51,6 +60,7 @@ jobs:
       - name: Lint
         shell: bash
         run: |
+          ccache --print-stats
           git config --global --add safe.directory $PWD
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
