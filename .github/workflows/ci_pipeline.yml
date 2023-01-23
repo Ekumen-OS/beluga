@@ -13,18 +13,17 @@ jobs:
       ROS_DISTRO: humble
     container:
       image: ros:humble-ros-base-jammy
-    strategy:
-      fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Install debian packages
         run: |
           sudo apt-get update
-          sudo apt-get install clang-tidy python3-colcon-coveragepy-result python3-pip -y
+          sudo apt-get install clang-tidy lcov python3-colcon-coveragepy-result python3-pip -y
 
       - name: Install python packages
-        run: pip install pre-commit==2.20.0
+        run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
 
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.2.7
@@ -32,6 +31,16 @@ jobs:
           package-name: beluga beluga_amcl
           target-ros2-distro:  ${{ env.ROS_DISTRO }}
           import-token: ${{ secrets.GITHUB_TOKEN }}
+          colcon-defaults: |
+            {
+              "build": {
+                "mixin": ["coverage-gcc", "coverage-pytest"]
+              },
+              "test": {
+                "mixin": ["coverage-pytest"]
+              }
+            }
+          colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
 
       - name: Lint
         shell: bash
@@ -40,17 +49,48 @@ jobs:
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
 
+      - name: Upload lcov artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: lcov_output
+          path: ros_ws/lcov/
+
+  code-coverage:
+    needs: build-test-lint
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install python packages
+        run: pip install lcov_cobertura==2.0.2
+
+      - name: Download lcov artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: lcov_output
+          path: lcov/
+
+      - name: Convert code coverage report to XML
+        run: lcov_cobertura lcov/total_coverage.info
+
+      - name: Check code coverage
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: coverage.xml
+          fail_below_min: true
+          thresholds: '50 75'
+
   build-docs:
     runs-on: ubuntu-22.04
     env:
       REPOSITORY_CHECKOUT_PATH: ${{ github.workspace }}/repository
       DOXYGEN_HTML_OUTPUT: ${{ github.workspace }}/docs
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           path: ${{ env.REPOSITORY_CHECKOUT_PATH }}
 
-      - uses: actions/checkout@v3
+      - name: Checkout documentation branch
+        uses: actions/checkout@v3
         with:
           path: ${{ env.DOXYGEN_HTML_OUTPUT }}
           ref: gh-pages
