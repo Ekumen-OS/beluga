@@ -13,7 +13,9 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
-  pre-commit==2.20.0
+  pre-commit==2.20.0 \
+  # Note: Installing timemory takes a long time.
+  timemory==3.3.0rc4
 
 ARG USER=developer
 ARG GROUP=ekumen

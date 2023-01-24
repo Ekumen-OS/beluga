@@ -17,6 +17,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
 from launch.actions import GroupAction
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -25,10 +26,34 @@ from launch.actions import ExecuteProcess
 from launch.actions import Shutdown
 from launch_ros.actions import Node
 from launch_ros.actions import SetParameter
+from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
     example_dir = get_package_share_directory('beluga_example')
+
+    package = LaunchConfiguration('package')
+    node = LaunchConfiguration('node')
+    prefix = LaunchConfiguration('prefix')
+
+    package_launch_arg = DeclareLaunchArgument(
+        name='package',
+        default_value='beluga_amcl',
+        description='Package that provides the localization node to launch.',
+        choices=['beluga_amcl', 'nav2_amcl'],
+    )
+
+    node_launch_arg = DeclareLaunchArgument(
+        name='node',
+        default_value='amcl_node',
+        description='Localization node to launch.',
+    )
+
+    prefix_launch_arg = DeclareLaunchArgument(
+        name='prefix',
+        default_value='',
+        description='Set of commands/arguments to preceed the node command (e.g. "timem --").',
+    )
 
     load_nodes = GroupAction(
         actions=[
@@ -60,17 +85,21 @@ def generate_launch_description():
                 on_exit=[Shutdown()],
             ),
             Node(
-                package='beluga_amcl',
-                executable='amcl_node',
+                package=package,
+                executable=node,
                 name='amcl',
                 output='screen',
                 parameters=[os.path.join(example_dir, 'config', 'params.yaml')],
                 arguments=['--ros-args', '--log-level', 'info'],
+                prefix=prefix,
             ),
         ]
     )
 
     ld = LaunchDescription()
+    ld.add_action(package_launch_arg)
+    ld.add_action(node_launch_arg)
+    ld.add_action(prefix_launch_arg)
     ld.add_action(load_nodes)
 
     return ld
