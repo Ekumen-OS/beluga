@@ -30,6 +30,7 @@ def generate_launch_description():
                 package='rviz2',
                 executable='rviz2',
                 name='rviz2',
+                output='own_log',
                 arguments=[
                     '--display-config',
                     os.path.join(example_dir, 'rviz', 'rviz.rviz'),
