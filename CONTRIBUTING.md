@@ -13,6 +13,14 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
 
 ### Make changes
 
+#### Prerequisites
+
+- Make sure you have [`docker compose`](https://github.com/docker/compose/tree/v2) installed ([`v2.10+`](https://github.com/docker/compose/releases/tag/v2.10.0)).
+   ```bash
+   docker compose version
+   ```
+   If you don't, please follow [these instructions](https://docs.docker.com/compose/install/linux/).
+
 #### Make changes locally
 
 1. Clone the repository.
@@ -23,6 +31,10 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
 2. Build and run the development docker container.
    ```bash
    cd <REPOSITORY_PATH>
+   docker/run.sh
+   ```
+   To build the image before starting the container, use:
+   ```bash
    docker/run.sh --build
    ```
 
@@ -46,13 +58,18 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    colcon test
    ```
 
-6. Run an example application.
+6. Run an example application using a pre-recorded rosbag.
+   ```bash
+   cd /ws
+   source install/setup.bash
+   ros2 launch beluga_example example_rosbag_launch.py
+   ```
+   You also can use `teleop_twist_keyboard` to control a simulated robot. In two separate terminals run:
    ```bash
    cd /ws
    source install/setup.bash
    ros2 launch beluga_example example_launch.py
    ```
-   You can use `teleop_twist_keyboard` to control the simulated turtlebot. In a separate terminal run:
    ```bash
    cd /ws
    source install/setup.bash
