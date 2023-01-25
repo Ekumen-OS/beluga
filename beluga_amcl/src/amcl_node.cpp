@@ -40,7 +40,7 @@ namespace
 /**
  * \param laser_scan Laser scan message to process.
  * \param laser_transform Transform from laser frame to robot frame.
- * \param max_beams Maximum number of evenly-spaced beams to be taken from the scan.
+ * \param max_beam_count Maximum number of evenly-spaced beams to be taken from the scan.
  * \param range_min Minimum range value. Beams with a range below this value will be ignored.
  * \param range_max Maximum range value. Beams with a range above this value will be ignored.
  * \return A vector of pairs of coordinates in the robot's reference frame.
@@ -48,23 +48,24 @@ namespace
 std::vector<std::pair<double, double>> pre_process_points(
   const sensor_msgs::msg::LaserScan & laser_scan,
   const Sophus::SE3d & laser_transform,
-  std::size_t max_beams,
+  std::size_t max_beam_count,
   float range_min,
   float range_max)
 {
+  const std::size_t beam_count = laser_scan.ranges.size();
   range_min = std::max(laser_scan.range_min, range_min);
   range_max = std::min(laser_scan.range_max, range_max);
 
   auto points = std::vector<std::pair<double, double>>{};
 
-  if (max_beams <= 1) {
+  if (max_beam_count <= 1 || beam_count <= 1) {
     return points;  // Return empty vector
   }
 
-  points.reserve(std::min(laser_scan.ranges.size(), max_beams));
-  const std::size_t step = std::max(1UL, (laser_scan.ranges.size() - 1) / (max_beams - 1));
+  const std::size_t step = std::max(1UL, (beam_count - 1) / (max_beam_count - 1));
+  points.reserve(std::min(beam_count, max_beam_count));
 
-  for (std::size_t index = 0; index < laser_scan.ranges.size(); index += step) {
+  for (std::size_t index = 0; index < beam_count; index += step) {
     const float range = laser_scan.ranges[index];
     if (std::isnan(range) || range <= range_min || range >= range_max) {
       continue;
