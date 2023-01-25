@@ -36,9 +36,19 @@ namespace beluga_amcl
 namespace
 {
 
+/// Generates a vector of points to update the measurement model.
+/**
+ * \param laser_scan Laser scan message to process.
+ * \param laser_transform Transform from laser frame to robot frame.
+ * \param max_beams Maximum number of evenly-spaced beams to be taken from the scan.
+ * \param range_min Minimum range value. Beams with a range below this value will be ignored.
+ * \param range_max Maximum range value. Beams with a range above this value will be ignored.
+ * \return A vector of pairs of coordinates in the robot's reference frame.
+ */
 std::vector<std::pair<double, double>> pre_process_points(
   const sensor_msgs::msg::LaserScan & laser_scan,
   const Sophus::SE3d & laser_transform,
+  std::size_t max_beams,
   float range_min,
   float range_max)
 {
@@ -46,8 +56,15 @@ std::vector<std::pair<double, double>> pre_process_points(
   range_max = std::min(laser_scan.range_max, range_max);
 
   auto points = std::vector<std::pair<double, double>>{};
-  points.reserve(laser_scan.ranges.size());
-  for (std::size_t index = 0; index < laser_scan.ranges.size(); ++index) {
+
+  if (max_beams <= 1) {
+    return points;  // Return empty vector
+  }
+
+  points.reserve(std::min(laser_scan.ranges.size(), max_beams));
+  const std::size_t step = std::max(1UL, (laser_scan.ranges.size() - 1) / (max_beams - 1));
+
+  for (std::size_t index = 0; index < laser_scan.ranges.size(); index += step) {
     const float range = laser_scan.ranges[index];
     if (std::isnan(range) || range <= range_min || range >= range_max) {
       continue;
@@ -317,6 +334,17 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("laser_min_range", rclcpp::ParameterValue(0.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "How many evenly-spaced beams in each scan will be used when updating the filter.";
+    descriptor.integer_range.resize(1);
+    descriptor.integer_range[0].from_value = 2;
+    descriptor.integer_range[0].to_value = std::numeric_limits<int>::max();
+    descriptor.integer_range[0].step = 1;
+    declare_parameter("max_beams", rclcpp::ParameterValue(60), descriptor);
   }
 
   {
@@ -598,6 +626,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
       pre_process_points(
         *laser_scan,
         base_to_laser_transform,
+        static_cast<std::size_t>(get_parameter("max_beams").as_int()),
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
     particle_filter_->importance_sample();
