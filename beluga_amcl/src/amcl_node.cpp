@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <beluga_amcl/amcl_node.hpp>
+#include <beluga_amcl/amcl_node_utils.hpp>
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
@@ -32,69 +33,6 @@
 
 namespace beluga_amcl
 {
-
-namespace
-{
-
-/// Generates a vector of points to update the measurement model.
-/**
- * \param laser_scan Laser scan message to process.
- * \param laser_transform Transform from laser frame to robot frame.
- * \param max_beam_count Maximum number of evenly-spaced beams to be taken from the scan.
- * \param range_min Minimum range value. Beams with a range below this value will be ignored.
- * \param range_max Maximum range value. Beams with a range above this value will be ignored.
- * \return A vector of pairs of coordinates in the robot's reference frame.
- */
-std::vector<std::pair<double, double>> pre_process_points(
-  const sensor_msgs::msg::LaserScan & laser_scan,
-  const Sophus::SE3d & laser_transform,
-  std::size_t max_beam_count,
-  float range_min,
-  float range_max)
-{
-  const std::size_t beam_count = laser_scan.ranges.size();
-  range_min = std::max(laser_scan.range_min, range_min);
-  range_max = std::min(laser_scan.range_max, range_max);
-
-  auto points = std::vector<std::pair<double, double>>{};
-
-  if (max_beam_count <= 1 || beam_count <= 1) {
-    return points;  // Return empty vector
-  }
-
-  const std::size_t step = std::max(1UL, (beam_count - 1) / (max_beam_count - 1));
-  points.reserve(std::min(beam_count, max_beam_count));
-
-  for (std::size_t index = 0; index < beam_count; index += step) {
-    const float range = laser_scan.ranges[index];
-    if (std::isnan(range) || range <= range_min || range >= range_max) {
-      continue;
-    }
-    // Store points in the robot's reference frame.
-    // Assume that laser scanning is instantaneous and no compensation is
-    // needed for robot speed vs. scan speed.
-    const float angle = laser_scan.angle_min +
-      static_cast<float>(index) * laser_scan.angle_increment;
-    const auto point = laser_transform * Eigen::Vector3d{
-      range * std::cos(angle),
-      range * std::sin(angle),
-      0.0};
-    points.emplace_back(point.x(), point.y());
-  }
-  return points;
-}
-
-Eigen::IOFormat make_eigen_comma_format()
-{
-  return Eigen::IOFormat{
-    Eigen::StreamPrecision,
-    Eigen::DontAlignCols,
-    ", ",  // coefficient separator
-    ", ",  // row separator
-  };
-}
-
-}  // namespace
 
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 : rclcpp_lifecycle::LifecycleNode{"amcl", "", options}
@@ -624,7 +562,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     particle_filter_->sample();
     const auto time2 = std::chrono::high_resolution_clock::now();
     particle_filter_->update_sensor(
-      pre_process_points(
+      utils::make_points_from_laser_scan(
         *laser_scan,
         base_to_laser_transform,
         static_cast<std::size_t>(get_parameter("max_beams").as_int()),
@@ -708,7 +646,7 @@ void AmclNode::initial_pose_callback(
     Eigen::Vector3d{pose.translation().x(), pose.translation().y(), pose.so2().log()};
 
   {
-    const auto eigen_format = make_eigen_comma_format();
+    const auto eigen_format = utils::make_eigen_comma_format();
     RCLCPP_INFO(get_logger(), "Initial pose received");
     RCLCPP_INFO_STREAM(
       get_logger(),
