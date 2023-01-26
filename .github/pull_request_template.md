@@ -23,4 +23,4 @@ NOTE: The larger description should be done in the linked issue, not here.
 - [ ] Signed all commits for DCO
 - [ ] Added tests (regression tests for bugs, coverage of new code for features)
 - [ ] Updated documentation (as needed)
-- [ ] CI is passing
+- [ ] Checked that CI is passing
