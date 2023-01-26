@@ -18,8 +18,8 @@ NOTE: The larger description should be done in the linked issue, not here.
 -->
 
 ## Checklist
-- [ ] I have read the [contributing guidelines](../CONTRIBUTING.md)
-- [ ] I have configured pre-commit and ran colcon test locally.
+- [ ] Read the [contributing guidelines](../CONTRIBUTING.md)
+- [ ] Configured pre-commit and ran colcon test locally.
 - [ ] Signed all commits for DCO
 - [ ] Added tests (regression tests for bugs, coverage of new code for features)
 - [ ] Updated documentation (as needed)
