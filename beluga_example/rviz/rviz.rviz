@@ -58,7 +58,7 @@ Visualization Manager:
       Class: nav2_rviz_plugins/ParticleCloud
       Color: 255; 25; 0
       Enabled: true
-      Max Arrow Length: 0.10000000149011612
+      Max Arrow Length: 0.05000000074505806
       Min Arrow Length: 0.05000000074505806
       Name: ParticleCloud
       Shape: Arrow (3D)

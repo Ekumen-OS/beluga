@@ -104,9 +104,6 @@ class DifferentialDriveModel : public Mixin {
     return state * Sophus::SE2d{first_rotation, Eigen::Vector2d{0.0, 0.0}} * Sophus::SE2d{second_rotation, translation};
   }
 
-  /// Gets the last update.
-  Sophus::SE2d last_pose() const { return last_pose_ ? last_pose_.value() : Sophus::SE2d{}; }
-
   /// Updates the motion model.
   /**
    * This will not update particles.
