@@ -26,12 +26,13 @@
 namespace tf2
 {
 
+/// Converts a Sophus SE2 type to a Pose message.
 /**
- * @brief Convert a Sophus SE2 type to a Pose message.
  * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * @param in The Sophus SE2 to convert.
- * @param out The pose converted to a Pose message.
- * @return The pose converted to a Pose message.
+ *
+ * \param in The Sophus SE2 element to convert.
+ * \param out The pose converted to a Pose message.
+ * \return The pose converted to a Pose message.
  */
 template<class Scalar>
 inline geometry_msgs::msg::Pose & toMsg(
@@ -49,12 +50,13 @@ inline geometry_msgs::msg::Pose & toMsg(
   return out;
 }
 
+/// Converts a Sophus SE3 type to a Pose message.
 /**
- * @brief Convert a Sophus SE3 type to a Pose message.
  * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * @param in The Sophus SE3 to convert.
- * @param out The pose converted to a Pose message.
- * @return The pose converted to a Pose message.
+ *
+ * \param in The Sophus SE3 element to convert.
+ * \param out The pose converted to a Pose message.
+ * \return The pose converted to a Pose message.
  */
 template<class Scalar>
 inline geometry_msgs::msg::Pose & toMsg(
@@ -71,11 +73,12 @@ inline geometry_msgs::msg::Pose & toMsg(
   return out;
 }
 
+/// Converts a Sophus SE2 type to a Transform message.
 /**
- * @brief Convert a Sophus SE2 type to a Transform message.
  * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * @param in The Sophus SE2 to convert.
- * @return The transform converted to a Transform message.
+ *
+ * \param in The Sophus SE2 element to convert.
+ * \return The transform converted to a Transform message.
  */
 template<class Scalar>
 inline geometry_msgs::msg::Transform toMsg(const Sophus::SE2<Scalar> & in)
@@ -92,11 +95,12 @@ inline geometry_msgs::msg::Transform toMsg(const Sophus::SE2<Scalar> & in)
   return msg;
 }
 
+/// Converts a Sophus SE3 type to a Transform message.
 /**
- * @brief Convert a Sophus SE3 type to a Transform message.
  * This function is a specialization of the toMsg template defined in tf2/convert.h.
- * @param in The Sophus SE3 to convert.
- * @return The transform converted to a Transform message.
+ *
+ * \param in The Sophus SE3 element to convert.
+ * \return The transform converted to a Transform message.
  */
 template<class Scalar>
 inline geometry_msgs::msg::Transform toMsg(const Sophus::SE3<Scalar> & in)
@@ -112,11 +116,12 @@ inline geometry_msgs::msg::Transform toMsg(const Sophus::SE3<Scalar> & in)
   return msg;
 }
 
+/// Converts a Transform message type to a Sophus SE2 type.
 /**
- * @brief Convert a Transform message type to a Sophus-specific SE2 type.
- * This function is a specialization of the fromMsg template defined in tf2/convert.h
- * @param msg The Transform message to convert.
- * @param out The transform converted to a Sophus SE2.
+ * This function is a specialization of the fromMsg template defined in tf2/convert.h.
+ *
+ * \param msg The transform message to convert.
+ * \param out The transform converted to a Sophus SE2 element.
  */
 template<class Scalar>
 inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE2<Scalar> & out)
@@ -128,11 +133,12 @@ inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE2<Scala
   out.so2() = Sophus::SO2<Scalar>{tf2::getYaw(msg.rotation)};
 }
 
+/// Converts a Transform message type to a Sophus SE3 type.
 /**
- * @brief Convert a Transform message type to a Sophus-specific SE3 type.
- * This function is a specialization of the fromMsg template defined in tf2/convert.h
- * @param msg The Transform message to convert.
- * @param out The transform converted to a Sophus SE3.
+ * This function is a specialization of the fromMsg template defined in tf2/convert.h.
+ *
+ * \param msg The transform message to convert.
+ * \param out The transform converted to a Sophus SE3 element.
  */
 template<class Scalar>
 inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scalar> & out)
@@ -152,11 +158,12 @@ inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scala
   };
 }
 
+/// Converts a Pose message type to a Sophus SE2 type.
 /**
- * @brief Convert a Pose message type to a Sophus-specific SE2 type.
- * This function is a specialization of the fromMsg template defined in tf2/convert.h
- * @param msg The Pose message to convert.
- * @param out The pose converted to a Sophus SE2.
+ * This function is a specialization of the fromMsg template defined in tf2/convert.h.
+ *
+ * \param msg The pose message to convert.
+ * \param out The pose converted to a Sophus SE2 element.
  */
 template<class Scalar>
 inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE2<Scalar> & out)
@@ -168,11 +175,12 @@ inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE2<Scalar> & 
   out.so2() = Sophus::SO2<Scalar>{tf2::getYaw(msg.orientation)};
 }
 
+/// Converts a Pose message type to a Sophus SE3 type.
 /**
- * @brief Convert a Pose message type to a Sophus-specific SE3 type.
- * This function is a specialization of the fromMsg template defined in tf2/convert.h
- * @param msg The Pose message to convert.
- * @param out The pose converted to a Sophus SE3.
+ * This function is a specialization of the fromMsg template defined in tf2/convert.h.
+ *
+ * \param msg The pose message to convert.
+ * \param out The pose converted to a Sophus SE3 element.
  */
 template<class Scalar>
 inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE3<Scalar> & out)
@@ -192,11 +200,10 @@ inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE3<Scalar> & 
   };
 }
 
+/// Converts an Eigen 3x3 covariance matrix to a 6x6 row-major array.
 /**
- * @brief Function that converts from an Eigen 3x3 matrix representation of a 2D
- * covariance matrix to a 6x6 row-major representation in 3D.
- * @param in An Eigen 3x3 matrix representation of a 2D covariance.
- * @return A row-major array of 36 covariance values.
+ * \param in An Eigen 3x3 covariance matrix of a 2D pose (x, y, yaw).
+ * \return A row-major array of 36 covariance values of a 3D pose.
  */
 template<class Scalar>
 inline std::array<Scalar, 36> covarianceEigenToRowMajor(const Eigen::Matrix3<Scalar> & in)
@@ -215,12 +222,11 @@ inline std::array<Scalar, 36> covarianceEigenToRowMajor(const Eigen::Matrix3<Sca
   return covariance;
 }
 
+/// Converts a 6x6 row-major array to an Eigen 3x3 covariance matrix.
 /**
- * @brief Function that converts from row-major array representing a 3D
- * covariance matrix to an Eigen 3x3 matrix.
- * @param in A row-major array of 36 covariance values.
- * @param out An Eigen 3x3 matrix representation of a 2D covariance.
- * @return An Eigen 3x3 matrix representation of a 2D covariance.
+ * \param in A row-major array of 36 covariance values of a 3D pose.
+ * \param out An Eigen 3x3 covariance matrix of a 2D pose (x, y, yaw).
+ * \return An Eigen 3x3 covariance matrix of a 2D pose (x, y, yaw).
  */
 template<class Scalar>
 inline Eigen::Matrix3<Scalar> & covarianceRowMajorToEigen(
