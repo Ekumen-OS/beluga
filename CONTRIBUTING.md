@@ -1,3 +1,23 @@
+Any contribution that you make to this repository will
+be under the Apache 2 License, as dictated by that
+[license](./LICENSE):
+
+~~~
+5. Submission of Contributions. Unless You explicitly state otherwise,
+   any Contribution intentionally submitted for inclusion in the Work
+   by You to the Licensor shall be under the terms and conditions of
+   this License, without any additional terms or conditions.
+   Notwithstanding the above, nothing herein shall supersede or modify
+   the terms of any separate license agreement you may have executed
+   with Licensor regarding such Contributions.
+~~~
+
+Contributors must sign-off each commit by adding a `Signed-off-by: ...`
+line to commit messages to certify that they have the right to submit
+the code they are contributing to the project according to the
+[Developer Certificate of Origin (DCO)](https://developercertificate.org/).
+
+
 # How to contribute to Beluga
 
 Thank you for investing your time in contributing to this project!
@@ -12,6 +32,10 @@ If you spot a problem or have a feature request you'd like to discuss, [search i
 If a related issue doesn't exist, you can [open a new issue](https://github.com/ekumenlabs/beluga/issues/new/choose).
 
 ### Make changes
+
+#### Commit good practices
+
+See https://cbea.ms/git-commit/.
 
 #### Prerequisites
 
