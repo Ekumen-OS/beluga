@@ -1,3 +1,9 @@
+# How to contribute to Beluga
+
+Thank you for investing your time in contributing to this project!
+
+## Contributions
+
 Any contribution that you make to this repository will
 be under the Apache 2 License, as dictated by that
 [license](./LICENSE):
@@ -17,11 +23,6 @@ line to commit messages to certify that they have the right to submit
 the code they are contributing to the project according to the
 [Developer Certificate of Origin (DCO)](https://developercertificate.org/).
 
-
-# How to contribute to Beluga
-
-Thank you for investing your time in contributing to this project!
-
 ## Getting started
 
 ### Issues
@@ -32,10 +33,6 @@ If you spot a problem or have a feature request you'd like to discuss, [search i
 If a related issue doesn't exist, you can [open a new issue](https://github.com/ekumenlabs/beluga/issues/new/choose).
 
 ### Make changes
-
-#### Commit good practices
-
-See https://cbea.ms/git-commit/.
 
 #### Prerequisites
 
@@ -101,3 +98,12 @@ See https://cbea.ms/git-commit/.
    ```
 
 7. Push your changes and [create a PR](https://github.com/ekumenlabs/beluga/compare)!
+
+8. At the time a feature branch is squashed-and-merged into `main`, the commit message should adhere to the following good practices:
+   - Limit the subject line to 50 characters.
+   - Capitalize the subject line.
+   - Do not end the subject line with a period.
+   - Use the imperative mood in the subject line.
+   - Wrap the body at 72 characters.
+   - Use the body to explain _what_ and _why_ vs. _how_.
+   - See https://cbea.ms/git-commit/ for more information and the reasoning behind this.
