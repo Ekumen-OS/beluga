@@ -2,6 +2,27 @@
 
 Thank you for investing your time in contributing to this project!
 
+## Contributions
+
+Any contribution that you make to this repository will
+be under the Apache 2 License, as dictated by that
+[license](./LICENSE):
+
+~~~
+5. Submission of Contributions. Unless You explicitly state otherwise,
+   any Contribution intentionally submitted for inclusion in the Work
+   by You to the Licensor shall be under the terms and conditions of
+   this License, without any additional terms or conditions.
+   Notwithstanding the above, nothing herein shall supersede or modify
+   the terms of any separate license agreement you may have executed
+   with Licensor regarding such Contributions.
+~~~
+
+Contributors must sign-off each commit by adding a `Signed-off-by: ...`
+line to commit messages to certify that they have the right to submit
+the code they are contributing to the project according to the
+[Developer Certificate of Origin (DCO)](https://developercertificate.org/).
+
 ## Getting started
 
 ### Issues
@@ -77,3 +98,12 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    ```
 
 7. Push your changes and [create a PR](https://github.com/ekumenlabs/beluga/compare)!
+
+8. At the time a feature branch is squashed-and-merged into `main`, the commit message should adhere to the following good practices:
+   - Limit the subject line to 50 characters.
+   - Capitalize the subject line.
+   - Do not end the subject line with a period.
+   - Use the imperative mood in the subject line.
+   - Wrap the body at 72 characters.
+   - Use the body to explain _what_ and _why_ vs. _how_.
+   - See https://cbea.ms/git-commit/ for more information and the reasoning behind this.

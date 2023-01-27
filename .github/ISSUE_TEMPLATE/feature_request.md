@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Request a new feature for beluga
+about: Request a new feature for beluga.
 title: ''
 labels: enhancement
 
