@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in beluga
+about: Report a bug in beluga.
 title: ''
 labels: bug
 
