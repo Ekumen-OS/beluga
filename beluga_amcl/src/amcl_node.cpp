@@ -537,6 +537,8 @@ void AmclNode::timer_callback()
     return;
   }
 
+  // TODO(nahuel): Throttle the particle cloud publishing in the
+  // laser_callback method instead of using a ROS timer.
   {
     auto message = nav2_msgs::msg::ParticleCloud{};
     message.header.stamp = now();
