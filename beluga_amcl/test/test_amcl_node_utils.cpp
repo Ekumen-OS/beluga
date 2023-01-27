@@ -136,7 +136,7 @@ TEST(MakePointsFromLaserScan, MaxBeamsZero)
   ASSERT_EQ(output.size(), 0UL);
 }
 
-TEST(MakePointsFromLaserScan, MaxBeamsFromSix)
+TEST(MakePointsFromLaserScan, TakeThreeBeamsFromSix)
 {
   auto laser_scan = sensor_msgs::msg::LaserScan{};
   laser_scan.range_min = 0.0;
@@ -155,7 +155,7 @@ TEST(MakePointsFromLaserScan, MaxBeamsFromSix)
   EXPECT_NEAR(norm(output[2]), 9.0, 0.001);
 }
 
-TEST(MakePointsFromLaserScan, MaxBeamsFromNine)
+TEST(MakePointsFromLaserScan, TakeThreeBeamsFromNine)
 {
   auto laser_scan = sensor_msgs::msg::LaserScan{};
   laser_scan.range_min = 0.0;
