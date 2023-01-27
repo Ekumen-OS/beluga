@@ -598,7 +598,6 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
       pre_process_points(
         *laser_scan,
         base_to_laser_transform,
-        static_cast<std::size_t>(get_parameter("max_beams").as_int()),
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
     particle_filter_->importance_sample();
