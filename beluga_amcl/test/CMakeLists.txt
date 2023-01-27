@@ -1,0 +1,4 @@
+find_package(ament_cmake_gmock REQUIRED)
+
+ament_add_gmock(test_amcl_node_utils test_amcl_node_utils.cpp)
+target_link_libraries(test_amcl_node_utils amcl_node_component)

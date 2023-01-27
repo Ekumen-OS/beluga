@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <beluga_amcl/amcl_node.hpp>
+#include <beluga_amcl/amcl_node_utils.hpp>
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
@@ -32,51 +33,6 @@
 
 namespace beluga_amcl
 {
-
-namespace
-{
-
-std::vector<std::pair<double, double>> pre_process_points(
-  const sensor_msgs::msg::LaserScan & laser_scan,
-  const Sophus::SE3d & laser_transform,
-  float range_min,
-  float range_max)
-{
-  range_min = std::max(laser_scan.range_min, range_min);
-  range_max = std::min(laser_scan.range_max, range_max);
-
-  auto points = std::vector<std::pair<double, double>>{};
-  points.reserve(laser_scan.ranges.size());
-  for (std::size_t index = 0; index < laser_scan.ranges.size(); ++index) {
-    const float range = laser_scan.ranges[index];
-    if (std::isnan(range) || range <= range_min || range >= range_max) {
-      continue;
-    }
-    // Store points in the robot's reference frame.
-    // Assume that laser scanning is instantaneous and no compensation is
-    // needed for robot speed vs. scan speed.
-    const float angle = laser_scan.angle_min +
-      static_cast<float>(index) * laser_scan.angle_increment;
-    const auto point = laser_transform * Eigen::Vector3d{
-      range * std::cos(angle),
-      range * std::sin(angle),
-      0.0};
-    points.emplace_back(point.x(), point.y());
-  }
-  return points;
-}
-
-Eigen::IOFormat make_eigen_comma_format()
-{
-  return Eigen::IOFormat{
-    Eigen::StreamPrecision,
-    Eigen::DontAlignCols,
-    ", ",  // coefficient separator
-    ", ",  // row separator
-  };
-}
-
-}  // namespace
 
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 : rclcpp_lifecycle::LifecycleNode{"amcl", "", options}
@@ -317,6 +273,17 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("laser_min_range", rclcpp::ParameterValue(0.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "How many evenly-spaced beams in each scan will be used when updating the filter.";
+    descriptor.integer_range.resize(1);
+    descriptor.integer_range[0].from_value = 2;
+    descriptor.integer_range[0].to_value = std::numeric_limits<int>::max();
+    descriptor.integer_range[0].step = 1;
+    declare_parameter("max_beams", rclcpp::ParameterValue(60), descriptor);
   }
 
   {
@@ -595,9 +562,10 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     particle_filter_->sample();
     const auto time2 = std::chrono::high_resolution_clock::now();
     particle_filter_->update_sensor(
-      pre_process_points(
+      utils::make_points_from_laser_scan(
         *laser_scan,
         base_to_laser_transform,
+        static_cast<std::size_t>(get_parameter("max_beams").as_int()),
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
     particle_filter_->importance_sample();
@@ -678,7 +646,7 @@ void AmclNode::initial_pose_callback(
     Eigen::Vector3d{pose.translation().x(), pose.translation().y(), pose.so2().log()};
 
   {
-    const auto eigen_format = make_eigen_comma_format();
+    const auto eigen_format = utils::make_eigen_comma_format();
     RCLCPP_INFO(get_logger(), "Initial pose received");
     RCLCPP_INFO_STREAM(
       get_logger(),

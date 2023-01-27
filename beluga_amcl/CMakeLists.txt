@@ -18,7 +18,9 @@ find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
 add_library(amcl_node_component SHARED)
-target_sources(amcl_node_component PUBLIC src/amcl_node.cpp)
+target_sources(amcl_node_component PUBLIC
+  src/amcl_node.cpp
+  src/amcl_node_utils.cpp)
 target_include_directories(amcl_node_component PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -53,6 +55,9 @@ install(TARGETS amcl_node
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
+
+  enable_testing()
+  add_subdirectory(test)
 endif()
 
 ament_package()
