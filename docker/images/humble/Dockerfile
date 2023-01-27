@@ -26,10 +26,12 @@ RUN addgroup --gid 1000 $GROUP \
   && adduser $USER sudo \
   && echo "$USER ALL=NOPASSWD: ALL" >> /etc/sudoers.d/$USER
 
+COPY docker/files/fixuid_config.yml /etc/fixuid/config.yml
 RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.4-linux-amd64.tar.gz | tar -C /usr/local/bin -xzf - \
   && chmod 4755 /usr/local/bin/fixuid \
-  && mkdir -p /etc/fixuid \
-  && printf "user: $USER\ngroup: $GROUP\n" > /etc/fixuid/config.yml
+  && cd /etc/fixuid \
+  && sed -i "s/_USER_/$USER/" config.yml \
+  && sed -i "s/_GROUP_/$GROUP/" config.yml
 
 USER $USER:$GROUP
 
