@@ -4,6 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
+    ccache \
     curl \
     doxygen \
     perl \
@@ -35,6 +36,11 @@ USER $USER:$GROUP
 ENV USER_WS /ws
 
 WORKDIR $USER_WS
+
+RUN colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
+  && colcon mixin update default
+COPY --chown=$USER:$GROUP docker/files/colcon_defaults.yaml /home/$USER/.colcon/defaults.yaml
+RUN mkdir -p /home/$USER/.ccache
 
 COPY . $USER_WS/src
 
