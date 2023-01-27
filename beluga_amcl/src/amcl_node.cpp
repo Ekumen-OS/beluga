@@ -366,8 +366,9 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Configuring");
 
+  // TODO(nahuel): Add a parameter for the timer period.
   using namespace std::chrono_literals;
-  timer_ = create_wall_timer(500ms, std::bind(&AmclNode::timer_callback, this));
+  timer_ = create_wall_timer(200ms, std::bind(&AmclNode::timer_callback, this));
 
   particle_cloud_pub_ = create_publisher<nav2_msgs::msg::ParticleCloud>(
     "particle_cloud",
@@ -536,6 +537,8 @@ void AmclNode::timer_callback()
     return;
   }
 
+  // TODO(nahuel): Throttle the particle cloud publishing in the
+  // laser_callback method instead of using a ROS timer.
   {
     auto message = nav2_msgs::msg::ParticleCloud{};
     message.header.stamp = now();
@@ -550,9 +553,84 @@ void AmclNode::timer_callback()
       });
     particle_cloud_pub_->publish(message);
   }
+}
+
+void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
+{
+  if (!particle_filter_) {
+    return;
+  }
+
+  auto odom_to_base_transform = Sophus::SE2d{};
+  try {
+    tf2::convert(
+      tf_buffer_->lookupTransform(
+        get_parameter("odom_frame_id").as_string(),
+        get_parameter("base_frame_id").as_string(),
+        laser_scan->header.stamp,
+        std::chrono::seconds(1)).transform,
+      odom_to_base_transform);
+  } catch (const tf2::TransformException & error) {
+    RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
+    return;
+  }
+
+  auto base_to_laser_transform = Sophus::SE3d{};
+  try {
+    tf2::convert(
+      tf_buffer_->lookupTransform(
+        get_parameter("base_frame_id").as_string(),
+        laser_scan->header.frame_id,
+        laser_scan->header.stamp,
+        std::chrono::seconds(1)).transform,
+      base_to_laser_transform);
+  } catch (const tf2::TransformException & error) {
+    RCLCPP_ERROR(get_logger(), "Could not transform from base to laser: %s", error.what());
+    return;
+  }
 
   {
-    const auto [pose, covariance] = particle_filter_->estimated_pose();
+    const auto time1 = std::chrono::high_resolution_clock::now();
+    particle_filter_->update_motion(odom_to_base_transform);
+    particle_filter_->sample();
+    const auto time2 = std::chrono::high_resolution_clock::now();
+    particle_filter_->update_sensor(
+      pre_process_points(
+        *laser_scan,
+        base_to_laser_transform,
+        static_cast<float>(get_parameter("laser_min_range").as_double()),
+        static_cast<float>(get_parameter("laser_max_range").as_double())));
+    particle_filter_->importance_sample();
+    const auto time3 = std::chrono::high_resolution_clock::now();
+    {
+      const auto delta = odom_to_base_transform * last_odom_to_base_transform_.inverse();
+      const bool has_moved_since_last_resample =
+        std::abs(delta.translation().x()) > get_parameter("update_min_d").as_double() ||
+        std::abs(delta.translation().y()) > get_parameter("update_min_d").as_double() ||
+        std::abs(delta.so2().log()) > get_parameter("update_min_a").as_double();
+      if (has_moved_since_last_resample) {
+        // To avoid loss of diversity in the particle population, don't
+        // resample when the state is known to be static.
+        // See 'Probabilistic Robotics, Chapter 4.2.4'.
+        particle_filter_->resample();
+        last_odom_to_base_transform_ = odom_to_base_transform;
+      }
+    }
+    const auto time4 = std::chrono::high_resolution_clock::now();
+
+    RCLCPP_INFO_THROTTLE(
+      get_logger(), *get_clock(), 2000,
+      "Particle fitler update stats: %ld particles %ld points - %.3fms %.3fms %.3fms",
+      particle_filter_->particles().size(),
+      laser_scan->ranges.size(),
+      std::chrono::duration<double, std::milli>(time2 - time1).count(),
+      std::chrono::duration<double, std::milli>(time3 - time2).count(),
+      std::chrono::duration<double, std::milli>(time4 - time3).count());
+  }
+
+  const auto [pose, covariance] = particle_filter_->estimated_pose();
+
+  {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
     message.header.stamp = now();
     message.header.frame_id = get_parameter("global_frame_id").as_string();
@@ -571,80 +649,6 @@ void AmclNode::timer_callback()
     message.child_frame_id = get_parameter("odom_frame_id").as_string();
     message.transform = tf2::toMsg(Sophus::SE2d{});
     tf_broadcaster_->sendTransform(message);
-  }
-}
-
-void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
-{
-  if (!particle_filter_) {
-    return;
-  }
-
-  try {
-    {
-      auto odom_to_base_transform = Sophus::SE2d{};
-      tf2::convert(
-        tf_buffer_->lookupTransform(
-          get_parameter("odom_frame_id").as_string(),
-          get_parameter("base_frame_id").as_string(),
-          laser_scan->header.stamp,
-          std::chrono::seconds(1)).transform,
-        odom_to_base_transform);
-
-      const auto delta = odom_to_base_transform * particle_filter_->last_pose().inverse();
-      const bool has_moved =
-        std::abs(delta.translation().x()) > get_parameter("update_min_d").as_double() ||
-        std::abs(delta.translation().y()) > get_parameter("update_min_d").as_double() ||
-        std::abs(delta.so2().log()) > get_parameter("update_min_a").as_double();
-
-      if (!has_moved) {
-        // To avoid loss of diversity in the particle population, don't
-        // resample when the state is known to be static.
-        // See 'Probabilistic Robotics, Chapter 4.2.4'.
-        RCLCPP_INFO_THROTTLE(
-          get_logger(), *get_clock(), 2000,
-          "Skipping the particle filter update as the robot is not moving");
-        return;
-      }
-      particle_filter_->update_motion(odom_to_base_transform);
-    }
-
-    {
-      auto base_to_laser_transform = Sophus::SE3d{};
-      tf2::convert(
-        tf_buffer_->lookupTransform(
-          get_parameter("base_frame_id").as_string(),
-          laser_scan->header.frame_id,
-          laser_scan->header.stamp,
-          std::chrono::seconds(1)).transform,
-        base_to_laser_transform);
-
-      particle_filter_->update_sensor(
-        pre_process_points(
-          *laser_scan,
-          base_to_laser_transform,
-          static_cast<float>(get_parameter("laser_min_range").as_double()),
-          static_cast<float>(get_parameter("laser_max_range").as_double())));
-    }
-
-    const auto time1 = std::chrono::high_resolution_clock::now();
-    particle_filter_->sample();
-    const auto time2 = std::chrono::high_resolution_clock::now();
-    particle_filter_->importance_sample();
-    const auto time3 = std::chrono::high_resolution_clock::now();
-    particle_filter_->resample();
-    const auto time4 = std::chrono::high_resolution_clock::now();
-
-    RCLCPP_INFO_THROTTLE(
-      get_logger(), *get_clock(), 2000,
-      "Filter update statistics: %ld particles %ld points - %.3fms %.3fms %.3fms",
-      particle_filter_->particles().size(),
-      laser_scan->ranges.size(),
-      std::chrono::duration<double, std::milli>(time2 - time1).count(),
-      std::chrono::duration<double, std::milli>(time3 - time2).count(),
-      std::chrono::duration<double, std::milli>(time4 - time3).count());
-  } catch (const tf2::TransformException & error) {
-    RCLCPP_ERROR(get_logger(), "Could not transform laser: %s", error.what());
   }
 }
 

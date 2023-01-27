@@ -82,6 +82,8 @@ protected:
   std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
     rclcpp_lifecycle::LifecycleNode>> laser_scan_sub_;
   message_filters::Connection laser_scan_connection_;
+
+  Sophus::SE2d last_odom_to_base_transform_;
 };
 
 }  // namespace beluga_amcl
