@@ -52,7 +52,6 @@ jobs:
       - name: Cache stat and config
         shell: bash
         run: |
-          ccache --show-log-stats
           ccache --show-config
 
       - name: Cache log
