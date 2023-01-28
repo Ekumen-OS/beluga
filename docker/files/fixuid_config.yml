@@ -1,0 +1,5 @@
+user: _USER_
+group: _GROUP_
+paths:
+  - /
+  - /home/_USER_/.ccache
