@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ROS_DISTRO: humble
+      CCACHE_LOGFILE: /tmp/ccache.log
+      CCACHE_DEBUG: 1
     container:
       image: ros:humble-ros-base-jammy
     steps:
@@ -29,7 +31,6 @@ jobs:
         uses: hendrikmuhs/ccache-action@v1.2.8
         with:
           key: ${{ github.job }}
-          verbose: 2
 
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.2.7
