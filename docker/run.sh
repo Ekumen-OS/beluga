@@ -8,10 +8,45 @@ cd $(dirname "$(readlink -f "$0")")
 
 [[ ! -z "${WITHIN_DEV}" ]] && echo "Already in the development environment!" && exit 1
 
+VALID_ARGS=$(OPTERR=1 getopt -o bph --long build,privileged,help -- "$@")
+if [[ $? -ne 0 ]]; then
+    exit 1;
+fi
+
+
+HELP="Usage: $(basename $0) [-b|--build] [-p|--privileged]"
+BUILD=false
+PRIVILEGED_CONTAINER=false
+
+eval set -- "$VALID_ARGS"
+while [[ "$1" != "" ]]; do
+    case "$1" in
+    -b | --build)
+        BUILD=true
+        shift
+        ;;
+    -p | --privileged)
+        PRIVILEGED_CONTAINER=true
+        shift
+        ;;
+    -h | --help)
+        echo $HELP
+        exit 0
+        ;;
+    --) # start of positional arguments
+        shift
+        ;;
+    ? | *)
+        echo $HELP
+        exit 1
+        ;;
+    esac
+done
+
 # Note: The `--build` flag was added to docker compose run after
 # https://github.com/docker/compose/releases/tag/v2.13.0.
 # We have this for convenience and compatibility with previous versions.
 # Otherwise, we could just forward the script arguments to the run verb.
-[[ "${1}" == "--build" ]] && docker compose build dev
+[[ "$BUILD" = true ]] && docker compose build dev
 
-USERID=$(id -u) GROUPID=$(id -g) docker compose run --rm dev
+PRIVILEGED_CONTAINER=$PRIVILEGED_CONTAINER USERID=$(id -u) GROUPID=$(id -g) docker compose run --rm dev
