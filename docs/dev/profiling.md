@@ -51,15 +51,18 @@ For that, use:
 sudo perf record -F 99 -g --call-graph dwarf -- <your command> <arg0> <arg1> ...
 ```
 
-In launch files that allow you to set a prefix, you can use `sudo perf record -F99 -g --call-graph dwarf --` as a prefix.
-For example:
+There is an example script for this:
 
 ```bash
 source /ws/install/setup.bash
-ros2 launch beluga_example example_rosbag_launch.py prefix:="sudo perf record -F99 -g --call-graph dwarf --"
+<base_repo_dir>/docs/dev/profiling/profile_amcl_with_bagfile.sh
 ```
 
-To avoid using `sudo`, see [troubleshooting](#avoiding-sudo).
+You must not use sudo in this case, if not `LD_LIBRARY_PATH` will not be correctly loaded.
+See [troubleshooting](#avoiding-sudo) for instruction on how to run `perf` without `sudo`.
+
+NOTE: Though this should work with launch files passing `perf` as a prefix, for some reason it is not working.
+Use the provided script as an example instead.
 
 ### Recording perf events of a running process
 
@@ -106,6 +109,15 @@ perf script > out.perf # if asks for sudo access, use chown to modify owner of p
 To visualize the flamegraph and be able to zoom-in/out, use a web-browser to open it.
 
 If the resulting flamegraph does not seem to provide accurate information, check the alternative [call-graph](#alternative-call-graph-recording-options) recording options.
+
+Alternatively, use the provided script:
+
+```bash
+source /ws/install/setup.bash
+<base_repo_dir>/docs/dev/profiling/flamegraph.sh
+```
+
+which will clone the `FlameGraph` repo if needed.
 
 ## Troubleshooting
 
