@@ -322,38 +322,18 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.read_only = true;
     descriptor.description =
-      "Execution policy used to update particles using the motion model [seq, unseq, par, par_unseq].";
-    auto sample_policy_string = declare_parameter(
-      "particle_update_execution_policy", "par", descriptor);
+      "Execution policy used to process particles [seq, unseq, par, par_unseq].";
+    auto execution_policy_string = declare_parameter(
+      "execution_policy", "par", descriptor);
     try {
-      sample_execution_policy_ = beluga_amcl::execution::policy_from_string(sample_policy_string);
+      execution_policy_ = beluga_amcl::execution::policy_from_string(
+        execution_policy_string);
     } catch (const std::invalid_argument &) {
       RCLCPP_WARN_STREAM(
         this->get_logger(),
-        "particle_update_execution_policy param should be [seq, unseq, par, par_unseq], got: " <<
-          sample_policy_string << "\nUsing the default parallel policy.");
-      sample_execution_policy_ = beluga_amcl::execution::Policy::par;
-    }
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.read_only = true;
-    descriptor.description =
-      "Execution policy used to run the impotance sample step, i.e. update particle weights"
-      " [seq, unseq, par, par_unseq].";
-    declare_parameter("importance_sample_execution_policy", "par", descriptor);
-    auto importance_sample_policy_string = declare_parameter(
-      "importance_sample_execution_policy", "par", descriptor);
-    try {
-      importance_sample_execution_policy_ = beluga_amcl::execution::policy_from_string(
-        importance_sample_policy_string);
-    } catch (const std::invalid_argument &) {
-      RCLCPP_WARN_STREAM(
-        this->get_logger(),
-        "importance_sample_execution_policy param should be [seq, unseq, par, par_unseq], got: " <<
-          importance_sample_policy_string << "\nUsing the default parallel policy.");
-      importance_sample_execution_policy_ = beluga_amcl::execution::Policy::par;
+        "execution_policy param should be [seq, unseq, par, par_unseq], got: " <<
+          execution_policy_string << "\nUsing the default parallel policy.");
+      execution_policy_ = beluga_amcl::execution::Policy::par;
     }
   }
 }
@@ -448,7 +428,14 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     tf2::durationFromSec(1.0));
 
   laser_scan_connection_ = laser_scan_filter_->registerCallback(
-    std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
+    beluga_amcl::execution::execute_with_policy(
+      execution_policy_, [this](
+        auto && std_policy) -> std::function<void(sensor_msgs::msg::LaserScan::ConstSharedPtr)>
+      {
+        return std::bind(
+          &AmclNode::laser_callback<decltype(std_policy)>, this, std_policy, std::placeholders::_1);
+      }));
+  // std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
 
   RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
 
@@ -566,7 +553,10 @@ void AmclNode::timer_callback()
   }
 }
 
-void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
+template<typename ExecutionPolicy>
+void AmclNode::laser_callback(
+  ExecutionPolicy && exec_policy,
+  sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
 {
   if (!particle_filter_) {
     return;
@@ -603,10 +593,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   {
     const auto time1 = std::chrono::high_resolution_clock::now();
     particle_filter_->update_motion(odom_to_base_transform);
-    beluga_amcl::execution::execute_with_policy(
-      sample_execution_policy_, [&pf = *particle_filter_](auto && std_policy) {
-        pf.sample(std_policy);
-      });
+    particle_filter_->sample(exec_policy);
     const auto time2 = std::chrono::high_resolution_clock::now();
     particle_filter_->update_sensor(
       utils::make_points_from_laser_scan(
@@ -615,10 +602,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
         static_cast<std::size_t>(get_parameter("max_beams").as_int()),
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
-    beluga_amcl::execution::execute_with_policy(
-      importance_sample_execution_policy_, [&pf = *particle_filter_](auto && std_policy) {
-        pf.importance_sample(std_policy);
-      });
+    particle_filter_->importance_sample(exec_policy);
     const auto time3 = std::chrono::high_resolution_clock::now();
     {
       const auto delta = odom_to_base_transform * last_odom_to_base_transform_.inverse();

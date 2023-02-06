@@ -60,12 +60,15 @@ protected:
 
   void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
   void timer_callback();
-  void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
+  template<typename ExecutionPolicy>
+  void laser_callback(
+    ExecutionPolicy && exec_policy,
+    sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan);
+  // void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
   void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
 
   std::unique_ptr<ParticleFilter> particle_filter_;
-  execution::Policy sample_execution_policy_;
-  execution::Policy importance_sample_execution_policy_;
+  execution::Policy execution_policy_;
 
   std::unique_ptr<bond::Bond> bond_;
 
