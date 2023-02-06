@@ -15,6 +15,8 @@
 #ifndef BELUGA_AMCL__AMCL_NODE_HPP_
 #define BELUGA_AMCL__AMCL_NODE_HPP_
 
+#include <beluga_amcl/execution_policy.hpp>
+
 #include <message_filters/subscriber.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/message_filter.h>
@@ -62,6 +64,9 @@ protected:
   void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
 
   std::unique_ptr<ParticleFilter> particle_filter_;
+  execution::Policy sample_execution_policy_;
+  execution::Policy importance_sample_execution_policy_;
+
   std::unique_ptr<bond::Bond> bond_;
 
   rclcpp::TimerBase::SharedPtr timer_;

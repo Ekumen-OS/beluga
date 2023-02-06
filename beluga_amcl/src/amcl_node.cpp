@@ -14,6 +14,7 @@
 
 #include <beluga_amcl/amcl_node.hpp>
 #include <beluga_amcl/amcl_node_utils.hpp>
+#include <beluga_amcl/execution_policy.hpp>
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
@@ -22,6 +23,7 @@
 #include <chrono>
 #include <limits>
 #include <memory>
+#include <utility>
 
 #include <beluga/random/multivariate_normal_distribution.hpp>
 #include <beluga_amcl/tf2_sophus.hpp>
@@ -315,6 +317,45 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("sigma_hit", rclcpp::ParameterValue(0.2), descriptor);
   }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.read_only = true;
+    descriptor.description =
+      "Execution policy used to update particles using the motion model [seq, unseq, par, par_unseq].";
+    auto sample_policy_string = declare_parameter(
+      "particle_update_execution_policy", "par", descriptor);
+    try {
+      sample_execution_policy_ = beluga_amcl::execution::policy_from_string(sample_policy_string);
+    } catch (const std::invalid_argument &) {
+      RCLCPP_WARN_STREAM(
+        this->get_logger(),
+        "particle_update_execution_policy param should be [seq, unseq, par, par_unseq], got: " <<
+          sample_policy_string << "\nUsing the default parallel policy.");
+      sample_execution_policy_ = beluga_amcl::execution::Policy::par;
+    }
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.read_only = true;
+    descriptor.description =
+      "Execution policy used to run the impotance sample step, i.e. update particle weights"
+      " [seq, unseq, par, par_unseq].";
+    declare_parameter("importance_sample_execution_policy", "par", descriptor);
+    auto importance_sample_policy_string = declare_parameter(
+      "importance_sample_execution_policy", "par", descriptor);
+    try {
+      importance_sample_execution_policy_ = beluga_amcl::execution::policy_from_string(
+        importance_sample_policy_string);
+    } catch (const std::invalid_argument &) {
+      RCLCPP_WARN_STREAM(
+        this->get_logger(),
+        "importance_sample_execution_policy param should be [seq, unseq, par, par_unseq], got: " <<
+          importance_sample_policy_string << "\nUsing the default parallel policy.");
+      importance_sample_execution_policy_ = beluga_amcl::execution::Policy::par;
+    }
+  }
 }
 
 AmclNode::~AmclNode()
@@ -562,7 +603,10 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   {
     const auto time1 = std::chrono::high_resolution_clock::now();
     particle_filter_->update_motion(odom_to_base_transform);
-    particle_filter_->sample();
+    beluga_amcl::execution::execute_with_policy(
+      sample_execution_policy_, [&pf = *particle_filter_](auto && std_policy) {
+        pf.sample(std_policy);
+      });
     const auto time2 = std::chrono::high_resolution_clock::now();
     particle_filter_->update_sensor(
       utils::make_points_from_laser_scan(
@@ -571,7 +615,10 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
         static_cast<std::size_t>(get_parameter("max_beams").as_int()),
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
-    particle_filter_->importance_sample();
+    beluga_amcl::execution::execute_with_policy(
+      importance_sample_execution_policy_, [&pf = *particle_filter_](auto && std_policy) {
+        pf.importance_sample(std_policy);
+      });
     const auto time3 = std::chrono::high_resolution_clock::now();
     {
       const auto delta = odom_to_base_transform * last_odom_to_base_transform_.inverse();
