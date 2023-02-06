@@ -11,7 +11,7 @@ Some extra steps are needed if you want to use it in the docker container.
 ### Common steps
 
 ```bash
-sudo apt install linux-tools-generic linux-cloud-tools-generic
+sudo apt update && sudo apt install linux-tools-generic linux-cloud-tools-generic linux-tools-common
 perf
 ```
 
@@ -27,12 +27,10 @@ You need to run a container with at least CAP_SYS_ADMIN added in order to be abl
 For that, you can use:
 
 ```
-docker/run --privileged
+docker/run.sh --privileged
 ```
 
 Which will run the container as privilaged.
-You will need to use `sudo` to run perf.
-See [troubleshooting](#avoiding-sudo) if you want to avoid that or you are still getting errors when recording.
 
 ## Building your code
 
@@ -50,24 +48,28 @@ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -D
 For that, use:
 
 ```bash
-perf record -F 99 -g --call-graph dwarf -- <your command> <arg0> <arg1> ...
+sudo perf record -F 99 -g --call-graph dwarf -- <your command> <arg0> <arg1> ...
 ```
 
-In launch files that allows you to set a prefix, you can use `perf record -F99 -g --call-graph dwarf --` as a prefix.
+In launch files that allow you to set a prefix, you can use `sudo perf record -F99 -g --call-graph dwarf --` as a prefix.
 For example:
 
 ```bash
-ros2 launch beluga_example example_rosbag_launch.py prefix:="perf record -F99 -g --call-graph dwarf --"
+source /ws/install/setup.bash
+ros2 launch beluga_example example_rosbag_launch.py prefix:="sudo perf record -F99 -g --call-graph dwarf --"
 ```
+
+To avoid using `sudo`, see [troubleshooting](#avoiding-sudo).
 
 ### Recording perf events of a running process
 
 This can be done either from the host or within the container.
 
 ```bash
-perf record -F 99 -g --call-graph dwarf -p <PID>
+sudo perf record -F 99 -g --call-graph dwarf -p <PID>
 ```
 
+To avoid using `sudo`, see [troubleshooting](#avoiding-sudo).
 You can stop recording using `ctrl-c`, or it will automatically stop when the process finishes.
 
 For example:
@@ -93,7 +95,7 @@ When the bag stops, the launch file will stop and perf will finish recording.
 This needs to be done in the docker container with your workspace sourced, so symbol names can be correctly extracted.
 
 ```bash
-source <your_ws_install_dir>/setup.bash
+source /ws/install/setup.bash
 cd <directory_with_perf.data_file>
 git clone https://github.com/brendangregg/FlameGraph
 perf script > out.perf # if asks for sudo access, use chown to modify owner of perf.data. May take really long for dwarf data.
