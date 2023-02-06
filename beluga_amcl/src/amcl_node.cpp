@@ -392,7 +392,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
   tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
     *tf_buffer_,
     this,
-    false);
+    false);  // avoid using dedicated tf thread
 
   laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
       rclcpp_lifecycle::LifecycleNode>>(
@@ -533,6 +533,9 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   auto odom_to_base_transform = Sophus::SE2d{};
   try {
+    // Use tf overload that does not waits for a transform within a timeout.
+    // This is not convenient in callbacks, the message filter we are using avoids the necessity of it,
+    // and it is also not allowed if not using a dedicated tf thread.
     tf2::convert(
       tf_buffer_->lookupTransform(
         get_parameter("odom_frame_id").as_string(),
