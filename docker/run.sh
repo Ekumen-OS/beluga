@@ -7,14 +7,22 @@ set -o errexit
 cd $(dirname "$(readlink -f "$0")")
 
 [[ ! -z "${WITHIN_DEV}" ]] && echo "Already in the development environment!" && exit 1
+HELP="Usage: $(basename $0) [-b|--build] [-p|--privileged]"
 
+set +o errexit
 VALID_ARGS=$(OPTERR=1 getopt -o bph --long build,privileged,help -- "$@")
-if [[ $? -ne 0 ]]; then
+RET_CODE=$?
+set -o errexit
+
+if [[ $RET_CODE -eq 1 ]]; then
+    echo $HELP
+    exit 1;
+fi
+if [[ $RET_CODE -ne 0 ]]; then
+    >&2 echo "Unexpected getopt error"
     exit 1;
 fi
 
-
-HELP="Usage: $(basename $0) [-b|--build] [-p|--privileged]"
 BUILD=false
 PRIVILEGED_CONTAINER=false
 
@@ -36,7 +44,8 @@ while [[ "$1" != "" ]]; do
     --) # start of positional arguments
         shift
         ;;
-    ? | *)
+    *)
+        >&2 echo "Unrecognized positional argument: $1"
         echo $HELP
         exit 1
         ;;
