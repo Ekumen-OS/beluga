@@ -533,9 +533,8 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   auto odom_to_base_transform = Sophus::SE2d{};
   try {
-    // Use tf overload that does not wait for a transform within a timeout.
-    // This is not convenient in callbacks, the message filter we are using avoids the necessity of it,
-    // and it is also not allowed if not using a dedicated tf thread.
+    // Use the lookupTransform overload with no timeout since we're not using a dedicated
+    // tf thread. The message filter we are using avoids the need for it.
     tf2::convert(
       tf_buffer_->lookupTransform(
         get_parameter("odom_frame_id").as_string(),
