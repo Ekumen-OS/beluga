@@ -20,9 +20,7 @@ repos:
         types_or: [c++, python]
         language: system
 
-  - repo: local
-    hooks:
-      - id: cmake
+      - id: compile_commands
         name: "[beluga] Export compile commands"
         description: Creates the compile_commands.json required by clang-tidy.
         entry: cmake -S ./beluga -B /tmp/beluga -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -32,8 +30,6 @@ repos:
         pass_filenames: false
         language: system
 
-  - repo: local
-    hooks:
       - id: ament_clang_format
         name: "[beluga] Fix C++ format (clang-format)"
         entry: ament_clang_format --config ./beluga/.clang-format --reformat
@@ -41,8 +37,6 @@ repos:
         types: [c++]
         language: system
 
-  - repo: local
-    hooks:
       - id: ament_clang_tidy
         name: "[beluga] Fix C++ errors (clang-tidy)"
         entry: ament_clang_tidy --config ./beluga/.clang-tidy --fix-errors /tmp/beluga/compile_commands.json
@@ -51,11 +45,16 @@ repos:
         pass_filenames: false
         language: system
 
-  - repo: local
-    hooks:
       - id: ament_uncrustify
         name: "[others] Fix C++ format (uncrustify)"
         entry: ament_uncrustify --reformat
+        exclude: beluga\/
+        types: [c++]
+        language: system
+
+      - id: ament_cpplint
+        name: "[others] Fix C++ format (cpplint)"
+        entry: ament_cpplint
         exclude: beluga\/
         types: [c++]
         language: system
