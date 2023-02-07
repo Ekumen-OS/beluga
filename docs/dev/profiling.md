@@ -36,12 +36,6 @@ source /ws/install/setup.bash
 
 NOTE: For some reason, it is not working when used as a prefix in launch, so modify the script avoid if desired.
 
-It may also be useful to run perf on a process that already started, e.g.:
-
-```bash
-perf record -F 99 -g --call-graph dwarf -p <PID>
-```
-
 In both cases, `perf` will generate a `perf.data` file in the folder it was run.
 To generate a flamegraph from the recorded data, run:
 
