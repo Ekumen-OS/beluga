@@ -26,7 +26,7 @@ For that, use:
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS="-fno-omit-frame-pointer"
 ```
 
-We will need to run `perf` without sudo, please run the extra steps in your host specified in [troubleshooting](#avoiding-sudo).
+We will need to run `perf` without `sudo`, please run the extra steps in your host specified in [troubleshooting](#avoiding-sudo).
 You can use `perf` as a prefix of a command, for example:
 
 ```bash
@@ -39,7 +39,7 @@ NOTE: For some reason, it is not working when used as a prefix in launch, so mod
 It may also be useful to run perf on a process that already started, e.g.:
 
 ```bash
-sudo perf record -F 99 -g --call-graph dwarf -p <PID>
+perf record -F 99 -g --call-graph dwarf -p <PID>
 ```
 
 In both cases, `perf` will generate a `perf.data` file in the folder it was run.
@@ -82,7 +82,7 @@ echo "-1" | sudo tee -a /proc/sys/kernel/perf_event_paranoid
 echo 0 | sudo tee -a /proc/sys/kernel/kptr_restrict
 ```
 
-This changes are not permanent, you will need to apply them again after rebooting.
+These changes are not permanent, you will need to apply them again after rebooting.
 
 ## References
 
