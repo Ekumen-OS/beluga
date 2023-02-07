@@ -3,7 +3,6 @@
 ## Generating a flamegraph from recorded perf events
 
 A flamegraph is a convenient tool for understanding how CPU time is being used.
-We're going to record the perf events from within docker in this guide, though it is also possible to do that from the host.
 
 To start, run the docker container in privileged mode:
 
