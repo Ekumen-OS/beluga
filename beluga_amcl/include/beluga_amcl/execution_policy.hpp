@@ -60,7 +60,8 @@ auto execute_with_policy(Policy p, F f, Args... args)
       return f(std::execution::par_unseq, args ...);
     case Policy::unseq:
       return f(std::execution::unseq, args ...);
-    case Policy::seq:  // fallthrough
+    case Policy::seq:
+      [[fallthrough]];
     default:
       return f(std::execution::seq, args ...);
   }

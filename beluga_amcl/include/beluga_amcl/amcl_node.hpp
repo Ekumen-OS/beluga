@@ -64,7 +64,6 @@ protected:
   void laser_callback(
     ExecutionPolicy && exec_policy,
     sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan);
-  // void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
   void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
 
   std::unique_ptr<ParticleFilter> particle_filter_;
