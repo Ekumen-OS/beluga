@@ -44,7 +44,7 @@ source /ws/install/setup.bash
 /ws/src/docs/dev/profiling/flamegraph.sh  # This may take a long time
 ```
 
-To visualize the flamegraph and be able to zoom it in or out, you need to use a web-browser.
+To visualize the flamegraph and be able to zoom in or out, open the generated `svg` file in a web-browser.
 
 ## Troubleshooting
 
