@@ -432,8 +432,11 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
       execution_policy_, [this](
         auto && std_policy) -> std::function<void(sensor_msgs::msg::LaserScan::ConstSharedPtr)>
       {
-        return [this, std_policy](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
-          this->laser_callback(std_policy, std::move(laser_scan));
+        using E = decltype(std_policy);
+        return [this,
+        std_policy =
+        std::forward<E>(std_policy)](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+          this->laser_callback(std::forward<E>(std_policy), std::move(laser_scan));
         };
       }));
   RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
@@ -601,7 +604,7 @@ void AmclNode::laser_callback(
         static_cast<std::size_t>(get_parameter("max_beams").as_int()),
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
-    particle_filter_->importance_sample(exec_policy);
+    particle_filter_->importance_sample(std::forward<ExecutionPolicy>(exec_policy));
     const auto time3 = std::chrono::high_resolution_clock::now();
     {
       const auto delta = odom_to_base_transform * last_odom_to_base_transform_.inverse();

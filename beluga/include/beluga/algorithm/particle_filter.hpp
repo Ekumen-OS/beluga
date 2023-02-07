@@ -205,9 +205,9 @@ struct BootstrapParticleFilter : public Mixin {
   template <typename ExecutionPolicy>
   void sample(ExecutionPolicy&& policy) {
     const auto states = views::states(particles_);
-    std::transform(policy, std::begin(states), std::end(states), std::begin(states), [this](const auto& state) {
-      return this->self().apply_motion(state);
-    });
+    std::transform(
+        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states), std::begin(states),
+        [this](const auto& state) { return this->self().apply_motion(state); });
   }
 
   /// Update the particle weights based on the sensor model.
@@ -226,7 +226,8 @@ struct BootstrapParticleFilter : public Mixin {
   void importance_sample(ExecutionPolicy&& policy) {
     const auto states = views::states(particles_);
     std::transform(
-        policy, std::begin(states), std::end(states), std::begin(views::weights(particles_)),
+        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states),
+        std::begin(views::weights(particles_)),
         [this](const auto& state) { return this->self().importance_weight(state); });
   }
 
