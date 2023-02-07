@@ -30,7 +30,7 @@ You can use `perf` as a prefix of a command, for example:
 
 ```bash
 source /ws/install/setup.bash
-/ws/src/docs/dev/profiling/profile_amcl_with_bagfile.sh
+/ws/src/scripts/profiling/profile_amcl_with_bagfile.sh
 ```
 
 In both cases, `perf` will generate a `perf.data` file in the folder it was run.
@@ -38,7 +38,7 @@ To generate a flamegraph from the recorded data, run:
 
 ```bash
 source /ws/install/setup.bash
-/ws/src/docs/dev/profiling/flamegraph.sh  # This may take a long time
+/ws/src/scripts/profiling/flamegraph.sh  # This may take a long time
 ```
 
 To visualize the flamegraph and be able to zoom in or out, open the generated `svg` file in a web-browser.
