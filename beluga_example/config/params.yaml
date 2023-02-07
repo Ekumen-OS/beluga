@@ -29,4 +29,4 @@ amcl:
     transform_tolerance: 1.0
     initial_pose: [0, 2, 0]
     set_initial_pose: true
-    execution_policy: par
+    execution_policy: seq
