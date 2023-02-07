@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# TODO(ivanpauno): For some reason the `prefix` option in a launch file is not working correctly with
+# perf.
+
 # emulate tty for launch to kill process properly and to get colored output
 0<&- script -qefc "ros2 launch beluga_example common_nodes_launch.py" /dev/null &
 perf record -e cycles -F 99 -g --call-graph dwarf --\

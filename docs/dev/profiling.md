@@ -34,8 +34,6 @@ source /ws/install/setup.bash
 /ws/src/docs/dev/profiling/profile_amcl_with_bagfile.sh
 ```
 
-NOTE: For some reason, it is not working when used as a prefix in launch, so modify the script avoid if desired.
-
 In both cases, `perf` will generate a `perf.data` file in the folder it was run.
 To generate a flamegraph from the recorded data, run:
 
