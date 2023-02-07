@@ -389,7 +389,10 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
       get_node_base_interface(),
       get_node_timers_interface()));
   tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(shared_from_this());
-  tf_listener_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_);
+  tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
+    *tf_buffer_,
+    this,
+    false);  // avoid using dedicated tf thread
 
   laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
       rclcpp_lifecycle::LifecycleNode>>(
@@ -530,12 +533,13 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   auto odom_to_base_transform = Sophus::SE2d{};
   try {
+    // Use the lookupTransform overload with no timeout since we're not using a dedicated
+    // tf thread. The message filter we are using avoids the need for it.
     tf2::convert(
       tf_buffer_->lookupTransform(
         get_parameter("odom_frame_id").as_string(),
         get_parameter("base_frame_id").as_string(),
-        laser_scan->header.stamp,
-        std::chrono::seconds(1)).transform,
+        tf2_ros::fromMsg(laser_scan->header.stamp)).transform,
       odom_to_base_transform);
   } catch (const tf2::TransformException & error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
@@ -548,8 +552,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
       tf_buffer_->lookupTransform(
         get_parameter("base_frame_id").as_string(),
         laser_scan->header.frame_id,
-        laser_scan->header.stamp,
-        std::chrono::seconds(1)).transform,
+        tf2_ros::fromMsg(laser_scan->header.stamp)).transform,
       base_to_laser_transform);
   } catch (const tf2::TransformException & error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from base to laser: %s", error.what());
