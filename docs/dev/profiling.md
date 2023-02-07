@@ -5,7 +5,7 @@
 The generated flamegraph is a good tool to understand what the cpu is used the time for.
 We're going to record the perf events from within docker in this guide, though it is also possible to do that from the host.
 
-To start, run the docker container in privilaged mode:
+To start, run the docker container in privileged mode:
 
 ```bash
 docker/run.sh -p
