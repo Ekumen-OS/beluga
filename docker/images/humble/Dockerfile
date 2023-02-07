@@ -7,6 +7,9 @@ RUN apt-get update \
     ccache \
     curl \
     doxygen \
+    linux-cloud-tools-generic \
+    linux-tools-common \
+    linux-tools-generic \
     perl \
     python3-pip \
     texlive-base \

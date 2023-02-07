@@ -88,7 +88,7 @@ def generate_launch_description():
     start_paused_launch_arg = DeclareLaunchArgument(
         name='start_paused',
         default_value='False',
-        description='Set of commands/arguments to preceed the node command (e.g. "timem --").',
+        description='Start the rosbag player in a paused state.',
     )
 
     load_nodes = GroupAction(
