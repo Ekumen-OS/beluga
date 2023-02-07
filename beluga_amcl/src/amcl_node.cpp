@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <beluga_amcl/amcl_node.hpp>
-#include <beluga_amcl/amcl_node_utils.hpp>
-#include <beluga_amcl/execution_policy.hpp>
-
 #include <tf2/convert.h>
 #include <tf2/utils.h>
 #include <tf2_ros/create_timer_ros.h>
@@ -24,6 +20,10 @@
 #include <limits>
 #include <memory>
 #include <utility>
+
+#include <beluga_amcl/amcl_node.hpp>
+#include <beluga_amcl/amcl_node_utils.hpp>
+#include <beluga_amcl/execution_policy.hpp>
 
 #include <beluga/random/multivariate_normal_distribution.hpp>
 #include <beluga_amcl/tf2_sophus.hpp>
@@ -432,11 +432,10 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
       execution_policy_, [this](
         auto && std_policy) -> std::function<void(sensor_msgs::msg::LaserScan::ConstSharedPtr)>
       {
-        return std::bind(
-          &AmclNode::laser_callback<decltype(std_policy)>, this, std_policy, std::placeholders::_1);
+        return [this, std_policy](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+          this->laser_callback(std_policy, std::move(laser_scan));
+        };
       }));
-  // std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
-
   RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
 
   return CallbackReturn::SUCCESS;
