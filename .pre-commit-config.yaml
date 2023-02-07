@@ -53,7 +53,7 @@ repos:
         language: system
 
       - id: ament_cpplint
-        name: "[others] Fix C++ format (cpplint)"
+        name: "[others] Check C++ format (cpplint)"
         entry: ament_cpplint
         exclude: beluga\/
         types: [c++]
