@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL_EXECUTION_POLICY_HPP
-#define BELUGA_AMCL_EXECUTION_POLICY_HPP
+#ifndef BELUGA_AMCL__EXECUTION_POLICY_HPP_
+#define BELUGA_AMCL__EXECUTION_POLICY_HPP_
 
 #include <execution>
 #include <stdexcept>
@@ -66,6 +66,6 @@ auto execute_with_policy(Policy p, F f, Args... args)
   }
 }
 
-}  // namespace beluga_amcl
+}  // namespace beluga_amcl::execution
 
-#endif  // BELUGA_AMCL_EXECUTION_POLICY_HPP
+#endif  // BELUGA_AMCL__EXECUTION_POLICY_HPP_

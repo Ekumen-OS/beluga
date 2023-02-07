@@ -15,8 +15,6 @@
 #ifndef BELUGA_AMCL__AMCL_NODE_HPP_
 #define BELUGA_AMCL__AMCL_NODE_HPP_
 
-#include <beluga_amcl/execution_policy.hpp>
-
 #include <message_filters/subscriber.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/message_filter.h>
@@ -28,13 +26,15 @@
 #include <beluga/algorithm/particle_filter.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/sensor/likelihood_field_model.hpp>
-#include <beluga_amcl/occupancy_grid.hpp>
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <nav2_msgs/msg/particle_cloud.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+
+#include "beluga_amcl/execution_policy.hpp"
+#include "beluga_amcl/occupancy_grid.hpp"
 
 namespace beluga_amcl
 {

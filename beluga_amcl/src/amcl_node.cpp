@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "beluga_amcl/amcl_node.hpp"
+
 #include <tf2/convert.h>
 #include <tf2/utils.h>
 #include <tf2_ros/create_timer_ros.h>
@@ -21,17 +23,16 @@
 #include <memory>
 #include <utility>
 
-#include <beluga_amcl/amcl_node.hpp>
-#include <beluga_amcl/amcl_node_utils.hpp>
-#include <beluga_amcl/execution_policy.hpp>
-
 #include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga_amcl/tf2_sophus.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
+#include "beluga_amcl/amcl_node_utils.hpp"
+#include "beluga_amcl/execution_policy.hpp"
+#include "beluga_amcl/tf2_sophus.hpp"
 
 namespace beluga_amcl
 {
