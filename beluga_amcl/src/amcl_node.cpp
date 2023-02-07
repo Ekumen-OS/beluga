@@ -334,7 +334,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
         this->get_logger(),
         "execution_policy param should be [seq, unseq, par, par_unseq], got: " <<
           execution_policy_string << "\nUsing the default parallel policy.");
-      execution_policy_ = beluga_amcl::execution::Policy::par;
+      execution_policy_ = std::execution::par;
     }
   }
 }
@@ -429,17 +429,17 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     tf2::durationFromSec(1.0));
 
   laser_scan_connection_ = laser_scan_filter_->registerCallback(
-    beluga_amcl::execution::execute_with_policy(
-      execution_policy_, [this](
-        auto && std_policy) -> std::function<void(sensor_msgs::msg::LaserScan::ConstSharedPtr)>
+    std::visit(
+      [this](
+        const auto & policy) -> std::function<void(sensor_msgs::msg::LaserScan::ConstSharedPtr)>
       {
-        using E = decltype(std_policy);
+        using E = decltype(policy);
         return [this,
-        std_policy =
-        std::forward<E>(std_policy)](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
-          this->laser_callback(std::forward<E>(std_policy), std::move(laser_scan));
+        policy =
+        std::forward<E>(policy)](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+          this->laser_callback(std::forward<E>(policy), std::move(laser_scan));
         };
-      }));
+      }, execution_policy_));
   RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
 
   return CallbackReturn::SUCCESS;
