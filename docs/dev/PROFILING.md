@@ -64,17 +64,6 @@ sudo ln -s /usr/lib/linux-tools/$VERSION_NUMBER-generic/perf /usr/bin
 
 Now running `perf` should not ask to install another version.
 
-### Avoiding sudo
-
-In your host:
-
-```bash
-echo "-1" | sudo tee -a /proc/sys/kernel/perf_event_paranoid
-echo 0 | sudo tee -a /proc/sys/kernel/kptr_restrict
-```
-
-These changes are not permanent, you will need to apply them again after rebooting.
-
 ## References
 
 - https://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html
