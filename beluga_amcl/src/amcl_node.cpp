@@ -323,7 +323,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.read_only = true;
     descriptor.description =
-      "Execution policy used to process particles [seq, unseq, par, par_unseq].";
+      "Execution policy used to process particles [seq, par].";
     auto execution_policy_string = declare_parameter(
       "execution_policy", "par", descriptor);
     try {
@@ -332,7 +332,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     } catch (const std::invalid_argument &) {
       RCLCPP_WARN_STREAM(
         this->get_logger(),
-        "execution_policy param should be [seq, unseq, par, par_unseq], got: " <<
+        "execution_policy param should be [seq, par], got: " <<
           execution_policy_string << "\nUsing the default parallel policy.");
       execution_policy_ = std::execution::par;
     }
@@ -428,16 +428,13 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     get_node_clock_interface(),
     tf2::durationFromSec(1.0));
 
+  using LaserCallback = std::function<void (sensor_msgs::msg::LaserScan::ConstSharedPtr)>;
   laser_scan_connection_ = laser_scan_filter_->registerCallback(
     std::visit(
-      [this](
-        const auto & policy) -> std::function<void(sensor_msgs::msg::LaserScan::ConstSharedPtr)>
+      [this](const auto & policy) -> LaserCallback
       {
-        using E = decltype(policy);
-        return [this,
-        policy =
-        std::forward<E>(policy)](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
-          this->laser_callback(std::forward<E>(policy), std::move(laser_scan));
+        return [this, &policy](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+          this->laser_callback(policy, std::move(laser_scan));
         };
       }, execution_policy_));
   RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
@@ -605,7 +602,7 @@ void AmclNode::laser_callback(
         static_cast<std::size_t>(get_parameter("max_beams").as_int()),
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
-    particle_filter_->importance_sample(std::forward<ExecutionPolicy>(exec_policy));
+    particle_filter_->importance_sample(exec_policy);
     const auto time3 = std::chrono::high_resolution_clock::now();
     {
       const auto delta = odom_to_base_transform * last_odom_to_base_transform_.inverse();

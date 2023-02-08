@@ -31,26 +31,18 @@ namespace beluga_amcl::execution
 /// Allows dinamically specifying an execution policy.
 using Policy = std::variant<
   std::execution::sequenced_policy,
-  std::execution::parallel_policy,
-  std::execution::parallel_unsequenced_policy,
-  std::execution::unsequenced_policy>;
+  std::execution::parallel_policy>;
 
-/// Returns the execution policy enum from its name.
+/// Returns the execution policy from its name.
 inline Policy policy_from_string(std::string_view policy_name)
 {
   if (policy_name == "seq") {
     return std::execution::seq;
   }
-  if (policy_name == "unseq") {
-    return std::execution::unseq;
-  }
   if (policy_name == "par") {
     return std::execution::par;
   }
-  if (policy_name == "par_unseq") {
-    return std::execution::par_unseq;
-  }
-  throw std::invalid_argument{"execution policy must be seq, unseq, par or par_unseq"};
+  throw std::invalid_argument{"execution policy must be seq, par"};
 }
 
 }  // namespace beluga_amcl::execution
