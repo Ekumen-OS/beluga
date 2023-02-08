@@ -146,9 +146,17 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stru
 <tr class="memitem:aa6649447c318bd17cbff60c30aa49ebe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BootstrapParticleFilter.html#aa6649447c318bd17cbff60c30aa49ebe">sample</a> ()</td></tr>
 <tr class="memdesc:aa6649447c318bd17cbff60c30aa49ebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the particles states based on the motion model and the last pose update.  <a href="structbeluga_1_1BootstrapParticleFilter.html#aa6649447c318bd17cbff60c30aa49ebe">More...</a><br /></td></tr>
 <tr class="separator:aa6649447c318bd17cbff60c30aa49ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67862e6ae791b193572956296fd10119"><td class="memTemplParams" colspan="2">template&lt;typename ExecutionPolicy &gt; </td></tr>
+<tr class="memitem:a67862e6ae791b193572956296fd10119"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BootstrapParticleFilter.html#a67862e6ae791b193572956296fd10119">sample</a> (ExecutionPolicy &amp;&amp;policy)</td></tr>
+<tr class="memdesc:a67862e6ae791b193572956296fd10119"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the particles states based on the motion model and the last pose update.  <a href="structbeluga_1_1BootstrapParticleFilter.html#a67862e6ae791b193572956296fd10119">More...</a><br /></td></tr>
+<tr class="separator:a67862e6ae791b193572956296fd10119"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23d34f7514f721465defeba0e4ef27cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BootstrapParticleFilter.html#a23d34f7514f721465defeba0e4ef27cb">importance_sample</a> ()</td></tr>
 <tr class="memdesc:a23d34f7514f721465defeba0e4ef27cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the particle weights based on the sensor model.  <a href="structbeluga_1_1BootstrapParticleFilter.html#a23d34f7514f721465defeba0e4ef27cb">More...</a><br /></td></tr>
 <tr class="separator:a23d34f7514f721465defeba0e4ef27cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8b08306b9c7ef78ff6ca8cd611ec871"><td class="memTemplParams" colspan="2">template&lt;typename ExecutionPolicy &gt; </td></tr>
+<tr class="memitem:aa8b08306b9c7ef78ff6ca8cd611ec871"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BootstrapParticleFilter.html#aa8b08306b9c7ef78ff6ca8cd611ec871">importance_sample</a> (ExecutionPolicy &amp;&amp;policy)</td></tr>
+<tr class="memdesc:aa8b08306b9c7ef78ff6ca8cd611ec871"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the particle weights based on the sensor model.  <a href="structbeluga_1_1BootstrapParticleFilter.html#aa8b08306b9c7ef78ff6ca8cd611ec871">More...</a><br /></td></tr>
+<tr class="separator:aa8b08306b9c7ef78ff6ca8cd611ec871"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6691e9b0d3fb09ee97afc63e4bf588b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BootstrapParticleFilter.html#a6691e9b0d3fb09ee97afc63e4bf588b0">resample</a> ()</td></tr>
 <tr class="memdesc:a6691e9b0d3fb09ee97afc63e4bf588b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resample particles based on ther weights and the resampling policy used.  <a href="structbeluga_1_1BootstrapParticleFilter.html#a6691e9b0d3fb09ee97afc63e4bf588b0">More...</a><br /></td></tr>
 <tr class="separator:a6691e9b0d3fb09ee97afc63e4bf588b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -225,7 +233,7 @@ template&lt;class... Args&gt; </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a23d34f7514f721465defeba0e4ef27cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23d34f7514f721465defeba0e4ef27cb">&#9670;&nbsp;</a></span>importance_sample()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a23d34f7514f721465defeba0e4ef27cb">&#9670;&nbsp;</a></span>importance_sample() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -251,6 +259,39 @@ template&lt;class Mixin , class Container &gt; </div>
 
 <p>Update the particle weights based on the sensor model. </p>
 <p>The update will be done based on the <code>Mixin</code> implementation of the <a class="el" href="SensorModelPage.html">SensorModel</a> named requirement. </p>
+
+</div>
+</div>
+<a id="aa8b08306b9c7ef78ff6ca8cd611ec871"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8b08306b9c7ef78ff6ca8cd611ec871">&#9670;&nbsp;</a></span>importance_sample() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Mixin , class Container &gt; </div>
+<div class="memtemplate">
+template&lt;typename ExecutionPolicy &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structbeluga_1_1BootstrapParticleFilter.html">beluga::BootstrapParticleFilter</a>&lt; Mixin, Container &gt;::importance_sample </td>
+          <td>(</td>
+          <td class="paramtype">ExecutionPolicy &amp;&amp;&#160;</td>
+          <td class="paramname"><em>policy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the particle weights based on the sensor model. </p>
+<p>Same as the overload that takes no arguments, but it allows specifying a different execution policy. The default is std::execution::par. </p>
 
 </div>
 </div>
@@ -330,7 +371,7 @@ template&lt;class Mixin , class Container &gt; </div>
 </div>
 </div>
 <a id="aa6649447c318bd17cbff60c30aa49ebe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6649447c318bd17cbff60c30aa49ebe">&#9670;&nbsp;</a></span>sample()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6649447c318bd17cbff60c30aa49ebe">&#9670;&nbsp;</a></span>sample() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -356,6 +397,39 @@ template&lt;class Mixin , class Container &gt; </div>
 
 <p>Update the particles states based on the motion model and the last pose update. </p>
 <p>The update will be done based on the <code>Mixin</code> implementation of the <a class="el" href="MotionModelPage.html">MotionModel</a> named requirement. </p>
+
+</div>
+</div>
+<a id="a67862e6ae791b193572956296fd10119"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67862e6ae791b193572956296fd10119">&#9670;&nbsp;</a></span>sample() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Mixin , class Container &gt; </div>
+<div class="memtemplate">
+template&lt;typename ExecutionPolicy &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structbeluga_1_1BootstrapParticleFilter.html">beluga::BootstrapParticleFilter</a>&lt; Mixin, Container &gt;::sample </td>
+          <td>(</td>
+          <td class="paramtype">ExecutionPolicy &amp;&amp;&#160;</td>
+          <td class="paramname"><em>policy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the particles states based on the motion model and the last pose update. </p>
+<p>Same as the overload that takes no arguments, but it allows specifying a different execution policy. The default is std::execution::par. </p>
 
 </div>
 </div>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['sample_250',['sample',['../structbeluga_1_1BootstrapParticleFilter.html#aa6649447c318bd17cbff60c30aa49ebe',1,'beluga::BootstrapParticleFilter']]],
+  ['sample_250',['sample',['../structbeluga_1_1BootstrapParticleFilter.html#aa6649447c318bd17cbff60c30aa49ebe',1,'beluga::BootstrapParticleFilter::sample()'],['../structbeluga_1_1BootstrapParticleFilter.html#a67862e6ae791b193572956296fd10119',1,'beluga::BootstrapParticleFilter::sample(ExecutionPolicy &amp;&amp;policy)']]],
   ['set_5fcluster_251',['set_cluster',['../sampling_8hpp.html#a3067c4d9759031795ba98ac43dc80dc7',1,'beluga']]],
   ['simpleestimation_252',['SimpleEstimation',['../classbeluga_1_1SimpleEstimation.html#ae60f94e5883d7305da103dea78612bc7',1,'beluga::SimpleEstimation']]],
   ['size_253',['size',['../classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#ab33916ee4b313dc966b4fa81a57d007b',1,'beluga::TupleContainer&lt; InternalContainer, Tuple&lt; Types... &gt; &gt;']]],

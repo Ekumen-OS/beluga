@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['sample_105',['sample',['../structbeluga_1_1BootstrapParticleFilter.html#aa6649447c318bd17cbff60c30aa49ebe',1,'beluga::BootstrapParticleFilter']]],
+  ['sample_105',['sample',['../structbeluga_1_1BootstrapParticleFilter.html#aa6649447c318bd17cbff60c30aa49ebe',1,'beluga::BootstrapParticleFilter::sample()'],['../structbeluga_1_1BootstrapParticleFilter.html#a67862e6ae791b193572956296fd10119',1,'beluga::BootstrapParticleFilter::sample(ExecutionPolicy &amp;&amp;policy)']]],
   ['sampling_2ehpp_106',['sampling.hpp',['../sampling_8hpp.html',1,'']]],
   ['scalar_107',['Scalar',['../classbeluga_1_1MultivariateNormalDistribution.html#a38c68b2332e80fb872607f067119d8d9',1,'beluga::MultivariateNormalDistribution']]],
   ['sensor_2ehpp_108',['sensor.hpp',['../sensor_8hpp.html',1,'']]],
