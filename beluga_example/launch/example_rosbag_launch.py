@@ -16,6 +16,7 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 
+from launch import Action
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import GroupAction
@@ -24,9 +25,37 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch.actions import ExecuteProcess
 from launch.actions import Shutdown
+from launch.utilities.type_utils import normalize_typed_substitution
+from launch.utilities.type_utils import perform_typed_substitution
 from launch_ros.actions import Node
 from launch_ros.actions import SetParameter
 from launch.substitutions import LaunchConfiguration
+
+
+class PlayBag(Action):
+    def __init__(self, *args, start_paused, example_dir, condition=None, **kwargs):
+        self._start_paused = normalize_typed_substitution(start_paused, bool)
+        self._example_dir = example_dir
+        self._kwargs = kwargs
+        super().__init__(condition=condition)
+
+    def execute(self, context):
+        start_paused = perform_typed_substitution(context, self._start_paused, bool)
+        cmd = [
+            'ros2',
+            'bag',
+            'play',
+            os.path.join(self._example_dir, 'bags', 'perfect_odometry'),
+            '--rate',
+            '3',
+        ]
+        if start_paused:
+            cmd.append('--start-paused')
+        return [
+            ExecuteProcess(
+                cmd=cmd, output='own_log', on_exit=[Shutdown()], **self._kwargs
+            )
+        ]
 
 
 def generate_launch_description():
@@ -35,6 +64,7 @@ def generate_launch_description():
     package = LaunchConfiguration('package')
     node = LaunchConfiguration('node')
     prefix = LaunchConfiguration('prefix')
+    start_paused = LaunchConfiguration('start_paused')
 
     package_launch_arg = DeclareLaunchArgument(
         name='package',
@@ -55,6 +85,12 @@ def generate_launch_description():
         description='Set of commands/arguments to preceed the node command (e.g. "timem --").',
     )
 
+    start_paused_launch_arg = DeclareLaunchArgument(
+        name='start_paused',
+        default_value='False',
+        description='Start the rosbag player in a paused state.',
+    )
+
     load_nodes = GroupAction(
         actions=[
             SetParameter('use_sim_time', True),
@@ -72,18 +108,7 @@ def generate_launch_description():
                     ]
                 )
             ),
-            ExecuteProcess(
-                cmd=[
-                    'ros2',
-                    'bag',
-                    'play',
-                    os.path.join(example_dir, 'bags', 'perfect_odometry'),
-                    '--rate',
-                    '3',
-                ],
-                output='own_log',
-                on_exit=[Shutdown()],
-            ),
+            PlayBag(start_paused=start_paused, example_dir=example_dir),
             Node(
                 package=package,
                 executable=node,
@@ -100,6 +125,7 @@ def generate_launch_description():
     ld.add_action(package_launch_arg)
     ld.add_action(node_launch_arg)
     ld.add_action(prefix_launch_arg)
+    ld.add_action(start_paused_launch_arg)
     ld.add_action(load_nodes)
 
     return ld

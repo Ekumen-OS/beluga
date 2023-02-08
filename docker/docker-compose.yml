@@ -12,6 +12,7 @@ services:
     stdin_open: true
     tty: true
     user: ${USERID:-1000}:${GROUPID:-1000}
+    privileged: ${PRIVILEGED_CONTAINER:-false}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /tmp/.docker.xauth:/tmp/.docker.xauth

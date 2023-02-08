@@ -7,6 +7,10 @@ RUN apt-get update \
     ccache \
     curl \
     doxygen \
+    git \
+    linux-cloud-tools-generic \
+    linux-tools-common \
+    linux-tools-generic \
     perl \
     python3-pip \
     texlive-base \
@@ -32,6 +36,8 @@ RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.
   && cd /etc/fixuid \
   && sed -i "s/_USER_/$USER/" config.yml \
   && sed -i "s/_GROUP_/$GROUP/" config.yml
+
+RUN cd /opt && git clone https://github.com/brendangregg/FlameGraph
 
 USER $USER:$GROUP
 
