@@ -16,6 +16,7 @@
 #define BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 
 #include <execution>
+#include <utility>
 
 #include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/sampling.hpp>
@@ -194,10 +195,18 @@ struct BootstrapParticleFilter : public Mixin {
    * The update will be done based on the `Mixin` implementation of the
    * \ref MotionModelPage "MotionModel" named requirement.
    */
-  void sample() {
+  void sample() { this->sample(std::execution::par); }
+
+  /// Update the particles states based on the motion model and the last pose update.
+  /**
+   * Same as the overload that takes no arguments, but it allows specifying a different execution policy.
+   * The default is std::execution::par.
+   */
+  template <typename ExecutionPolicy>
+  void sample(ExecutionPolicy&& policy) {
     const auto states = views::states(particles_);
     std::transform(
-        std::execution::par, std::begin(states), std::end(states), std::begin(states),
+        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states), std::begin(states),
         [this](const auto& state) { return this->self().apply_motion(state); });
   }
 
@@ -206,10 +215,19 @@ struct BootstrapParticleFilter : public Mixin {
    * The update will be done based on the `Mixin` implementation of the \ref SensorModelPage "SensorModel"
    * named requirement.
    */
-  void importance_sample() {
+  void importance_sample() { this->importance_sample(std::execution::par); }
+
+  /// Update the particle weights based on the sensor model.
+  /**
+   * Same as the overload that takes no arguments, but it allows specifying a different execution policy.
+   * The default is std::execution::par.
+   */
+  template <typename ExecutionPolicy>
+  void importance_sample(ExecutionPolicy&& policy) {
     const auto states = views::states(particles_);
     std::transform(
-        std::execution::par, std::begin(states), std::end(states), std::begin(views::weights(particles_)),
+        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states),
+        std::begin(views::weights(particles_)),
         [this](const auto& state) { return this->self().importance_weight(state); });
   }
 

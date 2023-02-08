@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <beluga_amcl/amcl_node.hpp>
-#include <beluga_amcl/amcl_node_utils.hpp>
+#include "beluga_amcl/amcl_node.hpp"
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
@@ -22,14 +21,18 @@
 #include <chrono>
 #include <limits>
 #include <memory>
+#include <utility>
 
 #include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga_amcl/tf2_sophus.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
+#include "beluga_amcl/amcl_node_utils.hpp"
+#include "beluga_amcl/execution_policy.hpp"
+#include "beluga_amcl/tf2_sophus.hpp"
 
 namespace beluga_amcl
 {
@@ -315,6 +318,25 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("sigma_hit", rclcpp::ParameterValue(0.2), descriptor);
   }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.read_only = true;
+    descriptor.description =
+      "Execution policy used to process particles [seq, par].";
+    auto execution_policy_string = declare_parameter(
+      "execution_policy", "par", descriptor);
+    try {
+      execution_policy_ = beluga_amcl::execution::policy_from_string(
+        execution_policy_string);
+    } catch (const std::invalid_argument &) {
+      RCLCPP_WARN_STREAM(
+        this->get_logger(),
+        "execution_policy param should be [seq, par], got: " <<
+          execution_policy_string << "\nUsing the default parallel policy.");
+      execution_policy_ = std::execution::par;
+    }
+  }
 }
 
 AmclNode::~AmclNode()
@@ -406,9 +428,15 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     get_node_clock_interface(),
     tf2::durationFromSec(1.0));
 
+  using LaserCallback = std::function<void (sensor_msgs::msg::LaserScan::ConstSharedPtr)>;
   laser_scan_connection_ = laser_scan_filter_->registerCallback(
-    std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
-
+    std::visit(
+      [this](const auto & policy) -> LaserCallback
+      {
+        return [this, &policy](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+          this->laser_callback(policy, std::move(laser_scan));
+        };
+      }, execution_policy_));
   RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
 
   return CallbackReturn::SUCCESS;
@@ -525,7 +553,10 @@ void AmclNode::timer_callback()
   }
 }
 
-void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
+template<typename ExecutionPolicy>
+void AmclNode::laser_callback(
+  ExecutionPolicy && exec_policy,
+  sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
 {
   if (!particle_filter_) {
     return;
@@ -562,7 +593,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   {
     const auto time1 = std::chrono::high_resolution_clock::now();
     particle_filter_->update_motion(odom_to_base_transform);
-    particle_filter_->sample();
+    particle_filter_->sample(exec_policy);
     const auto time2 = std::chrono::high_resolution_clock::now();
     particle_filter_->update_sensor(
       utils::make_points_from_laser_scan(
@@ -571,7 +602,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
         static_cast<std::size_t>(get_parameter("max_beams").as_int()),
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
-    particle_filter_->importance_sample();
+    particle_filter_->importance_sample(exec_policy);
     const auto time3 = std::chrono::high_resolution_clock::now();
     {
       const auto delta = odom_to_base_transform * last_odom_to_base_transform_.inverse();
