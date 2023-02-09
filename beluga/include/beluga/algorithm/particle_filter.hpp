@@ -18,7 +18,6 @@
 #include <execution>
 #include <utility>
 
-#include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/sampling.hpp>
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
@@ -287,7 +286,6 @@ struct MCL : public ciabatta::mixin<
                  ciabatta::curry<BaselineGeneration>::template mixin,
                  ciabatta::curry<NaiveGeneration>::template mixin,
                  ciabatta::curry<FixedResampling>::template mixin,
-                 ciabatta::curry<SimpleEstimation>::template mixin,
                  MotionModel,
                  SensorModel> {
   using ciabatta::mixin<
@@ -296,7 +294,6 @@ struct MCL : public ciabatta::mixin<
       ciabatta::curry<BaselineGeneration>::template mixin,
       ciabatta::curry<NaiveGeneration>::template mixin,
       ciabatta::curry<FixedResampling>::template mixin,
-      ciabatta::curry<SimpleEstimation>::template mixin,
       MotionModel,
       SensorModel>::mixin;
 };
@@ -325,7 +322,6 @@ struct AMCL : public ciabatta::mixin<
                   ciabatta::curry<BaselineGeneration>::template mixin,
                   ciabatta::curry<AdaptiveGeneration>::template mixin,
                   ciabatta::curry<KldResampling>::template mixin,
-                  ciabatta::curry<SimpleEstimation>::template mixin,
                   MotionModel,
                   SensorModel> {
   using ciabatta::mixin<
@@ -334,7 +330,6 @@ struct AMCL : public ciabatta::mixin<
       ciabatta::curry<BaselineGeneration>::template mixin,
       ciabatta::curry<AdaptiveGeneration>::template mixin,
       ciabatta::curry<KldResampling>::template mixin,
-      ciabatta::curry<SimpleEstimation>::template mixin,
       MotionModel,
       SensorModel>::mixin;
 };
