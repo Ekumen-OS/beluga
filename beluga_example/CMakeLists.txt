@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.16)
 project(beluga_example)
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
 find_package(beluga_amcl REQUIRED)
+
+ament_python_install_package(${PROJECT_NAME})
 
 install(DIRECTORY
   bags
