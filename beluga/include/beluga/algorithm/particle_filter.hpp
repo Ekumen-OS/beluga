@@ -104,7 +104,6 @@
  * - `T` satisfies the \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
  * - `T` satisfies the \ref SensorModelPage "SensorModel" named requirements.
  * - `T` satisfies the \ref MotionModelPage "MotionModel" named requirements.
- * - `T` satisfies the \ref StateEstimationPage "StateEstimation" named requirements.
  */
 namespace beluga {
 
