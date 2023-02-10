@@ -322,6 +322,86 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Set the initial pose from the initial_pose parameters";
+    descriptor.read_only = true;
+    declare_parameter("set_initial_pose", false, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose x axis coordinate.";
+    descriptor.read_only = true;
+    declare_parameter("initial_pose.x", 0.0, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose y axis coordinate.";
+    descriptor.read_only = true;
+    declare_parameter("initial_pose.y", 0.0, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose z axis coordinate.";
+    descriptor.read_only = true;
+    declare_parameter("initial_pose.z", 0.0, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose yaw rotation.";
+    descriptor.read_only = true;
+    declare_parameter("initial_pose.yaw", 0.0, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose x axis covariance.";
+    descriptor.read_only = true;
+    declare_parameter("initial_pose.covariance_x", 0.5 * 0.5, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose y axis covariance.";
+    descriptor.read_only = true;
+    declare_parameter("initial_pose.covariance_y", 0.5 * 0.5, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose yaw covariance.";
+    descriptor.read_only = true;
+    declare_parameter(
+      "initial_pose.covariance_yaw",
+      Sophus::Constants<double>::pi() / 12. * Sophus::Constants<double>::pi() / 12.,
+      descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose xy covariance.";
+    descriptor.read_only = true;
+    declare_parameter("initial_pose.covariance_xy", 0.0, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose xyaw covariance.";
+    descriptor.read_only = true;
+    declare_parameter("initial_pose.covariance_xyaw", 0.0, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Initial pose yyaw covariance.";
+    descriptor.read_only = true;
+    declare_parameter("initial_pose.covariance_yyaw", 0.0, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.read_only = true;
     descriptor.description =
       "Execution policy used to process particles [seq, par].";
@@ -504,12 +584,38 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   motion_params.translation_noise_from_translation = get_parameter("alpha3").as_double();
   motion_params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
 
+  // Only when we get the first map we should use the parameters, not later.
+  // TODO(ivanpauno): Should later maps be initialized from last known pose?
+  // should it be configurable with a parameter?
+  // See always_reset_initial_pose parameter in
+  // https://navigation.ros.org/configuration/packages/configuring-amcl.html
+  bool initialize_from_params = !particle_filter_;
   particle_filter_ = std::make_unique<ParticleFilter>(
     generation_params,
     resampling_params,
     motion_params,
     sensor_params,
     OccupancyGrid{map});
+
+  initialize_from_params = initialize_from_params &&
+    this->get_parameter("set_initial_pose").as_bool();
+  Eigen::Vector3d mean;
+  Eigen::Matrix3d covariance;
+  if (initialize_from_params) {
+    mean.x() = this->get_parameter("initial_pose.x").as_double();
+    mean.y() = this->get_parameter("initial_pose.y").as_double();
+    mean.z() = this->get_parameter("initial_pose.z").as_double();
+    covariance.coeffRef(0, 0) = this->get_parameter("initial_pose.covariance_x").as_double();
+    covariance.coeffRef(1, 1) = this->get_parameter("initial_pose.covariance_y").as_double();
+    covariance.coeffRef(2, 2) = this->get_parameter("initial_pose.covariance_yaw").as_double();
+    covariance.coeffRef(0, 1) = this->get_parameter("initial_pose.covariance_xy").as_double();
+    covariance.coeffRef(1, 0) = covariance.coeffRef(0, 1);
+    covariance.coeffRef(0, 2) = this->get_parameter("initial_pose.covariance_xyaw").as_double();
+    covariance.coeffRef(2, 0) = covariance.coeffRef(0, 2);
+    covariance.coeffRef(1, 2) = this->get_parameter("initial_pose.covariance_yyaw").as_double();
+    covariance.coeffRef(2, 1) = covariance.coeffRef(1, 2);
+    this->reinitialize_with_pose(mean, covariance);
+  }
 
   RCLCPP_INFO(
     get_logger(), "Particle filter initialized with %ld particles",
@@ -688,7 +794,12 @@ void AmclNode::initial_pose_callback(
       "Mean value: " << mean.format(eigen_format) <<
         " - Covariance coefficients: " << covariance.format(eigen_format));
   }
+  this->reinitialize_with_pose(mean, covariance);
+}
 
+void AmclNode::reinitialize_with_pose(
+  const Eigen::Vector3d & mean, const Eigen::Matrix3d & covariance)
+{
   try {
     particle_filter_->reinitialize(
       ranges::views::generate(
