@@ -37,6 +37,7 @@ from beluga_example.launch_utils import (
 def get_launch_arguments():
     example_dir_path = Path(get_package_share_directory('beluga_example'))
     params_file_path = example_dir_path / 'config' / 'params.yaml'
+    rosbag_path = example_dir_path / 'bags' / 'perfect_odometry'
     return [
         DeclareLaunchArgument(
             name='package',
@@ -58,6 +59,16 @@ def get_launch_arguments():
             name='start_paused',
             default_value='False',
             description='Start the rosbag player in a paused state.',
+        ),
+        DeclareLaunchArgument(
+            name='playback_rate',
+            default_value='3.',
+            description='Rate used to playback the bag.',
+        ),
+        DeclareLaunchArgument(
+            name='rosbag_path',
+            default_value=str(rosbag_path),
+            description='Path of the rosbag to playback.',
         ),
         DeclareLaunchArgument(
             name='amcl_parameters_file',
@@ -83,6 +94,8 @@ def generate_launch_description(
     node,
     prefix,
     start_paused,
+    rosbag_path,
+    playback_rate,
     amcl_parameters_file,
     record_bag,
     topics_to_record,
@@ -96,9 +109,9 @@ def generate_launch_description(
         'ros2',
         'bag',
         'play',
-        str(example_dir_path / 'bags' / 'perfect_odometry'),
+        rosbag_path,
         '--rate',
-        '3',
+        playback_rate,
     ]
     if start_paused:
         bag_play_cmd.append('--start-paused')
