@@ -12,120 +12,145 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+from pathlib import Path
+from typing import List
 
 from ament_index_python.packages import get_package_share_directory
 
-from launch import Action
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import GroupAction
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution
 from launch.actions import ExecuteProcess
 from launch.actions import Shutdown
-from launch.utilities.type_utils import normalize_typed_substitution
-from launch.utilities.type_utils import perform_typed_substitution
-from launch_ros.actions import Node
+from launch.utilities.type_utils import get_typed_value
+
 from launch_ros.actions import SetParameter
-from launch.substitutions import LaunchConfiguration
+
+from beluga_example.launch_utils import with_launch_arguments
+from beluga_example.launch_utils import (
+    get_node_with_arguments_declared_from_params_file,
+)
 
 
-class PlayBag(Action):
-    def __init__(self, *args, start_paused, example_dir, condition=None, **kwargs):
-        self._start_paused = normalize_typed_substitution(start_paused, bool)
-        self._example_dir = example_dir
-        self._kwargs = kwargs
-        super().__init__(condition=condition)
+def get_launch_arguments():
+    example_dir_path = Path(get_package_share_directory('beluga_example'))
+    params_file_path = example_dir_path / 'config' / 'params.yaml'
+    rosbag_path = example_dir_path / 'bags' / 'perfect_odometry'
+    return [
+        DeclareLaunchArgument(
+            name='package',
+            default_value='beluga_amcl',
+            description='Package that provides the localization node to launch.',
+            choices=['beluga_amcl', 'nav2_amcl'],
+        ),
+        DeclareLaunchArgument(
+            name='node',
+            default_value='amcl_node',
+            description='Localization node to launch.',
+        ),
+        DeclareLaunchArgument(
+            name='prefix',
+            default_value='',
+            description='Set of commands/arguments to preceed the node command (e.g. "timem --").',
+        ),
+        DeclareLaunchArgument(
+            name='start_paused',
+            default_value='False',
+            description='Start the rosbag player in a paused state.',
+        ),
+        DeclareLaunchArgument(
+            name='playback_rate',
+            default_value='3.',
+            description='Rate used to playback the bag.',
+        ),
+        DeclareLaunchArgument(
+            name='rosbag_path',
+            default_value=str(rosbag_path),
+            description='Path of the rosbag to playback.',
+        ),
+        DeclareLaunchArgument(
+            name='amcl_parameters_file',
+            default_value=str(params_file_path),
+            description='Parameters file to be used to run amcl.',
+        ),
+        DeclareLaunchArgument(
+            name='record_bag',
+            default_value='False',
+            description='Whether to record a bagfile or not.',
+        ),
+        DeclareLaunchArgument(
+            name='topics_to_record',
+            default_value='[/tf, /pose]',
+            description='Topics to record in a new bagfile.',
+        ),
+    ]
 
-    def execute(self, context):
-        start_paused = perform_typed_substitution(context, self._start_paused, bool)
-        cmd = [
-            'ros2',
-            'bag',
-            'play',
-            os.path.join(self._example_dir, 'bags', 'perfect_odometry'),
-            '--rate',
-            '3',
-        ]
-        if start_paused:
-            cmd.append('--start-paused')
-        return [
+
+@with_launch_arguments(get_launch_arguments())
+def generate_launch_description(
+    package,
+    node,
+    prefix,
+    start_paused,
+    rosbag_path,
+    playback_rate,
+    amcl_parameters_file,
+    record_bag,
+    topics_to_record,
+):
+    example_dir_path = Path(get_package_share_directory('beluga_example'))
+
+    start_paused = get_typed_value(start_paused, bool)
+    record_bag = get_typed_value(record_bag, bool)
+    topics_to_record = get_typed_value(topics_to_record, List[str])
+    bag_play_cmd = [
+        'ros2',
+        'bag',
+        'play',
+        rosbag_path,
+        '--rate',
+        playback_rate,
+    ]
+    if start_paused:
+        bag_play_cmd.append('--start-paused')
+
+    other_nodes = []
+    if record_bag:
+        other_nodes.append(
             ExecuteProcess(
-                cmd=cmd, output='own_log', on_exit=[Shutdown()], **self._kwargs
+                cmd=['ros2', 'bag', 'record', *topics_to_record],
+                output='own_log',
             )
-        ]
-
-
-def generate_launch_description():
-    example_dir = get_package_share_directory('beluga_example')
-
-    package = LaunchConfiguration('package')
-    node = LaunchConfiguration('node')
-    prefix = LaunchConfiguration('prefix')
-    start_paused = LaunchConfiguration('start_paused')
-
-    package_launch_arg = DeclareLaunchArgument(
-        name='package',
-        default_value='beluga_amcl',
-        description='Package that provides the localization node to launch.',
-        choices=['beluga_amcl', 'nav2_amcl'],
-    )
-
-    node_launch_arg = DeclareLaunchArgument(
-        name='node',
-        default_value='amcl_node',
-        description='Localization node to launch.',
-    )
-
-    prefix_launch_arg = DeclareLaunchArgument(
-        name='prefix',
-        default_value='',
-        description='Set of commands/arguments to preceed the node command (e.g. "timem --").',
-    )
-
-    start_paused_launch_arg = DeclareLaunchArgument(
-        name='start_paused',
-        default_value='False',
-        description='Start the rosbag player in a paused state.',
-    )
-
+        )
     load_nodes = GroupAction(
         actions=[
             SetParameter('use_sim_time', True),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
-                    [
-                        PathJoinSubstitution(
-                            [
-                                example_dir,
-                                'launch',
-                                'utils',
-                                'common_nodes_launch.py',
-                            ]
-                        )
-                    ]
+                    str(
+                        example_dir_path / 'launch' / 'utils' / 'common_nodes_launch.py'
+                    )
                 )
             ),
-            PlayBag(start_paused=start_paused, example_dir=example_dir),
-            Node(
+            ExecuteProcess(
+                cmd=bag_play_cmd,
+                output='own_log',
+                on_exit=[Shutdown()],
+            ),
+            *get_node_with_arguments_declared_from_params_file(
                 package=package,
                 executable=node,
+                namespace='',
                 name='amcl',
                 output='screen',
-                parameters=[os.path.join(example_dir, 'config', 'params.yaml')],
                 arguments=['--ros-args', '--log-level', 'info'],
                 prefix=prefix,
+                params_file=amcl_parameters_file,
             ),
+            *other_nodes,
         ]
     )
 
-    ld = LaunchDescription()
-    ld.add_action(package_launch_arg)
-    ld.add_action(node_launch_arg)
-    ld.add_action(prefix_launch_arg)
-    ld.add_action(start_paused_launch_arg)
-    ld.add_action(load_nodes)
-
-    return ld
+    return LaunchDescription([load_nodes])
