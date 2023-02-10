@@ -87,13 +87,13 @@ def get_node_with_arguments_declared_from_params_file(
     if full_name_without_starting_slash in params_file_dict:
         node_name_key = full_name_without_starting_slash
     if node_name_key is None:
-        launch.logging.get_logger().warn(
+        launch.logging.get_logger().warning(
             f"parameters file has no parameters for node '{full_name_without_starting_slash}'"
         )
         return [Node(name=name, namespace=namespace, **kwargs)]
     entries_for_node = params_file_dict[node_name_key]
     if 'ros__parameters' not in entries_for_node:
-        launch.logging.get_logger().warn(
+        launch.logging.get_logger().warning(
             f"parameters file does not have a 'ros__parameters' entry for node '{full_name_without_starting_slash}'"
         )
         return [Node(name=name, namespace=namespace, **kwargs)]
