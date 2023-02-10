@@ -6,7 +6,7 @@ The existing implementations are:
 
 The library is extensible, allowing to:
 - Provide a different [sensor](@ref SensorModelPage) or [motion](@ref MotionModelPage) model.
-- Provide a way of getting the [estimated pose](@ref StateEstimationPage) based on the particles.
+- Provide a way of getting the estimated pose based on the particles.
 - Provide a way of [generating the initial particles](@ref ParticleBaselineGenerationPage).
 - Provide a way of [generating particles samples](@ref ParticleSampledGenerationPage) from the previous particle set.
 - Provide a way to [resample](@ref ParticleResamplingPage) particles.

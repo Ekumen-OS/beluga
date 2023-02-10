@@ -23,6 +23,7 @@
 #include <memory>
 #include <utility>
 
+#include <beluga/algorithm/estimation.hpp>
 #include <beluga/random/multivariate_normal_distribution.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
@@ -630,7 +631,7 @@ void AmclNode::laser_callback(
       std::chrono::duration<double, std::milli>(time4 - time3).count());
   }
 
-  const auto [pose, covariance] = particle_filter_->estimated_pose();
+  const auto [pose, covariance] = beluga::estimate(particle_filter_->states());
 
   {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
