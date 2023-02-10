@@ -62,7 +62,7 @@ def get_launch_arguments():
         DeclareLaunchArgument(
             name='amcl_parameters_file',
             default_value=str(params_file_path),
-            description='Parameters file to be used to run amcl',
+            description='Parameters file to be used to run amcl.',
         ),
         DeclareLaunchArgument(
             name='record_bag',
