@@ -1,11 +1,11 @@
 <map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/type_traits/container_traits.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/type_traits/container_traits.hpp">
-<area shape="rect" id="node1" title="Useful traits for containers." alt="" coords="258,5,453,76"/>
-<area shape="rect" id="node2" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="326,124,521,195"/>
-<area shape="rect" id="node3" href="$type__traits_8hpp.html" title="Includes all beluga type traits." alt="" coords="244,243,467,299"/>
-<area shape="rect" id="node4" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="42,347,235,417"/>
-<area shape="rect" id="node5" href="$particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="298,465,491,536"/>
-<area shape="rect" id="node7" href="$beluga_8hpp.html" title="Includes all the beluga API." alt="" coords="161,688,358,744"/>
-<area shape="rect" id="node8" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="259,347,452,417"/>
-<area shape="rect" id="node9" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="528,354,762,410"/>
-<area shape="rect" id="node6" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="152,584,368,640"/>
+<area shape="rect" id="node1" title="Useful traits for containers." alt="" coords="162,5,357,76"/>
+<area shape="rect" id="node2" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="230,124,425,195"/>
+<area shape="rect" id="node3" href="$type__traits_8hpp.html" title="Includes all beluga type traits." alt="" coords="148,243,371,299"/>
+<area shape="rect" id="node4" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="28,465,221,536"/>
+<area shape="rect" id="node6" href="$beluga_8hpp.html" title="Includes all the beluga API." alt="" coords="161,688,358,744"/>
+<area shape="rect" id="node7" href="$particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="297,465,491,536"/>
+<area shape="rect" id="node8" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="163,347,356,417"/>
+<area shape="rect" id="node9" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="432,354,665,410"/>
+<area shape="rect" id="node5" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="151,584,367,640"/>
 </map>

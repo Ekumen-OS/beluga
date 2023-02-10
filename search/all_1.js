@@ -12,8 +12,7 @@ var searchData=
   ['beluga_20named_20requirements_3a_20particlesampledgeneration_17',['beluga named requirements: ParticleSampledGeneration',['../ParticleSampledGenerationPage.html',1,'']]],
   ['beluga_20named_20requirements_3a_20randomstatedistribution_18',['beluga named requirements: RandomStateDistribution',['../RandomStateDistributionRequirements.html',1,'']]],
   ['beluga_20named_20requirements_3a_20sensormodel_19',['beluga named requirements: SensorModel',['../SensorModelPage.html',1,'']]],
-  ['beluga_20named_20requirements_3a_20stateestimation_20',['beluga named requirements: StateEstimation',['../StateEstimationPage.html',1,'']]],
-  ['beluga_2ehpp_21',['beluga.hpp',['../beluga_8hpp.html',1,'']]],
-  ['bibliography_22',['Bibliography',['../citelist.html',1,'']]],
-  ['bootstrapparticlefilter_23',['BootstrapParticleFilter',['../structbeluga_1_1BootstrapParticleFilter.html',1,'beluga::BootstrapParticleFilter&lt; Mixin, Container &gt;'],['../structbeluga_1_1BootstrapParticleFilter.html#a9aec6d495a9f5c6184e3ea972c2cdf4d',1,'beluga::BootstrapParticleFilter::BootstrapParticleFilter()']]]
+  ['beluga_2ehpp_20',['beluga.hpp',['../beluga_8hpp.html',1,'']]],
+  ['bibliography_21',['Bibliography',['../citelist.html',1,'']]],
+  ['bootstrapparticlefilter_22',['BootstrapParticleFilter',['../structbeluga_1_1BootstrapParticleFilter.html',1,'beluga::BootstrapParticleFilter&lt; Mixin, Container &gt;'],['../structbeluga_1_1BootstrapParticleFilter.html#a9aec6d495a9f5c6184e3ea972c2cdf4d',1,'beluga::BootstrapParticleFilter::BootstrapParticleFilter()']]]
 ];

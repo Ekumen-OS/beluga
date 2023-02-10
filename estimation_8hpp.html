@@ -68,7 +68,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">estimation.hpp File Reference</div>  </div>
@@ -108,27 +107,24 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="estimation_8hpp__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2estimation_8hppdep" alt=""/></div>
 <map name="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2estimation_8hppdep" id="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2estimation_8hppdep">
-<area shape="rect" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="72,5,265,76"/>
-<area shape="rect" href="particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="5,124,199,195"/>
-<area shape="rect" href="algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="61,243,277,299"/>
-<area shape="rect" href="beluga_8hpp.html" title="Includes all the beluga API." alt="" coords="70,347,267,403"/>
+<area shape="rect" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="17,5,210,76"/>
+<area shape="rect" href="algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,124,221,180"/>
+<area shape="rect" href="beluga_8hpp.html" title="Includes all the beluga API." alt="" coords="15,228,212,284"/>
 </map>
 </div>
 </div>
 <p><a href="estimation_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1SimpleEstimation.html">beluga::SimpleEstimation&lt; Mixin &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An estimator that calculates the estimated pose mean and covariance using all the particles.  <a href="classbeluga_1_1SimpleEstimation.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ac313e4f884a5d297682845c5eee8647f"><td class="memTemplParams" colspan="2">template&lt;class Range , class Scalar &gt; </td></tr>
 <tr class="memitem:ac313e4f884a5d297682845c5eee8647f"><td class="memTemplItemLeft" align="right" valign="top">Eigen::Matrix2&lt; Scalar &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="estimation_8hpp.html#ac313e4f884a5d297682845c5eee8647f">beluga::covariance</a> (const Range &amp;range, const Eigen::Vector2&lt; Scalar &gt; &amp;mean)</td></tr>
 <tr class="memdesc:ac313e4f884a5d297682845c5eee8647f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the covariance of a range given its mean.  <a href="estimation_8hpp.html#ac313e4f884a5d297682845c5eee8647f">More...</a><br /></td></tr>
 <tr class="separator:ac313e4f884a5d297682845c5eee8647f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcb5471681c7150c56c86ca9fb14ec93"><td class="memTemplParams" colspan="2">template&lt;class Range , class Pose  = typename ranges::range_value_t&lt;Range&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
+<tr class="memitem:abcb5471681c7150c56c86ca9fb14ec93"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Eigen::Matrix3&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="estimation_8hpp.html#abcb5471681c7150c56c86ca9fb14ec93">beluga::estimate</a> (const Range &amp;poses)</td></tr>
+<tr class="memdesc:abcb5471681c7150c56c86ca9fb14ec93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="estimation_8hpp.html#abcb5471681c7150c56c86ca9fb14ec93">More...</a><br /></td></tr>
+<tr class="separator:abcb5471681c7150c56c86ca9fb14ec93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of algorithms that allow calculating the estimated state of a particle filter. </p>
@@ -164,8 +160,8 @@ template&lt;class Range , class Scalar &gt; </div>
 <p>Calculates the covariance of a range given its mean. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose <code>Range::value_type</code> is <code>Eigen::Vector2&lt;Scalar&gt;</code>. </td></tr>
-    <tr><td class="paramname">Scalar</td><td>An scalar type, e.g. double or float. </td></tr>
+    <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Eigen::Vector2&lt;Scalar&gt;</code>. </td></tr>
+    <tr><td class="paramname">Scalar</td><td>A scalar type, e.g. double or float. </td></tr>
   </table>
   </dd>
 </dl>
@@ -177,6 +173,44 @@ template&lt;class Range , class Scalar &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The calculated covariance, as a <code>Eigen::Matrix2&lt;Scalar&gt;</code>. </dd></dl>
+
+</div>
+</div>
+<a id="abcb5471681c7150c56c86ca9fb14ec93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcb5471681c7150c56c86ca9fb14ec93">&#9670;&nbsp;</a></span>estimate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Range , class Pose  = typename ranges::range_value_t&lt;Range&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;Sophus::SE2&lt;Scalar&gt;, Eigen::Matrix3&lt;Scalar&gt; &gt; beluga::estimate </td>
+          <td>(</td>
+          <td class="paramtype">const Range &amp;&#160;</td>
+          <td class="paramname"><em>poses</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a pair consisting of the estimated mean pose and its covariance. </p>
+<p>Given a range of poses, computes the estimated pose by averaging the translation and rotation parts. Computes the covariance matrix of the translation parts and the circular variance of the rotation angles to create a 3x3 covariance matrix. It does not take into account the particle weights.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Sophus::SE2&lt;Scalar&gt;</code>. </td></tr>
+    <tr><td class="paramname">Pose</td><td>The pose value type of the given range. </td></tr>
+    <tr><td class="paramname">Scalar</td><td>A scalar type, e.g. double or float. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">poses</td><td>Range of equally weighted 2D poses. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The estimated pose and its 3x3 covariance matrix. </dd></dl>
 
 </div>
 </div>

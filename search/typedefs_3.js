@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['result_5ftype_291',['result_type',['../classbeluga_1_1MultivariateNormalDistribution.html#ad02b12fb064397e5e579968a7dc7444e',1,'beluga::MultivariateNormalDistribution']]]
+  ['result_5ftype_287',['result_type',['../classbeluga_1_1MultivariateNormalDistribution.html#ad02b12fb064397e5e579968a7dc7444e',1,'beluga::MultivariateNormalDistribution']]]
 ];

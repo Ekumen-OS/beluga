@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,307,64,334"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,274,64,301"/>
 <area shape="rect" id="node2" href="$structbeluga_1_1AdaptiveGeneration.html" title=" " alt="" coords="112,5,379,47"/>
 <area shape="rect" id="node3" href="$structbeluga_1_1BaselineGeneration.html" title="A particle generator." alt="" coords="112,71,379,112"/>
 <area shape="rect" id="node4" href="$structbeluga_1_1BootstrapParticleFilter.html" title="Base implementation of a particle filter." alt="" coords="149,136,341,177"/>
@@ -8,6 +8,5 @@
 <area shape="rect" id="node7" href="$structbeluga_1_1KldResampling.html" title="Resampling policy that adapts the number of particles according to the KLD criteria." alt="" coords="159,332,331,373"/>
 <area shape="rect" id="node8" href="$classbeluga_1_1LikelihoodFieldModel.html" title="Likelihood field sensor model for range finders." alt="" coords="140,397,351,439"/>
 <area shape="rect" id="node9" href="$structbeluga_1_1NaiveGeneration.html" title="Generation of samples from input particles." alt="" coords="112,463,379,504"/>
-<area shape="rect" id="node10" href="$classbeluga_1_1SimpleEstimation.html" title="An estimator that calculates the estimated pose mean and covariance using all the particles." alt="" coords="151,528,340,569"/>
-<area shape="rect" id="node11" href="$classbeluga_1_1StationaryModel.html" title="A stationary motion model." alt="" coords="155,593,336,635"/>
+<area shape="rect" id="node10" href="$classbeluga_1_1StationaryModel.html" title="A stationary motion model." alt="" coords="155,528,336,569"/>
 </map>
