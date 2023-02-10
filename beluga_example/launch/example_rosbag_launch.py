@@ -72,7 +72,7 @@ def get_launch_arguments():
         DeclareLaunchArgument(
             name='topics_to_record',
             default_value='[/tf, /pose]',
-            description='If to record a bagfile or not',
+            description='Topics to record in a new bagfile.',
         ),
     ]
 
