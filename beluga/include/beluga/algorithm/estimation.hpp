@@ -33,7 +33,7 @@ namespace beluga {
 /// Calculates the covariance of a range given its mean.
 /**
  * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
- *  `Range::value_type` is `Eigen::Vector2<Scalar>`.
+ *  value type is `Eigen::Vector2<Scalar>`.
  * \tparam Scalar A scalar type, e.g. double or float.
  * \param range Range to be used to calculate the covariance.
  * \param mean The previously calculated mean of range. The value must be correct for the resulting
@@ -67,7 +67,7 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
  * It does not take into account the particle weights.
  *
  * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
- *  `Range::value_type` is `Sophus::SE2d<Scalar>`.
+ *  value type is `Sophus::SE2<Scalar>`.
  * \tparam Pose The pose value type of the given range.
  * \tparam Scalar A scalar type, e.g. double or float.
  * \param poses Range of equally weighted 2D poses.
