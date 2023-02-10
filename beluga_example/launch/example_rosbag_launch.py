@@ -67,7 +67,7 @@ def get_launch_arguments():
         DeclareLaunchArgument(
             name='record_bag',
             default_value='False',
-            description='If to record a bagfile or not',
+            description='Whether to record a bagfile or not.',
         ),
         DeclareLaunchArgument(
             name='topics_to_record',
