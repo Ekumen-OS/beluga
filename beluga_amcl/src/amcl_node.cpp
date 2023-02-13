@@ -175,6 +175,14 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
+      "Set this to false to prevent amcl from publishing the transform "
+      "between the global frame and the odometry frame.";
+    declare_parameter("tf_broadcast", rclcpp::ParameterValue(true), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
       "Time with which to post-date the transform that is published, "
       "to indicate that this transform is valid into the future";
     descriptor.floating_point_range.resize(1);
@@ -751,15 +759,14 @@ void AmclNode::laser_callback(
     pose_pub_->publish(message);
   }
 
-  {
-    // TODO(nahuel): Publish estimated map to odom transform.
+  if (get_parameter("tf_broadcast").as_bool()) {
     auto message = geometry_msgs::msg::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
     message.header.stamp = now() +
       tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     message.child_frame_id = get_parameter("odom_frame_id").as_string();
-    message.transform = tf2::toMsg(Sophus::SE2d{});
+    message.transform = tf2::toMsg(odom_to_base_transform * pose.inverse());
     tf_broadcaster_->sendTransform(message);
   }
 }
