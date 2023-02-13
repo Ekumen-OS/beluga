@@ -85,6 +85,11 @@ def get_launch_arguments():
             default_value='[/tf, /pose]',
             description='Topics to record in a new bagfile.',
         ),
+        DeclareLaunchArgument(
+            name='bagfile_output',
+            default_value='',
+            description='Destination bagfile to create, defaults to timestamped folder',
+        ),
     ]
 
 
@@ -99,6 +104,7 @@ def generate_launch_description(
     amcl_parameters_file,
     record_bag,
     topics_to_record,
+    bagfile_output,
 ):
     example_dir_path = Path(get_package_share_directory('beluga_example'))
 
@@ -118,9 +124,12 @@ def generate_launch_description(
 
     other_nodes = []
     if record_bag:
+        other_args = topics_to_record
+        if bagfile_output != '':
+            other_args.extend(('-o', bagfile_output))
         other_nodes.append(
             ExecuteProcess(
-                cmd=['ros2', 'bag', 'record', *topics_to_record],
+                cmd=['ros2', 'bag', 'record', *other_args],
                 output='own_log',
             )
         )
