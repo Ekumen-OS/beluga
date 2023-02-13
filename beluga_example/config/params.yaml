@@ -28,5 +28,14 @@ amcl:
     sigma_hit: 0.2
     transform_tolerance: 1.0
     initial_pose: [0, 2, 0]
-    set_initial_pose: true
     execution_policy: seq
+    set_initial_pose: false
+    initial_pose.x: 0.0
+    initial_pose.y: 0.0
+    initial_pose.yaw: 0.0
+    initial_pose.covariance_x: 0.25
+    initial_pose.covariance_y: 0.25
+    initial_pose.covariance_yaw: 0.0685
+    initial_pose.covariance_xy: 0.0
+    initial_pose.covariance_xyaw: 0.0
+    initial_pose.covariance_yyaw: 0.0

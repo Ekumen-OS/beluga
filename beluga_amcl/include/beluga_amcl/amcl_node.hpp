@@ -65,6 +65,7 @@ protected:
     ExecutionPolicy && exec_policy,
     sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan);
   void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
+  void reinitialize_with_pose(const Eigen::Vector3d & mean, const Eigen::Matrix3d & covariance);
 
   std::unique_ptr<ParticleFilter> particle_filter_;
   execution::Policy execution_policy_;
