@@ -300,7 +300,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Mixin weight for the probability of hitting an obstacle.";
+    descriptor.description = "Mixture weight for the probability of hitting an obstacle.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
@@ -310,7 +310,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Mixin weight for the probability of getting random measurements.";
+    descriptor.description = "Mixture weight for the probability of getting random measurements.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
