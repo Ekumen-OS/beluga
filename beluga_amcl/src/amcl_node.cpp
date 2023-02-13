@@ -585,11 +585,10 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   motion_params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
 
   // Only when we get the first map we should use the parameters, not later.
-  // TODO(ivanpauno): Should later maps be initialized from last known pose?
-  // should it be configurable with a parameter?
-  // See always_reset_initial_pose parameter in
-  // https://navigation.ros.org/configuration/packages/configuring-amcl.html
-  bool initialize_from_params = !particle_filter_;
+  // TODO(ivanpauno): Intialize later maps from last known pose.
+  const bool initialize_from_params = !particle_filter_ &&
+    this->get_parameter("set_initial_pose").as_bool();
+
   particle_filter_ = std::make_unique<ParticleFilter>(
     generation_params,
     resampling_params,
@@ -597,11 +596,10 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     sensor_params,
     OccupancyGrid{map});
 
-  initialize_from_params = initialize_from_params &&
-    this->get_parameter("set_initial_pose").as_bool();
-  Eigen::Vector3d mean;
-  Eigen::Matrix3d covariance;
   if (initialize_from_params) {
+    Eigen::Vector3d mean;
+    Eigen::Matrix3d covariance;
+
     mean.x() = this->get_parameter("initial_pose.x").as_double();
     mean.y() = this->get_parameter("initial_pose.y").as_double();
     mean.z() = this->get_parameter("initial_pose.z").as_double();
@@ -617,7 +615,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     this->reinitialize_with_pose(mean, covariance);
 
     RCLCPP_INFO_STREAM(
-      get_logger(),
+      this->get_logger(),
       "Particle filter initialized with initial pose x=" <<
         mean.x() << ", y=" << mean.y() << ", yaw=" << mean.z());
   }
