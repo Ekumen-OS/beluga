@@ -8,11 +8,6 @@ A flamegraph is a convenient tool for understanding how CPU time is being used.
     ```bash
     docker/run.sh -p
     ```
-    Within the container run `perf`:
-    ```bash
-    perf
-    ```
-    If you see `perf` is asking for another version to be installed, go to [troubleshooting](#perf-version-not-available-in-docker-container).
 
 2. Your code needs to be built with debug info and may also need frame pointers.
     For that, use:
@@ -33,27 +28,6 @@ A flamegraph is a convenient tool for understanding how CPU time is being used.
     /ws/src/scripts/profiling/flamegraph.sh  # This may take a long time
     ```
     To visualize the flamegraph and be able to zoom it in or out, open the generated `svg` file in a web-browser.
-
-## Troubleshooting
-
-### Perf version not available in docker container
-
-This happens when your host kernel is not supported by the container you are running.
-Check the output of the following command inside the container:
-
-```bash
-ls /usr/lib/linux-tools
-```
-
-You will find a folder like for example, `5.15.0-58-generic`, in the next examples `$VERSION_NUMBER-generic`.
-Simlink the perf binary in that folder to `/usr/bin`:
-
-```bash
-sudo mv /usr/bin/perf /usr/bin/perf.bkp
-sudo ln -s /usr/lib/linux-tools/$VERSION_NUMBER-generic/perf /usr/bin
-```
-
-Now running `perf` should not ask to install another version.
 
 ## References
 
