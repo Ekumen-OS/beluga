@@ -30,7 +30,7 @@ import yaml
 
 
 def with_launch_arguments(arguments_to_declare: List[DeclareLaunchArgument]):
-    """Decorator to resolve launch arguments early."""
+    """Decorate generate_launch_description function to resolve launch arguments early."""
 
     def decorator(get_launch_description_f):
         def wrapper():
@@ -72,7 +72,8 @@ def get_node_with_arguments_declared_from_params_file(
     Declare arguments from param file.
 
     Currently ROS 2 argument handling is a bit broken ...
-    If you specify a parameter file, there's no way to override the parameter value, except with other parameter file.
+    If you specify a parameter file, there's no way to override the parameter value, except with
+    other parameter file.
 
     Some magic to be able to easily override parameter values specified in a file from launch ...
     """
@@ -94,7 +95,8 @@ def get_node_with_arguments_declared_from_params_file(
     entries_for_node = params_file_dict[node_name_key]
     if 'ros__parameters' not in entries_for_node:
         launch.logging.get_logger().warning(
-            f"parameters file does not have a 'ros__parameters' entry for node '{full_name_without_starting_slash}'"
+            f"parameters file does not have a 'ros__parameters' entry for node "
+            f"'{full_name_without_starting_slash}'"
         )
         return [Node(name=name, namespace=namespace, **kwargs)]
     params_dict = entries_for_node['ros__parameters']
