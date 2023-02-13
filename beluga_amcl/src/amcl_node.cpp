@@ -322,7 +322,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Set the initial pose from the initial_pose parameters";
+    descriptor.description = "Set the initial pose from the initial_pose parameters.";
     descriptor.read_only = true;
     declare_parameter("set_initial_pose", false, descriptor);
   }
