@@ -47,17 +47,17 @@ jobs:
         # that prevent the html output from lcov from being generated correctly.
         run: |
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
-          colcon build --event-handlers=console_cohesion+ --symlink-install --packages-up-to ${{ env.ROS_PACKAGES }} --mixin ccache
-          colcon build --event-handlers=console_cohesion+ --symlink-install --packages-up-to ${{ env.ROS_PACKAGES }} --mixin ccache coverage-gcc coverage-pytest
+          colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
+          colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest
 
       - name: Test
         shell: bash
         run: |
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           colcon lcov-result --initial
-          colcon test --event-handlers=console_cohesion+ --return-code-on-test-failure --packages-select ${{ env.ROS_PACKAGES }} --mixin coverage-pytest --ctest-args -LE clang_tidy
-          colcon lcov-result --verbose --packages-select ${{ env.ROS_PACKAGES }}
-          colcon coveragepy-result --verbose --coverage-report-args -m --packages-select ${{ env.ROS_PACKAGES }}
+          colcon test --packages-select ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --return-code-on-test-failure --mixin coverage-pytest --ctest-args -LE clang_tidy
+          colcon lcov-result --packages-select ${{ env.ROS_PACKAGES }} --verbose
+          colcon coveragepy-result --packages-select ${{ env.ROS_PACKAGES }} --verbose --coverage-report-args -m
 
       - name: Lint
         working-directory: ${{ github.workspace }}/src
