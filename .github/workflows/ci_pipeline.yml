@@ -28,14 +28,14 @@ jobs:
       - name: Install python packages
         run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
 
-      - name: Install ros dependencies
+      - name: Install dependencies
         run: |
           rosdep update
           rosdep install --rosdistro ${{ env.ROS_DISTRO }} -r --from-paths src/ --default-yes --ignore-src --dependency-types build --dependency-types test
           colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
           colcon mixin update default
 
-      - name: Setup ccache
+      - name: Setup compiler cache
         uses: Chocobo1/setup-ccache-action@v1
         with:
           api_token: ${{ secrets.GITHUB_TOKEN }}
@@ -66,7 +66,7 @@ jobs:
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
 
-      - name: Upload lcov artifacts
+      - name: Upload coverage artifacts
         uses: actions/upload-artifact@v3
         with:
           name: lcov_output
@@ -80,7 +80,7 @@ jobs:
       - name: Install python packages
         run: pip install lcov_cobertura==2.0.2
 
-      - name: Download lcov artifacts
+      - name: Download coverage artifacts
         uses: actions/download-artifact@v3
         with:
           name: lcov_output
