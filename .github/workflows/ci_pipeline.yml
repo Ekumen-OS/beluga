@@ -11,11 +11,14 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ROS_DISTRO: humble
+      ROS_PACKAGES: beluga beluga_amcl
     container:
       image: ros:humble-ros-base-jammy
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          path: ${{ github.workspace }}/src
 
       - name: Install debian packages
         run: |
@@ -23,50 +26,52 @@ jobs:
           sudo apt-get install clang-tidy lcov python3-colcon-coveragepy-result python3-pip -y
 
       - name: Install python packages
-        run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
+        run: pip install colcon-lcov-result==0.5.0 lcov_cobertura==2.0.2 pre-commit==2.20.0
 
-      - name: Build and test
-        uses: ros-tooling/action-ros-ci@0.2.7
+      - name: Install dependencies
+        run: |
+          rosdep update
+          rosdep install --rosdistro ${{ env.ROS_DISTRO }} -r --from-paths src/ --default-yes --ignore-src --dependency-types build --dependency-types test
+          colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
+          colcon mixin update default
+
+      - name: Setup compiler cache
+        uses: Chocobo1/setup-ccache-action@v1
         with:
-          package-name: beluga beluga_amcl
-          target-ros2-distro:  ${{ env.ROS_DISTRO }}
-          import-token: ${{ secrets.GITHUB_TOKEN }}
-          colcon-defaults: |
-            {
-              "build": {
-                "mixin": ["coverage-gcc", "coverage-pytest"]
-              },
-              "test": {
-                "mixin": ["coverage-pytest"]
-              }
-            }
-          colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
+          api_token: ${{ secrets.GITHUB_TOKEN }}
+          update_packager_index: false
 
-      - name: Lint
+      - name: Build
+        shell: bash
+        # Do a build without coverage flags first to avoid generating .gcno files
+        # that prevent the html output from lcov from being generated correctly.
+        run: |
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
+          colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
+          colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest
+
+      - name: Test
         shell: bash
         run: |
-          git config --global --add safe.directory $PWD
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
+          colcon lcov-result --initial
+          colcon test --packages-select ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --return-code-on-test-failure --mixin coverage-pytest --ctest-args -LE clang_tidy
+          colcon lcov-result --packages-select ${{ env.ROS_PACKAGES }} --verbose
+          colcon coveragepy-result --packages-select ${{ env.ROS_PACKAGES }} --verbose --coverage-report-args -m
+
+      - name: Lint
+        working-directory: ${{ github.workspace }}/src
+        shell: bash
+        run: |
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
 
-      - name: Upload lcov artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: lcov_output
-          path: ros_ws/lcov/
-
-  code-coverage:
-    needs: build-test-lint
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Install python packages
-        run: pip install lcov_cobertura==2.0.2
-
-      - name: Download lcov artifacts
-        uses: actions/download-artifact@v2
+      - name: Upload code coverage artifacts
+        uses: actions/upload-artifact@v3
         with:
           name: lcov_output
           path: lcov/
+          retention-days: 7
 
       - name: Convert code coverage report to XML
         run: lcov_cobertura lcov/total_coverage.info
