@@ -26,7 +26,7 @@ jobs:
           sudo apt-get install clang-tidy lcov python3-colcon-coveragepy-result python3-pip -y
 
       - name: Install python packages
-        run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
+        run: pip install colcon-lcov-result==0.5.0 lcov_cobertura==2.0.2 pre-commit==2.20.0
 
       - name: Install dependencies
         run: |
@@ -66,25 +66,12 @@ jobs:
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
 
-      - name: Upload coverage artifacts
+      - name: Upload code coverage artifacts
         uses: actions/upload-artifact@v3
         with:
           name: lcov_output
           path: lcov/
           retention-days: 7
-
-  code-coverage:
-    needs: build-test-lint
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Install python packages
-        run: pip install lcov_cobertura==2.0.2
-
-      - name: Download coverage artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: lcov_output
-          path: lcov/
 
       - name: Convert code coverage report to XML
         run: lcov_cobertura lcov/total_coverage.info
