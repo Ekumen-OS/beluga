@@ -31,7 +31,7 @@ jobs:
       - name: Install ros dependencies
         run: |
           rosdep update
-          rosdep install -r --from-paths src/ --rosdistro ${{ env.ROS_DISTRO }} -y
+          rosdep install --rosdistro ${{ env.ROS_DISTRO }} -r --from-paths src/ --default-yes --ignore-src --dependency-types build --dependency-types test
           colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
           colcon mixin update default
 
