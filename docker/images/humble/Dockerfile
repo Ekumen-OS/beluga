@@ -20,6 +20,7 @@ RUN apt-get update \
 
 RUN pip install \
   pre-commit==2.20.0 \
+  evo \
   # Note: Installing timemory takes a long time.
   timemory==3.3.0rc4 \
   matplotlib \
