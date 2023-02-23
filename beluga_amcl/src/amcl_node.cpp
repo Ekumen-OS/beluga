@@ -752,7 +752,7 @@ void AmclNode::laser_callback(
 
   {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
-    message.header.stamp = now();
+    message.header.stamp = laser_scan->header.stamp;
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     tf2::toMsg(pose, message.pose.pose);
     message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
