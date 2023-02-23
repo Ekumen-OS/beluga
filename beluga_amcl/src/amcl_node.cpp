@@ -610,7 +610,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
     mean.x() = this->get_parameter("initial_pose.x").as_double();
     mean.y() = this->get_parameter("initial_pose.y").as_double();
-    mean.z() = this->get_parameter("initial_pose.z").as_double();
+    mean.z() = this->get_parameter("initial_pose.yaw").as_double();
     covariance.coeffRef(0, 0) = this->get_parameter("initial_pose.covariance_x").as_double();
     covariance.coeffRef(1, 1) = this->get_parameter("initial_pose.covariance_y").as_double();
     covariance.coeffRef(2, 2) = this->get_parameter("initial_pose.covariance_yaw").as_double();
