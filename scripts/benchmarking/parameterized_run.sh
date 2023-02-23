@@ -98,7 +98,7 @@ while : ;do
     esac
 done
 
-if [ -z "$@" ]; then
+if [[ -z "$@" ]]; then
     >&2 echo "At least one number of particles must be specified"
     echo -e $HELP
     exit 1
