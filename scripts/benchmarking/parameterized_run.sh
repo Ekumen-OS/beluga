@@ -14,9 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Bring up a docker container for development.
-# Use `--build` to build the image before starting the container.
-
 SCRIPT_DIR=$(cd $(dirname "$(readlink -f "$0")") && pwd)
 
 read -r -d '' HELP << EOM
@@ -28,7 +25,7 @@ Usage: $(basename $0) [...] <PARTICLES_0> ... <PARTICLES_N>\n
     [--initial-pose-x] Set initial x axis pose.\n
     [--initial-pose-y] Set initial y axis pose.\n
     [--initial-pose-yaw] Set initial yaw pose.\n
-    [-b|--rosbag] Use a different rosbag, defaults to "beluga_example/bags/perfect_odemetry".\n
+    [-b|--rosbag] Use a different rosbag, defaults to "beluga_example/bags/perfect_odometry".\n
     [-f|--playback-frequency] Rosbag playback frequency, defaults to 3.\n
     [-p|--profile] Create a perf cpu profile of the benchmark.
 EOM
