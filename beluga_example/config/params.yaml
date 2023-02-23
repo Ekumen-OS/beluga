@@ -28,7 +28,6 @@ amcl:
     sigma_hit: 0.2
     tf_broadcast: true
     transform_tolerance: 1.0
-    initial_pose: [0, 2, 0]
     execution_policy: seq
     set_initial_pose: false
     initial_pose.x: 0.0
