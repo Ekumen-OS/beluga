@@ -740,7 +740,7 @@ void AmclNode::laser_callback(
 
     RCLCPP_INFO_THROTTLE(
       get_logger(), *get_clock(), 2000,
-      "Particle fitler update stats: %ld particles %ld points - %.3fms %.3fms %.3fms",
+      "Particle filter update stats: %ld particles %ld points - %.3fms %.3fms %.3fms",
       particle_filter_->particles().size(),
       laser_scan->ranges.size(),
       std::chrono::duration<double, std::milli>(time2 - time1).count(),
