@@ -18,14 +18,14 @@ A flamegraph is a convenient tool for understanding how CPU time is being used.
 3. Run the following script to generate the profiling data:
     ```bash
     source /ws/install/setup.bash
-    /ws/src/scripts/profiling/profile_amcl_with_bagfile.sh
+    ros2 run beluga_benchmark profile_amcl_with_bagfile
     ```
     `perf` will generate a `perf.data` file in the folder it was run.
 
 4. To generate a flamegraph from the recorded data, run:
     ```bash
     source /ws/install/setup.bash
-    /ws/src/scripts/profiling/flamegraph.sh  # This may take a long time
+    ros2 run beluga_benchmark flamegraph  # This may take a long time
     ```
     To visualize the flamegraph and be able to zoom it in or out, open the generated `svg` file in a web-browser.
 
