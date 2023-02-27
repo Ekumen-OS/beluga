@@ -130,8 +130,16 @@ def main():
         help='Folder with parameterized benchmark results for the other implementation',
     )
     args = arg_parser.parse_args()
-    beluga_series = create_parameterized_series(args.beluga_results)
-    other_series = create_parameterized_series(args.other_results)
+    beluga_series = create_parameterized_series(args.beluga_results).add_prefix(
+        'beluga_'
+    )
+    other_series = create_parameterized_series(args.other_results).add_prefix('other_')
+
     ax = beluga_series.plot(subplots=True, color='red')
-    other_series.plot(subplots=True, ax=ax, color='blue')
+    other_series.plot(ax=ax, subplots=True, color='blue')
+    for ax in plt.gcf().axes:
+        ax.legend(fontsize='small', loc='upper left', bbox_to_anchor=(1.01, 1))
+        current_bounds = ax.get_position().bounds
+        new_bounds = (0.05, *current_bounds[1:])
+        ax.set_position(new_bounds)
     plt.show()
