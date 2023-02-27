@@ -13,7 +13,6 @@ RUN apt-get update \
     linux-tools-generic \
     perl \
     python3-pip \
-    python3-tk \
     texlive-base \
     texlive-binaries \
   && rm -rf /var/lib/apt/lists/*
@@ -22,10 +21,7 @@ RUN pip install \
   pre-commit==2.20.0 \
   evo \
   # Note: Installing timemory takes a long time.
-  timemory==3.3.0rc4 \
-  matplotlib \
-  numpy \
-  pandas
+  timemory==3.3.0rc4
 
 # Check if perf is working, if not replace it with the perf version available
 RUN perf help || ( \

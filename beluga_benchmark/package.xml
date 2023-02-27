@@ -15,6 +15,10 @@
 
   <exec_depend>beluga_amcl</exec_depend>
   <exec_depend>beluga_example</exec_depend>
+  <exec_depend>python3-matplotlib</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-pandas</exec_depend>
+  <exec_depend>python3-tk</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
