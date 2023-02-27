@@ -122,12 +122,14 @@ def main():
         '-b',
         type=Path,
         help='Folder with parameterized beluga benchmark results',
+        required=True,
     )
     arg_parser.add_argument(
         '--other-results',
         '-o',
         type=Path,
         help='Folder with parameterized benchmark results for the other implementation',
+        required=True,
     )
     args = arg_parser.parse_args()
     beluga_series = create_parameterized_series(args.beluga_results).add_prefix(
