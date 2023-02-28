@@ -65,12 +65,12 @@ ros2 run beluga_benchmark compare_results -b <BELUGA_RESULTS_PATH> -o <OTHER_RES
 The results path should be the one where `parameterized_run` was run, i.e. the one containing the `benchmark_*_particles_output` directories.
 The script will plot the following metrics vs the number of particles:
 
-- rss memory
-- cpu usage
-- ape mean
-- ape meadian
-- ape max
-- ape rmse
+- RSS memory
+- CPU usage
+- APE mean
+- APE median
+- APE max
+- APE rmse
 
 ## References
 
