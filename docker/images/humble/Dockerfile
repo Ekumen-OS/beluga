@@ -18,9 +18,15 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
+  evo==1.21.0 \
   pre-commit==2.20.0 \
   # Note: Installing timemory takes a long time.
   timemory==3.3.0rc4
+
+# Check if perf is working, if not replace it with the perf version available
+RUN perf help || ( \
+  mv /usr/bin/perf /usr/bin/perf.bkp && \
+  ln -s $(ls -d /usr/lib/linux-tools/* | tail -n1)/perf /usr/bin/perf)
 
 ARG USER=developer
 ARG GROUP=ekumen
