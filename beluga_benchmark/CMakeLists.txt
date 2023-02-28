@@ -7,8 +7,6 @@ find_package(beluga_amcl REQUIRED)
 
 ament_python_install_package(${PROJECT_NAME})
 
-# file(GLOB_RECURSE SCRIPTS "${PROJECT_SOURCE_DIR}/scripts/**/*")
-
 install(DIRECTORY
   scripts/profiling
   scripts/benchmarking
