@@ -74,5 +74,5 @@ The script will plot the following metrics vs the number of particles:
 
 ## References
 
-- https://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html
-- https://www.brendangregg.com/perf.html
+- https://github.com/NERSC/timemory
+- https://github.com/MichaelGrupp/evo
