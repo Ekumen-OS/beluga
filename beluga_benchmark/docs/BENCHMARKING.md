@@ -4,9 +4,9 @@
 
 This script will run the benchmark with the specified number of particles and record:
 
-- `timem` output: cpu usages, rss memory, virtual memory.
-- Record rosbag with reference trajectory and the estimated trajectory.
-- Optionally, record perf events.
+- The `timem` output: CPU usage, RSS memory, virtual memory.
+- A rosbag with the reference and estimated trajectories.
+- Perf events (optionally).
 
 To run, use:
 
