@@ -13,11 +13,11 @@
 # limitations under the License.
 
 from .exceptions import ScriptError
-from . import parameterized_run_compare
-from . import timem
+from . import compare_results
+from . import timem_results
 
 __all__ = [
     'ScriptError',
-    'parameterized_run_compare',
-    'timem',
+    'compare_results',
+    'timem_results',
 ]

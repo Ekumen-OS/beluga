@@ -16,11 +16,11 @@
 
 import sys
 
-from beluga_benchmark import timem, ScriptError
+from beluga_benchmark import timem_results, ScriptError
 
 if __name__ == '__main__':
     try:
-        timem.main()
+        timem_results.main()
     except ScriptError as exc:
         print(exc)
         sys.exit(1)

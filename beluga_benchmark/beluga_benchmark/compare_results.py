@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 from rosbag2_py._info import Info as Bag2Info
 import pandas as pd
 
-from . import timem
+from . import timem_results
 from .exceptions import ScriptError
 
 DIR_NAME_PATTERN = 'benchmark_([0-9]+)_particles_output'
@@ -84,8 +84,8 @@ def create_parameterized_series(results_path: Path):
         if not m:
             continue
         particles.append(int(m[1]))
-        timem_output = timem.read_timem_output(dir)
-        rss, cpu = timem.get_timem_metrics_values(timem_output)
+        timem_results_output = timem_results.read_timem_output(dir)
+        rss, cpu = timem_results.get_timem_metrics_values(timem_results_output)
         peak_rss.append(rss)
         cpu_usage.append(cpu)
         run_evo_ape(dir)
