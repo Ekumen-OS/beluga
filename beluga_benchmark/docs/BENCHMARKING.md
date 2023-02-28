@@ -14,7 +14,7 @@ To run, use:
 ros2 run parameterized_run <NUMBER_OF_PARTICLES_EXPERIMENT_1> <NUMBER_OF_PARTICLES_EXPERIMENT_2> ... --initial-pose-y 2.0
 ```
 
-The initial pose value is the correct one for the default rosbag, if not passed particles will be initialized all arround the map.
+Note that the initial pose value (x: 0, y: 2, theta: 0) is correct for the default rosbag. If not passed, particles will be initialized all around the map.
 The results of the different runs will be stored in folders named `benchmark_${N_PARTICLES}_particles_output`, where `N_PARTICLES` are the numbers specified in the above command.
 
 To run the same experiment using another AMCL node, e.g. nav2, use:
