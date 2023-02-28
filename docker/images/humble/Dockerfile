@@ -18,8 +18,8 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
+  evo==1.21.0 \
   pre-commit==2.20.0 \
-  evo \
   # Note: Installing timemory takes a long time.
   timemory==3.3.0rc4
 
