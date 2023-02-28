@@ -17,6 +17,17 @@ RUN apt-get update \
     texlive-binaries \
   && rm -rf /var/lib/apt/lists/*
 
+# Fix for the RViz black screen issue.
+# TODO(nahuel): Remove this when the Mesa version available
+# in Ubuntu 22.04 is 22.3.5 or greater.
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \
+    software-properties-common \
+  && add-apt-repository -y ppa:kisak/kisak-mesa \
+  && apt-get install --no-install-recommends -y \
+    libegl-mesa0 libglx-mesa0 \
+  && rm -rf /var/lib/apt/lists/*
+
 RUN pip install \
   pre-commit==2.20.0 \
   # Note: Installing timemory takes a long time.
