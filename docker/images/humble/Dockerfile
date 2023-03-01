@@ -20,6 +20,7 @@ RUN apt-get update \
 # Fix for the RViz black screen issue.
 # TODO(nahuel): Remove this when the Mesa version available
 # in Ubuntu 22.04 is 22.3.5 or greater.
+# See https://github.com/ekumenlabs/beluga/issues/123
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     software-properties-common \
