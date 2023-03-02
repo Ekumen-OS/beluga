@@ -37,7 +37,8 @@ class MockMixin : public ciabatta::mixin<MockMixin<Mixin>, Mixin> {
 
 class OmnidirectionalDriveModelTest : public ::testing::Test {
  protected:
-  MockMixin<beluga::OmnidirectionalDriveModel> mixin_{beluga::OmnidirectionalDriveModelParam{0.0, 0.0, 0.0, 0.0, 0.0}};  // No variance
+  MockMixin<beluga::OmnidirectionalDriveModel> mixin_{
+      beluga::OmnidirectionalDriveModelParam{0.0, 0.0, 0.0, 0.0, 0.0}};  // No variance
 };
 
 TEST_F(OmnidirectionalDriveModelTest, NoUpdate) {
@@ -120,7 +121,8 @@ TEST(OmnidirectionalDriveModelSamples, RotateFirstQuadrant) {
   const double alpha = 0.2;
   const double initial_angle = Constants::pi() / 6;
   const double motion_angle = Constants::pi() / 4;
-  auto mixin = MockMixin<beluga::OmnidirectionalDriveModel>{beluga::OmnidirectionalDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0}};
+  auto mixin =
+      MockMixin<beluga::OmnidirectionalDriveModel>{beluga::OmnidirectionalDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0}};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}});
   auto view = ranges::view::generate([&mixin, initial_angle]() {
@@ -136,7 +138,8 @@ TEST(OmnidirectionalDriveModelSamples, RotateThirdQuadrant) {
   const double alpha = 0.2;
   const double initial_angle = Constants::pi() / 6;
   const double motion_angle = -Constants::pi() * 3 / 4;
-  auto mixin = MockMixin<beluga::OmnidirectionalDriveModel>{beluga::OmnidirectionalDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0}};
+  auto mixin =
+      MockMixin<beluga::OmnidirectionalDriveModel>{beluga::OmnidirectionalDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0}};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}});
   auto view = ranges::view::generate([&mixin, initial_angle]() {
