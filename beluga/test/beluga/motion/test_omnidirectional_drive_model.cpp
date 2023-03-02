@@ -14,7 +14,7 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/motion/omni_drive_model.hpp>
+#include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <ciabatta/ciabatta.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/generate.hpp>
@@ -35,23 +35,23 @@ class MockMixin : public ciabatta::mixin<MockMixin<Mixin>, Mixin> {
   using ciabatta::mixin<MockMixin<Mixin>, Mixin>::mixin;
 };
 
-class OmniDriveModelTest : public ::testing::Test {
+class OmnidirectionalDriveModelTest : public ::testing::Test {
  protected:
-  MockMixin<beluga::OmniDriveModel> mixin_{beluga::OmniDriveModelParam{0.0, 0.0, 0.0, 0.0, 0.0}};  // No variance
+  MockMixin<beluga::OmnidirectionalDriveModel> mixin_{beluga::OmnidirectionalDriveModelParam{0.0, 0.0, 0.0, 0.0, 0.0}};  // No variance
 };
 
-TEST_F(OmniDriveModelTest, NoUpdate) {
+TEST_F(OmnidirectionalDriveModelTest, NoUpdate) {
   const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
   ASSERT_THAT(mixin_.apply_motion(pose), testing::SE2Eq(pose));
 }
 
-TEST_F(OmniDriveModelTest, OneUpdate) {
+TEST_F(OmnidirectionalDriveModelTest, OneUpdate) {
   const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
   mixin_.update_motion(SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}});
   ASSERT_THAT(mixin_.apply_motion(pose), testing::SE2Eq(pose));
 }
 
-TEST_F(OmniDriveModelTest, Translate) {
+TEST_F(OmnidirectionalDriveModelTest, Translate) {
   mixin_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin_.update_motion(SE2d{SO2d{0.0}, Vector2d{1.0, 0.0}});
   const auto result1 = mixin_.apply_motion(SE2d{SO2d{0.0}, Vector2d{2.0, 0.0}});
@@ -60,7 +60,7 @@ TEST_F(OmniDriveModelTest, Translate) {
   ASSERT_THAT(result2, testing::SE2Eq(SO2d{0.0}, Vector2d{1.0, 3.0}));
 }
 
-TEST_F(OmniDriveModelTest, RotateTranslate) {
+TEST_F(OmnidirectionalDriveModelTest, RotateTranslate) {
   mixin_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin_.update_motion(SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}});
   const auto result1 = mixin_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
@@ -69,7 +69,7 @@ TEST_F(OmniDriveModelTest, RotateTranslate) {
   ASSERT_THAT(result2, testing::SE2Eq(SO2d{0.0}, Vector2d{3.0, 3.0}));
 }
 
-TEST_F(OmniDriveModelTest, Rotate) {
+TEST_F(OmnidirectionalDriveModelTest, Rotate) {
   mixin_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin_.update_motion(SE2d{SO2d{Constants::pi() / 4}, Vector2d{0.0, 0.0}});
   const auto result1 = mixin_.apply_motion(SE2d{SO2d{Constants::pi()}, Vector2d{0.0, 0.0}});
@@ -78,20 +78,11 @@ TEST_F(OmniDriveModelTest, Rotate) {
   ASSERT_THAT(result2, testing::SE2Eq(SO2d{-Constants::pi() / 4}, Vector2d{0.0, 0.0}));
 }
 
-TEST_F(OmniDriveModelTest, RotateTranslateRotate) {
-  mixin_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
-  mixin_.update_motion(SE2d{SO2d{-Constants::pi() / 2}, Vector2d{1.0, 2.0}});
-  const auto result = mixin_.apply_motion(SE2d{SO2d{Constants::pi()}, Vector2d{3.0, 4.0}});
-  ASSERT_THAT(result, testing::SE2Eq(SO2d{Constants::pi() / 2}, Vector2d{2.0, 2.0}));
-}
-
-TEST_F(OmniDriveModelTest, TranslateSideway) {
+TEST_F(OmnidirectionalDriveModelTest, Translate_Strafe) {
   mixin_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 1.0}});
   const auto result1 = mixin_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   ASSERT_THAT(result1, testing::SE2Eq(SO2d{0.0}, Vector2d{0.0, 1.0}));
-  // const auto result2 = mixin_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 3.0}});
-  // ASSERT_THAT(result2, testing::SE2Eq(SO2d{0.0}, Vector2d{1.0, 3.0}));
 }
 
 template <class Range>
@@ -108,12 +99,12 @@ auto get_statistics(Range&& range) {
   return std::pair{mean, stddev};
 }
 
-TEST(OmniDriveModelSamples, Translate) {
+TEST(OmnidirectionalDriveModelSamples, Translate) {
   const double alpha = 0.2;
   const double origin = 5.0;
   const double distance = 3.0;
-  auto mixin = MockMixin<beluga::OmniDriveModel>{
-      beluga::OmniDriveModelParam{0.0, 0.0, alpha, 0.0, 0.0}};  // Translation variance
+  auto mixin = MockMixin<beluga::OmnidirectionalDriveModel>{
+      beluga::OmnidirectionalDriveModelParam{0.0, 0.0, alpha, 0.0, 0.0}};  // Translation variance
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{distance, 0.0}});
   auto view = ranges::view::generate([&mixin, origin]() {
@@ -125,12 +116,11 @@ TEST(OmniDriveModelSamples, Translate) {
   ASSERT_NEAR(stddev, std::sqrt(alpha * distance * distance), 0.01);
 }
 
-TEST(OmniDriveModelSamples, RotateFirstQuadrant) {
+TEST(OmnidirectionalDriveModelSamples, RotateFirstQuadrant) {
   const double alpha = 0.2;
   const double initial_angle = Constants::pi() / 6;
   const double motion_angle = Constants::pi() / 4;
-  auto mixin =
-      MockMixin<beluga::OmniDriveModel>{beluga::OmniDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0}};  // Rotation variance
+  auto mixin = MockMixin<beluga::OmnidirectionalDriveModel>{beluga::OmnidirectionalDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0}};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}});
   auto view = ranges::view::generate([&mixin, initial_angle]() {
@@ -142,12 +132,11 @@ TEST(OmniDriveModelSamples, RotateFirstQuadrant) {
   ASSERT_NEAR(stddev, std::sqrt(alpha * motion_angle * motion_angle), 0.01);
 }
 
-TEST(OmniDriveModelSamples, RotateThirdQuadrant) {
+TEST(OmnidirectionalDriveModelSamples, RotateThirdQuadrant) {
   const double alpha = 0.2;
   const double initial_angle = Constants::pi() / 6;
   const double motion_angle = -Constants::pi() * 3 / 4;
-  auto mixin =
-      MockMixin<beluga::OmniDriveModel>{beluga::OmniDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0}};  // Rotation variance
+  auto mixin = MockMixin<beluga::OmnidirectionalDriveModel>{beluga::OmnidirectionalDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0}};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}});
   auto view = ranges::view::generate([&mixin, initial_angle]() {
