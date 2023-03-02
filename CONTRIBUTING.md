@@ -98,9 +98,9 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    ros2 run teleop_twist_keyboard teleop_twist_keyboard
    ```
 
-1. Push your changes and [create a PR](https://github.com/ekumenlabs/beluga/compare)!
+7. Push your changes and [create a PR](https://github.com/ekumenlabs/beluga/compare)!
 
-2. At the time a feature branch is squashed-and-merged into `main`, the commit message should adhere to the following good practices:
+8. At the time a feature branch is squashed-and-merged into `main`, the commit message should adhere to the following good practices:
    - Limit the subject line to 50 characters.
    - Capitalize the subject line.
    - Do not end the subject line with a period.
