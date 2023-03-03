@@ -15,7 +15,7 @@ This repository contains the following packages:
 
 - How can I try an example?
 
-  Check the ["run an example"](CONTRIBUTING.md#running_an_example) section in the contributing guide.
+  Check the [contributing guidelines](CONTRIBUTING.md), specifically the [_run an example application_](CONTRIBUTING.md#running_an_example) section.
 
 - How can I contribute to the project?
 
