@@ -2,6 +2,9 @@
 
 ![CI badge](https://github.com/ekumenlabs/beluga/actions/workflows/ci_pipeline.yml/badge.svg?event=push)
 
+
+https://user-images.githubusercontent.com/26796393/222827672-b8ab8421-5933-42f3-8144-be8d417e8aeb.mp4
+
 ## Intoduction
 
 Beluga is a library providing an extensible particle filter implementation, including sensor and motion models.
