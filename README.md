@@ -2,13 +2,14 @@
 
 ![CI badge](https://github.com/ekumenlabs/beluga/actions/workflows/ci_pipeline.yml/badge.svg?event=push)
 
-This repository provides three packages:
+This repository contains the following packages:
 
-- `beluga`: A ROS agnostic extensible implementation of a particle filter.
-- `beluga_amcl`: A ROS 2 wrapper, providing an executable and a ROS 2 component.
-    It provides almost feature parity with `nav2_amcl`.
-- `beluga_example`: Example launch files, showing how to run beluga.
-- `beluga_benchmark`: Scripts to benchmark, profile and also compare beluga with other AMCL implementations.
+| Package            | Description |
+|--------------------| ------------|
+| `beluga`           | A ROS agnostic extensible library to implement algorithms based on particle filter. |
+| `beluga_amcl`      | A ROS 2 wrapper, providing an executable node and a ROS 2 component.<br> It provides almost feature parity with `nav2_amcl`. |
+| `beluga_example`   | Example launch files, showing how to run beluga. |
+| `beluga_benchmark` | Scripts to benchmark, profile and also compare beluga with other AMCL implementations. |
 
 ## FAQ
 
