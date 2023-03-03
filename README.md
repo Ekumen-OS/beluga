@@ -24,7 +24,7 @@ This repository contains the following packages:
 - Is there API documentation?
 
   Yes, but it's not currently being hosted online.
-  Use [generate_docs.sh](beluga/docs/generate_docs.sh) to generate docs for the beluga package.
+  You can use [a script](beluga/docs/generate_docs.sh) to generate docs for the beluga package locally.
 
 - Are the node parameters documented?
 
