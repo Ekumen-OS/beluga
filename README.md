@@ -19,7 +19,7 @@ This repository contains the following packages:
 
 - How can I contribute to the project?
 
-  Check the [contributing guidelines](CONTRIBUTING.md)
+  Check the [contributing guidelines](CONTRIBUTING.md).
 
 - Is there API documentation?
 
