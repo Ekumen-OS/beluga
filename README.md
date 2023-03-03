@@ -31,11 +31,11 @@ This repository contains the following packages:
   You can find all the supported parameter documented in the example parameters [yaml file](beluga_example/config/params.yaml).
 
 
-- How to benchmark beluga?
+- How to benchmark Beluga?
 
-  You can find micro-benchmarks in the test folder of [beluga](beluga/test/benchmark/).
-  For macro-benchmarking and comparing with other AMCL implementations, check [beluga_benchmark docs](beluga_benchmark/docs/BENCHMARKING.md).
+  You can find micro-benchmarks in the [test folder](beluga/test/benchmark/) of Beluga.<br/>
+  For macro-benchmarking and comparing with other AMCL implementations, check the [benchmarking documentation](beluga_benchmark/docs/BENCHMARKING.md).
 
-- How to cpu profile beluga?
+- How to cpu profile Beluga?
 
-  Check [beluga_benchmark docs](beluga_benchmark/docs/PROFILING.md).
+  Check the [profiling documentation](beluga_benchmark/docs/PROFILING.md).
