@@ -8,6 +8,10 @@ ament_add_gmock(test_beluga
   algorithm/test_sampling.cpp
   motion/test_differential_drive_model.cpp
   random/test_multivariate_normal_distribution.cpp
+  resampling_policies/test_resample_interval_policy.cpp
+  resampling_policies/test_resample_on_motion_policy.cpp
+  resampling_policies/test_resampling_policies_poller.cpp
+  resampling_policies/test_selective_resampling_policy.cpp
   sensor/test_likelihood_field_model.cpp
   test_tuple_vector.cpp
   test_spatial_hash.cpp)

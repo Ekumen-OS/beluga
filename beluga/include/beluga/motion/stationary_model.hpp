@@ -69,6 +69,12 @@ class StationaryModel : public Mixin {
    * For the stationary model, updates are ignored.
    */
   void update_motion(const update_type&) {}
+
+  /// Recovers latest motion update.
+  /**
+   * For the stationary model, we don't ever have motion updates.
+   */
+  [[nodiscard]] std::optional<update_type> latest_motion_update() const { return std::nullopt; }
 };
 
 }  // namespace beluga

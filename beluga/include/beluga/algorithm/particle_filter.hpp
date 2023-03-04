@@ -18,13 +18,18 @@
 #include <execution>
 #include <utility>
 
-#include <beluga/algorithm/sampling.hpp>
-#include <beluga/tuple_vector.hpp>
-#include <beluga/type_traits.hpp>
 #include <ciabatta/ciabatta.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/transform.hpp>
 #include <range/v3/view/const.hpp>
+
+#include <beluga/algorithm/sampling.hpp>
+#include <beluga/resampling_policies/resample_interval_policy.hpp>
+#include <beluga/resampling_policies/resample_on_motion_policy.hpp>
+#include <beluga/resampling_policies/resampling_policies_poller.hpp>
+#include <beluga/resampling_policies/selective_resampling_policy.hpp>
+#include <beluga/tuple_vector.hpp>
+#include <beluga/type_traits.hpp>
 
 /**
  * \file
@@ -85,6 +90,7 @@
  * The following is satisfied:
  * - `p.particles()` is valid and returns a view to a container that satisfies the
  *   \ref ParticleContainerPage "ParticleContainer" requirements.
+ * - `p.weights()` is valid and returns a view to a container to the weights of the particles.
  * - `p.sample()` updates the particle filter particles based on the last motion update.
  * - `p.importance_sample()` updates the particle filter particles weight.
  * - `p.resample()` updates the particle filter, generating new particles from the old ones
@@ -233,10 +239,14 @@ struct BootstrapParticleFilter : public Mixin {
   /**
    * The update will be done based on the Mixin implementation of the
    * \ref ParticleSampledGenerationPage "ParticleSampledGeneration" and
-   * \ref ParticleResamplingPage "ParticleResampling" named requirements.
+   * \ref ParticleResamplingPage "ParticleResampling" named requirements
+   * and the active resampling policies.
    */
   void resample() {
-    particles_ = initialize_container(this->self().generate_samples_from(particles_) | this->self().take_samples());
+    const auto resampling_vote_result = this->self().do_resampling_vote();
+    if (resampling_vote_result) {
+      particles_ = initialize_container(this->self().generate_samples_from(particles_) | this->self().take_samples());
+    }
   }
 
  private:
@@ -285,6 +295,11 @@ struct MCL : public ciabatta::mixin<
                  ciabatta::curry<BaselineGeneration>::template mixin,
                  ciabatta::curry<NaiveGeneration>::template mixin,
                  ciabatta::curry<FixedResampling>::template mixin,
+                 ciabatta::curry<
+                     ResamplingPoliciesPoller,
+                     ResampleOnMotionPolicy,
+                     ResampleIntervalPolicy,
+                     SelectiveResamplingPolicy>::template mixin,
                  MotionModel,
                  SensorModel> {
   using ciabatta::mixin<
@@ -293,6 +308,9 @@ struct MCL : public ciabatta::mixin<
       ciabatta::curry<BaselineGeneration>::template mixin,
       ciabatta::curry<NaiveGeneration>::template mixin,
       ciabatta::curry<FixedResampling>::template mixin,
+      ciabatta::
+          curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>::
+              mixin,
       MotionModel,
       SensorModel>::mixin;
 };
@@ -321,6 +339,11 @@ struct AMCL : public ciabatta::mixin<
                   ciabatta::curry<BaselineGeneration>::template mixin,
                   ciabatta::curry<AdaptiveGeneration>::template mixin,
                   ciabatta::curry<KldResampling>::template mixin,
+                  ciabatta::curry<
+                      ResamplingPoliciesPoller,
+                      ResampleOnMotionPolicy,
+                      ResampleIntervalPolicy,
+                      SelectiveResamplingPolicy>::template mixin,
                   MotionModel,
                   SensorModel> {
   using ciabatta::mixin<
@@ -329,6 +352,9 @@ struct AMCL : public ciabatta::mixin<
       ciabatta::curry<BaselineGeneration>::template mixin,
       ciabatta::curry<AdaptiveGeneration>::template mixin,
       ciabatta::curry<KldResampling>::template mixin,
+      ciabatta::
+          curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>::
+              template mixin,
       MotionModel,
       SensorModel>::mixin;
 };

@@ -49,6 +49,8 @@ class MockMixin : public ciabatta::mixin<MockMixin<Mixin>, Mixin> {
     return range | ranges::views::all;
   }
 
+  MOCK_METHOD(bool, do_resampling_vote, ());
+
   auto take_samples() const { return ranges::views::take_exactly(max_samples()); }
 };
 
@@ -64,6 +66,7 @@ TEST(BootstrapParticleFilter, Update) {
   auto filter = MockMixin<ParticleFilter>();
   EXPECT_CALL(filter, apply_motion(1.)).WillRepeatedly(testing::Return(2.));
   EXPECT_CALL(filter, importance_weight(2.)).WillRepeatedly(testing::Return(3.));
+  EXPECT_CALL(filter, do_resampling_vote()).WillRepeatedly(testing::Return(true));
   filter.update();
   for (auto [state, weight] : filter.particles()) {
     ASSERT_EQ(state, 2.);
@@ -74,8 +77,12 @@ TEST(BootstrapParticleFilter, Update) {
 template <class Mixin>
 class MockMotionModel : public Mixin {
  public:
+  using update_type = Sophus::SE2d;
+
   template <class... Args>
   explicit MockMotionModel(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+
+  [[nodiscard]] std::optional<update_type> latest_motion_update() const { return std::nullopt; }
 
   [[nodiscard]] double apply_motion(double state) { return state; }
 };
@@ -96,7 +103,9 @@ class MockSensorModel : public Mixin {
 
 TEST(MCL, InitializeFilter) {
   constexpr std::size_t kMaxSamples = 1'000;
-  auto filter = beluga::MCL<MockMotionModel, MockSensorModel, double>{beluga::FixedResamplingParam{kMaxSamples}};
+  auto filter = beluga::MCL<MockMotionModel, MockSensorModel, double>{
+      beluga::FixedResamplingParam{kMaxSamples}, beluga::ResampleOnMotionPolicyParam{},
+      beluga::ResampleIntervalPolicyParam{}, beluga::SelectiveResamplingPolicyParam{}};
   ASSERT_EQ(filter.particles().size(), kMaxSamples);
 }
 
@@ -110,7 +119,9 @@ TEST(AMCL, InitializeFilter) {
   constexpr double kKldZ = 3.;
   auto filter = beluga::AMCL<MockMotionModel, MockSensorModel, double>{
       beluga::AdaptiveGenerationParam{kAlphaSlow, kAlphaFast},
-      beluga::KldResamplingParam{kMinSamples, kMaxSamples, kSpatialResolution, kKldEpsilon, kKldZ}};
+      beluga::KldResamplingParam{kMinSamples, kMaxSamples, kSpatialResolution, kKldEpsilon, kKldZ},
+      beluga::ResampleOnMotionPolicyParam{}, beluga::ResampleIntervalPolicyParam{},
+      beluga::SelectiveResamplingPolicyParam{}};
   ASSERT_GE(filter.particles().size(), kMinSamples);
 }
 

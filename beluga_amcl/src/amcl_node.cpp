@@ -163,13 +163,23 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
-      "Number of filter updates required before resampling. "
-      "Values other than 1 are not supported in this implementation.";
+      "Number of filter updates required before resampling. ";
     descriptor.integer_range.resize(1);
     descriptor.integer_range[0].from_value = 1;
-    descriptor.integer_range[0].to_value = 1;
+    descriptor.integer_range[0].to_value = std::numeric_limits<int>::max();
     descriptor.integer_range[0].step = 1;
     declare_parameter("resample_interval", rclcpp::ParameterValue(1), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "When set to true, will reduce the resampling rate when not needed and help "
+      "avoid particle deprivation. The resampling will only happen if the effective "
+      "number of particles (N_eff = 1/(sum(k_i^2))) is lower than half the current "
+      "number of particles.";
+    descriptor.read_only = true;
+    declare_parameter("selective_resampling", false, descriptor);
   }
 
   {
@@ -579,6 +589,14 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   resampling_params.kld_epsilon = get_parameter("pf_err").as_double();
   resampling_params.kld_z = get_parameter("pf_z").as_double();
 
+  auto resample_on_motion_params = beluga::ResampleOnMotionPolicyParam{};
+  resample_on_motion_params.update_min_d = get_parameter("update_min_d").as_double();
+  resample_on_motion_params.update_min_a = get_parameter("update_min_a").as_double();
+
+  auto resample_interval_params = beluga::ResampleIntervalPolicyParam{};
+  resample_interval_params.resample_interval_count =
+    static_cast<std::size_t>(get_parameter("resample_interval").as_int());
+
   auto sensor_params = beluga::LikelihoodFieldModelParam{};
   sensor_params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
   sensor_params.max_laser_distance = get_parameter("laser_max_range").as_double();
@@ -592,6 +610,9 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   motion_params.translation_noise_from_translation = get_parameter("alpha3").as_double();
   motion_params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
 
+  auto selective_resampling_params = beluga::SelectiveResamplingPolicyParam{};
+  selective_resampling_params.enabled = get_parameter("selective_resampling").as_bool();
+
   // Only when we get the first map we should use the parameters, not later.
   // TODO(ivanpauno): Intialize later maps from last known pose.
   const bool initialize_from_params = !particle_filter_ &&
@@ -600,6 +621,9 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   particle_filter_ = std::make_unique<ParticleFilter>(
     generation_params,
     resampling_params,
+    resample_on_motion_params,
+    resample_interval_params,
+    selective_resampling_params,
     motion_params,
     sensor_params,
     OccupancyGrid{map});
@@ -722,20 +746,9 @@ void AmclNode::laser_callback(
         static_cast<float>(get_parameter("laser_max_range").as_double())));
     particle_filter_->importance_sample(exec_policy);
     const auto time3 = std::chrono::high_resolution_clock::now();
-    {
-      const auto delta = odom_to_base_transform * last_odom_to_base_transform_.inverse();
-      const bool has_moved_since_last_resample =
-        std::abs(delta.translation().x()) > get_parameter("update_min_d").as_double() ||
-        std::abs(delta.translation().y()) > get_parameter("update_min_d").as_double() ||
-        std::abs(delta.so2().log()) > get_parameter("update_min_a").as_double();
-      if (has_moved_since_last_resample) {
-        // To avoid loss of diversity in the particle population, don't
-        // resample when the state is known to be static.
-        // See 'Probabilistic Robotics, Chapter 4.2.4'.
-        particle_filter_->resample();
-        last_odom_to_base_transform_ = odom_to_base_transform;
-      }
-    }
+
+    particle_filter_->resample();
+
     const auto time4 = std::chrono::high_resolution_clock::now();
 
     RCLCPP_INFO_THROTTLE(

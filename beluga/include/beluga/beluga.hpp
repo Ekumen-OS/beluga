@@ -22,6 +22,7 @@
 
 #include <beluga/algorithm.hpp>
 #include <beluga/motion.hpp>
+#include <beluga/resampling_policies.hpp>
 #include <beluga/sensor.hpp>
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
