@@ -7,6 +7,7 @@ ament_add_gmock(test_beluga
   algorithm/test_particle_filter.cpp
   algorithm/test_sampling.cpp
   motion/test_differential_drive_model.cpp
+  motion/test_omnidirectional_drive_model.cpp
   random/test_multivariate_normal_distribution.cpp
   resampling_policies/test_resample_interval_policy.cpp
   resampling_policies/test_resample_on_motion_policy.cpp
