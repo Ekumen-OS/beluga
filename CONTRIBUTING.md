@@ -79,7 +79,8 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    colcon test
    ```
 
-6. Run an example application using a pre-recorded rosbag.
+6. <a name="running_an_example"></a>Run an example application using a pre-recorded rosbag.
+
    ```bash
    cd /ws
    source install/setup.bash
