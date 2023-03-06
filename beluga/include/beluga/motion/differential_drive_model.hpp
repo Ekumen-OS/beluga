@@ -110,7 +110,7 @@ class DifferentialDriveModel : public Mixin {
    * That is done by the particle filter using the apply_motion() method
    * provided by this class.
    *
-   * \param pose Last odometry udpate.
+   * \param pose Last odometry update.
    */
   void update_motion(const update_type& pose) {
     if (last_pose_) {
@@ -146,11 +146,14 @@ class DifferentialDriveModel : public Mixin {
     last_pose_ = pose;
   }
 
+  /// Recovers latest motion update.
+  [[nodiscard]] std::optional<update_type> latest_motion_update() const { return last_pose_; }
+
  private:
   using DistributionParam = typename std::normal_distribution<double>::param_type;
 
   DifferentialDriveModelParam params_;
-  std::optional<Sophus::SE2d> last_pose_;
+  std::optional<update_type> last_pose_;
 
   DistributionParam first_rotation_params_{0.0, 0.0};
   DistributionParam second_rotation_params_{0.0, 0.0};
