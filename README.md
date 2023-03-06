@@ -37,7 +37,6 @@ https://user-images.githubusercontent.com/26796393/222827672-b8ab8421-5933-42f3-
 
   You can find all the supported parameter documented in the example parameters [yaml file](beluga_example/config/params.yaml).
 
-
 - How to benchmark Beluga?
 
   You can find micro-benchmarks in the [test folder](beluga/test/benchmark/) of Beluga.<br/>
