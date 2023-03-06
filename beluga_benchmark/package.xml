@@ -4,10 +4,11 @@
   <name>beluga_benchmark</name>
   <version>1.0.0</version>
 
-  <description>Scripts to benchmark, profile and compare beluga with other amcl implementations.</description>
+  <description>Scripts to benchmark, profile and compare beluga with other AMCL implementations.</description>
 
-  <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
+  <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
   <maintainer email="ivanpauno@ekumenlabs.com">Ivan Paunovic</maintainer>
+  <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
 
   <license>Apache License 2.0</license>
 

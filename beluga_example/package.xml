@@ -6,6 +6,8 @@
 
   <description>Example launch files for Beluga AMCL.</description>
 
+  <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
+  <maintainer email="ivanpauno@ekumenlabs.com">Ivan Paunovic</maintainer>
   <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
 
   <license>Apache License 2.0</license>

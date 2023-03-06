@@ -6,7 +6,8 @@
 
   <description>A generic MCL library for ROS2.</description>
 
-  <maintainer email="camistolo@ekumenlabs.com">Camila Stolowicz</maintainer>
+  <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
+  <maintainer email="ivanpauno@ekumenlabs.com">Ivan Paunovic</maintainer>
   <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
 
   <license>Apache License 2.0</license>
