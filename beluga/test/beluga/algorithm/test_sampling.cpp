@@ -25,6 +25,11 @@
 
 namespace {
 
+using testing::_;
+using testing::Each;
+using testing::Return;
+using testing::ReturnRef;
+
 class RandomSelectWithParam : public ::testing::TestWithParam<double> {};
 
 TEST_P(RandomSelectWithParam, Functional) {
@@ -64,7 +69,7 @@ TEST(RandomSample, Functional) {
   AssertWeights(output, values, weights);
 }
 
-class KLDConditionWithParam : public ::testing::TestWithParam<std::tuple<double, std::size_t, std::size_t>> {};
+class KldConditionWithParam : public ::testing::TestWithParam<std::tuple<double, std::size_t, std::size_t>> {};
 
 auto GenerateDistinctHashes(std::size_t count) {
   return ranges::views::generate([count, hash = 0UL]() mutable {
@@ -75,14 +80,14 @@ auto GenerateDistinctHashes(std::size_t count) {
   });
 }
 
-TEST_P(KLDConditionWithParam, Minimum) {
+TEST_P(KldConditionWithParam, Minimum) {
   const std::size_t cluster_count = std::get<1>(GetParam());
   auto output = GenerateDistinctHashes(cluster_count) |
                 ranges::views::take_while(beluga::kld_condition(1'000, 0.01, 0.95)) | ranges::to<std::vector>;
   ASSERT_GE(output.size(), 1'000);
 }
 
-TEST_P(KLDConditionWithParam, Limit) {
+TEST_P(KldConditionWithParam, Limit) {
   const double kld_k = std::get<0>(GetParam());
   const std::size_t cluster_count = std::get<1>(GetParam());
   const std::size_t min_samples = std::get<2>(GetParam());
@@ -95,8 +100,8 @@ constexpr double kPercentile90th = 1.28155156327703;
 constexpr double kPercentile99th = 2.32634787735669;
 
 INSTANTIATE_TEST_SUITE_P(
-    KLDPairs,
-    KLDConditionWithParam,
+    KldPairs,
+    KldConditionWithParam,
     testing::Values(
         std::make_tuple(kPercentile90th, 3, 228),
         std::make_tuple(kPercentile90th, 4, 311),
@@ -111,87 +116,93 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple(kPercentile99th, 7, 843),
         std::make_tuple(kPercentile99th, 100, 6733)));
 
-template <template <class> class Mixin>
-class MockMixin : public ciabatta::mixin<MockMixin<Mixin>, Mixin> {
+template <class Mixin>
+class MockStorage : public Mixin {
  public:
-  using ciabatta::mixin<MockMixin<Mixin>, Mixin>::mixin;
-  MOCK_METHOD(double, generate_random_state, (std::mt19937&));
+  using particle_type = std::tuple<int, double>;
+
+  template <class... Args>
+  explicit MockStorage(Args&&... rest) : Mixin(std::forward<Args>(rest)...) {}
+
+  MOCK_METHOD(double, make_random_state, (std::mt19937&));
+  MOCK_METHOD(const std::vector<int>&, states, (), (const));
+  MOCK_METHOD(const std::vector<double>&, weights, (), (const));
 };
 
-TEST(BaselineGeneration, InstantiateAndCall) {
-  auto instance = MockMixin<beluga::BaselineGeneration>();
-  EXPECT_CALL(instance, generate_random_state(testing::_)).WillRepeatedly(testing::Return(1.5));
-  auto output = instance.generate_samples<std::pair<double, double>>() | ranges::views::take_exactly(50) |
-                ranges::to<std::vector>;
+TEST(RandomStateGenerator, InstantiateAndCall) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto instance = ciabatta::mixin<MockStorage, beluga::RandomStateGenerator>{};
+  EXPECT_CALL(instance, make_random_state(_)).WillRepeatedly(Return(1.5));
+  auto output = instance.generate_samples(generator) | ranges::views::take_exactly(50) | ranges::to<std::vector>;
   ASSERT_EQ(output.size(), 50);
-  for (auto [state, _] : output) {
-    ASSERT_EQ(state, 1.5);
-  }
+  ASSERT_THAT(output, Each(1.5));
 }
 
-auto GetParticleSet() {
-  return std::vector<std::tuple<int, double, std::size_t>>{
-      std::make_tuple(1, 0.3, 0), std::make_tuple(2, 0.1, 0), std::make_tuple(3, 0.4, 0), std::make_tuple(4, 0.2, 0)};
+TEST(NaiveSampler, Distribution) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto states = std::vector<int>{1, 2, 3, 4};
+  auto weights = std::vector<double>{0.3, 0.1, 0.4, 0.2};
+  auto instance = ciabatta::mixin<MockStorage, beluga::NaiveSampler>{};
+  EXPECT_CALL(instance, states()).WillOnce(ReturnRef(states));
+  EXPECT_CALL(instance, weights()).WillOnce(ReturnRef(weights));
+  auto output = instance.generate_samples_from_particles(generator) | ranges::views::take_exactly(100'000) |
+                ranges::to<std::vector>;
+  AssertWeights(output, states, weights);
 }
 
-TEST(NaiveGeneration, Distribution) {
-  auto particles = GetParticleSet();
-  auto instance = MockMixin<beluga::NaiveGeneration>();
-  auto output = instance.generate_samples_from(particles) | ranges::views::take_exactly(100'000) |
-                beluga::views::elements<0> | ranges::to<std::vector>;
-  AssertWeights(output, beluga::views::states(particles), beluga::views::weights(particles));
+TEST(AdaptiveSampler, Distribution) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto states = std::vector<int>{1, 2, 3, 4};
+  auto weights = std::vector<double>{0.3, 0.1, 0.4, 0.2};
+  auto instance = ciabatta::mixin<MockStorage, beluga::AdaptiveSampler>{beluga::AdaptiveSamplerParam{0.001, 0.1}};
+  EXPECT_CALL(instance, states()).WillOnce(ReturnRef(states));
+  EXPECT_CALL(instance, weights()).WillOnce(ReturnRef(weights));
+  auto output = instance.generate_samples_from_particles(generator) | ranges::views::take_exactly(100'000) |
+                ranges::to<std::vector>;
+  AssertWeights(output, states, weights);
 }
 
-TEST(AdaptiveGeneration, Distribution) {
-  auto particles = GetParticleSet();
-  auto instance = MockMixin<beluga::AdaptiveGeneration>(beluga::AdaptiveGenerationParam{0.001, 0.1});
-  auto output = instance.generate_samples_from(particles) | ranges::views::take_exactly(100'000) |
-                beluga::views::elements<0> | ranges::to<std::vector>;
-  AssertWeights(output, beluga::views::states(particles), beluga::views::weights(particles));
-}
+class AdaptiveSamplerWithParam : public ::testing::TestWithParam<std::tuple<double, double, double>> {};
 
-class AdaptiveGenerationWithParam : public ::testing::TestWithParam<std::tuple<double, double, double>> {};
+TEST_P(AdaptiveSamplerWithParam, RandomParticleCount) {
+  const auto [initial_average_weight, final_average_weight, random_particle_probability] = GetParam();
 
-TEST_P(AdaptiveGenerationWithParam, RandomParticleCount) {
-  const double initial_average_weight = std::get<0>(GetParam());
-  const double final_average_weight = std::get<1>(GetParam());
-  const double random_particle_probability = std::get<2>(GetParam());
+  auto instance = ciabatta::mixin<MockStorage, beluga::AdaptiveSampler>{beluga::AdaptiveSamplerParam{0.001, 0.1}};
 
-  auto instance = MockMixin<beluga::AdaptiveGeneration>(beluga::AdaptiveGenerationParam{0.001, 0.1});
-  EXPECT_CALL(instance, generate_random_state(testing::_)).WillRepeatedly(testing::Return(5));
-
-  auto particles = GetParticleSet();
-  auto set_average_weight = [&particles](double value) {
-    for (double& weight : beluga::views::weights(particles)) {
-      weight = value;
-    }
-  };
-
+  // A "random" generated particle will be any particle with value 5
+  EXPECT_CALL(instance, make_random_state(_)).WillRepeatedly(Return(5));
   auto random_particle_percentage = [](const auto& range) {
+    // Count "random" generated particles by counting the number of 5's
     return static_cast<double>(ranges::count(range, 5)) / static_cast<double>(range.size());
   };
 
-  auto generate_samples = [&particles, &instance]() {
-    return instance.generate_samples_from(particles) | ranges::views::take_exactly(100'000) |
-           beluga::views::elements<0> | ranges::to<std::vector>;
+  auto states = std::vector<int>{1, 2, 3, 4};
+  auto weights = std::vector<double>{0.0, 0.0, 0.0, 0.0};
+  EXPECT_CALL(instance, states()).WillRepeatedly(ReturnRef(states));
+  EXPECT_CALL(instance, weights()).WillRepeatedly(ReturnRef(weights));
+
+  auto create_samples = [&instance]() {
+    static auto generator = std::mt19937{std::random_device()()};
+    return instance.generate_samples_from_particles(generator) | ranges::views::take_exactly(100'000) |
+           ranges::to<std::vector>;
   };
 
-  set_average_weight(initial_average_weight);
-  auto output = generate_samples();
+  std::fill(weights.begin(), weights.end(), initial_average_weight);
+  auto output = create_samples();
   ASSERT_EQ(0, random_particle_percentage(output));
 
-  set_average_weight(final_average_weight);
-  output = generate_samples();
+  std::fill(weights.begin(), weights.end(), final_average_weight);
+  output = create_samples();
   ASSERT_NEAR(random_particle_probability, random_particle_percentage(output), 0.01);
 
   // Once random particles are injected, reset filters
-  output = generate_samples();
+  output = create_samples();
   ASSERT_EQ(0, random_particle_percentage(output));
 }
 
 INSTANTIATE_TEST_SUITE_P(
     AdaptiveParams,
-    AdaptiveGenerationWithParam,
+    AdaptiveSamplerWithParam,
     testing::Values(
         std::make_tuple(1.0, 1.5, 0.00),
         std::make_tuple(1.0, 2.0, 0.00),
@@ -199,47 +210,44 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple(0.5, 0.1, 0.08),
         std::make_tuple(0.5, 0.0, 0.10)));
 
-TEST(FixedResampling, TakeMaximum) {
-  auto instance = MockMixin<beluga::FixedResampling>(beluga::FixedResamplingParam{1'200});
-  auto output = ranges::views::generate([]() { return std::make_pair<double, double>(1., 2.); }) |
-                instance.take_samples() | ranges::to<std::vector>;
+TEST(FixedLimiter, TakeMaximum) {
+  auto instance = ciabatta::mixin<MockStorage, beluga::FixedLimiter>{beluga::FixedLimiterParam{1'200}};
+  auto output = ranges::views::generate([]() { return 1; }) | instance.take_samples() | ranges::to<std::vector>;
   ASSERT_EQ(output.size(), 1'200);
 }
 
-TEST(KldResampling, TakeMaximum) {
-  using State = std::pair<double, double>;
-  using Particle = std::tuple<State, double, std::size_t>;
-  auto instance = MockMixin<beluga::KldResampling>(beluga::KldResamplingParam{0, 1'200, 0.05, 0.05, 3.});
-  auto output = ranges::views::generate([]() {
-                  return Particle{{1., 1.}, 2., 0};
-                }) |
-                instance.take_samples() | ranges::to<std::vector>;
-  ASSERT_EQ(output.size(), 1'200);
-}
+template <class Mixin>
+struct MockStorageWithCluster : public Mixin {
+  using state_type = std::pair<double, double>;
+  using particle_type = std::tuple<state_type, double, std::size_t>;
 
-TEST(KldResampling, TakeLimit) {
-  using State = std::pair<double, double>;
-  using Particle = std::tuple<State, double, std::size_t>;
-  auto instance = MockMixin<beluga::KldResampling>(beluga::KldResamplingParam{0, 1'200, 0.05, 0.05, 3.});
-  auto output = ranges::views::generate([]() {
-                  return Particle{{1., 1.}, 2., 0};
-                }) |
-                ranges::views::intersperse(Particle{{2., 2.}, 2., 0}) |
-                ranges::views::intersperse(Particle{{3., 3.}, 2., 0}) | instance.take_samples() |
+  template <class... Args>
+  explicit MockStorageWithCluster(Args&&... rest) : Mixin(std::forward<Args>(rest)...) {}
+};
+
+TEST(KldLimiter, TakeMaximum) {
+  auto instance =
+      ciabatta::mixin<MockStorageWithCluster, beluga::KldLimiter>{beluga::KldLimiterParam{0, 1'200, 0.05, 0.05, 3.}};
+  auto output = ranges::views::generate([]() { return std::make_pair(1., 1.); }) | instance.take_samples() |
                 ranges::to<std::vector>;
+  ASSERT_EQ(output.size(), 1'200);
+}
+
+TEST(KldLimiter, TakeLimit) {
+  auto instance =
+      ciabatta::mixin<MockStorageWithCluster, beluga::KldLimiter>{beluga::KldLimiterParam{0, 1'200, 0.05, 0.05, 3.}};
+  auto output = ranges::views::generate([]() { return std::make_pair(1., 1.); }) |
+                ranges::views::intersperse(std::make_pair(2., 2.)) |
+                ranges::views::intersperse(std::make_pair(3., 3.)) | instance.take_samples() | ranges::to<std::vector>;
   ASSERT_EQ(output.size(), 135);
 }
 
-TEST(KldResampling, TakeMinimum) {
-  using State = std::pair<double, double>;
-  using Particle = std::tuple<State, double, std::size_t>;
-  auto instance = MockMixin<beluga::KldResampling>(beluga::KldResamplingParam{200, 1'200, 0.05, 0.05, 3.});
-  auto output = ranges::views::generate([]() {
-                  return Particle{{1., 1.}, 2., 0};
-                }) |
-                ranges::views::intersperse(Particle{{2., 2.}, 2., 0}) |
-                ranges::views::intersperse(Particle{{3., 3.}, 2., 0}) | instance.take_samples() |
-                ranges::to<std::vector>;
+TEST(KldLimiter, TakeMinimum) {
+  auto instance =
+      ciabatta::mixin<MockStorageWithCluster, beluga::KldLimiter>{beluga::KldLimiterParam{200, 1'200, 0.05, 0.05, 3.}};
+  auto output = ranges::views::generate([]() { return std::make_pair(1., 1.); }) |
+                ranges::views::intersperse(std::make_pair(2., 2.)) |
+                ranges::views::intersperse(std::make_pair(3., 3.)) | instance.take_samples() | ranges::to<std::vector>;
   ASSERT_EQ(output.size(), 200);
 }
 

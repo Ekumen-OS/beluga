@@ -14,7 +14,7 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/sensor/likelihood_field_model.hpp>
+#include <beluga/sensor.hpp>
 #include <ciabatta/ciabatta.hpp>
 
 namespace {
@@ -86,14 +86,9 @@ class StaticOccupancyGrid {
   double resolution() const { return resolution_; }
 };
 
-template <template <class> class Mixin>
-class MockMixin : public ciabatta::mixin<MockMixin<Mixin>, Mixin> {
- public:
-  using ciabatta::mixin<MockMixin<Mixin>, Mixin>::mixin;
-};
-
-template <class Mixin>
-using SensorModel = beluga::LikelihoodFieldModel<Mixin, StaticOccupancyGrid<5, 5>>;
+using UUT = ciabatta::mixin<
+    ciabatta::curry<beluga::LikelihoodFieldModel, StaticOccupancyGrid<5, 5>>::mixin,
+    ciabatta::provides<beluga::LaserSensorModelInterface2d>::mixin>;
 
 TEST(LikelihoodFieldModel, LikelihoodField) {
   constexpr double kResolution = 0.5;
@@ -116,7 +111,7 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto mixin = MockMixin<SensorModel>{params, grid};
+  auto mixin = UUT{params, grid};
   ASSERT_THAT(mixin.likelihood_field(), testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
 }
 
@@ -133,7 +128,7 @@ TEST(LikelihoodFieldModel, ImportanceWeight) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto mixin = MockMixin<SensorModel>{params, grid};
+  auto mixin = UUT{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{1.25, 1.25}});
   ASSERT_NEAR(1.020, mixin.importance_weight(grid.origin()), 0.003);
@@ -165,7 +160,7 @@ TEST(LikelihoodFieldModel, GridWithOffset) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto mixin = MockMixin<SensorModel>{params, grid};
+  auto mixin = UUT{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{4.5, 4.5}});
   ASSERT_NEAR(1.020, mixin.importance_weight(Sophus::SE2d{}), 0.003);
@@ -188,7 +183,7 @@ TEST(LikelihoodFieldModel, GridWithRotation) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto mixin = MockMixin<SensorModel>{params, grid};
+  auto mixin = UUT{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{-9.5, 9.5}});
   ASSERT_NEAR(1.020, mixin.importance_weight(Sophus::SE2d{}), 0.003);
@@ -214,7 +209,7 @@ TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto mixin = MockMixin<SensorModel>{params, grid};
+  auto mixin = UUT{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{-4.5, 4.5}});
   ASSERT_NEAR(1.020, mixin.importance_weight(Sophus::SE2d{}), 0.003);

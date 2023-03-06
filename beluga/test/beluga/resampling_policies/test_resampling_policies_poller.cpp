@@ -56,16 +56,8 @@ struct ProxyVoterPolicy {
 
 namespace {
 
-struct UUT_WITH_POLICIES_INSTALLED
-    : public ciabatta::mixin<
-          UUT_WITH_POLICIES_INSTALLED,
-          ciabatta::curry<ResamplingPoliciesPoller, ProxyVoterPolicy, ProxyVoterPolicy, ProxyVoterPolicy>::
-              template mixin> {
-  using ciabatta::mixin<
-      UUT_WITH_POLICIES_INSTALLED,
-      ciabatta::curry<ResamplingPoliciesPoller, ProxyVoterPolicy, ProxyVoterPolicy, ProxyVoterPolicy>::template mixin>::
-      mixin;
-};
+using UUT_WITH_POLICIES_INSTALLED = ciabatta::mixin<
+    ciabatta::curry<ResamplingPoliciesPoller, ProxyVoterPolicy, ProxyVoterPolicy, ProxyVoterPolicy>::mixin>;
 
 template <class EventType>
 using EventSubscriberCallback = std::function<void(const EventType&)>;
@@ -132,13 +124,7 @@ TEST_F(ResamplingPoliciesPollerTests, ResamplingPollerWithNPoliciesUsesShortCirc
 
 TEST_F(ResamplingPoliciesPollerTests, ResamplingVoteWithNoPolicies) {
   // Tests that if no policies have been registered, the vote is by default in favour of resampling
-
-  struct UUT_WITH_NO_POLICIES_INSTALLED
-      : public ciabatta::mixin<
-            UUT_WITH_NO_POLICIES_INSTALLED, ciabatta::curry<ResamplingPoliciesPoller>::template mixin> {
-    using ciabatta::mixin<UUT_WITH_NO_POLICIES_INSTALLED, ciabatta::curry<ResamplingPoliciesPoller>::template mixin>::
-        mixin;
-  };
+  using UUT_WITH_NO_POLICIES_INSTALLED = ciabatta::mixin<ciabatta::curry<ResamplingPoliciesPoller>::mixin>;
 
   UUT_WITH_NO_POLICIES_INSTALLED uut{};
 

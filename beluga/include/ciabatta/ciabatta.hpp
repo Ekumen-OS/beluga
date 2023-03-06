@@ -19,6 +19,7 @@
  * - Remove macro usage.
  * - Invert the argument order on the curry struct template to
  *   support default template parameters.
+ * - Re-implement mixin struct so it doesn't require CRTP to compose a new mixin.
  */
 
 #ifndef CIABATTA_CIABATTA_HPP
@@ -60,10 +61,15 @@ using mixin_impl = typename chain_inherit<ciabatta_top<Concrete>, Mixins...>::ty
 }  // namespace detail
 
 template <typename Concrete, template <class> class... Mixins>
-struct mixin : ::ciabatta::detail::mixin_impl<Concrete, Mixins...> {
+struct mixin_base : ::ciabatta::detail::mixin_impl<Concrete, Mixins...> {
   template <typename... Rest>
-  constexpr explicit mixin(Rest&&... rest)
+  constexpr explicit mixin_base(Rest&&... rest)
       : ::ciabatta::detail::mixin_impl<Concrete, Mixins...>(static_cast<decltype(rest)>(rest)...) {}
+};
+
+template <template <class> class... Mixins>
+struct mixin : ::ciabatta::mixin_base<mixin<Mixins...>, Mixins...> {
+  using ciabatta::mixin_base<mixin<Mixins...>, Mixins...>::mixin_base;
 };
 
 template <template <class...> class Mixin, typename... Args>
@@ -71,8 +77,6 @@ struct curry {
   template <typename Base>
   using mixin = Mixin<Base, Args...>;
 };
-
-namespace mixins {
 
 template <typename Interface, typename Base = ::ciabatta::deferred>
 struct provides : Base, Interface {
@@ -82,8 +86,6 @@ struct provides : Base, Interface {
   template <typename... Args>
   constexpr explicit provides(Args&&... args) : Base(static_cast<decltype(args)>(args)...) {}
 };
-
-}  // namespace mixins
 
 }  // namespace ciabatta
 

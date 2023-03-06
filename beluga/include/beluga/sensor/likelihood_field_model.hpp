@@ -129,17 +129,13 @@ class LikelihoodFieldModel : public Mixin {
    * The generated state is an unoccupied cell of the grid, any free cell is sampled uniformly.
    * The rotation is as well sampled uniformly.
    *
-   * \tparam Generator A type satisfying the [UniformRandomBitGenerator](
-   *  https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator) requirements.
-   * \param generator A `Generator` instance, used as a random bit generator to generate the random state.
    * \return The generated random state.
    */
   template <class Generator>
-  [[nodiscard]] Sophus::SE2d generate_random_state(Generator& generator) const {
+  [[nodiscard]] Sophus::SE2d make_random_state(Generator& gen) const {
     auto index_distribution = std::uniform_int_distribution<std::size_t>{0, free_cells_.size() - 1};
     return Sophus::SE2d{
-        Sophus::SO2d::sampleUniform(generator),
-        grid_.origin() * grid_.point(free_cells_[index_distribution(generator)])};
+        Sophus::SO2d::sampleUniform(gen), grid_.origin() * grid_.point(free_cells_[index_distribution(gen)])};
   }
 
   /// Gets the importance weight for a particle with the provided state.
@@ -172,7 +168,7 @@ class LikelihoodFieldModel : public Mixin {
    *
    * \param points The range finder points in the reference frame of the particle.
    */
-  void update_sensor(measurement_type points) {
+  void update_sensor(measurement_type points) final {
     const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
     points_ = std::move(points);
   }

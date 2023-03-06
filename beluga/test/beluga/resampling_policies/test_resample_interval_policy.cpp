@@ -23,10 +23,7 @@ namespace beluga {
 
 namespace {
 
-struct UUT
-    : public ciabatta::mixin<UUT, ciabatta::curry<ResamplingPoliciesPoller, ResampleIntervalPolicy>::template mixin> {
-  using ciabatta::mixin<UUT, ciabatta::curry<ResamplingPoliciesPoller, ResampleIntervalPolicy>::template mixin>::mixin;
-};
+using UUT = ciabatta::mixin<ciabatta::curry<ResamplingPoliciesPoller, ResampleIntervalPolicy>::mixin>;
 
 struct ResampleIntervalPolicyTests : public ::testing::Test {};
 

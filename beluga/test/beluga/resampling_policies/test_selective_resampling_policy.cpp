@@ -40,14 +40,7 @@ struct MockMixin : public Mixin {
   void set_weights(std::vector<double> v) { weights_ = std::move(v); }
 };
 
-struct UUT
-    : public ciabatta::
-          mixin<UUT, ciabatta::curry<ResamplingPoliciesPoller, SelectiveResamplingPolicy>::template mixin, MockMixin> {
-  using ciabatta::mixin<
-      UUT,
-      ciabatta::curry<ResamplingPoliciesPoller, SelectiveResamplingPolicy>::template mixin,
-      MockMixin>::mixin;
-};
+using UUT = ciabatta::mixin<ciabatta::curry<ResamplingPoliciesPoller, SelectiveResamplingPolicy>::mixin, MockMixin>;
 
 struct SelectiveResamplingPolicyTests : public ::testing::Test {};
 

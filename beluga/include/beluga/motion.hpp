@@ -16,6 +16,7 @@
 #define BELUGA_MOTION_HPP
 
 #include <beluga/motion/differential_drive_model.hpp>
+#include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
 
 /**
@@ -47,5 +48,14 @@
  * - `cp.latest_motion_update() returns a std::optional<update_type> with the latest motion update
  *   received through motion_update().
  */
+
+namespace beluga {
+
+struct OdometryMotionModelInterface2d {
+  virtual ~OdometryMotionModelInterface2d() = default;
+  virtual void update_motion(const Sophus::SE2d&) = 0;
+};
+
+}  // namespace beluga
 
 #endif

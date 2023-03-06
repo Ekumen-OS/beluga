@@ -16,28 +16,14 @@
 #define BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 
 #include <execution>
+#include <random>
 #include <utility>
 
-#include <ciabatta/ciabatta.hpp>
-#include <range/v3/algorithm/copy.hpp>
-#include <range/v3/algorithm/transform.hpp>
-#include <range/v3/view/const.hpp>
-
-#include <beluga/algorithm/sampling.hpp>
-#include <beluga/resampling_policies/resample_interval_policy.hpp>
-#include <beluga/resampling_policies/resample_on_motion_policy.hpp>
-#include <beluga/resampling_policies/resampling_policies_poller.hpp>
-#include <beluga/resampling_policies/selective_resampling_policy.hpp>
-#include <beluga/tuple_vector.hpp>
-#include <beluga/type_traits.hpp>
+#include <range/v3/view/common.hpp>
 
 /**
  * \file
  * \brief Implementation of particle filters.
- *
- * Contains:
- * - A configurable beluga::MCL implementation of Monte Carlo localization.
- * - A configurable beluga::AMCL implementation of adaptive Monte Carlo localization.
  */
 
 /**
@@ -113,6 +99,17 @@
  */
 namespace beluga {
 
+struct BaseParticleFilterInterface {
+  virtual ~BaseParticleFilterInterface() = default;
+  virtual void sample() = 0;
+  virtual void sample(std::execution::sequenced_policy) { return this->sample(); };
+  virtual void sample(std::execution::parallel_policy) { return this->sample(); };
+  virtual void importance_sample() = 0;
+  virtual void importance_sample(std::execution::sequenced_policy) { return this->importance_sample(); };
+  virtual void importance_sample(std::execution::parallel_policy) { return this->importance_sample(); };
+  virtual void resample() = 0;
+};
+
 /// Base implementation of a particle filter.
 /**
  * BootstrapParticleFilter<Mixin, Container> is an implementation of the
@@ -136,12 +133,9 @@ namespace beluga {
  * \tparam Container The particle container type.
  *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.
  */
-template <class Mixin, class Container>
+template <class Mixin>
 struct BootstrapParticleFilter : public Mixin {
  public:
-  /// The particle type.
-  using particle_type = typename Container::value_type;
-
   /// Constructs a BootstrapParticleFilter.
   /**
    * The initial particles are generated using the \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
@@ -151,47 +145,8 @@ struct BootstrapParticleFilter : public Mixin {
    * \param ...args arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit BootstrapParticleFilter(Args&&... args)
-      : Mixin(std::forward<Args>(args)...),
-        particles_{initialize_container(
-            this->self().template generate_samples<particle_type>() | this->self().take_samples())} {}
-
-  /// Returns a view of the particles container.
-  auto particles() { return views::all(particles_); }
-  /// Returns a const view of the particles container.
-  auto particles() const { return views::all(particles_) | ranges::views::const_; }
-
-  /// Returns a view of the particles states.
-  auto states() { return views::states(particles_); }
-  /// Returns a const view of the particles states.
-  auto states() const { return views::states(particles_) | ranges::views::const_; }
-
-  /// Returns a view of the particles weight.
-  auto weights() { return views::weights(particles_); }
-  /// Returns a const view of the particles weight.
-  auto weights() const { return views::weights(particles_) | ranges::views::const_; }
-
-  /// Reinitializes the filter with a given range view to the new particle states.
-  /**
-   * The particle filter will be initialized with the first `max_samples` states of the range,
-   * determined by the \ref ParticleResamplingPage "ParticleResampling" named requirements.
-   *
-   * \tparam View Range view type whose elements are of the same type as `particle_type::state_type`.
-   * \param states A state range view to reinitialize the filter.
-   */
-  template <class View>
-  void reinitialize(View states) {
-    particles_ = initialize_container(states | ranges::views::transform(beluga::make_from_state<particle_type>));
-  }
-
-  /// Runs all the sampling steps.
-  /**
-   * That means, it will sample, importance sample, and finally resample.
-   */
-  void update() {
-    sample();
-    importance_sample();
-    resample();
+  explicit BootstrapParticleFilter(Args&&... args) : Mixin(std::forward<Args>(args)...) {
+    this->self().initialize_particles(this->self().generate_samples(generator_) | this->self().take_samples());
   }
 
   /// Update the particles states based on the motion model and the last pose update.
@@ -199,41 +154,18 @@ struct BootstrapParticleFilter : public Mixin {
    * The update will be done based on the `Mixin` implementation of the
    * \ref MotionModelPage "MotionModel" named requirement.
    */
-  void sample() { this->sample(std::execution::par); }
-
-  /// Update the particles states based on the motion model and the last pose update.
-  /**
-   * Same as the overload that takes no arguments, but it allows specifying a different execution policy.
-   * The default is std::execution::par.
-   */
-  template <typename ExecutionPolicy>
-  void sample(ExecutionPolicy&& policy) {
-    const auto states = views::states(particles_);
-    std::transform(
-        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states), std::begin(states),
-        [this](const auto& state) { return this->self().apply_motion(state); });
-  }
+  void sample() final { return this->sample_impl(std::execution::seq); }
+  void sample(std::execution::sequenced_policy policy) final { this->sample_impl(policy); }
+  void sample(std::execution::parallel_policy policy) final { this->sample_impl(policy); }
 
   /// Update the particle weights based on the sensor model.
   /**
    * The update will be done based on the `Mixin` implementation of the \ref SensorModelPage "SensorModel"
    * named requirement.
    */
-  void importance_sample() { this->importance_sample(std::execution::par); }
-
-  /// Update the particle weights based on the sensor model.
-  /**
-   * Same as the overload that takes no arguments, but it allows specifying a different execution policy.
-   * The default is std::execution::par.
-   */
-  template <typename ExecutionPolicy>
-  void importance_sample(ExecutionPolicy&& policy) {
-    const auto states = views::states(particles_);
-    std::transform(
-        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states),
-        std::begin(views::weights(particles_)),
-        [this](const auto& state) { return this->self().importance_weight(state); });
-  }
+  void importance_sample() final { this->importance_sample_impl(std::execution::seq); }
+  void importance_sample(std::execution::sequenced_policy policy) final { this->importance_sample_impl(policy); }
+  void importance_sample(std::execution::parallel_policy policy) final { this->importance_sample_impl(policy); }
 
   /// Resample particles based on ther weights and the resampling policy used.
   /**
@@ -242,121 +174,34 @@ struct BootstrapParticleFilter : public Mixin {
    * \ref ParticleResamplingPage "ParticleResampling" named requirements
    * and the active resampling policies.
    */
-  void resample() {
+  void resample() final {
     const auto resampling_vote_result = this->self().do_resampling_vote();
     if (resampling_vote_result) {
-      particles_ = initialize_container(this->self().generate_samples_from(particles_) | this->self().take_samples());
+      this->self().initialize_particles(
+          this->self().generate_samples_from_particles(generator_) | this->self().take_samples());
     }
   }
 
  private:
-  Container particles_;
+  std::mt19937 generator_{std::random_device()()};
 
-  /// Initializes a new particle container from an input view.
-  /**
-   * The size of the container will be at most `max_samples`, determined by the ParticleResampling
-   * named requirements.
-   *
-   * \tparam View Range view type whose elements are of the same type as `Container::value_type`.
-   * \param input A particle range view to initialize the container.
-   */
-  template <class View>
-  [[nodiscard]] Container initialize_container(View input) const {
-    const std::size_t size = this->self().max_samples();
-    auto container = Container{size};
-    const auto first = std::begin(views::all(container));
-    const auto last = ranges::copy(input | ranges::views::take(size), first).out;
-    container.resize(std::distance(first, last));
-    return container;
+  /// Update the particles states based on the motion model and the last pose update.
+  template <typename ExecutionPolicy>
+  void sample_impl(ExecutionPolicy&& policy) {
+    auto states = this->self().states() | ranges::views::common;
+    std::transform(
+        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states), std::begin(states),
+        [this](const auto& state) { return this->self().apply_motion(state, generator_); });
   }
-};
 
-/// An implementation of Monte Carlo localization.
-/**
- * MCL<U, M, S, C> is an implementation of the \ref ParticleFilterPage "ParticleFilter"
- * named requirements.
- *
- * \tparam MotionModel MotionModel<AMCL> must implement the \ref MotionModelPage "MotionModel" named requirement.
- * \tparam SensorModel MotionModel<AMCL> must implement the \ref SensorModelPage "SensorModel" named requirement.
- * \tparam State The state of the particle type.
- * \tparam Container The particle container type.
- *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.
- */
-template <
-    template <class>
-    class MotionModel,
-    template <class>
-    class SensorModel,
-    class State,
-    class Container = TupleVector<std::pair<State, double>>>
-struct MCL : public ciabatta::mixin<
-                 MCL<MotionModel, SensorModel, State, Container>,
-                 ciabatta::curry<BootstrapParticleFilter, Container>::template mixin,
-                 ciabatta::curry<BaselineGeneration>::template mixin,
-                 ciabatta::curry<NaiveGeneration>::template mixin,
-                 ciabatta::curry<FixedResampling>::template mixin,
-                 ciabatta::curry<
-                     ResamplingPoliciesPoller,
-                     ResampleOnMotionPolicy,
-                     ResampleIntervalPolicy,
-                     SelectiveResamplingPolicy>::template mixin,
-                 MotionModel,
-                 SensorModel> {
-  using ciabatta::mixin<
-      MCL<MotionModel, SensorModel, State, Container>,
-      ciabatta::curry<BootstrapParticleFilter, Container>::template mixin,
-      ciabatta::curry<BaselineGeneration>::template mixin,
-      ciabatta::curry<NaiveGeneration>::template mixin,
-      ciabatta::curry<FixedResampling>::template mixin,
-      ciabatta::
-          curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>::
-              mixin,
-      MotionModel,
-      SensorModel>::mixin;
-};
-
-/// An implementation of adaptive Monte Carlo localization.
-/**
- * AMCL<U, M, S, C> is an implementation of the \ref ParticleFilterPage "ParticleFilter"
- * named requirements.
- *
- * \tparam MotionModel MotionModel<AMCL> must implement the \ref MotionModelPage "MotionModel" named requirement.
- * \tparam SensorModel MotionModel<AMCL> must implement the \ref SensorModelPage "SensorModel" named requirement.
- * \tparam State The state of the particle type.
- * \tparam Container The particle container type.
- *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.
- */
-template <
-    template <class>
-    class MotionModel,
-    template <class>
-    class SensorModel,
-    class State,
-    class Container = TupleVector<std::tuple<State, double, std::size_t>>>
-struct AMCL : public ciabatta::mixin<
-                  AMCL<MotionModel, SensorModel, State, Container>,
-                  ciabatta::curry<BootstrapParticleFilter, Container>::template mixin,
-                  ciabatta::curry<BaselineGeneration>::template mixin,
-                  ciabatta::curry<AdaptiveGeneration>::template mixin,
-                  ciabatta::curry<KldResampling>::template mixin,
-                  ciabatta::curry<
-                      ResamplingPoliciesPoller,
-                      ResampleOnMotionPolicy,
-                      ResampleIntervalPolicy,
-                      SelectiveResamplingPolicy>::template mixin,
-                  MotionModel,
-                  SensorModel> {
-  using ciabatta::mixin<
-      AMCL<MotionModel, SensorModel, State, Container>,
-      ciabatta::curry<BootstrapParticleFilter, Container>::template mixin,
-      ciabatta::curry<BaselineGeneration>::template mixin,
-      ciabatta::curry<AdaptiveGeneration>::template mixin,
-      ciabatta::curry<KldResampling>::template mixin,
-      ciabatta::
-          curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>::
-              template mixin,
-      MotionModel,
-      SensorModel>::mixin;
+  /// Update the particle weights based on the sensor model.
+  template <typename ExecutionPolicy>
+  void importance_sample_impl(ExecutionPolicy&& policy) {
+    auto states = this->self().states() | ranges::views::common;
+    std::transform(
+        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states), std::begin(this->self().weights()),
+        [this](const auto& state) { return this->self().importance_weight(state); });
+  }
 };
 
 }  // namespace beluga

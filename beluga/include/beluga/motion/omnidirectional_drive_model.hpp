@@ -62,7 +62,7 @@ struct OmnidirectionalDriveModelParam {
    * odometry updates.
    * Also known as `alpha5`.
    */
-  double translation_strafe_noise_from_translation;
+  double strafe_noise_from_translation;
 
   /// Distance threshold to detect in-place rotation.
   double distance_threshold = 0.01;
@@ -99,8 +99,8 @@ class OmnidirectionalDriveModel : public Mixin {
    * \param state The particle state to apply the motion to.
    * \return The updated particle state.
    */
-  [[nodiscard]] state_type apply_motion(const state_type& state) const {
-    static thread_local auto generator = std::mt19937{std::random_device()()};
+  template <class Generator>
+  [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) const {
     static thread_local auto distribution = std::normal_distribution<double>{};
     const auto lock = std::shared_lock<std::shared_mutex>{params_mutex_};
     // This is an implementation based on the same set of parameters that is used in
@@ -108,10 +108,10 @@ class OmnidirectionalDriveModel : public Mixin {
     // variable substitutions were performed:
     // - first_rotation = delta_bearing - previous_orientation
     // - second_rotation = delta_rot_hat - first_rotation
-    const auto second_rotation = Sophus::SO2d{distribution(generator, rotation_params_)} * first_rotation_.inverse();
+    const auto second_rotation = Sophus::SO2d{distribution(gen, rotation_params_)} * first_rotation_.inverse();
     const auto translation = Eigen::Vector2d{
-        distribution(generator, translation_params_),
-        -1.0 * distribution(generator, strafe_params_),
+        distribution(gen, translation_params_),
+        -1.0 * distribution(gen, strafe_params_),
     };
     return state * Sophus::SE2d{first_rotation_, Eigen::Vector2d{0.0, 0.0}} *
            Sophus::SE2d{second_rotation, translation};
@@ -125,7 +125,7 @@ class OmnidirectionalDriveModel : public Mixin {
    *
    * \param pose Last odometry udpate.
    */
-  void update_motion(const update_type& pose) {
+  void update_motion(const update_type& pose) final {
     if (last_pose_) {
       const auto translation = pose.translation() - last_pose_.value().translation();
       const double distance = translation.norm();
@@ -135,29 +135,32 @@ class OmnidirectionalDriveModel : public Mixin {
       const auto& current_orientation = pose.so2();
       const auto rotation = current_orientation * previous_orientation.inverse();
 
+      first_rotation_ =
+          distance > params_.distance_threshold
+              ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()
+              : Sophus::SO2d{0.0};
+
       {
         const auto lock = std::lock_guard<std::shared_mutex>{params_mutex_};
-        first_rotation_ =
-            distance > params_.distance_threshold
-                ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()
-                : Sophus::SO2d{0.0};
-        const double rotation_variance_ = rotation_variance(rotation);
         rotation_params_ = DistributionParam{
             rotation.log(), std::sqrt(
-                                params_.rotation_noise_from_rotation * rotation_variance_ +
+                                params_.rotation_noise_from_rotation * rotation_variance(rotation) +
                                 params_.rotation_noise_from_translation * distance_variance)};
         translation_params_ = DistributionParam{
             distance, std::sqrt(
                           params_.translation_noise_from_translation * distance_variance +
-                          params_.translation_noise_from_rotation * rotation_variance_)};
+                          params_.translation_noise_from_rotation * rotation_variance(rotation))};
         strafe_params_ = DistributionParam{
             0.0, std::sqrt(
-                     params_.translation_strafe_noise_from_translation * distance_variance +
-                     params_.translation_noise_from_rotation * rotation_variance_)};
+                     params_.strafe_noise_from_translation * distance_variance +
+                     params_.translation_noise_from_rotation * rotation_variance(rotation))};
       }
     }
     last_pose_ = pose;
   }
+
+  /// Recovers latest motion update.
+  [[nodiscard]] std::optional<update_type> latest_motion_update() const { return last_pose_; }
 
  private:
   using DistributionParam = typename std::normal_distribution<double>::param_type;

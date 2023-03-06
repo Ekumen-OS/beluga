@@ -46,4 +46,13 @@
  * - `cp.generate_random_state()` returns a `T::state_type` instance.
  */
 
+namespace beluga {
+
+struct LaserSensorModelInterface2d {
+  virtual ~LaserSensorModelInterface2d() = default;
+  virtual void update_sensor(std::vector<std::pair<double, double>>) = 0;
+};
+
+}  // namespace beluga
+
 #endif

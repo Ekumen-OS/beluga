@@ -56,19 +56,17 @@ class StationaryModel : public Mixin {
    * \param state The particle state to apply the motion to.
    * \return The updated paticle state.
    */
-  [[nodiscard]] state_type apply_motion(const state_type& state) const {
-    static thread_local std::mt19937 generator{std::random_device()()};
+  template <class Generator>
+  [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) const {
     auto distribution = std::normal_distribution<>{0, 0.02};
-    return state * Sophus::SE2d{
-                       Sophus::SO2d{distribution(generator)},
-                       Eigen::Vector2d{distribution(generator), distribution(generator)}};
+    return state * Sophus::SE2d{Sophus::SO2d{distribution(gen)}, Eigen::Vector2d{distribution(gen), distribution(gen)}};
   }
 
   /// Updates motion model.
   /**
    * For the stationary model, updates are ignored.
    */
-  void update_motion(const update_type&) {}
+  void update_motion(const update_type&) final {}
 
   /// Recovers latest motion update.
   /**

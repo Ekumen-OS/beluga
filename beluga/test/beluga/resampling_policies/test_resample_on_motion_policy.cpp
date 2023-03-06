@@ -37,15 +37,7 @@ struct MockMotionModel : public Mixin {
   std::optional<update_type> last_pose_;
 };
 
-struct UUT : public ciabatta::mixin<
-                 UUT,
-                 MockMotionModel,
-                 ciabatta::curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy>::template mixin> {
-  using ciabatta::mixin<
-      UUT,
-      MockMotionModel,
-      ciabatta::curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy>::template mixin>::mixin;
-};
+using UUT = ciabatta::mixin<MockMotionModel, ciabatta::curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy>::mixin>;
 
 struct ResampleOnMotionPolicyTests : public ::testing::Test {
   auto make_motion_update_event(double x, double y, double phi) {

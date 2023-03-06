@@ -93,14 +93,13 @@ class DifferentialDriveModel : public Mixin {
    * \param state The particle state to apply the motion to.
    * \return The updated paticle state.
    */
-  [[nodiscard]] state_type apply_motion(const state_type& state) const {
-    static thread_local auto generator = std::mt19937{std::random_device()()};
+  template <class Generator>
+  [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) const {
     static thread_local auto distribution = std::normal_distribution<double>{};
-
     const auto lock = std::shared_lock<std::shared_mutex>{params_mutex_};
-    const auto first_rotation = Sophus::SO2d{distribution(generator, first_rotation_params_)};
-    const auto translation = Eigen::Vector2d{distribution(generator, translation_params_), 0.0};
-    const auto second_rotation = Sophus::SO2d{distribution(generator, second_rotation_params_)};
+    const auto first_rotation = Sophus::SO2d{distribution(gen, first_rotation_params_)};
+    const auto translation = Eigen::Vector2d{distribution(gen, translation_params_), 0.0};
+    const auto second_rotation = Sophus::SO2d{distribution(gen, second_rotation_params_)};
     return state * Sophus::SE2d{first_rotation, Eigen::Vector2d{0.0, 0.0}} * Sophus::SE2d{second_rotation, translation};
   }
 
@@ -112,7 +111,7 @@ class DifferentialDriveModel : public Mixin {
    *
    * \param pose Last odometry update.
    */
-  void update_motion(const update_type& pose) {
+  void update_motion(const update_type& pose) final {
     if (last_pose_) {
       const auto translation = pose.translation() - last_pose_.value().translation();
       const double distance = translation.norm();

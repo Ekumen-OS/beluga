@@ -114,12 +114,12 @@ class TupleContainer<InternalContainer, Tuple<Types...>> {
   }
 
   /// Returns a view of all elements of the container.
-  constexpr auto view_all() {
+  [[nodiscard]] constexpr auto view_all() {
     return std::apply([](auto&&... containers) { return ranges::views::zip(containers...); }, sequences_);
   }
 
   /// \overload
-  constexpr auto view_all() const {
+  [[nodiscard]] constexpr auto view_all() const {
     return std::apply([](auto&&... containers) { return ranges::views::zip(containers...); }, sequences_) |
            ranges::views::const_;
   }
