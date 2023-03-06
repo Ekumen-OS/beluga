@@ -1,4 +1,4 @@
-// Copyright 2022 Ekumen, Inc.
+// Copyright 2023 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_MOTION_OMNI_DRIVE_MODEL_HPP
-#define BELUGA_MOTION_OMNI_DRIVE_MODEL_HPP
+#ifndef BELUGA_MOTION_OMNIDIRECTIONAL_DRIVE_MODEL_HPP
+#define BELUGA_MOTION_OMNIDIRECTIONAL_DRIVE_MODEL_HPP
 
 #include <optional>
 #include <random>
@@ -29,10 +29,7 @@
 
 namespace beluga {
 
-/// Parameters to construct an omnidirectionalDriveModel instance.
-/**
- * \TODO(olmerg) put a cite
- */
+/// Parameters to construct an OmnidirectionalDriveModel instance.
 struct OmnidirectionalDriveModelParam {
   /// Rotational noise from rotation
   /**
@@ -66,6 +63,9 @@ struct OmnidirectionalDriveModelParam {
    * Also known as `alpha5`.
    */
   double translation_strafe_noise_from_translation;
+
+  /// Distance threshold to detect in-place rotation.
+  double distance_threshold = 0.01;
 };
 
 /// Sampled odometry model for an omnidirectional drive.
@@ -103,9 +103,16 @@ class OmnidirectionalDriveModel : public Mixin {
     static thread_local auto generator = std::mt19937{std::random_device()()};
     static thread_local auto distribution = std::normal_distribution<double>{};
     const auto lock = std::shared_lock<std::shared_mutex>{params_mutex_};
+    // This is an implementation based on the same set of parameters that is used in
+    // nav2's omni_motion_model. To simplify the implementation, the following
+    // variable substitutions were performed:
+    // - first_rotation = delta_bearing - previous_orientation
+    // - second_rotation = delta_rot_hat - first_rotation
     const auto second_rotation = Sophus::SO2d{distribution(generator, rotation_params_)} * first_rotation_.inverse();
-    const auto translation =
-        Eigen::Vector2d{distribution(generator, translation_params_), -1.0 * distribution(generator, strafe_params_)};
+    const auto translation = Eigen::Vector2d{
+        distribution(generator, translation_params_),
+        -1.0 * distribution(generator, strafe_params_),
+    };
     return state * Sophus::SE2d{first_rotation_, Eigen::Vector2d{0.0, 0.0}} *
            Sophus::SE2d{second_rotation, translation};
   }
@@ -130,7 +137,10 @@ class OmnidirectionalDriveModel : public Mixin {
 
       {
         const auto lock = std::lock_guard<std::shared_mutex>{params_mutex_};
-        first_rotation_ = Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse();
+        first_rotation_ =
+            distance > params_.distance_threshold
+                ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()
+                : Sophus::SO2d{0.0};
         const double rotation_variance_ = rotation_variance(rotation);
         rotation_params_ = DistributionParam{
             rotation.log(), std::sqrt(
