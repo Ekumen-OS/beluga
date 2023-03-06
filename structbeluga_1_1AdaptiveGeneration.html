@@ -118,7 +118,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><h3>template&lt;class Mixin, class RandomNumberGenerator = typename std::mt19937&gt;<br />
 struct beluga::AdaptiveGeneration&lt; Mixin, RandomNumberGenerator &gt;</h3>
 
-<p>Generation of samples from input particles, adding random particles if all remaining particles are not close to the correct state. The addition of random samples allows the filter to recover. It determines how many random particles to add by averaging the weights of the particles. The estimate used considers a short-term and a long-term average. See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[1]</a>, Chapter 8.3.3.</p>
+<p>Generation of samples from input particles, adding random particles if all remaining particles are not close to the correct state. The addition of random samples allows the filter to recover. It determines how many random particles to add by averaging the weights of the particles. The estimate used considers a short-term and a long-term average. See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[3]</a>, Chapter 8.3.3.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Mixin</td><td>The mixed-in type. An instance m of Mixin must provide a protected method, <code>m.self()</code>. The return type of <code>m.self()</code> must satisfy the <a class="el" href="SensorModelPage.html">SensorModel</a> named requirements. </td></tr>

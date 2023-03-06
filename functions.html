@@ -118,12 +118,23 @@ $(function() {
 <li>distribution_type
 : <a class="el" href="classbeluga_1_1MultivariateNormalDistribution_1_1Param.html#a9978e145e026637e87026fc8014a9fd2">beluga::MultivariateNormalDistribution&lt; Matrix &gt;::Param</a>
 </li>
+<li>do_resampling()
+: <a class="el" href="structbeluga_1_1ResampleIntervalPolicy.html#aefc625feaad9960cb33e7d5934a98623">beluga::ResampleIntervalPolicy</a>
+, <a class="el" href="structbeluga_1_1ResampleOnMotionPolicy.html#a518e5ae955320a021b6160e86f4df1e3">beluga::ResampleOnMotionPolicy</a>
+, <a class="el" href="structbeluga_1_1SelectiveResamplingPolicy.html#ae0edd485f991bd1c514ce6878f80f06e">beluga::SelectiveResamplingPolicy</a>
+</li>
+<li>do_resampling_vote()
+: <a class="el" href="structbeluga_1_1ResamplingPoliciesPoller.html#ac55cbeb5ec20f675930f04dfa4e493b4">beluga::ResamplingPoliciesPoller&lt; Mixin, Policies &gt;</a>
+</li>
 </ul>
 
 
 <h3><a id="index_e"></a>- e -</h3><ul>
 <li>empty()
 : <a class="el" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a89b0e9e880f642a00aa8bcd4004e187b">beluga::TupleContainer&lt; InternalContainer, Tuple&lt; Types... &gt; &gt;</a>
+</li>
+<li>enabled
+: <a class="el" href="structbeluga_1_1SelectiveResamplingPolicyParam.html#a4af280403ea017ed0178969df9a11608">beluga::SelectiveResamplingPolicyParam</a>
 </li>
 <li>ExponentialFilter()
 : <a class="el" href="classbeluga_1_1ExponentialFilter.html#a67402a6a745a19829e3d5611ccc4a11c">beluga::ExponentialFilter</a>
@@ -176,6 +187,10 @@ $(function() {
 
 
 <h3><a id="index_l"></a>- l -</h3><ul>
+<li>latest_motion_update()
+: <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a46b0b434bb3bfc5271725d808c1303cc">beluga::DifferentialDriveModel&lt; Mixin &gt;</a>
+, <a class="el" href="classbeluga_1_1StationaryModel.html#a8bdf43c394e6e25dec583cf699549ca1">beluga::StationaryModel&lt; Mixin &gt;</a>
+</li>
 <li>likelihood_field()
 : <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a2cb7e445a5128fb299f1fc8caf85e623">beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</a>
 </li>
@@ -205,6 +220,9 @@ $(function() {
 : <a class="el" href="structbeluga_1_1FixedResampling.html#a1ec82b5f783b5fd81c574a74b9479d2d">beluga::FixedResampling&lt; Mixin &gt;</a>
 , <a class="el" href="structbeluga_1_1KldResampling.html#a6965a8a48c3818f0997dc1b84657f180">beluga::KldResampling&lt; Mixin &gt;</a>
 , <a class="el" href="structbeluga_1_1KldResamplingParam.html#a43a5642f8b8184323bf99e0f7dff5bee">beluga::KldResamplingParam</a>
+</li>
+<li>motion_event
+: <a class="el" href="structbeluga_1_1ResampleOnMotionPolicy.html#a0645734706b230df71c60dcd1c6b5bf8">beluga::ResampleOnMotionPolicy</a>
 </li>
 <li>MultivariateNormalDistribution()
 : <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a75e3ab5b3f5d873c49f526663e3a7c39">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
@@ -243,7 +261,7 @@ $(function() {
 : <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a62c3673e04919346558b627bbd44adde">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
 </li>
 <li>Param()
-: <a class="el" href="classbeluga_1_1MultivariateNormalDistribution_1_1Param.html#a77a58de0b3821cbb6a9fa5d32f11ee26">beluga::MultivariateNormalDistribution&lt; Matrix &gt;::Param</a>
+: <a class="el" href="classbeluga_1_1MultivariateNormalDistribution_1_1Param.html#ad3bc17b1ece3f0ba9b03176970070e78">beluga::MultivariateNormalDistribution&lt; Matrix &gt;::Param</a>
 </li>
 <li>param_type
 : <a class="el" href="structbeluga_1_1AdaptiveGeneration.html#a8bc599642cdad36b91c07f02a37659d7">beluga::AdaptiveGeneration&lt; Mixin, RandomNumberGenerator &gt;</a>
@@ -252,6 +270,9 @@ $(function() {
 , <a class="el" href="structbeluga_1_1KldResampling.html#a93506dd5db123bc7f8a6857fb8405257">beluga::KldResampling&lt; Mixin &gt;</a>
 , <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a36f10ae2aa8606003b15dd44553f5868">beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</a>
 , <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a14bf9023eee96ea35e3f48e380990e67">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
+, <a class="el" href="structbeluga_1_1ResampleIntervalPolicy.html#af00cbcb852614e4b5191fa917dfc1690">beluga::ResampleIntervalPolicy</a>
+, <a class="el" href="structbeluga_1_1ResampleOnMotionPolicy.html#aa3389f93cd0487abbeefa80b95b0e662">beluga::ResampleOnMotionPolicy</a>
+, <a class="el" href="structbeluga_1_1SelectiveResamplingPolicy.html#a8a44a5452c5123a7754a3b902a26661b">beluga::SelectiveResamplingPolicy</a>
 </li>
 <li>particle_type
 : <a class="el" href="structbeluga_1_1BootstrapParticleFilter.html#a9a31b43968b8462bcf45065756809173">beluga::BootstrapParticleFilter&lt; Mixin, Container &gt;</a>
@@ -271,6 +292,18 @@ $(function() {
 </li>
 <li>resample()
 : <a class="el" href="structbeluga_1_1BootstrapParticleFilter.html#a6691e9b0d3fb09ee97afc63e4bf588b0">beluga::BootstrapParticleFilter&lt; Mixin, Container &gt;</a>
+</li>
+<li>resample_interval_count
+: <a class="el" href="structbeluga_1_1ResampleIntervalPolicyParam.html#a90d898b392378f4c8b2f0a9f1767e303">beluga::ResampleIntervalPolicyParam</a>
+</li>
+<li>ResampleIntervalPolicy()
+: <a class="el" href="structbeluga_1_1ResampleIntervalPolicy.html#a4622143a27fb2fe78076f9b91336026c">beluga::ResampleIntervalPolicy</a>
+</li>
+<li>ResampleOnMotionPolicy()
+: <a class="el" href="structbeluga_1_1ResampleOnMotionPolicy.html#acfa1b10f572f19babb4d82f26bf2fbc3">beluga::ResampleOnMotionPolicy</a>
+</li>
+<li>ResamplingPoliciesPoller()
+: <a class="el" href="structbeluga_1_1ResamplingPoliciesPoller.html#aee82151d8cf55e6a619c498d1d9e3ec4">beluga::ResamplingPoliciesPoller&lt; Mixin, Policies &gt;</a>
 </li>
 <li>reserve()
 : <a class="el" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a44c1d784a60afa0e7e6d3ef22f6e5f46">beluga::TupleContainer&lt; InternalContainer, Tuple&lt; Types... &gt; &gt;</a>
@@ -300,6 +333,9 @@ $(function() {
 </li>
 <li>Scalar
 : <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a38c68b2332e80fb872607f067119d8d9">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
+</li>
+<li>SelectiveResamplingPolicy()
+: <a class="el" href="structbeluga_1_1SelectiveResamplingPolicy.html#a807239b9d10b64f5fb9dfda75749dd6a">beluga::SelectiveResamplingPolicy</a>
 </li>
 <li>sigma_hit
 : <a class="el" href="structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db">beluga::LikelihoodFieldModelParam</a>
@@ -365,6 +401,12 @@ $(function() {
 <h3><a id="index_u"></a>- u -</h3><ul>
 <li>update()
 : <a class="el" href="structbeluga_1_1BootstrapParticleFilter.html#ac511426ca3b1bf358b735e2574fa291e">beluga::BootstrapParticleFilter&lt; Mixin, Container &gt;</a>
+</li>
+<li>update_min_a
+: <a class="el" href="structbeluga_1_1ResampleOnMotionPolicyParam.html#ac65b68e51b4e2bedd8a0fc5b352b004b">beluga::ResampleOnMotionPolicyParam</a>
+</li>
+<li>update_min_d
+: <a class="el" href="structbeluga_1_1ResampleOnMotionPolicyParam.html#aeffa05da22fc1fb8907e5142740b53a0">beluga::ResampleOnMotionPolicyParam</a>
 </li>
 <li>update_motion()
 : <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#ae1d1d1c77dc6bc939e70fc807076518d">beluga::DifferentialDriveModel&lt; Mixin &gt;</a>

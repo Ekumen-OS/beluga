@@ -79,6 +79,7 @@ Requirements</h1>
 </ul>
 <p>The following is satisfied:</p><ul>
 <li><code>p.particles()</code> is valid and returns a view to a container that satisfies the <a class="el" href="ParticleContainerPage.html">ParticleContainer</a> requirements.</li>
+<li><code><a class="el" href="particle__traits_8hpp.html#a2587f0f5353e49219ab8720e7e48b613">p.weights()</a></code> is valid and returns a view to a container to the weights of the particles.</li>
 <li><code>p.sample()</code> updates the particle filter particles based on the last motion update.</li>
 <li><code>p.importance_sample()</code> updates the particle filter particles weight.</li>
 <li><code>p.resample()</code> updates the particle filter, generating new particles from the old ones based on their importance weights.</li>

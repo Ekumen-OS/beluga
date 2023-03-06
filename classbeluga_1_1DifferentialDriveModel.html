@@ -126,6 +126,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae1d1d1c77dc6bc939e70fc807076518d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#ae1d1d1c77dc6bc939e70fc807076518d">update_motion</a> (const <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a1f6244c5d854d9ae99719a4f5a0cede0">update_type</a> &amp;pose)</td></tr>
 <tr class="memdesc:ae1d1d1c77dc6bc939e70fc807076518d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the motion model.  <a href="classbeluga_1_1DifferentialDriveModel.html#ae1d1d1c77dc6bc939e70fc807076518d">More...</a><br /></td></tr>
 <tr class="separator:ae1d1d1c77dc6bc939e70fc807076518d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b0b434bb3bfc5271725d808c1303cc"><td class="memItemLeft" align="right" valign="top"><a id="a46b0b434bb3bfc5271725d808c1303cc"></a>
+std::optional&lt; <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a1f6244c5d854d9ae99719a4f5a0cede0">update_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a46b0b434bb3bfc5271725d808c1303cc">latest_motion_update</a> () const</td></tr>
+<tr class="memdesc:a46b0b434bb3bfc5271725d808c1303cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recovers latest motion update. <br /></td></tr>
+<tr class="separator:a46b0b434bb3bfc5271725d808c1303cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Mixin&gt;<br />
@@ -262,7 +266,7 @@ template&lt;class Mixin &gt; </div>
 <p>This will not update particles. That is done by the particle filter using the <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a8daf7f9027fb09a5e6aadd46f764eeff" title="Applies the last update to the particle state given.">apply_motion()</a> method provided by this class.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pose</td><td>Last odometry udpate. </td></tr>
+    <tr><td class="paramname">pose</td><td>Last odometry update. </td></tr>
   </table>
   </dd>
 </dl>

@@ -122,6 +122,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abcb3816b31567464248c2b0f71166d18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1StationaryModel.html#abcb3816b31567464248c2b0f71166d18">update_motion</a> (const <a class="el" href="classbeluga_1_1StationaryModel.html#af592273ec32543c7fa73be9e7cf7b45f">update_type</a> &amp;)</td></tr>
 <tr class="memdesc:abcb3816b31567464248c2b0f71166d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates motion model.  <a href="classbeluga_1_1StationaryModel.html#abcb3816b31567464248c2b0f71166d18">More...</a><br /></td></tr>
 <tr class="separator:abcb3816b31567464248c2b0f71166d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bdf43c394e6e25dec583cf699549ca1"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="classbeluga_1_1StationaryModel.html#af592273ec32543c7fa73be9e7cf7b45f">update_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1StationaryModel.html#a8bdf43c394e6e25dec583cf699549ca1">latest_motion_update</a> () const</td></tr>
+<tr class="memdesc:a8bdf43c394e6e25dec583cf699549ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recovers latest motion update.  <a href="classbeluga_1_1StationaryModel.html#a8bdf43c394e6e25dec583cf699549ca1">More...</a><br /></td></tr>
+<tr class="separator:a8bdf43c394e6e25dec583cf699549ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Mixin&gt;<br />
@@ -216,6 +219,36 @@ template&lt;class Mixin &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The updated paticle state. </dd></dl>
+
+</div>
+</div>
+<a id="a8bdf43c394e6e25dec583cf699549ca1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bdf43c394e6e25dec583cf699549ca1">&#9670;&nbsp;</a></span>latest_motion_update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Mixin &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="classbeluga_1_1StationaryModel.html#af592273ec32543c7fa73be9e7cf7b45f">update_type</a>&gt; <a class="el" href="classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>&lt; Mixin &gt;::latest_motion_update </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Recovers latest motion update. </p>
+<p>For the stationary model, we don't ever have motion updates. </p>
 
 </div>
 </div>

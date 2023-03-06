@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['naivegeneration_168',['NaiveGeneration',['../structbeluga_1_1NaiveGeneration.html',1,'beluga']]]
+  ['naivegeneration_190',['NaiveGeneration',['../structbeluga_1_1NaiveGeneration.html',1,'beluga']]]
 ];
