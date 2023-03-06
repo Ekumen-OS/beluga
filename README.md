@@ -13,7 +13,7 @@ https://user-images.githubusercontent.com/26796393/222827672-b8ab8421-5933-42f3-
 
 | Package            | Description |
 |--------------------| ------------|
-| `beluga`           | A ROS agnostic extensible library to implement algorithms based on particle filter. |
+| `beluga`           | A ROS agnostic extensible library to implement algorithms based on particle filters. |
 | `beluga_amcl`      | A ROS 2 wrapper, providing an executable node and a ROS 2 component.<br> It provides almost feature parity with `nav2_amcl`. |
 | `beluga_example`   | Example launch files, showing how to run beluga. |
 | `beluga_benchmark` | Scripts to benchmark, profile and also compare beluga with other AMCL implementations. |
