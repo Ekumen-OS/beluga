@@ -2,7 +2,7 @@
 
 ![CI badge](https://github.com/ekumenlabs/beluga/actions/workflows/ci_pipeline.yml/badge.svg?event=push)
 
-## Intoduction
+## Overview
 
 Beluga is a library providing an extensible particle filter implementation, including sensor and motion models.
 It also provides a `drop-in` replacement for the `amcl` node needed by [navigation2](https://github.com/ros-planning/navigation2).
