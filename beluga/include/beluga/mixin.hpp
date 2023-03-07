@@ -35,7 +35,7 @@ constexpr auto&& params_or_forward(T&& value) noexcept {
   }
 }
 
-template <class Interface, template <template <class> class...> class Base, class... Args>
+template <class Interface, template <class...> class Base, class... Args>
 auto make_unique(Args&&... args) {
   return visit_everything(
       [](auto&&... args) {

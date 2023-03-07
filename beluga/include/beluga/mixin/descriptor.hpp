@@ -82,22 +82,22 @@ inline constexpr bool is_not_tag_v = !is_tag<T>::value;  // NOLINT
 template <typename T>
 inline constexpr bool is_descriptor_v = is_descriptor<T>::value;  // NOLINT
 
-template <template <template <class> class...> class Base, class... Types>
+template <template <class...> class Base, class... Descriptors>
 struct mixin_from_descriptors {
-  using type = Base<std::decay_t<Types>::template mixin...>;
+  using type = Base<std::decay_t<Descriptors>...>;
 
-  static_assert((is_descriptor_v<Types> && ...), "Invalid mixin descriptors");
+  static_assert((is_descriptor_v<Descriptors> && ...), "Invalid mixin descriptors");
 };
 
-template <template <template <class> class...> class Base, class... Types>
-struct mixin_from_descriptors<Base, beluga::mixin::list<Types...>> {
-  using type = Base<std::decay_t<Types>::template mixin...>;
+template <template <class...> class Base, template <class...> class List, class... Descriptors>
+struct mixin_from_descriptors<Base, List<Descriptors...>> {
+  using type = Base<std::decay_t<Descriptors>...>;
 
-  static_assert((is_descriptor_v<Types> && ...), "Invalid mixin descriptors");
+  static_assert((is_descriptor_v<Descriptors> && ...), "Invalid mixin descriptors");
 };
 
-template <template <template <class> class...> class Base, class... Types>
-using mixin_from_descriptors_t = typename mixin_from_descriptors<Base, Types...>::type;
+template <template <class...> class Base, class... Descriptors>
+using mixin_from_descriptors_t = typename mixin_from_descriptors<Base, Descriptors...>::type;
 
 }  // namespace beluga::mixin
 

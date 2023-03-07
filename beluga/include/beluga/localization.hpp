@@ -54,7 +54,7 @@ using LaserLocalizationInterface2d = beluga::mixin::compose_interfaces<
  * \tparam MotionModel MotionModel<Mixin> must implement the \ref MotionModelPage "MotionModel" named requirement.
  * \tparam SensorModel SensorModel<Mixin> must implement the \ref SensorModelPage "SensorModel" named requirement.
  */
-template <template <class> class MotionModel, template <class> class SensorModel>
+template <class MotionDescriptor, class SensorDescriptor>
 using MonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
     ciabatta::curry<StructureOfArrays, Sophus::SE2d, double>::mixin,
@@ -65,8 +65,8 @@ using MonteCarloLocalization2d = ciabatta::mixin<
     ciabatta::
         curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>::
             mixin,
-    MotionModel,
-    SensorModel,
+    MotionDescriptor::template mixin,
+    SensorDescriptor::template mixin,
     ciabatta::provides<LaserLocalizationInterface2d>::mixin>;
 
 /// An implementation of Adaptive Monte Carlo Localization.
@@ -77,7 +77,7 @@ using MonteCarloLocalization2d = ciabatta::mixin<
  * \tparam MotionModel MotionModel<Mixin> must implement the \ref MotionModelPage "MotionModel" named requirement.
  * \tparam SensorModel SensorModel<Mixin> must implement the \ref SensorModelPage "SensorModel" named requirement.
  */
-template <template <class> class MotionModel, template <class> class SensorModel>
+template <class MotionDescriptor, class SensorDescriptor>
 using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
     ciabatta::curry<StructureOfArrays, Sophus::SE2d, double, std::size_t>::mixin,
@@ -88,8 +88,8 @@ using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     ciabatta::
         curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>::
             mixin,
-    MotionModel,
-    SensorModel,
+    MotionDescriptor::template mixin,
+    SensorDescriptor::template mixin,
     ciabatta::provides<LaserLocalizationInterface2d>::mixin>;
 
 }  // namespace beluga
