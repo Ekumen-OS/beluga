@@ -120,7 +120,7 @@ constexpr decltype(auto) maybe_variant(T&& value) noexcept {
 template <class Visitor, class... Args>
 constexpr decltype(auto) visit_everything(Visitor&& vis, Args&&... args) {
   return std::visit(
-      [&](auto&&... args) { return std::forward<Visitor>(vis)(maybe_unwrap(args)...); },
+      [&](auto&&... args) -> decltype(auto) { return std::forward<Visitor>(vis)(maybe_unwrap(args)...); },
       maybe_variant(std::forward<Args>(args))...);
 }
 
