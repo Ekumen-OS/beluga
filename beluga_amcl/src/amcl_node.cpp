@@ -632,7 +632,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   using OmnidirectionalDrive = beluga::mixin::descriptor<
     beluga::OmnidirectionalDriveModel,
     beluga::OmnidirectionalDriveModelParam>;
-  using Stationary = beluga::mixin::tag<beluga::StationaryModel>;
+  using Stationary = beluga::mixin::descriptor<beluga::StationaryModel>;
   using MotionDescriptor = std::variant<DifferentialDrive, OmnidirectionalDrive, Stationary>;
   auto get_motion_descriptor = [this]() -> MotionDescriptor {
       const auto name = get_parameter("robot_model_type").as_string();

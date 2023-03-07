@@ -28,7 +28,7 @@ struct compose_interfaces : public Interfaces... {
 
 template <class T>
 constexpr auto&& params_or_forward(T&& value) noexcept {
-  if constexpr (is_descriptor_v<T>) {
+  if constexpr (is_descriptor_v<T> && is_not_tag_v<T>) {
     return forward_like<T>(value.params);
   } else {
     return std::forward<T>(value);
@@ -39,7 +39,7 @@ template <class Interface, template <template <class> class...> class Base, clas
 auto make_unique(Args&&... args) {
   return visit_everything(
       [](auto&&... args) {
-        using Concrete = mixin_from_descriptors_t<Base, filter<is_descriptor_or_tag, decltype(args)...>>;
+        using Concrete = mixin_from_descriptors_t<Base, filter<is_descriptor, decltype(args)...>>;
         return std::apply(
             [](auto&&... args) -> std::unique_ptr<Interface> { return std::make_unique<Concrete>(args...); },
             make_tuple_with<is_not_tag>(params_or_forward(args)...));
