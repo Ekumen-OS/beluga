@@ -18,6 +18,7 @@
 #include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/particle_filter.hpp>
 #include <beluga/algorithm/sampling.hpp>
+#include <beluga/mixin.hpp>
 #include <beluga/motion.hpp>
 #include <beluga/resampling_policies/resample_interval_policy.hpp>
 #include <beluga/resampling_policies/resample_on_motion_policy.hpp>
@@ -38,12 +39,7 @@
 
 namespace beluga {
 
-template <class... Interfaces>
-struct compose_interfaces : public Interfaces... {
-  ~compose_interfaces() override = default;
-};
-
-using LaserLocalizationInterface2d = beluga::compose_interfaces<
+using LaserLocalizationInterface2d = beluga::mixin::compose_interfaces<
     BaseParticleFilterInterface,
     StorageInterface<Sophus::SE2d, double>,
     EstimationInterface2d,

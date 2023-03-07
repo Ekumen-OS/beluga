@@ -21,6 +21,11 @@
 
 namespace beluga::mixin {
 
+template <class... Interfaces>
+struct compose_interfaces : public Interfaces... {
+  ~compose_interfaces() override = default;
+};
+
 template <class T>
 constexpr auto&& params_or_forward(T&& value) noexcept {
   if constexpr (is_descriptor_v<T>) {
