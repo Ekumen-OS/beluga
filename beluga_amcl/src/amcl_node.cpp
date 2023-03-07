@@ -633,10 +633,8 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     beluga::OmnidirectionalDriveModel,
     beluga::OmnidirectionalDriveModelParam>;
   using Stationary = beluga::mixin::tag<beluga::StationaryModel>;
-  auto get_motion_descriptor = [this]() -> std::variant<
-    DifferentialDrive,
-    OmnidirectionalDrive,
-    Stationary> {
+  using MotionDescriptor = std::variant<DifferentialDrive, OmnidirectionalDrive, Stationary>;
+  auto get_motion_descriptor = [this]() -> MotionDescriptor {
       const auto name = get_parameter("robot_model_type").as_string();
       if (name == "differential_drive" || name == "nav2_amcl::DifferentialMotionModel") {
         auto params = beluga::DifferentialDriveModelParam{};
@@ -662,7 +660,8 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   using LikelihoodField = beluga::mixin::descriptor<
     ciabatta::curry<beluga::LikelihoodFieldModel, OccupancyGrid>::mixin,
     beluga::LikelihoodFieldModelParam>;
-  auto get_sensor_descriptor = [this]() -> std::variant<LikelihoodField> {
+  using SensorDescriptor = std::variant<LikelihoodField>;
+  auto get_sensor_descriptor = [this]() -> SensorDescriptor {
       const auto name = get_parameter("laser_model_type").as_string();
       if (name == "likelihood_field") {
         auto params = beluga::LikelihoodFieldModelParam{};
@@ -682,9 +681,9 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     this->get_parameter("set_initial_pose").as_bool();
 
   try {
-    particle_filter_ = beluga::mixin::make_unique<
-      beluga::LaserLocalizationInterface2d,
-      beluga::AdaptiveMonteCarloLocalization2d>(
+    using beluga::mixin::make_unique;
+    using Interface = beluga::LaserLocalizationInterface2d;
+    particle_filter_ = make_unique<Interface, beluga::AdaptiveMonteCarloLocalization2d>(
       sampler_params,
       limiter_params,
       resample_on_motion_params,
@@ -693,7 +692,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
       get_motion_descriptor(),
       get_sensor_descriptor(),
       OccupancyGrid{map}
-      );
+    );
   } catch (const std::invalid_argument & error) {
     RCLCPP_ERROR(this->get_logger(), "Coudn't instantiate the particle filter: %s", error.what());
     return;
