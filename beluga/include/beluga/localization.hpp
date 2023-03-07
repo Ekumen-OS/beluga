@@ -46,6 +46,9 @@ using LaserLocalizationInterface2d = beluga::mixin::compose_interfaces<
     OdometryMotionModelInterface2d,
     LaserSensorModelInterface2d>;
 
+using CombinedResamplingPolicy = ciabatta::
+    curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>;
+
 /// An implementation of Monte Carlo Localization.
 /**
  * MCL<U, M> is an implementation of the \ref ParticleFilterPage "ParticleFilter"
@@ -62,9 +65,7 @@ using MonteCarloLocalization2d = ciabatta::mixin<
     RandomStateGenerator,
     NaiveSampler,
     FixedLimiter,
-    ciabatta::
-        curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>::
-            mixin,
+    CombinedResamplingPolicy::template mixin,
     MotionDescriptor::template mixin,
     SensorDescriptor::template mixin,
     ciabatta::provides<LaserLocalizationInterface2d>::mixin>;
@@ -85,9 +86,7 @@ using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     RandomStateGenerator,
     AdaptiveSampler,
     KldLimiter,
-    ciabatta::
-        curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>::
-            mixin,
+    CombinedResamplingPolicy::template mixin,
     MotionDescriptor::template mixin,
     SensorDescriptor::template mixin,
     ciabatta::provides<LaserLocalizationInterface2d>::mixin>;
