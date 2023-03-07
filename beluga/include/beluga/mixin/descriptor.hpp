@@ -40,11 +40,11 @@ struct descriptor<Mixin, Param> {
 
 namespace detail {
 
-template <typename T>
-struct is_tag_impl : public std::false_type {};
+template <class T, typename Enable = void>
+struct has_params_impl : public std::false_type {};
 
-template <template <class> class Mixin>
-struct is_tag_impl<descriptor<Mixin>> : public std::true_type {};
+template <class T>
+struct has_params_impl<T, std::void_t<decltype(std::declval<T&>().params)>> : public std::true_type {};
 
 template <typename T>
 struct is_descriptor_impl : public std::false_type {};
@@ -58,12 +58,12 @@ struct is_descriptor_impl<descriptor<Mixin, Param>> : public std::true_type {};
 }  // namespace detail
 
 template <typename T>
-struct is_tag {
-  static constexpr bool value = detail::is_tag_impl<std::decay_t<T>>::value;  // NOLINT
+struct has_params {
+  static constexpr bool value = detail::has_params_impl<std::decay_t<T>>::value;  // NOLINT
 };
 
 template <typename T>
-using is_not_tag = std::negation<is_tag<T>>;
+inline constexpr bool has_params_v = has_params<T>::value;  // NOLINT
 
 template <typename T>
 struct is_descriptor {
@@ -72,12 +72,6 @@ struct is_descriptor {
 
 template <typename T>
 using is_not_descriptor = std::negation<is_descriptor<T>>;
-
-template <typename T>
-inline constexpr bool is_tag_v = is_tag<T>::value;  // NOLINT
-
-template <typename T>
-inline constexpr bool is_not_tag_v = !is_tag<T>::value;  // NOLINT
 
 template <typename T>
 inline constexpr bool is_descriptor_v = is_descriptor<T>::value;  // NOLINT
