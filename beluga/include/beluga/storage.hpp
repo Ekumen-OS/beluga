@@ -27,28 +27,34 @@
 
 namespace beluga {
 
-template <class State>
+template <class State, class Weight>
 struct StorageInterface {
   using state_type = State;
-  using input_view = ranges::any_view<state_type>;
-  using output_view = ranges::any_view<state_type, ranges::category::random_access | ranges::category::sized>;
+  using weight_type = Weight;
+  using input_view_type = ranges::any_view<state_type>;
+  using output_view_type = ranges::any_view<state_type, ranges::category::random_access | ranges::category::sized>;
+  using weights_view_type = ranges::any_view<weight_type, ranges::category::random_access | ranges::category::sized>;
   virtual ~StorageInterface() = default;
-  virtual void initialize_states(input_view) = 0;
-  [[nodiscard]] virtual output_view states_view() const = 0;
+  virtual void initialize_states(input_view_type) = 0;
+  [[nodiscard]] virtual output_view_type states_view() const = 0;
+  [[nodiscard]] virtual weights_view_type weights_view() const = 0;
 };
 
 template <
     class Mixin,
     class Container,
     class Particle = typename Container::value_type,
-    class State = typename particle_traits<Particle>::state_type>
+    class State = typename particle_traits<Particle>::state_type,
+    class Weight = typename particle_traits<Particle>::weight_type>
 class StoragePolicy : public Mixin {
  public:
   using particle_type = Particle;
   using state_type = State;
+  using weight_type = Weight;
 
-  using input_view = ranges::any_view<state_type>;
-  using output_view = ranges::any_view<state_type, ranges::category::random_access | ranges::category::sized>;
+  using input_view_type = ranges::any_view<state_type>;
+  using output_view_type = ranges::any_view<state_type, ranges::category::random_access | ranges::category::sized>;
+  using weights_view_type = ranges::any_view<weight_type, ranges::category::random_access | ranges::category::sized>;
 
   template <class... Args>
   explicit StoragePolicy(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
@@ -70,11 +76,12 @@ class StoragePolicy : public Mixin {
     particles_.resize(std::distance(first, last));
   }
 
-  void initialize_states(input_view input) final {
+  void initialize_states(input_view_type input) final {
     initialize_particles(input | ranges::views::transform(beluga::make_from_state<particle_type>));
   }
 
-  [[nodiscard]] output_view states_view() const final { return this->states(); }
+  [[nodiscard]] output_view_type states_view() const final { return this->states(); }
+  [[nodiscard]] weights_view_type weights_view() const final { return this->weights(); }
 
   /// Returns a view of the particles container.
   [[nodiscard]] auto particles() { return views::all(particles_); }

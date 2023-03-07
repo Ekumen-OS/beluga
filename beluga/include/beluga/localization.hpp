@@ -45,7 +45,7 @@ struct compose_interfaces : public Interfaces... {
 
 using LaserLocalizationInterface2d = beluga::compose_interfaces<
     BaseParticleFilterInterface,
-    StorageInterface<Sophus::SE2d>,
+    StorageInterface<Sophus::SE2d, double>,
     EstimationInterface2d,
     OdometryMotionModelInterface2d,
     LaserSensorModelInterface2d>;
