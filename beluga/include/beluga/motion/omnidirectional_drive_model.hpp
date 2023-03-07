@@ -135,13 +135,13 @@ class OmnidirectionalDriveModel : public Mixin {
       const auto& current_orientation = pose.so2();
       const auto rotation = current_orientation * previous_orientation.inverse();
 
-      first_rotation_ =
-          distance > params_.distance_threshold
-              ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()
-              : Sophus::SO2d{0.0};
-
       {
         const auto lock = std::lock_guard<std::shared_mutex>{params_mutex_};
+        first_rotation_ =
+            distance > params_.distance_threshold
+                ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()
+                : Sophus::SO2d{0.0};
+
         rotation_params_ = DistributionParam{
             rotation.log(), std::sqrt(
                                 params_.rotation_noise_from_rotation * rotation_variance(rotation) +
