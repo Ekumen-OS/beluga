@@ -743,7 +743,7 @@ void AmclNode::timer_callback()
     ranges::transform(
       ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view()),
       std::begin(message.particles), [](const auto & particle) {
-        const auto& [state, weight] = particle;
+        const auto & [state, weight] = particle;
         auto message = nav2_msgs::msg::Particle{};
         tf2::toMsg(state, message.pose);
         message.weight = weight;

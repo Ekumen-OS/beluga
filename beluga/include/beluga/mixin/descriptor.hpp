@@ -21,7 +21,7 @@
 
 namespace beluga::mixin {
 
-template <template <class> class Mixin, class ...Params>
+template <template <class> class Mixin, class... Params>
 struct descriptor;
 
 template <template <class> class Mixin>
