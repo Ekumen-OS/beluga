@@ -1,7 +1,7 @@
 amcl:
   ros__parameters:
     # Odometry motion model type.
-    robot_model_type: differential_drive
+    robot_model_type: nav2_amcl::DifferentialMotionModel
     # Expected process noise in odometry’s rotation estimate from rotation.
     alpha1: 0.1
     # Expected process noise in odometry’s rotation estimate from translation.
