@@ -73,7 +73,7 @@ struct OmnidirectionalDriveModelParam {
  * \tparam Mixin The mixed-in type.
  */
 template <class Mixin>
-class OmnidirectionalDriveModel : public Mixin {
+struct OmnidirectionalDriveModel : public Mixin {
  public:
   /// Update type of the motion model, same as the state_type in the odometry model.
   using update_type = Sophus::SE2d;

@@ -91,7 +91,7 @@ struct LikelihoodFieldModelParam {
  *  It must satisfy the \ref OccupancyGrid2dPage OccupancyGrid2d requirements.
  */
 template <class Mixin, class OccupancyGrid>
-class LikelihoodFieldModel : public Mixin {
+struct LikelihoodFieldModel : public Mixin {
  public:
   /// State type of a particle.
   using state_type = Sophus::SE2d;

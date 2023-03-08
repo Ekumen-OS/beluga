@@ -67,7 +67,7 @@ struct DifferentialDriveModelParam {
  * \tparam Mixin The mixed-in type.
  */
 template <class Mixin>
-class DifferentialDriveModel : public Mixin {
+struct DifferentialDriveModel : public Mixin {
  public:
   /// Update type of the motion model, same as the state_type in the odometry model.
   using update_type = Sophus::SE2d;

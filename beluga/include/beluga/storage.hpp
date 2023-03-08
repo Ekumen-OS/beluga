@@ -46,7 +46,7 @@ template <
     class Particle = typename Container::value_type,
     class State = typename particle_traits<Particle>::state_type,
     class Weight = typename particle_traits<Particle>::weight_type>
-class StoragePolicy : public Mixin {
+struct StoragePolicy : public Mixin {
  public:
   using particle_type = Particle;
   using state_type = State;
