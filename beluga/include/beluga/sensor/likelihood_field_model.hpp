@@ -168,7 +168,7 @@ class LikelihoodFieldModel : public Mixin {
    *
    * \param points The range finder points in the reference frame of the particle.
    */
-  void update_sensor(measurement_type points) final {
+  void update_sensor(measurement_type&& points) final {
     const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
     points_ = std::move(points);
   }
