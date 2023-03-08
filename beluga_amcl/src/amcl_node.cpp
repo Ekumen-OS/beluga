@@ -503,7 +503,6 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Configuring");
 
-  // TODO(nahuel): Add a parameter for the timer period.
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(200ms, std::bind(&AmclNode::timer_callback, this));
 
@@ -749,8 +748,10 @@ void AmclNode::timer_callback()
     return;
   }
 
-  // TODO(nahuel): Throttle the particle cloud publishing in the
-  // laser_callback method instead of using a ROS timer.
+  if (particle_cloud_pub_->get_subscription_count() == 0) {
+    return;
+  }
+
   {
     auto message = nav2_msgs::msg::ParticleCloud{};
     message.header.stamp = now();
@@ -820,9 +821,7 @@ void AmclNode::laser_callback(
         static_cast<float>(get_parameter("laser_max_range").as_double())));
     particle_filter_->importance_sample(exec_policy);
     const auto time3 = std::chrono::high_resolution_clock::now();
-
     particle_filter_->resample();
-
     const auto time4 = std::chrono::high_resolution_clock::now();
 
     RCLCPP_INFO_THROTTLE(
