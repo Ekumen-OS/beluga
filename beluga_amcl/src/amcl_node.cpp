@@ -45,6 +45,20 @@
 namespace beluga_amcl
 {
 
+namespace
+{
+
+constexpr std::string_view kDifferentialModelName = "differential_drive";
+constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
+constexpr std::string_view kStationaryModelName = "stationary";
+
+constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::DifferentialMotionModel";
+constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
+
+constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
+
+}  // namespace
+
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 : rclcpp_lifecycle::LifecycleNode{"amcl", "", options}
 {
@@ -215,7 +229,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
       "Which motion model to use [differential_drive, omnidirectional_drive, stationary].";
     declare_parameter(
       "robot_model_type",
-      rclcpp::ParameterValue("differential_drive"), descriptor);
+      rclcpp::ParameterValue(std::string(kDifferentialModelName)), descriptor);
   }
 
   {
@@ -297,7 +311,9 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
       "Which observartion model to use [beam, likelihood_field].";
-    declare_parameter("laser_model_type", rclcpp::ParameterValue("likelihood_field"), descriptor);
+    declare_parameter(
+      "laser_model_type",
+      rclcpp::ParameterValue(std::string(kLikelihoodFieldModelName)), descriptor);
   }
 
   {
@@ -636,14 +652,14 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   using MotionDescriptor = std::variant<DifferentialDrive, OmnidirectionalDrive, Stationary>;
   auto get_motion_descriptor = [this]() -> MotionDescriptor {
       const auto name = get_parameter("robot_model_type").as_string();
-      if (name == "differential_drive" || name == "nav2_amcl::DifferentialMotionModel") {
+      if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
         auto params = beluga::DifferentialDriveModelParam{};
         params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
         params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
         params.translation_noise_from_translation = get_parameter("alpha3").as_double();
         params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
         return DifferentialDrive{params};
-      } else if (name == "omnidirectional_drive" || name == "nav2_amcl::OmniMotionModel") {
+      } else if (name == kOmnidirectionalModelName || name == kNav2OmnidirectionalModelName) {
         auto params = beluga::OmnidirectionalDriveModelParam{};
         params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
         params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
@@ -651,7 +667,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
         params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
         params.strafe_noise_from_translation = get_parameter("alpha5").as_double();
         return OmnidirectionalDrive{params};
-      } else if (name == "stationary") {
+      } else if (name == kStationaryModelName) {
         return Stationary{};
       }
       throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
@@ -663,7 +679,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   using SensorDescriptor = std::variant<LikelihoodField>;
   auto get_sensor_descriptor = [this]() -> SensorDescriptor {
       const auto name = get_parameter("laser_model_type").as_string();
-      if (name == "likelihood_field") {
+      if (name == kLikelihoodFieldModelName) {
         auto params = beluga::LikelihoodFieldModelParam{};
         params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
         params.max_laser_distance = get_parameter("laser_max_range").as_double();
