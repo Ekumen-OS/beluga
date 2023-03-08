@@ -212,7 +212,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
-      "Which motion model to use [differential_drive, omnidirectional_drive].";
+      "Which motion model to use [differential_drive, omnidirectional_drive, stationary].";
     declare_parameter(
       "robot_model_type",
       rclcpp::ParameterValue("differential_drive"), descriptor);
