@@ -739,7 +739,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
   RCLCPP_INFO(
     get_logger(), "Particle filter initialized with %ld particles",
-    particle_filter_->states_view().size());
+    particle_filter_->particle_count());
 }
 
 void AmclNode::timer_callback()
@@ -756,7 +756,7 @@ void AmclNode::timer_callback()
     auto message = nav2_msgs::msg::ParticleCloud{};
     message.header.stamp = now();
     message.header.frame_id = get_parameter("global_frame_id").as_string();
-    message.particles.resize(particle_filter_->states_view().size());
+    message.particles.resize(particle_filter_->particle_count());
     ranges::transform(
       ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view()),
       std::begin(message.particles), [](const auto & particle) {
@@ -827,7 +827,7 @@ void AmclNode::laser_callback(
     RCLCPP_INFO_THROTTLE(
       get_logger(), *get_clock(), 2000,
       "Particle filter update stats: %ld particles %ld points - %.3fms %.3fms %.3fms",
-      particle_filter_->states_view().size(),
+      particle_filter_->particle_count(),
       laser_scan->ranges.size(),
       std::chrono::duration<double, std::milli>(time2 - time1).count(),
       std::chrono::duration<double, std::milli>(time3 - time2).count(),

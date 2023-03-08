@@ -36,6 +36,7 @@ struct StorageInterface {
   using weights_view_type = ranges::any_view<weight_type, ranges::category::random_access | ranges::category::sized>;
   virtual ~StorageInterface() = default;
   virtual void initialize_states(input_view_type) = 0;
+  [[nodiscard]] virtual std::size_t particle_count() const = 0;
   [[nodiscard]] virtual output_view_type states_view() const = 0;
   [[nodiscard]] virtual weights_view_type weights_view() const = 0;
 };
@@ -79,6 +80,8 @@ struct StoragePolicy : public Mixin {
   void initialize_states(input_view_type input) final {
     initialize_particles(input | ranges::views::transform(beluga::make_from_state<particle_type>));
   }
+
+  [[nodiscard]] std::size_t particle_count() const final { return particles_.size(); }
 
   [[nodiscard]] output_view_type states_view() const final { return this->states(); }
   [[nodiscard]] weights_view_type weights_view() const final { return this->weights(); }
