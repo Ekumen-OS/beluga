@@ -752,22 +752,20 @@ void AmclNode::timer_callback()
     return;
   }
 
-  {
-    auto message = nav2_msgs::msg::ParticleCloud{};
-    message.header.stamp = now();
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
-    message.particles.resize(particle_filter_->particle_count());
-    ranges::transform(
-      ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view()),
-      std::begin(message.particles), [](const auto & particle) {
-        const auto & [state, weight] = particle;
-        auto message = nav2_msgs::msg::Particle{};
-        tf2::toMsg(state, message.pose);
-        message.weight = weight;
-        return message;
-      });
-    particle_cloud_pub_->publish(message);
-  }
+  auto message = nav2_msgs::msg::ParticleCloud{};
+  message.header.stamp = now();
+  message.header.frame_id = get_parameter("global_frame_id").as_string();
+  message.particles.resize(particle_filter_->particle_count());
+  ranges::transform(
+    ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view()),
+    std::begin(message.particles), [](const auto & particle) {
+      const auto & [state, weight] = particle;
+      auto message = nav2_msgs::msg::Particle{};
+      tf2::toMsg(state, message.pose);
+      message.weight = weight;
+      return message;
+    });
+  particle_cloud_pub_->publish(message);
 }
 
 template<typename ExecutionPolicy>
