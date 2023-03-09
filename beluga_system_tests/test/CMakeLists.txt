@@ -2,6 +2,7 @@ find_package(rosbag2_cpp REQUIRED)
 find_package(beluga REQUIRED)
 find_package(beluga_amcl REQUIRED)
 find_package(GTest REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 add_executable(test_system test_system.cpp)
 
@@ -14,4 +15,5 @@ target_link_libraries(test_system
 )
 
 include(GoogleTest)
-gtest_discover_tests(test_system)
+gtest_add_tests(test_system "" AUTO WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+# gtest_discover_tests(test_system WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})

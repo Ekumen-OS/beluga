@@ -13,6 +13,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wconversion -Werror -Wextra -Wpedantic)
 endif()
 
+option(BUILD_TESTING "Build the testing tree." ON)
+
 if(BUILD_TESTING)
   message(STATUS "Build testing enabled.")
 

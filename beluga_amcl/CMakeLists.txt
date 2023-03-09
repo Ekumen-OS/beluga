@@ -34,7 +34,7 @@ target_include_directories(amcl_node_utils PUBLIC
 
 target_link_libraries(amcl_node_utils
   PUBLIC beluga::beluga ${sensor_msgs_TARGETS} Sophus::Sophus
-  INTERFACE ${geometry_msgs_TARGETS} tf2::tf2 ${nav2_msgs_TARGETS})
+  INTERFACE ${geometry_msgs_TARGETS} ${nav2_msgs_TARGETS} tf2::tf2 tf2_eigen::tf2_eigen tf2_geometry_msgs::tf2_geometry_msgs)
 target_compile_features(amcl_node_utils PUBLIC cxx_std_17)
 
 add_library(amcl_node_component SHARED)
@@ -49,9 +49,7 @@ ament_target_dependencies(amcl_node_component PUBLIC
   rclcpp
   rclcpp_components
   rclcpp_lifecycle
-  sensor_msgs
-  tf2_eigen
-  tf2_geometry_msgs)
+  sensor_msgs)
 rclcpp_components_register_nodes(amcl_node_component "beluga_amcl::AmclNode")
 
 add_executable(amcl_node)
@@ -68,6 +66,7 @@ ament_export_dependencies(
   rclcpp_components
   rclcpp_lifecycle
   sensor_msgs
+  tf2
   tf2_eigen
   tf2_geometry_msgs
 )
