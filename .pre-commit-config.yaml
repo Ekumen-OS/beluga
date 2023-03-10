@@ -70,8 +70,10 @@ repos:
     rev: v1.3.5
     hooks:
       - id: clang-tidy
-        args: ["-p=/tmp/beluga", "--fix-errors"]
+        args: ["-p=/tmp/beluga", "--config-file=./.clang-tidy", "--fix-errors", "-header-filter=.*", "--quiet", "-extra-arg=-std=c++17"]
         files: beluga\/
+        # TODO(ivanpauno): Enable this later, as it does a lot more checking
+        pass_filenames: false
         types: [c++]
 
   - repo: https://github.com/psf/black

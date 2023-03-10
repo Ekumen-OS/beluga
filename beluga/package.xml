@@ -19,9 +19,11 @@
   <depend>sophus</depend>
   <depend>tbb</depend>
 
+  <test_depend>clang-format</test_depend>
+  <test_depend>clang-tidy</test_depend>
   <test_depend>google_benchmark_vendor</test_depend>
-  <test_depend>libgmock-dev</test_depend>
   <test_depend>gtest</test_depend>
+  <test_depend>libgmock-dev</test_depend>
 
   <export>
     <build_type>cmake</build_type>
