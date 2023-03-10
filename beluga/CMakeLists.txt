@@ -9,8 +9,9 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
 endif()
 
+add_library(beluga_compile_options INTERFACE)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wconversion -Werror -Wextra -Wpedantic)
+  target_compile_options(beluga_compile_options INTERFACE -Wall -Wconversion -Werror -Wextra -Wpedantic)
 endif()
 
 find_package(Eigen3 REQUIRED NO_MODULE)
@@ -22,19 +23,22 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
-target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen Sophus::Sophus TBB::tbb range-v3::range-v3)
+target_link_libraries(${PROJECT_NAME}
+  INTERFACE Eigen3::Eigen Sophus::Sophus TBB::tbb range-v3::range-v3)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG SOPHUS_USE_BASIC_LOGGING)
 
 add_executable(clang_tidy_findable)
 target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
-target_link_libraries(clang_tidy_findable PRIVATE ${PROJECT_NAME})
+target_link_libraries(clang_tidy_findable
+  PRIVATE ${PROJECT_NAME} beluga_compile_options)
 # Setting this so clang-tidy can detect the standard version from the compile commands.
 # CMake may omit the -std= flag if the compiler's default standard level is at least
 # that of the requested feature.
 # https://cmake.org/cmake/help/v3.23/manual/cmake-compile-features.7.html#requiring-language-standards
-target_compile_options(clang_tidy_findable PRIVATE -std=c++17)
+target_compile_options(clang_tidy_findable PRIVATE -std=c++17 )
 
+option(BUILD_TESTING "Build the testing tree." ON)
 if(BUILD_TESTING)
   message(STATUS "Build testing enabled.")
 

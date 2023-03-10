@@ -19,7 +19,8 @@
   <depend>sophus</depend>
   <depend>tbb</depend>
 
-  <test_depend>google-mock</test_depend>
+  <test_depend>benchmark</test_depend>
+  <test_depend>libgmock-dev</test_depend>
   <test_depend>gtest</test_depend>
 
   <export>
