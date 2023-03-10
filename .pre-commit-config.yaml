@@ -70,7 +70,7 @@ repos:
     rev: v1.3.5
     hooks:
       - id: clang-tidy
-        args: ["-p=/tmp/beluga", '--fix-errors']
+        args: ["-p=/tmp/beluga", "--fix-errors"]
         files: beluga\/
         types: [c++]
 

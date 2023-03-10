@@ -11,7 +11,11 @@ endif()
 
 add_library(beluga_compile_options INTERFACE)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  target_compile_options(beluga_compile_options INTERFACE -Wall -Wconversion -Werror -Wextra -Wpedantic)
+  # Setting this so clang-tidy can detect the standard version from the compile commands.
+  # CMake may omit the -std= flag if the compiler's default standard level is at least
+  # that of the requested feature.
+  # https://cmake.org/cmake/help/v3.23/manual/cmake-compile-features.7.html#requiring-language-standards
+  target_compile_options(beluga_compile_options INTERFACE -Wall -Wconversion -Werror -Wextra -Wpedantic -std=c++17)
 endif()
 
 find_package(Eigen3 REQUIRED NO_MODULE)
@@ -32,11 +36,6 @@ add_executable(clang_tidy_findable)
 target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
 target_link_libraries(clang_tidy_findable
   PRIVATE ${PROJECT_NAME} beluga_compile_options)
-# Setting this so clang-tidy can detect the standard version from the compile commands.
-# CMake may omit the -std= flag if the compiler's default standard level is at least
-# that of the requested feature.
-# https://cmake.org/cmake/help/v3.23/manual/cmake-compile-features.7.html#requiring-language-standards
-target_compile_options(clang_tidy_findable PRIVATE -std=c++17 )
 
 option(BUILD_TESTING "Build the testing tree." ON)
 if(BUILD_TESTING)
