@@ -30,8 +30,8 @@ target_include_directories(amcl_node_component PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 target_compile_features(amcl_node_component PUBLIC cxx_std_17)
+target_link_libraries(amcl_node_component PUBLIC beluga::beluga)
 ament_target_dependencies(amcl_node_component PUBLIC
-  beluga
   bondcpp
   nav2_msgs
   rclcpp

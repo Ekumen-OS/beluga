@@ -13,7 +13,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wconversion -Werror -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake REQUIRED)
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
@@ -23,8 +22,7 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
-ament_target_dependencies(${PROJECT_NAME} range-v3)
-target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen Sophus::Sophus TBB::tbb)
+target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen Sophus::Sophus TBB::tbb range-v3::range-v3)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG SOPHUS_USE_BASIC_LOGGING)
 
@@ -40,38 +38,46 @@ target_compile_options(clang_tidy_findable PRIVATE -std=c++17)
 if(BUILD_TESTING)
   message(STATUS "Build testing enabled.")
 
-  find_package(ament_cmake_clang_format REQUIRED)
-  ament_clang_format(CONFIG_FILE .clang-format)
-
-  find_package(ament_cmake_clang_tidy REQUIRED)
-  ament_clang_tidy(${CMAKE_BINARY_DIR} CONFIG_FILE .clang-tidy)
-
-  find_package(ament_cmake_copyright REQUIRED)
-  ament_copyright()
-
   enable_testing()
   add_subdirectory(test)
 endif()
 
+set(INSTALL_CMAKEDIR ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/cmake)
+
 install(
-  TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
+  DIRECTORY include/
+  DESTINATION include/${PROJECT_NAME}
+)
+
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
-ament_export_include_directories("include/${PROJECT_NAME}")
+install(
+  EXPORT ${PROJECT_NAME}Targets
+  FILE ${PROJECT_NAME}Targets.cmake
+  NAMESPACE ${PROJECT_NAME}::
+  DESTINATION ${INSTALL_CMAKEDIR}
+)
 
-ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(
-  Eigen3
-  range-v3
-  Sophus
-  TBB)
-
-ament_package()
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION ${INSTALL_CMAKEDIR}
+)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion )
 
 install(
-  DIRECTORY include/
-  DESTINATION include/${PROJECT_NAME}
+  FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION ${INSTALL_CMAKEDIR}
 )
