@@ -641,16 +641,16 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   auto selective_resampling_params = beluga::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = get_parameter("selective_resampling").as_bool();
 
+  using Stationary = beluga::mixin::descriptor<beluga::StationaryModel>;
   using DifferentialDrive = beluga::mixin::descriptor<
     beluga::DifferentialDriveModel,
     beluga::DifferentialDriveModelParam>;
   using OmnidirectionalDrive = beluga::mixin::descriptor<
     beluga::OmnidirectionalDriveModel,
     beluga::OmnidirectionalDriveModelParam>;
-  using Stationary = beluga::mixin::descriptor<beluga::StationaryModel>;
-  using MotionDescriptor = std::variant<DifferentialDrive, OmnidirectionalDrive, Stationary>;
-  auto get_motion_descriptor = [this]() -> MotionDescriptor {
-      const auto name = get_parameter("robot_model_type").as_string();
+
+  using MotionDescriptor = std::variant<Stationary, DifferentialDrive, OmnidirectionalDrive>;
+  auto get_motion_descriptor = [this](std::string_view name) -> MotionDescriptor {
       if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
         auto params = beluga::DifferentialDriveModelParam{};
         params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
@@ -675,9 +675,9 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   using LikelihoodField = beluga::mixin::descriptor<
     ciabatta::curry<beluga::LikelihoodFieldModel, OccupancyGrid>::mixin,
     beluga::LikelihoodFieldModelParam>;
+
   using SensorDescriptor = std::variant<LikelihoodField>;
-  auto get_sensor_descriptor = [this]() -> SensorDescriptor {
-      const auto name = get_parameter("laser_model_type").as_string();
+  auto get_sensor_descriptor = [this](std::string_view name) -> SensorDescriptor {
       if (name == kLikelihoodFieldModelName) {
         auto params = beluga::LikelihoodFieldModelParam{};
         params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
@@ -697,15 +697,16 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
   try {
     using beluga::mixin::make_unique;
-    using Interface = beluga::LaserLocalizationInterface2d;
-    particle_filter_ = make_unique<Interface, beluga::AdaptiveMonteCarloLocalization2d>(
+    using beluga::LaserLocalizationInterface2d;
+    using beluga::AdaptiveMonteCarloLocalization2d;
+    particle_filter_ = make_unique<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
       sampler_params,
       limiter_params,
       resample_on_motion_params,
       resample_interval_params,
       selective_resampling_params,
-      get_motion_descriptor(),
-      get_sensor_descriptor(),
+      get_motion_descriptor(get_parameter("robot_model_type").as_string()),
+      get_sensor_descriptor(get_parameter("laser_model_type").as_string()),
       OccupancyGrid{map}
     );
   } catch (const std::invalid_argument & error) {
