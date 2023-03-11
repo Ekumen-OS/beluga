@@ -38,7 +38,7 @@ struct ResamplingPoliciesPoller : public Mixin {
   /**
    * \tparam ...Rest Arguments types for the remaining mixin constructors.
    * \param policy_configs Configuration parameters for each of the installed resampling policies.
-   * \param ...rest arguments that are not used by this part of the mixin, but by others.
+   * \param ...rest Arguments that are not used by this part of the mixin, but by others.
    */
   template <typename... Rest>
   explicit ResamplingPoliciesPoller(const typename Policies::param_type&... policy_configs, Rest&&... rest)

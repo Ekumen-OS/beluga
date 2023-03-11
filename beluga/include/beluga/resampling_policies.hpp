@@ -26,21 +26,27 @@
  */
 
 /**
- * \page ResamplingPolicyPage beluga named requirements: ResamplingPolicy
- * Requirements for a resampling policy to be used a beluga `ParticleFilter`.
+ * \page ResamplingPolicyPage Beluga named requirements: ResamplingPolicy
+ * Requirements for a resampling policy to be used in a `ParticleFilter`.
  *
  * \section ResamplingPolicyRequirements Requirements
  * A type `T` satisfies the `ResamplingPolicy` requirements if the following is satisfied.
  *
  * Given:
  * - An instance `p` of `T`.
- * - An instance `c` of `C`, where is C a particle filter that meets the requirements listed in the policy.
+ * - An instance `c` of `C`, where is `C` a particle filter that meets the requirements listed in the policy.
  *
  * Then:
- * - `p.do_resampling(c)` will return true if resampling must be done according to the policy, false otherwise. This
- * function is called in cascade when multiple policies are installed in the filter, and a given filter's
- * do_resampling() function may not be called during a given iteration if a previously queried policy has already voted
- * "false" (short-circuit evaluation of policies).
- * */
+ * - `p.do_resampling(c)` will return `true` if resampling must be done according to the policy, `false` otherwise. \n
+ *   This function is called in cascade when multiple policies are installed in the filter, and a given filter's
+ *   `do_resampling()` function may not be called if a previously queried policy has already voted `false`
+ *   (short-circuit evaluation of policies).
+ *
+ * \section ResamplingPolicyLinks See also
+ * - beluga::ResampleIntervalPolicy
+ * - beluga::ResampleOnMotionPolicy
+ * - beluga::ResamplingPoliciesPoller
+ * - beluga::SelectiveResamplingPolicy
+ */
 
 #endif

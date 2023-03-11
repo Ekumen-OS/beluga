@@ -29,9 +29,9 @@ namespace beluga {
 
 /// Multivariate normal distribution.
 /**
- * `MultivariateNormalDistribution<Matrix>` is an implementation of the
- * \ref RandomStateDistributionRequirements "RandomStateDistribution" named requirements that
- * represents a multi-dimensional normal distribution of real-valued random variables.
+ * `MultivariateNormalDistribution<Matrix>` is an implementation of
+ * \ref RandomStateDistributionPage that represents a multi-dimensional
+ * normal distribution of real-valued random variables.
  *
  * \tparam Matrix The type of the covariance matrix; this is expected to be an instantiation
  * of the [Eigen::Matrix](https://eigen.tuxfamily.org/dox/classEigen_1_1Matrix.html) class
@@ -133,7 +133,7 @@ class MultivariateNormalDistribution {
   /**
    * \param params The distribution parameter set.
    */
-  explicit MultivariateNormalDistribution(const param_type& params) : params_{param} {}
+  explicit MultivariateNormalDistribution(const param_type& params) : params_{params} {}
 
   /// Constructs a MultivariateNormalDistribution with zero mean and the given covariance.
   /**

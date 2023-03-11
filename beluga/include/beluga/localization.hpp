@@ -31,14 +31,27 @@
 /**
  * \file
  * \brief Implementation of localization algorithms.
- *
- * Contains:
- * - A configurable beluga::MonteCarloLocalization implementation of Monte Carlo Localization.
- * - A configurable beluga::AdaptiveMonteCarloLocalization implementation of Adaptive Monte Carlo Localization.
  */
 
 namespace beluga {
 
+/**
+ * \page LocalizationPage Beluga named requirements: Localization
+ * What an implementation of a localization algorithm in Beluga should provide.
+ *
+ * \section LocalizationRequirements Requirements
+ * `T` is a `Localization` type if:
+ * - `T` satisfies \ref BaseParticleFilterPage.
+ * - `T` satisfies \ref StoragePolicyPage.
+ * - `T` satisfies \ref StateEstimatorPage.
+ * - `T` satisfies \ref SensorModelPage.
+ * - `T` satisfies \ref MotionModelPage.
+ *
+ * \section LocalizationLinks See also
+ * - \ref localization.hpp
+ */
+
+/// Pure abstract class representing an interface for laser-based localization algorithms.
 using LaserLocalizationInterface2d = beluga::mixin::compose_interfaces<
     BaseParticleFilterInterface,
     StorageInterface<Sophus::SE2d, double>,
@@ -46,16 +59,17 @@ using LaserLocalizationInterface2d = beluga::mixin::compose_interfaces<
     OdometryMotionModelInterface2d,
     LaserSensorModelInterface2d>;
 
+/// Commonly used resampling policies combined in a single mixin.
 using CombinedResamplingPolicy = ciabatta::
     curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy>;
 
 /// An implementation of Monte Carlo Localization.
 /**
- * MCL<U, M> is an implementation of the \ref ParticleFilterPage "ParticleFilter"
- * named requirements.
+ * An instance of this class template implements beluga::LaserLocalizationInterface2d
+ * and \ref LocalizationPage.
  *
- * \tparam MotionModel MotionModel<Mixin> must implement the \ref MotionModelPage "MotionModel" named requirement.
- * \tparam SensorModel SensorModel<Mixin> must implement the \ref SensorModelPage "SensorModel" named requirement.
+ * \tparam MotionDescriptor A descriptor of a mixin that implements \ref MotionModelPage.
+ * \tparam SensorDescriptor A descriptor of a mixin that implements \ref SensorModelPage.
  */
 template <class MotionDescriptor, class SensorDescriptor>
 using MonteCarloLocalization2d = ciabatta::mixin<
@@ -72,11 +86,11 @@ using MonteCarloLocalization2d = ciabatta::mixin<
 
 /// An implementation of Adaptive Monte Carlo Localization.
 /**
- * AMCL<U, M> is an implementation of the \ref ParticleFilterPage "ParticleFilter"
- * named requirements.
+ * An instance of this class template implements beluga::LaserLocalizationInterface2d
+ * and \ref LocalizationPage.
  *
- * \tparam MotionModel MotionModel<Mixin> must implement the \ref MotionModelPage "MotionModel" named requirement.
- * \tparam SensorModel SensorModel<Mixin> must implement the \ref SensorModelPage "SensorModel" named requirement.
+ * \tparam MotionDescriptor A descriptor of a mixin that implements \ref MotionModelPage.
+ * \tparam SensorDescriptor A descriptor of a mixin that implements \ref SensorModelPage.
  */
 template <class MotionDescriptor, class SensorDescriptor>
 using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<

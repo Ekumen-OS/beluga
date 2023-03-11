@@ -1,7 +1,8 @@
-PROJECT_NAME           = "beluga"
-PROJECT_BRIEF          = "An extensible Monte Carlo based localization library."
+PROJECT_NAME           = "Beluga"
+PROJECT_BRIEF          = "An extensible particle filter library."
 OUTPUT_DIRECTORY       = $(DOXYGEN_OUTPUT_DIRECTORY)
 INPUT                  = ../include ./README.md
+EXAMPLE_PATH           = ../test/beluga
 RECURSIVE              = YES
 USE_MDFILE_AS_MAINPAGE = ./README.md
 GENERATE_HTML          = YES

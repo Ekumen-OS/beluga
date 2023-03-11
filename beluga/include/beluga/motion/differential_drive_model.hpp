@@ -58,13 +58,18 @@ struct DifferentialDriveModelParam {
    * Also known as `alpha4`.
    */
   double translation_noise_from_rotation;
+
   /// Distance threshold to detect in-place rotation.
   double distance_threshold = 0.01;
 };
 
 /// Sampled odometry model for a differential drive.
 /**
- * \tparam Mixin The mixed-in type.
+ * This class implements OdometryMotionModelInterface2d and satisfies \ref MotionModelPage.
+ *
+ * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 5.4.2.
+ *
+ * \tparam Mixin The mixed-in type with no particular requirements.
  */
 template <class Mixin>
 struct DifferentialDriveModel : public Mixin {
@@ -82,16 +87,19 @@ struct DifferentialDriveModel : public Mixin {
    * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param params Parameters to configure this instance.
    *  See beluga::DifferentialDriveModelParam for details.
-   * \param ...args arguments that are not used by this part of the mixin, but by others.
+   * \param ...args Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
   explicit DifferentialDriveModel(const param_type& params, Args&&... args)
       : Mixin(std::forward<Args>(args)...), params_{params} {}
 
-  /// Applies the last update to the particle state given.
+  /// Applies the last motion update to the given particle state.
   /**
-   * \param state The particle state to apply the motion to.
-   * \return The updated paticle state.
+   * \tparam Generator  A random number generator that must satisfy the
+   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
+   *  requirements.
+   * \param state The state of the particle to which the motion will be applied.
+   * \param gen An uniform random bit generator object.
    */
   template <class Generator>
   [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) const {
@@ -103,14 +111,7 @@ struct DifferentialDriveModel : public Mixin {
     return state * Sophus::SE2d{first_rotation, Eigen::Vector2d{0.0, 0.0}} * Sophus::SE2d{second_rotation, translation};
   }
 
-  /// Updates the motion model.
-  /**
-   * This will not update particles.
-   * That is done by the particle filter using the apply_motion() method
-   * provided by this class.
-   *
-   * \param pose Last odometry update.
-   */
+  /// \copydoc OdometryMotionModelInterface2d::update_motion(const Sophus::SE2d&)
   void update_motion(const update_type& pose) final {
     if (last_pose_) {
       const auto translation = pose.translation() - last_pose_.value().translation();
@@ -145,7 +146,10 @@ struct DifferentialDriveModel : public Mixin {
     last_pose_ = pose;
   }
 
-  /// Recovers latest motion update.
+  /// Recovers the latest motion update.
+  /**
+   * \return Last motion update received by the model or an empty optional if no update was received.
+   */
   [[nodiscard]] std::optional<update_type> latest_motion_update() const { return last_pose_; }
 
  private:

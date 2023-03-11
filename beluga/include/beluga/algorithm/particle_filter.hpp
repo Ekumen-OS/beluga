@@ -27,151 +27,144 @@
  */
 
 /**
- * \page ParticlePage beluga named requirements: Particle
- * What an implementation of a particle in beluga should provide.
- *
- * \section ParticleRequirements Requirements
- * `T` is a `Particle` if given:
- * - An instance `p` of `T`.
- * - A possibly const instance `cp` of `T`.
- *
- * The following is satisfied:
- * - \c particle_traits<T>::state_type is a valid type.
- * - \c particle_traits<T>::state(cp) returns an instance of \c particle_traits<T>::state_type.
- * - Given `s` an instance of \c particle_traits<T>::state_type, \c particle_traits<T>::state(p) = `s`
- *   is a valid expression and assigns the state `s` to the particle `p`. \n
- *   i.e. after the assignment `s` == \c particle_traits<T>::state(p) is `true`.
- * - \c particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
- *   type or a floating-point type).
- * - \c particle_traits<T>::weight(cp) is a valid expression and the return type is
- *   \c particle_traits<T>::weight_type.
- * - Given `w` an instance of \c particle_traits<T>::weight_type, \c particle_traits<T>::weight(p) = `w`
- *   is a valid expression and assigns the weight `w` to the particle `p`. \n
- *   i.e. after the assignment `w` == \c particle_traits<T>::weight(p) is `true`.
- */
-
-/**
- * \page ParticleContainerPage beluga named requirements: ParticleContainer
- * What an implementation of a particle container in beluga should provide.
- *
- * \section ParticleContainerRequirements Requirements
- * `T` is a `ParticleContainer` if:
- * - `T` satisfies the [Container](https://en.cppreference.com/w/cpp/named_req/Container)
- *   c++ named requirements.
- * - `T::value_type` satisfies the beluga named requirements \ref ParticlePage "Particle".
- */
-
-/**
- * \page BaseParticleFilterPage beluga named requirements: BaseParticleFilter
- * Base requirements of a particle filter in beluga.
+ * \page BaseParticleFilterPage Beluga named requirements: BaseParticleFilter
+ * Base requirements of a particle filter in Beluga.
  *
  * \section BaseParticleFilterRequirements Requirements
- * `B` is a `BaseParticleFilter` if given
- * - `T`, the type named by `B::particle_type`.
- * - `S`, the type named by `T::state_type`.
- * - `V`, a range view whose elements are of the same type as `S`.
- * - `p`, a value of type `B`.
- * - `x`, possibly const value of type `V`.
+ * `B` is a `BaseParticleFilter` if given:
+ * - `b`, a value of type `B`.
  *
  * The following is satisfied:
- * - `p.particles()` is valid and returns a view to a container that satisfies the
- *   \ref ParticleContainerPage "ParticleContainer" requirements.
- * - `p.weights()` is valid and returns a view to a container to the weights of the particles.
- * - `p.sample()` updates the particle filter particles based on the last motion update.
- * - `p.importance_sample()` updates the particle filter particles weight.
- * - `p.resample()` updates the particle filter, generating new particles from the old ones
- *   based on their importance weights.
- * - `p.update()` shorthand for executing the above three steps.
- * - `p.reinitialize(x)` is valid and reinitializes the particles with the given range view values.
+ * - `b.sample()` updates the particles based on the last motion update.
+ * - `b.importance_sample()` updates the particles weight.
+ * - `b.resample()` generates new particles from the old ones based on their importance weights.
+ *
+ * \section BaseParticleFilterLinks See also
+ * - beluga::BootstrapParticleFilter
  */
 
-/**
- * \page ParticleFilterPage beluga named requirements: ParticleFilter
- * What an implementation of a particle filter in beluga should provide.
- * This is satisfied for example by `beluga::MCL<U, M, S, C>` and `beluga::AMCL<U, M, S, C>`,
- * for any valid `U`, `M`, `S`, `C` (see respective docs for detail).
- *
- * \section ParticleFilterRequirements Requirements
- * `T` is a `ParticleFilter` if:
- * - `T` satisfies the \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
- * - `T` satisfies the \ref SensorModelPage "SensorModel" named requirements.
- * - `T` satisfies the \ref MotionModelPage "MotionModel" named requirements.
- */
 namespace beluga {
 
+/// Pure abstract class representing the base particle filter interface.
 struct BaseParticleFilterInterface {
+  /// Virtual destructor.
   virtual ~BaseParticleFilterInterface() = default;
+
+  /// Update the particle states.
+  /**
+   * This step generates a hyphotetical state based on the current
+   * particle state and controls.
+   */
   virtual void sample() = 0;
+
+  /**
+   * \overload
+   * It allows specifying a sequenced execution policy.
+   */
   virtual void sample(std::execution::sequenced_policy) { return this->sample(); };
+
+  /**
+   * \overload
+   * It allows specifying a parallel execution policy.
+   */
   virtual void sample(std::execution::parallel_policy) { return this->sample(); };
+
+  /// Update the particle weights.
+  /**
+   * This step computes the importance factor or weight of each particle
+   * to incorporate measurements. The importance is proportional to the
+   * probability of seeing the measurement given the current particle state.
+   */
   virtual void importance_sample() = 0;
+
+  /**
+   * \overload
+   * It allows specifying a sequenced execution policy.
+   */
   virtual void importance_sample(std::execution::sequenced_policy) { return this->importance_sample(); };
+
+  /**
+   * \overload
+   * It allows specifying a parallel execution policy.
+   */
   virtual void importance_sample(std::execution::parallel_policy) { return this->importance_sample(); };
+
+  /// Resample particles based on their weights.
+  /**
+   * This step creates a new particle set drawing samples from the
+   * current particle set. The probability of drawing each particle
+   * is given by its importance weight.
+   */
   virtual void resample() = 0;
 };
 
 /// Base implementation of a particle filter.
 /**
- * BootstrapParticleFilter<Mixin, Container> is an implementation of the
- * \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
+ * This class implements BaseParticleFilterInterface and satisfies the \ref BaseParticleFilterPage.
  *
- * Given `T`, the type named by \c Container::value_type,
- * - \c particle_traits<T>::state_type must be the same as the `state_type` of the sensor
- *   and motion model.
- *
- * - \c particle_traits<T>::weight_type must be the same as the `weight_type` used in the
- *   sensor mode.
- *
- * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
- *  `m.self()`. The return type of `m.self()` must satisfy:
- * - \ref ParticleResamplingPage "ParticleResampling"
- * - \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
- * - \ref ParticleSampledGenerationPage "ParticleSampledGeneration"
- * - \ref MotionModelPage "MotionModel"
- * - \ref SensorModelPage "SensorModel"
- *
- * \tparam Container The particle container type.
- *  It must satisfy the \ref ParticleContainerPage "ParticleContainer" named requirements.
+ * \tparam Mixin The mixed-in type. An instance `m` of `Mixin` must provide:
+ * - A `states()`, `weights()` and `initialize_particles()` methods that
+ *   satisfy the requirements specified in \ref StoragePolicyPage.
+ * - A `generate_samples()` method that satisfies the requirements specified in
+ *  \ref StateGeneratorPage.
+ * - A `generate_samples_from_particles()` method that satisfies the requirements
+ *  specified in \ref SamplerPage.
+ * - A `take_samples()` method that satisfies the requirements specified in
+ *  \ref LimiterPage.
+ * - An `apply_motion()` method that satisfies the requirements specified in
+ *  \ref MotionModelPage.
+ * - An `importance_weight()` method that satisfies the requirements specified in
+ *  \ref SensorModelPage.
  */
 template <class Mixin>
 struct BootstrapParticleFilter : public Mixin {
  public:
   /// Constructs a BootstrapParticleFilter.
   /**
-   * The initial particles are generated using the \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
+   * The initial particles are generated using the \ref StateGeneratorPage "StateGenerator"
    * implementation of `Mixin`.
    *
    * \tparam ...Args Arguments types for the remaining mixin constructors.
-   * \param ...args arguments that are not used by this part of the mixin, but by others.
+   * \param ...args Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
   explicit BootstrapParticleFilter(Args&&... args) : Mixin(std::forward<Args>(args)...) {
     this->self().initialize_particles(this->self().generate_samples(generator_) | this->self().take_samples());
   }
 
-  /// Update the particles states based on the motion model and the last pose update.
   /**
+   * \copydoc BaseParticleFilterInterface::sample()
+   *
    * The update will be done based on the `Mixin` implementation of the
-   * \ref MotionModelPage "MotionModel" named requirement.
+   * \ref MotionModelPage "MotionModel" named requirements.
    */
   void sample() final { return this->sample_impl(std::execution::seq); }
+
+  /// \copydoc BaseParticleFilterInterface::sample(std::execution::sequenced_policy policy)
   void sample(std::execution::sequenced_policy policy) final { this->sample_impl(policy); }
+
+  /// \copydoc BaseParticleFilterInterface::sample(std::execution::parallel_policy policy)
   void sample(std::execution::parallel_policy policy) final { this->sample_impl(policy); }
 
-  /// Update the particle weights based on the sensor model.
   /**
-   * The update will be done based on the `Mixin` implementation of the \ref SensorModelPage "SensorModel"
-   * named requirement.
+   * \copydoc BaseParticleFilterInterface::importance_sample()
+   *
+   * The update will be done based on the `Mixin` implementation of the
+   * \ref SensorModelPage "SensorModel" named requirements.
    */
   void importance_sample() final { this->importance_sample_impl(std::execution::seq); }
+
+  /// \copydoc BaseParticleFilterInterface::importance_sample(std::execution::sequenced_policy policy)
   void importance_sample(std::execution::sequenced_policy policy) final { this->importance_sample_impl(policy); }
+
+  /// \copydoc BaseParticleFilterInterface::importance_sample(std::execution::parallel_policy policy)
   void importance_sample(std::execution::parallel_policy policy) final { this->importance_sample_impl(policy); }
 
-  /// Resample particles based on ther weights and the resampling policy used.
   /**
-   * The update will be done based on the Mixin implementation of the
-   * \ref ParticleSampledGenerationPage "ParticleSampledGeneration" and
-   * \ref ParticleResamplingPage "ParticleResampling" named requirements
+   * \copydoc BaseParticleFilterInterface::resample()
+   *
+   * The update will be done based on the `Mixin` implementation of the
+   * \ref SamplerPage "Sampler" and \ref LimiterPage "Limiter" named requirements
    * and the active resampling policies.
    */
   void resample() final {
@@ -185,7 +178,6 @@ struct BootstrapParticleFilter : public Mixin {
  private:
   std::mt19937 generator_{std::random_device()()};
 
-  /// Update the particles states based on the motion model and the last pose update.
   template <typename ExecutionPolicy>
   void sample_impl(ExecutionPolicy&& policy) {
     auto states = this->self().states() | ranges::views::common;
@@ -194,7 +186,6 @@ struct BootstrapParticleFilter : public Mixin {
         [this](const auto& state) { return this->self().apply_motion(state, generator_); });
   }
 
-  /// Update the particle weights based on the sensor model.
   template <typename ExecutionPolicy>
   void importance_sample_impl(ExecutionPolicy&& policy) {
     auto states = this->self().states() | ranges::views::common;

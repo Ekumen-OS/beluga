@@ -21,12 +21,12 @@
 
 /**
  * \file
- * \brief Includes all beluga motion models.
+ * \brief Includes all Beluga motion models.
  */
 
 /**
- * \page MotionModelPage beluga named requirements: MotionModel
- * Requirements for a motion model to be used in a beluga `ParticleFilter`.
+ * \page MotionModelPage Beluga named requirements: MotionModel
+ * Requirements for a motion model to be used in a Beluga `ParticleFilter`.
  *
  * \section MotionModelRequirements Requirements
  * A type `T` satisfies the `MotionModel` requirements if the following is satisfied:
@@ -45,15 +45,34 @@
  *   will be used in subsequent calls to the `apply_motion()` method.
  * - `cp.apply_motion(s)` returns a `T::state_type`, that is the result of applying the motion model
  *   to `s` based on the updates.
- * - `cp.latest_motion_update() returns a std::optional<update_type> with the latest motion update
- *   received through motion_update().
+ * - `cp.latest_motion_update()` returns a `std::optional<update_type>` with the latest motion update
+ *   received through `motion_update()`.
+ *
+ * \section MotionModelLinks See also
+ * - beluga::DifferentialDriveModel
+ * - beluga::OmnidirectionalDriveModel
+ * - beluga::StationaryModel
  */
 
 namespace beluga {
 
+/// Pure abstract class representing the odometry motion model interface.
 struct OdometryMotionModelInterface2d {
+  /// Update type of the motion model.
+  using update_type = Sophus::SE2d;
+
+  /// Virtual destructor.
   virtual ~OdometryMotionModelInterface2d() = default;
-  virtual void update_motion(const Sophus::SE2d&) = 0;
+
+  /// Updates the motion model with the last odometry data.
+  /**
+   * This method updates the motion model with the information
+   * it needs to apply the motion to each particle.
+   * It does not apply the motion directly when it's called.
+   *
+   * \param pose Last odometry update.
+   */
+  virtual void update_motion(const update_type& pose) = 0;
 };
 
 }  // namespace beluga

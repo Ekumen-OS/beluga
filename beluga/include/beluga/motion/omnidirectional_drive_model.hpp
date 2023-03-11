@@ -70,7 +70,9 @@ struct OmnidirectionalDriveModelParam {
 
 /// Sampled odometry model for an omnidirectional drive.
 /**
- * \tparam Mixin The mixed-in type.
+ * This class implements the OdometryMotionModelInterface2d and satisfies \ref MotionModelPage.
+ *
+ * \tparam Mixin The mixed-in type with no particular requirements.
  */
 template <class Mixin>
 struct OmnidirectionalDriveModel : public Mixin {
@@ -83,21 +85,24 @@ struct OmnidirectionalDriveModel : public Mixin {
   /// Parameter type that the constructor uses to configure the motion model.
   using param_type = OmnidirectionalDriveModelParam;
 
-  /// Constructs an omnidirectionalDriveModel instance.
+  /// Constructs an OmnidirectionalDriveModel instance.
   /**
    * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param params Parameters to configure this instance.
    *  See beluga::OmnidirectionalDriveModelParam for details.
-   * \param ...args arguments that are not used by this part of the mixin, but by others.
+   * \param ...args Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
   explicit OmnidirectionalDriveModel(const param_type& params, Args&&... args)
       : Mixin(std::forward<Args>(args)...), params_{params} {}
 
-  /// Applies the last update to the particle state given.
+  /// Applies the last motion update to the given particle state.
   /**
-   * \param state The particle state to apply the motion to.
-   * \return The updated particle state.
+   * \tparam Generator  A random number generator that must satisfy the
+   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
+   *  requirements.
+   * \param state The state of the particle to which the motion will be applied.
+   * \param gen An uniform random bit generator object.
    */
   template <class Generator>
   [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) const {
@@ -117,14 +122,7 @@ struct OmnidirectionalDriveModel : public Mixin {
            Sophus::SE2d{second_rotation, translation};
   }
 
-  /// Updates the motion model.
-  /**
-   * This will not update particles.
-   * That is done by the particle filter using the apply_motion() method
-   * provided by this class.
-   *
-   * \param pose Last odometry udpate.
-   */
+  /// \copydoc OdometryMotionModelInterface2d::update_motion(const Sophus::SE2d&)
   void update_motion(const update_type& pose) final {
     if (last_pose_) {
       const auto translation = pose.translation() - last_pose_.value().translation();
@@ -159,7 +157,10 @@ struct OmnidirectionalDriveModel : public Mixin {
     last_pose_ = pose;
   }
 
-  /// Recovers latest motion update.
+  /// Recovers the latest motion update.
+  /**
+   * \return Last motion update received by the model or an empty optional if no update was received.
+   */
   [[nodiscard]] std::optional<update_type> latest_motion_update() const { return last_pose_; }
 
  private:

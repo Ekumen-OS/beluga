@@ -19,13 +19,33 @@
 #include <beluga/mixin/utility.hpp>
 #include <ciabatta/ciabatta.hpp>
 
+/**
+ * \file
+ * \brief Implementation of mixin utilities and extensions.
+ */
+
 namespace beluga::mixin {
 
+/// Composes multiple interfaces into a single interface type.
+/**
+ * \tparam Interfaces Interfaces to combine.
+ */
 template <class... Interfaces>
 struct compose_interfaces : public Interfaces... {
+  /// Virtual destructor.
+  /**
+   * Makes it so at least one of the interfaces provides a virtual destructor.
+   */
   ~compose_interfaces() override = default;
 };
 
+/// Helper method to get descriptor parameters or forward the value.
+/**
+ * \tparam T The type of the input value.
+ * \param value A value to get the params from, or to forward.
+ * \return The params with the same value category of the input value or
+ * the input value forwarded.
+ */
 template <class T>
 constexpr auto&& params_or_forward(T&& value) noexcept {
   if constexpr (is_descriptor_v<T> && has_params_v<T>) {
@@ -35,6 +55,32 @@ constexpr auto&& params_or_forward(T&& value) noexcept {
   }
 }
 
+/// Constructs a mixin and wraps it into a `std::unique_ptr` to a given interface.
+/**
+ * This method can be used to create different mixin alternatives based on
+ * the input arguments. The input arguments can be parameters of the mixin constructor
+ * or descriptor variants holding parameters of the mixin constructor.
+ *
+ * This function will use the descriptor information to instantiate the correct
+ * mixin type and construct it with the given parameters.
+ *
+ * Descriptors can also contain no parameters, in which case the type information
+ * will be used to deduce the mixin type and there is no need to forward parameter
+ * values to the constructor.
+ *
+ * All the possible mixin alternatives from the input variants must implement `Interface`,
+ * and the `Interface` type must be specified since this function must return the
+ * same type for all possible combinations of variants.
+ *
+ * Examples:
+ * \snippet test/beluga/test_mixin.cpp Using make_unique
+ *
+ * \tparam Interface The interface type used to create the std::unique_ptr.
+ * \tparam Base A base mixin template taking descriptors.
+ * \tparam Args The input argument or descriptor types from which to instantiate the mixin.
+ * \param args The input arguments or descriptor instances from which to construct the mixin.
+ * \return A `std::unique_ptr` of an instance of type `Interface`.
+ */
 template <class Interface, template <class...> class Base, class... Args>
 auto make_unique(Args&&... args) {
   return visit_everything(

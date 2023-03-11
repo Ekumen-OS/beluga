@@ -19,12 +19,12 @@
 
 /**
  * \file
- * \brief Includes all beluga sensor models.
+ * \brief Includes all Beluga sensor models.
  */
 
 /**
- * \page SensorModelPage beluga named requirements: SensorModel
- * Requirements for a sensor model to be used in a beluga `ParticleFilter`.
+ * \page SensorModelPage Beluga named requirements: SensorModel
+ * Requirements for a sensor model to be used in a Beluga `ParticleFilter`.
  *
  * \section SensorModelRequirements Requirements
  * A type `T` satisfies the `SensorModel` requirements if the following is satisfied:
@@ -35,23 +35,40 @@
  * Given:
  * - An instance `p` of `T`.
  * - A possibly const instance `cp` of `T`.
- * - A possibly const instance of `T::measurement_type` `m`.
- * - A possibly const instance of `T::state_type` `s`.
+ * - A possibly const instance `m` of `T::measurement_type`.
+ * - A possibly const instance `s` of `T::state_type`.
  *
  * Then:
  * - `p.update_sensor(m)` will update the sensor model with `p`.
  *   This will not actually update the particle weights, but the update done here
  *   will be used in the nexts `importance_weight()` method calls.
  * - `cp.importance_weight(s)` returns a `T::weight_type` instance representing the weight of the particle.
- * - `cp.generate_random_state()` returns a `T::state_type` instance.
+ * - `cp.make_random_state()` returns a `T::state_type` instance.
+ *
+ * \section SensorModelLinks See also
+ * - beluga::LikelihoodFieldModel
  */
 
 namespace beluga {
 
+/// Pure abstract class representing the laser sensor model interface.
 struct LaserSensorModelInterface2d {
+  /// Measurement type of the sensor: a point cloud for the range finder.
   using measurement_type = std::vector<std::pair<double, double>>;
+
+  /// Virtual destructor.
   virtual ~LaserSensorModelInterface2d() = default;
-  virtual void update_sensor(measurement_type&&) = 0;
+
+  /// Update the sensor model with the measured points.
+  /**
+   * This method updates the sensor model with the information
+   * it needs to compute the weight of each particle.
+   * It does not compute the particle weights directly when it's
+   * called.
+   *
+   * \param points The range finder points in the reference frame of the particle.
+   */
+  virtual void update_sensor(measurement_type&& points) = 0;
 };
 
 }  // namespace beluga

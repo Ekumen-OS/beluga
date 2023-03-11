@@ -1,12 +1,13 @@
-This library provides implementations for Monte Carlo based localization.
+This library provides implementations for Monte Carlo based localization algorithms.
 The existing implementations are:
 
-- beluga::MCL: Monte carlo localization using a fixed number of particles.
-- beluga::AMCL: Adaptive Monte Carlo localization, the number of particles is defined using the KLD criteria.
+- MCL: Monte Carlo Localization using a fixed number of particles.
+- AMCL: Adaptive Monte Carlo Localization, the number of particles is defined using the KLD criteria.
 
 The library is extensible, allowing to:
-- Provide a different [sensor](@ref SensorModelPage) or [motion](@ref MotionModelPage) model.
-- Provide a way of getting the estimated pose based on the particles.
-- Provide a way of [generating the initial particles](@ref ParticleBaselineGenerationPage).
-- Provide a way of [generating particles samples](@ref ParticleSampledGenerationPage) from the previous particle set.
-- Provide a way to [resample](@ref ParticleResamplingPage) particles.
+- Provide different [sensor](@ref SensorModelPage) or [motion](@ref MotionModelPage) models.
+- Provide a way of getting the [estimated pose](@ref StateEstimatorPage) based on the particles.
+- Provide a way of [generating the initial particles](@ref StateGeneratorPage).
+- Provide a way of [sampling](@ref SamplerPage) from the previous particle set.
+- Provide a way to [limiting](@ref LimiterPage) the amount of particles.
+- Provide a way to [choose when to resample](@ref ResamplingPolicyPage).
