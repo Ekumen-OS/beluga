@@ -14,8 +14,6 @@
 
 #include <gmock/gmock.h>
 
-#include <functional>
-
 #include <beluga/mixin/utility.hpp>
 
 namespace {
@@ -130,6 +128,25 @@ TEST(VisitEverything, FowardSingleParameter) {
   ASSERT_EQ(alias, 5);
   alias = 6;
   ASSERT_EQ(value, 6);
+}
+
+template <typename T>
+using is_object = std::is_same<std::decay_t<T>, Object>;
+
+template <typename T>
+using is_arithmetic_decay = std::is_arithmetic<std::decay_t<T>>;
+
+TEST(MakeTupleWith, Values) {
+  int mutable_value = 4;
+  const int const_value = 5;
+  auto tuple1 = beluga::mixin::make_tuple_with<is_object>(1., mutable_value, const_value, Object{});
+  auto tuple2 = beluga::mixin::make_tuple_with<is_arithmetic_decay>(1., mutable_value, const_value, Object{});
+  static_assert(std::is_same_v<decltype(tuple1), std::tuple<Object&&>>);
+  static_assert(std::is_same_v<decltype(tuple2), std::tuple<double&&, int&, const int&>>);
+  int& alias = std::get<int&>(tuple2);
+  ASSERT_EQ(alias, 4);
+  alias = 6;
+  ASSERT_EQ(mutable_value, 6);
 }
 
 }  // namespace
