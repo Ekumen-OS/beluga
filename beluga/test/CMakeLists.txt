@@ -33,5 +33,6 @@ if(NOT TARGET benchmark::benchmark_main)
   FetchContent_MakeAvailable(benchmark)
 endif()
 
+include(CTest)
 add_subdirectory(benchmark)
 add_subdirectory(beluga)
