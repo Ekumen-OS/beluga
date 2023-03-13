@@ -1,13 +1,4 @@
 find_package(GTest MODULE)
-# cmake versions older than 3.23 do not provide the target
-# try pkgconfig
-if(NOT TARGET GTest::gmock_main)
-  find_package(PkgConfig)
-  pkg_check_modules(gmock_main QUIET IMPORTED_TARGET gmock_main)
-  if(TARGET PkgConfig::gmock_main)
-    add_library(GTest::gmock_main ALIAS PkgConfig::gmock_main)
-  endif()
-endif()
 # still not available? -> fetch it!
 if(NOT TARGET GTest::gmock_main)
   include(FetchContent)
