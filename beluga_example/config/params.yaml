@@ -10,6 +10,8 @@ amcl:
     alpha3: 0.1
     # Expected process noise in odometry’s translation estimate from rotation.
     alpha4: 0.05
+    # Expected process noise in odometry's strafe estimate from translation.
+    alpha5: 0.1
     # The name of the coordinate frame published by the localization system.
     global_frame_id: map
     # The name of the coordinate frame published by the odometry system.
