@@ -23,16 +23,9 @@ repos:
       - id: compile_commands
         name: "[beluga] Export compile commands"
         description: Creates the compile_commands.json required by clang-tidy.
-        entry: cmake -S ./beluga -B /tmp/beluga -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-        fail_fast: true
-        files: beluga\/
-        types: [c++]
-        pass_filenames: false
-        language: system
-
-      - id: ament_clang_tidy
-        name: "[beluga] Fix C++ errors (clang-tidy)"
-        entry: ament_clang_tidy --config ./.clang-tidy --fix-errors /tmp/beluga/compile_commands.json
+        # this will only show a warning if not inside the docker container instead of failing
+        entry: bash -c "cmake -S ./beluga -B /tmp/beluga -DCMAKE_EXPORT_COMPILE_COMMANDS=ON | true"
+        verbose: true
         files: beluga\/
         types: [c++]
         pass_filenames: false
@@ -73,6 +66,18 @@ repos:
       args: ["-style=file:.clang-format"]
       files: beluga\/
       types: [c++]
+
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      # this hook only warns if the compile command is not available
+      - id: clang-tidy
+        args: [
+          "-p=/ws/build/beluga/compile_commands.json", "--config-file=./.clang-tidy", "--fix-errors",
+          "-header-filter=.*", "--quiet", "-extra-arg=-std=c++17"
+        ]
+        files: beluga\/
+        types: [c++]
 
   - repo: https://github.com/psf/black
     rev:  22.10.0
