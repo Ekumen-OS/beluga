@@ -30,6 +30,14 @@ repos:
         pass_filenames: false
         language: system
 
+      - id: ament_clang_tidy
+        name: "[beluga] Fix C++ errors (clang-tidy)"
+        entry: ament_clang_tidy --config ./.clang-tidy --fix-errors /tmp/beluga/compile_commands.json
+        files: beluga\/
+        types: [c++]
+        pass_filenames: false
+        language: system
+
       - id: ament_uncrustify
         name: "[others] Fix C++ format (uncrustify)"
         entry: ament_uncrustify --reformat
