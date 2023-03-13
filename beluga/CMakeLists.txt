@@ -30,8 +30,7 @@ target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG SOPHUS_USE_B
 
 add_executable(clang_tidy_findable)
 target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
-target_link_libraries(clang_tidy_findable
-  PRIVATE ${PROJECT_NAME} beluga_compile_options)
+target_link_libraries(clang_tidy_findable PRIVATE ${PROJECT_NAME} beluga_compile_options)
 
 option(BUILD_TESTING "Build the testing tree." ON)
 if(BUILD_TESTING)
