@@ -30,16 +30,9 @@ repos:
         pass_filenames: false
         language: system
 
-      - id: ament_clang_format
-        name: "[beluga] Fix C++ format (clang-format)"
-        entry: ament_clang_format --config ./beluga/.clang-format --reformat
-        files: beluga\/
-        types: [c++]
-        language: system
-
       - id: ament_clang_tidy
         name: "[beluga] Fix C++ errors (clang-tidy)"
-        entry: ament_clang_tidy --config ./beluga/.clang-tidy --fix-errors /tmp/beluga/compile_commands.json
+        entry: ament_clang_tidy --config ./.clang-tidy --fix-errors /tmp/beluga/compile_commands.json
         files: beluga\/
         types: [c++]
         pass_filenames: false
@@ -72,6 +65,14 @@ repos:
         exclude: beluga\/
         types: [python]
         language: system
+
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v14.0.6
+    hooks:
+    - id: clang-format
+      args: ["-style=file:.clang-format"]
+      files: beluga\/
+      types: [c++]
 
   - repo: https://github.com/psf/black
     rev:  22.10.0
