@@ -1,3 +1,6 @@
+option(BELUGA_RUN_PERFORMANCE_TESTS
+  "Enable performance tests instead of unconditionally skipping them" OFF)
+
 add_executable(benchmark_beluga
   benchmark_likelihood_field_model.cpp
   benchmark_sampling.cpp
@@ -8,6 +11,8 @@ set(TEST_RESULTS_DIR "${CMAKE_BINARY_DIR}/test_results/${PROJECT_NAME}")
 file(MAKE_DIRECTORY ${TEST_RESULTS_DIR})
 
 set(benchmark_out "${TEST_RESULTS_DIR}/benchmark_beluga.google_benchmark.json")
-add_test(
-  NAME benchmark_beluga
-  COMMAND benchmark_beluga "--benchmark_out_format=json" "--benchmark_out=${benchmark_out}")
+if(BELUGA_RUN_PERFORMANCE_TESTS)
+  add_test(
+    NAME benchmark_beluga
+    COMMAND benchmark_beluga "--benchmark_out_format=json" "--benchmark_out=${benchmark_out}")
+endif()
