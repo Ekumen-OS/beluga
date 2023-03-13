@@ -1,5 +1,4 @@
 find_package(GTest MODULE)
-# still not available? -> fetch it!
 if(NOT TARGET GTest::gmock_main)
   include(FetchContent)
   FetchContent_Declare(
