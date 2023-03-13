@@ -36,7 +36,7 @@
  *
  * The following is satisfied:
  * - `b.sample()` updates the particles based on the last motion update.
- * - `b.importance_sample()` updates the particles weight.
+ * - `b.importance_sample()` updates the particles weight based on the last sensor update.
  * - `b.resample()` generates new particles from the old ones based on their importance weights.
  *
  * \section BaseParticleFilterLinks See also
@@ -50,7 +50,7 @@ struct BaseParticleFilterInterface {
   /// Virtual destructor.
   virtual ~BaseParticleFilterInterface() = default;
 
-  /// Update the particle states.
+  /// Update the states of the particles.
   /**
    * This step generates a hyphotetical state based on the current
    * particle state and controls.
@@ -69,7 +69,7 @@ struct BaseParticleFilterInterface {
    */
   virtual void sample(std::execution::parallel_policy) { return this->sample(); };
 
-  /// Update the particle weights.
+  /// Update the weights of the particles.
   /**
    * This step computes the importance factor or weight of each particle
    * to incorporate measurements. The importance is proportional to the
