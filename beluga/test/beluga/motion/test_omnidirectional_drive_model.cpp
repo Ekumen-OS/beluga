@@ -76,7 +76,7 @@ TEST_F(OmnidirectionalDriveModelTest, Rotate) {
   ASSERT_THAT(result2, testing::SE2Eq(SO2d{-Constants::pi() / 4}, Vector2d{0.0, 0.0}));
 }
 
-TEST_F(OmnidirectionalDriveModelTest, Translate_Strafe) {
+TEST_F(OmnidirectionalDriveModelTest, TranslateStrafe) {
   mixin_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 1.0}});
   const auto result1 = mixin_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}, generator_);
@@ -85,7 +85,7 @@ TEST_F(OmnidirectionalDriveModelTest, Translate_Strafe) {
 
 template <class Range>
 auto get_statistics(Range&& range) {
-  const double size = static_cast<double>(std::distance(std::begin(range), std::end(range)));
+  const auto size = static_cast<double>(std::distance(std::begin(range), std::end(range)));
   const double sum = std::accumulate(std::begin(range), std::end(range), 0.0);
   const double mean = sum / size;
   const double squared_diff_sum =

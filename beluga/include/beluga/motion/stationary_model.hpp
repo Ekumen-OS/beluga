@@ -15,6 +15,7 @@
 #ifndef BELUGA_MOTION_STATIONARY_MODEL_HPP
 #define BELUGA_MOTION_STATIONARY_MODEL_HPP
 
+#include <optional>
 #include <random>
 
 #include <sophus/se2.hpp>

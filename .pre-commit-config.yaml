@@ -73,7 +73,7 @@ repos:
       # this hook only warns if the compile command is not available
       - id: clang-tidy
         args: [
-          "-p=/ws/build/beluga/compile_commands.json", "--config-file=./.clang-tidy", "--fix-errors",
+          "-p=/ws/build/beluga/compile_commands.json", "--fix",
           "-header-filter=.*", "--quiet", "-extra-arg=-std=c++17"
         ]
         files: beluga\/

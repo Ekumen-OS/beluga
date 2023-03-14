@@ -34,8 +34,8 @@ struct ciabatta_top { /* not a mixin */
   using self_type = MostDerived;
   decltype(auto) self() & { return static_cast<self_type&>(*this); }
   decltype(auto) self() && { return static_cast<self_type&&>(*this); }
-  decltype(auto) self() const& { return static_cast<self_type const&>(*this); }
-  decltype(auto) self() const&& { return static_cast<self_type const&&>(*this); }
+  [[nodiscard]] decltype(auto) self() const& { return static_cast<self_type const&>(*this); }
+  [[nodiscard]] decltype(auto) self() const&& { return static_cast<self_type const&&>(*this); }
 };
 
 struct deferred {

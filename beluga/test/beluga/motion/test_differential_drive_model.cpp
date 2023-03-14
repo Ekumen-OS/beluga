@@ -85,7 +85,7 @@ TEST_F(DifferentialDriveModelTest, RotateTranslateRotate) {
 
 template <class Range>
 auto get_statistics(Range&& range) {
-  const double size = static_cast<double>(std::distance(std::begin(range), std::end(range)));
+  const auto size = static_cast<double>(std::distance(std::begin(range), std::end(range)));
   const double sum = std::accumulate(std::begin(range), std::end(range), 0.0);
   const double mean = sum / size;
   const double squared_diff_sum =

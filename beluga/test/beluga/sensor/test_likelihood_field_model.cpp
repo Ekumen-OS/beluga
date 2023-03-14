@@ -34,12 +34,12 @@ class StaticOccupancyGrid {
       const Sophus::SE2d& origin = Sophus::SE2d{})
       : grid_{array}, origin_{origin}, origin_inverse_{origin.inverse()}, resolution_{resolution} {}
 
-  std::size_t size() const { return grid_.size(); }
-  const auto& data() const { return grid_; }
-  const Sophus::SE2d& origin() const { return origin_; }
-  const Sophus::SE2d& origin_inverse() const { return origin_inverse_; }
+  [[nodiscard]] std::size_t size() const { return grid_.size(); }
+  [[nodiscard]] const auto& data() const { return grid_; }
+  [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
+  [[nodiscard]] const Sophus::SE2d& origin_inverse() const { return origin_inverse_; }
 
-  std::size_t index(double x, double y) const {
+  [[nodiscard]] std::size_t index(double x, double y) const {
     const auto x_index = static_cast<std::size_t>(std::floor(x / resolution()));
     const auto y_index = static_cast<std::size_t>(std::floor(y / resolution()));
     if (x_index >= width() || y_index >= height()) {
@@ -48,15 +48,15 @@ class StaticOccupancyGrid {
     return x_index + y_index * width();
   }
 
-  std::size_t index(const Eigen::Vector2d& point) const { return index(point.x(), point.y()); }
+  [[nodiscard]] std::size_t index(const Eigen::Vector2d& point) const { return index(point.x(), point.y()); }
 
-  Eigen::Vector2d point(std::size_t index) const {
+  [[nodiscard]] Eigen::Vector2d point(std::size_t index) const {
     return Eigen::Vector2d{
         (static_cast<double>(index % width()) + 0.5) * resolution(),
         (static_cast<double>(index / width()) + 0.5) * resolution()};
   }
 
-  auto neighbors(std::size_t index) const {
+  [[nodiscard]] auto neighbors(std::size_t index) const {
     auto result = std::vector<std::size_t>{};
     const std::size_t row = index / width();
     const std::size_t col = index % width();
@@ -81,9 +81,9 @@ class StaticOccupancyGrid {
   Sophus::SE2d origin_inverse_;
   double resolution_;
 
-  std::size_t width() const { return Cols; }
-  std::size_t height() const { return Rows; }
-  double resolution() const { return resolution_; }
+  [[nodiscard]] std::size_t width() const { return Cols; }
+  [[nodiscard]] std::size_t height() const { return Rows; }
+  [[nodiscard]] double resolution() const { return resolution_; }
 };
 
 using UUT = ciabatta::mixin<

@@ -18,6 +18,7 @@
 #include <ciabatta/ciabatta.hpp>
 #include <range/v3/algorithm/count.hpp>
 #include <range/v3/range/conversion.hpp>
+#include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/intersperse.hpp>
 #include <range/v3/view/take_exactly.hpp>
@@ -38,8 +39,8 @@ TEST_P(RandomSelectWithParam, Functional) {
   auto output =
       ranges::views::generate(beluga::random_select([]() { return 1; }, []() { return 2; }, generator, probability)) |
       ranges::views::take_exactly(1'000'000);
-  std::size_t one_count = ranges::count(output, 1);
-  std::size_t two_count = ranges::count(output, 2);
+  auto one_count = static_cast<size_t>(ranges::count(output, 1));
+  auto two_count = static_cast<size_t>(ranges::count(output, 2));
   ASSERT_NEAR(probability, static_cast<double>(one_count) / static_cast<double>(one_count + two_count), 0.01);
 }
 
@@ -54,8 +55,8 @@ void AssertWeights(Range&& range, const Values& values, const Weights& weights) 
     auto& counter = *(std::begin(counters) + std::distance(std::begin(values), it));
     ++counter;
   }
-  for (std::size_t i = 0; i < counters.size(); ++i) {
-    ASSERT_NEAR(*(weights.begin() + i), static_cast<double>(counters[i]) / static_cast<double>(range.size()), 0.01);
+  for (auto [i, weight] : ranges::views::enumerate(weights)) {
+    ASSERT_NEAR(weight, static_cast<double>(counters[i]) / static_cast<double>(range.size()), 0.01);
   }
 }
 

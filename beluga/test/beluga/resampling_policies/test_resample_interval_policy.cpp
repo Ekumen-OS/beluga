@@ -32,7 +32,7 @@ TEST_F(ResampleIntervalPolicyTests, Construction) {
   [[maybe_unused]] UUT uut{ResampleIntervalPolicyParam{}};
 }
 
-class ResampleIntervalPolicyTestsWithParam : public testing::TestWithParam<int> {};
+class ResampleIntervalPolicyTestsWithParam : public testing::TestWithParam<size_t> {};
 
 TEST_P(ResampleIntervalPolicyTestsWithParam, ResampleEveryNthIteration) {
   // uut allows resampling every N-th iteration, starting on the N-th one

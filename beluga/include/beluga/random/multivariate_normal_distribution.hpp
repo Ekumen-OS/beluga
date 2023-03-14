@@ -19,6 +19,7 @@
 
 #include <Eigen/Core>
 #include <Eigen/Eigenvalues>
+#include <utility>
 
 /**
  * \file
@@ -74,8 +75,8 @@ class MultivariateNormalDistribution {
      * \throw std::runtime_error If the provided covariance is invalid.
      */
     template <typename InputType>
-    Param(const Vector& mean, const Eigen::EigenBase<InputType>& covariance)
-        : mean_{mean}, transform_{make_transform(covariance)} {}
+    Param(Vector mean, const Eigen::EigenBase<InputType>& covariance)
+        : mean_{std::move(mean)}, transform_{make_transform(covariance)} {}
 
     /// Compares this object with other parameter set object.
     /**
@@ -112,7 +113,7 @@ class MultivariateNormalDistribution {
       if (solver.info() != Eigen::Success) {
         throw std::runtime_error("Invalid covariance matrix, eigen solver failed.");
       }
-      const auto eigenvalues = solver.eigenvalues();
+      const auto& eigenvalues = solver.eigenvalues();
       if ((eigenvalues.array() < 0.0).any()) {
         throw std::runtime_error("Invalid covariance matrix, it has negative eigenvalues.");
       }

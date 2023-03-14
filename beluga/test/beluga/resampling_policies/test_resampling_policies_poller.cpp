@@ -27,7 +27,7 @@ class ProxyVoterInterface {
  public:
   using Ptr = std::shared_ptr<ProxyVoterInterface>;
   virtual ~ProxyVoterInterface() = default;
-  virtual bool current_vote_value() const = 0;
+  [[nodiscard]] virtual bool current_vote_value() const = 0;
 };
 
 class MockDrivenProxyVoter : public ProxyVoterInterface {
