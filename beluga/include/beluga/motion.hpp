@@ -16,16 +16,17 @@
 #define BELUGA_MOTION_HPP
 
 #include <beluga/motion/differential_drive_model.hpp>
+#include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
 
 /**
  * \file
- * \brief Includes all beluga motion models.
+ * \brief Includes all Beluga motion models.
  */
 
 /**
- * \page MotionModelPage beluga named requirements: MotionModel
- * Requirements for a motion model to be used in a beluga `ParticleFilter`.
+ * \page MotionModelPage Beluga named requirements: MotionModel
+ * Requirements for a motion model to be used in a Beluga `ParticleFilter`.
  *
  * \section MotionModelRequirements Requirements
  * A type `T` satisfies the `MotionModel` requirements if the following is satisfied:
@@ -44,8 +45,37 @@
  *   will be used in subsequent calls to the `apply_motion()` method.
  * - `cp.apply_motion(s)` returns a `T::state_type`, that is the result of applying the motion model
  *   to `s` based on the updates.
- * - `cp.latest_motion_update() returns a std::optional<update_type> with the latest motion update
- *   received through motion_update().
+ * - `cp.latest_motion_update()` returns a `std::optional<update_type>` with the latest motion update
+ *   received through `motion_update()`.
+ *
+ * \section MotionModelLinks See also
+ * - beluga::DifferentialDriveModel
+ * - beluga::OmnidirectionalDriveModel
+ * - beluga::StationaryModel
  */
+
+namespace beluga {
+
+/// Pure abstract class representing the odometry motion model interface.
+struct OdometryMotionModelInterface2d {
+  /// Update type of the motion model.
+  using update_type = Sophus::SE2d;
+
+  /// Virtual destructor.
+  virtual ~OdometryMotionModelInterface2d() = default;
+
+  /// Updates the motion model with the latest odometry data.
+  /**
+   * This method updates the motion model with the information
+   * it needs to apply the motion to each particle.
+   * The motion is applied by subsequent calls to the `apply_motion()`
+   * method provided by the same mixin component.
+   *
+   * \param pose Latest odometry update.
+   */
+  virtual void update_motion(const update_type& pose) = 0;
+};
+
+}  // namespace beluga
 
 #endif

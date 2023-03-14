@@ -60,7 +60,7 @@ struct LikelihoodFieldModelParam {
 };
 
 /**
- * \page OccupancyGrid2dPage beluga named requirements: OccupancyGrid2d
+ * \page OccupancyGrid2dPage Beluga named requirements: OccupancyGrid2d
  *
  * A type `G` satisfies the `OccupancyGrid2d` requirements if.
  * Given `g` a possible const instance of `G`:
@@ -86,9 +86,14 @@ struct LikelihoodFieldModelParam {
 
 /// Likelihood field sensor model for range finders.
 /**
- * \tparam Mixin The mixed-in type.
+ * This class implements the LaserSensorModelInterface2d interface
+ * and satisfies \ref SensorModelPage.
+ *
+ * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4.
+ *
+ * \tparam Mixin The mixed-in type with no particular requirements.
  * \tparam OccupancyGrid Type representing an occupancy grid.
- *  It must satisfy the \ref OccupancyGrid2dPage OccupancyGrid2d requirements.
+ *  It must satisfy \ref OccupancyGrid2dPage.
  */
 template <class Mixin, class OccupancyGrid>
 class LikelihoodFieldModel : public Mixin {
@@ -109,7 +114,7 @@ class LikelihoodFieldModel : public Mixin {
    * \param params Parameters to configure this instance.
    *  See beluga::LikelihoodFieldModelParam for details.
    * \param grid Occupancy grid representing the static map.
-   * \param ...rest arguments that are not used by this part of the mixin, but by others.
+   * \param ...rest Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
   explicit LikelihoodFieldModel(const param_type& params, const OccupancyGrid& grid, Args&&... rest)
@@ -129,17 +134,17 @@ class LikelihoodFieldModel : public Mixin {
    * The generated state is an unoccupied cell of the grid, any free cell is sampled uniformly.
    * The rotation is as well sampled uniformly.
    *
-   * \tparam Generator A type satisfying the [UniformRandomBitGenerator](
-   *  https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator) requirements.
-   * \param generator A `Generator` instance, used as a random bit generator to generate the random state.
+   * \tparam Generator  A random number generator that must satisfy the
+   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
+   *  requirements.
+   * \param gen An uniform random bit generator object.
    * \return The generated random state.
    */
   template <class Generator>
-  [[nodiscard]] Sophus::SE2d generate_random_state(Generator& generator) const {
+  [[nodiscard]] state_type make_random_state(Generator& gen) const {
     auto index_distribution = std::uniform_int_distribution<std::size_t>{0, free_cells_.size() - 1};
     return Sophus::SE2d{
-        Sophus::SO2d::sampleUniform(generator),
-        grid_.origin() * grid_.point(free_cells_[index_distribution(generator)])};
+        Sophus::SO2d::sampleUniform(gen), grid_.origin() * grid_.point(free_cells_[index_distribution(gen)])};
   }
 
   /// Gets the importance weight for a particle with the provided state.
@@ -165,14 +170,8 @@ class LikelihoodFieldModel : public Mixin {
         });
   }
 
-  /// Update the sensor model with the measured points.
-  /**
-   * This will not update the particle filter particles weights.
-   * For that, the importance_weight() method provided here is used by the particle filter.
-   *
-   * \param points The range finder points in the reference frame of the particle.
-   */
-  void update_sensor(measurement_type points) {
+  /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
+  void update_sensor(measurement_type&& points) final {
     const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
     points_ = std::move(points);
   }

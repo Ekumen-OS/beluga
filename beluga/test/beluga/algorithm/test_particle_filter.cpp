@@ -15,114 +15,78 @@
 #include <gmock/gmock.h>
 
 #include <beluga/algorithm/particle_filter.hpp>
-
-namespace beluga {
-
-template <>
-struct spatial_hash<double, void> {
- public:
-  constexpr std::size_t operator()(double value, double resolution = 1.) const {
-    return spatial_hash<std::tuple<double>>{}(std::make_tuple(value), resolution);
-  }
-};
-
-}  // namespace beluga
+#include <beluga/views.hpp>
+#include <ciabatta/ciabatta.hpp>
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/generate.hpp>
+#include <range/v3/view/take_exactly.hpp>
+#include <range/v3/view/transform.hpp>
 
 namespace {
 
-template <template <class> class Mixin>
-class MockMixin : public ciabatta::mixin<MockMixin<Mixin>, Mixin> {
- public:
-  using ciabatta::mixin<MockMixin<Mixin>, Mixin>::mixin;
-  MOCK_METHOD(double, apply_motion, (double state));
-  MOCK_METHOD(double, importance_weight, (double state));
-
-  std::size_t max_samples() const { return 10.; }
-
-  template <class Particle>
-  auto generate_samples() const {
-    return ranges::views::generate([]() { return std::make_pair(1., 1.); });
-  }
-
-  template <class Range>
-  auto generate_samples_from(Range&& range) const {
-    return range | ranges::views::all;
-  }
-
-  MOCK_METHOD(bool, do_resampling_vote, ());
-
-  auto take_samples() const { return ranges::views::take_exactly(max_samples()); }
-};
+using testing::Each;
+using testing::Return;
 
 template <class Mixin>
-using ParticleFilter = typename beluga::BootstrapParticleFilter<Mixin, std::vector<std::pair<double, double>>>;
+class MockMixin : public Mixin {
+ public:
+  MOCK_METHOD(double, apply_motion, (double state), (const));
+  MOCK_METHOD(double, importance_weight, (double state), (const));
+  MOCK_METHOD(bool, do_resampling_vote, ());
 
-TEST(BootstrapParticleFilter, Initialize) {
-  auto filter = MockMixin<ParticleFilter>();
-  ASSERT_EQ(filter.particles().size(), 10);
+  auto states() { return particles_ | beluga::views::elements<0>; }
+
+  auto weights() { return particles_ | beluga::views::elements<1>; }
+
+  template <class Range>
+  void initialize_particles(Range&& input) {
+    particles_ = input | ranges::to<std::vector>;
+  }
+
+  template <class Generator>
+  auto generate_samples(Generator&&) const {
+    return ranges::views::generate([]() { return 0.0; });
+  }
+
+  template <class Generator>
+  auto generate_samples_from_particles(Generator&&) const {
+    return ranges::views::generate([]() { return 0.0; });
+  }
+
+  auto take_samples() const {
+    return ranges::views::transform([](double state) { return std::make_pair(state, 1.0); }) |
+           ranges::views::take_exactly(10);
+  }
+
+  template <class Generator>
+  double apply_motion(double state, Generator&) const {
+    return apply_motion(state);
+  }
+
+ private:
+  std::vector<std::pair<double, double>> particles_;
+};
+
+using ParticleFilter = ciabatta::
+    mixin<beluga::BootstrapParticleFilter, MockMixin, ciabatta::provides<beluga::BaseParticleFilterInterface>::mixin>;
+
+TEST(BootstrapParticleFilter, InitializeParticles) {
+  auto filter = ParticleFilter{};
+  ASSERT_EQ(filter.states().size(), 10);
+  EXPECT_THAT(filter.states() | ranges::to<std::vector>, Each(0.));
+  EXPECT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.));
 }
 
 TEST(BootstrapParticleFilter, Update) {
-  auto filter = MockMixin<ParticleFilter>();
-  EXPECT_CALL(filter, apply_motion(1.)).WillRepeatedly(testing::Return(2.));
-  EXPECT_CALL(filter, importance_weight(2.)).WillRepeatedly(testing::Return(3.));
-  EXPECT_CALL(filter, do_resampling_vote()).WillRepeatedly(testing::Return(true));
-  filter.update();
-  for (auto [state, weight] : filter.particles()) {
-    ASSERT_EQ(state, 2.);
-    ASSERT_EQ(weight, 3.);
-  }
-}
-
-template <class Mixin>
-class MockMotionModel : public Mixin {
- public:
-  using update_type = Sophus::SE2d;
-
-  template <class... Args>
-  explicit MockMotionModel(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
-
-  [[nodiscard]] std::optional<update_type> latest_motion_update() const { return std::nullopt; }
-
-  [[nodiscard]] double apply_motion(double state) { return state; }
-};
-
-template <class Mixin>
-class MockSensorModel : public Mixin {
- public:
-  template <class... Args>
-  explicit MockSensorModel(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
-
-  [[nodiscard]] double importance_weight(double) { return 1.; }
-
-  template <class Generator>
-  [[nodiscard]] double generate_random_state(Generator&) {
-    return 0.;
-  }
-};
-
-TEST(MCL, InitializeFilter) {
-  constexpr std::size_t kMaxSamples = 1'000;
-  auto filter = beluga::MCL<MockMotionModel, MockSensorModel, double>{
-      beluga::FixedResamplingParam{kMaxSamples}, beluga::ResampleOnMotionPolicyParam{},
-      beluga::ResampleIntervalPolicyParam{}, beluga::SelectiveResamplingPolicyParam{}};
-  ASSERT_EQ(filter.particles().size(), kMaxSamples);
-}
-
-TEST(AMCL, InitializeFilter) {
-  constexpr double kAlphaSlow = 0.001;
-  constexpr double kAlphaFast = 0.1;
-  constexpr std::size_t kMinSamples = 2'000;
-  constexpr std::size_t kMaxSamples = 2'000;
-  constexpr double kSpatialResolution = 1.;
-  constexpr double kKldEpsilon = 0.05;
-  constexpr double kKldZ = 3.;
-  auto filter = beluga::AMCL<MockMotionModel, MockSensorModel, double>{
-      beluga::AdaptiveGenerationParam{kAlphaSlow, kAlphaFast},
-      beluga::KldResamplingParam{kMinSamples, kMaxSamples, kSpatialResolution, kKldEpsilon, kKldZ},
-      beluga::ResampleOnMotionPolicyParam{}, beluga::ResampleIntervalPolicyParam{},
-      beluga::SelectiveResamplingPolicyParam{}};
-  ASSERT_GE(filter.particles().size(), kMinSamples);
+  auto filter = ParticleFilter{};
+  EXPECT_CALL(filter, apply_motion(0.)).WillRepeatedly(Return(2.));
+  EXPECT_CALL(filter, importance_weight(2.)).WillRepeatedly(Return(3.));
+  EXPECT_THAT(filter.states() | ranges::to<std::vector>, Each(0.));
+  filter.sample();
+  EXPECT_THAT(filter.states() | ranges::to<std::vector>, Each(2.));
+  EXPECT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.));
+  filter.importance_sample();
+  EXPECT_THAT(filter.weights() | ranges::to<std::vector>, Each(3.));
 }
 
 }  // namespace

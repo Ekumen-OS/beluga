@@ -34,7 +34,7 @@ struct ResampleIntervalPolicyParam {
 /**
  * ResampleIntervalPolicy is an implementation of the \ref ResamplingPolicyPage "ResamplingPolicy" named requirements.
  * */
-struct ResampleIntervalPolicy {
+class ResampleIntervalPolicy {
  public:
   /// Parameter type that the constructor uses to configure the policy.
   using param_type = ResampleIntervalPolicyParam;

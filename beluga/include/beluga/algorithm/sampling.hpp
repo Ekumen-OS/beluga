@@ -23,6 +23,7 @@
 #include <beluga/algorithm/exponential_filter.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
 #include <beluga/type_traits.hpp>
+#include <range/v3/view/common.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_exactly.hpp>
@@ -38,55 +39,75 @@
 namespace beluga {
 
 /**
- * \page ParticleBaselineGenerationPage beluga named requirements: ParticleBaselineGeneration
- * Classes satisfying the `ParticleBaselineGeneration` requirements can be used in a particle filter
+ * \page StateGeneratorPage Beluga named requirements: StateGenerator
+ * Classes satisfying the `StateGenerator` requirements can be used in a particle filter
  * to generate the initial set of particles.
  *
- * \section ParticleBaselineGenerationRequirements Requirements
- * A type `T` satisfies the `ParticleBaselineGeneration` requirements if given:
- * - A type `P` that satisfies the \ref ParticlePage "Particle" named requirements.
- * - An instance `g` of `T`.
+ * \section StateGeneratorRequirements Requirements
+ * A type `T` satisfies the `StateGenerator` requirements if `T` is a mixin type, and given:
+ * - A type `G` that satisfies the requirements of
+ *   [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator).
+ * - A type `S` that represents the state of a particle.
+ * - An instance `p` of `T`.
+ * - An instance `g` of `G`.
  *
  * Then:
- * - `g.generate_samples<P>()` returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles `P`.
+ * - `p.generate_samples(g)` returns a [range](https://en.cppreference.com/w/cpp/ranges/range)
+ *   whose value type is `S`.
+ *
+ * \section StateGeneratorLinks See also
+ * - beluga::RandomStateGenerator
  */
 
 /**
- * \page ParticleSampledGenerationPage beluga named requirements: ParticleSampledGeneration
- * Classes satisfying the `ParticleSampledGeneration` requirements can be used in a particle filter
- * to generate new particles from the previous particles set.
+ * \page SamplerPage Beluga named requirements: Sampler
+ * Classes satisfying the `Sampler` requirements can be used in a particle filter
+ * to take a new sample of particles from the previous particle set.
  *
- * \section ParticleSampledGenerationRequirements Requirements
- * A type `T` satisfies the `ParticleSampledGeneration` requirements if given:
- * - A type `P` that satisfies the \ref ParticlePage "Particle" named requirements.
- * - An instance `p` of a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles of
- *   type `P`.
- * - An instance `g` of `T`.
+ * \section SamplerRequirements Requirements
+ * A type `T` satisfies the `Sampler` requirements if `T` is a mixin type, and given:
+ * - A type `G` that satisfies the requirements of
+ *   [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator).
+ * - A type `S` that represents the state of a particle.
+ * - An instance `p` of `T`.
+ * - An instance `g` of `G`.
  *
  * Then:
- * - `g.generate_samples_from(p)` returns a [range](https://en.cppreference.com/w/cpp/ranges/range) of particles `P`.
- *   The input range `p` may be used as a base to generate the particles in the returned range.
+ * - `p.generate_samples_from_particles(g)` returns a [range](https://en.cppreference.com/w/cpp/ranges/range)
+ *   whose value type is `S`.
+ *
+ * \section SamplerLinks See also
+ * - beluga::NaiveSampler
+ * - beluga::AdaptiveSampler
  */
 
 /**
- * \page ParticleResamplingPage beluga named requirements: ParticleResampling
- * Classes satisfying the `ParticleResampling` can be used in the particle filter to provide a policy
- * of how the previous particles are resampled.
+ * \page LimiterPage Beluga named requirements: Limiter
+ * Classes satisfying the `Limiter` requirements can be used in the particle filter
+ * to provide a policy for deciding how many particles to sample.
  *
- * \section ParticleResamplingRequirements Requirements
- * A type `T` satisfies the `ParticleResampling` requirements if given:
- * - A type `P` that satisfies the \ref ParticlePage "Particle" named requirements.
- *   Particular implementations may have extra requirements on `P`.
- * - A [range](https://en.cppreference.com/w/cpp/ranges/range) `R` with value type `P`.
+ * \section LimiterRequirements Requirements
+ * A type `T` satisfies the `Limiter` requirements if given:
+ * - A type `S` that represents the state of a particle.
+ * - A [range](https://en.cppreference.com/w/cpp/ranges/range) `R` with value type `S`.
  * - A possibly const instance `t` of `T`.
+ * - An instance `r` of `R`.
  *
  * Then:
  * - `t.take_samples()` returns a [range adaptor object](
  *   https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject).
- * - If `r` is an instance of `R` and `v` the return values of `t.take_samples()`,
+ * - If `v` is the return value of `t.take_samples()`,
  *   the expression `r | v` is valid and results in a range view of particles.
  *   This range view contains the particles that result of resampling `r` according
  *   to the policy of `T`.
+ * - `t.max_samples()` is a valid expression and returns the maximum number of samples
+ *   the policy will generate.
+ * - `t.min_samples()` is a valid expression and returns the minimum number of samples
+ *   the policy will generate.
+ *
+ * \section LimiterLinks See also
+ * - beluga::FixedLimiter
+ * - beluga::KldLimiter
  */
 
 /// Selects between executing one function or another randomly.
@@ -141,7 +162,7 @@ auto random_sample(const Range& samples, const Weights& weights, RandomNumberGen
 /**
  * \param resolution The size along any axis of the spatial cluster cell.
  * \return A callable object with prototype `(ParticleT && p) -> ParticleT`. \n
- *  `ParticleT` must satisfy the \ref ParticlePage "Particle" named requirements. \n
+ *  `ParticleT` must satisfy \ref ParticlePage. \n
  *  The expression \c particle_traits<ParticleT>::cluster(p) must also
  *  be valid and return a `std::size_t &`. \n
  *  After the returned object is applied to a particle `p`, \c cluster(p) will be updated
@@ -156,7 +177,7 @@ inline auto set_cluster(double resolution) {
   };
 }
 
-/// Returns a callable object that verifies if the kld condition is being satisfied.
+/// Returns a callable object that verifies if the KLD condition is being satisfied.
 /**
  * The callable object will compute the minimum number of samples based on a Kullback-Leibler
  * distance epsilon between the maximum likelihood estimate and the true distribution. \n
@@ -173,6 +194,8 @@ inline auto set_cluster(double resolution) {
  *
  * If the computed value is less than what the min argument specifies, then min will be returned.
  *
+ * See KLD-Sampling: Adaptive Particle Filters \cite fox2001adaptivekldsampling.
+ *
  * \param min Minimum number of particles that the callable object will return.
  * \param epsilon Maximum distance epsilon between the maximum likelihood estimate and the true
  *  distrubution.
@@ -183,7 +206,7 @@ inline auto set_cluster(double resolution) {
  *  The returned callable object is stateful, tracking the total number of particles and
  *  the particle clusters based on the spatial hash. \n
  *  The return value of the callable will be false when the number of particles is more than the minimum
- *  and the kld condition is satisfied, if not it will be true. \n
+ *  and the KLD condition is satisfied, if not it will be true. \n
  *  i.e. A return value of true means that you need to keep sampling to satisfy the condition.
  */
 inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
@@ -204,138 +227,140 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
   };
 }
 
-/// A particle generator.
+/// A random state generator.
 /**
- * An implementation of the \ref ParticleBaselineGenerationPage "ParticleBaselineGeneration"
- * named requirements.
+ * An implementation of \ref StateGeneratorPage.
  *
- * \tparam Mixin The mixed-in type. An instance `m` of `Mixin` must provide a protected method,
- *  `m.self()`. The return type of `m.self()` must satisfy the \ref SensorModelPage "SensorModel"
- *  named requirements.
- * \tparam RandomNumberGenerator A random number generator, must satisfy the
- *  [UniformRandomBitGenerator](
- *  https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator) requirements.
+ * \tparam Mixin The mixed-in type. An instance `m` of `Mixin` must provide:
+ * - A `make_random_state()` method that satisfies the requirements specified
+ *   in \ref SensorModelPage.
  */
-template <class Mixin, class RandomNumberGenerator = typename std::mt19937>
-struct BaselineGeneration : public Mixin {
+template <class Mixin>
+class RandomStateGenerator : public Mixin {
  public:
-  /// Constructs a BaselineGeneration instance.
+  /// Constructs a RandomStateGenerator instance.
   /**
    * \tparam ...Args Arguments types for the remaining mixin constructors.
-   * \param ...args arguments that are not used by this part of the mixin, but by others.
+   * \param ...args Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit BaselineGeneration(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+  explicit RandomStateGenerator(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
-  /// Returns a range containing the generated particles.
+  /// Generates new random states.
   /**
-   * The particles are generated randomly according to the `generate_random_state()` method provided by the sensor
-   * model. See \ref SensorModelPage "SensorModel".
+   * The states are generated according to the `make_random_state()` method
+   * provided by the mixin.
    *
-   * \tparam Particle The particle type, must satisfy the \ref ParticlePage "Particle" named requirements.
-   * \return A range with the generated particles.
+   * \tparam Generator  A random number generator that must satisfy the
+   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
+   *  requirements.
+   * \param gen An uniform random bit generator object.
+   * \return A range view that can generate random states.
    */
-  template <class Particle>
-  [[nodiscard]] auto generate_samples() {
-    return ranges::views::generate([this]() { return this->self().generate_random_state(random_number_generator_); }) |
-           ranges::views::transform(make_from_state<Particle>);
+  template <class Generator>
+  [[nodiscard]] auto generate_samples(Generator& gen) {
+    return ranges::views::generate([this, &gen]() { return this->self().make_random_state(gen); });
   }
-
- private:
-  RandomNumberGenerator random_number_generator_{std::random_device()()};
 };
 
 /// Generation of samples from input particles.
 /**
- * \tparam Mixin The mixed-in type.
- * \tparam RandomNumberGenerator A random number generator, must satisfy the
- *  [UniformRandomBitGenerator](
- *  https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator) requirements.
+ * An implementation of \ref SamplerPage.
+ *
+ * Naive implementation that has no way to recover if there are no particles
+ * close to the true state.
+ *
+ * \tparam Mixin The mixed-in type. An instance `m` of `Mixin` must provide:
+ * - A `states()` and `weights()` methods that satisfy the requirements
+ *   specified in \ref StoragePolicyPage.
  */
-template <class Mixin, class RandomNumberGenerator = typename std::mt19937>
-struct NaiveGeneration : public Mixin {
+template <class Mixin>
+class NaiveSampler : public Mixin {
  public:
-  /// Constructs a NaiveGeneration instance.
+  /// Constructs a NaiveSampler instance.
   /**
    * \tparam ...Args Arguments types for the remaining mixin constructors.
-   * \param ...args arguments that are not used by this part of the mixin, but by others.
+   * \param ...args Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit NaiveGeneration(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+  explicit NaiveSampler(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
-  /// Generates new particles from the given input particles.
+  /// Generates new samples from the current particles.
   /**
-   * \tparam Range A range of particles. The value type of the range must satisfy the
-   *  \ref ParticlePage "Particle" named requirements.
-   * \param particles The input particles from where the output particles are sampled.
-   * \return The range of sampled particles.
+   * The new states are generated according to the `states()` and `weights()` methods
+   * provided by the mixin.
+   *
+   * \tparam Generator  A random number generator that must satisfy the
+   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
+   *  requirements.
+   * \param gen An uniform random bit generator object.
+   * \return A range view that can generate samples from the current set of particles.
    */
-  template <class Range>
-  [[nodiscard]] auto generate_samples_from(Range&& particles) {
-    return ranges::views::generate(
-        random_sample(views::all(particles), views::weights(particles), random_number_generator_));
+  template <class Generator>
+  [[nodiscard]] auto generate_samples_from_particles(Generator& gen) const {
+    return ranges::views::generate(beluga::random_sample(this->self().states(), this->self().weights(), gen));
   }
-
- private:
-  RandomNumberGenerator random_number_generator_{std::random_device()()};
 };
 
-/// Parameters used to construct an AdaptiveGeneration instance.
-struct AdaptiveGenerationParam {
+/// Parameters used to construct an AdaptiveSampler instance.
+struct AdaptiveSamplerParam {
   /// Smoothing coefficient used in the slow exponential filter.
   double alpha_slow;
   /// Smoothing coefficient used in the fast exponential filter.
   double alpha_fast;
 };
 
-/// Generation of samples from input particles, adding random particles if all remaining particles
-/// are not close to the correct state.
+/// Generation of samples from input particles with a recovery strategy.
 /**
+ * An implementation of \ref SamplerPage.
+ *
  * The addition of random samples allows the filter to recover.
  * It determines how many random particles to add by averaging the weights of the particles.
  * The estimate used considers a short-term and a long-term average.
+ *
  * See Probabilistic Robotics \cite thrun2005probabilistic, Chapter 8.3.3.
  *
- * \tparam Mixin The mixed-in type. An instance m of Mixin must provide a protected method,
- *  `m.self()`. The return type of `m.self()` must satisfy the \ref SensorModelPage "SensorModel" named requirements.
- * \tparam RandomNumberGenerator A random number generator, must satisfy the
- *  [UniformRandomBitGenerator](
- *  https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator) requirements.
+ * \tparam Mixin The mixed-in type. An instance `m` of `Mixin` must provide:
+ * - A `states()` and `weights()`  methods that satisfy
+ *   the requirements specified in \ref StoragePolicyPage.
+ * - A `make_random_state()` method that satisfies the requirements specified in
+ *   \ref SensorModelPage.
  */
-template <class Mixin, class RandomNumberGenerator = typename std::mt19937>
-struct AdaptiveGeneration : public Mixin {
+template <class Mixin>
+class AdaptiveSampler : public Mixin {
  public:
   /// Parameter type that the constructor uses to configure the generation.
-  using param_type = AdaptiveGenerationParam;
+  using param_type = AdaptiveSamplerParam;
 
-  /// Constructs an AdaptiveGeneration instance.
+  /// Constructs an AdaptiveSampler instance.
   /**
    * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param parameters Parameters to configure the instance.
-   *  See beluga::AdaptiveGenerationParam for details.
-   * \param ...rest arguments that are not used by this part of the mixin, but by others.
+   *  See beluga::AdaptiveSamplerParam for details.
+   * \param ...rest Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit AdaptiveGeneration(const param_type& parameters, Args&&... rest)
+  explicit AdaptiveSampler(const param_type& parameters, Args&&... rest)
       : Mixin(std::forward<Args>(rest)...), slow_filter_{parameters.alpha_slow}, fast_filter_{parameters.alpha_fast} {}
 
-  /// Generates new particles from the given input particles.
+  /// Generates new samples from the current particles.
   /**
    * A random state will be generated with a probability of
    * `P = max(0, 1 - fast_filter_average / slow_filter_average)`
-   * where the filters are configured according to param_type specified in the constructor.
-   * If not, a previous particle will be sampled.
+   * where the filters are configured according to `param_type` specified in the constructor.
+   * If not, an existing particle will be sampled.
    *
    * The filters are reset if P > 0 for the next iteration, to avoid spiraling off into complete randomness.
    *
-   * \tparam Range A range of particles. The value type of the range must satisfy the
-   *  \ref ParticlePage "Particle" named requirements.
-   * \param particles The input particles from where the output particles are sampled.
-   * \return The range of sampled particles.
+   * \tparam Generator  A random number generator that must satisfy the
+   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
+   *  requirements.
+   * \param gen An uniform random bit generator object.
+   * \return A range view that can generate samples from the current set of particles.
    */
-  template <class Range>
-  [[nodiscard]] auto generate_samples_from(Range&& particles) {
-    auto&& weights = views::weights(particles);
+  template <class Generator>
+  [[nodiscard]] auto generate_samples_from_particles(Generator& gen) {
+    auto weights = this->self().weights() | ranges::views::common;
     double total_weight = std::reduce(std::begin(weights), std::end(weights), 0.);
     double average_weight = total_weight / static_cast<double>(weights.size());
     double random_state_probability = std::max(0., 1. - fast_filter_(average_weight) / slow_filter_(average_weight));
@@ -345,80 +370,85 @@ struct AdaptiveGeneration : public Mixin {
       slow_filter_.reset();
     }
 
-    using particle_type = typename std::decay_t<Range>::value_type;
     return ranges::views::generate(random_select(
-               [this]() { return this->self().generate_random_state(random_number_generator_); },
-               random_sample(views::states(particles), weights, random_number_generator_), random_number_generator_,
-               random_state_probability)) |
-           ranges::views::transform(make_from_state<particle_type>);
+        [this, &gen]() { return this->self().make_random_state(gen); },
+        random_sample(this->self().states(), weights, gen), gen, random_state_probability));
   }
 
  private:
-  RandomNumberGenerator random_number_generator_{std::random_device()()};
   ExponentialFilter slow_filter_;
   ExponentialFilter fast_filter_;
 };
 
-/// Parameters used to construct a FixedResamplingParam instance.
-struct FixedResamplingParam {
+/// Parameters used to construct a FixedLimiter instance.
+struct FixedLimiterParam {
   /// Maximum number of particles to be sampled.
   std::size_t max_samples;
 };
 
-/// Resampling policy that uses a fixed number of particles.
+/// Limiter policy that takes a fixed number of particles.
 /**
- * \tparam Mixin The mixed-in type.
+ * An implementation of \ref LimiterPage.
+ *
+ * \tparam Mixin The mixed-in type. `Mixin::self_type::particle_type` must exist and
+ * satisfy \ref ParticlePage.
  */
 template <class Mixin>
-struct FixedResampling : public Mixin {
+class FixedLimiter : public Mixin {
  public:
   /// Parameters type used to construct an instance of this class.
-  using param_type = FixedResamplingParam;
+  using param_type = FixedLimiterParam;
 
-  /// Constructs a FixedResampling instance.
+  /// Constructs a FixedLimiter instance.
   /**
    * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param parameters Parameters to configure this instance.
-   *  See beluga::FixedResamplingParam for details.
-   * \param ...rest arguments that are not used by this part of the mixin, but by others.
+   *  See beluga::FixedLimiterParam for details.
+   * \param ...rest Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit FixedResampling(const param_type& parameters, Args&&... rest)
+  explicit FixedLimiter(const param_type& parameters, Args&&... rest)
       : Mixin(std::forward<Args>(rest)...), parameters_{parameters} {}
 
   /// Returns the minimum number of particles to be sampled.
   /**
    * This policy uses a fixed number of particles, so the return value is equal
-   * to max_samples() and also to FixedResamplingParam::max_samples parameter
+   * to `max_samples()` and also to `FixedLimiterParam::max_samples` parameter
    * specified in the constructor.
    *
    * \return Minimum number of particles to be sampled.
    */
   [[nodiscard]] std::size_t min_samples() const { return parameters_.max_samples; }
+
   /// Returns the maximum number of particles to be sampled.
   /**
    * This policy uses a fixed number of particles, so the return value is equal
-   * to min_samples() and also to FixedResamplingParam::max_samples parameter
+   * to `min_samples()` and also to `FixedLimiterParam::max_samples` parameter
    * specified in the constructor.
    *
    * \return Maximum number of particles to be sampled.
    */
   [[nodiscard]] std::size_t max_samples() const { return parameters_.max_samples; }
 
-  /// Returns a [RangeAdaptorObject](
-  /// https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject), that will sample until the
-  /// required number of particles is reached.
+  /// Takes samples from a range of states.
   /**
-   * The returned range adaptor object can be composed with any particle range.
+   * The returned range adaptor object can be composed with any range of particle states.
+   *
+   * \return A [RangeAdaptorObject](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject)
+   * that will sample until the required number of particles is reached.
    */
-  [[nodiscard]] auto take_samples() const { return ranges::views::take_exactly(parameters_.max_samples); }
+  [[nodiscard]] auto take_samples() const {
+    using particle_type = typename Mixin::self_type::particle_type;
+    return ranges::views::transform(beluga::make_from_state<particle_type>) |
+           ranges::views::take_exactly(parameters_.max_samples);
+  }
 
  private:
   param_type parameters_;
 };
 
-/// Parameters used to construct a KldResampling instance.
-struct KldResamplingParam {
+/// Parameters used to construct a KldLimiter instance.
+struct KldLimiterParam {
   /// Minimum number of particles to be sampled.
   std::size_t min_samples;
   /// Maximum number of particles to be sampled.
@@ -431,62 +461,77 @@ struct KldResamplingParam {
   double kld_z;
 };
 
-/// Resampling policy that adapts the number of particles according to the KLD criteria.
+/// Limiter policy that takes a number of particles defined by the KLD criteria.
 /**
- * \tparam Mixin The mixed-in type.
+ *
+ * An implementation of \ref LimiterPage.
+ *
+ * See KLD-Sampling: Adaptive Particle Filters \cite fox2001adaptivekldsampling.
+ *
+ * \tparam Mixin The mixed-in type. `Mixin::self_type::particle_type` must exist and
+ * satisfy \ref ParticlePage.
+ *
+ * Additionally, given:
+ * - `P`, the type `Mixin::self_type::particle_type`
+ * - `p` an instance of `P`
+ * - `cp` a possibly const instance of `P`
+ * - `h` an instance of `std::size_t`
+ *
+ * The following conditions must be satisfied:
+ * - The expression \c particle_traits<P>::cluster(cp) returns a `std::size_t` that represents the spatial
+ *   hash of the particle `cp`.
+ * - The expression \c particle_traits<P>::cluster(p) = `h` is valid and
+ *   assigns the cluster hash to the particle `p`. \n
+ *   i.e. after the assignment `h` == \c particle_traits<P>::cluster(p) is true.
  */
 template <class Mixin>
-struct KldResampling : public Mixin {
+class KldLimiter : public Mixin {
  public:
-  /// Parameters type used to construct a KldResampling instance.
-  using param_type = KldResamplingParam;
+  /// Parameters type used to construct a KldLimiter instance.
+  using param_type = KldLimiterParam;
 
-  /// Constructs a KldResampling instance.
+  /// Constructs a KldLimiter instance.
   /**
    * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param parameters Parameters to configure this instance.
-   *  See beluga::KldResamplingParam for details.
-   * \param ...rest arguments that are not used by this part of the mixin, but by others.
+   *  See beluga::KldLimiterParam for details.
+   * \param ...rest Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit KldResampling(const param_type& parameters, Args&&... rest)
+  explicit KldLimiter(const param_type& parameters, Args&&... rest)
       : Mixin(std::forward<Args>(rest)...), parameters_{parameters} {}
 
   /// Returns the minimum number of particles to be sampled.
   /**
-   * This is equal to what was specified in the KldResamplingParam::min_samples
+   * This is equal to what was specified in the KldLimiterParam::min_samples
    * parameter passed in the constructor.
    *
    * \return Minimum number of particles to be sampled.
    */
   [[nodiscard]] std::size_t min_samples() const { return parameters_.min_samples; }
+
   /// Returns the maximum number of particles to be sampled.
   /**
-   * This is equal to what was specified in the KldResamplingParam::max_samples
+   * This is equal to what was specified in the KldLimiterParam::max_samples
    * parameter passed in the constructor.
    *
    * \return Maximum number of particles to be sampled.
    */
   [[nodiscard]] std::size_t max_samples() const { return parameters_.max_samples; }
 
-  /// Returns a [RangeAdaptorObject](
-  /// https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject), that will sample until the
-  /// kld condition is satisfied.
+  /// Takes samples from a range of states.
   /**
-   * The returned range adaptor object can be composed with a particle range.
-   * It can only be composed with a range whose value type satisfies:
-   * - The \ref ParticlePage "Particle" named requirements.
-   * - Given `P` the range value type, `p` an instance of `P`, `cp` a possibly const instance of `P`.
-   *   - The expression \c particle_traits<P>::cluster(cp) returns a `std::size_t` that represents the spatial
-   *     hash of the particle `cp`.
-   *   - Given a `std::size_t hash`, the expression \c particle_traits<P>::cluster(p) = `hash` is valid and
-   *     assigns the cluster hash to the particle `p`. \n
-   *     i.e. after the assignment `hash` == \c particle_traits<P>::cluster(p) is true.
+   * The returned range adaptor object can be composed with any range of particle states.
+   *
+   * \return A [RangeAdaptorObject](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject)
+   * that will sample until the KLD criteria is satisfied.
    */
   [[nodiscard]] auto take_samples() const {
-    return ranges::views::transform(set_cluster(parameters_.spatial_resolution)) |
+    using particle_type = typename Mixin::self_type::particle_type;
+    return ranges::views::transform(beluga::make_from_state<particle_type>) |
+           ranges::views::transform(beluga::set_cluster(parameters_.spatial_resolution)) |
            ranges::views::take_while(
-               kld_condition(parameters_.min_samples, parameters_.kld_epsilon, parameters_.kld_z),
+               beluga::kld_condition(parameters_.min_samples, parameters_.kld_epsilon, parameters_.kld_z),
                [](auto&& particle) { return cluster(particle); }) |
            ranges::views::take(parameters_.max_samples);
   }

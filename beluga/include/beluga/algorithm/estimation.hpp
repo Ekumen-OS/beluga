@@ -15,7 +15,6 @@
 #ifndef BELUGA_ALGORITHM_ESTIMATION_HPP
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
-#include <beluga/type_traits.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/view/common.hpp>
@@ -26,6 +25,22 @@
  * \file
  * \brief Implementation of algorithms that allow calculating the estimated state of
  *  a particle filter.
+ */
+
+/**
+ * \page StateEstimatorPage Beluga named requirements: StateEstimator
+ * The requirements that a state estimator must satisfy.
+ *
+ * \section StateEstimationRequirements Requirements
+ * `T` is a `StateEstimator` if given a (possibly const) instance `p` of `T`, the following is satisfied:
+ * - `p.estimate()` is a valid expression.
+ * - `std::get<0>(p.estimate())` is valid.
+ *   `decltype(std::get<0>(p.estimate()))` represents the type of the estimated state.
+ * - `std::get<1>(p.estimate())` is valid.
+ *   `decltype(std::get<1>(p.estimate()))` represents the type of the covariance of the estimation.
+ *
+ * \section StateEstimationLinks See also
+ * - beluga::SimpleStateEstimator<Mixin, Sophus::SE2d>
  */
 
 namespace beluga {
@@ -41,10 +56,10 @@ namespace beluga {
  * \return The calculated covariance, as a `Eigen::Matrix2<Scalar>`.
  */
 template <class Range, class Scalar>
-Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scalar>& mean) {
+Eigen::Matrix2<Scalar> covariance(Range&& range, const Eigen::Vector2<Scalar>& mean) {
+  auto view = range | ranges::views::common;
   Eigen::Vector3<Scalar> coefficients = std::transform_reduce(
-      ranges::begin(range), ranges::end(range), Eigen::Vector3<Scalar>::Zero().eval(), std::plus{},
-      [mean](const auto& value) {
+      view.begin(), view.end(), Eigen::Vector3<Scalar>::Zero().eval(), std::plus{}, [mean](const auto& value) {
         const auto centered = value - mean;
         return Eigen::Vector3<Scalar>{
             centered.x() * centered.x(),
@@ -52,7 +67,7 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
             centered.y() * centered.y(),
         };
       });
-  coefficients /= (static_cast<Scalar>(ranges::size(range) - 1));
+  coefficients /= (static_cast<Scalar>(view.size() - 1));
   auto covariance_matrix = Eigen::Matrix2<Scalar>{};
   covariance_matrix << coefficients(0), coefficients(1), coefficients(1), coefficients(2);
   return covariance_matrix;
@@ -70,23 +85,24 @@ Eigen::Matrix2<Scalar> covariance(const Range& range, const Eigen::Vector2<Scala
  *  value type is `Sophus::SE2<Scalar>`.
  * \tparam Pose The pose value type of the given range.
  * \tparam Scalar A scalar type, e.g. double or float.
- * \param poses Range of equally weighted 2D poses.
+ * \param range Range of equally weighted 2D poses.
  * \return The estimated pose and its 3x3 covariance matrix.
  */
 template <
     class Range,
-    class Pose = typename ranges::range_value_t<Range>,
+    class Pose = ranges::range_value_t<Range>,
     class Scalar = typename Pose::Scalar,
     typename = std::enable_if_t<std::is_same_v<Pose, typename Sophus::SE2<Scalar>>>>
-std::pair<Sophus::SE2<Scalar>, Eigen::Matrix3<Scalar>> estimate(const Range& poses) {
-  const auto translation_view = poses | ranges::views::transform([](const auto& pose) { return pose.translation(); });
+std::pair<Sophus::SE2<Scalar>, Eigen::Matrix3<Scalar>> estimate(Range&& range) {
+  auto pose_view = range | ranges::views::common;
+  auto translation_view = range | ranges::views::transform([](const auto& pose) { return pose.translation(); });
 
   // Compute the average of all the coefficients of the SE(2) group elements and
   // construct a new SE(2) element.
   const Eigen::Vector4<Scalar> sum_vector = std::transform_reduce(
-      poses.begin(), poses.end(), Eigen::Vector4<Scalar>::Zero().eval(), std::plus{},
-      [](const auto& pose) { return Eigen::Map<const Eigen::Vector4d>{pose.data()}; });
-  const Eigen::Vector4<Scalar> mean_vector = sum_vector / static_cast<double>(poses.size());
+      pose_view.begin(), pose_view.end(), Eigen::Vector4<Scalar>::Zero().eval(), std::plus{},
+      [](const auto& pose) { return Eigen::Map<const Eigen::Vector4<Scalar>>{pose.data()}; });
+  const Eigen::Vector4<Scalar> mean_vector = sum_vector / static_cast<double>(pose_view.size());
   Sophus::SE2<Scalar> mean = Eigen::Map<const Sophus::SE2<Scalar>>{mean_vector.data()};
 
   // Compute the covariance of the translation part.
@@ -107,6 +123,50 @@ std::pair<Sophus::SE2<Scalar>, Eigen::Matrix3<Scalar>> estimate(const Range& pos
   }
   return std::pair{mean, covariance_matrix};
 }
+
+/// Pure abstract class representing the estimation interface.
+struct EstimationInterface2d {
+  /// Virtual destructor.
+  virtual ~EstimationInterface2d() = default;
+
+  /// Returns the estimate state of the particle filter.
+  /**
+   * \return The estimated 2D pose and its 3x3 covariance matrix.
+   */
+  [[nodiscard]] virtual std::pair<Sophus::SE2d, Eigen::Matrix3d> estimate() const = 0;
+};
+
+/// Primary template for a simple state estimator.
+template <class Mixin, class State>
+class SimpleStateEstimator;
+
+/// Partial template specialization for simple state estimator in 2D.
+/**
+ * This class implements the EstimationInterface2d interface
+ * and satisfies \ref StateEstimatorPage.
+ *
+ * It's an estimator that calculates the pose mean and covariance using all the particles.
+ */
+template <class Mixin>
+class SimpleStateEstimator<Mixin, Sophus::SE2d> : public Mixin {
+ public:
+  /// Constructs a SimpleStateEstimator instance.
+  /**
+   * \tparam ...Args Arguments types for the remaining mixin constructors.
+   * \param ...args Arguments that are not used by this part of the mixin, but by others.
+   */
+  template <class... Args>
+  explicit SimpleStateEstimator(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+
+  /// \copydoc EstimationInterface2d::estimate()
+  [[nodiscard]] std::pair<Sophus::SE2d, Eigen::Matrix3d> estimate() const final {
+    return beluga::estimate(this->self().states());
+  }
+};
+
+/// An alias template for the simple state estimator in 2D.
+template <class Mixin>
+using SimpleStateEstimator2d = SimpleStateEstimator<Mixin, Sophus::SE2d>;
 
 }  // namespace beluga
 

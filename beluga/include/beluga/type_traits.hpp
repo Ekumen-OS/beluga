@@ -20,7 +20,7 @@
 
 /**
  * \file
- * \brief Includes all beluga type traits.
+ * \brief Includes all Beluga type traits.
  */
 
 #endif

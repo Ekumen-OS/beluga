@@ -23,18 +23,15 @@
 
 #include <memory>
 
-#include <beluga/algorithm/particle_filter.hpp>
-#include <beluga/motion/differential_drive_model.hpp>
-#include <beluga/sensor/likelihood_field_model.hpp>
+#include <beluga/localization.hpp>
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <nav2_msgs/msg/particle_cloud.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
+#include <nav2_msgs/msg/particle_cloud.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
 #include "beluga_amcl/execution_policy.hpp"
-#include "beluga_amcl/occupancy_grid.hpp"
 
 namespace beluga_amcl
 {
@@ -42,10 +39,6 @@ namespace beluga_amcl
 class AmclNode : public rclcpp_lifecycle::LifecycleNode
 {
 public:
-  template<class Mixin>
-  using SensorModel = typename beluga::LikelihoodFieldModel<Mixin, OccupancyGrid>;
-  using ParticleFilter = beluga::AMCL<beluga::DifferentialDriveModel, SensorModel, Sophus::SE2d>;
-
   using rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
   explicit AmclNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
@@ -67,7 +60,7 @@ protected:
   void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
   void reinitialize_with_pose(const Eigen::Vector3d & mean, const Eigen::Matrix3d & covariance);
 
-  std::unique_ptr<ParticleFilter> particle_filter_;
+  std::unique_ptr<beluga::LaserLocalizationInterface2d> particle_filter_;
   execution::Policy execution_policy_;
 
   std::unique_ptr<bond::Bond> bond_;

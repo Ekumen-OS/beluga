@@ -21,22 +21,43 @@
 #include <chrono>
 #include <limits>
 #include <memory>
+#include <stdexcept>
+#include <string>
+#include <string_view>
 #include <utility>
 
-#include <beluga/algorithm/estimation.hpp>
+#include <beluga/mixin.hpp>
+#include <beluga/motion/differential_drive_model.hpp>
+#include <beluga/sensor/likelihood_field_model.hpp>
 #include <beluga/random/multivariate_normal_distribution.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
+#include <range/v3/algorithm/transform.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include "beluga_amcl/amcl_node_utils.hpp"
 #include "beluga_amcl/execution_policy.hpp"
+#include "beluga_amcl/occupancy_grid.hpp"
 #include "beluga_amcl/tf2_sophus.hpp"
 
 namespace beluga_amcl
 {
+
+namespace
+{
+
+constexpr std::string_view kDifferentialModelName = "differential_drive";
+constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
+constexpr std::string_view kStationaryModelName = "stationary";
+
+constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::DifferentialMotionModel";
+constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
+
+constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
+
+}  // namespace
 
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 : rclcpp_lifecycle::LifecycleNode{"amcl", "", options}
@@ -205,6 +226,15 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
+      "Which motion model to use [differential_drive, omnidirectional_drive, stationary].";
+    declare_parameter(
+      "robot_model_type",
+      rclcpp::ParameterValue(std::string(kDifferentialModelName)), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
       "Rotation noise from rotation for the differential drive model.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
@@ -248,6 +278,17 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Strafe noise from translation for the omnidirectional drive model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("alpha5", rclcpp::ParameterValue(0.2), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Rotational movement required before performing a filter update.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
@@ -264,6 +305,15 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("update_min_d", rclcpp::ParameterValue(0.25), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Which observartion model to use [beam, likelihood_field].";
+    declare_parameter(
+      "laser_model_type",
+      rclcpp::ParameterValue(std::string(kLikelihoodFieldModelName)), descriptor);
   }
 
   {
@@ -426,8 +476,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     auto execution_policy_string = declare_parameter(
       "execution_policy", "par", descriptor);
     try {
-      execution_policy_ = beluga_amcl::execution::policy_from_string(
-        execution_policy_string);
+      execution_policy_ = beluga_amcl::execution::policy_from_string(execution_policy_string);
     } catch (const std::invalid_argument &) {
       RCLCPP_WARN_STREAM(
         this->get_logger(),
@@ -454,17 +503,12 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Configuring");
 
-  // TODO(nahuel): Add a parameter for the timer period.
   using namespace std::chrono_literals;
   timer_ = create_wall_timer(200ms, std::bind(&AmclNode::timer_callback, this));
 
   particle_cloud_pub_ = create_publisher<nav2_msgs::msg::ParticleCloud>(
     "particle_cloud",
     rclcpp::SensorDataQoS());
-
-  likelihood_field_pub_ = create_publisher<nav_msgs::msg::OccupancyGrid>(
-    "likelihood_field",
-    rclcpp::SystemDefaultsQoS());
 
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "pose",
@@ -477,7 +521,6 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Activating");
   particle_cloud_pub_->on_activate();
-  likelihood_field_pub_->on_activate();
   pose_pub_->on_activate();
 
   RCLCPP_INFO(get_logger(), "Creating bond (%s) to lifecycle manager.", get_name());
@@ -545,7 +588,6 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State &
 {
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
-  likelihood_field_pub_->on_deactivate();
   pose_pub_->on_deactivate();
   map_sub_.reset();
   initial_pose_sub_.reset();
@@ -563,7 +605,6 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
-  likelihood_field_pub_.reset();
   pose_pub_.reset();
   return CallbackReturn::SUCCESS;
 }
@@ -578,16 +619,16 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 {
   RCLCPP_INFO(get_logger(), "A new map was received");
 
-  auto generation_params = beluga::AdaptiveGenerationParam{};
-  generation_params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
-  generation_params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
+  auto sampler_params = beluga::AdaptiveSamplerParam{};
+  sampler_params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
+  sampler_params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
 
-  auto resampling_params = beluga::KldResamplingParam{};
-  resampling_params.min_samples = static_cast<std::size_t>(get_parameter("min_particles").as_int());
-  resampling_params.max_samples = static_cast<std::size_t>(get_parameter("max_particles").as_int());
-  resampling_params.spatial_resolution = get_parameter("spatial_resolution").as_double();
-  resampling_params.kld_epsilon = get_parameter("pf_err").as_double();
-  resampling_params.kld_z = get_parameter("pf_z").as_double();
+  auto limiter_params = beluga::KldLimiterParam{};
+  limiter_params.min_samples = static_cast<std::size_t>(get_parameter("min_particles").as_int());
+  limiter_params.max_samples = static_cast<std::size_t>(get_parameter("max_particles").as_int());
+  limiter_params.spatial_resolution = get_parameter("spatial_resolution").as_double();
+  limiter_params.kld_epsilon = get_parameter("pf_err").as_double();
+  limiter_params.kld_z = get_parameter("pf_z").as_double();
 
   auto resample_on_motion_params = beluga::ResampleOnMotionPolicyParam{};
   resample_on_motion_params.update_min_d = get_parameter("update_min_d").as_double();
@@ -597,36 +638,81 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   resample_interval_params.resample_interval_count =
     static_cast<std::size_t>(get_parameter("resample_interval").as_int());
 
-  auto sensor_params = beluga::LikelihoodFieldModelParam{};
-  sensor_params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
-  sensor_params.max_laser_distance = get_parameter("laser_max_range").as_double();
-  sensor_params.z_hit = get_parameter("z_hit").as_double();
-  sensor_params.z_random = get_parameter("z_rand").as_double();
-  sensor_params.sigma_hit = get_parameter("sigma_hit").as_double();
-
-  auto motion_params = beluga::DifferentialDriveModelParam{};
-  motion_params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
-  motion_params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
-  motion_params.translation_noise_from_translation = get_parameter("alpha3").as_double();
-  motion_params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
-
   auto selective_resampling_params = beluga::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = get_parameter("selective_resampling").as_bool();
+
+  using Stationary = beluga::mixin::descriptor<beluga::StationaryModel>;
+  using DifferentialDrive = beluga::mixin::descriptor<
+    beluga::DifferentialDriveModel,
+    beluga::DifferentialDriveModelParam>;
+  using OmnidirectionalDrive = beluga::mixin::descriptor<
+    beluga::OmnidirectionalDriveModel,
+    beluga::OmnidirectionalDriveModelParam>;
+
+  using MotionDescriptor = std::variant<Stationary, DifferentialDrive, OmnidirectionalDrive>;
+  auto get_motion_descriptor = [this](std::string_view name) -> MotionDescriptor {
+      if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
+        auto params = beluga::DifferentialDriveModelParam{};
+        params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
+        params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
+        params.translation_noise_from_translation = get_parameter("alpha3").as_double();
+        params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
+        return DifferentialDrive{params};
+      } else if (name == kOmnidirectionalModelName || name == kNav2OmnidirectionalModelName) {
+        auto params = beluga::OmnidirectionalDriveModelParam{};
+        params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
+        params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
+        params.translation_noise_from_translation = get_parameter("alpha3").as_double();
+        params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
+        params.strafe_noise_from_translation = get_parameter("alpha5").as_double();
+        return OmnidirectionalDrive{params};
+      } else if (name == kStationaryModelName) {
+        return Stationary{};
+      }
+      throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
+    };
+
+  using LikelihoodField = beluga::mixin::descriptor<
+    ciabatta::curry<beluga::LikelihoodFieldModel, OccupancyGrid>::mixin,
+    beluga::LikelihoodFieldModelParam>;
+
+  using SensorDescriptor = std::variant<LikelihoodField>;
+  auto get_sensor_descriptor = [this](std::string_view name) -> SensorDescriptor {
+      if (name == kLikelihoodFieldModelName) {
+        auto params = beluga::LikelihoodFieldModelParam{};
+        params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
+        params.max_laser_distance = get_parameter("laser_max_range").as_double();
+        params.z_hit = get_parameter("z_hit").as_double();
+        params.z_random = get_parameter("z_rand").as_double();
+        params.sigma_hit = get_parameter("sigma_hit").as_double();
+        return LikelihoodField{params};
+      }
+      throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
+    };
 
   // Only when we get the first map we should use the parameters, not later.
   // TODO(ivanpauno): Intialize later maps from last known pose.
   const bool initialize_from_params = !particle_filter_ &&
     this->get_parameter("set_initial_pose").as_bool();
 
-  particle_filter_ = std::make_unique<ParticleFilter>(
-    generation_params,
-    resampling_params,
-    resample_on_motion_params,
-    resample_interval_params,
-    selective_resampling_params,
-    motion_params,
-    sensor_params,
-    OccupancyGrid{map});
+  try {
+    using beluga::mixin::make_unique;
+    using beluga::LaserLocalizationInterface2d;
+    using beluga::AdaptiveMonteCarloLocalization2d;
+    particle_filter_ = make_unique<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
+      sampler_params,
+      limiter_params,
+      resample_on_motion_params,
+      resample_interval_params,
+      selective_resampling_params,
+      get_motion_descriptor(get_parameter("robot_model_type").as_string()),
+      get_sensor_descriptor(get_parameter("laser_model_type").as_string()),
+      OccupancyGrid{map}
+    );
+  } catch (const std::invalid_argument & error) {
+    RCLCPP_ERROR(this->get_logger(), "Coudn't instantiate the particle filter: %s", error.what());
+    return;
+  }
 
   if (initialize_from_params) {
     Eigen::Vector3d mean;
@@ -654,21 +740,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
   RCLCPP_INFO(
     get_logger(), "Particle filter initialized with %ld particles",
-    particle_filter_->particles().size());
-
-  {
-    const auto & likelihood_field = particle_filter_->likelihood_field();
-    auto message = nav_msgs::msg::OccupancyGrid{};
-    message.header.stamp = now();
-    message.header.frame_id = map->header.frame_id;
-    message.info = map->info;
-    message.data.resize(likelihood_field.size());
-    for (std::size_t index = 0; index < message.data.size(); ++index) {
-      message.data[index] = static_cast<std::int8_t>(likelihood_field[index] * 100);
-    }
-    RCLCPP_INFO(get_logger(), "Publishing likelihood field");
-    likelihood_field_pub_->publish(message);
-  }
+    particle_filter_->particle_count());
 }
 
 void AmclNode::timer_callback()
@@ -677,22 +749,24 @@ void AmclNode::timer_callback()
     return;
   }
 
-  // TODO(nahuel): Throttle the particle cloud publishing in the
-  // laser_callback method instead of using a ROS timer.
-  {
-    auto message = nav2_msgs::msg::ParticleCloud{};
-    message.header.stamp = now();
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
-    message.particles.resize(particle_filter_->particles().size());
-    ranges::transform(
-      particle_filter_->particles(), std::begin(message.particles), [](const auto & particle) {
-        auto message = nav2_msgs::msg::Particle{};
-        tf2::toMsg(beluga::state(particle), message.pose);
-        message.weight = beluga::weight(particle);
-        return message;
-      });
-    particle_cloud_pub_->publish(message);
+  if (particle_cloud_pub_->get_subscription_count() == 0) {
+    return;
   }
+
+  auto message = nav2_msgs::msg::ParticleCloud{};
+  message.header.stamp = now();
+  message.header.frame_id = get_parameter("global_frame_id").as_string();
+  message.particles.resize(particle_filter_->particle_count());
+  ranges::transform(
+    ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view()),
+    std::begin(message.particles), [](const auto & particle) {
+      const auto & [state, weight] = particle;
+      auto message = nav2_msgs::msg::Particle{};
+      tf2::toMsg(state, message.pose);
+      message.weight = weight;
+      return message;
+    });
+  particle_cloud_pub_->publish(message);
 }
 
 template<typename ExecutionPolicy>
@@ -746,22 +820,20 @@ void AmclNode::laser_callback(
         static_cast<float>(get_parameter("laser_max_range").as_double())));
     particle_filter_->importance_sample(exec_policy);
     const auto time3 = std::chrono::high_resolution_clock::now();
-
     particle_filter_->resample();
-
     const auto time4 = std::chrono::high_resolution_clock::now();
 
     RCLCPP_INFO_THROTTLE(
       get_logger(), *get_clock(), 2000,
       "Particle filter update stats: %ld particles %ld points - %.3fms %.3fms %.3fms",
-      particle_filter_->particles().size(),
+      particle_filter_->particle_count(),
       laser_scan->ranges.size(),
       std::chrono::duration<double, std::milli>(time2 - time1).count(),
       std::chrono::duration<double, std::milli>(time3 - time2).count(),
       std::chrono::duration<double, std::milli>(time4 - time3).count());
   }
 
-  const auto [pose, covariance] = beluga::estimate(particle_filter_->states());
+  const auto [pose, covariance] = particle_filter_->estimate();
 
   {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
@@ -824,7 +896,7 @@ void AmclNode::reinitialize_with_pose(
   const Eigen::Vector3d & mean, const Eigen::Matrix3d & covariance)
 {
   try {
-    particle_filter_->reinitialize(
+    particle_filter_->initialize_states(
       ranges::views::generate(
         [distribution = beluga::MultivariateNormalDistribution{mean, covariance}]() mutable {
           static auto generator = std::mt19937{std::random_device()()};
