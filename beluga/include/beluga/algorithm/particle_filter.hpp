@@ -117,7 +117,7 @@ struct BaseParticleFilterInterface {
  *  \ref SensorModelPage.
  */
 template <class Mixin>
-struct BootstrapParticleFilter : public Mixin {
+class BootstrapParticleFilter : public Mixin {
  public:
   /// Constructs a BootstrapParticleFilter.
   /**

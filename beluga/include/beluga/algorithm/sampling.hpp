@@ -236,7 +236,7 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
  *   in \ref SensorModelPage.
  */
 template <class Mixin>
-struct RandomStateGenerator : public Mixin {
+class RandomStateGenerator : public Mixin {
  public:
   /// Constructs a RandomStateGenerator instance.
   /**
@@ -275,7 +275,7 @@ struct RandomStateGenerator : public Mixin {
  *   specified in \ref StoragePolicyPage.
  */
 template <class Mixin>
-struct NaiveSampler : public Mixin {
+class NaiveSampler : public Mixin {
  public:
   /// Constructs a NaiveSampler instance.
   /**
@@ -327,7 +327,7 @@ struct AdaptiveSamplerParam {
  *   \ref SensorModelPage.
  */
 template <class Mixin>
-struct AdaptiveSampler : public Mixin {
+class AdaptiveSampler : public Mixin {
  public:
   /// Parameter type that the constructor uses to configure the generation.
   using param_type = AdaptiveSamplerParam;
@@ -394,7 +394,7 @@ struct FixedLimiterParam {
  * satisfy \ref ParticlePage.
  */
 template <class Mixin>
-struct FixedLimiter : public Mixin {
+class FixedLimiter : public Mixin {
  public:
   /// Parameters type used to construct an instance of this class.
   using param_type = FixedLimiterParam;
@@ -485,7 +485,7 @@ struct KldLimiterParam {
  *   i.e. after the assignment `h` == \c particle_traits<P>::cluster(p) is true.
  */
 template <class Mixin>
-struct KldLimiter : public Mixin {
+class KldLimiter : public Mixin {
  public:
   /// Parameters type used to construct a KldLimiter instance.
   using param_type = KldLimiterParam;

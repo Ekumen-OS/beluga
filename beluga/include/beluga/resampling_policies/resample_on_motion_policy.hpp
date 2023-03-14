@@ -38,7 +38,7 @@ struct ResampleOnMotionPolicyParam {
 /**
  * ResampleOnMotionPolicy is an implementation of the \ref ResamplingPolicyPage "ResamplingPolicy" named requirements.
  * */
-struct ResampleOnMotionPolicy {
+class ResampleOnMotionPolicy {
  public:
   /// Parameter type that the constructor uses to configure the policy.
   using param_type = ResampleOnMotionPolicyParam;

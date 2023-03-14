@@ -39,7 +39,7 @@ struct SelectiveResamplingPolicyParam {
  * The algorithm is based in \cite grisetti2007selectiveresampling, according to the description given in
  * \cite tiacheng2015resamplingmethods.
  * */
-struct SelectiveResamplingPolicy {
+class SelectiveResamplingPolicy {
  public:
   /// Parameter type that the constructor uses to configure the policy.
   using param_type = SelectiveResamplingPolicyParam;

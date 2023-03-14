@@ -37,7 +37,7 @@ namespace beluga {
  * \tparam Mixin The mixed-in type with no particular requirements.
  */
 template <class Mixin>
-struct StationaryModel : public Mixin {
+class StationaryModel : public Mixin {
  public:
   /// Update type of the motion model.
   using update_type = Sophus::SE2d;

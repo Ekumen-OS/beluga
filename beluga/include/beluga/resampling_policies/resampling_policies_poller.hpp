@@ -33,7 +33,7 @@ namespace beluga {
  * named requirements.
  */
 template <typename Mixin, typename... Policies>
-struct ResamplingPoliciesPoller : public Mixin {
+class ResamplingPoliciesPoller : public Mixin {
   /// Constructs a ResamplingPoliciesPoller instance.
   /**
    * \tparam ...Rest Arguments types for the remaining mixin constructors.
