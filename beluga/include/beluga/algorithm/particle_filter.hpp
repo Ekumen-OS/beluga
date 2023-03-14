@@ -35,8 +35,8 @@
  * - `b`, a value of type `B`.
  *
  * The following is satisfied:
- * - `b.sample()` updates the particles based on the last motion update.
- * - `b.importance_sample()` updates the particles weight based on the last sensor update.
+ * - `b.sample()` updates the particles based on the latest motion update.
+ * - `b.importance_sample()` updates the particles weight based on the latest sensor update.
  * - `b.resample()` generates new particles from the old ones based on their importance weights.
  *
  * \section BaseParticleFilterLinks See also

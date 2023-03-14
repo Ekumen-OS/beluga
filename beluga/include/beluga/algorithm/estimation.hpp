@@ -35,9 +35,9 @@
  * `T` is a `StateEstimator` if given a (possibly const) instance `p` of `T`, the following is satisfied:
  * - `p.estimate()` is a valid expression.
  * - `std::get<0>(p.estimate())` is valid.
- *   `decltype(std::get<0>(p.estimate()))` represents the estimated state.
+ *   `decltype(std::get<0>(p.estimate()))` represents the type of the estimated state.
  * - `std::get<1>(p.estimate())` is valid.
- *   `decltype(std::get<1>(p.estimate()))` represents the covariance of the estimation.
+ *   `decltype(std::get<1>(p.estimate()))` represents the type of the covariance of the estimation.
  *
  * \section StateEstimationLinks See also
  * - beluga::SimpleStateEstimator<Mixin, Sophus::SE2d>
@@ -145,7 +145,7 @@ class SimpleStateEstimator;
  * This class implements the EstimationInterface2d interface
  * and satisfies \ref StateEstimatorPage.
  *
- * It is an estimator that calculates the pose mean and covariance using all the particles.
+ * It's an estimator that calculates the pose mean and covariance using all the particles.
  */
 template <class Mixin>
 class SimpleStateEstimator<Mixin, Sophus::SE2d> : public Mixin {

@@ -121,7 +121,7 @@ inline constexpr bool is_reference_wrapper_v = is_reference_wrapper<T>::value;  
 /// Returns a reference to a value which has similar properties to `T&&`.
 /**
  * Implementation taken from https://en.cppreference.com/w/cpp/utility/forward_like
- * since its available in C++23.
+ * since this feature is only available starting with C++23.
  *
  * The program is ill-formed if `T&&` is not a valid type.
  *
@@ -152,7 +152,7 @@ template <class T, class U>
 /**
  * \tparam T The type of the input value.
  * \param value A reference_wrapper value to unwrap or a value to forward.
- * \return The unwrapped reference or a the forwarded value.
+ * \return The unwrapped reference or the forwarded value.
  */
 template <class T>
 constexpr decltype(auto) maybe_unwrap(T&& value) noexcept {

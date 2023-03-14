@@ -63,8 +63,9 @@ struct LaserSensorModelInterface2d {
   /**
    * This method updates the sensor model with the information
    * it needs to compute the weight of each particle.
-   * It does not compute the particle weights directly when it's
-   * called.
+   * The weight of each particle is calculated by subsequent calls to
+   * the `importance_weight()` method provided by the same mixin
+   * component.
    *
    * \param points The range finder points in the reference frame of the particle.
    */

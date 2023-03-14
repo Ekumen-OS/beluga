@@ -21,7 +21,7 @@
 
 /**
  * \file
- * \brief Implementation of descriptors and its traits.
+ * \brief Implementation of descriptors and their traits.
  */
 
 namespace beluga::mixin {

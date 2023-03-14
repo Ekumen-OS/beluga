@@ -267,8 +267,8 @@ struct RandomStateGenerator : public Mixin {
 /**
  * An implementation of \ref SamplerPage.
  *
- * It is called naive sampling because it has no way to recover if there are
- * no particles close to the correct state.
+ * Naive implementation that has no way to recover if there are no particles
+ * close to the true state.
  *
  * \tparam Mixin The mixed-in type. An instance `m` of `Mixin` must provide:
  * - A `states()` and `weights()` methods that satisfy the requirements
