@@ -17,6 +17,7 @@
   <test_depend>google-mock</test_depend>
   <test_depend>gmock_vendor</test_depend>
   <test_depend>rosbag2_cpp</test_depend>
+  <test_depend>rosbag2_storage_default_plugins</test_depend>
 
   <export>
     <build_type>cmake</build_type>

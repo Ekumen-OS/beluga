@@ -10,10 +10,9 @@ target_link_libraries(test_system
     PUBLIC
         beluga::beluga
         beluga_amcl::amcl_node_utils
-        GTest::Main  # deprecated since cmake 3.20 but compatible with minimum 3.16
+        GTest::gtest_main
         rosbag2_cpp::rosbag2_cpp
 )
 
 include(GoogleTest)
-gtest_add_tests(test_system "" AUTO WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-# gtest_discover_tests(test_system WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+gtest_discover_tests(test_system WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})

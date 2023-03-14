@@ -176,6 +176,12 @@ class LikelihoodFieldModel : public Mixin {
     points_ = std::move(points);
   }
 
+  /// \copydoc LaserSensorModelInterface2d::update_sensor(const measurement_type& points)
+  void update_sensor(const measurement_type& points) final {
+    const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
+    points_ = points;
+  }
+
  private:
   OccupancyGrid grid_;
   std::vector<std::size_t> free_cells_;

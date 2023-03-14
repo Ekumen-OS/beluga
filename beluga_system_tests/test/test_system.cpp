@@ -23,6 +23,7 @@
 
 #include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/particle_filter.hpp>
+#include <beluga/localization.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/random/multivariate_normal_distribution.hpp>
 #include <beluga/sensor/likelihood_field_model.hpp>
@@ -34,9 +35,13 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 
 #include <range/v3/view/any_view.hpp>
+#include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/generate.hpp>
+#include <range/v3/view/generate_n.hpp>
 
 namespace {
+
+using namespace beluga;
 
 struct InitialPose {
   Eigen::Vector3d mean;
@@ -54,16 +59,15 @@ struct TestData {
   InitialPose initial_pose;
   // to avoid problem with rosbag2_cpp::Reader destructor (captured objects).
   // see comment below
-  mutable ranges::any_view<TestDataPoint> data_points = ranges::empty_view<TestDataPoint>();
+  ranges::any_view<TestDataPoint> data_points = ranges::empty_view<TestDataPoint>();
   double tol_distance;
   double tol_angle;
 };
 
-class BelugaSystemTest : public testing::TestWithParam<TestData> {};
+// Workaround to avoid opening/closing bagfiles at static initialization time.
+using TestDataBuilder = std::function<TestData()>;
 
-template <class Mixin>
-using SensorModel = typename beluga::LikelihoodFieldModel<Mixin, beluga_amcl::OccupancyGrid>;
-using ParticleFilter = beluga::AMCL<beluga::DifferentialDriveModel, SensorModel, Sophus::SE2d>;
+class BelugaSystemTest : public testing::TestWithParam<TestDataBuilder> {};
 
 std::string se2d_to_string(const Sophus::SE2d& input) {
   std::ostringstream oss;
@@ -72,88 +76,77 @@ std::string se2d_to_string(const Sophus::SE2d& input) {
 }
 
 TEST_P(BelugaSystemTest, test_estimated_path) {
-  auto& test_data = GetParam();
-  try {
-    // TODO(ivanpauno): Parameterize particle filter when Nuhue's PR is ready
+  auto test_data = GetParam()();
+  // TODO(ivanpauno): Parameterize particle filter when Nuhue's PR is ready
 
-    auto generation_params = beluga::AdaptiveGenerationParam{};
-    generation_params.alpha_slow = 0.001;
-    generation_params.alpha_fast = 0.1;
+  auto sampler_params = AdaptiveSamplerParam{};
+  sampler_params.alpha_slow = 0.001;
+  sampler_params.alpha_fast = 0.1;
 
-    auto resampling_params = beluga::KldResamplingParam{};
-    resampling_params.min_samples = 500ul;
-    resampling_params.max_samples = 2000ul;
-    resampling_params.spatial_resolution = 0.1;
-    resampling_params.kld_epsilon = 0.05;
-    resampling_params.kld_z = 3.;
+  auto limiter_params = KldLimiterParam{};
+  limiter_params.min_samples = 500ul;
+  limiter_params.max_samples = 2000ul;
+  limiter_params.spatial_resolution = 0.1;
+  limiter_params.kld_epsilon = 0.05;
+  limiter_params.kld_z = 3.;
 
-    auto resample_on_motion_params = beluga::ResampleOnMotionPolicyParam{};
-    resample_on_motion_params.update_min_d = 0.25;
-    resample_on_motion_params.update_min_a = 0.2;
+  auto resample_on_motion_params = ResampleOnMotionPolicyParam{};
+  resample_on_motion_params.update_min_d = 0.25;
+  resample_on_motion_params.update_min_a = 0.2;
 
-    auto resample_interval_params = beluga::ResampleIntervalPolicyParam{};
-    resample_interval_params.resample_interval_count = 1;
+  auto resample_interval_params = ResampleIntervalPolicyParam{};
+  resample_interval_params.resample_interval_count = 1;
 
-    auto sensor_params = beluga::LikelihoodFieldModelParam{};
-    sensor_params.max_obstacle_distance = 2.0;
-    sensor_params.max_laser_distance = 100.0;
-    sensor_params.z_hit = 0.5;
-    sensor_params.z_random = 0.5;
-    sensor_params.sigma_hit = 0.2;
+  auto sensor_params = LikelihoodFieldModelParam{};
+  sensor_params.max_obstacle_distance = 2.0;
+  sensor_params.max_laser_distance = 100.0;
+  sensor_params.z_hit = 0.5;
+  sensor_params.z_random = 0.5;
+  sensor_params.sigma_hit = 0.2;
 
-    auto motion_params = beluga::DifferentialDriveModelParam{};
-    motion_params.rotation_noise_from_rotation = 0.2;
-    motion_params.rotation_noise_from_translation = 0.2;
-    motion_params.translation_noise_from_translation = 0.2;
-    motion_params.translation_noise_from_rotation = 0.2;
+  auto motion_params = DifferentialDriveModelParam{};
+  motion_params.rotation_noise_from_rotation = 0.2;
+  motion_params.rotation_noise_from_translation = 0.2;
+  motion_params.translation_noise_from_translation = 0.2;
+  motion_params.translation_noise_from_rotation = 0.2;
 
-    auto selective_resampling_params = beluga::SelectiveResamplingPolicyParam{};
-    selective_resampling_params.enabled = false;
+  auto selective_resampling_params = SelectiveResamplingPolicyParam{};
+  selective_resampling_params.enabled = false;
 
-    ParticleFilter pf{
-        generation_params,
-        resampling_params,
-        resample_on_motion_params,
-        resample_interval_params,
-        selective_resampling_params,
-        motion_params,
-        sensor_params,
-        beluga_amcl::OccupancyGrid{test_data.map}};
+  using DifferentialDrive =
+      beluga::mixin::descriptor<beluga::DifferentialDriveModel, beluga::DifferentialDriveModelParam>;
+  using LikelihoodField = beluga::mixin::descriptor<
+      ciabatta::curry<beluga::LikelihoodFieldModel, beluga_amcl::OccupancyGrid>::mixin,
+      beluga::LikelihoodFieldModelParam>;
 
-    pf.reinitialize(
-        ranges::views::generate([distribution = beluga::MultivariateNormalDistribution{
-                                     test_data.initial_pose.mean, test_data.initial_pose.covariance}]() mutable {
-          static auto generator = std::mt19937{std::random_device()()};
-          const auto sample = distribution(generator);
-          return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
-        }));
-    std::size_t iteration{};
-    for (const auto& data_point : test_data.data_points) {
-      pf.update_motion(data_point.odom);
-      pf.sample();
-      pf.update_sensor(data_point.scan);
-      pf.importance_sample();
-      pf.resample();
-      auto estimation = beluga::estimate(pf.states());
-      auto error = estimation.first * data_point.ground_truth.inverse();
-      auto distance_error = error.translation().norm();
-      EXPECT_LE(distance_error, test_data.tol_distance) << "iteration: " << iteration << "\nestimation\n"
-                                                        << se2d_to_string(estimation.first) << "\nactual\n"
-                                                        << se2d_to_string(data_point.ground_truth) << std::endl;
-      auto angle_error = error.so2().log();
-      EXPECT_LE(angle_error, test_data.tol_angle) << "iteration: " << iteration << "\nestimation\n"
-                                                  << se2d_to_string(estimation.first) << "\nactual\n"
-                                                  << se2d_to_string(data_point.ground_truth) << std::endl;
-      ++iteration;
-    }
-  } catch (...) {
-    // rosbag2_cpp::Reader segfaults in the destructor if the object has static lifetime,
-    // i.e. destruction order issues.
-    // cleanup view here, so objects captured are destructed.
-    test_data.data_points = ranges::empty_view<TestDataPoint>();
-    throw;
+  auto pf = mixin::make_unique<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
+      sampler_params, limiter_params, resample_on_motion_params, resample_interval_params, selective_resampling_params,
+      DifferentialDrive{motion_params}, LikelihoodField{sensor_params}, beluga_amcl::OccupancyGrid{test_data.map});
+
+  pf->initialize_states(
+      ranges::views::generate([distribution = MultivariateNormalDistribution{
+                                   test_data.initial_pose.mean, test_data.initial_pose.covariance}]() mutable {
+        static auto generator = std::mt19937{std::random_device()()};
+        const auto sample = distribution(generator);
+        return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
+      }));
+  for (const auto [iteration, data_point] : ranges::views::enumerate(test_data.data_points)) {
+    pf->update_motion(data_point.odom);
+    pf->sample();
+    pf->update_sensor(data_point.scan);
+    pf->importance_sample();
+    pf->resample();
+    auto estimation = pf->estimate();
+    auto error = estimation.first * data_point.ground_truth.inverse();
+    auto distance_error = error.translation().norm();
+    EXPECT_LE(distance_error, test_data.tol_distance) << "iteration: " << iteration << "\nestimation\n"
+                                                      << se2d_to_string(estimation.first) << "\nactual\n"
+                                                      << se2d_to_string(data_point.ground_truth) << std::endl;
+    auto angle_error = error.so2().log();
+    EXPECT_LE(angle_error, test_data.tol_angle) << "iteration: " << iteration << "\nestimation\n"
+                                                << se2d_to_string(estimation.first) << "\nactual\n"
+                                                << se2d_to_string(data_point.ground_truth) << std::endl;
   }
-  test_data.data_points = ranges::empty_view<TestDataPoint>();
 }
 
 template <typename MessageT>
@@ -266,15 +259,14 @@ TestData test_data_from_ros2bag(
     next_test_data.ground_truth = ground_truth_reader.next();
     return next_test_data;
   };
-  auto generate_view = ranges::generate_view<std::decay_t<decltype(generate_fn)>>(std::move(generate_fn)) |
-                       ranges::views::take_exactly(range_size);
+  auto generate_view = ranges::generate_n_view<std::decay_t<decltype(generate_fn)>>(std::move(generate_fn), range_size);
   test_data.data_points = std::move(generate_view);
   return test_data;
 }
 
-std::vector<TestData> get_test_parameters() {
-  std::vector<TestData> ret;
-  {
+std::vector<TestDataBuilder> get_test_parameters() {
+  std::vector<TestDataBuilder> ret;
+  ret.emplace_back([]() {
     InitialPose initial_pose{
         Eigen::Vector3d{0.0, 2.0, 0.0}, Eigen::Matrix3d{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}};
     // initial_pose.mean(1) = 2.0;
@@ -285,10 +277,10 @@ std::vector<TestData> get_test_parameters() {
     laser_info.max_beam_count = 60;
     laser_info.range_max = 100.;
     laser_info.range_min = 0.;
-    ret.emplace_back(test_data_from_ros2bag<SE2dFromOdometryReader>(
+    return test_data_from_ros2bag<SE2dFromOdometryReader>(
         "./bags/perfect_odometry", initial_pose, laser_info, "/map", "/odometry/ground_truth", "/scan",
-        "/odometry/ground_truth"));
-  }
+        "/odometry/ground_truth");
+  });
   return ret;
 }
 
