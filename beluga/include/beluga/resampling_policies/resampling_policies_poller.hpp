@@ -34,6 +34,7 @@ namespace beluga {
  */
 template <typename Mixin, typename... Policies>
 class ResamplingPoliciesPoller : public Mixin {
+ public:
   /// Constructs a ResamplingPoliciesPoller instance.
   /**
    * \tparam ...Rest Arguments types for the remaining mixin constructors.
