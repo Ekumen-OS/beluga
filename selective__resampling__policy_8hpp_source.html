@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/selective_resampling_policy.hpp Source File</title>
+<title>Beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/selective_resampling_policy.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -98,16 +98,16 @@ $(function() {
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;};</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="structbeluga_1_1SelectiveResamplingPolicy.html">   42</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1SelectiveResamplingPolicy.html">SelectiveResamplingPolicy</a> {</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classbeluga_1_1SelectiveResamplingPolicy.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1SelectiveResamplingPolicy.html">SelectiveResamplingPolicy</a> {</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="structbeluga_1_1SelectiveResamplingPolicy.html#a8a44a5452c5123a7754a3b902a26661b">   45</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1SelectiveResamplingPolicyParam.html">param_type</a> = <a class="code" href="structbeluga_1_1SelectiveResamplingPolicyParam.html">SelectiveResamplingPolicyParam</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classbeluga_1_1SelectiveResamplingPolicy.html#a8a44a5452c5123a7754a3b902a26661b">   45</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1SelectiveResamplingPolicyParam.html">param_type</a> = <a class="code" href="structbeluga_1_1SelectiveResamplingPolicyParam.html">SelectiveResamplingPolicyParam</a>;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="structbeluga_1_1SelectiveResamplingPolicy.html#a807239b9d10b64f5fb9dfda75749dd6a">   51</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="structbeluga_1_1SelectiveResamplingPolicy.html#a807239b9d10b64f5fb9dfda75749dd6a">SelectiveResamplingPolicy</a>(<span class="keyword">const</span> <a class="code" href="structbeluga_1_1SelectiveResamplingPolicyParam.html">param_type</a>&amp; configuration) : configuration_{configuration} {}</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classbeluga_1_1SelectiveResamplingPolicy.html#a807239b9d10b64f5fb9dfda75749dd6a">   51</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1SelectiveResamplingPolicy.html#a807239b9d10b64f5fb9dfda75749dd6a">SelectiveResamplingPolicy</a>(<span class="keyword">const</span> <a class="code" href="structbeluga_1_1SelectiveResamplingPolicyParam.html">param_type</a>&amp; configuration) : configuration_{configuration} {}</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Concrete&gt;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="structbeluga_1_1SelectiveResamplingPolicy.html#ae0edd485f991bd1c514ce6878f80f06e">   59</a></span>&#160;  [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1SelectiveResamplingPolicy.html#ae0edd485f991bd1c514ce6878f80f06e">do_resampling</a>(Concrete&amp; filter) {</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classbeluga_1_1SelectiveResamplingPolicy.html#ae0edd485f991bd1c514ce6878f80f06e">   59</a></span>&#160;  [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1SelectiveResamplingPolicy.html#ae0edd485f991bd1c514ce6878f80f06e">do_resampling</a>(Concrete&amp; filter) {</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">if</span> (!configuration_.<a class="code" href="structbeluga_1_1SelectiveResamplingPolicyParam.html#a4af280403ea017ed0178969df9a11608">enabled</a>) {</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
@@ -118,18 +118,18 @@ $(function() {
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  }</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <a class="code" href="structbeluga_1_1SelectiveResamplingPolicy.html#a8a44a5452c5123a7754a3b902a26661b">param_type</a> configuration_;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <a class="code" href="classbeluga_1_1SelectiveResamplingPolicy.html#a8a44a5452c5123a7754a3b902a26661b">param_type</a> configuration_;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;};</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}  <span class="comment">// namespace beluga</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1SelectiveResamplingPolicy_html"><div class="ttname"><a href="classbeluga_1_1SelectiveResamplingPolicy.html">beluga::SelectiveResamplingPolicy</a></div><div class="ttdoc">Implementation of the Selective Resampling algorithm for resampling.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:42</div></div>
+<div class="ttc" id="aclassbeluga_1_1SelectiveResamplingPolicy_html_a807239b9d10b64f5fb9dfda75749dd6a"><div class="ttname"><a href="classbeluga_1_1SelectiveResamplingPolicy.html#a807239b9d10b64f5fb9dfda75749dd6a">beluga::SelectiveResamplingPolicy::SelectiveResamplingPolicy</a></div><div class="ttdeci">SelectiveResamplingPolicy(const param_type &amp;configuration)</div><div class="ttdoc">Constructs a SelectiveResamplingPolicy instance.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:51</div></div>
+<div class="ttc" id="aclassbeluga_1_1SelectiveResamplingPolicy_html_a8a44a5452c5123a7754a3b902a26661b"><div class="ttname"><a href="classbeluga_1_1SelectiveResamplingPolicy.html#a8a44a5452c5123a7754a3b902a26661b">beluga::SelectiveResamplingPolicy::param_type</a></div><div class="ttdeci">SelectiveResamplingPolicyParam param_type</div><div class="ttdoc">Parameter type that the constructor uses to configure the policy.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:45</div></div>
+<div class="ttc" id="aclassbeluga_1_1SelectiveResamplingPolicy_html_ae0edd485f991bd1c514ce6878f80f06e"><div class="ttname"><a href="classbeluga_1_1SelectiveResamplingPolicy.html#ae0edd485f991bd1c514ce6878f80f06e">beluga::SelectiveResamplingPolicy::do_resampling</a></div><div class="ttdeci">bool do_resampling(Concrete &amp;filter)</div><div class="ttdoc">Vote whether resampling must be done according to this policy.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:59</div></div>
 <div class="ttc" id="astructbeluga_1_1SelectiveResamplingPolicyParam_html"><div class="ttname"><a href="structbeluga_1_1SelectiveResamplingPolicyParam.html">beluga::SelectiveResamplingPolicyParam</a></div><div class="ttdoc">Parameters used to construct a SelectiveResamplingPolicy instance.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:29</div></div>
 <div class="ttc" id="astructbeluga_1_1SelectiveResamplingPolicyParam_html_a4af280403ea017ed0178969df9a11608"><div class="ttname"><a href="structbeluga_1_1SelectiveResamplingPolicyParam.html#a4af280403ea017ed0178969df9a11608">beluga::SelectiveResamplingPolicyParam::enabled</a></div><div class="ttdeci">bool enabled</div><div class="ttdoc">Enable/disable the SelectiveResampling feature.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:31</div></div>
-<div class="ttc" id="astructbeluga_1_1SelectiveResamplingPolicy_html"><div class="ttname"><a href="structbeluga_1_1SelectiveResamplingPolicy.html">beluga::SelectiveResamplingPolicy</a></div><div class="ttdoc">Implementation of the Selective Resampling algorithm for resampling.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:42</div></div>
-<div class="ttc" id="astructbeluga_1_1SelectiveResamplingPolicy_html_a807239b9d10b64f5fb9dfda75749dd6a"><div class="ttname"><a href="structbeluga_1_1SelectiveResamplingPolicy.html#a807239b9d10b64f5fb9dfda75749dd6a">beluga::SelectiveResamplingPolicy::SelectiveResamplingPolicy</a></div><div class="ttdeci">SelectiveResamplingPolicy(const param_type &amp;configuration)</div><div class="ttdoc">Constructs a SelectiveResamplingPolicy instance.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:51</div></div>
-<div class="ttc" id="astructbeluga_1_1SelectiveResamplingPolicy_html_a8a44a5452c5123a7754a3b902a26661b"><div class="ttname"><a href="structbeluga_1_1SelectiveResamplingPolicy.html#a8a44a5452c5123a7754a3b902a26661b">beluga::SelectiveResamplingPolicy::param_type</a></div><div class="ttdeci">SelectiveResamplingPolicyParam param_type</div><div class="ttdoc">Parameter type that the constructor uses to configure the policy.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:45</div></div>
-<div class="ttc" id="astructbeluga_1_1SelectiveResamplingPolicy_html_ae0edd485f991bd1c514ce6878f80f06e"><div class="ttname"><a href="structbeluga_1_1SelectiveResamplingPolicy.html#ae0edd485f991bd1c514ce6878f80f06e">beluga::SelectiveResamplingPolicy::do_resampling</a></div><div class="ttdeci">bool do_resampling(Concrete &amp;filter)</div><div class="ttdoc">Vote whether resampling must be done according to this policy.</div><div class="ttdef"><b>Definition:</b> selective_resampling_policy.hpp:59</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

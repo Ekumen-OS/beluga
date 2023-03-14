@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['mcl_192',['MCL',['../structbeluga_1_1MCL.html',1,'beluga']]],
-  ['multivariatenormaldistribution_193',['MultivariateNormalDistribution',['../classbeluga_1_1MultivariateNormalDistribution.html',1,'beluga']]]
+  ['kldlimiter_251',['KldLimiter',['../classbeluga_1_1KldLimiter.html',1,'beluga']]],
+  ['kldlimiterparam_252',['KldLimiterParam',['../structbeluga_1_1KldLimiterParam.html',1,'beluga']]]
 ];

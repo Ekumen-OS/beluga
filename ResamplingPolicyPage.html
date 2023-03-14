@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: beluga named requirements: ResamplingPolicy</title>
+<title>Beluga: Beluga named requirements: ResamplingPolicy</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -64,19 +64,28 @@ $(function() {
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">beluga named requirements: ResamplingPolicy </div>  </div>
+<div class="title">Beluga named requirements: ResamplingPolicy </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Requirements for a resampling policy to be used a beluga <code>ParticleFilter</code>.</p>
+<div class="textblock"><p>Requirements for a resampling policy to be used in a <code>ParticleFilter</code>.</p>
 <h1><a class="anchor" id="ResamplingPolicyRequirements"></a>
 Requirements</h1>
 <p>A type <code>T</code> satisfies the <code>ResamplingPolicy</code> requirements if the following is satisfied.</p>
 <p>Given:</p><ul>
 <li>An instance <code>p</code> of <code>T</code>.</li>
-<li>An instance <code>c</code> of <code>C</code>, where is C a particle filter that meets the requirements listed in the policy.</li>
+<li>An instance <code>c</code> of <code>C</code>, where is <code>C</code> a particle filter that meets the requirements listed in the policy.</li>
 </ul>
 <p>Then:</p><ul>
-<li><code>p.do_resampling(c)</code> will return true if resampling must be done according to the policy, false otherwise. This function is called in cascade when multiple policies are installed in the filter, and a given filter's do_resampling() function may not be called during a given iteration if a previously queried policy has already voted "false" (short-circuit evaluation of policies). </li>
+<li><code>p.do_resampling(c)</code> will return <code>true</code> if resampling must be done according to the policy, <code>false</code> otherwise. <br  />
+ This function is called in cascade when multiple policies are installed in the filter, and a given filter's <code>do_resampling()</code> function may not be called if a previously queried policy has already voted <code>false</code> (short-circuit evaluation of policies).</li>
+</ul>
+<h1><a class="anchor" id="ResamplingPolicyLinks"></a>
+See also</h1>
+<ul>
+<li><a class="el" href="classbeluga_1_1ResampleIntervalPolicy.html" title="Implementation of the Resample Interval algorithm for resampling.">beluga::ResampleIntervalPolicy</a></li>
+<li><a class="el" href="classbeluga_1_1ResampleOnMotionPolicy.html" title="Implementation of the Resample-On-Motion algorithm for resampling.">beluga::ResampleOnMotionPolicy</a></li>
+<li><a class="el" href="classbeluga_1_1ResamplingPoliciesPoller.html" title="Resampling policy poller.">beluga::ResamplingPoliciesPoller</a></li>
+<li><a class="el" href="classbeluga_1_1SelectiveResamplingPolicy.html" title="Implementation of the Selective Resampling algorithm for resampling.">beluga::SelectiveResamplingPolicy</a> </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

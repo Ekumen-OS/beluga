@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['resample_5finterval_5fcount_323',['resample_interval_count',['../structbeluga_1_1ResampleIntervalPolicyParam.html#a90d898b392378f4c8b2f0a9f1767e303',1,'beluga::ResampleIntervalPolicyParam']]],
-  ['rotation_5fnoise_5ffrom_5frotation_324',['rotation_noise_from_rotation',['../structbeluga_1_1DifferentialDriveModelParam.html#a01eab931f32b7ae92f2d4f0b1175e30c',1,'beluga::DifferentialDriveModelParam::rotation_noise_from_rotation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#ad954995b2de1b3ebaa2839635a6d2eff',1,'beluga::OmnidirectionalDriveModelParam::rotation_noise_from_rotation()']]],
-  ['rotation_5fnoise_5ffrom_5ftranslation_325',['rotation_noise_from_translation',['../structbeluga_1_1DifferentialDriveModelParam.html#a14d0476d23005e9c2bfbc7d8f3de4b55',1,'beluga::DifferentialDriveModelParam::rotation_noise_from_translation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a7933e668b81ddf041ea9f8747a8b7dc6',1,'beluga::OmnidirectionalDriveModelParam::rotation_noise_from_translation()']]]
+  ['kld_5fepsilon_413',['kld_epsilon',['../structbeluga_1_1KldLimiterParam.html#a9f90906d8eb1b1d81e5f5707875a4417',1,'beluga::KldLimiterParam']]],
+  ['kld_5fz_414',['kld_z',['../structbeluga_1_1KldLimiterParam.html#a53ebfe742dee0c7b3822f803b4b3e666',1,'beluga::KldLimiterParam']]]
 ];

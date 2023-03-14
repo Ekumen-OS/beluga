@@ -1,0 +1,6 @@
+<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/motion/omnidirectional_drive_model.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/motion/omnidirectional_drive_model.hpp">
+<area shape="rect" id="node1" title="Implementation of an omnidirectional drive odometry motion model." alt="" coords="5,5,283,76"/>
+<area shape="rect" id="node2" href="$motion_8hpp.html" title="Includes all Beluga motion models." alt="" coords="45,124,243,180"/>
+<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="45,332,243,388"/>
+<area shape="rect" id="node4" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="106,228,334,284"/>
+</map>

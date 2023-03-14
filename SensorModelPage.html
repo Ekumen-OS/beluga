@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: beluga named requirements: SensorModel</title>
+<title>Beluga: Beluga named requirements: SensorModel</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -64,10 +64,10 @@ $(function() {
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">beluga named requirements: SensorModel </div>  </div>
+<div class="title">Beluga named requirements: SensorModel </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Requirements for a sensor model to be used in a beluga <code>ParticleFilter</code>.</p>
+<div class="textblock"><p>Requirements for a sensor model to be used in a Beluga <code>ParticleFilter</code>.</p>
 <h1><a class="anchor" id="SensorModelRequirements"></a>
 Requirements</h1>
 <p>A type <code>T</code> satisfies the <code>SensorModel</code> requirements if the following is satisfied:</p><ul>
@@ -78,13 +78,18 @@ Requirements</h1>
 <p>Given:</p><ul>
 <li>An instance <code>p</code> of <code>T</code>.</li>
 <li>A possibly const instance <code>cp</code> of <code>T</code>.</li>
-<li>A possibly const instance of <code>T::measurement_type</code> <code>m</code>.</li>
-<li>A possibly const instance of <code>T::state_type</code> <code>s</code>.</li>
+<li>A possibly const instance <code>m</code> of <code>T::measurement_type</code>.</li>
+<li>A possibly const instance <code>s</code> of <code>T::state_type</code>.</li>
 </ul>
 <p>Then:</p><ul>
 <li><code>p.update_sensor(m)</code> will update the sensor model with <code>p</code>. This will not actually update the particle weights, but the update done here will be used in the nexts <code>importance_weight()</code> method calls.</li>
 <li><code>cp.importance_weight(s)</code> returns a <code>T::weight_type</code> instance representing the weight of the particle.</li>
-<li><code>cp.generate_random_state()</code> returns a <code>T::state_type</code> instance. </li>
+<li><code>cp.make_random_state()</code> returns a <code>T::state_type</code> instance.</li>
+</ul>
+<h1><a class="anchor" id="SensorModelLinks"></a>
+See also</h1>
+<ul>
+<li><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html" title="Likelihood field sensor model for range finders.">beluga::LikelihoodFieldModel</a> </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

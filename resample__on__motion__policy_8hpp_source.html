@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/resample_on_motion_policy.hpp Source File</title>
+<title>Beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/resample_on_motion_policy.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -100,17 +100,17 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResampleOnMotionPolicy.html">   41</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1ResampleOnMotionPolicy.html">ResampleOnMotionPolicy</a> {</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResampleOnMotionPolicy.html">   41</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1ResampleOnMotionPolicy.html">ResampleOnMotionPolicy</a> {</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResampleOnMotionPolicy.html#aa3389f93cd0487abbeefa80b95b0e662">   44</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1ResampleOnMotionPolicyParam.html">param_type</a> = <a class="code" href="structbeluga_1_1ResampleOnMotionPolicyParam.html">ResampleOnMotionPolicyParam</a>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResampleOnMotionPolicy.html#a0645734706b230df71c60dcd1c6b5bf8">   46</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1ResampleOnMotionPolicy.html#a0645734706b230df71c60dcd1c6b5bf8">motion_event</a> = Sophus::SE2d;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResampleOnMotionPolicy.html#aa3389f93cd0487abbeefa80b95b0e662">   44</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1ResampleOnMotionPolicyParam.html">param_type</a> = <a class="code" href="structbeluga_1_1ResampleOnMotionPolicyParam.html">ResampleOnMotionPolicyParam</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResampleOnMotionPolicy.html#a0645734706b230df71c60dcd1c6b5bf8">   46</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1ResampleOnMotionPolicy.html#a0645734706b230df71c60dcd1c6b5bf8">motion_event</a> = Sophus::SE2d;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResampleOnMotionPolicy.html#acfa1b10f572f19babb4d82f26bf2fbc3">   52</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="structbeluga_1_1ResampleOnMotionPolicy.html#acfa1b10f572f19babb4d82f26bf2fbc3">ResampleOnMotionPolicy</a>(<span class="keyword">const</span> <a class="code" href="structbeluga_1_1ResampleOnMotionPolicyParam.html">param_type</a>&amp; configuration) : configuration_{configuration} {}</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResampleOnMotionPolicy.html#acfa1b10f572f19babb4d82f26bf2fbc3">   52</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1ResampleOnMotionPolicy.html#acfa1b10f572f19babb4d82f26bf2fbc3">ResampleOnMotionPolicy</a>(<span class="keyword">const</span> <a class="code" href="structbeluga_1_1ResampleOnMotionPolicyParam.html">param_type</a>&amp; configuration) : configuration_{configuration} {}</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Concrete&gt;</div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResampleOnMotionPolicy.html#a518e5ae955320a021b6160e86f4df1e3">   60</a></span>&#160;  [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1ResampleOnMotionPolicy.html#a518e5ae955320a021b6160e86f4df1e3">do_resampling</a>(Concrete&amp; filter) {</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResampleOnMotionPolicy.html#a518e5ae955320a021b6160e86f4df1e3">   60</a></span>&#160;  [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1ResampleOnMotionPolicy.html#a518e5ae955320a021b6160e86f4df1e3">do_resampling</a>(Concrete&amp; filter) {</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">// To avoid loss of diversity in the particle population, don&#39;t</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">// resample when the state is known to be static.</span></div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="comment">// Probabilistic Robotics \cite thrun2005probabilistic Chapter 4.2.4.</span></div>
@@ -139,21 +139,21 @@ $(function() {
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  }</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <a class="code" href="structbeluga_1_1ResampleOnMotionPolicy.html#aa3389f93cd0487abbeefa80b95b0e662">param_type</a> configuration_;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <a class="code" href="classbeluga_1_1ResampleOnMotionPolicy.html#aa3389f93cd0487abbeefa80b95b0e662">param_type</a> configuration_;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  std::optional&lt;motion_event&gt; latest_resample_pose_;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}  <span class="comment">// namespace beluga</span></div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1ResampleOnMotionPolicy_html"><div class="ttname"><a href="classbeluga_1_1ResampleOnMotionPolicy.html">beluga::ResampleOnMotionPolicy</a></div><div class="ttdoc">Implementation of the Resample-On-Motion algorithm for resampling.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:41</div></div>
+<div class="ttc" id="aclassbeluga_1_1ResampleOnMotionPolicy_html_a0645734706b230df71c60dcd1c6b5bf8"><div class="ttname"><a href="classbeluga_1_1ResampleOnMotionPolicy.html#a0645734706b230df71c60dcd1c6b5bf8">beluga::ResampleOnMotionPolicy::motion_event</a></div><div class="ttdeci">Sophus::SE2d motion_event</div><div class="ttdoc">Type used to exchange and store motion updates by the motion model.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:46</div></div>
+<div class="ttc" id="aclassbeluga_1_1ResampleOnMotionPolicy_html_a518e5ae955320a021b6160e86f4df1e3"><div class="ttname"><a href="classbeluga_1_1ResampleOnMotionPolicy.html#a518e5ae955320a021b6160e86f4df1e3">beluga::ResampleOnMotionPolicy::do_resampling</a></div><div class="ttdeci">bool do_resampling(Concrete &amp;filter)</div><div class="ttdoc">Vote whether resampling must be done according to this policy.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:60</div></div>
+<div class="ttc" id="aclassbeluga_1_1ResampleOnMotionPolicy_html_aa3389f93cd0487abbeefa80b95b0e662"><div class="ttname"><a href="classbeluga_1_1ResampleOnMotionPolicy.html#aa3389f93cd0487abbeefa80b95b0e662">beluga::ResampleOnMotionPolicy::param_type</a></div><div class="ttdeci">ResampleOnMotionPolicyParam param_type</div><div class="ttdoc">Parameter type that the constructor uses to configure the policy.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:44</div></div>
+<div class="ttc" id="aclassbeluga_1_1ResampleOnMotionPolicy_html_acfa1b10f572f19babb4d82f26bf2fbc3"><div class="ttname"><a href="classbeluga_1_1ResampleOnMotionPolicy.html#acfa1b10f572f19babb4d82f26bf2fbc3">beluga::ResampleOnMotionPolicy::ResampleOnMotionPolicy</a></div><div class="ttdeci">ResampleOnMotionPolicy(const param_type &amp;configuration)</div><div class="ttdoc">Constructs a ResampleOnMotionPolicy instance.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:52</div></div>
 <div class="ttc" id="astructbeluga_1_1ResampleOnMotionPolicyParam_html"><div class="ttname"><a href="structbeluga_1_1ResampleOnMotionPolicyParam.html">beluga::ResampleOnMotionPolicyParam</a></div><div class="ttdoc">Parameters used to construct a ResampleOnMotionPolicy instance.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:30</div></div>
 <div class="ttc" id="astructbeluga_1_1ResampleOnMotionPolicyParam_html_ac65b68e51b4e2bedd8a0fc5b352b004b"><div class="ttname"><a href="structbeluga_1_1ResampleOnMotionPolicyParam.html#ac65b68e51b4e2bedd8a0fc5b352b004b">beluga::ResampleOnMotionPolicyParam::update_min_a</a></div><div class="ttdeci">double update_min_a</div><div class="ttdoc">Angular threshold to trigger a resample.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:34</div></div>
 <div class="ttc" id="astructbeluga_1_1ResampleOnMotionPolicyParam_html_aeffa05da22fc1fb8907e5142740b53a0"><div class="ttname"><a href="structbeluga_1_1ResampleOnMotionPolicyParam.html#aeffa05da22fc1fb8907e5142740b53a0">beluga::ResampleOnMotionPolicyParam::update_min_d</a></div><div class="ttdeci">double update_min_d</div><div class="ttdoc">Distance threshold along x an y (independently) to trigger a resample.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:32</div></div>
-<div class="ttc" id="astructbeluga_1_1ResampleOnMotionPolicy_html"><div class="ttname"><a href="structbeluga_1_1ResampleOnMotionPolicy.html">beluga::ResampleOnMotionPolicy</a></div><div class="ttdoc">Implementation of the Resample-On-Motion algorithm for resampling.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:41</div></div>
-<div class="ttc" id="astructbeluga_1_1ResampleOnMotionPolicy_html_a0645734706b230df71c60dcd1c6b5bf8"><div class="ttname"><a href="structbeluga_1_1ResampleOnMotionPolicy.html#a0645734706b230df71c60dcd1c6b5bf8">beluga::ResampleOnMotionPolicy::motion_event</a></div><div class="ttdeci">Sophus::SE2d motion_event</div><div class="ttdoc">Type used to exchange and store motion updates by the motion model.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:46</div></div>
-<div class="ttc" id="astructbeluga_1_1ResampleOnMotionPolicy_html_a518e5ae955320a021b6160e86f4df1e3"><div class="ttname"><a href="structbeluga_1_1ResampleOnMotionPolicy.html#a518e5ae955320a021b6160e86f4df1e3">beluga::ResampleOnMotionPolicy::do_resampling</a></div><div class="ttdeci">bool do_resampling(Concrete &amp;filter)</div><div class="ttdoc">Vote whether resampling must be done according to this policy.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:60</div></div>
-<div class="ttc" id="astructbeluga_1_1ResampleOnMotionPolicy_html_aa3389f93cd0487abbeefa80b95b0e662"><div class="ttname"><a href="structbeluga_1_1ResampleOnMotionPolicy.html#aa3389f93cd0487abbeefa80b95b0e662">beluga::ResampleOnMotionPolicy::param_type</a></div><div class="ttdeci">ResampleOnMotionPolicyParam param_type</div><div class="ttdoc">Parameter type that the constructor uses to configure the policy.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:44</div></div>
-<div class="ttc" id="astructbeluga_1_1ResampleOnMotionPolicy_html_acfa1b10f572f19babb4d82f26bf2fbc3"><div class="ttname"><a href="structbeluga_1_1ResampleOnMotionPolicy.html#acfa1b10f572f19babb4d82f26bf2fbc3">beluga::ResampleOnMotionPolicy::ResampleOnMotionPolicy</a></div><div class="ttdeci">ResampleOnMotionPolicy(const param_type &amp;configuration)</div><div class="ttdoc">Constructs a ResampleOnMotionPolicy instance.</div><div class="ttdef"><b>Definition:</b> resample_on_motion_policy.hpp:52</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

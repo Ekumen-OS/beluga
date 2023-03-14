@@ -1,48 +1,36 @@
 <map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm.hpp">
-<area shape="rect" id="node1" title="Includes all beluga algorithms." alt="" coords="2079,5,2295,61"/>
-<area shape="rect" id="node2" href="$distance__map_8hpp.html" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="182,199,374,240"/>
-<area shape="rect" id="node7" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="398,206,633,233"/>
-<area shape="rect" id="node18" href="$exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="3787,288,4001,329"/>
-<area shape="rect" id="node19" href="$particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="1807,109,1994,151"/>
-<area shape="rect" id="node26" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="2752,206,2977,233"/>
-<area shape="rect" id="node31" href="$spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="2414,288,2595,329"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,295,68,322"/>
-<area shape="rect" id="node4" title=" " alt="" coords="1303,295,1365,322"/>
-<area shape="rect" id="node5" title=" " alt="" coords="336,295,532,322"/>
-<area shape="rect" id="node6" title=" " alt="" coords="93,295,311,322"/>
-<area shape="rect" id="node8" href="$type__traits_8hpp.html" title="Includes all beluga type traits." alt="" coords="1441,295,1609,322"/>
-<area shape="rect" id="node15" title=" " alt="" coords="1298,556,1509,583"/>
-<area shape="rect" id="node16" title=" " alt="" coords="557,295,759,322"/>
-<area shape="rect" id="node17" title=" " alt="" coords="837,385,959,411"/>
-<area shape="rect" id="node9" href="$container__traits_8hpp.html" title="Useful traits for containers." alt="" coords="1536,467,1692,508"/>
-<area shape="rect" id="node12" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="1658,377,1802,419"/>
-<area shape="rect" id="node10" title=" " alt="" coords="1720,556,1812,583"/>
-<area shape="rect" id="node11" title=" " alt="" coords="1533,556,1695,583"/>
-<area shape="rect" id="node13" title=" " alt="" coords="1964,556,2019,583"/>
-<area shape="rect" id="node14" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="1767,474,1903,501"/>
-<area shape="rect" id="node20" title=" " alt="" coords="1638,206,1723,233"/>
-<area shape="rect" id="node21" title=" " alt="" coords="2297,385,2357,411"/>
-<area shape="rect" id="node22" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="2129,295,2289,322"/>
-<area shape="rect" id="node23" title=" " alt="" coords="2051,199,2198,240"/>
-<area shape="rect" id="node24" title=" " alt="" coords="915,199,1062,240"/>
-<area shape="rect" id="node25" title=" " alt="" coords="1873,295,2054,322"/>
-<area shape="rect" id="node39" href="$resample__interval__policy_8hpp.html" title="Implementation of the resample interval algorithm for resampling." alt="" coords="1086,199,1302,240"/>
-<area shape="rect" id="node41" href="$resample__on__motion__policy_8hpp.html" title="Implementation of the resample&#45;on&#45;motion algorithm for resampling." alt="" coords="657,199,891,240"/>
-<area shape="rect" id="node42" href="$resampling__policies__poller_8hpp.html" title="Implementation of a resampling policies poller." alt="" coords="2273,199,2499,240"/>
-<area shape="rect" id="node43" href="$selective__resampling__policy_8hpp.html" title="Implementation of the selective resampling algorithm for resampling." alt="" coords="1326,199,1563,240"/>
-<area shape="rect" id="node45" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="1747,206,1926,233"/>
-<area shape="rect" id="node27" title=" " alt="" coords="3624,295,3711,322"/>
-<area shape="rect" id="node28" title=" " alt="" coords="3253,385,3311,411"/>
-<area shape="rect" id="node29" title=" " alt="" coords="2619,295,2691,322"/>
-<area shape="rect" id="node30" title=" " alt="" coords="2715,295,2830,322"/>
-<area shape="rect" id="node35" title=" " alt="" coords="2855,295,3059,322"/>
-<area shape="rect" id="node36" title=" " alt="" coords="3083,295,3257,322"/>
-<area shape="rect" id="node37" title=" " alt="" coords="3282,288,3429,329"/>
-<area shape="rect" id="node38" title=" " alt="" coords="3453,288,3599,329"/>
-<area shape="rect" id="node32" title=" " alt="" coords="2433,385,2491,411"/>
-<area shape="rect" id="node33" title=" " alt="" coords="2516,385,2579,411"/>
-<area shape="rect" id="node34" title=" " alt="" coords="2603,385,2670,411"/>
-<area shape="rect" id="node40" title=" " alt="" coords="935,295,1010,322"/>
-<area shape="rect" id="node44" title=" " alt="" coords="1035,295,1279,322"/>
-<area shape="rect" id="node46" title=" " alt="" coords="1633,295,1798,322"/>
+<area shape="rect" id="node1" title="Includes all beluga algorithms." alt="" coords="1054,5,1270,61"/>
+<area shape="rect" id="node2" href="$distance__map_8hpp.html" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="193,109,385,151"/>
+<area shape="rect" id="node7" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="565,117,799,143"/>
+<area shape="rect" id="node11" href="$exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="2747,199,2961,240"/>
+<area shape="rect" id="node12" href="$particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="913,109,1099,151"/>
+<area shape="rect" id="node16" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="1780,117,2005,143"/>
+<area shape="rect" id="node20" href="$spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="1227,199,1409,240"/>
+<area shape="rect" id="node3" title=" " alt="" coords="92,206,155,233"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,206,68,233"/>
+<area shape="rect" id="node5" title=" " alt="" coords="423,206,619,233"/>
+<area shape="rect" id="node6" title=" " alt="" coords="179,206,398,233"/>
+<area shape="rect" id="node8" title=" " alt="" coords="905,206,1107,233"/>
+<area shape="rect" id="node9" title=" " alt="" coords="2017,467,2227,493"/>
+<area shape="rect" id="node10" title=" " alt="" coords="763,295,886,322"/>
+<area shape="rect" id="node13" title=" " alt="" coords="745,206,830,233"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1131,206,1203,233"/>
+<area shape="rect" id="node15" title=" " alt="" coords="1049,295,1109,322"/>
+<area shape="rect" id="node17" title=" " alt="" coords="1433,206,1520,233"/>
+<area shape="rect" id="node18" title=" " alt="" coords="2421,295,2479,322"/>
+<area shape="rect" id="node19" title=" " alt="" coords="1545,206,1659,233"/>
+<area shape="rect" id="node26" href="$type__traits_8hpp.html" title="Includes all Beluga type traits." alt="" coords="2554,206,2722,233"/>
+<area shape="rect" id="node31" title=" " alt="" coords="1684,206,1888,233"/>
+<area shape="rect" id="node32" title=" " alt="" coords="1912,206,2087,233"/>
+<area shape="rect" id="node33" title=" " alt="" coords="2111,199,2258,240"/>
+<area shape="rect" id="node34" title=" " alt="" coords="2282,199,2429,240"/>
+<area shape="rect" id="node21" title=" " alt="" coords="1203,295,1262,322"/>
+<area shape="rect" id="node22" title=" " alt="" coords="1287,295,1349,322"/>
+<area shape="rect" id="node23" title=" " alt="" coords="1374,295,1441,322"/>
+<area shape="rect" id="node24" title=" " alt="" coords="2305,467,2360,493"/>
+<area shape="rect" id="node25" title=" " alt="" coords="2495,467,2587,493"/>
+<area shape="rect" id="node27" href="$container__traits_8hpp.html" title="Useful traits for containers." alt="" coords="2603,377,2759,419"/>
+<area shape="rect" id="node29" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="2554,288,2698,329"/>
+<area shape="rect" id="node28" title=" " alt="" coords="2611,467,2774,493"/>
+<area shape="rect" id="node30" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="2159,385,2295,411"/>
 </map>

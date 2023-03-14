@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['kldresampling_188',['KldResampling',['../structbeluga_1_1KldResampling.html',1,'beluga']]],
-  ['kldresamplingparam_189',['KldResamplingParam',['../structbeluga_1_1KldResamplingParam.html',1,'beluga']]]
+  ['has_5fparams_247',['has_params',['../structbeluga_1_1mixin_1_1has__params.html',1,'beluga::mixin']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/resample_interval_policy.hpp Source File</title>
+<title>Beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/resample_interval_policy.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -97,34 +97,34 @@ $(function() {
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;};</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResampleIntervalPolicy.html">   37</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1ResampleIntervalPolicy.html">ResampleIntervalPolicy</a> {</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResampleIntervalPolicy.html">   37</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1ResampleIntervalPolicy.html">ResampleIntervalPolicy</a> {</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResampleIntervalPolicy.html#af00cbcb852614e4b5191fa917dfc1690">   40</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1ResampleIntervalPolicyParam.html">param_type</a> = <a class="code" href="structbeluga_1_1ResampleIntervalPolicyParam.html">ResampleIntervalPolicyParam</a>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResampleIntervalPolicy.html#af00cbcb852614e4b5191fa917dfc1690">   40</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1ResampleIntervalPolicyParam.html">param_type</a> = <a class="code" href="structbeluga_1_1ResampleIntervalPolicyParam.html">ResampleIntervalPolicyParam</a>;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResampleIntervalPolicy.html#a4622143a27fb2fe78076f9b91336026c">   46</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="structbeluga_1_1ResampleIntervalPolicy.html#a4622143a27fb2fe78076f9b91336026c">ResampleIntervalPolicy</a>(<span class="keyword">const</span> <a class="code" href="structbeluga_1_1ResampleIntervalPolicyParam.html">param_type</a>&amp; configuration) : configuration_{configuration} {}</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResampleIntervalPolicy.html#a4622143a27fb2fe78076f9b91336026c">   46</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1ResampleIntervalPolicy.html#a4622143a27fb2fe78076f9b91336026c">ResampleIntervalPolicy</a>(<span class="keyword">const</span> <a class="code" href="structbeluga_1_1ResampleIntervalPolicyParam.html">param_type</a>&amp; configuration) : configuration_{configuration} {}</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Concrete&gt;</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResampleIntervalPolicy.html#aefc625feaad9960cb33e7d5934a98623">   53</a></span>&#160;  [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1ResampleIntervalPolicy.html#aefc625feaad9960cb33e7d5934a98623">do_resampling</a>([[maybe_unused]] Concrete&amp; filter) {</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResampleIntervalPolicy.html#aefc625feaad9960cb33e7d5934a98623">   53</a></span>&#160;  [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1ResampleIntervalPolicy.html#aefc625feaad9960cb33e7d5934a98623">do_resampling</a>([[maybe_unused]] Concrete&amp; filter) {</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    filter_update_counter_ = (filter_update_counter_ + 1) % configuration_.<a class="code" href="structbeluga_1_1ResampleIntervalPolicyParam.html#a90d898b392378f4c8b2f0a9f1767e303">resample_interval_count</a>;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    return (filter_update_counter_ == 0);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  }</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="structbeluga_1_1ResampleIntervalPolicy.html#af00cbcb852614e4b5191fa917dfc1690">param_type</a> configuration_;              <span class="comment">//&lt; Policy configuration</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="classbeluga_1_1ResampleIntervalPolicy.html#af00cbcb852614e4b5191fa917dfc1690">param_type</a> configuration_;              <span class="comment">//&lt; Policy configuration</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  std::size_t filter_update_counter_{0};  <span class="comment">//&lt; Current cycle phase</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;};</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}  <span class="comment">// namespace beluga</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1ResampleIntervalPolicy_html"><div class="ttname"><a href="classbeluga_1_1ResampleIntervalPolicy.html">beluga::ResampleIntervalPolicy</a></div><div class="ttdoc">Implementation of the Resample Interval algorithm for resampling.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:37</div></div>
+<div class="ttc" id="aclassbeluga_1_1ResampleIntervalPolicy_html_a4622143a27fb2fe78076f9b91336026c"><div class="ttname"><a href="classbeluga_1_1ResampleIntervalPolicy.html#a4622143a27fb2fe78076f9b91336026c">beluga::ResampleIntervalPolicy::ResampleIntervalPolicy</a></div><div class="ttdeci">ResampleIntervalPolicy(const param_type &amp;configuration)</div><div class="ttdoc">Constructs a ResampleIntervalPolicy instance.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:46</div></div>
+<div class="ttc" id="aclassbeluga_1_1ResampleIntervalPolicy_html_aefc625feaad9960cb33e7d5934a98623"><div class="ttname"><a href="classbeluga_1_1ResampleIntervalPolicy.html#aefc625feaad9960cb33e7d5934a98623">beluga::ResampleIntervalPolicy::do_resampling</a></div><div class="ttdeci">bool do_resampling([[maybe_unused]] Concrete &amp;filter)</div><div class="ttdoc">Vote whether resampling must be done according to this policy.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:53</div></div>
+<div class="ttc" id="aclassbeluga_1_1ResampleIntervalPolicy_html_af00cbcb852614e4b5191fa917dfc1690"><div class="ttname"><a href="classbeluga_1_1ResampleIntervalPolicy.html#af00cbcb852614e4b5191fa917dfc1690">beluga::ResampleIntervalPolicy::param_type</a></div><div class="ttdeci">ResampleIntervalPolicyParam param_type</div><div class="ttdoc">Parameter type that the constructor uses to configure the policy.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:40</div></div>
 <div class="ttc" id="astructbeluga_1_1ResampleIntervalPolicyParam_html"><div class="ttname"><a href="structbeluga_1_1ResampleIntervalPolicyParam.html">beluga::ResampleIntervalPolicyParam</a></div><div class="ttdoc">Parameters used to construct a ResampleIntervalPolicy instance.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:28</div></div>
 <div class="ttc" id="astructbeluga_1_1ResampleIntervalPolicyParam_html_a90d898b392378f4c8b2f0a9f1767e303"><div class="ttname"><a href="structbeluga_1_1ResampleIntervalPolicyParam.html#a90d898b392378f4c8b2f0a9f1767e303">beluga::ResampleIntervalPolicyParam::resample_interval_count</a></div><div class="ttdeci">std::size_t resample_interval_count</div><div class="ttdoc">Interval of calls to do_resampling() out of which only the last iteration will do resampling.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:30</div></div>
-<div class="ttc" id="astructbeluga_1_1ResampleIntervalPolicy_html"><div class="ttname"><a href="structbeluga_1_1ResampleIntervalPolicy.html">beluga::ResampleIntervalPolicy</a></div><div class="ttdoc">Implementation of the Resample Interval algorithm for resampling.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:37</div></div>
-<div class="ttc" id="astructbeluga_1_1ResampleIntervalPolicy_html_a4622143a27fb2fe78076f9b91336026c"><div class="ttname"><a href="structbeluga_1_1ResampleIntervalPolicy.html#a4622143a27fb2fe78076f9b91336026c">beluga::ResampleIntervalPolicy::ResampleIntervalPolicy</a></div><div class="ttdeci">ResampleIntervalPolicy(const param_type &amp;configuration)</div><div class="ttdoc">Constructs a ResampleIntervalPolicy instance.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:46</div></div>
-<div class="ttc" id="astructbeluga_1_1ResampleIntervalPolicy_html_aefc625feaad9960cb33e7d5934a98623"><div class="ttname"><a href="structbeluga_1_1ResampleIntervalPolicy.html#aefc625feaad9960cb33e7d5934a98623">beluga::ResampleIntervalPolicy::do_resampling</a></div><div class="ttdeci">bool do_resampling([[maybe_unused]] Concrete &amp;filter)</div><div class="ttdoc">Vote whether resampling must be done according to this policy.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:53</div></div>
-<div class="ttc" id="astructbeluga_1_1ResampleIntervalPolicy_html_af00cbcb852614e4b5191fa917dfc1690"><div class="ttname"><a href="structbeluga_1_1ResampleIntervalPolicy.html#af00cbcb852614e4b5191fa917dfc1690">beluga::ResampleIntervalPolicy::param_type</a></div><div class="ttdeci">ResampleIntervalPolicyParam param_type</div><div class="ttdoc">Parameter type that the constructor uses to configure the policy.</div><div class="ttdef"><b>Definition:</b> resample_interval_policy.hpp:40</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

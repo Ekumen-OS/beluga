@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['fixedresampling_186',['FixedResampling',['../structbeluga_1_1FixedResampling.html',1,'beluga']]],
-  ['fixedresamplingparam_187',['FixedResamplingParam',['../structbeluga_1_1FixedResamplingParam.html',1,'beluga']]]
+  ['fixedlimiter_245',['FixedLimiter',['../classbeluga_1_1FixedLimiter.html',1,'beluga']]],
+  ['fixedlimiterparam_246',['FixedLimiterParam',['../structbeluga_1_1FixedLimiterParam.html',1,'beluga']]]
 ];

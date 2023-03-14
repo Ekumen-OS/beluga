@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/motion.hpp Source File</title>
+<title>Beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/motion.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -89,11 +89,30 @@ $(function() {
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_MOTION_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="differential__drive__model_8hpp.html">beluga/motion/differential_drive_model.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="stationary__model_8hpp.html">beluga/motion/stationary_model.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="omnidirectional__drive__model_8hpp.html">beluga/motion/omnidirectional_drive_model.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="stationary__model_8hpp.html">beluga/motion/stationary_model.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">namespace </span>beluga {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="structbeluga_1_1OdometryMotionModelInterface2d.html">   60</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1OdometryMotionModelInterface2d.html">OdometryMotionModelInterface2d</a> {</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="structbeluga_1_1OdometryMotionModelInterface2d.html#a591469a1d4a5d06d07375b22b43dbeec">   62</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1OdometryMotionModelInterface2d.html#a591469a1d4a5d06d07375b22b43dbeec">update_type</a> = Sophus::SE2d;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="structbeluga_1_1OdometryMotionModelInterface2d.html#af6bc63d8cb62e77e7e9a9f1c221045f2">   65</a></span>&#160;  <span class="keyword">virtual</span> <a class="code" href="structbeluga_1_1OdometryMotionModelInterface2d.html#af6bc63d8cb62e77e7e9a9f1c221045f2">~OdometryMotionModelInterface2d</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="structbeluga_1_1OdometryMotionModelInterface2d.html#a4366533b5965f3c1dd17afb2112435d8">   76</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="structbeluga_1_1OdometryMotionModelInterface2d.html#a4366533b5965f3c1dd17afb2112435d8">update_motion</a>(<span class="keyword">const</span> <a class="code" href="structbeluga_1_1OdometryMotionModelInterface2d.html#a591469a1d4a5d06d07375b22b43dbeec">update_type</a>&amp; pose) = 0;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;};</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="adifferential__drive__model_8hpp_html"><div class="ttname"><a href="differential__drive__model_8hpp.html">differential_drive_model.hpp</a></div><div class="ttdoc">Implementation of a differential drive odometry motion model.</div></div>
+<div class="ttc" id="aomnidirectional__drive__model_8hpp_html"><div class="ttname"><a href="omnidirectional__drive__model_8hpp.html">omnidirectional_drive_model.hpp</a></div><div class="ttdoc">Implementation of an omnidirectional drive odometry motion model.</div></div>
 <div class="ttc" id="astationary__model_8hpp_html"><div class="ttname"><a href="stationary__model_8hpp.html">stationary_model.hpp</a></div><div class="ttdoc">Implementation of a stationary motion model.</div></div>
+<div class="ttc" id="astructbeluga_1_1OdometryMotionModelInterface2d_html"><div class="ttname"><a href="structbeluga_1_1OdometryMotionModelInterface2d.html">beluga::OdometryMotionModelInterface2d</a></div><div class="ttdoc">Pure abstract class representing the odometry motion model interface.</div><div class="ttdef"><b>Definition:</b> motion.hpp:60</div></div>
+<div class="ttc" id="astructbeluga_1_1OdometryMotionModelInterface2d_html_a4366533b5965f3c1dd17afb2112435d8"><div class="ttname"><a href="structbeluga_1_1OdometryMotionModelInterface2d.html#a4366533b5965f3c1dd17afb2112435d8">beluga::OdometryMotionModelInterface2d::update_motion</a></div><div class="ttdeci">virtual void update_motion(const update_type &amp;pose)=0</div><div class="ttdoc">Updates the motion model with the latest odometry data.</div></div>
+<div class="ttc" id="astructbeluga_1_1OdometryMotionModelInterface2d_html_a591469a1d4a5d06d07375b22b43dbeec"><div class="ttname"><a href="structbeluga_1_1OdometryMotionModelInterface2d.html#a591469a1d4a5d06d07375b22b43dbeec">beluga::OdometryMotionModelInterface2d::update_type</a></div><div class="ttdeci">Sophus::SE2d update_type</div><div class="ttdoc">Update type of the motion model.</div><div class="ttdef"><b>Definition:</b> motion.hpp:62</div></div>
+<div class="ttc" id="astructbeluga_1_1OdometryMotionModelInterface2d_html_af6bc63d8cb62e77e7e9a9f1c221045f2"><div class="ttname"><a href="structbeluga_1_1OdometryMotionModelInterface2d.html#af6bc63d8cb62e77e7e9a9f1c221045f2">beluga::OdometryMotionModelInterface2d::~OdometryMotionModelInterface2d</a></div><div class="ttdeci">virtual ~OdometryMotionModelInterface2d()=default</div><div class="ttdoc">Virtual destructor.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

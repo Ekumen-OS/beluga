@@ -1,4 +1,5 @@
 <map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/sensor.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/sensor.hpp">
-<area shape="rect" id="node1" title="Includes all beluga sensor models." alt="" coords="7,5,201,61"/>
-<area shape="rect" id="node2" href="$beluga_8hpp.html" title="Includes all the beluga API." alt="" coords="5,109,203,165"/>
+<area shape="rect" id="node1" title="Includes all Beluga sensor models." alt="" coords="7,5,201,61"/>
+<area shape="rect" id="node2" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,213,203,269"/>
+<area shape="rect" id="node3" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="66,109,294,165"/>
 </map>

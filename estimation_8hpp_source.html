@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm/estimation.hpp Source File</title>
+<title>Beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm/estimation.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -88,76 +88,108 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_ALGORITHM_ESTIMATION_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ALGORITHM_ESTIMATION_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="type__traits_8hpp.html">beluga/type_traits.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;range/v3/range/access.hpp&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;range/v3/range/primitives.hpp&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/common.hpp&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/transform.hpp&gt;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>beluga {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, <span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="estimation_8hpp.html#ac313e4f884a5d297682845c5eee8647f">   44</a></span>&#160;Eigen::Matrix2&lt;Scalar&gt; <a class="code" href="estimation_8hpp.html#ac313e4f884a5d297682845c5eee8647f">covariance</a>(<span class="keyword">const</span> Range&amp; range, <span class="keyword">const</span> Eigen::Vector2&lt;Scalar&gt;&amp; mean) {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  Eigen::Vector3&lt;Scalar&gt; coefficients = std::transform_reduce(</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      ranges::begin(range), ranges::end(range), Eigen::Vector3&lt;Scalar&gt;::Zero().eval(), std::plus{},</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      [mean](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; value) {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> centered = value - mean;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">return</span> Eigen::Vector3&lt;Scalar&gt;{</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            centered.x() * centered.x(),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            centered.x() * centered.y(),</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            centered.y() * centered.y(),</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        };</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      });</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  coefficients /= (<span class="keyword">static_cast&lt;</span>Scalar<span class="keyword">&gt;</span>(ranges::size(range) - 1));</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keyword">auto</span> covariance_matrix = Eigen::Matrix2&lt;Scalar&gt;{};</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  covariance_matrix &lt;&lt; coefficients(0), coefficients(1), coefficients(1), coefficients(2);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keywordflow">return</span> covariance_matrix;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">class </span>Range,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">class </span>Pose = <span class="keyword">typename</span> ranges::range_value_t&lt;Range&gt;,</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">class </span>Scalar = <span class="keyword">typename</span> Pose::Scalar,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">typename</span> = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="estimation_8hpp.html#abcb5471681c7150c56c86ca9fb14ec93">   81</a></span>&#160;std::pair&lt;Sophus::SE2&lt;Scalar&gt;, Eigen::Matrix3&lt;Scalar&gt;&gt; <a class="code" href="estimation_8hpp.html#abcb5471681c7150c56c86ca9fb14ec93">estimate</a>(<span class="keyword">const</span> Range&amp; poses) {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> translation_view = poses | ranges::views::transform([](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; pose) { <span class="keywordflow">return</span> pose.translation(); });</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="comment">// Compute the average of all the coefficients of the SE(2) group elements and</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="comment">// construct a new SE(2) element.</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keyword">const</span> Eigen::Vector4&lt;Scalar&gt; sum_vector = std::transform_reduce(</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      poses.begin(), poses.end(), Eigen::Vector4&lt;Scalar&gt;::Zero().eval(), std::plus{},</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; pose) { return Eigen::Map&lt;const Eigen::Vector4d&gt;{pose.data()}; });</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="keyword">const</span> Eigen::Vector4&lt;Scalar&gt; mean_vector = sum_vector / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(poses.size());</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  Sophus::SE2&lt;Scalar&gt; mean = Eigen::Map&lt;const Sophus::SE2&lt;Scalar&gt;&gt;{mean_vector.data()};</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="comment">// Compute the covariance of the translation part.</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  Eigen::Matrix3&lt;Scalar&gt; covariance_matrix = Eigen::Matrix3&lt;Scalar&gt;::Zero();</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  covariance_matrix.template topLeftCorner&lt;2, 2&gt;() = <a class="code" href="estimation_8hpp.html#ac313e4f884a5d297682845c5eee8647f">covariance</a>(translation_view, mean.translation());</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="comment">// Compute the circular variance and re-normalize the rotation component.</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keywordflow">if</span> (mean.so2().unit_complex().norm() &lt; std::numeric_limits&lt;double&gt;::epsilon()) {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// Handle the case where both averages are too close to zero.</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="comment">// Return zero yaw and infinite variance.</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    covariance_matrix.coeffRef(2, 2) = std::numeric_limits&lt;double&gt;::infinity();</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    mean.so2() = Sophus::SO2&lt;Scalar&gt;{0.0};</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">// See circular standard deviation in</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="comment">// https://en.wikipedia.org/wiki/Directional_statistics#Dispersion.</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    covariance_matrix.coeffRef(2, 2) = -2.0 * std::log(mean.so2().unit_complex().norm());</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    mean.so2().normalize();</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordflow">return</span> std::pair{mean, covariance_matrix};</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aestimation_8hpp_html_abcb5471681c7150c56c86ca9fb14ec93"><div class="ttname"><a href="estimation_8hpp.html#abcb5471681c7150c56c86ca9fb14ec93">beluga::estimate</a></div><div class="ttdeci">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Eigen::Matrix3&lt; Scalar &gt; &gt; estimate(const Range &amp;poses)</div><div class="ttdoc">Returns a pair consisting of the estimated mean pose and its covariance.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:81</div></div>
-<div class="ttc" id="aestimation_8hpp_html_ac313e4f884a5d297682845c5eee8647f"><div class="ttname"><a href="estimation_8hpp.html#ac313e4f884a5d297682845c5eee8647f">beluga::covariance</a></div><div class="ttdeci">Eigen::Matrix2&lt; Scalar &gt; covariance(const Range &amp;range, const Eigen::Vector2&lt; Scalar &gt; &amp;mean)</div><div class="ttdoc">Calculates the covariance of a range given its mean.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:44</div></div>
-<div class="ttc" id="atype__traits_8hpp_html"><div class="ttname"><a href="type__traits_8hpp.html">type_traits.hpp</a></div><div class="ttdoc">Includes all beluga type traits.</div></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;range/v3/range/access.hpp&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;range/v3/range/primitives.hpp&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/common.hpp&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/transform.hpp&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span>beluga {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, <span class="keyword">class</span> Scalar&gt;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="estimation_8hpp.html#a99554af5727d1c61272e1fbcf49f3745">   59</a></span>&#160;Eigen::Matrix2&lt;Scalar&gt; <a class="code" href="estimation_8hpp.html#a99554af5727d1c61272e1fbcf49f3745">covariance</a>(Range&amp;&amp; range, <span class="keyword">const</span> Eigen::Vector2&lt;Scalar&gt;&amp; mean) {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">auto</span> view = range | ranges::views::common;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  Eigen::Vector3&lt;Scalar&gt; coefficients = std::transform_reduce(</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      view.begin(), view.end(), Eigen::Vector3&lt;Scalar&gt;::Zero().eval(), std::plus{}, [mean](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; value) {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        const auto centered = value - mean;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        return Eigen::Vector3&lt;Scalar&gt;{</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            centered.x() * centered.x(),</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            centered.x() * centered.y(),</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            centered.y() * centered.y(),</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        };</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      });</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  coefficients /= (<span class="keyword">static_cast&lt;</span>Scalar<span class="keyword">&gt;</span>(view.size() - 1));</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keyword">auto</span> covariance_matrix = Eigen::Matrix2&lt;Scalar&gt;{};</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  covariance_matrix &lt;&lt; coefficients(0), coefficients(1), coefficients(1), coefficients(2);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keywordflow">return</span> covariance_matrix;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">class </span>Range,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">class </span>Pose = ranges::range_value_t&lt;Range&gt;,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">class </span>Scalar = <span class="keyword">typename</span> Pose::Scalar,</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">typename</span> = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt;</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="estimation_8hpp.html#ad777c60ad89e4c7e278d14510c519bc7">   96</a></span>&#160;std::pair&lt;Sophus::SE2&lt;Scalar&gt;, Eigen::Matrix3&lt;Scalar&gt;&gt; <a class="code" href="estimation_8hpp.html#ad777c60ad89e4c7e278d14510c519bc7">estimate</a>(Range&amp;&amp; range) {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keyword">auto</span> pose_view = range | ranges::views::common;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <span class="keyword">auto</span> translation_view = range | ranges::views::transform([](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; pose) { <span class="keywordflow">return</span> pose.translation(); });</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="comment">// Compute the average of all the coefficients of the SE(2) group elements and</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="comment">// construct a new SE(2) element.</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keyword">const</span> Eigen::Vector4&lt;Scalar&gt; sum_vector = std::transform_reduce(</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;      pose_view.begin(), pose_view.end(), Eigen::Vector4&lt;Scalar&gt;::Zero().eval(), std::plus{},</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;      [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; pose) { return Eigen::Map&lt;const Eigen::Vector4&lt;Scalar&gt;&gt;{pose.data()}; });</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keyword">const</span> Eigen::Vector4&lt;Scalar&gt; mean_vector = sum_vector / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(pose_view.size());</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  Sophus::SE2&lt;Scalar&gt; mean = Eigen::Map&lt;const Sophus::SE2&lt;Scalar&gt;&gt;{mean_vector.data()};</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="comment">// Compute the covariance of the translation part.</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  Eigen::Matrix3&lt;Scalar&gt; covariance_matrix = Eigen::Matrix3&lt;Scalar&gt;::Zero();</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  covariance_matrix.template topLeftCorner&lt;2, 2&gt;() = <a class="code" href="estimation_8hpp.html#a99554af5727d1c61272e1fbcf49f3745">covariance</a>(translation_view, mean.translation());</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="comment">// Compute the circular variance and re-normalize the rotation component.</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordflow">if</span> (mean.so2().unit_complex().norm() &lt; std::numeric_limits&lt;double&gt;::epsilon()) {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">// Handle the case where both averages are too close to zero.</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">// Return zero yaw and infinite variance.</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    covariance_matrix.coeffRef(2, 2) = std::numeric_limits&lt;double&gt;::infinity();</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    mean.so2() = Sophus::SO2&lt;Scalar&gt;{0.0};</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="comment">// See circular standard deviation in</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="comment">// https://en.wikipedia.org/wiki/Directional_statistics#Dispersion.</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    covariance_matrix.coeffRef(2, 2) = -2.0 * std::log(mean.so2().unit_complex().norm());</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    mean.so2().normalize();</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  }</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keywordflow">return</span> std::pair{mean, covariance_matrix};</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="structbeluga_1_1EstimationInterface2d.html">  128</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1EstimationInterface2d.html">EstimationInterface2d</a> {</div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="structbeluga_1_1EstimationInterface2d.html#a7d968ce1ed43073860ba6bd04fb3a3a9">  130</a></span>&#160;  <span class="keyword">virtual</span> <a class="code" href="structbeluga_1_1EstimationInterface2d.html#a7d968ce1ed43073860ba6bd04fb3a3a9">~EstimationInterface2d</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="structbeluga_1_1EstimationInterface2d.html#aeabe4a85b9789b5f84888fd59f0a3900">  136</a></span>&#160;  [[nodiscard]] <span class="keyword">virtual</span> std::pair&lt;Sophus::SE2d, Eigen::Matrix3d&gt; <a class="code" href="structbeluga_1_1EstimationInterface2d.html#aeabe4a85b9789b5f84888fd59f0a3900">estimate</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;};</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Mixin, <span class="keyword">class</span> State&gt;</div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="classbeluga_1_1SimpleStateEstimator.html">  141</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1SimpleStateEstimator.html">SimpleStateEstimator</a>;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160; </div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Mixin&gt;</div>
+<div class="line"><a name="l00151"></a><span class="lineno"><a class="line" href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html">  151</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1SimpleStateEstimator.html">SimpleStateEstimator</a>&lt;Mixin, Sophus::SE2d&gt; : <span class="keyword">public</span> Mixin {</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00159"></a><span class="lineno"><a class="line" href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html#ade76738ed7aa8c9125d46ecf8935ce2e">  159</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html#ade76738ed7aa8c9125d46ecf8935ce2e">SimpleStateEstimator</a>(Args&amp;&amp;... args) : Mixin(std::forward&lt;Args&gt;(args)...) {}</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html#af68d48628e3d6cb4d1d14b1214a0178e">  162</a></span>&#160;  [[nodiscard]] std::pair&lt;Sophus::SE2d, Eigen::Matrix3d&gt; <a class="code" href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html#af68d48628e3d6cb4d1d14b1214a0178e">estimate</a>() const final {</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="estimation_8hpp.html#ad777c60ad89e4c7e278d14510c519bc7">beluga::estimate</a>(this-&gt;<span class="keyword">self</span>().states());</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;  }</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;};</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Mixin&gt;</div>
+<div class="line"><a name="l00169"></a><span class="lineno"><a class="line" href="estimation_8hpp.html#a725dd1fc304e5edb21b90b7c8d3c42bb">  169</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html">SimpleStateEstimator2d</a> = <a class="code" href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html">SimpleStateEstimator&lt;Mixin, Sophus::SE2d&gt;</a>;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4_html"><div class="ttname"><a href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html">beluga::SimpleStateEstimator&lt; Mixin, Sophus::SE2d &gt;</a></div><div class="ttdoc">Partial template specialization for simple state estimator in 2D.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:151</div></div>
+<div class="ttc" id="aclassbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4_html_ade76738ed7aa8c9125d46ecf8935ce2e"><div class="ttname"><a href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html#ade76738ed7aa8c9125d46ecf8935ce2e">beluga::SimpleStateEstimator&lt; Mixin, Sophus::SE2d &gt;::SimpleStateEstimator</a></div><div class="ttdeci">SimpleStateEstimator(Args &amp;&amp;... args)</div><div class="ttdoc">Constructs a SimpleStateEstimator instance.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:159</div></div>
+<div class="ttc" id="aclassbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4_html_af68d48628e3d6cb4d1d14b1214a0178e"><div class="ttname"><a href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html#af68d48628e3d6cb4d1d14b1214a0178e">beluga::SimpleStateEstimator&lt; Mixin, Sophus::SE2d &gt;::estimate</a></div><div class="ttdeci">std::pair&lt; Sophus::SE2d, Eigen::Matrix3d &gt; estimate() const final</div><div class="ttdoc">Returns the estimate state of the particle filter.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:162</div></div>
+<div class="ttc" id="aclassbeluga_1_1SimpleStateEstimator_html"><div class="ttname"><a href="classbeluga_1_1SimpleStateEstimator.html">beluga::SimpleStateEstimator</a></div><div class="ttdoc">Primary template for a simple state estimator.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:141</div></div>
+<div class="ttc" id="aestimation_8hpp_html_a99554af5727d1c61272e1fbcf49f3745"><div class="ttname"><a href="estimation_8hpp.html#a99554af5727d1c61272e1fbcf49f3745">beluga::covariance</a></div><div class="ttdeci">Eigen::Matrix2&lt; Scalar &gt; covariance(Range &amp;&amp;range, const Eigen::Vector2&lt; Scalar &gt; &amp;mean)</div><div class="ttdoc">Calculates the covariance of a range given its mean.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:59</div></div>
+<div class="ttc" id="aestimation_8hpp_html_ad777c60ad89e4c7e278d14510c519bc7"><div class="ttname"><a href="estimation_8hpp.html#ad777c60ad89e4c7e278d14510c519bc7">beluga::estimate</a></div><div class="ttdeci">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Eigen::Matrix3&lt; Scalar &gt; &gt; estimate(Range &amp;&amp;range)</div><div class="ttdoc">Returns a pair consisting of the estimated mean pose and its covariance.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:96</div></div>
+<div class="ttc" id="astructbeluga_1_1EstimationInterface2d_html"><div class="ttname"><a href="structbeluga_1_1EstimationInterface2d.html">beluga::EstimationInterface2d</a></div><div class="ttdoc">Pure abstract class representing the estimation interface.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:128</div></div>
+<div class="ttc" id="astructbeluga_1_1EstimationInterface2d_html_a7d968ce1ed43073860ba6bd04fb3a3a9"><div class="ttname"><a href="structbeluga_1_1EstimationInterface2d.html#a7d968ce1ed43073860ba6bd04fb3a3a9">beluga::EstimationInterface2d::~EstimationInterface2d</a></div><div class="ttdeci">virtual ~EstimationInterface2d()=default</div><div class="ttdoc">Virtual destructor.</div></div>
+<div class="ttc" id="astructbeluga_1_1EstimationInterface2d_html_aeabe4a85b9789b5f84888fd59f0a3900"><div class="ttname"><a href="structbeluga_1_1EstimationInterface2d.html#aeabe4a85b9789b5f84888fd59f0a3900">beluga::EstimationInterface2d::estimate</a></div><div class="ttdeci">virtual std::pair&lt; Sophus::SE2d, Eigen::Matrix3d &gt; estimate() const =0</div><div class="ttdoc">Returns the estimate state of the particle filter.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

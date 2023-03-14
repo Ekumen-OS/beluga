@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['update_5fmin_5fa_331',['update_min_a',['../structbeluga_1_1ResampleOnMotionPolicyParam.html#ac65b68e51b4e2bedd8a0fc5b352b004b',1,'beluga::ResampleOnMotionPolicyParam']]],
-  ['update_5fmin_5fd_332',['update_min_d',['../structbeluga_1_1ResampleOnMotionPolicyParam.html#aeffa05da22fc1fb8907e5142740b53a0',1,'beluga::ResampleOnMotionPolicyParam']]]
+  ['resample_5finterval_5fcount_420',['resample_interval_count',['../structbeluga_1_1ResampleIntervalPolicyParam.html#a90d898b392378f4c8b2f0a9f1767e303',1,'beluga::ResampleIntervalPolicyParam']]],
+  ['rotation_5fnoise_5ffrom_5frotation_421',['rotation_noise_from_rotation',['../structbeluga_1_1DifferentialDriveModelParam.html#a01eab931f32b7ae92f2d4f0b1175e30c',1,'beluga::DifferentialDriveModelParam::rotation_noise_from_rotation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#ad954995b2de1b3ebaa2839635a6d2eff',1,'beluga::OmnidirectionalDriveModelParam::rotation_noise_from_rotation()']]],
+  ['rotation_5fnoise_5ffrom_5ftranslation_422',['rotation_noise_from_translation',['../structbeluga_1_1DifferentialDriveModelParam.html#a14d0476d23005e9c2bfbc7d8f3de4b55',1,'beluga::DifferentialDriveModelParam::rotation_noise_from_translation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a7933e668b81ddf041ea9f8747a8b7dc6',1,'beluga::OmnidirectionalDriveModelParam::rotation_noise_from_translation()']]]
 ];

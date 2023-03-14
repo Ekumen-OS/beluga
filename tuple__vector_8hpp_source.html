@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/tuple_vector.hpp Source File</title>
+<title>Beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/tuple_vector.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -141,11 +141,11 @@ $(function() {
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    push_back_impl(value, std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(Types)&gt;());</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  }</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a801bd76c2e9556006ea09af84c5df36f">  117</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a801bd76c2e9556006ea09af84c5df36f">view_all</a>() {</div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a801bd76c2e9556006ea09af84c5df36f">  117</a></span>&#160;  [[nodiscard]] constexpr <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a801bd76c2e9556006ea09af84c5df36f">view_all</a>() {</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">return</span> std::apply([](<span class="keyword">auto</span>&amp;&amp;... containers) { <span class="keywordflow">return</span> ranges::views::zip(containers...); }, sequences_);</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  }</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a72a9ad0e68adeaba04dc94dcabb7bdf9">  122</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a72a9ad0e68adeaba04dc94dcabb7bdf9">view_all</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a72a9ad0e68adeaba04dc94dcabb7bdf9">  122</a></span>&#160;  [[nodiscard]] constexpr <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a72a9ad0e68adeaba04dc94dcabb7bdf9">view_all</a>()<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordflow">return</span> std::apply([](<span class="keyword">auto</span>&amp;&amp;... containers) { <span class="keywordflow">return</span> ranges::views::zip(containers...); }, sequences_) |</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;           ranges::views::const_;</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  }</div>
@@ -200,7 +200,7 @@ $(function() {
 <div class="ttc" id="astructbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01T_01_4_01_4_html_ad4038bd012877995108647e957499e61"><div class="ttname"><a href="structbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01T_01_4_01_4.html#ad4038bd012877995108647e957499e61">beluga::container_traits&lt; TupleContainer&lt; InternalContainer, T &gt; &gt;::view_all</a></div><div class="ttdeci">static constexpr auto view_all(U &amp;&amp;container)</div><div class="ttdoc">Returns a view of all the elements in the container.</div><div class="ttdef"><b>Definition:</b> tuple_vector.hpp:148</div></div>
 <div class="ttc" id="astructbeluga_1_1container__traits_html"><div class="ttname"><a href="structbeluga_1_1container__traits.html">beluga::container_traits</a></div><div class="ttdoc">Useful traits for a Container.</div><div class="ttdef"><b>Definition:</b> container_traits.hpp:34</div></div>
 <div class="ttc" id="atuple__vector_8hpp_html_a51cbced5170bfe37a85ef0a454b4ade0"><div class="ttname"><a href="tuple__vector_8hpp.html#a51cbced5170bfe37a85ef0a454b4ade0">beluga::Vector</a></div><div class="ttdeci">std::vector&lt; T, std::allocator&lt; T &gt; &gt; Vector</div><div class="ttdoc">Shorthand for a std::vector&lt;T, std::allocator&lt;T&gt;&gt;.</div><div class="ttdef"><b>Definition:</b> tuple_vector.hpp:155</div></div>
-<div class="ttc" id="atype__traits_8hpp_html"><div class="ttname"><a href="type__traits_8hpp.html">type_traits.hpp</a></div><div class="ttdoc">Includes all beluga type traits.</div></div>
+<div class="ttc" id="atype__traits_8hpp_html"><div class="ttname"><a href="type__traits_8hpp.html">type_traits.hpp</a></div><div class="ttdoc">Includes all Beluga type traits.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

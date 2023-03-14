@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt; Class Template Reference</title>
+<title>Beluga: beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -128,26 +128,28 @@ Public Member Functions</h2></td></tr>
 const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a2cb7e445a5128fb299f1fc8caf85e623">likelihood_field</a> () const</td></tr>
 <tr class="memdesc:a2cb7e445a5128fb299f1fc8caf85e623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the likelihood field, constructed from the provided map. <br /></td></tr>
 <tr class="separator:a2cb7e445a5128fb299f1fc8caf85e623"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53482d8b02320a7c083e4315e152251e"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
-<tr class="memitem:a53482d8b02320a7c083e4315e152251e"><td class="memTemplItemLeft" align="right" valign="top">Sophus::SE2d&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a53482d8b02320a7c083e4315e152251e">generate_random_state</a> (Generator &amp;generator) const</td></tr>
-<tr class="memdesc:a53482d8b02320a7c083e4315e152251e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a random particle state.  <a href="classbeluga_1_1LikelihoodFieldModel.html#a53482d8b02320a7c083e4315e152251e">More...</a><br /></td></tr>
-<tr class="separator:a53482d8b02320a7c083e4315e152251e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6b74a82d3ec5baa6a49553317eb6939"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
+<tr class="memitem:af6b74a82d3ec5baa6a49553317eb6939"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#ac088f5c1a0bf60d5eca535e1979b5564">state_type</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#af6b74a82d3ec5baa6a49553317eb6939">make_random_state</a> (Generator &amp;gen) const</td></tr>
+<tr class="memdesc:af6b74a82d3ec5baa6a49553317eb6939"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a random particle state.  <a href="classbeluga_1_1LikelihoodFieldModel.html#af6b74a82d3ec5baa6a49553317eb6939">More...</a><br /></td></tr>
+<tr class="separator:af6b74a82d3ec5baa6a49553317eb6939"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a508967d4e3e24c7d20330c338c8e4671"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a411eaec04a3b4eb68016d3dbda492f86">weight_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a508967d4e3e24c7d20330c338c8e4671">importance_weight</a> (const <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#ac088f5c1a0bf60d5eca535e1979b5564">state_type</a> &amp;state) const</td></tr>
 <tr class="memdesc:a508967d4e3e24c7d20330c338c8e4671"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the importance weight for a particle with the provided state.  <a href="classbeluga_1_1LikelihoodFieldModel.html#a508967d4e3e24c7d20330c338c8e4671">More...</a><br /></td></tr>
 <tr class="separator:a508967d4e3e24c7d20330c338c8e4671"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4abb9cd7c4b1f514760a55436e8d4234"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a4abb9cd7c4b1f514760a55436e8d4234">update_sensor</a> (<a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a9d326f9aea9643cce21a2413d15f655a">measurement_type</a> points)</td></tr>
-<tr class="memdesc:a4abb9cd7c4b1f514760a55436e8d4234"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="classbeluga_1_1LikelihoodFieldModel.html#a4abb9cd7c4b1f514760a55436e8d4234">More...</a><br /></td></tr>
-<tr class="separator:a4abb9cd7c4b1f514760a55436e8d4234"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0025fd6c1fb449e091db8fdca0f9fba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#aa0025fd6c1fb449e091db8fdca0f9fba">update_sensor</a> (<a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a9d326f9aea9643cce21a2413d15f655a">measurement_type</a> &amp;&amp;points) final</td></tr>
+<tr class="memdesc:aa0025fd6c1fb449e091db8fdca0f9fba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="classbeluga_1_1LikelihoodFieldModel.html#aa0025fd6c1fb449e091db8fdca0f9fba">More...</a><br /></td></tr>
+<tr class="separator:aa0025fd6c1fb449e091db8fdca0f9fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Mixin, class OccupancyGrid&gt;<br />
 class beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</h3>
 
 <p>Likelihood field sensor model for range finders. </p>
+<p>This class implements the <a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html" title="Pure abstract class representing the laser sensor model interface.">LaserSensorModelInterface2d</a> interface and satisfies <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>.</p>
+<p>See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[4]</a> Chapter 6.4.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mixin</td><td>The mixed-in type. </td></tr>
-    <tr><td class="paramname">OccupancyGrid</td><td>Type representing an occupancy grid. It must satisfy the <a class="el" href="OccupancyGrid2dPage.html">beluga named requirements: OccupancyGrid2d</a> OccupancyGrid2d requirements. </td></tr>
+    <tr><td class="paramname">Mixin</td><td>The mixed-in type with no particular requirements. </td></tr>
+    <tr><td class="paramname">OccupancyGrid</td><td>Type representing an occupancy grid. It must satisfy <a class="el" href="OccupancyGrid2dPage.html">Beluga named requirements: OccupancyGrid2d</a>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -207,7 +209,7 @@ template&lt;class... Args&gt; </div>
   <table class="params">
     <tr><td class="paramname">params</td><td>Parameters to configure this instance. See <a class="el" href="structbeluga_1_1LikelihoodFieldModelParam.html" title="Parameters used to construct a LikelihoodFieldModel instance.">beluga::LikelihoodFieldModelParam</a> for details. </td></tr>
     <tr><td class="paramname">grid</td><td>Occupancy grid representing the static map. </td></tr>
-    <tr><td class="paramname">...rest</td><td>arguments that are not used by this part of the mixin, but by others. </td></tr>
+    <tr><td class="paramname">...rest</td><td>Arguments that are not used by this part of the mixin, but by others. </td></tr>
   </table>
   </dd>
 </dl>
@@ -215,52 +217,6 @@ template&lt;class... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a53482d8b02320a7c083e4315e152251e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53482d8b02320a7c083e4315e152251e">&#9670;&nbsp;</a></span>generate_random_state()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Mixin , class OccupancyGrid &gt; </div>
-<div class="memtemplate">
-template&lt;class Generator &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Sophus::SE2d <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html">beluga::LikelihoodFieldModel</a>&lt; Mixin, OccupancyGrid &gt;::generate_random_state </td>
-          <td>(</td>
-          <td class="paramtype">Generator &amp;&#160;</td>
-          <td class="paramname"><em>generator</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Generates a random particle state. </p>
-<p>The generated state is an unoccupied cell of the grid, any free cell is sampled uniformly. The rotation is as well sampled uniformly.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Generator</td><td>A type satisfying the <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a> requirements. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">generator</td><td>A <code>Generator</code> instance, used as a random bit generator to generate the random state. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The generated random state. </dd></dl>
-
-</div>
-</div>
 <a id="a508967d4e3e24c7d20330c338c8e4671"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a508967d4e3e24c7d20330c338c8e4671">&#9670;&nbsp;</a></span>importance_weight()</h2>
 
@@ -298,8 +254,54 @@ template&lt;class Mixin , class OccupancyGrid &gt; </div>
 
 </div>
 </div>
-<a id="a4abb9cd7c4b1f514760a55436e8d4234"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4abb9cd7c4b1f514760a55436e8d4234">&#9670;&nbsp;</a></span>update_sensor()</h2>
+<a id="af6b74a82d3ec5baa6a49553317eb6939"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6b74a82d3ec5baa6a49553317eb6939">&#9670;&nbsp;</a></span>make_random_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Mixin , class OccupancyGrid &gt; </div>
+<div class="memtemplate">
+template&lt;class Generator &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#ac088f5c1a0bf60d5eca535e1979b5564">state_type</a> <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html">beluga::LikelihoodFieldModel</a>&lt; Mixin, OccupancyGrid &gt;::make_random_state </td>
+          <td>(</td>
+          <td class="paramtype">Generator &amp;&#160;</td>
+          <td class="paramname"><em>gen</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generates a random particle state. </p>
+<p>The generated state is an unoccupied cell of the grid, any free cell is sampled uniformly. The rotation is as well sampled uniformly.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Generator</td><td>A random number generator that must satisfy the <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a> requirements. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gen</td><td>An uniform random bit generator object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The generated random state. </dd></dl>
+
+</div>
+</div>
+<a id="aa0025fd6c1fb449e091db8fdca0f9fba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0025fd6c1fb449e091db8fdca0f9fba">&#9670;&nbsp;</a></span>update_sensor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -312,20 +314,20 @@ template&lt;class Mixin , class OccupancyGrid &gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html">beluga::LikelihoodFieldModel</a>&lt; Mixin, OccupancyGrid &gt;::update_sensor </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a9d326f9aea9643cce21a2413d15f655a">measurement_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a9d326f9aea9643cce21a2413d15f655a">measurement_type</a> &amp;&amp;&#160;</td>
           <td class="paramname"><em>points</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Update the sensor model with the measured points. </p>
-<p>This will not update the particle filter particles weights. For that, the <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a508967d4e3e24c7d20330c338c8e4671" title="Gets the importance weight for a particle with the provided state.">importance_weight()</a> method provided here is used by the particle filter.</p>
+<p>This method updates the sensor model with the information it needs to compute the weight of each particle. The weight of each particle is calculated by subsequent calls to the <code><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a508967d4e3e24c7d20330c338c8e4671" title="Gets the importance weight for a particle with the provided state.">importance_weight()</a></code> method provided by the same mixin component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">points</td><td>The range finder points in the reference frame of the particle. </td></tr>

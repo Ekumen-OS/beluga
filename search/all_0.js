@@ -1,11 +1,12 @@
 var searchData=
 [
-  ['adaptivegeneration_0',['AdaptiveGeneration',['../structbeluga_1_1AdaptiveGeneration.html#a04fba0907e0c5bc4ed95ada54e0a877b',1,'beluga::AdaptiveGeneration::AdaptiveGeneration()'],['../structbeluga_1_1AdaptiveGeneration.html',1,'beluga::AdaptiveGeneration&lt; Mixin, RandomNumberGenerator &gt;']]],
-  ['adaptivegenerationparam_1',['AdaptiveGenerationParam',['../structbeluga_1_1AdaptiveGenerationParam.html',1,'beluga']]],
-  ['algorithm_2ehpp_2',['algorithm.hpp',['../algorithm_8hpp.html',1,'']]],
-  ['all_3',['all',['../container__traits_8hpp.html#a2aa8661ab85caa22e894886a4cee337d',1,'beluga::views']]],
-  ['alpha_5ffast_4',['alpha_fast',['../structbeluga_1_1AdaptiveGenerationParam.html#a4e2d51f280d8b8a55c59cae389b62aeb',1,'beluga::AdaptiveGenerationParam']]],
-  ['alpha_5fslow_5',['alpha_slow',['../structbeluga_1_1AdaptiveGenerationParam.html#a83c74adaf0ff1f8ea1d6b574d507cb0a',1,'beluga::AdaptiveGenerationParam']]],
-  ['amcl_6',['AMCL',['../structbeluga_1_1AMCL.html',1,'beluga']]],
-  ['apply_5fmotion_7',['apply_motion',['../classbeluga_1_1DifferentialDriveModel.html#a8daf7f9027fb09a5e6aadd46f764eeff',1,'beluga::DifferentialDriveModel::apply_motion()'],['../classbeluga_1_1OmnidirectionalDriveModel.html#a9649a7fc5c8ac52af891aef89731814b',1,'beluga::OmnidirectionalDriveModel::apply_motion()'],['../classbeluga_1_1StationaryModel.html#a77950c7a7f7f3a09174db4455f95c3b9',1,'beluga::StationaryModel::apply_motion()']]]
+  ['adaptivemontecarlolocalization2d_0',['AdaptiveMonteCarloLocalization2d',['../localization_8hpp.html#a7310463381883e280c6d931306058e13',1,'beluga']]],
+  ['adaptivesampler_1',['AdaptiveSampler',['../classbeluga_1_1AdaptiveSampler.html#ad4a9badc42f836e1e797e2cf20376175',1,'beluga::AdaptiveSampler::AdaptiveSampler()'],['../classbeluga_1_1AdaptiveSampler.html',1,'beluga::AdaptiveSampler&lt; Mixin &gt;']]],
+  ['adaptivesamplerparam_2',['AdaptiveSamplerParam',['../structbeluga_1_1AdaptiveSamplerParam.html',1,'beluga']]],
+  ['algorithm_2ehpp_3',['algorithm.hpp',['../algorithm_8hpp.html',1,'']]],
+  ['all_4',['all',['../container__traits_8hpp.html#a2aa8661ab85caa22e894886a4cee337d',1,'beluga::views']]],
+  ['alpha_5ffast_5',['alpha_fast',['../structbeluga_1_1AdaptiveSamplerParam.html#ae8626be75049cab675b34723c414578c',1,'beluga::AdaptiveSamplerParam']]],
+  ['alpha_5fslow_6',['alpha_slow',['../structbeluga_1_1AdaptiveSamplerParam.html#a742bb003667cc42f43f2e7f9e9f3e8f2',1,'beluga::AdaptiveSamplerParam']]],
+  ['apply_5fmotion_7',['apply_motion',['../classbeluga_1_1DifferentialDriveModel.html#a37101e2b774320bc331bf2cf0e0b313a',1,'beluga::DifferentialDriveModel::apply_motion()'],['../classbeluga_1_1OmnidirectionalDriveModel.html#a363e0638d48b3d23597a41370baf449a',1,'beluga::OmnidirectionalDriveModel::apply_motion()'],['../classbeluga_1_1StationaryModel.html#a5100b33c83acf3d4e2819c51dffd3d4f',1,'beluga::StationaryModel::apply_motion()']]],
+  ['arrayofstructures_8',['ArrayOfStructures',['../storage_8hpp.html#a662135ce0f05bba0aaf21dbd8292a87b',1,'beluga']]]
 ];

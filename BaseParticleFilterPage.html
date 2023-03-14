@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: beluga named requirements: BaseParticleFilter</title>
+<title>Beluga: Beluga named requirements: BaseParticleFilter</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -64,27 +64,24 @@ $(function() {
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">beluga named requirements: BaseParticleFilter </div>  </div>
+<div class="title">Beluga named requirements: BaseParticleFilter </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Base requirements of a particle filter in beluga.</p>
+<div class="textblock"><p>Base requirements of a particle filter in Beluga.</p>
 <h1><a class="anchor" id="BaseParticleFilterRequirements"></a>
 Requirements</h1>
-<p><code>B</code> is a <code>BaseParticleFilter</code> if given</p><ul>
-<li><code>T</code>, the type named by <code>B::particle_type</code>.</li>
-<li><code>S</code>, the type named by <code>T::state_type</code>.</li>
-<li><code>V</code>, a range view whose elements are of the same type as <code>S</code>.</li>
-<li><code>p</code>, a value of type <code>B</code>.</li>
-<li><code>x</code>, possibly const value of type <code>V</code>.</li>
+<p><code>B</code> is a <code>BaseParticleFilter</code> if given:</p><ul>
+<li><code>b</code>, a value of type <code>B</code>.</li>
 </ul>
 <p>The following is satisfied:</p><ul>
-<li><code>p.particles()</code> is valid and returns a view to a container that satisfies the <a class="el" href="ParticleContainerPage.html">ParticleContainer</a> requirements.</li>
-<li><code><a class="el" href="particle__traits_8hpp.html#a2587f0f5353e49219ab8720e7e48b613">p.weights()</a></code> is valid and returns a view to a container to the weights of the particles.</li>
-<li><code>p.sample()</code> updates the particle filter particles based on the last motion update.</li>
-<li><code>p.importance_sample()</code> updates the particle filter particles weight.</li>
-<li><code>p.resample()</code> updates the particle filter, generating new particles from the old ones based on their importance weights.</li>
-<li><code>p.update()</code> shorthand for executing the above three steps.</li>
-<li><code>p.reinitialize(x)</code> is valid and reinitializes the particles with the given range view values. </li>
+<li><code>b.sample()</code> updates the particles based on the latest motion update.</li>
+<li><code>b.importance_sample()</code> updates the particles weight based on the latest sensor update.</li>
+<li><code>b.resample()</code> generates new particles from the old ones based on their importance weights.</li>
+</ul>
+<h1><a class="anchor" id="BaseParticleFilterLinks"></a>
+See also</h1>
+<ul>
+<li><a class="el" href="classbeluga_1_1BootstrapParticleFilter.html" title="Base implementation of a particle filter.">beluga::BootstrapParticleFilter</a> </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

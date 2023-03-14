@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: beluga named requirements: MotionModel</title>
+<title>Beluga: Beluga named requirements: MotionModel</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -64,10 +64,10 @@ $(function() {
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">beluga named requirements: MotionModel </div>  </div>
+<div class="title">Beluga named requirements: MotionModel </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Requirements for a motion model to be used in a beluga <code>ParticleFilter</code>.</p>
+<div class="textblock"><p>Requirements for a motion model to be used in a Beluga <code>ParticleFilter</code>.</p>
 <h1><a class="anchor" id="MotionModelRequirements"></a>
 Requirements</h1>
 <p>A type <code>T</code> satisfies the <code>MotionModel</code> requirements if the following is satisfied:</p><ul>
@@ -83,7 +83,14 @@ Requirements</h1>
 <p>Then:</p><ul>
 <li><code>p.update_motion(u)</code> will update the motion model with <code>u</code>. This will not actually update the particle states, but the update done here will be used in subsequent calls to the <code>apply_motion()</code> method.</li>
 <li><code>cp.apply_motion(s)</code> returns a <code>T::state_type</code>, that is the result of applying the motion model to <code>s</code> based on the updates.</li>
-<li>`cp.latest_motion_update() returns a std::optional&lt;update_type&gt; with the latest motion update received through motion_update(). </li>
+<li><code>cp.latest_motion_update()</code> returns a <code>std::optional&lt;update_type&gt;</code> with the latest motion update received through <code>motion_update()</code>.</li>
+</ul>
+<h1><a class="anchor" id="MotionModelLinks"></a>
+See also</h1>
+<ul>
+<li><a class="el" href="classbeluga_1_1DifferentialDriveModel.html" title="Sampled odometry model for a differential drive.">beluga::DifferentialDriveModel</a></li>
+<li><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html" title="Sampled odometry model for an omnidirectional drive.">beluga::OmnidirectionalDriveModel</a></li>
+<li><a class="el" href="classbeluga_1_1StationaryModel.html" title="A stationary motion model.">beluga::StationaryModel</a> </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

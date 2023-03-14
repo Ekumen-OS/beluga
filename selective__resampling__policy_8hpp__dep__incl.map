@@ -1,7 +1,6 @@
 <map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/selective_resampling_policy.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/selective_resampling_policy.hpp">
-<area shape="rect" id="node1" title="Implementation of the selective resampling algorithm for resampling." alt="" coords="117,5,339,91"/>
-<area shape="rect" id="node2" href="$particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="65,139,258,209"/>
-<area shape="rect" id="node5" href="$resampling__policies_8hpp.html" title="Includes all resampling policy related headers." alt="" coords="246,257,445,328"/>
-<area shape="rect" id="node3" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,265,221,321"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the beluga API." alt="" coords="131,376,328,432"/>
+<area shape="rect" id="node1" title="Implementation of the selective resampling algorithm for resampling." alt="" coords="127,5,349,91"/>
+<area shape="rect" id="node2" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="5,146,233,202"/>
+<area shape="rect" id="node4" href="$resampling__policies_8hpp.html" title="Includes all resampling policy related headers." alt="" coords="257,139,456,209"/>
+<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="139,257,337,313"/>
 </map>

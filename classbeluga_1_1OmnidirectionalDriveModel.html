@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: beluga::OmnidirectionalDriveModel&lt; Mixin &gt; Class Template Reference</title>
+<title>Beluga: beluga::OmnidirectionalDriveModel&lt; Mixin &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -118,23 +118,28 @@ using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aff70a0a584ac3590432f1c0c5f347a37"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; </td></tr>
 <tr class="memitem:aff70a0a584ac3590432f1c0c5f347a37"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aff70a0a584ac3590432f1c0c5f347a37">OmnidirectionalDriveModel</a> (const <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aeef05689b2ee8d1ca6321fe2dda31d39">param_type</a> &amp;params, Args &amp;&amp;... args)</td></tr>
-<tr class="memdesc:aff70a0a584ac3590432f1c0c5f347a37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an omnidirectionalDriveModel instance.  <a href="classbeluga_1_1OmnidirectionalDriveModel.html#aff70a0a584ac3590432f1c0c5f347a37">More...</a><br /></td></tr>
+<tr class="memdesc:aff70a0a584ac3590432f1c0c5f347a37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html" title="Sampled odometry model for an omnidirectional drive.">OmnidirectionalDriveModel</a> instance.  <a href="classbeluga_1_1OmnidirectionalDriveModel.html#aff70a0a584ac3590432f1c0c5f347a37">More...</a><br /></td></tr>
 <tr class="separator:aff70a0a584ac3590432f1c0c5f347a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9649a7fc5c8ac52af891aef89731814b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">state_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a9649a7fc5c8ac52af891aef89731814b">apply_motion</a> (const <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">state_type</a> &amp;state) const</td></tr>
-<tr class="memdesc:a9649a7fc5c8ac52af891aef89731814b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the last update to the particle state given.  <a href="classbeluga_1_1OmnidirectionalDriveModel.html#a9649a7fc5c8ac52af891aef89731814b">More...</a><br /></td></tr>
-<tr class="separator:a9649a7fc5c8ac52af891aef89731814b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c13b7188b526f3e8ac649aecb3904f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a2c13b7188b526f3e8ac649aecb3904f3">update_motion</a> (const <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a28e78c6ebaa00c505177126578eb8a11">update_type</a> &amp;pose)</td></tr>
-<tr class="memdesc:a2c13b7188b526f3e8ac649aecb3904f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the motion model.  <a href="classbeluga_1_1OmnidirectionalDriveModel.html#a2c13b7188b526f3e8ac649aecb3904f3">More...</a><br /></td></tr>
-<tr class="separator:a2c13b7188b526f3e8ac649aecb3904f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a363e0638d48b3d23597a41370baf449a"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
+<tr class="memitem:a363e0638d48b3d23597a41370baf449a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">state_type</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a363e0638d48b3d23597a41370baf449a">apply_motion</a> (const <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">state_type</a> &amp;state, Generator &amp;gen) const</td></tr>
+<tr class="memdesc:a363e0638d48b3d23597a41370baf449a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the last motion update to the given particle state.  <a href="classbeluga_1_1OmnidirectionalDriveModel.html#a363e0638d48b3d23597a41370baf449a">More...</a><br /></td></tr>
+<tr class="separator:a363e0638d48b3d23597a41370baf449a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a207022984184bedd15fe76c5e51054d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a207022984184bedd15fe76c5e51054d9">update_motion</a> (const <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a28e78c6ebaa00c505177126578eb8a11">update_type</a> &amp;pose) final</td></tr>
+<tr class="memdesc:a207022984184bedd15fe76c5e51054d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the motion model with the latest odometry data.  <a href="classbeluga_1_1OmnidirectionalDriveModel.html#a207022984184bedd15fe76c5e51054d9">More...</a><br /></td></tr>
+<tr class="separator:a207022984184bedd15fe76c5e51054d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e5b85ecfaf13934312b4935d744d0b7"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a28e78c6ebaa00c505177126578eb8a11">update_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a8e5b85ecfaf13934312b4935d744d0b7">latest_motion_update</a> () const</td></tr>
+<tr class="memdesc:a8e5b85ecfaf13934312b4935d744d0b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recovers the latest motion update.  <a href="classbeluga_1_1OmnidirectionalDriveModel.html#a8e5b85ecfaf13934312b4935d744d0b7">More...</a><br /></td></tr>
+<tr class="separator:a8e5b85ecfaf13934312b4935d744d0b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Mixin&gt;<br />
 class beluga::OmnidirectionalDriveModel&lt; Mixin &gt;</h3>
 
 <p>Sampled odometry model for an omnidirectional drive. </p>
+<p>This class implements the <a class="el" href="structbeluga_1_1OdometryMotionModelInterface2d.html" title="Pure abstract class representing the odometry motion model interface.">OdometryMotionModelInterface2d</a> and satisfies <a class="el" href="MotionModelPage.html">Beluga named requirements: MotionModel</a>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mixin</td><td>The mixed-in type. </td></tr>
+    <tr><td class="paramname">Mixin</td><td>The mixed-in type with no particular requirements. </td></tr>
   </table>
   </dd>
 </dl>
@@ -177,7 +182,7 @@ template&lt;class... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Constructs an omnidirectionalDriveModel instance. </p>
+<p>Constructs an <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html" title="Sampled odometry model for an omnidirectional drive.">OmnidirectionalDriveModel</a> instance. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">...Args</td><td>Arguments types for the remaining mixin constructors. </td></tr>
@@ -187,7 +192,7 @@ template&lt;class... Args&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">params</td><td>Parameters to configure this instance. See <a class="el" href="structbeluga_1_1OmnidirectionalDriveModelParam.html" title="Parameters to construct an OmnidirectionalDriveModel instance.">beluga::OmnidirectionalDriveModelParam</a> for details. </td></tr>
-    <tr><td class="paramname">...args</td><td>arguments that are not used by this part of the mixin, but by others. </td></tr>
+    <tr><td class="paramname">...args</td><td>Arguments that are not used by this part of the mixin, but by others. </td></tr>
   </table>
   </dd>
 </dl>
@@ -195,8 +200,63 @@ template&lt;class... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9649a7fc5c8ac52af891aef89731814b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9649a7fc5c8ac52af891aef89731814b">&#9670;&nbsp;</a></span>apply_motion()</h2>
+<a id="a363e0638d48b3d23597a41370baf449a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a363e0638d48b3d23597a41370baf449a">&#9670;&nbsp;</a></span>apply_motion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Mixin &gt; </div>
+<div class="memtemplate">
+template&lt;class Generator &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">state_type</a> <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a>&lt; Mixin &gt;::apply_motion </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">state_type</a> &amp;&#160;</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Generator &amp;&#160;</td>
+          <td class="paramname"><em>gen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Applies the last motion update to the given particle state. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Generator</td><td>A random number generator that must satisfy the <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a> requirements. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>The state of the particle to which the motion will be applied. </td></tr>
+    <tr><td class="paramname">gen</td><td>An uniform random bit generator object. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8e5b85ecfaf13934312b4935d744d0b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e5b85ecfaf13934312b4935d744d0b7">&#9670;&nbsp;</a></span>latest_motion_update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -207,10 +267,9 @@ template&lt;class Mixin &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">state_type</a> <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a>&lt; Mixin &gt;::apply_motion </td>
+          <td class="memname">std::optional&lt;<a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a28e78c6ebaa00c505177126578eb8a11">update_type</a>&gt; <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a>&lt; Mixin &gt;::latest_motion_update </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">state_type</a> &amp;&#160;</td>
-          <td class="paramname"><em>state</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -221,19 +280,13 @@ template&lt;class Mixin &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Applies the last update to the particle state given. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">state</td><td>The particle state to apply the motion to. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The updated particle state. </dd></dl>
+<p>Recovers the latest motion update. </p>
+<dl class="section return"><dt>Returns</dt><dd>Last motion update received by the model or an empty optional if no update was received. </dd></dl>
 
 </div>
 </div>
-<a id="a2c13b7188b526f3e8ac649aecb3904f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c13b7188b526f3e8ac649aecb3904f3">&#9670;&nbsp;</a></span>update_motion()</h2>
+<a id="a207022984184bedd15fe76c5e51054d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a207022984184bedd15fe76c5e51054d9">&#9670;&nbsp;</a></span>update_motion()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -253,16 +306,16 @@ template&lt;class Mixin &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Updates the motion model. </p>
-<p>This will not update particles. That is done by the particle filter using the <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a9649a7fc5c8ac52af891aef89731814b" title="Applies the last update to the particle state given.">apply_motion()</a> method provided by this class.</p>
+<p>Updates the motion model with the latest odometry data. </p>
+<p>This method updates the motion model with the information it needs to apply the motion to each particle. The motion is applied by subsequent calls to the <code><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a363e0638d48b3d23597a41370baf449a" title="Applies the last motion update to the given particle state.">apply_motion()</a></code> method provided by the same mixin component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pose</td><td>Last odometry udpate. </td></tr>
+    <tr><td class="paramname">pose</td><td>Latest odometry update. </td></tr>
   </table>
   </dd>
 </dl>

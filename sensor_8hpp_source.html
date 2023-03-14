@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/sensor.hpp Source File</title>
+<title>Beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/sensor.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -90,8 +90,25 @@ $(function() {
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="likelihood__field__model_8hpp.html">beluga/sensor/likelihood_field_model.hpp</a>&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">namespace </span>beluga {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="structbeluga_1_1LaserSensorModelInterface2d.html">   55</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1LaserSensorModelInterface2d.html">LaserSensorModelInterface2d</a> {</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e">   57</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e">measurement_type</a> = std::vector&lt;std::pair&lt;double, double&gt;&gt;;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="structbeluga_1_1LaserSensorModelInterface2d.html#a105135fb02b03618aa3909599e2e1d08">   60</a></span>&#160;  <span class="keyword">virtual</span> <a class="code" href="structbeluga_1_1LaserSensorModelInterface2d.html#a105135fb02b03618aa3909599e2e1d08">~LaserSensorModelInterface2d</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="structbeluga_1_1LaserSensorModelInterface2d.html#a1d15eebdbc444ab28c39e9ad24abb164">   72</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="structbeluga_1_1LaserSensorModelInterface2d.html#a1d15eebdbc444ab28c39e9ad24abb164">update_sensor</a>(<a class="code" href="structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e">measurement_type</a>&amp;&amp; points) = 0;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;};</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="alikelihood__field__model_8hpp_html"><div class="ttname"><a href="likelihood__field__model_8hpp.html">likelihood_field_model.hpp</a></div><div class="ttdoc">Implementation of a likelihood field sensor model for range finders.</div></div>
+<div class="ttc" id="astructbeluga_1_1LaserSensorModelInterface2d_html"><div class="ttname"><a href="structbeluga_1_1LaserSensorModelInterface2d.html">beluga::LaserSensorModelInterface2d</a></div><div class="ttdoc">Pure abstract class representing the laser sensor model interface.</div><div class="ttdef"><b>Definition:</b> sensor.hpp:55</div></div>
+<div class="ttc" id="astructbeluga_1_1LaserSensorModelInterface2d_html_a105135fb02b03618aa3909599e2e1d08"><div class="ttname"><a href="structbeluga_1_1LaserSensorModelInterface2d.html#a105135fb02b03618aa3909599e2e1d08">beluga::LaserSensorModelInterface2d::~LaserSensorModelInterface2d</a></div><div class="ttdeci">virtual ~LaserSensorModelInterface2d()=default</div><div class="ttdoc">Virtual destructor.</div></div>
+<div class="ttc" id="astructbeluga_1_1LaserSensorModelInterface2d_html_a1d15eebdbc444ab28c39e9ad24abb164"><div class="ttname"><a href="structbeluga_1_1LaserSensorModelInterface2d.html#a1d15eebdbc444ab28c39e9ad24abb164">beluga::LaserSensorModelInterface2d::update_sensor</a></div><div class="ttdeci">virtual void update_sensor(measurement_type &amp;&amp;points)=0</div><div class="ttdoc">Update the sensor model with the measured points.</div></div>
+<div class="ttc" id="astructbeluga_1_1LaserSensorModelInterface2d_html_ae5eb21ebfecad52da373cce26a5ba65e"><div class="ttname"><a href="structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e">beluga::LaserSensorModelInterface2d::measurement_type</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; double, double &gt; &gt; measurement_type</div><div class="ttdoc">Measurement type of the sensor: a point cloud for the range finder.</div><div class="ttdef"><b>Definition:</b> sensor.hpp:57</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

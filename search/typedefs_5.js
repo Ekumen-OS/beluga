@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['tuplevector_346',['TupleVector',['../tuple__vector_8hpp.html#a86706e165596847122eda1ceaa923781',1,'beluga']]],
-  ['type_347',['type',['../structbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01T_01_4_01_4.html#a57a516484a11e964d1579f6eda7b1d8f',1,'beluga::container_traits&lt; TupleContainer&lt; InternalContainer, T &gt; &gt;::type()'],['../structbeluga_1_1decay__tuple__types.html#aa9919703e122456da572d7df0098bdf9',1,'beluga::decay_tuple_types::type()'],['../structbeluga_1_1decay__tuple__types_3_01Tuple_3_01Types_8_8_8_01_4_01_4.html#a38441cd1a9bd2b0561ba4c4eaf919965',1,'beluga::decay_tuple_types&lt; Tuple&lt; Types... &gt; &gt;::type()'],['../structbeluga_1_1decay__tuple.html#ae89cfe975c2046c8d0202e090bdf691b',1,'beluga::decay_tuple::type()']]]
+  ['measurement_5ftype_442',['measurement_type',['../classbeluga_1_1LikelihoodFieldModel.html#a9d326f9aea9643cce21a2413d15f655a',1,'beluga::LikelihoodFieldModel::measurement_type()'],['../structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e',1,'beluga::LaserSensorModelInterface2d::measurement_type()']]],
+  ['mixin_443',['mixin',['../structbeluga_1_1mixin_1_1descriptor_3_01Mixin_01_4.html#abb4a70553723e74ad828f389bb3f540f',1,'beluga::mixin::descriptor&lt; Mixin &gt;::mixin()'],['../structbeluga_1_1mixin_1_1descriptor_3_01Mixin_00_01Param_01_4.html#a4dc6e38b20add3b8a09bb1d7d2f1ca09',1,'beluga::mixin::descriptor&lt; Mixin, Param &gt;::mixin()']]],
+  ['mixin_5ffrom_5fdescriptors_5ft_444',['mixin_from_descriptors_t',['../descriptor_8hpp.html#a1205669121240f60bd2d501e2be33fb0',1,'beluga::mixin']]],
+  ['montecarlolocalization2d_445',['MonteCarloLocalization2d',['../localization_8hpp.html#a700a0fcfa664f85b091604be7c809655',1,'beluga']]],
+  ['motion_5fevent_446',['motion_event',['../classbeluga_1_1ResampleOnMotionPolicy.html#a0645734706b230df71c60dcd1c6b5bf8',1,'beluga::ResampleOnMotionPolicy']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['alpha_5ffast_312',['alpha_fast',['../structbeluga_1_1AdaptiveGenerationParam.html#a4e2d51f280d8b8a55c59cae389b62aeb',1,'beluga::AdaptiveGenerationParam']]],
-  ['alpha_5fslow_313',['alpha_slow',['../structbeluga_1_1AdaptiveGenerationParam.html#a83c74adaf0ff1f8ea1d6b574d507cb0a',1,'beluga::AdaptiveGenerationParam']]]
+  ['alpha_5ffast_404',['alpha_fast',['../structbeluga_1_1AdaptiveSamplerParam.html#ae8626be75049cab675b34723c414578c',1,'beluga::AdaptiveSamplerParam']]],
+  ['alpha_5fslow_405',['alpha_slow',['../structbeluga_1_1AdaptiveSamplerParam.html#a742bb003667cc42f43f2e7f9e9f3e8f2',1,'beluga::AdaptiveSamplerParam']]]
 ];

@@ -1,5 +1,5 @@
 <map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/type_traits.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/type_traits.hpp">
-<area shape="rect" id="node1" title="Includes all beluga type traits." alt="" coords="93,5,315,61"/>
+<area shape="rect" id="node1" title="Includes all Beluga type traits." alt="" coords="93,5,315,61"/>
 <area shape="rect" id="node2" href="$container__traits_8hpp.html" title="Useful traits for containers." alt="" coords="67,199,223,240"/>
 <area shape="rect" id="node5" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="189,109,333,151"/>
 <area shape="rect" id="node3" title=" " alt="" coords="193,288,285,315"/>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: beluga::StationaryModel&lt; Mixin &gt; Class Template Reference</title>
+<title>Beluga: beluga::StationaryModel&lt; Mixin &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -116,14 +116,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aed3943b33807f89f33a4ed474d8610d8"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1StationaryModel.html#aed3943b33807f89f33a4ed474d8610d8">StationaryModel</a> (Args &amp;&amp;... args)</td></tr>
 <tr class="memdesc:aed3943b33807f89f33a4ed474d8610d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1StationaryModel.html" title="A stationary motion model.">StationaryModel</a> instance.  <a href="classbeluga_1_1StationaryModel.html#aed3943b33807f89f33a4ed474d8610d8">More...</a><br /></td></tr>
 <tr class="separator:aed3943b33807f89f33a4ed474d8610d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77950c7a7f7f3a09174db4455f95c3b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1StationaryModel.html#ac85504b93546cfe5a4a464c5a78da326">state_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1StationaryModel.html#a77950c7a7f7f3a09174db4455f95c3b9">apply_motion</a> (const <a class="el" href="classbeluga_1_1StationaryModel.html#ac85504b93546cfe5a4a464c5a78da326">state_type</a> &amp;state) const</td></tr>
-<tr class="memdesc:a77950c7a7f7f3a09174db4455f95c3b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies motion to a particle.  <a href="classbeluga_1_1StationaryModel.html#a77950c7a7f7f3a09174db4455f95c3b9">More...</a><br /></td></tr>
-<tr class="separator:a77950c7a7f7f3a09174db4455f95c3b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcb3816b31567464248c2b0f71166d18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1StationaryModel.html#abcb3816b31567464248c2b0f71166d18">update_motion</a> (const <a class="el" href="classbeluga_1_1StationaryModel.html#af592273ec32543c7fa73be9e7cf7b45f">update_type</a> &amp;)</td></tr>
-<tr class="memdesc:abcb3816b31567464248c2b0f71166d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates motion model.  <a href="classbeluga_1_1StationaryModel.html#abcb3816b31567464248c2b0f71166d18">More...</a><br /></td></tr>
-<tr class="separator:abcb3816b31567464248c2b0f71166d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5100b33c83acf3d4e2819c51dffd3d4f"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
+<tr class="memitem:a5100b33c83acf3d4e2819c51dffd3d4f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1StationaryModel.html#ac85504b93546cfe5a4a464c5a78da326">state_type</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1StationaryModel.html#a5100b33c83acf3d4e2819c51dffd3d4f">apply_motion</a> (const <a class="el" href="classbeluga_1_1StationaryModel.html#ac85504b93546cfe5a4a464c5a78da326">state_type</a> &amp;state, Generator &amp;gen) const</td></tr>
+<tr class="memdesc:a5100b33c83acf3d4e2819c51dffd3d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies motion to the given particle state.  <a href="classbeluga_1_1StationaryModel.html#a5100b33c83acf3d4e2819c51dffd3d4f">More...</a><br /></td></tr>
+<tr class="separator:a5100b33c83acf3d4e2819c51dffd3d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0145571608156d56ff8d9dbf89a5117"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1StationaryModel.html#ab0145571608156d56ff8d9dbf89a5117">update_motion</a> ([[maybe_unused]] const <a class="el" href="classbeluga_1_1StationaryModel.html#af592273ec32543c7fa73be9e7cf7b45f">update_type</a> &amp;pose) final</td></tr>
+<tr class="memdesc:ab0145571608156d56ff8d9dbf89a5117"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the motion model with the latest odometry data.  <a href="classbeluga_1_1StationaryModel.html#ab0145571608156d56ff8d9dbf89a5117">More...</a><br /></td></tr>
+<tr class="separator:ab0145571608156d56ff8d9dbf89a5117"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bdf43c394e6e25dec583cf699549ca1"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="classbeluga_1_1StationaryModel.html#af592273ec32543c7fa73be9e7cf7b45f">update_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1StationaryModel.html#a8bdf43c394e6e25dec583cf699549ca1">latest_motion_update</a> () const</td></tr>
-<tr class="memdesc:a8bdf43c394e6e25dec583cf699549ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recovers latest motion update.  <a href="classbeluga_1_1StationaryModel.html#a8bdf43c394e6e25dec583cf699549ca1">More...</a><br /></td></tr>
+<tr class="memdesc:a8bdf43c394e6e25dec583cf699549ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recovers the latest motion update.  <a href="classbeluga_1_1StationaryModel.html#a8bdf43c394e6e25dec583cf699549ca1">More...</a><br /></td></tr>
 <tr class="separator:a8bdf43c394e6e25dec583cf699549ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -131,10 +132,11 @@ Public Member Functions</h2></td></tr>
 class beluga::StationaryModel&lt; Mixin &gt;</h3>
 
 <p>A stationary motion model. </p>
-<p>This class satisfies the <a class="el" href="MotionModelPage.html">MotionModel</a> requirements.</p>
+<p>This class implements the <a class="el" href="structbeluga_1_1OdometryMotionModelInterface2d.html" title="Pure abstract class representing the odometry motion model interface.">OdometryMotionModelInterface2d</a> and satisfies <a class="el" href="MotionModelPage.html">Beluga named requirements: MotionModel</a>.</p>
+<p>It ignores all odometry updates and only adds Gaussian noise to the input states.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mixin</td><td>The mixed-in type. </td></tr>
+    <tr><td class="paramname">Mixin</td><td>The mixed-in type with no particular requirements. </td></tr>
   </table>
   </dd>
 </dl>
@@ -176,7 +178,7 @@ template&lt;class... Args&gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">...args</td><td>arguments that are not used by this part of the mixin, but by others. </td></tr>
+    <tr><td class="paramname">...args</td><td>Arguments that are not used by this part of the mixin, but by others. </td></tr>
   </table>
   </dd>
 </dl>
@@ -184,13 +186,15 @@ template&lt;class... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a77950c7a7f7f3a09174db4455f95c3b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77950c7a7f7f3a09174db4455f95c3b9">&#9670;&nbsp;</a></span>apply_motion()</h2>
+<a id="a5100b33c83acf3d4e2819c51dffd3d4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5100b33c83acf3d4e2819c51dffd3d4f">&#9670;&nbsp;</a></span>apply_motion()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class Mixin &gt; </div>
+<div class="memtemplate">
+template&lt;class Generator &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -199,8 +203,18 @@ template&lt;class Mixin &gt; </div>
           <td class="memname"><a class="el" href="classbeluga_1_1StationaryModel.html#ac85504b93546cfe5a4a464c5a78da326">state_type</a> <a class="el" href="classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>&lt; Mixin &gt;::apply_motion </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classbeluga_1_1StationaryModel.html#ac85504b93546cfe5a4a464c5a78da326">state_type</a> &amp;&#160;</td>
-          <td class="paramname"><em>state</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Generator &amp;&#160;</td>
+          <td class="paramname"><em>gen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
   </td>
@@ -210,15 +224,22 @@ template&lt;class Mixin &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Applies motion to a particle. </p>
+<p>Applies motion to the given particle state. </p>
 <p>The updated state will be centered around <code>state</code> with some covariance.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">state</td><td>The particle state to apply the motion to. </td></tr>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Generator</td><td>A random number generator that must satisfy the <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a> requirements. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The updated paticle state. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>The state of the particle to which the motion will be applied. </td></tr>
+    <tr><td class="paramname">gen</td><td>An uniform random bit generator object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new particle state. </dd></dl>
 
 </div>
 </div>
@@ -247,13 +268,14 @@ template&lt;class Mixin &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Recovers latest motion update. </p>
-<p>For the stationary model, we don't ever have motion updates. </p>
+<p>Recovers the latest motion update. </p>
+<p>For the stationary model, we don't ever have motion updates.</p>
+<dl class="section return"><dt>Returns</dt><dd>An empty optional. </dd></dl>
 
 </div>
 </div>
-<a id="abcb3816b31567464248c2b0f71166d18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abcb3816b31567464248c2b0f71166d18">&#9670;&nbsp;</a></span>update_motion()</h2>
+<a id="ab0145571608156d56ff8d9dbf89a5117"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0145571608156d56ff8d9dbf89a5117">&#9670;&nbsp;</a></span>update_motion()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,20 +288,27 @@ template&lt;class Mixin &gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>&lt; Mixin &gt;::update_motion </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classbeluga_1_1StationaryModel.html#af592273ec32543c7fa73be9e7cf7b45f">update_type</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">[[maybe_unused] ] const <a class="el" href="classbeluga_1_1StationaryModel.html#af592273ec32543c7fa73be9e7cf7b45f">update_type</a> &amp;&#160;</td>
+          <td class="paramname"><em>pose</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Updates motion model. </p>
-<p>For the stationary model, updates are ignored. </p>
+<p>Updates the motion model with the latest odometry data. </p>
+<p>This method updates the motion model with the information it needs to apply the motion to each particle. The motion is applied by subsequent calls to the <code><a class="el" href="classbeluga_1_1StationaryModel.html#a5100b33c83acf3d4e2819c51dffd3d4f" title="Applies motion to the given particle state.">apply_motion()</a></code> method provided by the same mixin component.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pose</td><td>Latest odometry update.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>For this model, odometry updates are ignored. </p>
 
 </div>
 </div>

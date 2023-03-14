@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['update_305',['update',['../structbeluga_1_1BootstrapParticleFilter.html#ac511426ca3b1bf358b735e2574fa291e',1,'beluga::BootstrapParticleFilter']]],
-  ['update_5fmotion_306',['update_motion',['../classbeluga_1_1DifferentialDriveModel.html#ae1d1d1c77dc6bc939e70fc807076518d',1,'beluga::DifferentialDriveModel::update_motion()'],['../classbeluga_1_1OmnidirectionalDriveModel.html#a2c13b7188b526f3e8ac649aecb3904f3',1,'beluga::OmnidirectionalDriveModel::update_motion()'],['../classbeluga_1_1StationaryModel.html#abcb3816b31567464248c2b0f71166d18',1,'beluga::StationaryModel::update_motion()']]],
-  ['update_5fsensor_307',['update_sensor',['../classbeluga_1_1LikelihoodFieldModel.html#a4abb9cd7c4b1f514760a55436e8d4234',1,'beluga::LikelihoodFieldModel']]]
+  ['update_5fmotion_391',['update_motion',['../classbeluga_1_1DifferentialDriveModel.html#a0c08a11d3be665c8f575a92826914160',1,'beluga::DifferentialDriveModel::update_motion()'],['../classbeluga_1_1OmnidirectionalDriveModel.html#a207022984184bedd15fe76c5e51054d9',1,'beluga::OmnidirectionalDriveModel::update_motion()'],['../classbeluga_1_1StationaryModel.html#ab0145571608156d56ff8d9dbf89a5117',1,'beluga::StationaryModel::update_motion()'],['../structbeluga_1_1OdometryMotionModelInterface2d.html#a4366533b5965f3c1dd17afb2112435d8',1,'beluga::OdometryMotionModelInterface2d::update_motion()']]],
+  ['update_5fsensor_392',['update_sensor',['../classbeluga_1_1LikelihoodFieldModel.html#aa0025fd6c1fb449e091db8fdca0f9fba',1,'beluga::LikelihoodFieldModel::update_sensor()'],['../structbeluga_1_1LaserSensorModelInterface2d.html#a1d15eebdbc444ab28c39e9ad24abb164',1,'beluga::LaserSensorModelInterface2d::update_sensor()']]]
 ];

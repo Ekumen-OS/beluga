@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: Main Page</title>
+<title>Beluga: Main Page</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -64,20 +64,21 @@ $(function() {
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">beluga Documentation</div>  </div>
+<div class="title">Beluga Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> This library provides implementations for Monte Carlo based localization. The existing implementations are:</p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> This library provides implementations for Monte Carlo based localization algorithms. The existing implementations are:</p>
 <ul>
-<li><a class="el" href="structbeluga_1_1MCL.html" title="An implementation of Monte Carlo localization.">beluga::MCL</a>: Monte carlo localization using a fixed number of particles.</li>
-<li><a class="el" href="structbeluga_1_1AMCL.html" title="An implementation of adaptive Monte Carlo localization.">beluga::AMCL</a>: Adaptive Monte Carlo localization, the number of particles is defined using the KLD criteria.</li>
+<li>MCL: Monte Carlo Localization using a fixed number of particles.</li>
+<li>AMCL: Adaptive Monte Carlo Localization, the number of particles is defined using the KLD criteria.</li>
 </ul>
 <p>The library is extensible, allowing to:</p><ul>
-<li>Provide a different <a class="el" href="SensorModelPage.html">sensor</a> or <a class="el" href="MotionModelPage.html">motion</a> model.</li>
-<li>Provide a way of getting the estimated pose based on the particles.</li>
-<li>Provide a way of <a class="el" href="ParticleBaselineGenerationPage.html">generating the initial particles</a>.</li>
-<li>Provide a way of <a class="el" href="ParticleSampledGenerationPage.html">generating particles samples</a> from the previous particle set.</li>
-<li>Provide a way to <a class="el" href="ParticleResamplingPage.html">resample</a> particles. </li>
+<li>Provide different <a class="el" href="SensorModelPage.html">sensor</a> or <a class="el" href="MotionModelPage.html">motion</a> models.</li>
+<li>Provide a way of getting the <a class="el" href="StateEstimatorPage.html">estimated pose</a> based on the particles.</li>
+<li>Provide a way of <a class="el" href="StateGeneratorPage.html">generating the initial particles</a>.</li>
+<li>Provide a way of <a class="el" href="SamplerPage.html">sampling</a> from the previous particle set.</li>
+<li>Provide a way to <a class="el" href="LimiterPage.html">limiting</a> the amount of particles.</li>
+<li>Provide a way to <a class="el" href="ResamplingPolicyPage.html">choose when to resample</a>. </li>
 </ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->

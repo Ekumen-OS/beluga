@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm/sampling.hpp File Reference</title>
+<title>Beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm/sampling.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -84,6 +84,7 @@ $(function() {
 <code>#include &lt;<a class="el" href="exponential__filter_8hpp_source.html">beluga/algorithm/exponential_filter.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="spatial__hash_8hpp_source.html">beluga/algorithm/spatial_hash.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="type__traits_8hpp_source.html">beluga/type_traits.hpp</a>&gt;</code><br />
+<code>#include &lt;range/v3/view/common.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/generate.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/take.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/take_exactly.hpp&gt;</code><br />
@@ -94,30 +95,31 @@ Include dependency graph for sampling.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="sampling_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2sampling_8hpp" alt=""/></div>
 <map name="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2sampling_8hpp" id="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2sampling_8hpp">
-<area shape="rect" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="1113,5,1306,76"/>
-<area shape="rect" title=" " alt="" coords="218,131,305,158"/>
-<area shape="rect" title=" " alt="" coords="5,221,64,247"/>
-<area shape="rect" title=" " alt="" coords="1115,131,1187,158"/>
-<area shape="rect" title=" " alt="" coords="1211,131,1325,158"/>
-<area shape="rect" href="exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="1350,124,1565,165"/>
-<area shape="rect" href="spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="380,124,561,165"/>
-<area shape="rect" href="type__traits_8hpp.html" title="Includes all beluga type traits." alt="" coords="857,131,1025,158"/>
-<area shape="rect" title=" " alt="" coords="960,392,1171,419"/>
-<area shape="rect" title=" " alt="" coords="1589,131,1793,158"/>
-<area shape="rect" title=" " alt="" coords="1817,131,1991,158"/>
-<area shape="rect" title=" " alt="" coords="2016,124,2163,165"/>
-<area shape="rect" title=" " alt="" coords="2187,124,2333,165"/>
-<area shape="rect" title=" " alt="" coords="499,221,557,247"/>
-<area shape="rect" title=" " alt="" coords="89,221,151,247"/>
-<area shape="rect" title=" " alt="" coords="176,221,243,247"/>
-<area shape="rect" title=" " alt="" coords="855,392,910,419"/>
-<area shape="rect" title=" " alt="" coords="677,392,769,419"/>
-<area shape="rect" title=" " alt="" coords="267,221,327,247"/>
-<area shape="rect" title=" " alt="" coords="352,221,475,247"/>
-<area shape="rect" href="container__traits_8hpp.html" title="Useful traits for containers." alt="" coords="587,303,743,344"/>
-<area shape="rect" href="particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="869,213,1013,255"/>
-<area shape="rect" title=" " alt="" coords="489,392,652,419"/>
-<area shape="rect" href="views_8hpp.html" title="Implementation of useful container views." alt="" coords="920,310,1056,337"/>
+<area shape="rect" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="768,5,961,76"/>
+<area shape="rect" title=" " alt="" coords="5,131,92,158"/>
+<area shape="rect" title=" " alt="" coords="167,221,226,247"/>
+<area shape="rect" title=" " alt="" coords="711,131,783,158"/>
+<area shape="rect" title=" " alt="" coords="807,131,922,158"/>
+<area shape="rect" href="exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="947,124,1161,165"/>
+<area shape="rect" href="spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="314,124,495,165"/>
+<area shape="rect" href="type__traits_8hpp.html" title="Includes all Beluga type traits." alt="" coords="519,131,687,158"/>
+<area shape="rect" title=" " alt="" coords="66,392,277,419"/>
+<area shape="rect" title=" " alt="" coords="1186,131,1389,158"/>
+<area shape="rect" title=" " alt="" coords="1413,131,1617,158"/>
+<area shape="rect" title=" " alt="" coords="1641,131,1816,158"/>
+<area shape="rect" title=" " alt="" coords="1841,124,1987,165"/>
+<area shape="rect" title=" " alt="" coords="2011,124,2158,165"/>
+<area shape="rect" title=" " alt="" coords="674,221,733,247"/>
+<area shape="rect" title=" " alt="" coords="757,221,820,247"/>
+<area shape="rect" title=" " alt="" coords="301,221,367,247"/>
+<area shape="rect" title=" " alt="" coords="341,392,396,419"/>
+<area shape="rect" title=" " alt="" coords="783,392,875,419"/>
+<area shape="rect" title=" " alt="" coords="443,221,503,247"/>
+<area shape="rect" title=" " alt="" coords="527,221,650,247"/>
+<area shape="rect" href="container__traits_8hpp.html" title="Useful traits for containers." alt="" coords="893,303,1049,344"/>
+<area shape="rect" href="particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="845,213,989,255"/>
+<area shape="rect" title=" " alt="" coords="899,392,1062,419"/>
+<area shape="rect" href="views_8hpp.html" title="Implementation of useful container views." alt="" coords="301,310,437,337"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -125,10 +127,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="sampling_8hpp__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2sampling_8hppdep" alt=""/></div>
 <map name="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2sampling_8hppdep" id="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2sampling_8hppdep">
-<area shape="rect" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="72,5,265,76"/>
-<area shape="rect" href="particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="5,124,199,195"/>
-<area shape="rect" href="algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="61,243,277,299"/>
-<area shape="rect" href="beluga_8hpp.html" title="Includes all the beluga API." alt="" coords="70,347,267,403"/>
+<area shape="rect" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="139,5,333,76"/>
+<area shape="rect" href="algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,124,221,180"/>
+<area shape="rect" href="localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="246,124,474,180"/>
+<area shape="rect" href="beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="137,228,335,284"/>
 </map>
 </div>
 </div>
@@ -136,28 +138,29 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaselineGeneration.html">beluga::BaselineGeneration&lt; Mixin, RandomNumberGenerator &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A particle generator.  <a href="structbeluga_1_1BaselineGeneration.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1RandomStateGenerator.html">beluga::RandomStateGenerator&lt; Mixin &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A random state generator.  <a href="classbeluga_1_1RandomStateGenerator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1NaiveGeneration.html">beluga::NaiveGeneration&lt; Mixin, RandomNumberGenerator &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generation of samples from input particles.  <a href="structbeluga_1_1NaiveGeneration.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NaiveSampler.html">beluga::NaiveSampler&lt; Mixin &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generation of samples from input particles.  <a href="classbeluga_1_1NaiveSampler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1AdaptiveGenerationParam.html">beluga::AdaptiveGenerationParam</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct an <a class="el" href="structbeluga_1_1AdaptiveGeneration.html">AdaptiveGeneration</a> instance.  <a href="structbeluga_1_1AdaptiveGenerationParam.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1AdaptiveSamplerParam.html">beluga::AdaptiveSamplerParam</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct an <a class="el" href="classbeluga_1_1AdaptiveSampler.html" title="Generation of samples from input particles with a recovery strategy.">AdaptiveSampler</a> instance.  <a href="structbeluga_1_1AdaptiveSamplerParam.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1AdaptiveGeneration.html">beluga::AdaptiveGeneration&lt; Mixin, RandomNumberGenerator &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1AdaptiveSampler.html">beluga::AdaptiveSampler&lt; Mixin &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generation of samples from input particles with a recovery strategy.  <a href="classbeluga_1_1AdaptiveSampler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1FixedResamplingParam.html">beluga::FixedResamplingParam</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct a <a class="el" href="structbeluga_1_1FixedResamplingParam.html" title="Parameters used to construct a FixedResamplingParam instance.">FixedResamplingParam</a> instance.  <a href="structbeluga_1_1FixedResamplingParam.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1FixedLimiterParam.html">beluga::FixedLimiterParam</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct a <a class="el" href="classbeluga_1_1FixedLimiter.html" title="Limiter policy that takes a fixed number of particles.">FixedLimiter</a> instance.  <a href="structbeluga_1_1FixedLimiterParam.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1FixedResampling.html">beluga::FixedResampling&lt; Mixin &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resampling policy that uses a fixed number of particles.  <a href="structbeluga_1_1FixedResampling.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1FixedLimiter.html">beluga::FixedLimiter&lt; Mixin &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Limiter policy that takes a fixed number of particles.  <a href="classbeluga_1_1FixedLimiter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldResamplingParam.html">beluga::KldResamplingParam</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct a <a class="el" href="structbeluga_1_1KldResampling.html" title="Resampling policy that adapts the number of particles according to the KLD criteria.">KldResampling</a> instance.  <a href="structbeluga_1_1KldResamplingParam.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html">beluga::KldLimiterParam</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct a <a class="el" href="classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria.">KldLimiter</a> instance.  <a href="structbeluga_1_1KldLimiterParam.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldResampling.html">beluga::KldResampling&lt; Mixin &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resampling policy that adapts the number of particles according to the KLD criteria.  <a href="structbeluga_1_1KldResampling.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter&lt; Mixin &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Limiter policy that takes a number of particles defined by the KLD criteria.  <a href="classbeluga_1_1KldLimiter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -174,7 +177,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a3067c4d9759031795ba98ac43dc80dc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a callable object that allows setting the cluster of a particle.  <a href="sampling_8hpp.html#a3067c4d9759031795ba98ac43dc80dc7">More...</a><br /></td></tr>
 <tr class="separator:a3067c4d9759031795ba98ac43dc80dc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99">beluga::kld_condition</a> (std::size_t min, double epsilon, double z=3.)</td></tr>
-<tr class="memdesc:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a callable object that verifies if the kld condition is being satisfied.  <a href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99">More...</a><br /></td></tr>
+<tr class="memdesc:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a callable object that verifies if the KLD condition is being satisfied.  <a href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99">More...</a><br /></td></tr>
 <tr class="separator:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -220,7 +223,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns a callable object that verifies if the kld condition is being satisfied. </p>
+<p>Returns a callable object that verifies if the KLD condition is being satisfied. </p>
 <p>The callable object will compute the minimum number of samples based on a Kullback-Leibler distance epsilon between the maximum likelihood estimate and the true distribution. <br  />
 Z is the upper standard normal quantile for P, where P is the probability that the error in the estimated distribution will be less than epsilon.</p>
 <p>Here are some examples: </p><table class="markdownTable">
@@ -236,6 +239,7 @@ Z is the upper standard normal quantile for P, where P is the probability that t
 <td class="markdownTableBodyNone">0.999   </td><td class="markdownTableBodyNone">3.09023224677087   </td></tr>
 </table>
 <p>If the computed value is less than what the min argument specifies, then min will be returned.</p>
+<p>See KLD-Sampling: Adaptive Particle Filters <a class="el" href="citelist.html#CITEREF_fox2001adaptivekldsampling">[1]</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">min</td><td>Minimum number of particles that the callable object will return. </td></tr>
@@ -246,7 +250,7 @@ Z is the upper standard normal quantile for P, where P is the probability that t
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A callable object with prototype <code>(std::size_t hash) -&gt; bool</code>. <code>hash</code> is the spatial hash of the particle being added. <br  />
  The returned callable object is stateful, tracking the total number of particles and the particle clusters based on the spatial hash. <br  />
- The return value of the callable will be false when the number of particles is more than the minimum and the kld condition is satisfied, if not it will be true. <br  />
+ The return value of the callable will be false when the number of particles is more than the minimum and the KLD condition is satisfied, if not it will be true. <br  />
  i.e. A return value of true means that you need to keep sampling to satisfy the condition. </dd></dl>
 
 </div>
@@ -400,7 +404,7 @@ template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt;
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A callable object with prototype <code>(ParticleT &amp;&amp; p) -&gt; ParticleT</code>. <br  />
- <code>ParticleT</code> must satisfy the <a class="el" href="ParticlePage.html">Particle</a> named requirements. <br  />
+ <code>ParticleT</code> must satisfy <a class="el" href="ParticlePage.html">Beluga named requirements: Particle</a>. <br  />
  The expression <code>particle_traits&lt;ParticleT&gt;::cluster(p)</code> must also be valid and return a <code>std::size_t &amp;</code>. <br  />
  After the returned object is applied to a particle <code>p</code>, <code>cluster(p)</code> will be updated with the calculated spatial hash according to the specified resolution. </dd></dl>
 

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/resampling_policies_poller.hpp Source File</title>
+<title>Beluga: /home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies/resampling_policies_poller.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">beluga
+   <div id="projectname">Beluga
    </div>
-   <div id="projectbrief">An extensible Monte Carlo based localization library.</div>
+   <div id="projectbrief">An extensible particle filter library.</div>
   </td>
  </tr>
  </tbody>
@@ -96,28 +96,29 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Mixin, <span class="keyword">typename</span>... Policies&gt;</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResamplingPoliciesPoller.html">   36</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1ResamplingPoliciesPoller.html">ResamplingPoliciesPoller</a> : <span class="keyword">public</span> Mixin {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Rest&gt;</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResamplingPoliciesPoller.html#aee82151d8cf55e6a619c498d1d9e3ec4">   44</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="structbeluga_1_1ResamplingPoliciesPoller.html#aee82151d8cf55e6a619c498d1d9e3ec4">ResamplingPoliciesPoller</a>(<span class="keyword">const</span> <span class="keyword">typename</span> Policies::param_type&amp;... policy_configs, Rest&amp;&amp;... rest)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      : Mixin(std::forward&lt;Rest&gt;(rest)...), policies_{policy_configs...} {}</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="structbeluga_1_1ResamplingPoliciesPoller.html#ac55cbeb5ec20f675930f04dfa4e493b4">   57</a></span>&#160;  [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1ResamplingPoliciesPoller.html#ac55cbeb5ec20f675930f04dfa4e493b4">do_resampling_vote</a>() {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">// resampling voters are queried in cascade, with short-circuit evaluation. Order matters!</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> std::apply([<span class="keyword">this</span>](<span class="keyword">auto</span>&amp;... policies) { <span class="keywordflow">return</span> (policies.do_resampling(this-&gt;self()) &amp;&amp; ...); }, policies_);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  std::tuple&lt;Policies...&gt; policies_;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="astructbeluga_1_1ResamplingPoliciesPoller_html"><div class="ttname"><a href="structbeluga_1_1ResamplingPoliciesPoller.html">beluga::ResamplingPoliciesPoller</a></div><div class="ttdoc">Resampling policy poller.</div><div class="ttdef"><b>Definition:</b> resampling_policies_poller.hpp:36</div></div>
-<div class="ttc" id="astructbeluga_1_1ResamplingPoliciesPoller_html_ac55cbeb5ec20f675930f04dfa4e493b4"><div class="ttname"><a href="structbeluga_1_1ResamplingPoliciesPoller.html#ac55cbeb5ec20f675930f04dfa4e493b4">beluga::ResamplingPoliciesPoller::do_resampling_vote</a></div><div class="ttdeci">bool do_resampling_vote()</div><div class="ttdoc">Evaluate all configured resampling policies, return true only if no policy votes &quot;no&quot;.</div><div class="ttdef"><b>Definition:</b> resampling_policies_poller.hpp:57</div></div>
-<div class="ttc" id="astructbeluga_1_1ResamplingPoliciesPoller_html_aee82151d8cf55e6a619c498d1d9e3ec4"><div class="ttname"><a href="structbeluga_1_1ResamplingPoliciesPoller.html#aee82151d8cf55e6a619c498d1d9e3ec4">beluga::ResamplingPoliciesPoller::ResamplingPoliciesPoller</a></div><div class="ttdeci">ResamplingPoliciesPoller(const typename Policies::param_type &amp;... policy_configs, Rest &amp;&amp;... rest)</div><div class="ttdoc">Constructs a ResamplingPoliciesPoller instance.</div><div class="ttdef"><b>Definition:</b> resampling_policies_poller.hpp:44</div></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResamplingPoliciesPoller.html">   36</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1ResamplingPoliciesPoller.html">ResamplingPoliciesPoller</a> : <span class="keyword">public</span> Mixin {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Rest&gt;</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResamplingPoliciesPoller.html#aee82151d8cf55e6a619c498d1d9e3ec4">   45</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1ResamplingPoliciesPoller.html#aee82151d8cf55e6a619c498d1d9e3ec4">ResamplingPoliciesPoller</a>(<span class="keyword">const</span> <span class="keyword">typename</span> Policies::param_type&amp;... policy_configs, Rest&amp;&amp;... rest)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      : Mixin(std::forward&lt;Rest&gt;(rest)...), policies_{policy_configs...} {}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classbeluga_1_1ResamplingPoliciesPoller.html#ac55cbeb5ec20f675930f04dfa4e493b4">   58</a></span>&#160;  [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1ResamplingPoliciesPoller.html#ac55cbeb5ec20f675930f04dfa4e493b4">do_resampling_vote</a>() {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// resampling voters are queried in cascade, with short-circuit evaluation. Order matters!</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> std::apply([<span class="keyword">this</span>](<span class="keyword">auto</span>&amp;... policies) { <span class="keywordflow">return</span> (policies.do_resampling(this-&gt;self()) &amp;&amp; ...); }, policies_);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  std::tuple&lt;Policies...&gt; policies_;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;};</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1ResamplingPoliciesPoller_html"><div class="ttname"><a href="classbeluga_1_1ResamplingPoliciesPoller.html">beluga::ResamplingPoliciesPoller</a></div><div class="ttdoc">Resampling policy poller.</div><div class="ttdef"><b>Definition:</b> resampling_policies_poller.hpp:36</div></div>
+<div class="ttc" id="aclassbeluga_1_1ResamplingPoliciesPoller_html_ac55cbeb5ec20f675930f04dfa4e493b4"><div class="ttname"><a href="classbeluga_1_1ResamplingPoliciesPoller.html#ac55cbeb5ec20f675930f04dfa4e493b4">beluga::ResamplingPoliciesPoller::do_resampling_vote</a></div><div class="ttdeci">bool do_resampling_vote()</div><div class="ttdoc">Evaluate all configured resampling policies, return true only if no policy votes &quot;no&quot;.</div><div class="ttdef"><b>Definition:</b> resampling_policies_poller.hpp:58</div></div>
+<div class="ttc" id="aclassbeluga_1_1ResamplingPoliciesPoller_html_aee82151d8cf55e6a619c498d1d9e3ec4"><div class="ttname"><a href="classbeluga_1_1ResamplingPoliciesPoller.html#aee82151d8cf55e6a619c498d1d9e3ec4">beluga::ResamplingPoliciesPoller::ResamplingPoliciesPoller</a></div><div class="ttdeci">ResamplingPoliciesPoller(const typename Policies::param_type &amp;... policy_configs, Rest &amp;&amp;... rest)</div><div class="ttdoc">Constructs a ResamplingPoliciesPoller instance.</div><div class="ttdef"><b>Definition:</b> resampling_policies_poller.hpp:45</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['translation_5fnoise_5ffrom_5frotation_328',['translation_noise_from_rotation',['../structbeluga_1_1DifferentialDriveModelParam.html#a1aa831f00bffc8392783a680aea17d69',1,'beluga::DifferentialDriveModelParam::translation_noise_from_rotation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a29a2b89158609e2028f85f49e26c4767',1,'beluga::OmnidirectionalDriveModelParam::translation_noise_from_rotation()']]],
-  ['translation_5fnoise_5ffrom_5ftranslation_329',['translation_noise_from_translation',['../structbeluga_1_1DifferentialDriveModelParam.html#acd54f76dfe05df2525d386c7c6640e27',1,'beluga::DifferentialDriveModelParam::translation_noise_from_translation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a3cb5f8edc206b5cac0cf71b4dbf6c438',1,'beluga::OmnidirectionalDriveModelParam::translation_noise_from_translation()']]],
-  ['translation_5fstrafe_5fnoise_5ffrom_5ftranslation_330',['translation_strafe_noise_from_translation',['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a554dda5642ea3d5c5c0e8319f321a928',1,'beluga::OmnidirectionalDriveModelParam']]]
+  ['params_419',['params',['../structbeluga_1_1mixin_1_1descriptor_3_01Mixin_00_01Param_01_4.html#a49a8c4f4490b637aa1db44bcf400a7ec',1,'beluga::mixin::descriptor&lt; Mixin, Param &gt;']]]
 ];
