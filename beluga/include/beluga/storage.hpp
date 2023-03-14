@@ -182,7 +182,7 @@ class StoragePolicy : public Mixin {
     particles_.resize(size);
     const auto first = std::begin(views::all(particles_));
     const auto last = ranges::copy(input | ranges::views::take(size), first).out;
-    particles_.resize(std::distance(first, last));
+    particles_.resize(static_cast<std::size_t>(std::distance(first, last)));
   }
 
   /// \copydoc StorageInterface::initialize_states()

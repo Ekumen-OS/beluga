@@ -105,7 +105,7 @@ TEST(OmnidirectionalDriveModelSamples, Translate) {
   auto generator = std::mt19937{std::random_device()()};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{distance, 0.0}});
-  auto view = ranges::view::generate([&]() {
+  auto view = ranges::views::generate([&]() {
                 return mixin.apply_motion(SE2d{SO2d{0.0}, Vector2d{origin, 0.0}}, generator).translation().x();
               }) |
               ranges::views::take_exactly(1'000'000) | ranges::views::common;
@@ -122,7 +122,7 @@ TEST(OmnidirectionalDriveModelSamples, RotateFirstQuadrant) {
   auto generator = std::mt19937{std::random_device()()};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}});
-  auto view = ranges::view::generate([&]() {
+  auto view = ranges::views::generate([&]() {
                 return mixin.apply_motion(SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}}, generator).so2().log();
               }) |
               ranges::views::take_exactly(1'000'000) | ranges::views::common;
@@ -139,7 +139,7 @@ TEST(OmnidirectionalDriveModelSamples, RotateThirdQuadrant) {
   auto generator = std::mt19937{std::random_device()()};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}});
-  auto view = ranges::view::generate([&]() {
+  auto view = ranges::views::generate([&]() {
                 return mixin.apply_motion(SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}}, generator).so2().log();
               }) |
               ranges::views::take_exactly(1'000'000) | ranges::views::common;

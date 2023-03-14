@@ -27,7 +27,7 @@ namespace {
 
 // Common interface for demonstration purposes.
 struct Interface {
-  virtual std::string_view name() const = 0;
+  [[nodiscard]] virtual std::string_view name() const = 0;
   virtual ~Interface() = default;
 };
 
@@ -48,7 +48,7 @@ struct NameProvider1 : public Mixin {
   template <class... Args>
   explicit NameProvider1(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
-  std::string_view name() const override { return "One"; }
+  [[nodiscard]] std::string_view name() const override { return "One"; }
 };
 
 // This is a mixin component with a single parameter.
@@ -57,7 +57,7 @@ struct NameProvider2 : public Mixin {
   template <class... Args>
   explicit NameProvider2(char, Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
-  std::string_view name() const override { return "Two"; }
+  [[nodiscard]] std::string_view name() const override { return "Two"; }
 };
 
 // Descriptor definitions.

@@ -15,6 +15,8 @@
 #ifndef BELUGA_MIXIN_HPP
 #define BELUGA_MIXIN_HPP
 
+#include <memory>
+
 #include <beluga/mixin/descriptor.hpp>
 #include <beluga/mixin/utility.hpp>
 #include <ciabatta/ciabatta.hpp>

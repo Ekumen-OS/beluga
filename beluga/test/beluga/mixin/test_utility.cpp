@@ -96,35 +96,35 @@ TEST(MaybeUnwrap, PassingNonReferenceWrapper) {
 TEST(MaybeVariant, PassingVariant) {
   using variant_type = std::variant<int, float>;
   static_assert(std::is_same_v<decltype(beluga::mixin::maybe_variant(variant_type{100})), variant_type&&>);
-  auto mutable_object = variant_type{1.0f};
+  auto mutable_object = variant_type{1.0F};
   static_assert(std::is_same_v<decltype(beluga::mixin::maybe_variant(mutable_object)), variant_type&>);
-  const auto const_object = variant_type{2.0f};
+  const auto const_object = variant_type{2.0F};
   static_assert(std::is_same_v<decltype(beluga::mixin::maybe_variant(const_object)), const variant_type&>);
 }
 
 TEST(MaybeVariant, PassingNonVariant) {
   using type = std::variant<std::reference_wrapper<float>>;
-  float mutable_object = 2.0f;
+  float mutable_object = 2.0F;
   static_assert(std::is_same_v<decltype(beluga::mixin::maybe_variant(mutable_object)), type>);
   static_assert(std::is_same_v<decltype(beluga::mixin::maybe_variant(std::move(mutable_object))), type>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::maybe_variant(100.0f)), type>);
+  static_assert(std::is_same_v<decltype(beluga::mixin::maybe_variant(100.0F)), type>);
 }
 
 TEST(VisitEverything, VariantAndValues) {
   int value = 5;
   auto variant = std::variant<int, long>{2};
-  constexpr auto sum_to_long = [](auto v1, auto v2) -> long { return v1 + v2; };
-  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_long, variant, value), 7);
-  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_long, 10, value), 15);
-  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_long, variant, 10), 12);
+  constexpr auto kSumToLong = [](auto v1, auto v2) -> long { return v1 + v2; };
+  ASSERT_EQ(beluga::mixin::visit_everything(kSumToLong, variant, value), 7);
+  ASSERT_EQ(beluga::mixin::visit_everything(kSumToLong, 10, value), 15);
+  ASSERT_EQ(beluga::mixin::visit_everything(kSumToLong, variant, 10), 12);
 }
 
 TEST(VisitEverything, FowardSingleParameter) {
-  constexpr auto forward = [](auto&& value) -> auto&& {
+  constexpr auto kForward = [](auto&& value) -> auto&& {
     return value;
   };
   int value = 5;
-  int& alias = beluga::mixin::visit_everything(forward, value);
+  int& alias = beluga::mixin::visit_everything(kForward, value);
   ASSERT_EQ(alias, 5);
   alias = 6;
   ASSERT_EQ(value, 6);
