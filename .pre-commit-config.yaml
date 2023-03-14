@@ -71,7 +71,7 @@ repos:
     hooks:
       - id: clang-tidy
         args: [
-          "-p=/ws/build/beluga/compile_commands.json", "--fix",
+          "-p=/tmp/beluga", "--fix",
           "-header-filter=.*", "--quiet", "-extra-arg=-std=c++17"
         ]
         files: beluga\/
