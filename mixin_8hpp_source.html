@@ -88,50 +88,52 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_MIXIN_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_MIXIN_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="descriptor_8hpp.html">beluga/mixin/descriptor.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="utility_8hpp.html">beluga/mixin/utility.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;ciabatta/ciabatta.hpp&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>beluga::mixin {</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="descriptor_8hpp.html">beluga/mixin/descriptor.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="utility_8hpp.html">beluga/mixin/utility.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;ciabatta/ciabatta.hpp&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>beluga::mixin {</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... Interfaces&gt;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="structbeluga_1_1mixin_1_1compose__interfaces.html">   34</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1mixin_1_1compose__interfaces.html">compose_interfaces</a> : <span class="keyword">public</span> Interfaces... {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="structbeluga_1_1mixin_1_1compose__interfaces.html#a670e7fb48a48e47e9fd62d2973ef247f">   39</a></span>&#160;  <a class="code" href="structbeluga_1_1mixin_1_1compose__interfaces.html#a670e7fb48a48e47e9fd62d2973ef247f">~compose_interfaces</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;};</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... Interfaces&gt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="structbeluga_1_1mixin_1_1compose__interfaces.html">   36</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1mixin_1_1compose__interfaces.html">compose_interfaces</a> : <span class="keyword">public</span> Interfaces... {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="structbeluga_1_1mixin_1_1compose__interfaces.html#a670e7fb48a48e47e9fd62d2973ef247f">   41</a></span>&#160;  <a class="code" href="structbeluga_1_1mixin_1_1compose__interfaces.html#a670e7fb48a48e47e9fd62d2973ef247f">~compose_interfaces</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">   50</a></span>&#160;constexpr <span class="keyword">auto</span>&amp;&amp; <a class="code" href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">params_or_forward</a>(T&amp;&amp; value) noexcept {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keywordflow">if</span> constexpr (is_descriptor_v&lt;T&gt; &amp;&amp; has_params_v&lt;T&gt;) {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">return</span> forward_like&lt;T&gt;(value.params);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> std::forward&lt;T&gt;(value);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">   52</a></span>&#160;constexpr <span class="keyword">auto</span>&amp;&amp; <a class="code" href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">params_or_forward</a>(T&amp;&amp; value) noexcept {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keywordflow">if</span> constexpr (is_descriptor_v&lt;T&gt; &amp;&amp; has_params_v&lt;T&gt;) {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> forward_like&lt;T&gt;(value.params);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> std::forward&lt;T&gt;(value);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  }</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>Interface, <span class="keyword">template</span> &lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>Base, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="mixin_8hpp.html#a5d1b20abe21a42adcbf6a3378cf90bcf">   85</a></span>&#160;<span class="keyword">auto</span> <a class="code" href="mixin_8hpp.html#a5d1b20abe21a42adcbf6a3378cf90bcf">make_unique</a>(Args&amp;&amp;... args) {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="utility_8hpp.html#aea4e5423453b1773d4ef3def52b295f6">visit_everything</a>(</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      [](<span class="keyword">auto</span>&amp;&amp;... args) {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">using</span> Concrete = <a class="code" href="descriptor_8hpp.html#a1205669121240f60bd2d501e2be33fb0">mixin_from_descriptors_t</a>&lt;Base, filter&lt;<a class="code" href="structbeluga_1_1mixin_1_1is__descriptor.html">is_descriptor</a>, decltype(args)...&gt;&gt;;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">return</span> std::apply(</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            [](<span class="keyword">auto</span>&amp;&amp;... args) -&gt; std::unique_ptr&lt;Interface&gt; { <span class="keywordflow">return</span> std::make_unique&lt;Concrete&gt;(args...); },</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            make_tuple_with&lt;is_not_descriptor&gt;(<a class="code" href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">params_or_forward</a>(args)...));</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      },</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      args...);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}  <span class="comment">// namespace beluga::mixin</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>Interface, <span class="keyword">template</span> &lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>Base, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="mixin_8hpp.html#a5d1b20abe21a42adcbf6a3378cf90bcf">   87</a></span>&#160;<span class="keyword">auto</span> <a class="code" href="mixin_8hpp.html#a5d1b20abe21a42adcbf6a3378cf90bcf">make_unique</a>(Args&amp;&amp;... args) {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="utility_8hpp.html#aea4e5423453b1773d4ef3def52b295f6">visit_everything</a>(</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      [](<span class="keyword">auto</span>&amp;&amp;... args) {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keyword">using</span> Concrete = <a class="code" href="descriptor_8hpp.html#a1205669121240f60bd2d501e2be33fb0">mixin_from_descriptors_t</a>&lt;Base, filter&lt;<a class="code" href="structbeluga_1_1mixin_1_1is__descriptor.html">is_descriptor</a>, decltype(args)...&gt;&gt;;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">return</span> std::apply(</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            [](<span class="keyword">auto</span>&amp;&amp;... args) -&gt; std::unique_ptr&lt;Interface&gt; { <span class="keywordflow">return</span> std::make_unique&lt;Concrete&gt;(args...); },</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            make_tuple_with&lt;is_not_descriptor&gt;(<a class="code" href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">params_or_forward</a>(args)...));</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      },</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      args...);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}  <span class="comment">// namespace beluga::mixin</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="adescriptor_8hpp_html"><div class="ttname"><a href="descriptor_8hpp.html">descriptor.hpp</a></div><div class="ttdoc">Implementation of descriptors and their traits.</div></div>
 <div class="ttc" id="adescriptor_8hpp_html_a1205669121240f60bd2d501e2be33fb0"><div class="ttname"><a href="descriptor_8hpp.html#a1205669121240f60bd2d501e2be33fb0">beluga::mixin::mixin_from_descriptors_t</a></div><div class="ttdeci">typename mixin_from_descriptors&lt; Base, Descriptors... &gt;::type mixin_from_descriptors_t</div><div class="ttdoc">Helper type alias that returns a mixin type from descriptors.</div><div class="ttdef"><b>Definition:</b> descriptor.hpp:153</div></div>
-<div class="ttc" id="amixin_8hpp_html_a5d1b20abe21a42adcbf6a3378cf90bcf"><div class="ttname"><a href="mixin_8hpp.html#a5d1b20abe21a42adcbf6a3378cf90bcf">beluga::mixin::make_unique</a></div><div class="ttdeci">auto make_unique(Args &amp;&amp;... args)</div><div class="ttdoc">Constructs a mixin and wraps it into a std::unique_ptr to a given interface.</div><div class="ttdef"><b>Definition:</b> mixin.hpp:85</div></div>
-<div class="ttc" id="amixin_8hpp_html_aeb9eed2345cee33aded75399e601ba02"><div class="ttname"><a href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">beluga::mixin::params_or_forward</a></div><div class="ttdeci">constexpr auto &amp;&amp; params_or_forward(T &amp;&amp;value) noexcept</div><div class="ttdoc">Helper method to get descriptor parameters or forward the value.</div><div class="ttdef"><b>Definition:</b> mixin.hpp:50</div></div>
-<div class="ttc" id="astructbeluga_1_1mixin_1_1compose__interfaces_html"><div class="ttname"><a href="structbeluga_1_1mixin_1_1compose__interfaces.html">beluga::mixin::compose_interfaces</a></div><div class="ttdoc">Composes multiple interfaces into a single interface type.</div><div class="ttdef"><b>Definition:</b> mixin.hpp:34</div></div>
+<div class="ttc" id="amixin_8hpp_html_a5d1b20abe21a42adcbf6a3378cf90bcf"><div class="ttname"><a href="mixin_8hpp.html#a5d1b20abe21a42adcbf6a3378cf90bcf">beluga::mixin::make_unique</a></div><div class="ttdeci">auto make_unique(Args &amp;&amp;... args)</div><div class="ttdoc">Constructs a mixin and wraps it into a std::unique_ptr to a given interface.</div><div class="ttdef"><b>Definition:</b> mixin.hpp:87</div></div>
+<div class="ttc" id="amixin_8hpp_html_aeb9eed2345cee33aded75399e601ba02"><div class="ttname"><a href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">beluga::mixin::params_or_forward</a></div><div class="ttdeci">constexpr auto &amp;&amp; params_or_forward(T &amp;&amp;value) noexcept</div><div class="ttdoc">Helper method to get descriptor parameters or forward the value.</div><div class="ttdef"><b>Definition:</b> mixin.hpp:52</div></div>
+<div class="ttc" id="astructbeluga_1_1mixin_1_1compose__interfaces_html"><div class="ttname"><a href="structbeluga_1_1mixin_1_1compose__interfaces.html">beluga::mixin::compose_interfaces</a></div><div class="ttdoc">Composes multiple interfaces into a single interface type.</div><div class="ttdef"><b>Definition:</b> mixin.hpp:36</div></div>
 <div class="ttc" id="astructbeluga_1_1mixin_1_1compose__interfaces_html_a670e7fb48a48e47e9fd62d2973ef247f"><div class="ttname"><a href="structbeluga_1_1mixin_1_1compose__interfaces.html#a670e7fb48a48e47e9fd62d2973ef247f">beluga::mixin::compose_interfaces::~compose_interfaces</a></div><div class="ttdeci">~compose_interfaces() override=default</div><div class="ttdoc">Virtual destructor.</div></div>
 <div class="ttc" id="astructbeluga_1_1mixin_1_1is__descriptor_html"><div class="ttname"><a href="structbeluga_1_1mixin_1_1is__descriptor.html">beluga::mixin::is_descriptor</a></div><div class="ttdoc">Type trait to detect that a given type is a descriptor.</div><div class="ttdef"><b>Definition:</b> descriptor.hpp:111</div></div>
 <div class="ttc" id="autility_8hpp_html"><div class="ttname"><a href="utility_8hpp.html">utility.hpp</a></div><div class="ttdoc">Implementation of extensions to the standard utility library.</div></div>

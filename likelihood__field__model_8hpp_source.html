@@ -196,7 +196,7 @@ $(function() {
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    };</div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> distance_map = <a class="code" href="distance__map_8hpp.html#a3f336d45ba35b9fbef400d7ebb97c36e">nearest_obstacle_distance_map</a>(</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        obstacle_map, squared_distance, std::bind(&amp;OccupancyGrid::neighbors, &amp;grid, std::placeholders::_1));</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        obstacle_map, squared_distance, [&amp;grid](std::size_t index) { <span class="keywordflow">return</span> grid.neighbors(index); });</div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keyword">auto</span> to_likelihood = [amplitude =</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;                              params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants&lt;double&gt;::pi())),</div>

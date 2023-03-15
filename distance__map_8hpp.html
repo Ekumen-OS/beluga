@@ -80,16 +80,18 @@ $(function() {
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;range/v3/range/access.hpp&gt;</code><br />
 <code>#include &lt;range/v3/range/primitives.hpp&gt;</code><br />
+<code>#include &lt;range/v3/view/enumerate.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for distance_map.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="distance__map_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2distance__map_8hpp" alt=""/></div>
 <map name="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2distance__map_8hpp" id="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2algorithm_2distance__map_8hpp">
-<area shape="rect" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="103,5,296,76"/>
+<area shape="rect" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="180,5,373,76"/>
 <area shape="rect" title=" " alt="" coords="5,124,68,151"/>
 <area shape="rect" title=" " alt="" coords="92,124,155,151"/>
 <area shape="rect" title=" " alt="" coords="179,124,375,151"/>
 <area shape="rect" title=" " alt="" coords="399,124,618,151"/>
+<area shape="rect" title=" " alt="" coords="643,124,860,151"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -156,7 +158,7 @@ template&lt;class Range , class DistanceFunction , class NeighborsFunction &gt; 
 <p>The algorithm uses O(N) time and memory, where <code>N=ranges::size(obstacle_map)</code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized</a> <a href="https://en.cppreference.com/w/cpp/ranges/random_access_range">random access</a> range. Its value type must be bool. </td></tr>
+    <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a>. Its value type must be bool. </td></tr>
     <tr><td class="paramname">DistanceFunction</td><td>A callable type, its prototype must be (std::size_t, std::size_t) -&gt; DistanceType. DistanceType must be an scalar type. </td></tr>
     <tr><td class="paramname">NeighborsFunction</td><td>A callabe type, its prototype must be (std::size_t) -&gt; NeighborsT, where NeighborsT is a <a href="https://en.cppreference.com/w/cpp/ranges/range">Range</a> with value type std::size_t. </td></tr>
   </table>

@@ -1,11 +1,11 @@
 <map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/motion.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/motion.hpp">
-<area shape="rect" id="node1" title="Includes all Beluga motion models." alt="" coords="248,5,447,61"/>
-<area shape="rect" id="node2" href="$differential__drive__model_8hpp.html" title="Implementation of a differential drive odometry motion model." alt="" coords="252,109,443,151"/>
-<area shape="rect" id="node8" href="$omnidirectional__drive__model_8hpp.html" title="Implementation of an omnidirectional drive odometry motion model." alt="" coords="5,109,228,151"/>
-<area shape="rect" id="node9" href="$stationary__model_8hpp.html" title="Implementation of a stationary motion model." alt="" coords="467,109,654,151"/>
-<area shape="rect" id="node3" title=" " alt="" coords="158,199,233,225"/>
-<area shape="rect" id="node4" title=" " alt="" coords="257,199,329,225"/>
-<area shape="rect" id="node5" title=" " alt="" coords="19,199,134,225"/>
-<area shape="rect" id="node6" title=" " alt="" coords="353,199,475,225"/>
-<area shape="rect" id="node7" title=" " alt="" coords="499,199,622,225"/>
+<area shape="rect" id="node1" title="Includes all Beluga motion models." alt="" coords="229,5,427,61"/>
+<area shape="rect" id="node2" href="$differential__drive__model_8hpp.html" title="Implementation of a differential drive odometry motion model." alt="" coords="463,109,654,151"/>
+<area shape="rect" id="node8" href="$omnidirectional__drive__model_8hpp.html" title="Implementation of an omnidirectional drive odometry motion model." alt="" coords="217,109,439,151"/>
+<area shape="rect" id="node9" href="$stationary__model_8hpp.html" title="Implementation of a stationary motion model." alt="" coords="5,109,192,151"/>
+<area shape="rect" id="node3" title=" " alt="" coords="433,199,508,225"/>
+<area shape="rect" id="node4" title=" " alt="" coords="44,199,116,225"/>
+<area shape="rect" id="node5" title=" " alt="" coords="532,199,647,225"/>
+<area shape="rect" id="node6" title=" " alt="" coords="140,199,263,225"/>
+<area shape="rect" id="node7" title=" " alt="" coords="287,199,409,225"/>
 </map>
