@@ -154,7 +154,7 @@ template <class Range, class Weights, class RandomNumberGenerator>
 auto random_sample(const Range& samples, const Weights& weights, RandomNumberGenerator& generator) {
   auto weights_begin = std::begin(weights);
   auto weights_end = std::end(weights);
-  using val_type = decltype(weights_end - weights_begin);
+  using difference_type = decltype(weights_end - weights_begin);
   return [&generator, first = std::begin(samples),
           distribution = std::discrete_distribution<val_type>{weights_begin, weights_end}]() mutable {
     return *(first + distribution(generator));
