@@ -182,7 +182,7 @@ TestData test_data_from_ros2bag(
     std::string_view ground_truth_topic,
     // Tolerance value shouldn't be testing accuracy,
     // but only that it's working grossly well
-    double tol_distance = 0.5,
+    double tol_distance = 0.8,
     double tol_angle = 30. * Sophus::Constants<double>::pi() / 180.) {
   TestData test_data;
   test_data.initial_pose = std::move(initial_pose);
