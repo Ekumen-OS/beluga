@@ -59,8 +59,7 @@ auto nearest_obstacle_distance_map(
   };
 
   using DistanceType = std::invoke_result_t<DistanceFunction, std::size_t, std::size_t>;
-  auto map_size = ranges::size(obstacle_map);
-  auto distance_map = std::vector<DistanceType>(map_size);
+  auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_map));
   auto visited = std::vector<bool>(ranges::size(obstacle_map), false);
 
   auto compare = [&distance_map](const IndexPair& first, const IndexPair& second) {
