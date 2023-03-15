@@ -20,7 +20,7 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
-#include "../../utils/sophus_matchers.hpp"
+#include "beluga/test/utils/sophus_matchers.hpp"
 
 namespace {
 
@@ -60,7 +60,7 @@ TEST_P(MultivariateNormalDistributionWithParam, DistributionCovarianceAndMean) {
   const Eigen::Vector2d expected_mean = std::get<0>(GetParam());
   const Eigen::Matrix2d expected_covariance = std::get<1>(GetParam());
   auto distribution = beluga::MultivariateNormalDistribution{expected_mean, expected_covariance};
-  const auto sequence = ranges::view::generate([&]() {
+  const auto sequence = ranges::views::generate([&]() {
                           static auto generator = std::mt19937{std::random_device()()};
                           return distribution(generator);
                         }) |

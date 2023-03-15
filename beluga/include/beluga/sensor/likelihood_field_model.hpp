@@ -203,7 +203,7 @@ class LikelihoodFieldModel : public Mixin {
     };
 
     const auto distance_map = nearest_obstacle_distance_map(
-        obstacle_map, squared_distance, std::bind(&OccupancyGrid::neighbors, &grid, std::placeholders::_1));
+        obstacle_map, squared_distance, [&grid](std::size_t index) { return grid.neighbors(index); });
 
     auto to_likelihood = [amplitude =
                               params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi())),

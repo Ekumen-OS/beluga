@@ -30,14 +30,6 @@ repos:
         pass_filenames: false
         language: system
 
-      - id: ament_clang_tidy
-        name: "[beluga] Fix C++ errors (clang-tidy)"
-        entry: ament_clang_tidy --config ./.clang-tidy --fix-errors /tmp/beluga/compile_commands.json
-        files: beluga\/
-        types: [c++]
-        pass_filenames: false
-        language: system
-
       - id: ament_uncrustify
         name: "[others] Fix C++ format (uncrustify)"
         entry: ament_uncrustify --reformat
@@ -73,6 +65,17 @@ repos:
       args: ["-style=file:.clang-format"]
       files: beluga\/
       types: [c++]
+
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: clang-tidy
+        args: [
+          "-p=/tmp/beluga", "--fix",
+          "-header-filter=.*", "--quiet", "-extra-arg=-std=c++17"
+        ]
+        files: beluga\/
+        types: [c++]
 
   - repo: https://github.com/psf/black
     rev:  22.10.0

@@ -20,6 +20,7 @@
 
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
+#include <range/v3/view/enumerate.hpp>
 
 /**
  * \file
@@ -30,8 +31,7 @@
 /**
  * The algorithm uses O(N) time and memory, where `N=ranges::size(obstacle_map)`.
  *
- * \tparam Range A [sized](https://en.cppreference.com/w/cpp/ranges/sized_range)
- *  [random access](https://en.cppreference.com/w/cpp/ranges/random_access_range) range.
+ * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range).
  *  Its value type must be bool.
  * \tparam DistanceFunction A callable type, its prototype must be
  *  (std::size_t, std::size_t) -> DistanceType. DistanceType must be an scalar type.
@@ -67,9 +67,7 @@ auto nearest_obstacle_distance_map(
   };
   auto queue = std::priority_queue<IndexPair, std::vector<IndexPair>, decltype(compare)>{compare};
 
-  auto begin = ranges::begin(obstacle_map);
-  for (std::size_t index = 0; index < ranges::size(obstacle_map); ++index) {
-    bool is_obstacle = *(begin + index);
+  for (auto [index, is_obstacle] : ranges::views::enumerate(obstacle_map)) {
     if (is_obstacle) {
       visited[index] = true;
       distance_map[index] = 0;

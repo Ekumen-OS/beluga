@@ -40,7 +40,7 @@ struct MockMotionModel : public Mixin {
 using UUT = ciabatta::mixin<MockMotionModel, ciabatta::curry<ResamplingPoliciesPoller, ResampleOnMotionPolicy>::mixin>;
 
 struct ResampleOnMotionPolicyTests : public ::testing::Test {
-  auto make_motion_update_event(double x, double y, double phi) {
+  static auto make_motion_update_event(double x, double y, double phi) {
     using Eigen::Vector2d;
     using Sophus::SE2d;
     using Sophus::SO2d;

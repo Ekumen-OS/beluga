@@ -1,4 +1,4 @@
-// Copyright 2022 Ekumen, Inc.
+// Copyright 2023 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_TEST_UTILS_SOPHUS_MATCHERS_HPP
+#define BELUGA_TEST_UTILS_SOPHUS_MATCHERS_HPP
 
 #include <gmock/gmock.h>
 
@@ -46,3 +47,5 @@ inline auto SE2Eq(const Sophus::SO2<Scalar>& rotation, const Eigen::Vector2<Scal
 }
 
 }  // namespace testing
+
+#endif

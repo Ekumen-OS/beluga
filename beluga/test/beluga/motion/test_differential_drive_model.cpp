@@ -20,7 +20,7 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
-#include "../../utils/sophus_matchers.hpp"
+#include "beluga/test/utils/sophus_matchers.hpp"
 
 namespace {
 
@@ -85,7 +85,7 @@ TEST_F(DifferentialDriveModelTest, RotateTranslateRotate) {
 
 template <class Range>
 auto get_statistics(Range&& range) {
-  const double size = static_cast<double>(std::distance(std::begin(range), std::end(range)));
+  const auto size = static_cast<double>(std::distance(std::begin(range), std::end(range)));
   const double sum = std::accumulate(std::begin(range), std::end(range), 0.0);
   const double mean = sum / size;
   const double squared_diff_sum =
@@ -105,7 +105,7 @@ TEST(DifferentialDriveModelSamples, Translate) {
   auto generator = std::mt19937{std::random_device()()};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{distance, 0.0}});
-  auto view = ranges::view::generate([&]() {
+  auto view = ranges::views::generate([&]() {
                 return mixin.apply_motion(SE2d{SO2d{0.0}, Vector2d{origin, 0.0}}, generator).translation().x();
               }) |
               ranges::views::take_exactly(1'000'000) | ranges::views::common;
@@ -122,7 +122,7 @@ TEST(DifferentialDriveModelSamples, RotateFirstQuadrant) {
   auto generator = std::mt19937{std::random_device()()};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}});
-  auto view = ranges::view::generate([&]() {
+  auto view = ranges::views::generate([&]() {
                 return mixin.apply_motion(SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}}, generator).so2().log();
               }) |
               ranges::views::take_exactly(1'000'000) | ranges::views::common;
@@ -139,7 +139,7 @@ TEST(DifferentialDriveModelSamples, RotateThirdQuadrant) {
   auto generator = std::mt19937{std::random_device()()};
   mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   mixin.update_motion(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}});
-  auto view = ranges::view::generate([&]() {
+  auto view = ranges::views::generate([&]() {
                 return mixin.apply_motion(SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}}, generator).so2().log();
               }) |
               ranges::views::take_exactly(1'000'000) | ranges::views::common;

@@ -17,7 +17,7 @@
 #include <beluga/algorithm/estimation.hpp>
 #include <ciabatta/ciabatta.hpp>
 
-#include "../../utils/sophus_matchers.hpp"
+#include "beluga/test/utils/sophus_matchers.hpp"
 
 namespace {
 

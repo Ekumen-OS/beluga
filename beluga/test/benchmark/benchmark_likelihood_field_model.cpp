@@ -26,8 +26,9 @@ constexpr std::size_t kNumParticles = 2'000;
 void BM_PointTransform_Baseline(benchmark::State& state) {
   const auto count = state.range(0);
   state.SetComplexityN(count);
+  auto size = static_cast<size_t>(count);
   const auto particles = std::vector<Sophus::SE2d>{kNumParticles};
-  const auto points = std::vector<std::pair<double, double>>(count);
+  const auto points = std::vector<std::pair<double, double>>(size);
   const auto origin = Sophus::SE2d{};
   for (auto _ : state) {
     for (const auto& pose : particles) {
@@ -48,8 +49,9 @@ void BM_PointTransform_Baseline(benchmark::State& state) {
 void BM_PointTransform_EigenSophus(benchmark::State& state) {
   const auto count = state.range(0);
   state.SetComplexityN(count);
+  auto size = static_cast<size_t>(count);
   const auto particles = std::vector<Sophus::SE2d>{kNumParticles};
-  const auto points = std::vector<Eigen::Vector2d>(count);
+  const auto points = std::vector<Eigen::Vector2d>(size);
   const auto origin = Sophus::SE2d{};
   for (auto _ : state) {
     for (const auto& pose : particles) {

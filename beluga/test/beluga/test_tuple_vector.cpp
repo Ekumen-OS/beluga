@@ -41,7 +41,7 @@ using StructureOfArrays = beluga::TupleVector<Particle>;
 using ArrayOfStructures = beluga::Vector<Particle>;
 
 using Implementations = testing::Types<StructureOfArrays, ArrayOfStructures>;
-TYPED_TEST_SUITE(ContainerTest, Implementations);
+TYPED_TEST_SUITE(ContainerTest, Implementations, );
 
 TYPED_TEST(ContainerTest, Size) {
   auto container = TypeParam{100};

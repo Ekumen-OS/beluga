@@ -152,8 +152,11 @@ auto random_select(Function1 first, Function2 second, RandomNumberGenerator& gen
  */
 template <class Range, class Weights, class RandomNumberGenerator>
 auto random_sample(const Range& samples, const Weights& weights, RandomNumberGenerator& generator) {
+  auto weights_begin = std::begin(weights);
+  auto weights_end = std::end(weights);
+  using difference_type = decltype(weights_end - weights_begin);
   return [&generator, first = std::begin(samples),
-          distribution = std::discrete_distribution<std::size_t>{std::begin(weights), std::end(weights)}]() mutable {
+          distribution = std::discrete_distribution<difference_type>{weights_begin, weights_end}]() mutable {
     return *(first + distribution(generator));
   };
 }

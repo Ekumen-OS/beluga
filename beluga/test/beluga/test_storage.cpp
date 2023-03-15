@@ -41,13 +41,13 @@ template <class T>
 class StoragePolicyTest : public testing::Test {};
 
 using Implementations = testing::Types<SOA_UUT, AOS_UUT>;
-TYPED_TEST_SUITE(StoragePolicyTest, Implementations);
+TYPED_TEST_SUITE(StoragePolicyTest, Implementations, );
 
 TYPED_TEST(StoragePolicyTest, InitializeWithLessParticlesThanExpected) {
   auto states = std::vector<int>{1, 2, 3};
   auto mixin = TypeParam{};
   EXPECT_CALL(mixin, max_samples()).WillOnce(Return(5));
-  mixin.initialize_states(states | ranges::view::all);
+  mixin.initialize_states(states | ranges::views::all);
   ASSERT_EQ(mixin.particle_count(), 3);
 }
 
@@ -55,7 +55,7 @@ TYPED_TEST(StoragePolicyTest, InitializeWithMoreParticlesThanExpected) {
   auto states = std::vector<int>{1, 2, 3, 4};
   auto mixin = TypeParam{};
   EXPECT_CALL(mixin, max_samples()).WillOnce(Return(2));
-  mixin.initialize_states(states | ranges::view::all);
+  mixin.initialize_states(states | ranges::views::all);
   ASSERT_EQ(mixin.particle_count(), 2);
 }
 
