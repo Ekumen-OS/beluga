@@ -179,8 +179,8 @@ class StoragePolicy : public Mixin {
   void initialize_particles(Range&& input) {
     static_assert(std::is_same_v<particle_type, ranges::range_value_t<Range>>, "Invalid value type");
     const std::size_t size = this->self().max_samples();
+    particles_.clear();
     particles_.reserve(size);
-    const auto first = std::begin(views::all(particles_));
     auto limited_view = input | ranges::views::take(size);
     for (const auto& elem : limited_view) {
       particles_.push_back(elem);
