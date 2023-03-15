@@ -87,6 +87,7 @@ void BM_AdaptiveResample(benchmark::State& state) {
   }
 
   std::size_t min_samples = 0;
+  std::size_t max_samples = container_size;
   double resolution = 1.;
   double kld_epsilon = 0.05;
   double kld_z = 3.;
@@ -101,8 +102,7 @@ void BM_AdaptiveResample(benchmark::State& state) {
     auto first = std::begin(beluga::views::all(new_container));
     auto last = std::copy(std::begin(samples), std::end(samples), first);
     state.counters["SampleSize"] = static_cast<double>(std::distance(first, last));
-    state.counters["Percentage"] =
-        static_cast<double>(std::distance(first, last)) / static_cast<double>(particle_count);
+    state.counters["Percentage"] = static_cast<double>(std::distance(first, last)) / static_cast<double>(max_samples);
   }
 }
 

@@ -113,18 +113,18 @@ TEST(MaybeVariant, PassingNonVariant) {
 TEST(VisitEverything, VariantAndValues) {
   int value = 5;
   auto variant = std::variant<int, long>{2};
-  constexpr auto kSumToLong = [](auto v1, auto v2) -> long { return v1 + v2; };
-  ASSERT_EQ(beluga::mixin::visit_everything(kSumToLong, variant, value), 7);
-  ASSERT_EQ(beluga::mixin::visit_everything(kSumToLong, 10, value), 15);
-  ASSERT_EQ(beluga::mixin::visit_everything(kSumToLong, variant, 10), 12);
+  const auto sum_to_long = [](auto v1, auto v2) -> long { return v1 + v2; };
+  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_long, variant, value), 7);
+  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_long, 10, value), 15);
+  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_long, variant, 10), 12);
 }
 
 TEST(VisitEverything, FowardSingleParameter) {
-  constexpr auto kForward = [](auto&& value) -> auto&& {
+  const auto forward = [](auto&& value) -> auto&& {
     return value;
   };
   int value = 5;
-  int& alias = beluga::mixin::visit_everything(kForward, value);
+  int& alias = beluga::mixin::visit_everything(forward, value);
   ASSERT_EQ(alias, 5);
   alias = 6;
   ASSERT_EQ(value, 6);
