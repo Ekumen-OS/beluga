@@ -19,6 +19,7 @@ add_executable(test_beluga
   test_spatial_hash.cpp
   test_storage.cpp)
 target_link_libraries(test_beluga PRIVATE ${PROJECT_NAME} beluga_compile_options GTest::gmock_main)
+target_include_directories(test_beluga PRIVATE include)
 target_compile_options(test_beluga PRIVATE -Wno-sign-compare)
 
 include(GoogleTest)

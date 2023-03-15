@@ -20,7 +20,7 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
-#include "../../utils/sophus_matchers.hpp"
+#include "beluga/test/utils/sophus_matchers.hpp"
 
 namespace {
 
