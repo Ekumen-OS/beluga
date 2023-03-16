@@ -38,6 +38,7 @@
 #include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/generate_n.hpp>
+#include <utility>
 
 namespace {
 
@@ -110,7 +111,7 @@ struct OneTopicReader {
       : reader_{std::make_unique<rosbag2_cpp::Reader>()} {
     reader_->open(bagfile_path.native());
     rosbag2_storage::StorageFilter filter;
-    filter.topics.push_back(std::string{topic_name});
+    filter.topics.emplace_back(topic_name);
     reader_->set_filter(filter);
     for (const auto& topic_info_with_count : reader_->get_metadata().topics_with_message_count) {
       if (topic_info_with_count.topic_metadata.name == topic_name) {
@@ -127,7 +128,7 @@ struct OneTopicReader {
  private:
   // wrapped in a unique pointer to make it movable :)
   std::unique_ptr<rosbag2_cpp::Reader> reader_;
-  std::size_t size_{0ul};
+  std::size_t size_{0UL};
 };
 
 struct SE2dFromOdometryReader {
@@ -197,7 +198,7 @@ TestData test_data_from_ros2bag(
   }
   auto map = std::make_shared<nav_msgs::msg::OccupancyGrid>(map_reader.next());
 
-  PointsFromScanReader scan_reader{bagfile_path, scan_topic, laser_scan_info};
+  PointsFromScanReader scan_reader{bagfile_path, scan_topic, std::move(laser_scan_info)};
   SE2dFromOdometryReader odometry_reader{bagfile_path, odom_topic};
   GroundTruthReader ground_truth_reader{bagfile_path, ground_truth_topic};
   auto range_size = scan_reader.size();
@@ -227,8 +228,8 @@ std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::Oc
   sampler_params.alpha_fast = 0.1;
 
   auto limiter_params = KldLimiterParam{};
-  limiter_params.min_samples = 500ul;
-  limiter_params.max_samples = 2000ul;
+  limiter_params.min_samples = 500UL;
+  limiter_params.max_samples = 2000UL;
   limiter_params.spatial_resolution = 0.1;
   limiter_params.kld_epsilon = 0.05;
   limiter_params.kld_z = 3.;
@@ -269,7 +270,7 @@ std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::Oc
 
 std::unique_ptr<LaserLocalizationInterface2d> mcl_pf_from_map(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
   auto limiter_params = FixedLimiterParam{};
-  limiter_params.max_samples = 2000ul;
+  limiter_params.max_samples = 2000UL;
 
   auto resample_on_motion_params = ResampleOnMotionPolicyParam{};
   resample_on_motion_params.update_min_d = 0.;

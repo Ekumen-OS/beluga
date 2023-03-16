@@ -29,7 +29,7 @@ repos:
         types: [c++]
         pass_filenames: false
         language: system
-      
+
       - id: beluga_system_tests_compile_commands
         name: "[beluga_system_tests] Export compile commands"
         description: Creates the compile_commands.json required by clang-tidy.
@@ -73,7 +73,7 @@ repos:
     hooks:
     - id: clang-format
       args: ["-style=file:.clang-format"]
-      exclute: beluga_amcl\/
+      exclude: beluga_amcl\/
       types: [c++]
 
   - repo: https://github.com/pocc/pre-commit-hooks
