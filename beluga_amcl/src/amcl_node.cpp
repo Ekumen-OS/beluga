@@ -819,7 +819,6 @@ void AmclNode::laser_callback(
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
     particle_filter_->importance_sample(exec_policy);
-    auto format = beluga_amcl::utils::make_eigen_comma_format();
     const auto time3 = std::chrono::high_resolution_clock::now();
     particle_filter_->resample();
     const auto time4 = std::chrono::high_resolution_clock::now();
