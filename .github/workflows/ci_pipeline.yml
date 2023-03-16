@@ -67,7 +67,7 @@ jobs:
         working-directory: ${{ github.workspace }}/src
         shell: bash
         run: |
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
+          source ${{ github.workspace }}/install/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
 
       - name: Upload code coverage artifacts
