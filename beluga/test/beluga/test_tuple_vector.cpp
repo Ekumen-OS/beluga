@@ -33,23 +33,29 @@ inline auto StateEq(const State& expected) {
   return AllOf(Field("x", &State::x, DoubleEq(expected.x)), Field("y", &State::y, DoubleEq(expected.y)));
 }
 
+template <template <class...> class T>
+struct TemplateWrapper {
+  template <class... Types>
+  using TemplateParam = T<Types...>;
+};
+
 template <class T>
-class ContainerTest : public testing::Test {};
+class ContainerTest : public testing::Test {
+ public:
+  template <class... Types>
+  using TemplateParam = typename T::template TemplateParam<Types...>;
+};
 
-using Particle = std::tuple<State, double, std::size_t>;
-using StructureOfArrays = beluga::TupleVector<Particle>;
-using ArrayOfStructures = beluga::Vector<Particle>;
-
-using Implementations = testing::Types<StructureOfArrays, ArrayOfStructures>;
+using Implementations = testing::Types<TemplateWrapper<beluga::VectorTuple>, TemplateWrapper<beluga::TupleVector>>;
 TYPED_TEST_SUITE(ContainerTest, Implementations, );
 
 TYPED_TEST(ContainerTest, Size) {
-  auto container = TypeParam{100};
+  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{100};
   ASSERT_EQ(container.size(), 100);
 }
 
 TYPED_TEST(ContainerTest, Resize) {
-  auto container = TypeParam{};
+  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   int reps = 0;
@@ -63,7 +69,7 @@ TYPED_TEST(ContainerTest, Resize) {
 }
 
 TYPED_TEST(ContainerTest, Clear) {
-  auto container = TypeParam{};
+  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
   container.resize(15);
   EXPECT_EQ(container.size(), 15);
   container.clear();
@@ -71,7 +77,7 @@ TYPED_TEST(ContainerTest, Clear) {
 }
 
 TYPED_TEST(ContainerTest, PushBack) {
-  auto container = TypeParam{};
+  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
   EXPECT_EQ(container.size(), 0);
   container.push_back({{1, 2}, 3, 4});
   EXPECT_EQ(container.size(), 1);
@@ -82,7 +88,7 @@ TYPED_TEST(ContainerTest, PushBack) {
 }
 
 TYPED_TEST(ContainerTest, GetterSetter) {
-  auto container = TypeParam{};
+  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
   auto&& view = beluga::views::all(container);
   container.push_back({{1, 2}, 3, 4});
   beluga::weight(view.front()) = 5;
@@ -90,7 +96,7 @@ TYPED_TEST(ContainerTest, GetterSetter) {
 }
 
 TYPED_TEST(ContainerTest, View) {
-  auto container = TypeParam{};
+  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr double kTestWeight = 1.25;
@@ -103,7 +109,7 @@ TYPED_TEST(ContainerTest, View) {
 }
 
 TYPED_TEST(ContainerTest, StructuredBinding) {
-  auto container = TypeParam{};
+  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr std::size_t kTestCluster = 75;
@@ -115,8 +121,8 @@ TYPED_TEST(ContainerTest, StructuredBinding) {
   }
 }
 
-TEST(TupleVector, SingleElementTuple) {
-  auto container = beluga::TupleVector<std::tuple<int>>{};
+TYPED_TEST(ContainerTest, SingleElementTuple) {
+  auto container = typename TestFixture::template TemplateParam<int>{};
   container.push_back({4});
   container.push_back({4});
   container.push_back({4});
@@ -126,8 +132,8 @@ TEST(TupleVector, SingleElementTuple) {
   }
 }
 
-TEST(TupleVector, DoubleElementTuple) {
-  auto container = beluga::TupleVector<std::tuple<int, float>>{};
+TYPED_TEST(ContainerTest, DoubleElementTuple) {
+  auto container = typename TestFixture::template TemplateParam<int, float>{};
   container.push_back({2, 0.5});
   container.push_back({2, 0.5});
   container.push_back({2, 0.5});

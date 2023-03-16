@@ -29,39 +29,58 @@
 
 namespace beluga {
 
-/// Specialization for a tuple with no arguments.
-template <template <class> class InternalContainer, class Tuple>
-class TupleContainer;
+/// A metafunction that returns a tuple or a pair depending on the number of types.
+template <class... Types>
+struct tuple_or_pair {
+  /// The resulting type, an `std::tuple` by default.
+  using type = std::tuple<Types...>;
+};
+
+/// Specialization that returns a pair.
+template <class First, class Second>
+struct tuple_or_pair<First, Second> {
+  /// The resulting type, an `std::pair`.
+  using type = std::pair<First, Second>;
+};
+
+/// Helper type alias that returns a tuple or a pair depending on the number of types.
+template <class... Types>
+using tuple_or_pair_t = typename tuple_or_pair<Types...>::type;
 
 /// An implementation of a tuple of containers, with an interface that looks like a container of tuples.
 /**
- * i.e. though this is implemented internally as a `Tuple<InternalContainer<Types>...>`, the interface looks like
- * an `InternalContainer<Tuple<Types>...>`.
+ * i.e. though this is implemented internally as an `std::tuple<InternalContainer<Types>...>`, the interface looks like
+ * an `InternalContainer<std::tuple<Types>...>`.
  * It provides the convenience of the second, but when iterating over only one of the elements of the tuple in the
  * container it has better performance (because of cache locality).
  * To that end, use for example `views::all(tuple_container) | views::elements<0>` to iterate over the first element of
  * the tuple in the container.
  *
  * \tparam InternalContainer Container type constructor, e.g. std::vector.
- * \tparam Tuple Tuple type constructor, e.g. std::pair or std::tuple.
  * \tparam ...Types Elements types of the tuple.
  */
-template <template <class> class InternalContainer, template <class...> class Tuple, class... Types>
-class TupleContainer<InternalContainer, Tuple<Types...>> {
+template <template <class> class InternalContainer, class... Types>
+class ContainerTuple {
  public:
   /// Value type of the container.
-  using value_type = Tuple<Types...>;
+  /**
+   * It will be an `std::pair` if there are two elements or an `std::tuple` otherwise.
+   * This is because `ranges::views::zip` returns a reference view to pairs if there
+   * are two elements, and they are not assignable with tuples.
+   */
+  using value_type = tuple_or_pair_t<Types...>;
+
   /// Size type of the container.
   using size_type = std::size_t;
 
   /// Default constructor, will default initialize all containers in the tuple.
-  constexpr TupleContainer() = default;
+  constexpr ContainerTuple() = default;
 
   /// Constructs a container of size count, all values are default initialized.
   /**
    * \param count Size of the container.
    */
-  explicit constexpr TupleContainer(size_type count) : sequences_{((void)sizeof(Types), count)...} {}
+  explicit constexpr ContainerTuple(size_type count) : sequences_{((void)sizeof(Types), count)...} {}
 
   /// Returns true if the container is empty.
   [[nodiscard]] constexpr bool empty() const noexcept { return std::get<0>(sequences_).empty(); }
@@ -133,11 +152,11 @@ class TupleContainer<InternalContainer, Tuple<Types...>> {
   }
 };
 
-/// Specialization for a TupleContainer<InternalContainer, T>, see also \ref container_traits.hpp.
-template <template <class> class InternalContainer, class T>
-struct container_traits<TupleContainer<InternalContainer, T>> {
+/// Specialization for a ContainerTuple<InternalContainer, Types...>, see also \ref container_traits.hpp.
+template <template <class> class InternalContainer, class... Types>
+struct container_traits<ContainerTuple<InternalContainer, Types...>> {
   /// The container type.
-  using type = TupleContainer<InternalContainer, T>;
+  using type = ContainerTuple<InternalContainer, Types...>;
   /// The container value type.
   using value_type = typename type::value_type;
   /// The container size type.
@@ -150,13 +169,17 @@ struct container_traits<TupleContainer<InternalContainer, T>> {
   }
 };
 
-/// Shorthand for a std::vector<T, std::allocator<T>>.
+/// Shorthand for a vector with the default allocator.
 template <class T>
 using Vector = std::vector<T, std::allocator<T>>;
 
-/// Shorthand for a TupleContainer<Vector, Tuple>.
-template <class Tuple>
-using TupleVector = TupleContainer<Vector, Tuple>;
+/// Shorthand for a vector of tuples with the default allocator.
+template <class... Types>
+using TupleVector = Vector<std::tuple<Types...>>;
+
+/// Shorthand for a tuple of vectors with the default allocator.
+template <class... Types>
+using VectorTuple = ContainerTuple<Vector, Types...>;
 
 }  // namespace beluga
 
