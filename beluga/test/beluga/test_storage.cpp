@@ -27,12 +27,22 @@ class MockMixin : public Mixin {
   MOCK_METHOD(std::size_t, max_samples, (), (const));
 };
 
-using SOA_UUT = ciabatta::mixin<
+using SOA_WITH_PAIR = ciabatta::mixin<
+    ciabatta::curry<beluga::StructureOfArrays, int, double>::mixin,
+    MockMixin,
+    ciabatta::provides<beluga::StorageInterface<int, double>>::mixin>;
+
+using AOS_WITH_PAIR = ciabatta::mixin<
+    ciabatta::curry<beluga::ArrayOfStructures, int, double>::mixin,
+    MockMixin,
+    ciabatta::provides<beluga::StorageInterface<int, double>>::mixin>;
+
+using SOA_WITH_TUPLE = ciabatta::mixin<
     ciabatta::curry<beluga::StructureOfArrays, int, double, std::size_t>::mixin,
     MockMixin,
     ciabatta::provides<beluga::StorageInterface<int, double>>::mixin>;
 
-using AOS_UUT = ciabatta::mixin<
+using AOS_WITH_TUPLE = ciabatta::mixin<
     ciabatta::curry<beluga::ArrayOfStructures, int, double, std::size_t>::mixin,
     MockMixin,
     ciabatta::provides<beluga::StorageInterface<int, double>>::mixin>;
@@ -40,7 +50,7 @@ using AOS_UUT = ciabatta::mixin<
 template <class T>
 class StoragePolicyTest : public testing::Test {};
 
-using Implementations = testing::Types<SOA_UUT, AOS_UUT>;
+using Implementations = testing::Types<SOA_WITH_PAIR, AOS_WITH_PAIR, SOA_WITH_TUPLE, AOS_WITH_TUPLE>;
 TYPED_TEST_SUITE(StoragePolicyTest, Implementations, );
 
 TYPED_TEST(StoragePolicyTest, InitializeWithLessParticlesThanExpected) {
