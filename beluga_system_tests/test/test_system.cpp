@@ -89,7 +89,8 @@ TEST_P(BelugaSystemTest, test_estimated_path) {
   for (const auto [iteration, data_point] : ranges::views::enumerate(test_data.data_points)) {
     pf.update_motion(data_point.odom);
     pf.sample();
-    pf.update_sensor(data_point.scan);
+    auto scan_copy = data_point.scan;
+    pf.update_sensor(std::move(scan_copy));
     pf.importance_sample();
     pf.resample();
     auto estimation = pf.estimate();

@@ -70,12 +70,6 @@ struct LaserSensorModelInterface2d {
    * \param points The range finder points in the reference frame of the particle.
    */
   virtual void update_sensor(measurement_type&& points) = 0;
-
-  /// Update the sensor model with the measured points.
-  /**
-   * \overload
-   */
-  virtual void update_sensor(const measurement_type& points) = 0;
 };
 
 }  // namespace beluga
