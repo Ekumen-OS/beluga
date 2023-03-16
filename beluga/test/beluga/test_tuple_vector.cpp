@@ -46,7 +46,7 @@ class ContainerTest : public testing::Test {
   using TemplateParam = typename T::template TemplateParam<Types...>;
 };
 
-using Implementations = testing::Types<TemplateWrapper<beluga::VectorTuple>, TemplateWrapper<beluga::TupleVector>>;
+using Implementations = testing::Types<TemplateWrapper<beluga::VectorOfTuples>, TemplateWrapper<beluga::TupleOfVectors>>;
 TYPED_TEST_SUITE(ContainerTest, Implementations, );
 
 TYPED_TEST(ContainerTest, Size) {

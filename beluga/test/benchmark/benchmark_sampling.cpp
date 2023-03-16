@@ -40,7 +40,7 @@ struct beluga::spatial_hash<State> {
 namespace {
 
 using Particle = std::tuple<State, double, std::size_t>;
-using Container = beluga::TupleVector<State, double, std::size_t>;
+using Container = beluga::TupleOfVectors<State, double, std::size_t>;
 
 void BM_FixedResample(benchmark::State& state) {
   const auto particle_count = state.range(0);

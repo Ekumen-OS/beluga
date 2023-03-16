@@ -175,11 +175,11 @@ using Vector = std::vector<T, std::allocator<T>>;
 
 /// Shorthand for a vector of tuples with the default allocator.
 template <class... Types>
-using VectorTuple = Vector<std::tuple<Types...>>;
+using VectorOfTuples = Vector<std::tuple<Types...>>;
 
 /// Shorthand for a tuple of vectors with the default allocator.
 template <class... Types>
-using TupleVector = TupleContainer<Vector, Types...>;
+using TupleOfVectors = TupleContainer<Vector, Types...>;
 
 }  // namespace beluga
 

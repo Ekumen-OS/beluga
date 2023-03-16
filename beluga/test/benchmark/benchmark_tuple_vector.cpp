@@ -28,8 +28,8 @@ struct State {
 };
 
 using Particle = std::tuple<State, double, std::size_t>;
-using StructureOfArrays = beluga::TupleVector<State, double, std::size_t>;
-using ArrayOfStructures = beluga::VectorTuple<State, double, std::size_t>;
+using StructureOfArrays = beluga::TupleOfVectors<State, double, std::size_t>;
+using ArrayOfStructures = beluga::VectorOfTuples<State, double, std::size_t>;
 
 struct Arrays {
   std::vector<State> states;
