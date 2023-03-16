@@ -64,11 +64,10 @@ jobs:
           colcon coveragepy-result --packages-select ${{ env.ROS_PACKAGES }} --verbose --coverage-report-args -m
 
       - name: Lint
-        working-directory: ${{ github.workspace }}/src
         shell: bash
         run: |
-          source ${{ github.workspace }}/install/setup.sh
-          pre-commit run --all-files --verbose --show-diff-on-failure
+          source install/setup.sh
+          cd ${{ github.workspace }}/src && pre-commit run --all-files --verbose --show-diff-on-failure
 
       - name: Upload code coverage artifacts
         uses: actions/upload-artifact@v3
