@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ROS_DISTRO: humble
-      ROS_PACKAGES: beluga beluga_amcl
+      ROS_PACKAGES: beluga beluga_amcl beluga_system_tests
     container:
       image: ros:humble-ros-base-jammy
     steps:
