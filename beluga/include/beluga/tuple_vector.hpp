@@ -60,7 +60,7 @@ using tuple_or_pair_t = typename tuple_or_pair<Types...>::type;
  * \tparam ...Types Elements types of the tuple.
  */
 template <template <class> class InternalContainer, class... Types>
-class ContainerTuple {
+class TupleContainer {
  public:
   /// Value type of the container.
   /**
@@ -74,13 +74,13 @@ class ContainerTuple {
   using size_type = std::size_t;
 
   /// Default constructor, will default initialize all containers in the tuple.
-  constexpr ContainerTuple() = default;
+  constexpr TupleContainer() = default;
 
   /// Constructs a container of size count, all values are default initialized.
   /**
    * \param count Size of the container.
    */
-  explicit constexpr ContainerTuple(size_type count) : sequences_{((void)sizeof(Types), count)...} {}
+  explicit constexpr TupleContainer(size_type count) : sequences_{((void)sizeof(Types), count)...} {}
 
   /// Returns true if the container is empty.
   [[nodiscard]] constexpr bool empty() const noexcept { return std::get<0>(sequences_).empty(); }
@@ -152,11 +152,11 @@ class ContainerTuple {
   }
 };
 
-/// Specialization for a ContainerTuple<InternalContainer, Types...>, see also \ref container_traits.hpp.
+/// Specialization for a TupleContainer<InternalContainer, Types...>, see also \ref container_traits.hpp.
 template <template <class> class InternalContainer, class... Types>
-struct container_traits<ContainerTuple<InternalContainer, Types...>> {
+struct container_traits<TupleContainer<InternalContainer, Types...>> {
   /// The container type.
-  using type = ContainerTuple<InternalContainer, Types...>;
+  using type = TupleContainer<InternalContainer, Types...>;
   /// The container value type.
   using value_type = typename type::value_type;
   /// The container size type.
@@ -175,11 +175,11 @@ using Vector = std::vector<T, std::allocator<T>>;
 
 /// Shorthand for a vector of tuples with the default allocator.
 template <class... Types>
-using TupleVector = Vector<std::tuple<Types...>>;
+using VectorTuple = Vector<std::tuple<Types...>>;
 
 /// Shorthand for a tuple of vectors with the default allocator.
 template <class... Types>
-using VectorTuple = ContainerTuple<Vector, Types...>;
+using TupleVector = TupleContainer<Vector, Types...>;
 
 }  // namespace beluga
 

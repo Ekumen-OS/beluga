@@ -220,11 +220,11 @@ class StoragePolicy : public Mixin {
 
 /// A storage policy that implements a structure of arrays layout.
 template <class Mixin, class... Types>
-using StructureOfArrays = StoragePolicy<Mixin, VectorTuple<Types...>>;
+using StructureOfArrays = StoragePolicy<Mixin, TupleVector<Types...>>;
 
 /// A storage policy that implements an array of structures layout.
 template <class Mixin, class... Types>
-using ArrayOfStructures = StoragePolicy<Mixin, TupleVector<Types...>>;
+using ArrayOfStructures = StoragePolicy<Mixin, VectorTuple<Types...>>;
 
 }  // namespace beluga
 
