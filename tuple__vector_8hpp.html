@@ -117,25 +117,41 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html">beluga::TupleContainer&lt; InternalContainer, Tuple&lt; Types... &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of a tuple of containers, with an interface that looks like a container of tuples.  <a href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1tuple__or__pair.html">beluga::tuple_or_pair&lt; Types &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A metafunction that returns a tuple or a pair depending on the number of types.  <a href="structbeluga_1_1tuple__or__pair.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01T_01_4_01_4.html">beluga::container_traits&lt; TupleContainer&lt; InternalContainer, T &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for a TupleContainer&lt;InternalContainer, T&gt;, see also <a class="el" href="container__traits_8hpp.html">container_traits.hpp</a>.  <a href="structbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01T_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1tuple__or__pair_3_01First_00_01Second_01_4.html">beluga::tuple_or_pair&lt; First, Second &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization that returns a pair.  <a href="structbeluga_1_1tuple__or__pair_3_01First_00_01Second_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html">beluga::TupleContainer&lt; InternalContainer, Types &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of a tuple of containers, with an interface that looks like a container of tuples.  <a href="classbeluga_1_1TupleContainer.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01Types_8_8_8_01_4_01_4.html">beluga::container_traits&lt; TupleContainer&lt; InternalContainer, Types... &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for a TupleContainer&lt;InternalContainer, Types...&gt;, see also <a class="el" href="container__traits_8hpp.html">container_traits.hpp</a>.  <a href="structbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01Types_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:aa437a2910a87170805835fe68e9d0a0a"><td class="memTemplParams" colspan="2"><a id="aa437a2910a87170805835fe68e9d0a0a"></a>
+template&lt;class... Types&gt; </td></tr>
+<tr class="memitem:aa437a2910a87170805835fe68e9d0a0a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__vector_8hpp.html#aa437a2910a87170805835fe68e9d0a0a">beluga::tuple_or_pair_t</a> = typename tuple_or_pair&lt; Types... &gt;::type</td></tr>
+<tr class="memdesc:aa437a2910a87170805835fe68e9d0a0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type alias that returns a tuple or a pair depending on the number of types. <br /></td></tr>
+<tr class="separator:aa437a2910a87170805835fe68e9d0a0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51cbced5170bfe37a85ef0a454b4ade0"><td class="memTemplParams" colspan="2"><a id="a51cbced5170bfe37a85ef0a454b4ade0"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a51cbced5170bfe37a85ef0a454b4ade0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__vector_8hpp.html#a51cbced5170bfe37a85ef0a454b4ade0">beluga::Vector</a> = std::vector&lt; T, std::allocator&lt; T &gt; &gt;</td></tr>
-<tr class="memdesc:a51cbced5170bfe37a85ef0a454b4ade0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorthand for a std::vector&lt;T, std::allocator&lt;T&gt;&gt;. <br /></td></tr>
+<tr class="memdesc:a51cbced5170bfe37a85ef0a454b4ade0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorthand for a vector with the default allocator. <br /></td></tr>
 <tr class="separator:a51cbced5170bfe37a85ef0a454b4ade0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86706e165596847122eda1ceaa923781"><td class="memTemplParams" colspan="2"><a id="a86706e165596847122eda1ceaa923781"></a>
-template&lt;class Tuple &gt; </td></tr>
-<tr class="memitem:a86706e165596847122eda1ceaa923781"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__vector_8hpp.html#a86706e165596847122eda1ceaa923781">beluga::TupleVector</a> = TupleContainer&lt; Vector, Tuple &gt;</td></tr>
-<tr class="memdesc:a86706e165596847122eda1ceaa923781"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorthand for a TupleContainer&lt;Vector, Tuple&gt;. <br /></td></tr>
-<tr class="separator:a86706e165596847122eda1ceaa923781"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bab96127ef9d000ec00feab26ed896d"><td class="memTemplParams" colspan="2"><a id="a0bab96127ef9d000ec00feab26ed896d"></a>
+template&lt;class... Types&gt; </td></tr>
+<tr class="memitem:a0bab96127ef9d000ec00feab26ed896d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__vector_8hpp.html#a0bab96127ef9d000ec00feab26ed896d">beluga::VectorOfTuples</a> = Vector&lt; std::tuple&lt; Types... &gt; &gt;</td></tr>
+<tr class="memdesc:a0bab96127ef9d000ec00feab26ed896d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorthand for a vector of tuples with the default allocator. <br /></td></tr>
+<tr class="separator:a0bab96127ef9d000ec00feab26ed896d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8d4b9a8e86c77ab467b8c7d190ead1e"><td class="memTemplParams" colspan="2"><a id="ad8d4b9a8e86c77ab467b8c7d190ead1e"></a>
+template&lt;class... Types&gt; </td></tr>
+<tr class="memitem:ad8d4b9a8e86c77ab467b8c7d190ead1e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__vector_8hpp.html#ad8d4b9a8e86c77ab467b8c7d190ead1e">beluga::TupleOfVectors</a> = TupleContainer&lt; Vector, Types... &gt;</td></tr>
+<tr class="memdesc:ad8d4b9a8e86c77ab467b8c7d190ead1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorthand for a tuple of vectors with the default allocator. <br /></td></tr>
+<tr class="separator:ad8d4b9a8e86c77ab467b8c7d190ead1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of a tuple of containers. </p>

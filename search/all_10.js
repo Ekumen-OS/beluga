@@ -12,8 +12,8 @@ var searchData=
   ['simplestateestimator_172',['SimpleStateEstimator',['../classbeluga_1_1SimpleStateEstimator.html',1,'beluga::SimpleStateEstimator&lt; Mixin, State &gt;'],['../classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html#ade76738ed7aa8c9125d46ecf8935ce2e',1,'beluga::SimpleStateEstimator&lt; Mixin, Sophus::SE2d &gt;::SimpleStateEstimator()']]],
   ['simplestateestimator2d_173',['SimpleStateEstimator2d',['../estimation_8hpp.html#a725dd1fc304e5edb21b90b7c8d3c42bb',1,'beluga']]],
   ['simplestateestimator_3c_20mixin_2c_20sophus_3a_3ase2d_20_3e_174',['SimpleStateEstimator&lt; Mixin, Sophus::SE2d &gt;',['../classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html',1,'beluga']]],
-  ['size_175',['size',['../classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#ab33916ee4b313dc966b4fa81a57d007b',1,'beluga::TupleContainer&lt; InternalContainer, Tuple&lt; Types... &gt; &gt;']]],
-  ['size_5ftype_176',['size_type',['../structbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01T_01_4_01_4.html#a92bc4e623f538ecdfc448a7232f16e5d',1,'beluga::container_traits&lt; TupleContainer&lt; InternalContainer, T &gt; &gt;::size_type()'],['../classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html#ae1bb12d9b461a7fcede79b8f6aa691ec',1,'beluga::TupleContainer&lt; InternalContainer, Tuple&lt; Types... &gt; &gt;::size_type()'],['../structbeluga_1_1container__traits.html#a4ce92107487127c7b800717a6d807366',1,'beluga::container_traits::size_type()']]],
+  ['size_175',['size',['../classbeluga_1_1TupleContainer.html#aae8c8c439f9c871ec377d6f886f2654d',1,'beluga::TupleContainer']]],
+  ['size_5ftype_176',['size_type',['../structbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01Types_8_8_8_01_4_01_4.html#a8df01215f210ec3a020ed58a6e17526a',1,'beluga::container_traits&lt; TupleContainer&lt; InternalContainer, Types... &gt; &gt;::size_type()'],['../classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894',1,'beluga::TupleContainer::size_type()'],['../structbeluga_1_1container__traits.html#a4ce92107487127c7b800717a6d807366',1,'beluga::container_traits::size_type()']]],
   ['spatial_5fhash_177',['spatial_hash',['../structbeluga_1_1spatial__hash.html',1,'beluga']]],
   ['spatial_5fhash_2ehpp_178',['spatial_hash.hpp',['../spatial__hash_8hpp.html',1,'']]],
   ['spatial_5fhash_3c_20sophus_3a_3ase2d_2c_20void_20_3e_179',['spatial_hash&lt; Sophus::SE2d, void &gt;',['../structbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html',1,'beluga']]],
@@ -30,5 +30,5 @@ var searchData=
   ['storageinterface_190',['StorageInterface',['../structbeluga_1_1StorageInterface.html',1,'beluga']]],
   ['storagepolicy_191',['StoragePolicy',['../classbeluga_1_1StoragePolicy.html',1,'beluga::StoragePolicy&lt; Mixin, Container, Particle, State, Weight &gt;'],['../classbeluga_1_1StoragePolicy.html#a9bdc6e6ed602181ffd2bf49d28586a96',1,'beluga::StoragePolicy::StoragePolicy()']]],
   ['strafe_5fnoise_5ffrom_5ftranslation_192',['strafe_noise_from_translation',['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a51327f31df0f15909a66753067dd7d15',1,'beluga::OmnidirectionalDriveModelParam']]],
-  ['structureofarrays_193',['StructureOfArrays',['../storage_8hpp.html#a1bd59fbc0aeebf42637b4882cb770ef6',1,'beluga']]]
+  ['structureofarrays_193',['StructureOfArrays',['../storage_8hpp.html#a960adf7844295767f7350b8ff6e14114',1,'beluga']]]
 ];

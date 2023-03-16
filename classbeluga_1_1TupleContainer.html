@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::TupleContainer&lt; InternalContainer, Tuple &gt; Class Template Reference</title>
+<title>Beluga: beluga::TupleContainer&lt; InternalContainer, Types &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -67,19 +67,259 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classbeluga_1_1TupleContainer-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::TupleContainer&lt; InternalContainer, Tuple &gt; Class Template Reference</div>  </div>
+<div class="title">beluga::TupleContainer&lt; InternalContainer, Types &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Specialization for a tuple with no arguments.  
+<p>An implementation of a tuple of containers, with an interface that looks like a container of tuples.  
  <a href="classbeluga_1_1TupleContainer.html#details">More...</a></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;template&lt; class &gt; class InternalContainer, class Tuple&gt;<br />
-class beluga::TupleContainer&lt; InternalContainer, Tuple &gt;</h3>
 
-<p>Specialization for a tuple with no arguments. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+<p><code>#include &lt;<a class="el" href="tuple__vector_8hpp_source.html">tuple_vector.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a470abeddd5e6a9912ac61b76bec5d6db"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#a470abeddd5e6a9912ac61b76bec5d6db">value_type</a> = <a class="el" href="tuple__vector_8hpp.html#aa437a2910a87170805835fe68e9d0a0a">tuple_or_pair_t</a>&lt; Types... &gt;</td></tr>
+<tr class="memdesc:a470abeddd5e6a9912ac61b76bec5d6db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value type of the container.  <a href="classbeluga_1_1TupleContainer.html#a470abeddd5e6a9912ac61b76bec5d6db">More...</a><br /></td></tr>
+<tr class="separator:a470abeddd5e6a9912ac61b76bec5d6db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52e7d341a10751701c6cb682bbbcd894"><td class="memItemLeft" align="right" valign="top"><a id="a52e7d341a10751701c6cb682bbbcd894"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">size_type</a> = std::size_t</td></tr>
+<tr class="memdesc:a52e7d341a10751701c6cb682bbbcd894"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size type of the container. <br /></td></tr>
+<tr class="separator:a52e7d341a10751701c6cb682bbbcd894"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a0f4add754d4028ba78d721a95fed6999"><td class="memItemLeft" align="right" valign="top"><a id="a0f4add754d4028ba78d721a95fed6999"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#a0f4add754d4028ba78d721a95fed6999">TupleContainer</a> ()=default</td></tr>
+<tr class="memdesc:a0f4add754d4028ba78d721a95fed6999"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor, will default initialize all containers in the tuple. <br /></td></tr>
+<tr class="separator:a0f4add754d4028ba78d721a95fed6999"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa490742eb26eaa39e1ee95374e6a688e"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#aa490742eb26eaa39e1ee95374e6a688e">TupleContainer</a> (<a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">size_type</a> count)</td></tr>
+<tr class="memdesc:aa490742eb26eaa39e1ee95374e6a688e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a container of size count, all values are default initialized.  <a href="classbeluga_1_1TupleContainer.html#aa490742eb26eaa39e1ee95374e6a688e">More...</a><br /></td></tr>
+<tr class="separator:aa490742eb26eaa39e1ee95374e6a688e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa18695617db5258ab4f7f7da9bbb941a"><td class="memItemLeft" align="right" valign="top"><a id="aa18695617db5258ab4f7f7da9bbb941a"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#aa18695617db5258ab4f7f7da9bbb941a">empty</a> () const noexcept</td></tr>
+<tr class="memdesc:aa18695617db5258ab4f7f7da9bbb941a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the container is empty. <br /></td></tr>
+<tr class="separator:aa18695617db5258ab4f7f7da9bbb941a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae8c8c439f9c871ec377d6f886f2654d"><td class="memItemLeft" align="right" valign="top"><a id="aae8c8c439f9c871ec377d6f886f2654d"></a>
+constexpr <a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">size_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#aae8c8c439f9c871ec377d6f886f2654d">size</a> () const noexcept</td></tr>
+<tr class="memdesc:aae8c8c439f9c871ec377d6f886f2654d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the size of the container. <br /></td></tr>
+<tr class="separator:aae8c8c439f9c871ec377d6f886f2654d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a883a25758c473fe3dd0e6474733d6314"><td class="memItemLeft" align="right" valign="top"><a id="a883a25758c473fe3dd0e6474733d6314"></a>
+constexpr <a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">size_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#a883a25758c473fe3dd0e6474733d6314">capacity</a> () const noexcept</td></tr>
+<tr class="memdesc:a883a25758c473fe3dd0e6474733d6314"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the capacity of the container. <br /></td></tr>
+<tr class="separator:a883a25758c473fe3dd0e6474733d6314"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26a9ecf80e50daf6895e3bc28888b669"><td class="memItemLeft" align="right" valign="top"><a id="a26a9ecf80e50daf6895e3bc28888b669"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#a26a9ecf80e50daf6895e3bc28888b669">clear</a> () noexcept</td></tr>
+<tr class="memdesc:a26a9ecf80e50daf6895e3bc28888b669"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the container. <br /></td></tr>
+<tr class="separator:a26a9ecf80e50daf6895e3bc28888b669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eb715652b3e7a8d71d967b0b54af17f"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#a5eb715652b3e7a8d71d967b0b54af17f">reserve</a> (<a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">size_type</a> new_cap)</td></tr>
+<tr class="memdesc:a5eb715652b3e7a8d71d967b0b54af17f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserves the specified capacity.  <a href="classbeluga_1_1TupleContainer.html#a5eb715652b3e7a8d71d967b0b54af17f">More...</a><br /></td></tr>
+<tr class="separator:a5eb715652b3e7a8d71d967b0b54af17f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62a27f5414e5a78771479b8f3e539a3e"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#a62a27f5414e5a78771479b8f3e539a3e">resize</a> (<a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">size_type</a> count)</td></tr>
+<tr class="memdesc:a62a27f5414e5a78771479b8f3e539a3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resizes the container.  <a href="classbeluga_1_1TupleContainer.html#a62a27f5414e5a78771479b8f3e539a3e">More...</a><br /></td></tr>
+<tr class="separator:a62a27f5414e5a78771479b8f3e539a3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad292de954d0435966d97288ef03ecb7f"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#ad292de954d0435966d97288ef03ecb7f">push_back</a> (<a class="el" href="classbeluga_1_1TupleContainer.html#a470abeddd5e6a9912ac61b76bec5d6db">value_type</a> &amp;&amp;value)</td></tr>
+<tr class="memdesc:ad292de954d0435966d97288ef03ecb7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an element at the end of the container.  <a href="classbeluga_1_1TupleContainer.html#ad292de954d0435966d97288ef03ecb7f">More...</a><br /></td></tr>
+<tr class="separator:ad292de954d0435966d97288ef03ecb7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4de278599e2c22abf7bf9f5bca014019"><td class="memItemLeft" align="right" valign="top"><a id="a4de278599e2c22abf7bf9f5bca014019"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#a4de278599e2c22abf7bf9f5bca014019">push_back</a> (const <a class="el" href="classbeluga_1_1TupleContainer.html#a470abeddd5e6a9912ac61b76bec5d6db">value_type</a> &amp;value)</td></tr>
+<tr class="memdesc:a4de278599e2c22abf7bf9f5bca014019"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
+<tr class="separator:a4de278599e2c22abf7bf9f5bca014019"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace683def8baab4fa8df08091b6f1bfd2"><td class="memItemLeft" align="right" valign="top"><a id="ace683def8baab4fa8df08091b6f1bfd2"></a>
+constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#ace683def8baab4fa8df08091b6f1bfd2">view_all</a> ()</td></tr>
+<tr class="memdesc:ace683def8baab4fa8df08091b6f1bfd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a view of all elements of the container. <br /></td></tr>
+<tr class="separator:ace683def8baab4fa8df08091b6f1bfd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01fedcf471af7d33861aa29a6c9ed102"><td class="memItemLeft" align="right" valign="top"><a id="a01fedcf471af7d33861aa29a6c9ed102"></a>
+constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1TupleContainer.html#a01fedcf471af7d33861aa29a6c9ed102">view_all</a> () const</td></tr>
+<tr class="memdesc:a01fedcf471af7d33861aa29a6c9ed102"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
+<tr class="separator:a01fedcf471af7d33861aa29a6c9ed102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;template&lt; class &gt; class InternalContainer, class... Types&gt;<br />
+class beluga::TupleContainer&lt; InternalContainer, Types &gt;</h3>
+
+<p>An implementation of a tuple of containers, with an interface that looks like a container of tuples. </p>
+<p>i.e. though this is implemented internally as an <code>std::tuple&lt;InternalContainer&lt;Types&gt;...&gt;</code>, the interface looks like an <code>InternalContainer&lt;std::tuple&lt;Types&gt;...&gt;</code>. It provides the convenience of the second, but when iterating over only one of the elements of the tuple in the container it has better performance (because of cache locality). To that end, use for example <code>views::all(tuple_container) | views::elements&lt;0&gt;</code> to iterate over the first element of the tuple in the container.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">InternalContainer</td><td>Container type constructor, e.g. std::vector. </td></tr>
+    <tr><td class="paramname">...Types</td><td>Elements types of the tuple. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a470abeddd5e6a9912ac61b76bec5d6db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a470abeddd5e6a9912ac61b76bec5d6db">&#9670;&nbsp;</a></span>value_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;template&lt; class &gt; class InternalContainer, class... Types&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classbeluga_1_1TupleContainer.html">beluga::TupleContainer</a>&lt; InternalContainer, Types &gt;::<a class="el" href="classbeluga_1_1TupleContainer.html#a470abeddd5e6a9912ac61b76bec5d6db">value_type</a> =  <a class="el" href="tuple__vector_8hpp.html#aa437a2910a87170805835fe68e9d0a0a">tuple_or_pair_t</a>&lt;Types...&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Value type of the container. </p>
+<p>It will be an <code>std::pair</code> if there are two elements or an <code>std::tuple</code> otherwise. This is because <code>ranges::views::zip</code> returns a reference view to pairs if there are two elements, and they are not assignable with tuples. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aa490742eb26eaa39e1ee95374e6a688e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa490742eb26eaa39e1ee95374e6a688e">&#9670;&nbsp;</a></span>TupleContainer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;template&lt; class &gt; class InternalContainer, class... Types&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1TupleContainer.html">beluga::TupleContainer</a>&lt; InternalContainer, Types &gt;::<a class="el" href="classbeluga_1_1TupleContainer.html">TupleContainer</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">size_type</a>&#160;</td>
+          <td class="paramname"><em>count</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs a container of size count, all values are default initialized. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">count</td><td>Size of the container. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad292de954d0435966d97288ef03ecb7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad292de954d0435966d97288ef03ecb7f">&#9670;&nbsp;</a></span>push_back()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;template&lt; class &gt; class InternalContainer, class... Types&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void <a class="el" href="classbeluga_1_1TupleContainer.html">beluga::TupleContainer</a>&lt; InternalContainer, Types &gt;::push_back </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1TupleContainer.html#a470abeddd5e6a9912ac61b76bec5d6db">value_type</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds an element at the end of the container. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The element to be appended. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5eb715652b3e7a8d71d967b0b54af17f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eb715652b3e7a8d71d967b0b54af17f">&#9670;&nbsp;</a></span>reserve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;template&lt; class &gt; class InternalContainer, class... Types&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void <a class="el" href="classbeluga_1_1TupleContainer.html">beluga::TupleContainer</a>&lt; InternalContainer, Types &gt;::reserve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">size_type</a>&#160;</td>
+          <td class="paramname"><em>new_cap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reserves the specified capacity. </p>
+<p>If the specified new capacity is greater than the current capacity, new storage is allocated. Otherwise, the method does nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new_cap</td><td>New capacity of the container. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a62a27f5414e5a78771479b8f3e539a3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62a27f5414e5a78771479b8f3e539a3e">&#9670;&nbsp;</a></span>resize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;template&lt; class &gt; class InternalContainer, class... Types&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void <a class="el" href="classbeluga_1_1TupleContainer.html">beluga::TupleContainer</a>&lt; InternalContainer, Types &gt;::resize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">size_type</a>&#160;</td>
+          <td class="paramname"><em>count</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Resizes the container. </p>
+<p>The container is resized to have exactly <code>count</code> elements. If the specified size is less than the current size, the first <code>count</code> elements of the container will be kept. Otherwise, the container is extended with default initialized values.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">count</td><td>New size of the container. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/runner/work/beluga/beluga/repository/beluga/include/beluga/<a class="el" href="tuple__vector_8hpp_source.html">tuple_vector.hpp</a></li>
 </ul>
 </div><!-- contents -->

@@ -8,5 +8,5 @@ var searchData=
   ['alpha_5ffast_5',['alpha_fast',['../structbeluga_1_1AdaptiveSamplerParam.html#ae8626be75049cab675b34723c414578c',1,'beluga::AdaptiveSamplerParam']]],
   ['alpha_5fslow_6',['alpha_slow',['../structbeluga_1_1AdaptiveSamplerParam.html#a742bb003667cc42f43f2e7f9e9f3e8f2',1,'beluga::AdaptiveSamplerParam']]],
   ['apply_5fmotion_7',['apply_motion',['../classbeluga_1_1DifferentialDriveModel.html#a37101e2b774320bc331bf2cf0e0b313a',1,'beluga::DifferentialDriveModel::apply_motion()'],['../classbeluga_1_1OmnidirectionalDriveModel.html#a363e0638d48b3d23597a41370baf449a',1,'beluga::OmnidirectionalDriveModel::apply_motion()'],['../classbeluga_1_1StationaryModel.html#a5100b33c83acf3d4e2819c51dffd3d4f',1,'beluga::StationaryModel::apply_motion()']]],
-  ['arrayofstructures_8',['ArrayOfStructures',['../storage_8hpp.html#a662135ce0f05bba0aaf21dbd8292a87b',1,'beluga']]]
+  ['arrayofstructures_8',['ArrayOfStructures',['../storage_8hpp.html#a78709fbafa5dc2b9fc65c537a1fc6076',1,'beluga']]]
 ];

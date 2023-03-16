@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['tuplecontainer_284',['TupleContainer',['../classbeluga_1_1TupleContainer.html',1,'beluga']]],
-  ['tuplecontainer_3c_20internalcontainer_2c_20tuple_3c_20types_2e_2e_2e_20_3e_20_3e_285',['TupleContainer&lt; InternalContainer, Tuple&lt; Types... &gt; &gt;',['../classbeluga_1_1TupleContainer_3_01InternalContainer_00_01Tuple_3_01Types_8_8_8_01_4_01_4.html',1,'beluga']]]
+  ['tuple_5for_5fpair_287',['tuple_or_pair',['../structbeluga_1_1tuple__or__pair.html',1,'beluga']]],
+  ['tuple_5for_5fpair_3c_20first_2c_20second_20_3e_288',['tuple_or_pair&lt; First, Second &gt;',['../structbeluga_1_1tuple__or__pair_3_01First_00_01Second_01_4.html',1,'beluga']]],
+  ['tuplecontainer_289',['TupleContainer',['../classbeluga_1_1TupleContainer.html',1,'beluga']]]
 ];
