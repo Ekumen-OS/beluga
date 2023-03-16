@@ -67,7 +67,7 @@ jobs:
         shell: bash
         run: |
           source install/setup.sh
-          cd ${{ github.workspace }}/src && pre-commit run --all-files --verbose --show-diff-on-failure
+          cd $GITHUB_WORKSPACE/src && pre-commit run --all-files --verbose --show-diff-on-failure
 
       - name: Upload code coverage artifacts
         uses: actions/upload-artifact@v3
