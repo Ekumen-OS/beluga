@@ -1,7 +1,0 @@
----
-BasedOnStyle: Chromium
-Language: Cpp
-PointerAlignment: Left
-ColumnLimit: 120
-AlignAfterOpenBracket: AlwaysBreak
-...
