@@ -28,24 +28,24 @@ class MockMixin : public Mixin {
 };
 
 using SOA_WITH_PAIR = ciabatta::mixin<
-    ciabatta::curry<beluga::StructureOfArrays, int, double>::mixin,
+    ciabatta::curry<beluga::StructureOfArrays, int, beluga::Weight>::mixin,
     MockMixin,
-    ciabatta::provides<beluga::StorageInterface<int, double>>::mixin>;
+    ciabatta::provides<beluga::StorageInterface<int, beluga::Weight>>::mixin>;
 
 using AOS_WITH_PAIR = ciabatta::mixin<
-    ciabatta::curry<beluga::ArrayOfStructures, int, double>::mixin,
+    ciabatta::curry<beluga::ArrayOfStructures, int, beluga::Weight>::mixin,
     MockMixin,
-    ciabatta::provides<beluga::StorageInterface<int, double>>::mixin>;
+    ciabatta::provides<beluga::StorageInterface<int, beluga::Weight>>::mixin>;
 
 using SOA_WITH_TUPLE = ciabatta::mixin<
-    ciabatta::curry<beluga::StructureOfArrays, int, double, std::size_t>::mixin,
+    ciabatta::curry<beluga::StructureOfArrays, int, beluga::Weight, beluga::Cluster>::mixin,
     MockMixin,
-    ciabatta::provides<beluga::StorageInterface<int, double>>::mixin>;
+    ciabatta::provides<beluga::StorageInterface<int, beluga::Weight>>::mixin>;
 
 using AOS_WITH_TUPLE = ciabatta::mixin<
-    ciabatta::curry<beluga::ArrayOfStructures, int, double, std::size_t>::mixin,
+    ciabatta::curry<beluga::ArrayOfStructures, int, beluga::Weight, beluga::Cluster>::mixin,
     MockMixin,
-    ciabatta::provides<beluga::StorageInterface<int, double>>::mixin>;
+    ciabatta::provides<beluga::StorageInterface<int, beluga::Weight>>::mixin>;
 
 template <class T>
 class StoragePolicyTest : public testing::Test {};
