@@ -27,6 +27,7 @@
 namespace {
 
 using testing::_;
+using testing::DoubleEq;
 using testing::Each;
 using testing::Return;
 using testing::ReturnRef;
@@ -36,9 +37,9 @@ class RandomSelectWithParam : public ::testing::TestWithParam<double> {};
 TEST_P(RandomSelectWithParam, Functional) {
   const double probability = GetParam();
   auto generator = std::mt19937{std::random_device()()};
-  auto output =
-      ranges::views::generate(beluga::random_select([]() { return 1; }, []() { return 2; }, generator, probability)) |
-      ranges::views::take_exactly(1'000'000);
+  auto output = ranges::views::generate(
+                    beluga::make_random_selector([]() { return 1; }, []() { return 2; }, generator, probability)) |
+                ranges::views::take_exactly(1'000'000);
   auto one_count = static_cast<size_t>(ranges::count(output, 1));
   auto two_count = static_cast<size_t>(ranges::count(output, 2));
   ASSERT_NEAR(probability, static_cast<double>(one_count) / static_cast<double>(one_count + two_count), 0.01);
@@ -65,8 +66,8 @@ TEST(RandomSample, Functional) {
   auto values = std::array<int, 4>{1, 2, 3, 4};
   auto weights = std::array<double, 4>{0.1, 0.4, 0.3, 0.2};
   auto generator = std::mt19937{std::random_device()()};
-  auto output =
-      ranges::views::generate(beluga::random_sample(values, weights, generator)) | ranges::views::take_exactly(samples);
+  auto output = ranges::views::generate(beluga::make_multinomial_sampler(values, weights, generator)) |
+                ranges::views::take_exactly(samples);
   AssertWeights(output, values, weights);
 }
 
@@ -125,7 +126,7 @@ class MockStorage : public Mixin {
   template <class... Args>
   explicit MockStorage(Args&&... rest) : Mixin(std::forward<Args>(rest)...) {}
 
-  MOCK_METHOD(double, make_random_state, (std::mt19937&));
+  MOCK_METHOD(int, make_random_state, (std::mt19937&));
   MOCK_METHOD(const std::vector<int>&, states, (), (const));
   MOCK_METHOD(const std::vector<double>&, weights, (), (const));
 };
@@ -133,10 +134,10 @@ class MockStorage : public Mixin {
 TEST(RandomStateGenerator, InstantiateAndCall) {
   auto generator = std::mt19937{std::random_device()()};
   auto instance = ciabatta::mixin<MockStorage, beluga::RandomStateGenerator>{};
-  EXPECT_CALL(instance, make_random_state(_)).WillRepeatedly(Return(1.5));
+  EXPECT_CALL(instance, make_random_state(_)).WillRepeatedly(Return(5));
   auto output = instance.generate_samples(generator) | ranges::views::take_exactly(50) | ranges::to<std::vector>;
   ASSERT_EQ(output.size(), 50);
-  ASSERT_THAT(output, Each(1.5));
+  ASSERT_THAT(output, Each(5));
 }
 
 TEST(NaiveSampler, Distribution) {
@@ -211,6 +212,14 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple(0.5, 0.1, 0.08),
         std::make_tuple(0.5, 0.0, 0.10)));
 
+TEST(FixedLimiter, TakeSamplesLeavesUnitWeight) {
+  auto instance = ciabatta::mixin<MockStorage, beluga::FixedLimiter>{beluga::FixedLimiterParam{1'200}};
+  auto output = ranges::views::generate([]() { return 1; }) | instance.take_samples() |
+                ranges::views::transform([](const auto& p) -> double { return std::get<1>(p); }) |
+                ranges::to<std::vector>;
+  ASSERT_THAT(output, Each(DoubleEq(1.0)));
+}
+
 TEST(FixedLimiter, TakeMaximum) {
   auto instance = ciabatta::mixin<MockStorage, beluga::FixedLimiter>{beluga::FixedLimiterParam{1'200}};
   auto output = ranges::views::generate([]() { return 1; }) | instance.take_samples() | ranges::to<std::vector>;
@@ -225,6 +234,14 @@ struct MockStorageWithCluster : public Mixin {
   template <class... Args>
   explicit MockStorageWithCluster(Args&&... rest) : Mixin(std::forward<Args>(rest)...) {}
 };
+
+TEST(KldLimiter, TakeSamplesLeavesUnitWeight) {
+  auto instance = ciabatta::mixin<MockStorage, beluga::FixedLimiter>{beluga::FixedLimiterParam{1'200}};
+  auto output = ranges::views::generate([]() { return 1; }) | instance.take_samples() |
+                ranges::views::transform([](const auto& p) -> double { return std::get<1>(p); }) |
+                ranges::to<std::vector>;
+  ASSERT_THAT(output, Each(DoubleEq(1.0)));
+}
 
 using state = std::pair<double, double>;
 

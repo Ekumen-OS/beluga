@@ -119,6 +119,7 @@ class LikelihoodFieldModel : public Mixin {
   template <class... Args>
   explicit LikelihoodFieldModel(const param_type& params, const OccupancyGrid& grid, Args&&... rest)
       : Mixin(std::forward<Args>(rest)...),
+        params_{params},
         grid_{grid},
         free_cells_{make_free_cells_vector(grid)},
         likelihood_field_{make_likelihood_field(params, grid)} {}
@@ -155,18 +156,21 @@ class LikelihoodFieldModel : public Mixin {
   [[nodiscard]] weight_type importance_weight(const state_type& state) const {
     const auto transform = grid_.origin().inverse() * state;
     const auto lock = std::shared_lock<std::shared_mutex>{points_mutex_};
+    // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
+    // See https://github.com/ekumenlabs/beluga/issues/153
     return std::transform_reduce(
-        points_.cbegin(), points_.cend(), 0.0, std::plus{},
+        points_.cbegin(), points_.cend(), 1.0, std::plus{},
         [this, x_offset = transform.translation().x(), y_offset = transform.translation().y(),
-         cos_theta = transform.so2().unit_complex().x(),
-         sin_theta = transform.so2().unit_complex().y()](const auto& point) {
+         cos_theta = transform.so2().unit_complex().x(), sin_theta = transform.so2().unit_complex().y(),
+         unknown_space_occupancy_prob = 1. / params_.max_laser_distance](const auto& point) {
           // Transform the end point of the laser to the global coordinate system.
           // Not using Eigen/Sophus because they make the routine x10 slower.
           // See `benchmark_likelihood_field_model.cpp` for reference.
           const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
           const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
           const auto index = grid_.index(x, y);
-          return index < likelihood_field_.size() ? likelihood_field_[index] : 0.0;
+          const auto pz = index < likelihood_field_.size() ? likelihood_field_[index] : unknown_space_occupancy_prob;
+          return pz * pz * pz;
         });
   }
 
@@ -177,6 +181,7 @@ class LikelihoodFieldModel : public Mixin {
   }
 
  private:
+  param_type params_;
   OccupancyGrid grid_;
   std::vector<std::size_t> free_cells_;
   std::vector<double> likelihood_field_;
