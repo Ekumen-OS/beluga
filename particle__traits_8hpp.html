@@ -81,18 +81,22 @@ $(function() {
 <div class="textblock"><code>#include &lt;tuple&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;<a class="el" href="container__traits_8hpp_source.html">beluga/type_traits/container_traits.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="strongly__typed__numeric_8hpp_source.html">beluga/type_traits/strongly_typed_numeric.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="views_8hpp_source.html">beluga/views.hpp</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for particle_traits.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="particle__traits_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2type__traits_2particle__traits_8hpp" alt=""/></div>
 <map name="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2type__traits_2particle__traits_8hpp" id="a_2home_2runner_2work_2beluga_2beluga_2repository_2beluga_2include_2beluga_2type__traits_2particle__traits_8hpp">
-<area shape="rect" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="121,5,315,76"/>
+<area shape="rect" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="303,5,498,76"/>
 <area shape="rect" title=" " alt="" coords="5,213,60,240"/>
-<area shape="rect" title=" " alt="" coords="319,213,411,240"/>
-<area shape="rect" href="container__traits_8hpp.html" title="Useful traits for containers." alt="" coords="309,124,465,165"/>
-<area shape="rect" href="views_8hpp.html" title="Implementation of useful container views." alt="" coords="98,131,234,158"/>
-<area shape="rect" title=" " alt="" coords="435,213,598,240"/>
+<area shape="rect" title=" " alt="" coords="505,213,597,240"/>
+<area shape="rect" href="container__traits_8hpp.html" title="Useful traits for containers." alt="" coords="323,124,479,165"/>
+<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="558,124,769,165"/>
+<area shape="rect" href="views_8hpp.html" title="Implementation of useful container views." alt="" coords="121,131,257,158"/>
+<area shape="rect" title=" " alt="" coords="318,213,481,240"/>
+<area shape="rect" title=" " alt="" coords="621,213,708,240"/>
+<area shape="rect" title=" " alt="" coords="733,213,791,240"/>
 <area shape="rect" title=" " alt="" coords="83,213,294,240"/>
 </map>
 </div>
@@ -128,15 +132,23 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1particle__traits.html">beluga::particle_traits&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common traits of all particle types. See <a class="el" href="ParticlePage.html">Page</a> requirements as well.  <a href="structbeluga_1_1particle__traits.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1particle__traits_3_01Pair_3_01State_00_01double_00_01Extra_8_8_8_01_4_01_4.html">beluga::particle_traits&lt; Pair&lt; State, double, Extra... &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for particles represented by a state/weight/etc tuple.  <a href="structbeluga_1_1particle__traits_3_01Pair_3_01State_00_01double_00_01Extra_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1particle__traits_3_01Pair_3_01State_00_01Weight_00_01Extra_8_8_8_01_4_01_4.html">beluga::particle_traits&lt; Pair&lt; State, Weight, Extra... &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for particles represented by a state/weight/etc tuple.  <a href="structbeluga_1_1particle__traits_3_01Pair_3_01State_00_01Weight_00_01Extra_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1particle__traits_3_01Tuple_3_01State_00_01double_00_01std_1_1size__t_00_01Extra_8_8_8_01_4_01_4.html">beluga::particle_traits&lt; Tuple&lt; State, double, std::size_t, Extra... &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for particles represented by a state/weight/cluster/etc tuple.  <a href="structbeluga_1_1particle__traits_3_01Tuple_3_01State_00_01double_00_01std_1_1size__t_00_01Extra_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1particle__traits_3_01Tuple_3_01State_00_01Weight_00_01Cluster_00_01Extra_8_8_8_01_4_01_4.html">beluga::particle_traits&lt; Tuple&lt; State, Weight, Cluster, Extra... &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for particles represented by a state/weight/cluster/etc tuple.  <a href="structbeluga_1_1particle__traits_3_01Tuple_3_01State_00_01Weight_00_01Cluster_00_01Extra_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a7804cf035e3e2c218773a71ee9f3b0de"><td class="memItemLeft" align="right" valign="top"><a id="a7804cf035e3e2c218773a71ee9f3b0de"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> = Numeric&lt; double, struct WeightTag &gt;</td></tr>
+<tr class="memdesc:a7804cf035e3e2c218773a71ee9f3b0de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Weight type, as a strongly typed double. <br /></td></tr>
+<tr class="separator:a7804cf035e3e2c218773a71ee9f3b0de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f17811828f632529bca9b868d8c4d12"><td class="memItemLeft" align="right" valign="top"><a id="a5f17811828f632529bca9b868d8c4d12"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="particle__traits_8hpp.html#a5f17811828f632529bca9b868d8c4d12">beluga::Cluster</a> = Numeric&lt; std::size_t, struct ClusterTag &gt;</td></tr>
+<tr class="memdesc:a5f17811828f632529bca9b868d8c4d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cluster type, as a strongly typed std::size_t. <br /></td></tr>
+<tr class="separator:a5f17811828f632529bca9b868d8c4d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70fbeebef818d279fae72150cb2635dd"><td class="memTemplParams" colspan="2"><a id="a70fbeebef818d279fae72150cb2635dd"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a70fbeebef818d279fae72150cb2635dd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="particle__traits_8hpp.html#a70fbeebef818d279fae72150cb2635dd">beluga::decay_tuple_types_t</a> = typename decay_tuple_types&lt; T &gt;::type</td></tr>
