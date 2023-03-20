@@ -18,10 +18,12 @@
 #include <functional>
 #include <limits>
 #include <type_traits>
+
 /**
  * \file
  * \brief Implementation of a strongly typed numeric helper.
  */
+
 namespace beluga {
 
 /// Helper for creating strongly typed numeric types.
@@ -54,6 +56,7 @@ class Numeric final {
 };
 
 }  // namespace beluga
+
 namespace std {
 
 /// `std::numeric_limits` specialization for `Numeric` types.
