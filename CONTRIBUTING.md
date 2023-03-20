@@ -44,12 +44,18 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
 
 #### Make changes locally
 
+1. Install `git-lfs`
+   ```bash
+   sudo apt install git-lfs
+   git lfs install
+   ```
+
 1. Clone the repository.
    ```bash
    git clone --recursive git@github.com:ekumenlabs/beluga.git
    ```
 
-2. Build and run the development docker container.
+1. Build and run the development docker container.
    ```bash
    cd <REPOSITORY_PATH>
    docker/run.sh
@@ -59,7 +65,7 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    docker/run.sh --build
    ```
 
-3. **[Optional]** Install pre-commit hooks. _This will probably cause you to not be able to create commits from your host machine since the hooks have dependencies that exist only in the development container._
+1. **[Optional]** Install pre-commit hooks. _This will probably cause you to not be able to create commits from your host machine since the hooks have dependencies that exist only in the development container._
    ```bash
    cd /ws/src
    pre-commit install
@@ -70,16 +76,16 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    pre-commit run --all-files
    ```
 
-4. Create a working branch and start with your changes. The suggested branch name convention is `<user_name>/<feature_name>`.
+1. Create a working branch and start with your changes. The suggested branch name convention is `<user_name>/<feature_name>`.
 
-5. Build and test the project.
+1. Build and test the project.
    ```bash
    cd /ws
    colcon build --symlink-install
    colcon test
    ```
 
-6. <a name="running_an_example"></a>Run an example application using a pre-recorded rosbag.
+1. <a name="running_an_example"></a>Run an example application using a pre-recorded rosbag.
 
    ```bash
    cd /ws
@@ -98,9 +104,9 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    ros2 run teleop_twist_keyboard teleop_twist_keyboard
    ```
 
-7. Push your changes and [create a PR](https://github.com/ekumenlabs/beluga/compare)!
+1. Push your changes and [create a PR](https://github.com/ekumenlabs/beluga/compare)!
 
-8. At the time a feature branch is squashed-and-merged into `main`, the commit message should adhere to the following good practices:
+1. At the time a feature branch is squashed-and-merged into `main`, the commit message should adhere to the following good practices:
    - Limit the subject line to 50 characters.
    - Capitalize the subject line.
    - Do not end the subject line with a period.
