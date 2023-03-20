@@ -91,44 +91,43 @@ $(function() {
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;functional&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;limits&gt;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>beluga {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span>beluga {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> PhantomType, <span class="keyword">typename</span> = std::enable_if_t&lt;std::is_arithmetic_v&lt;T&gt;&gt;&gt;</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1Numeric.html">Numeric</a> final {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html#a95d133ae7ad47732898b6737b99ac483">   43</a></span>&#160;  constexpr <a class="code" href="classbeluga_1_1Numeric.html#a95d133ae7ad47732898b6737b99ac483">Numeric</a>() noexcept = default;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html#a8d851365c7d9d80e13b749409b2a9a8b">   48</a></span>&#160;  constexpr <a class="code" href="classbeluga_1_1Numeric.html">Numeric</a>(const T t) noexcept : value_{t} {};  <span class="comment">// NOLINT</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html#aaebb7fa51261347b030bf54e8facf636">   50</a></span>&#160;<span class="comment"></span>  constexpr <span class="keyword">operator</span> T&amp;() noexcept { <span class="keywordflow">return</span> value_; }  <span class="comment">// NOLINT</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html#a8ec8f54330d481ff1f764e827c979af3">   52</a></span>&#160;<span class="comment"></span>  constexpr <span class="keyword">operator</span> <span class="keyword">const</span> T&amp;() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> value_; }  <span class="comment">// NOLINT</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  T value_{0};  <span class="comment">// Underlying primitive type.</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> PhantomType, <span class="keyword">typename</span> = std::enable_if_t&lt;std::is_arithmetic_v&lt;T&gt;&gt;&gt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html">   38</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1Numeric.html">Numeric</a> final {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html#a95d133ae7ad47732898b6737b99ac483">   41</a></span>&#160;  constexpr <a class="code" href="classbeluga_1_1Numeric.html#a95d133ae7ad47732898b6737b99ac483">Numeric</a>() noexcept = default;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html#a8d851365c7d9d80e13b749409b2a9a8b">   46</a></span>&#160;  constexpr <a class="code" href="classbeluga_1_1Numeric.html">Numeric</a>(const T t) noexcept : value_{t} {};  <span class="comment">// NOLINT</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html#aaebb7fa51261347b030bf54e8facf636">   48</a></span>&#160;<span class="comment"></span>  constexpr <span class="keyword">operator</span> T&amp;() noexcept { <span class="keywordflow">return</span> value_; }  <span class="comment">// NOLINT</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classbeluga_1_1Numeric.html#a8ec8f54330d481ff1f764e827c979af3">   50</a></span>&#160;<span class="comment"></span>  constexpr <span class="keyword">operator</span> <span class="keyword">const</span> T&amp;() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> value_; }  <span class="comment">// NOLINT</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  T value_{0};  <span class="comment">// Underlying primitive type.</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}  <span class="comment">// namespace beluga</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">namespace </span>std {</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">namespace </span>std {</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> PhantomType&gt;</div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="structstd_1_1numeric__limits_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">   68</a></span>&#160;<span class="keyword">struct </span>numeric_limits&lt;beluga::Numeric&lt;T, PhantomType&gt;&gt; : <span class="keyword">public</span> numeric_limits&lt;T&gt; {};</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> PhantomType&gt;</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="structstd_1_1numeric__limits_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">   66</a></span>&#160;<span class="keyword">struct </span>numeric_limits&lt;beluga::Numeric&lt;T, PhantomType&gt;&gt; : <span class="keyword">public</span> numeric_limits&lt;T&gt; {};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> PhantomType&gt;</div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">   76</a></span>&#160;<span class="keyword">struct </span>hash&lt;beluga::Numeric&lt;T, PhantomType&gt;&gt; {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html#a110271dc3b316a8b40ba7203fe93456b">   82</a></span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html#a110271dc3b316a8b40ba7203fe93456b">operator()</a>(<a class="code" href="classbeluga_1_1Numeric.html">beluga::Numeric&lt;T, PhantomType&gt;</a> t) { <span class="keywordflow">return</span> hash&lt;T&gt;{}(t); }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> PhantomType&gt;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">   74</a></span>&#160;<span class="keyword">struct </span>hash&lt;beluga::Numeric&lt;T, PhantomType&gt;&gt; {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html#a110271dc3b316a8b40ba7203fe93456b">   80</a></span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html#a110271dc3b316a8b40ba7203fe93456b">operator()</a>(<a class="code" href="classbeluga_1_1Numeric.html">beluga::Numeric&lt;T, PhantomType&gt;</a> t) { <span class="keywordflow">return</span> hash&lt;T&gt;{}(t); }</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;};</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}  <span class="comment">// namespace std</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}  <span class="comment">// namespace std</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassbeluga_1_1Numeric_html"><div class="ttname"><a href="classbeluga_1_1Numeric.html">beluga::Numeric</a></div><div class="ttdoc">Helper for creating strongly typed numeric types.</div><div class="ttdef"><b>Definition:</b> strongly_typed_numeric.hpp:40</div></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1Numeric_html"><div class="ttname"><a href="classbeluga_1_1Numeric.html">beluga::Numeric</a></div><div class="ttdoc">Helper for creating strongly typed numeric types.</div><div class="ttdef"><b>Definition:</b> strongly_typed_numeric.hpp:38</div></div>
 <div class="ttc" id="aclassbeluga_1_1Numeric_html_a95d133ae7ad47732898b6737b99ac483"><div class="ttname"><a href="classbeluga_1_1Numeric.html#a95d133ae7ad47732898b6737b99ac483">beluga::Numeric::Numeric</a></div><div class="ttdeci">constexpr Numeric() noexcept=default</div><div class="ttdoc">Default constructor.</div></div>
-<div class="ttc" id="astructstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4_html_a110271dc3b316a8b40ba7203fe93456b"><div class="ttname"><a href="structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html#a110271dc3b316a8b40ba7203fe93456b">std::hash&lt; beluga::Numeric&lt; T, PhantomType &gt; &gt;::operator()</a></div><div class="ttdeci">size_t operator()(beluga::Numeric&lt; T, PhantomType &gt; t)</div><div class="ttdoc">Forwards hashing to the underlying type.</div><div class="ttdef"><b>Definition:</b> strongly_typed_numeric.hpp:82</div></div>
+<div class="ttc" id="astructstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4_html_a110271dc3b316a8b40ba7203fe93456b"><div class="ttname"><a href="structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html#a110271dc3b316a8b40ba7203fe93456b">std::hash&lt; beluga::Numeric&lt; T, PhantomType &gt; &gt;::operator()</a></div><div class="ttdeci">size_t operator()(beluga::Numeric&lt; T, PhantomType &gt; t)</div><div class="ttdoc">Forwards hashing to the underlying type.</div><div class="ttdef"><b>Definition:</b> strongly_typed_numeric.hpp:80</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
