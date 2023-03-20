@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['adaptivemontecarlolocalization2d_0',['AdaptiveMonteCarloLocalization2d',['../localization_8hpp.html#a76ba3b1fc86bbaf14f2b122b478c7f98',1,'beluga']]],
+  ['adaptivemontecarlolocalization2d_0',['AdaptiveMonteCarloLocalization2d',['../localization_8hpp.html#a7310463381883e280c6d931306058e13',1,'beluga']]],
   ['adaptivesampler_1',['AdaptiveSampler',['../classbeluga_1_1AdaptiveSampler.html#ad4a9badc42f836e1e797e2cf20376175',1,'beluga::AdaptiveSampler::AdaptiveSampler()'],['../classbeluga_1_1AdaptiveSampler.html',1,'beluga::AdaptiveSampler&lt; Mixin &gt;']]],
   ['adaptivesamplerparam_2',['AdaptiveSamplerParam',['../structbeluga_1_1AdaptiveSamplerParam.html',1,'beluga']]],
   ['algorithm_2ehpp_3',['algorithm.hpp',['../algorithm_8hpp.html',1,'']]],
