@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__EXECUTION_POLICY_HPP_
-#define BELUGA_AMCL__EXECUTION_POLICY_HPP_
+#ifndef BELUGA_AMCL__PRIVATE__EXECUTION_POLICY_HPP_
+#define BELUGA_AMCL__PRIVATE__EXECUTION_POLICY_HPP_
 
 #include <execution>
 #include <stdexcept>
@@ -47,4 +47,4 @@ inline Policy policy_from_string(std::string_view policy_name)
 
 }  // namespace beluga_amcl::execution
 
-#endif  // BELUGA_AMCL__EXECUTION_POLICY_HPP_
+#endif  // BELUGA_AMCL__PRIVATE__EXECUTION_POLICY_HPP_

@@ -14,7 +14,7 @@
 
 #include <memory>
 
-#include <beluga_amcl/amcl_node.hpp>
+#include <beluga_amcl/private/amcl_node.hpp>
 #include <rclcpp/executors.hpp>
 
 int main(int argc, char ** argv)

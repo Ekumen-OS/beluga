@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__AMCL_NODE_HPP_
-#define BELUGA_AMCL__AMCL_NODE_HPP_
+#ifndef BELUGA_AMCL__PRIVATE__AMCL_NODE_HPP_
+#define BELUGA_AMCL__PRIVATE__AMCL_NODE_HPP_
 
 #include <message_filters/subscriber.h>
 #include <tf2_ros/buffer.h>
@@ -31,7 +31,7 @@
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
-#include "beluga_amcl/execution_policy.hpp"
+#include "beluga_amcl/private/execution_policy.hpp"
 
 namespace beluga_amcl
 {
@@ -89,4 +89,4 @@ protected:
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL__AMCL_NODE_HPP_
+#endif  // BELUGA_AMCL__PRIVATE__AMCL_NODE_HPP_

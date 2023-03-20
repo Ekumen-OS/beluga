@@ -89,7 +89,7 @@ install(TARGETS amcl_node
 
 install(DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
-  PATTERN "beluga_amcl/amcl_node.hpp" EXCLUDE)
+  PATTERN "beluga_amcl/private" EXCLUDE)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
