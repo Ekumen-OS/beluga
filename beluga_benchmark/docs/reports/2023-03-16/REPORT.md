@@ -19,20 +19,20 @@ The results were the following:
 
 It can be seen that:
 
-- Beluga needs less RAM memory, it's peak usage for 20000 particles were 35MB, whereas it was 44MB for `nav2_amcl`.
+- Beluga needs less RAM memory, it's peak usage for 20000 particles was 35MB, whereas it was 44MB for `nav2_amcl`.
 - Beluga uses less CPU when using the sequential executor.
   For 20000 particles, Beluga was using 85% of the CPU, whereas `nav2_amcl` was using 103%.
 - Beluga estimated trajectory absolute pose error is on par or slightly better than `nav2_amcl`.
   It can also be seen that `beluga` tends to improve on those metrics when using a higher number of particles, while `nav2_amcl` starts getting worst results.
-  Probably because starting to drop messages while not being able to process the input fast enough.
+  Probably because `nav2_amcl` starts dropping messages without being able to process the input fast enough.
 
 Besides that, beluga can handle a lot more particles using the parallel executor:
 
 ![results-2.png](results-2.png)
 
 For more than 20000 particles, both `nav2_amcl` and Beluga using a sequential executor start using close to 100% of one cpu and can't handle more load without starting to drop messages.
-Beluga can use a parallel executor, taking more advantages for all the cores.
-This can not only be interesting when a higher amount of particles, but it may allow using more complex measurement models in the future.
+Beluga can use a parallel executor, making use of multiple cores.
+This may not only be interesting when there is a larger amount of particles, but may also allow the use of more complex measurement models in the future.
 
 ## How to reproduce
 
