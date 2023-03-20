@@ -80,6 +80,7 @@ repos:
     rev: v1.3.5
     hooks:
       - id: clang-tidy
+        name: clang-tidy beluga package
         alias: beluga_clang_tidy
         args: [
           "-p=/tmp/beluga", "--fix",
@@ -88,6 +89,7 @@ repos:
         files: beluga\/
         types: [c++]
       - id: clang-tidy
+        name: clang-tidy beluga_system_tests package
         alias: beluga_system_tests_clang_tidy
         args: [
           "-p=/tmp/beluga_system_tests", "--fix",

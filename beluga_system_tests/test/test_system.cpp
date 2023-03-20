@@ -61,8 +61,8 @@ struct TestData {
   // to avoid problem with rosbag2_cpp::Reader destructor (captured objects).
   // see comment below
   ranges::any_view<TestDataPoint> data_points = ranges::empty_view<TestDataPoint>();
-  double tol_distance;
-  double tol_angle;
+  double distance_tolerance;
+  double angular_tolerance;
 };
 
 // Workaround to avoid opening/closing bagfiles at static initialization time.
@@ -94,15 +94,15 @@ TEST_P(BelugaSystemTest, test_estimated_path) {
     pf.importance_sample();
     pf.resample();
     auto estimation = pf.estimate();
-    auto error = estimation.first * data_point.ground_truth.inverse();
+    auto error = data_point.ground_truth.inverse() * estimation.first;
     auto distance_error = error.translation().norm();
-    EXPECT_LE(distance_error, test_data.tol_distance) << "iteration: " << iteration << "\nestimation\n"
-                                                      << se2d_to_string(estimation.first) << "\nactual\n"
-                                                      << se2d_to_string(data_point.ground_truth) << std::endl;
+    EXPECT_LE(distance_error, test_data.distance_tolerance) << "iteration: " << iteration << "\nestimation\n"
+                                                            << se2d_to_string(estimation.first) << "\nactual\n"
+                                                            << se2d_to_string(data_point.ground_truth) << std::endl;
     auto angle_error = error.so2().log();
-    EXPECT_LE(angle_error, test_data.tol_angle) << "iteration: " << iteration << "\nestimation\n"
-                                                << se2d_to_string(estimation.first) << "\nactual\n"
-                                                << se2d_to_string(data_point.ground_truth) << std::endl;
+    EXPECT_LE(angle_error, test_data.angular_tolerance) << "iteration: " << iteration << "\nestimation\n"
+                                                        << se2d_to_string(estimation.first) << "\nactual\n"
+                                                        << se2d_to_string(data_point.ground_truth) << std::endl;
   }
 }
 
@@ -184,12 +184,12 @@ TestData test_data_from_ros2bag(
     std::string_view ground_truth_topic,
     // Tolerance value shouldn't be testing accuracy,
     // but only that it's working grossly well
-    double tol_distance = 0.8,
-    double tol_angle = 30. * Sophus::Constants<double>::pi() / 180.) {
+    double distance_tolerance = 0.8,
+    double angular_tolerance = 30. * Sophus::Constants<double>::pi() / 180.) {
   TestData test_data;
   test_data.initial_pose = std::move(initial_pose);
-  test_data.tol_distance = tol_distance;
-  test_data.tol_angle = tol_angle;
+  test_data.distance_tolerance = distance_tolerance;
+  test_data.angular_tolerance = angular_tolerance;
 
   OneTopicReader<nav_msgs::msg::OccupancyGrid> map_reader{bagfile_path, map_topic};
   if (map_reader.size() != 1) {
@@ -311,8 +311,13 @@ std::vector<TestDataBuilder> get_test_parameters() {
   std::vector<TestDataBuilder> ret;
   ret.emplace_back([]() {
     InitialPose initial_pose{
-        Eigen::Vector3d{0.0, 2.0, 0.0}, Eigen::Matrix3d{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}};
-    // initial_pose.mean(1) = 2.0;
+        Eigen::Vector3d{0.0, 2.0, 0.0},
+        Eigen::Matrix3d{
+            {0.125, 0.0, 0.0},
+            {0.0, 0.125, 0.0},
+            {0.0, 0.0, 0.04},
+        },
+    };
     LaserScanInfo laser_info;
     laser_info.laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
     auto format = beluga_amcl::utils::make_eigen_comma_format();
@@ -327,7 +332,6 @@ std::vector<TestDataBuilder> get_test_parameters() {
   ret.emplace_back([]() {
     InitialPose initial_pose{
         Eigen::Vector3d{0.0, 2.0, 0.0}, Eigen::Matrix3d{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}};
-    // initial_pose.mean(1) = 2.0;
     LaserScanInfo laser_info;
     laser_info.laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
     auto format = beluga_amcl::utils::make_eigen_comma_format();

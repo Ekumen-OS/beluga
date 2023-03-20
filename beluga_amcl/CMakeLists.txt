@@ -20,7 +20,6 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(Sophus REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
@@ -33,7 +32,7 @@ target_include_directories(amcl_node_utils PUBLIC
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
 target_link_libraries(amcl_node_utils
-  PUBLIC beluga::beluga ${sensor_msgs_TARGETS} Sophus::Sophus
+  PUBLIC beluga::beluga ${sensor_msgs_TARGETS}
   INTERFACE ${geometry_msgs_TARGETS} ${nav2_msgs_TARGETS} tf2::tf2 tf2_eigen::tf2_eigen tf2_geometry_msgs::tf2_geometry_msgs)
 target_compile_features(amcl_node_utils PUBLIC cxx_std_17)
 

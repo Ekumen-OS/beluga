@@ -4,7 +4,7 @@
   <name>beluga_system_tests</name>
   <version>1.0.0</version>
 
-  <description>System tests for beluga</description>
+  <description>System tests for beluga.</description>
 
   <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
   <maintainer email="ivanpauno@ekumenlabs.com">Ivan Paunovic</maintainer>

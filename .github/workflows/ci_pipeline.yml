@@ -65,9 +65,11 @@ jobs:
 
       - name: Lint
         shell: bash
+        # `github.workspace` does not provide the right result here, see https://github.com/actions/runner/issues/2058.
         run: |
           source install/setup.sh
-          cd $GITHUB_WORKSPACE/src && pre-commit run --all-files --verbose --show-diff-on-failure
+          cd $GITHUB_WORKSPACE/src
+          pre-commit run --all-files --verbose --show-diff-on-failure
 
       - name: Upload code coverage artifacts
         uses: actions/upload-artifact@v3
