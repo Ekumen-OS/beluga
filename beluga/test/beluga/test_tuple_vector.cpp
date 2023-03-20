@@ -51,26 +51,26 @@ using Implementations =
 TYPED_TEST_SUITE(ContainerTest, Implementations, );
 
 TYPED_TEST(ContainerTest, Size) {
-  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{100};
+  auto container = typename TestFixture::template TemplateParam<State, beluga::Weight, beluga::Cluster>{100};
   ASSERT_EQ(container.size(), 100);
 }
 
 TYPED_TEST(ContainerTest, Resize) {
-  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
+  auto container = typename TestFixture::template TemplateParam<State, beluga::Weight, beluga::Cluster>{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   int reps = 0;
   for (auto&& [state, weight, cluster] : beluga::views::all(container)) {
     ASSERT_THAT(state, StateEq(State{}));
     ASSERT_EQ(weight, double{});
-    ASSERT_EQ(cluster, std::size_t{});
+    ASSERT_EQ(cluster, beluga::Cluster{});
     ++reps;
   }
   ASSERT_EQ(reps, 3);
 }
 
 TYPED_TEST(ContainerTest, Clear) {
-  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
+  auto container = typename TestFixture::template TemplateParam<State, beluga::Weight, beluga::Cluster>{};
   container.resize(15);
   EXPECT_EQ(container.size(), 15);
   container.clear();
@@ -78,7 +78,7 @@ TYPED_TEST(ContainerTest, Clear) {
 }
 
 TYPED_TEST(ContainerTest, PushBack) {
-  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
+  auto container = typename TestFixture::template TemplateParam<State, beluga::Weight, beluga::Cluster>{};
   EXPECT_EQ(container.size(), 0);
   container.push_back({{1, 2}, 3, 4});
   EXPECT_EQ(container.size(), 1);
@@ -89,7 +89,7 @@ TYPED_TEST(ContainerTest, PushBack) {
 }
 
 TYPED_TEST(ContainerTest, GetterSetter) {
-  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
+  auto container = typename TestFixture::template TemplateParam<State, beluga::Weight, beluga::Cluster>{};
   auto&& view = beluga::views::all(container);
   container.push_back({{1, 2}, 3, 4});
   beluga::weight(view.front()) = 5;
@@ -97,7 +97,7 @@ TYPED_TEST(ContainerTest, GetterSetter) {
 }
 
 TYPED_TEST(ContainerTest, View) {
-  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
+  auto container = typename TestFixture::template TemplateParam<State, beluga::Weight, beluga::Cluster>{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr double kTestWeight = 1.25;
@@ -110,7 +110,7 @@ TYPED_TEST(ContainerTest, View) {
 }
 
 TYPED_TEST(ContainerTest, StructuredBinding) {
-  auto container = typename TestFixture::template TemplateParam<State, double, std::size_t>{};
+  auto container = typename TestFixture::template TemplateParam<State, beluga::Weight, beluga::Cluster>{};
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr std::size_t kTestCluster = 75;

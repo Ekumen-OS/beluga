@@ -27,9 +27,9 @@ struct State {
   double theta = 0.;
 };
 
-using Particle = std::tuple<State, double, std::size_t>;
-using StructureOfArrays = beluga::TupleOfVectors<State, double, std::size_t>;
-using ArrayOfStructures = beluga::VectorOfTuples<State, double, std::size_t>;
+using Particle = std::tuple<State, beluga::Weight, beluga::Cluster>;
+using StructureOfArrays = beluga::TupleOfVectors<State, beluga::Weight, beluga::Cluster>;
+using ArrayOfStructures = beluga::VectorOfTuples<State, beluga::Weight, beluga::Cluster>;
 
 struct Arrays {
   std::vector<State> states;

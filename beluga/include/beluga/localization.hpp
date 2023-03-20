@@ -54,7 +54,7 @@ namespace beluga {
 /// Pure abstract class representing an interface for laser-based localization algorithms.
 using LaserLocalizationInterface2d = beluga::mixin::compose_interfaces<
     BaseParticleFilterInterface,
-    StorageInterface<Sophus::SE2d, double>,
+    StorageInterface<Sophus::SE2d, beluga::Weight>,
     EstimationInterface2d,
     OdometryMotionModelInterface2d,
     LaserSensorModelInterface2d>;
@@ -74,7 +74,7 @@ using CombinedResamplingPolicy = ciabatta::
 template <class MotionDescriptor, class SensorDescriptor>
 using MonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
-    ciabatta::curry<StructureOfArrays, Sophus::SE2d, double>::mixin,
+    ciabatta::curry<StructureOfArrays, Sophus::SE2d, beluga::Weight>::mixin,
     SimpleStateEstimator2d,
     RandomStateGenerator,
     NaiveSampler,
@@ -95,7 +95,7 @@ using MonteCarloLocalization2d = ciabatta::mixin<
 template <class MotionDescriptor, class SensorDescriptor>
 using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
-    ciabatta::curry<StructureOfArrays, Sophus::SE2d, double, std::size_t>::mixin,
+    ciabatta::curry<StructureOfArrays, Sophus::SE2d, beluga::Weight, beluga::Cluster>::mixin,
     SimpleStateEstimator2d,
     RandomStateGenerator,
     AdaptiveSampler,

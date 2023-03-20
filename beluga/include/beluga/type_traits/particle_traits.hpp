@@ -19,6 +19,7 @@
 #include <type_traits>
 
 #include <beluga/type_traits/container_traits.hpp>
+#include <beluga/type_traits/strongly_typed_numeric.hpp>
 #include <beluga/views.hpp>
 
 /**
@@ -27,6 +28,12 @@
  */
 
 namespace beluga {
+
+/// Weight type, as a strongly typed double
+using Weight = Numeric<double, struct WeightTag>;
+
+/// Cluster type, as a strongly typed std::size_t
+using Cluster = Numeric<std::size_t, struct ClusterTag>;
 
 /// std::decay is applied to all tuple element types if T is a tuple.
 template <class T>
@@ -63,13 +70,13 @@ struct particle_traits {};
 
 /// Specialization for particles represented by a state/weight/etc tuple.
 template <template <class...> class Pair, class State, class... Extra>
-struct particle_traits<Pair<State, double, Extra...>> {
+struct particle_traits<Pair<State, Weight, Extra...>> {
   /// The particle state type.
   using state_type = State;
   /// The particle weight type.
-  using weight_type = double;
+  using weight_type = Weight;
   /// The particle state/weight pair.
-  using value_type = Pair<State, double>;
+  using value_type = Pair<State, Weight>;
 
   /// Returns the particle state.
   template <class T>
@@ -94,13 +101,13 @@ struct particle_traits<Pair<State, double, Extra...>> {
 
 /// Specialization for particles represented by a state/weight/cluster/etc tuple.
 template <template <class...> class Tuple, class State, class... Extra>
-struct particle_traits<Tuple<State, double, std::size_t, Extra...>> {
+struct particle_traits<Tuple<State, Weight, Cluster, Extra...>> {
   /// The particle state type.
   using state_type = State;
   /// The particle weight type.
-  using weight_type = double;
+  using weight_type = Weight;
   /// The particle state/weight/cluster tuple.
-  using value_type = Tuple<State, double, std::size_t>;
+  using value_type = Tuple<State, Weight, Cluster>;
 
   /// Returns the particle state.
   template <class T>

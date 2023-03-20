@@ -120,7 +120,7 @@ INSTANTIATE_TEST_SUITE_P(
 template <class Mixin>
 class MockStorage : public Mixin {
  public:
-  using particle_type = std::tuple<int, double>;
+  using particle_type = std::tuple<int, beluga::Weight>;
 
   template <class... Args>
   explicit MockStorage(Args&&... rest) : Mixin(std::forward<Args>(rest)...) {}
@@ -220,7 +220,7 @@ TEST(FixedLimiter, TakeMaximum) {
 template <class Mixin>
 struct MockStorageWithCluster : public Mixin {
   using state_type = std::pair<double, double>;
-  using particle_type = std::tuple<state_type, double, std::size_t>;
+  using particle_type = std::tuple<state_type, beluga::Weight, beluga::Cluster>;
 
   template <class... Args>
   explicit MockStorageWithCluster(Args&&... rest) : Mixin(std::forward<Args>(rest)...) {}
