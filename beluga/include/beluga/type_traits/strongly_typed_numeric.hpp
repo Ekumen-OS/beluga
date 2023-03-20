@@ -54,6 +54,7 @@ class Numeric final {
 };
 
 }  // namespace beluga
+
 namespace std {
 
 /// `std::numeric_limits` specialization for `Numeric` types.
