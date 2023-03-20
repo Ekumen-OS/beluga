@@ -25,7 +25,7 @@
 namespace beluga {
 
 /// Helper for creating strongly typed numeric types.
-/* Usage:
+/** Usage:
  *    using YOUR_TYPE = Numeric< UNDERLYING_TYPE , struct UNDERLYING_TYPETag >;
  *
  * Types resulting from this pattern will allow for implicit conversions in both ways (from underlying type, and to
@@ -41,7 +41,7 @@ class Numeric final {
   constexpr Numeric() noexcept = default;
   /// Constructs a new Numeric object.
   /**
-   *  \param t built in arithmetic type value.
+   *  \param t built-in arithmetic type value.
    */
   constexpr Numeric(const T t) noexcept : value_{t} {};  // NOLINT
   /// Implicit conversion to the underlying type.
