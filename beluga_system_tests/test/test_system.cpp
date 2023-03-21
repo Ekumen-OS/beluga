@@ -331,7 +331,13 @@ std::vector<TestDataBuilder> get_test_parameters() {
   });
   ret.emplace_back([]() {
     InitialPose initial_pose{
-        Eigen::Vector3d{0.0, 2.0, 0.0}, Eigen::Matrix3d{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}};
+        Eigen::Vector3d{0.0, 2.0, 0.0},
+        Eigen::Matrix3d{
+            {0.125, 0.0, 0.0},
+            {0.0, 0.125, 0.0},
+            {0.0, 0.0, 0.04},
+        },
+    };
     LaserScanInfo laser_info;
     laser_info.laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
     auto format = beluga_amcl::utils::make_eigen_comma_format();
