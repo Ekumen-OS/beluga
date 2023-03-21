@@ -89,7 +89,7 @@ repos:
         files: beluga\/
         types: [c++]
       - id: clang-tidy
-        name: clang-tidy beluga_system_tests package
+        name: [beluga_system_tests] Lint C++ (clang-tidy)
         alias: beluga_system_tests_clang_tidy
         args: [
           "-p=/tmp/beluga_system_tests", "--fix",
