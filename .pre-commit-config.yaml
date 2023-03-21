@@ -80,7 +80,7 @@ repos:
     rev: v1.3.5
     hooks:
       - id: clang-tidy
-        name: clang-tidy beluga package
+        name: [beluga] Lint C++ (clang-tidy)
         alias: beluga_clang_tidy
         args: [
           "-p=/tmp/beluga", "--fix",
