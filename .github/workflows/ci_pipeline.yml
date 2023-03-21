@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ROS_DISTRO: humble
-      ROS_PACKAGES: beluga beluga_amcl
+      ROS_PACKAGES: beluga beluga_amcl beluga_system_tests
     container:
       image: ros:humble-ros-base-jammy
     steps:
@@ -64,10 +64,11 @@ jobs:
           colcon coveragepy-result --packages-select ${{ env.ROS_PACKAGES }} --verbose --coverage-report-args -m
 
       - name: Lint
-        working-directory: ${{ github.workspace }}/src
         shell: bash
+        # `github.workspace` does not provide the right result here, see https://github.com/actions/runner/issues/2058.
         run: |
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
+          source install/setup.sh
+          cd $GITHUB_WORKSPACE/src
           pre-commit run --all-files --verbose --show-diff-on-failure
 
       - name: Upload code coverage artifacts

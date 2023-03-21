@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "beluga_amcl/amcl_node.hpp"
+#include "beluga_amcl/private/amcl_node.hpp"
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
@@ -38,9 +38,9 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include "beluga_amcl/amcl_node_utils.hpp"
-#include "beluga_amcl/execution_policy.hpp"
 #include "beluga_amcl/occupancy_grid.hpp"
 #include "beluga_amcl/tf2_sophus.hpp"
+#include "beluga_amcl/private/execution_policy.hpp"
 
 namespace beluga_amcl
 {
