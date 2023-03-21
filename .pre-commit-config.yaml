@@ -20,26 +20,6 @@ repos:
         types_or: [c++, python]
         language: system
 
-      - id: beluga_compile_commands
-        name: "[beluga] Export compile commands"
-        description: Creates the compile_commands.json required by clang-tidy.
-        entry: cmake -S ./beluga -B /tmp/beluga -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-        fail_fast: true
-        files: beluga\/
-        types: [c++]
-        pass_filenames: false
-        language: system
-
-      - id: beluga_system_tests_compile_commands
-        name: "[beluga_system_tests] Export compile commands"
-        description: Creates the compile_commands.json required by clang-tidy.
-        entry: cmake -S ./beluga_system_tests -B /tmp/beluga_system_tests -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-        fail_fast: true
-        files: beluga_system_tests\/
-        types: [c++]
-        pass_filenames: false
-        language: system
-
       - id: ament_uncrustify
         name: "[others] Fix C++ format (uncrustify)"
         entry: ament_uncrustify --reformat
@@ -68,6 +48,27 @@ repos:
         types: [python]
         language: system
 
+      - id: beluga_clang-tidy
+        name: "[beluga] C++ static-analysis (if available) (clang-tidy)"
+        entry: python3 ./clang-tidy-script.py --build-directory /ws/build/beluga
+        files: beluga\/
+        types: [c++]
+        verbose: True
+        language: system
+        # pre-commit parallelizes, splitting the files in groups and running the checked many times.
+        # for clang-tidy, we want to pass all files at once to get a complete analysis.
+        require_serial: True
+      - id: beluga_system_tests_clang-tidy
+        name: "[beluga_system_tests] C++ static-analysis (if available) (clang-tidy)"
+        entry: python3 ./clang-tidy-script.py --build-directory /ws/build/beluga_system_tests
+        files: beluga_system_tests\/
+        types: [c++]
+        verbose: True
+        language: system
+        # pre-commit parallelizes, splitting the files in groups and running the checked many times.
+        # for clang-tidy, we want to pass all files at once to get a complete analysis.
+        require_serial: True
+
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v14.0.6
     hooks:
@@ -76,28 +77,6 @@ repos:
       args: ["-style=file:.clang-format"]
       exclude: beluga_amcl\/
       types: [c++]
-
-  - repo: https://github.com/pocc/pre-commit-hooks
-    rev: v1.3.5
-    hooks:
-      - id: clang-tidy
-        name: "[beluga] Lint C++ (clang-tidy)"
-        alias: beluga_clang_tidy
-        args: [
-          "-p=/tmp/beluga", "--fix",
-          "-header-filter=.*", "--quiet", "-extra-arg=-std=c++17"
-        ]
-        files: beluga\/
-        types: [c++]
-      - id: clang-tidy
-        name: "[beluga_system_tests] Lint C++ (clang-tidy)"
-        alias: beluga_system_tests_clang_tidy
-        args: [
-          "-p=/tmp/beluga_system_tests", "--fix",
-          "-header-filter=.*", "--quiet", "-extra-arg=-std=c++17"
-        ]
-        files: beluga_system_tests\/
-        types: [c++]
 
   - repo: https://github.com/psf/black
     rev:  22.10.0
