@@ -23,6 +23,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: ${{ github.workspace }}/src
+          lfs: True
 
       - name: Install debian packages
         run: |
