@@ -163,19 +163,18 @@ auto random_sample(const Range& samples, const Weights& weights, RandomNumberGen
 
 /// Returns a callable object that allows setting the cluster of a particle.
 /**
- * \param resolution The size along any axis of the spatial cluster cell.
- * \return A callable object with prototype `(ParticleT && p) -> ParticleT`. \n
- *  `ParticleT` must satisfy \ref ParticlePage. \n
- *  The expression \c particle_traits<ParticleT>::cluster(p) must also
- *  be valid and return a `std::size_t &`. \n
- *  After the returned object is applied to a particle `p`, \c cluster(p) will be updated
- *  with the calculated spatial hash according to the specified resolution.
+ * \param hasher A copyable callable object with signature (const decltype(state(particle)) &) -> std::size_t, that
+ * returns a spatial cluster for a given particle state. \return A callable object with prototype `(ParticleT && p) ->
+ * ParticleT`. \n `ParticleT` must satisfy \ref ParticlePage. \n The expression \c
+ * particle_traits<ParticleT>::cluster(p) must also be valid and return a `std::size_t &`. \n After the returned object
+ * is applied to a particle `p`, \c cluster(p) will be updated with the calculated spatial hash according to the
+ * specified resolution.
  */
-inline auto set_cluster(double resolution) {
-  return [resolution](auto&& particle) {
-    using state_type = std::decay_t<decltype(state(particle))>;
+template <class Hasher>
+inline auto set_cluster(Hasher&& hasher) {
+  return [hasher](auto&& particle) {
     auto new_particle = particle;
-    cluster(new_particle) = spatial_hash<state_type>{}(state(particle), resolution);
+    cluster(new_particle) = hasher(state(particle));
     return new_particle;
   };
 }
@@ -451,13 +450,17 @@ class FixedLimiter : public Mixin {
 };
 
 /// Parameters used to construct a KldLimiter instance.
+/**
+ * @tparam State Type that represents the state of the particle.
+ */
+template <class State>
 struct KldLimiterParam {
   /// Minimum number of particles to be sampled.
   std::size_t min_samples;
   /// Maximum number of particles to be sampled.
   std::size_t max_samples;
-  /// Cluster resolution in any axis, used to compute the spatial hash.
-  double spatial_resolution;
+  /// Callable object with signature: (const State&) -> std::size_t  returning the state's spatial cluster.
+  spatial_hash<State> spatial_hasher;
   /// See beluga::kld_condition() for details.
   double kld_epsilon;
   /// See beluga::kld_condition() for details.
@@ -473,6 +476,8 @@ struct KldLimiterParam {
  *
  * \tparam Mixin The mixed-in type. `Mixin::self_type::particle_type` must exist and
  * satisfy \ref ParticlePage.
+ * \tparam State Type that represents the state of a particle. It should match with
+ * particle_traits<Mixin::self_type::particle_type::state>::state_type.
  *
  * Additionally, given:
  * - `P`, the type `Mixin::self_type::particle_type`
@@ -487,11 +492,11 @@ struct KldLimiterParam {
  *   assigns the cluster hash to the particle `p`. \n
  *   i.e. after the assignment `h` == \c particle_traits<P>::cluster(p) is true.
  */
-template <class Mixin>
+template <class Mixin, class State>
 class KldLimiter : public Mixin {
  public:
   /// Parameters type used to construct a KldLimiter instance.
-  using param_type = KldLimiterParam;
+  using param_type = KldLimiterParam<State>;
 
   /// Constructs a KldLimiter instance.
   /**
@@ -532,7 +537,7 @@ class KldLimiter : public Mixin {
   [[nodiscard]] auto take_samples() const {
     using particle_type = typename Mixin::self_type::particle_type;
     return ranges::views::transform(beluga::make_from_state<particle_type>) |
-           ranges::views::transform(beluga::set_cluster(parameters_.spatial_resolution)) |
+           ranges::views::transform(beluga::set_cluster(parameters_.spatial_hasher)) |
            ranges::views::take_while(
                beluga::kld_condition(parameters_.min_samples, parameters_.kld_epsilon, parameters_.kld_z),
                [](auto&& particle) { return cluster(particle); }) |

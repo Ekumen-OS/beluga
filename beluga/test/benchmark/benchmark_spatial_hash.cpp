@@ -23,13 +23,15 @@ namespace {
 
 void BM_Hashing(benchmark::State& state) {
   using Tuple = std::tuple<double, double, double>;
+  constexpr std::array kClusteringResolution{1., 1., 1.};
+  auto hasher = beluga::spatial_hash<Tuple>{kClusteringResolution};
 
   const auto count = state.range(0);
   state.SetComplexityN(count);
 
   for (auto _ : state) {
     auto hashes = ranges::views::generate([]() { return std::make_tuple(1., 2., 3.); }) |
-                  ranges::views::transform([](const auto& tuple) { return beluga::spatial_hash<Tuple>{}(tuple); }) |
+                  ranges::views::transform([hasher](const auto& tuple) { return hasher(tuple); }) |
                   ranges::views::take_exactly(count);
 
     auto first = std::begin(hashes);

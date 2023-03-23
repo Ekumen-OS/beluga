@@ -99,7 +99,7 @@ using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     SimpleStateEstimator2d,
     RandomStateGenerator,
     AdaptiveSampler,
-    KldLimiter,
+    ciabatta::curry<KldLimiter, Sophus::SE2d>::mixin,
     CombinedResamplingPolicy::template mixin,
     MotionDescriptor::template mixin,
     SensorDescriptor::template mixin,

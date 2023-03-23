@@ -226,17 +226,23 @@ struct MockStorageWithCluster : public Mixin {
   explicit MockStorageWithCluster(Args&&... rest) : Mixin(std::forward<Args>(rest)...) {}
 };
 
+using state = std::pair<double, double>;
+
 TEST(KldLimiter, TakeMaximum) {
-  auto instance =
-      ciabatta::mixin<MockStorageWithCluster, beluga::KldLimiter>{beluga::KldLimiterParam{0, 1'200, 0.05, 0.05, 3.}};
+  constexpr std::array kClusteringResolution{1., 1.};
+  auto hasher = beluga::spatial_hash<state>{kClusteringResolution};
+  auto instance = ciabatta::mixin<MockStorageWithCluster, ciabatta::curry<beluga::KldLimiter, state>::mixin>{
+      beluga::KldLimiterParam<state>{200, 1'200, hasher, 0.05, 3.}};
   auto output = ranges::views::generate([]() { return std::make_pair(1., 1.); }) | instance.take_samples() |
                 ranges::to<std::vector>;
   ASSERT_EQ(output.size(), 1'200);
 }
 
 TEST(KldLimiter, TakeLimit) {
-  auto instance =
-      ciabatta::mixin<MockStorageWithCluster, beluga::KldLimiter>{beluga::KldLimiterParam{0, 1'200, 0.05, 0.05, 3.}};
+  constexpr std::array kClusteringResolution{0.05, 0.05};
+  auto hasher = beluga::spatial_hash<state>{kClusteringResolution};
+  auto instance = ciabatta::mixin<MockStorageWithCluster, ciabatta::curry<beluga::KldLimiter, state>::mixin>{
+      beluga::KldLimiterParam<state>{0, 1'200, hasher, 0.05, 3.}};
   auto output = ranges::views::generate([]() { return std::make_pair(1., 1.); }) |
                 ranges::views::intersperse(std::make_pair(2., 2.)) |
                 ranges::views::intersperse(std::make_pair(3., 3.)) | instance.take_samples() | ranges::to<std::vector>;
@@ -244,8 +250,10 @@ TEST(KldLimiter, TakeLimit) {
 }
 
 TEST(KldLimiter, TakeMinimum) {
-  auto instance =
-      ciabatta::mixin<MockStorageWithCluster, beluga::KldLimiter>{beluga::KldLimiterParam{200, 1'200, 0.05, 0.05, 3.}};
+  constexpr std::array kClusteringResolution{1., 1.};
+  auto hasher = beluga::spatial_hash<state>{kClusteringResolution};
+  auto instance = ciabatta::mixin<MockStorageWithCluster, ciabatta::curry<beluga::KldLimiter, state>::mixin>{
+      beluga::KldLimiterParam<state>{200, 1'200, hasher, 0.05, 3.}};
   auto output = ranges::views::generate([]() { return std::make_pair(1., 1.); }) |
                 ranges::views::intersperse(std::make_pair(2., 2.)) |
                 ranges::views::intersperse(std::make_pair(3., 3.)) | instance.take_samples() | ranges::to<std::vector>;
