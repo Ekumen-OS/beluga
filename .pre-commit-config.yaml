@@ -48,27 +48,6 @@ repos:
         types: [python]
         language: system
 
-      - id: beluga_clang-tidy
-        name: "[beluga] C++ static-analysis (if available) (clang-tidy)"
-        entry: python3 ./clang-tidy-script.py --build-directory /ws/build/beluga
-        files: beluga\/
-        types: [c++]
-        verbose: True
-        language: system
-        # pre-commit parallelizes, splitting the files in groups and running the checked many times.
-        # for clang-tidy, we want to pass all files at once to get a complete analysis.
-        require_serial: True
-      - id: beluga_system_tests_clang-tidy
-        name: "[beluga_system_tests] C++ static-analysis (if available) (clang-tidy)"
-        entry: python3 ./clang-tidy-script.py --build-directory /ws/build/beluga_system_tests
-        files: beluga_system_tests\/
-        types: [c++]
-        verbose: True
-        language: system
-        # pre-commit parallelizes, splitting the files in groups and running the checked many times.
-        # for clang-tidy, we want to pass all files at once to get a complete analysis.
-        require_serial: True
-
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v14.0.6
     hooks:

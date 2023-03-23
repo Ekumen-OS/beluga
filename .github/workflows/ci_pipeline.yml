@@ -47,6 +47,7 @@ jobs:
           update_packager_index: false
 
       - name: Build
+        working-directory: ${{ github.workspace }
         shell: bash
         # Do a build without coverage flags first to avoid generating .gcno files
         # that prevent the html output from lcov from being generated correctly.
@@ -56,6 +57,7 @@ jobs:
           colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest
 
       - name: Test
+        working-directory: ${{ github.workspace }
         shell: bash
         run: |
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
@@ -65,12 +67,23 @@ jobs:
           colcon coveragepy-result --packages-select ${{ env.ROS_PACKAGES }} --verbose --coverage-report-args -m
 
       - name: Lint
+        working-directory: ${{ github.workspace }}/src
         shell: bash
-        # `github.workspace` does not provide the right result here, see https://github.com/actions/runner/issues/2058.
         run: |
-          source install/setup.sh
-          cd $GITHUB_WORKSPACE/src
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
+
+      - name: "[beluga] Static Analysis (clang-tidy)"
+        working-directory: ${{ github.workspace }}/src/beluga
+        shell: bash
+        run: |
+          clang-tidy -p=$GITHUB_WORKSPACE/build/beluga -header-filter=.* -extra-arg=-std=c++17 --quiet $(find . -type f -name "*.[ch]pp")
+
+      - name: "[beluga_system_tests] Static Analysis (clang-tidy)"
+        working-directory: ${{ github.workspace }}/src/beluga_system_tests
+        shell: bash
+        run: |
+          clang-tidy -p=$GITHUB_WORKSPACE/build/beluga_system_tests -header-filter=.* -extra-arg=-std=c++17 --quiet $(find . -type f -name "*.[ch]pp")
 
       - name: Upload code coverage artifacts
         uses: actions/upload-artifact@v3
