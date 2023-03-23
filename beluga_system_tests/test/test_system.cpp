@@ -228,12 +228,14 @@ std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::Oc
   sampler_params.alpha_slow = 0.001;
   sampler_params.alpha_fast = 0.1;
 
-  auto limiter_params = KldLimiterParam{};
-  limiter_params.min_samples = 500UL;
-  limiter_params.max_samples = 2000UL;
-  limiter_params.spatial_resolution = 0.1;
-  limiter_params.kld_epsilon = 0.05;
-  limiter_params.kld_z = 3.;
+  SE2SpatialClusteringOptions spatial_clustering_options{0.1,0.1,0.1};
+  auto limiter_params = KldLimiterParam<Sophus::SE2d>{
+    500UL,
+    2000UL,
+    spatial_hash<Sophus::SE2d>{spatial_clustering_options},
+    0.05,
+    3.
+  };
 
   auto resample_on_motion_params = ResampleOnMotionPolicyParam{};
   resample_on_motion_params.update_min_d = 0.25;
