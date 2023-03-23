@@ -53,7 +53,7 @@ class StaticOccupancyGrid {
   [[nodiscard]] Eigen::Vector2d point(std::size_t index) const {
     return Eigen::Vector2d{
         (static_cast<double>(index % width()) + 0.5) * resolution(),
-        (static_cast<double>(index / width()) + 0.5) * resolution()};
+        (static_cast<double>(index / width()) + 0.5) * resolution()};  // NOLINT(bugprone-integer-division)
   }
 
   [[nodiscard]] auto neighbors(std::size_t index) const {
@@ -101,7 +101,7 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
     true , false, false, false, false},
     kResolution};
 
-  const double expected_likelihood_field[] = {
+  const double expected_likelihood_field[] = {  // NOLINT(modernize-avoid-c-arrays)
     0.025, 0.025, 0.025, 0.070, 1.020,
     0.025, 0.027, 0.070, 1.020, 0.070,
     0.025, 0.070, 1.020, 0.070, 0.025,

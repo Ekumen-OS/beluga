@@ -29,7 +29,12 @@ Checks: >
   -bugprone-easily-swappable-parameters,
   -bugprone-implicit-widening-of-multiplication-result
 
-HeaderFilterRegex: "*"
+HeaderFilterRegex: ".*"
+
+WarningsAsErrors: '*'
+
+ExtraArgs:
+  - "-std=c++17"
 
 CheckOptions:
   - { key: readability-identifier-naming.NamespaceCase,          value: lower_case }

@@ -112,11 +112,11 @@ TEST(MaybeVariant, PassingNonVariant) {
 
 TEST(VisitEverything, VariantAndValues) {
   int value = 5;
-  auto variant = std::variant<int, long>{2};
-  const auto sum_to_long = [](auto v1, auto v2) -> long { return v1 + v2; };
-  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_long, variant, value), 7);
-  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_long, 10, value), 15);
-  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_long, variant, 10), 12);
+  auto variant = std::variant<int, std::int64_t>{2};
+  const auto sum_to_int64 = [](auto v1, auto v2) -> std::int64_t { return v1 + v2; };
+  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_int64, variant, value), 7);
+  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_int64, 10, value), 15);
+  ASSERT_EQ(beluga::mixin::visit_everything(sum_to_int64, variant, 10), 12);
 }
 
 TEST(VisitEverything, FowardSingleParameter) {

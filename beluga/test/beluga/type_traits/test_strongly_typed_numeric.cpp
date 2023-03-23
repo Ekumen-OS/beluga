@@ -20,7 +20,7 @@ using strong_double = Numeric<double, struct StrongDoubleTag>;
 using strong_size_t = Numeric<std::size_t, struct StrongSizeTTag>;
 using strong_size_t_2 = Numeric<std::size_t, struct StrongSizeTTag2>;
 
-TEST(NumericTypeDef, implicit_casts) {
+TEST(NumericTypeDef, implicitCasts) {
   strong_double sd;
   ASSERT_EQ(sd, 0);
   sd = 2;
@@ -36,7 +36,7 @@ TEST(NumericTypeDef, implicit_casts) {
   ASSERT_EQ(r, 2);
 }
 
-TEST(NumericTypeDef, numeric_limits) {
+TEST(NumericTypeDef, numericLimits) {
   ASSERT_EQ(std::numeric_limits<std::size_t>::min(), std::numeric_limits<strong_size_t>::min());
   ASSERT_EQ(std::numeric_limits<double>::min(), std::numeric_limits<strong_double>::min());
 }
