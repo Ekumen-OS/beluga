@@ -77,13 +77,13 @@ jobs:
         working-directory: ${{ github.workspace }}/src/beluga
         shell: bash
         run: |
-          clang-tidy --config-file=$GITHUB_WORKSPACE/src/.clang-tidy -p=$GITHUB_WORKSPACE/build/beluga -header-filter=.* -extra-arg=-std=c++17 --quiet $(find . -type f -name "*.[ch]pp")
+          run-clang-tidy -quiet -p $GITHUB_WORKSPACE/build/beluga
 
       - name: "[beluga_system_tests] Static Analysis (clang-tidy)"
         working-directory: ${{ github.workspace }}/src/beluga_system_tests
         shell: bash
         run: |
-          clang-tidy --config-file=$GITHUB_WORKSPACE/src/.clang-tidy -p=$GITHUB_WORKSPACE/build/beluga_system_tests -header-filter=.* -extra-arg=-std=c++17 --quiet $(find . -type f -name "*.[ch]pp")
+          run-clang-tidy -quiet -p $GITHUB_WORKSPACE/build/beluga_system_tests
 
       - name: Upload code coverage artifacts
         uses: actions/upload-artifact@v3
