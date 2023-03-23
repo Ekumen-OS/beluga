@@ -135,9 +135,12 @@ class spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types
 
 /// Spatial clustering options for a Sophus::SE2d spatial hasher.
 struct SE2SpatialClusteringOptions {
-  double x_clustering_resolution;      // [m]
-  double y_clustering_resolution;      // [m]
-  double theta_clustering_resolution;  // [rad]
+  /// Clustering resolution for the X axis, in meters.
+  double x_clustering_resolution;
+  /// Clustering resolution for the X axis, in meters.
+  double y_clustering_resolution;
+  /// Clustering resolution for the Theta axis, in radians.
+  double theta_clustering_resolution;
 };
 
 /**
