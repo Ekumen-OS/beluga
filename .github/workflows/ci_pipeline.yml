@@ -47,7 +47,7 @@ jobs:
           update_packager_index: false
 
       - name: Build
-        working-directory: ${{ github.workspace }
+        working-directory: ${{ github.workspace }}
         shell: bash
         # Do a build without coverage flags first to avoid generating .gcno files
         # that prevent the html output from lcov from being generated correctly.
@@ -57,7 +57,7 @@ jobs:
           colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest
 
       - name: Test
-        working-directory: ${{ github.workspace }
+        working-directory: ${{ github.workspace }}
         shell: bash
         run: |
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
