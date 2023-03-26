@@ -75,7 +75,7 @@ template <class MotionDescriptor, class SensorDescriptor>
 using MonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
     ciabatta::curry<StructureOfArrays, Sophus::SE2d, beluga::Weight>::mixin,
-    SimpleStateEstimator2d,
+    WeightedStateEstimator2d,
     RandomStateGenerator,
     NaiveSampler,
     FixedLimiter,
@@ -96,7 +96,7 @@ template <class MotionDescriptor, class SensorDescriptor>
 using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
     ciabatta::curry<StructureOfArrays, Sophus::SE2d, beluga::Weight, beluga::Cluster>::mixin,
-    SimpleStateEstimator2d,
+    WeightedStateEstimator2d,
     RandomStateGenerator,
     AdaptiveSampler,
     ciabatta::curry<KldLimiter, Sophus::SE2d>::mixin,
