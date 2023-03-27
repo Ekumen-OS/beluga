@@ -1,9 +1,9 @@
 var searchData=
 [
   ['make_5ffrom_5fstate_99',['make_from_state',['../particle__traits_8hpp.html#abb77fbfd1ae771fc783fd98a07295d10',1,'beluga']]],
-  ['make_5frandom_5fstate_100',['make_random_state',['../classbeluga_1_1LikelihoodFieldModel.html#af6b74a82d3ec5baa6a49553317eb6939',1,'beluga::LikelihoodFieldModel']]],
-  ['make_5ftuple_5fwith_101',['make_tuple_with',['../utility_8hpp.html#a7b3df3785f48a7af53ad5289e5577d56',1,'beluga::mixin']]],
-  ['make_5funique_102',['make_unique',['../mixin_8hpp.html#a5d1b20abe21a42adcbf6a3378cf90bcf',1,'beluga::mixin']]],
+  ['make_5fmixin_100',['make_mixin',['../mixin_8hpp.html#a535bef07d4370b1a60a3c1ad08a30a3e',1,'beluga::mixin']]],
+  ['make_5frandom_5fstate_101',['make_random_state',['../classbeluga_1_1LikelihoodFieldModel.html#af6b74a82d3ec5baa6a49553317eb6939',1,'beluga::LikelihoodFieldModel']]],
+  ['make_5ftuple_5fwith_102',['make_tuple_with',['../utility_8hpp.html#a7b3df3785f48a7af53ad5289e5577d56',1,'beluga::mixin']]],
   ['max_5flaser_5fdistance_103',['max_laser_distance',['../structbeluga_1_1LikelihoodFieldModelParam.html#a7d71848306f0d0e2a6601b240ff847b1',1,'beluga::LikelihoodFieldModelParam']]],
   ['max_5fobstacle_5fdistance_104',['max_obstacle_distance',['../structbeluga_1_1LikelihoodFieldModelParam.html#a3e34aea5149234747783753e5f905c70',1,'beluga::LikelihoodFieldModelParam']]],
   ['max_5fsamples_105',['max_samples',['../classbeluga_1_1FixedLimiter.html#a1aa6a4e9fcf77bbc3dc97283234f6dc3',1,'beluga::FixedLimiter::max_samples()'],['../classbeluga_1_1KldLimiter.html#a26938f700e9d7ae88140c1f227cfd95c',1,'beluga::KldLimiter::max_samples()'],['../structbeluga_1_1KldLimiterParam.html#a5451ee43898d50151be34bc20c98e0ae',1,'beluga::KldLimiterParam::max_samples()'],['../structbeluga_1_1FixedLimiterParam.html#a9d55d6e549b8c3641d0182107e37c716',1,'beluga::FixedLimiterParam::max_samples()']]],

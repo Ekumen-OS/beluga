@@ -121,16 +121,16 @@ Functions</h2></td></tr>
 <tr class="memitem:aeb9eed2345cee33aded75399e601ba02"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">beluga::mixin::params_or_forward</a> (T &amp;&amp;value) noexcept</td></tr>
 <tr class="memdesc:aeb9eed2345cee33aded75399e601ba02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper method to get descriptor parameters or forward the value.  <a href="mixin_8hpp.html#aeb9eed2345cee33aded75399e601ba02">More...</a><br /></td></tr>
 <tr class="separator:aeb9eed2345cee33aded75399e601ba02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d1b20abe21a42adcbf6a3378cf90bcf"><td class="memTemplParams" colspan="2">template&lt;class Interface , template&lt; class... &gt; class Base, class... Args&gt; </td></tr>
-<tr class="memitem:a5d1b20abe21a42adcbf6a3378cf90bcf"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="mixin_8hpp.html#a5d1b20abe21a42adcbf6a3378cf90bcf">beluga::mixin::make_unique</a> (Args &amp;&amp;... args)</td></tr>
-<tr class="memdesc:a5d1b20abe21a42adcbf6a3378cf90bcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a mixin and wraps it into a <code>std::unique_ptr</code> to a given interface.  <a href="mixin_8hpp.html#a5d1b20abe21a42adcbf6a3378cf90bcf">More...</a><br /></td></tr>
-<tr class="separator:a5d1b20abe21a42adcbf6a3378cf90bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a535bef07d4370b1a60a3c1ad08a30a3e"><td class="memTemplParams" colspan="2">template&lt;class Interface , template&lt; class... &gt; class Base, class... Args&gt; </td></tr>
+<tr class="memitem:a535bef07d4370b1a60a3c1ad08a30a3e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="mixin_8hpp.html#a535bef07d4370b1a60a3c1ad08a30a3e">beluga::mixin::make_mixin</a> (Args &amp;&amp;... args)</td></tr>
+<tr class="memdesc:a535bef07d4370b1a60a3c1ad08a30a3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a mixin and wraps it into a <code>std::unique_ptr</code> to a given interface.  <a href="mixin_8hpp.html#a535bef07d4370b1a60a3c1ad08a30a3e">More...</a><br /></td></tr>
+<tr class="separator:a535bef07d4370b1a60a3c1ad08a30a3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of mixin utilities and extensions. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a5d1b20abe21a42adcbf6a3378cf90bcf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d1b20abe21a42adcbf6a3378cf90bcf">&#9670;&nbsp;</a></span>make_unique()</h2>
+<a id="a535bef07d4370b1a60a3c1ad08a30a3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a535bef07d4370b1a60a3c1ad08a30a3e">&#9670;&nbsp;</a></span>make_mixin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -138,7 +138,7 @@ Functions</h2></td></tr>
 template&lt;class Interface , template&lt; class... &gt; class Base, class... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto beluga::mixin::make_unique </td>
+          <td class="memname">auto beluga::mixin::make_mixin </td>
           <td>(</td>
           <td class="paramtype">Args &amp;&amp;...&#160;</td>
           <td class="paramname"><em>args</em></td><td>)</td>
@@ -196,7 +196,7 @@ template&lt;class Interface , template&lt; class... &gt; class Base, class... Ar
 <div class="line">TEST(MakeUnique, ExampleBasic) {</div>
 <div class="line">  <span class="keyword">auto</span> first = EmptyComponentDescriptor{};</div>
 <div class="line">  <span class="keyword">auto</span> second = NameProviderDescriptor1{};</div>
-<div class="line">  <span class="keyword">auto</span> ptr = beluga::mixin::make_unique&lt;Interface, Combined&gt;(first, second);</div>
+<div class="line">  <span class="keyword">auto</span> ptr = beluga::mixin::make_mixin&lt;Interface, Combined&gt;(first, second);</div>
 <div class="line">  static_assert(std::is_same_v&lt;decltype(ptr), std::unique_ptr&lt;Interface&gt;&gt;);</div>
 <div class="line">  ASSERT_EQ(ptr-&gt;name(), <span class="stringliteral">&quot;One&quot;</span>);</div>
 <div class="line">}</div>
@@ -204,7 +204,7 @@ template&lt;class Interface , template&lt; class... &gt; class Base, class... Ar
 <div class="line">TEST(MakeUnique, ExampleVariants) {</div>
 <div class="line">  <span class="keyword">auto</span> first = EmptyComponentDescriptor{};</div>
 <div class="line">  <span class="keyword">auto</span> second = std::variant&lt;NameProviderDescriptor1, NameProviderDescriptor2&gt;{NameProviderDescriptor1{}};</div>
-<div class="line">  <span class="keyword">auto</span> ptr = beluga::mixin::make_unique&lt;Interface, Combined&gt;(first, second);</div>
+<div class="line">  <span class="keyword">auto</span> ptr = beluga::mixin::make_mixin&lt;Interface, Combined&gt;(first, second);</div>
 <div class="line">  static_assert(std::is_same_v&lt;decltype(ptr), std::unique_ptr&lt;Interface&gt;&gt;);</div>
 <div class="line">  ASSERT_EQ(ptr-&gt;name(), <span class="stringliteral">&quot;One&quot;</span>);</div>
 <div class="line">}</div>
@@ -212,7 +212,7 @@ template&lt;class Interface , template&lt; class... &gt; class Base, class... Ar
 <div class="line">TEST(MakeUnique, ExampleParameters) {</div>
 <div class="line">  <span class="keyword">auto</span> first = EmptyComponentDescriptor{};</div>
 <div class="line">  <span class="keyword">auto</span> second = NameProviderDescriptor2{<span class="charliteral">&#39;a&#39;</span>};</div>
-<div class="line">  <span class="keyword">auto</span> ptr = beluga::mixin::make_unique&lt;Interface, Combined&gt;(first, second);</div>
+<div class="line">  <span class="keyword">auto</span> ptr = beluga::mixin::make_mixin&lt;Interface, Combined&gt;(first, second);</div>
 <div class="line">  static_assert(std::is_same_v&lt;decltype(ptr), std::unique_ptr&lt;Interface&gt;&gt;);</div>
 <div class="line">  ASSERT_EQ(ptr-&gt;name(), <span class="stringliteral">&quot;Two&quot;</span>);</div>
 <div class="line">}</div>
@@ -220,7 +220,7 @@ template&lt;class Interface , template&lt; class... &gt; class Base, class... Ar
 <div class="line">TEST(MakeUnique, ExampleVariantsAndParameters) {</div>
 <div class="line">  <span class="keyword">auto</span> first = EmptyComponentDescriptor{};</div>
 <div class="line">  <span class="keyword">auto</span> second = std::variant&lt;NameProviderDescriptor1, NameProviderDescriptor2&gt;{NameProviderDescriptor2{<span class="charliteral">&#39;a&#39;</span>}};</div>
-<div class="line">  <span class="keyword">auto</span> ptr = beluga::mixin::make_unique&lt;Interface, Combined&gt;(first, second);</div>
+<div class="line">  <span class="keyword">auto</span> ptr = beluga::mixin::make_mixin&lt;Interface, Combined&gt;(first, second);</div>
 <div class="line">  static_assert(std::is_same_v&lt;decltype(ptr), std::unique_ptr&lt;Interface&gt;&gt;);</div>
 <div class="line">  ASSERT_EQ(ptr-&gt;name(), <span class="stringliteral">&quot;Two&quot;</span>);</div>
 <div class="line">}</div>
