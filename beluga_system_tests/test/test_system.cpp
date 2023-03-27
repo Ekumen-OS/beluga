@@ -264,7 +264,7 @@ std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::Oc
       ciabatta::curry<beluga::LikelihoodFieldModel, beluga_amcl::OccupancyGrid>::mixin,
       beluga::LikelihoodFieldModelParam>;
 
-  return mixin::make_unique<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
+  return mixin::make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
       sampler_params, limiter_params, resample_on_motion_params, resample_interval_params, selective_resampling_params,
       DifferentialDrive{motion_params}, LikelihoodField{sensor_params}, beluga_amcl::OccupancyGrid{std::move(map)});
 }
@@ -302,7 +302,7 @@ std::unique_ptr<LaserLocalizationInterface2d> mcl_pf_from_map(nav_msgs::msg::Occ
       ciabatta::curry<beluga::LikelihoodFieldModel, beluga_amcl::OccupancyGrid>::mixin,
       beluga::LikelihoodFieldModelParam>;
 
-  return mixin::make_unique<LaserLocalizationInterface2d, MonteCarloLocalization2d>(
+  return mixin::make_mixin<LaserLocalizationInterface2d, MonteCarloLocalization2d>(
       limiter_params, resample_on_motion_params, resample_interval_params, selective_resampling_params,
       DifferentialDrive{motion_params}, LikelihoodField{sensor_params}, beluga_amcl::OccupancyGrid{std::move(map)});
 }

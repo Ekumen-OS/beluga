@@ -23,7 +23,7 @@
 
 namespace {
 
-//! [Using make_unique]
+//! [Using make_mixin]
 
 // Common interface for demonstration purposes.
 struct Interface {
@@ -68,7 +68,7 @@ using NameProviderDescriptor2 = beluga::mixin::descriptor<NameProvider2, char>;
 TEST(MakeUnique, ExampleBasic) {
   auto first = EmptyComponentDescriptor{};
   auto second = NameProviderDescriptor1{};
-  auto ptr = beluga::mixin::make_unique<Interface, Combined>(first, second);
+  auto ptr = beluga::mixin::make_mixin<Interface, Combined>(first, second);
   static_assert(std::is_same_v<decltype(ptr), std::unique_ptr<Interface>>);
   ASSERT_EQ(ptr->name(), "One");
 }
@@ -76,7 +76,7 @@ TEST(MakeUnique, ExampleBasic) {
 TEST(MakeUnique, ExampleVariants) {
   auto first = EmptyComponentDescriptor{};
   auto second = std::variant<NameProviderDescriptor1, NameProviderDescriptor2>{NameProviderDescriptor1{}};
-  auto ptr = beluga::mixin::make_unique<Interface, Combined>(first, second);
+  auto ptr = beluga::mixin::make_mixin<Interface, Combined>(first, second);
   static_assert(std::is_same_v<decltype(ptr), std::unique_ptr<Interface>>);
   ASSERT_EQ(ptr->name(), "One");
 }
@@ -84,7 +84,7 @@ TEST(MakeUnique, ExampleVariants) {
 TEST(MakeUnique, ExampleParameters) {
   auto first = EmptyComponentDescriptor{};
   auto second = NameProviderDescriptor2{'a'};
-  auto ptr = beluga::mixin::make_unique<Interface, Combined>(first, second);
+  auto ptr = beluga::mixin::make_mixin<Interface, Combined>(first, second);
   static_assert(std::is_same_v<decltype(ptr), std::unique_ptr<Interface>>);
   ASSERT_EQ(ptr->name(), "Two");
 }
@@ -92,11 +92,11 @@ TEST(MakeUnique, ExampleParameters) {
 TEST(MakeUnique, ExampleVariantsAndParameters) {
   auto first = EmptyComponentDescriptor{};
   auto second = std::variant<NameProviderDescriptor1, NameProviderDescriptor2>{NameProviderDescriptor2{'a'}};
-  auto ptr = beluga::mixin::make_unique<Interface, Combined>(first, second);
+  auto ptr = beluga::mixin::make_mixin<Interface, Combined>(first, second);
   static_assert(std::is_same_v<decltype(ptr), std::unique_ptr<Interface>>);
   ASSERT_EQ(ptr->name(), "Two");
 }
 
-//! [Using make_unique]
+//! [Using make_mixin]
 
 }  // namespace
