@@ -77,13 +77,13 @@ jobs:
         working-directory: ${{ github.workspace }}/src/beluga
         shell: bash
         run: |
-          run-clang-tidy.sh
+          ./run-clang-tidy.sh
 
       - name: "Static Analysis (beluga_system_tests)"
         working-directory: ${{ github.workspace }}/src/beluga_system_tests
         shell: bash
         run: |
-          run-clang-tidy.sh
+          ./run-clang-tidy.sh
 
       - name: Upload code coverage artifacts
         uses: actions/upload-artifact@v3
