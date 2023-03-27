@@ -73,17 +73,17 @@ jobs:
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
 
-      - name: "[beluga] Static Analysis (clang-tidy)"
+      - name: "Static Analysis (beluga)"
         working-directory: ${{ github.workspace }}/src/beluga
         shell: bash
         run: |
-          run-clang-tidy -quiet -p $GITHUB_WORKSPACE/build/beluga
+          run-clang-tidy.sh
 
-      - name: "[beluga_system_tests] Static Analysis (clang-tidy)"
+      - name: "Static Analysis (beluga_system_tests)"
         working-directory: ${{ github.workspace }}/src/beluga_system_tests
         shell: bash
         run: |
-          run-clang-tidy -quiet -p $GITHUB_WORKSPACE/build/beluga_system_tests
+          run-clang-tidy.sh
 
       - name: Upload code coverage artifacts
         uses: actions/upload-artifact@v3
