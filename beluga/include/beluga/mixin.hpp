@@ -75,7 +75,7 @@ constexpr auto&& params_or_forward(T&& value) noexcept {
  * same type for all possible combinations of variants.
  *
  * Examples:
- * \snippet test/beluga/test_mixin.cpp Using make_unique
+ * \snippet test/beluga/test_mixin.cpp Using make_mixin
  *
  * \tparam Interface The interface type used to create the std::unique_ptr.
  * \tparam Base A base mixin template taking descriptors.
@@ -84,7 +84,7 @@ constexpr auto&& params_or_forward(T&& value) noexcept {
  * \return A `std::unique_ptr` of an instance of type `Interface`.
  */
 template <class Interface, template <class...> class Base, class... Args>
-auto make_unique(Args&&... args) {
+auto make_mixin(Args&&... args) {
   return visit_everything(
       [](auto&&... args) {
         using Concrete = mixin_from_descriptors_t<Base, filter<is_descriptor, decltype(args)...>>;

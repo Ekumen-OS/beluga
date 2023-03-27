@@ -696,10 +696,10 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     this->get_parameter("set_initial_pose").as_bool();
 
   try {
-    using beluga::mixin::make_unique;
+    using beluga::mixin::make_mixin;
     using beluga::LaserLocalizationInterface2d;
     using beluga::AdaptiveMonteCarloLocalization2d;
-    particle_filter_ = make_unique<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
+    particle_filter_ = make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
       sampler_params,
       limiter_params,
       resample_on_motion_params,
