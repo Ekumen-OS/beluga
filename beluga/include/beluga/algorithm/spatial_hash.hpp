@@ -133,14 +133,12 @@ class spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types
   resolution_in_each_axis_t resolution_;
 };
 
-
 /**
  * Specialization for Sophus::SE2d. Will calculate the spatial hash based on the translation and rotation.
  */
 template <>
 class spatial_hash<Sophus::SE2d, void> {
  public:
-
   /// Constructs a functor capable of computing a spatial hash from a Sophus::SE2d.
   /**
    *
@@ -149,13 +147,10 @@ class spatial_hash<Sophus::SE2d, void> {
    * @param theta_clustering_resolution Clustering resolution for the Theta axis, in radians.
    */
   explicit spatial_hash(
-    double x_clustering_resolution,
-    double y_clustering_resolution,
-    double theta_clustering_resolution
-      )
-      : underlying_hasher_{{
-            x_clustering_resolution, y_clustering_resolution,
-            theta_clustering_resolution}} {};
+      double x_clustering_resolution,
+      double y_clustering_resolution,
+      double theta_clustering_resolution)
+      : underlying_hasher_{{x_clustering_resolution, y_clustering_resolution, theta_clustering_resolution}} {};
 
   /// Calculates the tuple hash, using the given resolution for x, y and rotation given at construction time.
   /**
