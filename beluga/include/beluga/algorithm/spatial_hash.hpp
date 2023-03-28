@@ -133,15 +133,6 @@ class spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types
   resolution_in_each_axis_t resolution_;
 };
 
-/// Spatial clustering options for a Sophus::SE2d spatial hasher.
-struct SE2SpatialClusteringOptions {
-  /// Clustering resolution for the X axis, in meters.
-  double x_clustering_resolution;
-  /// Clustering resolution for the X axis, in meters.
-  double y_clustering_resolution;
-  /// Clustering resolution for the Theta axis, in radians.
-  double theta_clustering_resolution;
-};
 
 /**
  * Specialization for Sophus::SE2d. Will calculate the spatial hash based on the translation and rotation.
@@ -149,14 +140,22 @@ struct SE2SpatialClusteringOptions {
 template <>
 class spatial_hash<Sophus::SE2d, void> {
  public:
+
   /// Constructs a functor capable of computing a spatial hash from a Sophus::SE2d.
   /**
-   *  \param parameters Spatial clustering options.
+   *
+   * @param x_clustering_resolution Clustering resolution for the X axis, in meters.
+   * @param y_clustering_resolution Clustering resolution for the Y axis, in meters.
+   * @param theta_clustering_resolution Clustering resolution for the Theta axis, in radians.
    */
-  explicit spatial_hash(const SE2SpatialClusteringOptions& parameters)
-      : underlying_hasher_{std::array{
-            parameters.x_clustering_resolution, parameters.y_clustering_resolution,
-            parameters.theta_clustering_resolution}} {};
+  explicit spatial_hash(
+    double x_clustering_resolution,
+    double y_clustering_resolution,
+    double theta_clustering_resolution
+      )
+      : underlying_hasher_{{
+            x_clustering_resolution, y_clustering_resolution,
+            theta_clustering_resolution}} {};
 
   /// Calculates the tuple hash, using the given resolution for x, y and rotation given at construction time.
   /**

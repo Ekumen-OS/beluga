@@ -657,8 +657,8 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   auto limiter_params = beluga::KldLimiterParam<Sophus::SE2d>{
     min_samples,
     max_samples,
-    beluga::spatial_hash<Sophus::SE2d>{{spatial_resolution_x, spatial_resolution_y,
-      spatial_resolution_theta}},
+    beluga::spatial_hash<Sophus::SE2d>{spatial_resolution_x, spatial_resolution_y,
+      spatial_resolution_theta},
     kld_epsilon,
     kld_z
   };
