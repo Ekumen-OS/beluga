@@ -232,7 +232,7 @@ std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::Oc
   sampler_params.alpha_fast = 0.1;
 
   auto limiter_params =
-      KldLimiterParam<Sophus::SE2d>{500UL, 2000UL, spatial_hash<Sophus::SE2d>{0.1, 0.1, 0.1}, 0.05, 3.};
+      beluga::KldLimiterParam<Sophus::SE2d>{500UL, 2000UL, beluga::spatial_hash<Sophus::SE2d>{0.1, 0.1, 0.1}, 0.05, 3.};
 
   auto resample_on_motion_params = beluga::ResampleOnMotionPolicyParam{};
   resample_on_motion_params.update_min_d = 0.25;
