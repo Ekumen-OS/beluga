@@ -42,7 +42,10 @@
 
 namespace {
 
-using namespace beluga;
+using beluga::AdaptiveMonteCarloLocalization2d;
+using beluga::LaserLocalizationInterface2d;
+using beluga::MonteCarloLocalization2d;
+using beluga::MultivariateNormalDistribution;
 
 struct InitialPose {
   Eigen::Vector3d mean;
@@ -76,7 +79,7 @@ std::string se2d_to_string(const Sophus::SE2d& input) {
   return oss.str();
 }
 
-TEST_P(BelugaSystemTest, test_estimated_path) {
+TEST_P(BelugaSystemTest, testEstimatedPath) {
   auto test_data = GetParam()();
   auto& pf = *test_data.particle_filter;
   pf.initialize_states(
@@ -224,34 +227,34 @@ TestData test_data_from_ros2bag(
 }
 
 std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
-  auto sampler_params = AdaptiveSamplerParam{};
+  auto sampler_params = beluga::AdaptiveSamplerParam{};
   sampler_params.alpha_slow = 0.001;
   sampler_params.alpha_fast = 0.1;
 
   auto limiter_params =
       KldLimiterParam<Sophus::SE2d>{500UL, 2000UL, spatial_hash<Sophus::SE2d>{0.1, 0.1, 0.1}, 0.05, 3.};
 
-  auto resample_on_motion_params = ResampleOnMotionPolicyParam{};
+  auto resample_on_motion_params = beluga::ResampleOnMotionPolicyParam{};
   resample_on_motion_params.update_min_d = 0.25;
   resample_on_motion_params.update_min_a = 0.2;
 
-  auto resample_interval_params = ResampleIntervalPolicyParam{};
+  auto resample_interval_params = beluga::ResampleIntervalPolicyParam{};
   resample_interval_params.resample_interval_count = 1;
 
-  auto sensor_params = LikelihoodFieldModelParam{};
+  auto sensor_params = beluga::LikelihoodFieldModelParam{};
   sensor_params.max_obstacle_distance = 2.0;
   sensor_params.max_laser_distance = 100.0;
   sensor_params.z_hit = 0.5;
   sensor_params.z_random = 0.5;
   sensor_params.sigma_hit = 0.2;
 
-  auto motion_params = DifferentialDriveModelParam{};
+  auto motion_params = beluga::DifferentialDriveModelParam{};
   motion_params.rotation_noise_from_rotation = 0.2;
   motion_params.rotation_noise_from_translation = 0.2;
   motion_params.translation_noise_from_translation = 0.2;
   motion_params.translation_noise_from_rotation = 0.2;
 
-  auto selective_resampling_params = SelectiveResamplingPolicyParam{};
+  auto selective_resampling_params = beluga::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = false;
 
   using DifferentialDrive =
@@ -260,36 +263,36 @@ std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::Oc
       ciabatta::curry<beluga::LikelihoodFieldModel, beluga_amcl::OccupancyGrid>::mixin,
       beluga::LikelihoodFieldModelParam>;
 
-  return mixin::make_unique<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
+  return beluga::mixin::make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
       sampler_params, limiter_params, resample_on_motion_params, resample_interval_params, selective_resampling_params,
       DifferentialDrive{motion_params}, LikelihoodField{sensor_params}, beluga_amcl::OccupancyGrid{std::move(map)});
 }
 
 std::unique_ptr<LaserLocalizationInterface2d> mcl_pf_from_map(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
-  auto limiter_params = FixedLimiterParam{};
+  auto limiter_params = beluga::FixedLimiterParam{};
   limiter_params.max_samples = 2000UL;
 
-  auto resample_on_motion_params = ResampleOnMotionPolicyParam{};
+  auto resample_on_motion_params = beluga::ResampleOnMotionPolicyParam{};
   resample_on_motion_params.update_min_d = 0.;
   resample_on_motion_params.update_min_a = 0.;
 
-  auto resample_interval_params = ResampleIntervalPolicyParam{};
+  auto resample_interval_params = beluga::ResampleIntervalPolicyParam{};
   resample_interval_params.resample_interval_count = 1;
 
-  auto sensor_params = LikelihoodFieldModelParam{};
+  auto sensor_params = beluga::LikelihoodFieldModelParam{};
   sensor_params.max_obstacle_distance = 2.0;
   sensor_params.max_laser_distance = 100.0;
   sensor_params.z_hit = 0.5;
   sensor_params.z_random = 0.5;
   sensor_params.sigma_hit = 0.2;
 
-  auto motion_params = DifferentialDriveModelParam{};
+  auto motion_params = beluga::DifferentialDriveModelParam{};
   motion_params.rotation_noise_from_rotation = 0.2;
   motion_params.rotation_noise_from_translation = 0.2;
   motion_params.translation_noise_from_translation = 0.2;
   motion_params.translation_noise_from_rotation = 0.2;
 
-  auto selective_resampling_params = SelectiveResamplingPolicyParam{};
+  auto selective_resampling_params = beluga::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = false;
 
   using DifferentialDrive =
@@ -298,7 +301,7 @@ std::unique_ptr<LaserLocalizationInterface2d> mcl_pf_from_map(nav_msgs::msg::Occ
       ciabatta::curry<beluga::LikelihoodFieldModel, beluga_amcl::OccupancyGrid>::mixin,
       beluga::LikelihoodFieldModelParam>;
 
-  return mixin::make_unique<LaserLocalizationInterface2d, MonteCarloLocalization2d>(
+  return beluga::mixin::make_mixin<LaserLocalizationInterface2d, MonteCarloLocalization2d>(
       limiter_params, resample_on_motion_params, resample_interval_params, selective_resampling_params,
       DifferentialDrive{motion_params}, LikelihoodField{sensor_params}, beluga_amcl::OccupancyGrid{std::move(map)});
 }
