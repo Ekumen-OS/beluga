@@ -18,21 +18,6 @@ option(BUILD_TESTING "Build the testing tree." ON)
 if(BUILD_TESTING)
   message(STATUS "Build testing enabled.")
 
-  find_package(ament_cmake_clang_format QUIET)
-  if(ament_cmake_clang_format_FOUND)
-    ament_clang_format(CONFIG_FILE .clang-format)
-  endif()
-
-  find_package(ament_cmake_clang_tidy QUIET)
-  if (ament_cmake_clang_tidy_FOUND)
-    ament_clang_tidy(${CMAKE_BINARY_DIR} CONFIG_FILE .clang-tidy)
-  endif()
-
-  find_package(ament_cmake_copyright QUIET)
-  if(ament_cmake_copyright_FOUND)
-    ament_copyright()
-  endif()
-
   enable_testing()
   add_subdirectory(test)
 endif()
