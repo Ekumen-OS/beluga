@@ -63,10 +63,12 @@ constexpr std::size_t floor_and_shift(double value) {
  * \return The calculated hash.
  */
 template <class T, std::size_t... Ids>
-constexpr std::size_t
-hash_impl(const T& value, double resolution, [[maybe_unused]] std::index_sequence<Ids...> index_sequence) {
+constexpr std::size_t hash_impl(
+    const T& value,
+    const std::array<double, sizeof...(Ids)>& resolution,
+    [[maybe_unused]] std::index_sequence<Ids...> index_sequence) {
   constexpr auto kBits = std::numeric_limits<std::size_t>::digits / sizeof...(Ids);
-  return (detail::floor_and_shift<kBits, Ids>(std::get<Ids>(value) / resolution) | ...);
+  return (detail::floor_and_shift<kBits, Ids>(std::get<Ids>(value) / resolution[Ids]) | ...);
 }
 
 }  // namespace detail
@@ -77,50 +79,92 @@ struct spatial_hash {};
 
 /// Specialization for arrays.
 template <class T, std::size_t N>
-struct spatial_hash<std::array<T, N>, std::enable_if_t<std::is_arithmetic_v<T>, void>> {
+class spatial_hash<std::array<T, N>, std::enable_if_t<std::is_arithmetic_v<T>, void>> {
  public:
-  /// Calculates the array hash, using the given resolution in all axes.
+  /// Type that represents the resolution in each axis.
+  using resolution_in_each_axis_t = std::array<double, N>;
+
+  /// Constructs a spatial hasher from an `std::array` of doubles.
+  /**
+   *  \param resolution std::array of doubles containing resolution for each index of the array to be hashed, with
+   * matching indices. I.e: array[0] will be hashed with resolution[0].
+   */
+  explicit spatial_hash(const resolution_in_each_axis_t& resolution) : resolution_{resolution} {}
+
+  /// Calculates the array hash, with the resolutions in each axis, given at construction time.
   /**
    * \param array Array to be hashed.
-   * \param resolution Resolution to be used in each axes.
    * \return The calculated hash.
    */
-  constexpr std::size_t operator()(const std::array<T, N>& array, double resolution = 1.) const {
-    return detail::hash_impl(array, resolution, std::make_index_sequence<N>());
+  constexpr std::size_t operator()(const std::array<T, N>& array) const {
+    return detail::hash_impl(array, resolution_, std::make_index_sequence<N>());
   }
+
+ private:
+  resolution_in_each_axis_t resolution_;
 };
 
 /// Specialization for tuples.
 template <template <class...> class Tuple, class... Types>
-struct spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types> && ...), void>> {
+class spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types> && ...), void>> {
  public:
-  /// Calculates the tuple hash, using the given resolution in all axes.
+  /// Type that represents the resolution in each axis.
+  using resolution_in_each_axis_t = std::array<double, sizeof...(Types)>;
+
+  /// Constructs a spatial hasher from an `std::array` of doubles.
+  /**
+   *  \param resolution std::array of doubles containing resolution for each index of the tuple to be hashed, with
+   * matching indices. I.e: std::get<0>(tuple) will be hashed with resolution[0].
+   */
+  explicit spatial_hash(const resolution_in_each_axis_t& resolution) : resolution_{resolution} {}
+
+  /// Calculates the array hash, with the resolutions in each axis, given at construction time.
   /**
    * \param tuple Tuple to be hashed.
-   * \param resolution Resolution to be used in each axes.
    * \return The calculated hash.
    */
-  constexpr std::size_t operator()(const Tuple<Types...>& tuple, double resolution = 1.) const {
-    return detail::hash_impl(tuple, resolution, std::make_index_sequence<sizeof...(Types)>());
+  constexpr std::size_t operator()(const Tuple<Types...>& tuple) const {
+    return detail::hash_impl(tuple, resolution_, std::make_index_sequence<sizeof...(Types)>());
   }
+
+ private:
+  resolution_in_each_axis_t resolution_;
 };
 
 /**
- * Will calculate the spatial hash based on the translation, the rotation is not used.
+ * Specialization for Sophus::SE2d. Will calculate the spatial hash based on the translation and rotation.
  */
 template <>
-struct spatial_hash<Sophus::SE2d, void> {
+class spatial_hash<Sophus::SE2d, void> {
  public:
-  /// Calculates the tuple hash, using the given resolution for both the x and y translation coordinates.
+  /// Constructs a spatial hasher from an `std::array` of doubles.
+  /**
+   *
+   * \param x_clustering_resolution Clustering resolution for the X axis, in meters.
+   * \param y_clustering_resolution Clustering resolution for the Y axis, in meters.
+   * \param theta_clustering_resolution Clustering resolution for the Theta axis, in radians.
+   */
+  explicit spatial_hash(
+      double x_clustering_resolution,
+      double y_clustering_resolution,
+      double theta_clustering_resolution)
+      : underlying_hasher_{{x_clustering_resolution, y_clustering_resolution, theta_clustering_resolution}} {};
+
+  /// Default constructor
+  spatial_hash() = default;
+
+  /// Calculates the tuple hash, using the given resolution for x, y and rotation given at construction time.
   /**
    * \param state The state to be hashed.
-   * \param resolution Resolution to be used for both x and y translation coordinates.
    * \return The calculated hash.
    */
-  std::size_t operator()(const Sophus::SE2d& state, double resolution = 1.) const {
+  std::size_t operator()(const Sophus::SE2d& state) const {
     const auto& position = state.translation();
-    return spatial_hash<std::tuple<double, double>>{}(std::make_tuple(position.x(), position.y()), resolution);
+    return underlying_hasher_(std::make_tuple(position.x(), position.y(), state.so2().log()));
   }
+
+ private:
+  spatial_hash<std::tuple<double, double, double>> underlying_hasher_{{1., 1., 1.}};
 };
 
 }  // namespace beluga

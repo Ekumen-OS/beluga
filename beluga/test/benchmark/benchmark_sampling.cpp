@@ -31,9 +31,9 @@ struct State {
 
 template <>
 struct beluga::spatial_hash<State> {
-  std::size_t operator()(const State& state, double resolution = 1.) const {
-    const auto pair = std::make_tuple(state.x, state.y);
-    return beluga::spatial_hash<std::decay_t<decltype(pair)>>{}(pair, resolution);
+  std::size_t operator()(const State& state) const {
+    const auto tuple = std::make_tuple(state.x, state.y);
+    return beluga::spatial_hash<std::decay_t<decltype(tuple)>>{std::array{1., 1.}}(tuple);
   }
 };
 
@@ -88,14 +88,14 @@ void BM_AdaptiveResample(benchmark::State& state) {
 
   std::size_t min_samples = 0;
   std::size_t max_samples = container_size;
-  double resolution = 1.;
+  auto hasher = beluga::spatial_hash<State>{};
   double kld_epsilon = 0.05;
   double kld_z = 3.;
 
   for (auto _ : state) {
     auto&& samples = ranges::views::generate(beluga::random_sample(
                          beluga::views::all(container), beluga::views::weights(container), generator)) |
-                     ranges::views::transform(beluga::set_cluster(resolution)) |
+                     ranges::views::transform(beluga::set_cluster(hasher)) |
                      ranges::views::take_while(
                          beluga::kld_condition(min_samples, kld_epsilon, kld_z), beluga::cluster<const Particle&>) |
                      ranges::views::take(container_size) | ranges::views::common;

@@ -173,12 +173,36 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
-      "Spatial resolution used to divide the space in buckets for KLD resampling.";
+      "Resolution in meters for the X axis used to divide the space in buckets for KLD resampling.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("spatial_resolution", rclcpp::ParameterValue(0.1), descriptor);
+    declare_parameter("spatial_resolution_x", rclcpp::ParameterValue(0.1), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Resolution in meters for the Y axis used to divide the space in buckets for KLD resampling.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("spatial_resolution_y", rclcpp::ParameterValue(0.1), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Resolution in radians for the theta axis to divide the space in buckets for KLD resampling.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter(
+      "spatial_resolution_theta",
+      rclcpp::ParameterValue(Sophus::Constants<double>::pi() / 4), descriptor);
   }
 
   {
@@ -623,10 +647,14 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   sampler_params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
   sampler_params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
 
-  auto limiter_params = beluga::KldLimiterParam{};
+  auto limiter_params = beluga::KldLimiterParam<Sophus::SE2d>{};
   limiter_params.min_samples = static_cast<std::size_t>(get_parameter("min_particles").as_int());
   limiter_params.max_samples = static_cast<std::size_t>(get_parameter("max_particles").as_int());
-  limiter_params.spatial_resolution = get_parameter("spatial_resolution").as_double();
+  limiter_params.spatial_hasher = beluga::spatial_hash<Sophus::SE2d>{
+    get_parameter("spatial_resolution_x").as_double(),
+    get_parameter("spatial_resolution_y").as_double(),
+    get_parameter("spatial_resolution_theta").as_double(),
+  };
   limiter_params.kld_epsilon = get_parameter("pf_err").as_double();
   limiter_params.kld_z = get_parameter("pf_z").as_double();
 
