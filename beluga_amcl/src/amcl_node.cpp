@@ -200,7 +200,9 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("spatial_resolution_theta", rclcpp::ParameterValue(0.1), descriptor);
+    declare_parameter(
+      "spatial_resolution_theta",
+      rclcpp::ParameterValue(Sophus::Constants<double>::pi() / 4), descriptor);
   }
 
   {
