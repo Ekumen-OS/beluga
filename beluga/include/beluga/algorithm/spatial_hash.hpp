@@ -149,6 +149,9 @@ class spatial_hash<Sophus::SE2d, void> {
       double y_clustering_resolution,
       double theta_clustering_resolution)
       : underlying_hasher_{{x_clustering_resolution, y_clustering_resolution, theta_clustering_resolution}} {};
+  
+  /// Default constructor
+  spatial_hash() = default;
 
   /// Calculates the tuple hash, using the given resolution for x, y and rotation given at construction time.
   /**
@@ -161,7 +164,7 @@ class spatial_hash<Sophus::SE2d, void> {
   }
 
  private:
-  spatial_hash<std::tuple<double, double, double>> underlying_hasher_;
+  spatial_hash<std::tuple<double, double, double>> underlying_hasher_{{1., 1., 1.}};
 };
 
 }  // namespace beluga

@@ -645,21 +645,16 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   sampler_params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
   sampler_params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
 
-  auto min_samples = static_cast<std::size_t>(get_parameter("min_particles").as_int());
-  auto max_samples = static_cast<std::size_t>(get_parameter("max_particles").as_int());
-  auto kld_epsilon = get_parameter("pf_err").as_double();
-  auto kld_z = get_parameter("pf_z").as_double();
-  const double spatial_resolution_x = get_parameter("spatial_resolution_x").as_double();
-  const double spatial_resolution_y = get_parameter("spatial_resolution_y").as_double();
-  const double spatial_resolution_theta = get_parameter("spatial_resolution_theta").as_double();
-  auto limiter_params = beluga::KldLimiterParam<Sophus::SE2d>{
-    min_samples,
-    max_samples,
-    beluga::spatial_hash<Sophus::SE2d>{spatial_resolution_x, spatial_resolution_y,
-      spatial_resolution_theta},
-    kld_epsilon,
-    kld_z
+  auto limiter_params = beluga::KldLimiterParam<Sophus::SE2d>{};
+  limiter_params.min_samples = static_cast<std::size_t>(get_parameter("min_particles").as_int());
+  limiter_params.max_samples = static_cast<std::size_t>(get_parameter("max_particles").as_int());
+  limiter_params.spatial_hasher = beluga::spatial_hash<Sophus::SE2d>{
+    get_parameter("spatial_resolution_x").as_double(),
+    get_parameter("spatial_resolution_y").as_double(),
+    get_parameter("spatial_resolution_theta").as_double(),
   };
+  limiter_params.kld_epsilon = get_parameter("pf_err").as_double();
+  limiter_params.kld_z = get_parameter("pf_z").as_double();
 
   auto resample_on_motion_params = beluga::ResampleOnMotionPolicyParam{};
   resample_on_motion_params.update_min_d = get_parameter("update_min_d").as_double();
