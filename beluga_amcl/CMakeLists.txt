@@ -20,6 +20,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
@@ -48,7 +49,8 @@ ament_target_dependencies(amcl_node_component PUBLIC
   rclcpp
   rclcpp_components
   rclcpp_lifecycle
-  sensor_msgs)
+  sensor_msgs
+  std_srvs)
 rclcpp_components_register_nodes(amcl_node_component "beluga_amcl::AmclNode")
 
 add_executable(amcl_node)

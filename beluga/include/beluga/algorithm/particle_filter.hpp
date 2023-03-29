@@ -100,6 +100,9 @@ struct BaseParticleFilterInterface {
    * If resampling is performed, the importance weights of all particles are reset to 1.0.
    */
   virtual void resample() = 0;
+
+  /// distribute the particles over all the space.
+  virtual void distribute_particles() = 0;
 };
 
 /// Base implementation of a particle filter.
@@ -133,9 +136,15 @@ class BootstrapParticleFilter : public Mixin {
    */
   template <class... Args>
   explicit BootstrapParticleFilter(Args&&... args) : Mixin(std::forward<Args>(args)...) {
+    distribute_particles();
+  }
+  /*
+   Distribute the particles base in a uniform distribution using the \ref StateGeneratorPage "StateGenerator"
+  */
+  void distribute_particles() final {
     this->self().initialize_particles(this->self().generate_samples(generator_) | this->self().take_samples());
   }
-
+  
   /**
    * \copydoc BaseParticleFilterInterface::sample()
    *

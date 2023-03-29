@@ -526,6 +526,14 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Requires that AMCL is provided an initial pose either"
+      "via topic or initial_pose* parameter when reset. Otherwise, by default AMCL will use the last known pose to initialize";
+    descriptor.read_only = true;
+    declare_parameter("always_reset_initial_pose", false, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.read_only = true;
     descriptor.description =
       "Execution policy used to process particles [seq, par].";
@@ -570,6 +578,10 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
     "pose",
     rclcpp::SystemDefaultsQoS());
 
+  if (get_parameter("always_reset_initial_pose").as_bool()) {
+    initial_pose_is_known_ = false;
+  }
+
   return CallbackReturn::SUCCESS;
 }
 
@@ -597,6 +609,12 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     get_parameter("initial_pose_topic").as_string(),
     rclcpp::SystemDefaultsQoS(),
     std::bind(&AmclNode::initial_pose_callback, this, std::placeholders::_1));
+
+  global_localization_server_ = create_service<std_srvs::srv::Empty>(
+    "reinitialize_global_localization",
+    std::bind(
+      &AmclNode::global_localization_callback, this, std::placeholders::_1,
+      std::placeholders::_2, std::placeholders::_3));
 
   RCLCPP_INFO(
     get_logger(),
@@ -824,7 +842,7 @@ void AmclNode::timer_callback()
     return;
   }
 
-  if (particle_cloud_pub_->get_subscription_count() == 0) {
+  if (particle_cloud_pub_->get_subscription_count() == 0 || !initial_pose_is_known_) {
     return;
   }
 
@@ -910,24 +928,26 @@ void AmclNode::laser_callback(
 
   const auto [pose, covariance] = particle_filter_->estimate();
 
-  {
-    auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
-    message.header.stamp = laser_scan->header.stamp;
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
-    tf2::toMsg(pose, message.pose.pose);
-    message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
-    pose_pub_->publish(message);
-  }
+  if (initial_pose_is_known_) {
+    {
+      auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
+      message.header.stamp = laser_scan->header.stamp;
+      message.header.frame_id = get_parameter("global_frame_id").as_string();
+      tf2::toMsg(pose, message.pose.pose);
+      message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
+      pose_pub_->publish(message);
+    }
 
-  if (get_parameter("tf_broadcast").as_bool()) {
-    auto message = geometry_msgs::msg::TransformStamped{};
-    // Sending a transform that is valid into the future so that odom can be used.
-    message.header.stamp = now() +
-      tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
-    message.child_frame_id = get_parameter("odom_frame_id").as_string();
-    message.transform = tf2::toMsg(odom_to_base_transform * pose.inverse());
-    tf_broadcaster_->sendTransform(message);
+    if (get_parameter("tf_broadcast").as_bool()) {
+      auto message = geometry_msgs::msg::TransformStamped{};
+      // Sending a transform that is valid into the future so that odom can be used.
+      message.header.stamp = now() +
+        tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
+      message.header.frame_id = get_parameter("global_frame_id").as_string();
+      message.child_frame_id = get_parameter("odom_frame_id").as_string();
+      message.transform = tf2::toMsg(odom_to_base_transform * pose.inverse());
+      tf_broadcaster_->sendTransform(message);
+    }
   }
 }
 
@@ -965,6 +985,7 @@ void AmclNode::initial_pose_callback(
         " - Covariance coefficients: " << covariance.format(eigen_format));
   }
   this->reinitialize_with_pose(mean, covariance);
+  initial_pose_is_known_ = true;
 }
 
 void AmclNode::reinitialize_with_pose(
@@ -981,6 +1002,21 @@ void AmclNode::reinitialize_with_pose(
   } catch (const std::runtime_error & error) {
     RCLCPP_ERROR(get_logger(), "Could not generate particles: %s", error.what());
   }
+}
+
+void
+AmclNode::global_localization_callback(
+  const std::shared_ptr<rmw_request_id_t>/*request_header*/,
+  const std::shared_ptr<std_srvs::srv::Empty::Request>/*req*/,
+  std::shared_ptr<std_srvs::srv::Empty::Response>/*res*/)
+{
+  RCLCPP_INFO(get_logger(), "Initializing with uniform distribution");
+  if (!particle_filter_) {
+    return;
+  }
+  particle_filter_->distribute_particles();
+  RCLCPP_INFO(get_logger(), "Global initialisation done!");
+  initial_pose_is_known_ = true;
 }
 
 }  // namespace beluga_amcl
