@@ -192,7 +192,6 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     declare_parameter("spatial_resolution_y", rclcpp::ParameterValue(0.1), descriptor);
   }
 
-
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
@@ -648,7 +647,6 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
   auto min_samples = static_cast<std::size_t>(get_parameter("min_particles").as_int());
   auto max_samples = static_cast<std::size_t>(get_parameter("max_particles").as_int());
-  // auto spatial_resolution = get_parameter("spatial_resolution").as_double();
   auto kld_epsilon = get_parameter("pf_err").as_double();
   auto kld_z = get_parameter("pf_z").as_double();
   const double spatial_resolution_x = get_parameter("spatial_resolution_x").as_double();

@@ -81,14 +81,13 @@ struct spatial_hash {};
 template <class T, std::size_t N>
 class spatial_hash<std::array<T, N>, std::enable_if_t<std::is_arithmetic_v<T>, void>> {
  public:
-  /// @brief  Type that represents the resolution in each axis.
+  /// Type that represents the resolution in each axis.
   using resolution_in_each_axis_t = std::array<double, N>;
 
-  /// Constructs a functor capable of computing a spatial hash from a std::array of arithmetic types. With a different
-  /// resolution in each index
+  /// Constructs a spatial hasher from an `std::array` of doubles.
   /**
    *  \param resolution std::array of doubles containing resolution for each index of the array to be hashed, with
-   * matching indices. I.e: array[0] will be hashed with resoltion[0].
+   * matching indices. I.e: array[0] will be hashed with resolution[0].
    */
   explicit spatial_hash(const resolution_in_each_axis_t& resolution) : resolution_{resolution} {}
 
@@ -109,14 +108,13 @@ class spatial_hash<std::array<T, N>, std::enable_if_t<std::is_arithmetic_v<T>, v
 template <template <class...> class Tuple, class... Types>
 class spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types> && ...), void>> {
  public:
-  /// @brief  Type that represents the resolution in each axis.
+  /// Type that represents the resolution in each axis.
   using resolution_in_each_axis_t = std::array<double, sizeof...(Types)>;
 
-  /// Constructs a functor capable of computing a spatial hash from a std::tuple of arithmetic types. With a different
-  /// resolution in each axis
+  /// Constructs a spatial hasher from an `std::array` of doubles.
   /**
    *  \param resolution std::array of doubles containing resolution for each index of the tuple to be hashed, with
-   * matching indices. I.e: std::get<0>(tuple) will be hashed with resoltion[0].
+   * matching indices. I.e: std::get<0>(tuple) will be hashed with resolution[0].
    */
   explicit spatial_hash(const resolution_in_each_axis_t& resolution) : resolution_{resolution} {}
 
@@ -139,12 +137,12 @@ class spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types
 template <>
 class spatial_hash<Sophus::SE2d, void> {
  public:
-  /// Constructs a functor capable of computing a spatial hash from a Sophus::SE2d.
+  /// Constructs a spatial hasher from an `std::array` of doubles.
   /**
    *
-   * @param x_clustering_resolution Clustering resolution for the X axis, in meters.
-   * @param y_clustering_resolution Clustering resolution for the Y axis, in meters.
-   * @param theta_clustering_resolution Clustering resolution for the Theta axis, in radians.
+   * \param x_clustering_resolution Clustering resolution for the X axis, in meters.
+   * \param y_clustering_resolution Clustering resolution for the Y axis, in meters.
+   * \param theta_clustering_resolution Clustering resolution for the Theta axis, in radians.
    */
   explicit spatial_hash(
       double x_clustering_resolution,

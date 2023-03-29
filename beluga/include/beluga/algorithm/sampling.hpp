@@ -165,10 +165,10 @@ auto random_sample(const Range& samples, const Weights& weights, RandomNumberGen
 /**
  * \param hasher A copyable callable object with signature (const decltype(state(particle)) &) -> std::size_t, that
  * returns a spatial cluster for a given particle state.
- * \return A callable object with prototype `(ParticleT && p) ->ParticleT`.
- * `ParticleT` must satisfy \ref ParticlePage.
- * The expression \c particle_traits<ParticleT>::cluster(p) must also be valid and return a `std::size_t &`.
- * After the returned object is applied to a particle `p`, \c cluster(p) will be updated with the calculated spatial
+ * \return A callable object with prototype `(ParticleT && p) ->ParticleT`. \n
+ *  `ParticleT` must satisfy \ref ParticlePage. \ n
+ *  The expression \c particle_traits<ParticleT>::cluster(p) must also be valid and return a `std::size_t &`. \n
+ *  After the returned object is applied to a particle `p`, \c cluster(p) will be updated with the calculated spatial
  * hash according to the specified resolutions in each axis.
  */
 template <class Hasher>
@@ -452,7 +452,7 @@ class FixedLimiter : public Mixin {
 
 /// Parameters used to construct a KldLimiter instance.
 /**
- * @tparam State Type that represents the state of the particle.
+ * \tparam State Type that represents the state of the particle.
  */
 template <class State>
 struct KldLimiterParam {
@@ -460,7 +460,7 @@ struct KldLimiterParam {
   std::size_t min_samples;
   /// Maximum number of particles to be sampled.
   std::size_t max_samples;
-  /// Callable object with signature: (const State&) -> std::size_t  returning the state's spatial cluster.
+  /// Hasher instance used to compute the spatial cluster for a given state.
   spatial_hash<State> spatial_hasher;
   /// See beluga::kld_condition() for details.
   double kld_epsilon;
