@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['kld_5fepsilon_434',['kld_epsilon',['../structbeluga_1_1KldLimiterParam.html#a9f90906d8eb1b1d81e5f5707875a4417',1,'beluga::KldLimiterParam']]],
-  ['kld_5fz_435',['kld_z',['../structbeluga_1_1KldLimiterParam.html#a53ebfe742dee0c7b3822f803b4b3e666',1,'beluga::KldLimiterParam']]]
+  ['kld_5fepsilon_439',['kld_epsilon',['../structbeluga_1_1KldLimiterParam.html#a451efaa8e29f12d43862eb5f183a506e',1,'beluga::KldLimiterParam']]],
+  ['kld_5fz_440',['kld_z',['../structbeluga_1_1KldLimiterParam.html#a917255482e04f9c06ea9fabb0b76882b',1,'beluga::KldLimiterParam']]]
 ];

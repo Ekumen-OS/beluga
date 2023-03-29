@@ -1,8 +1,8 @@
 var searchData=
 [
   ['kld_5fcondition_86',['kld_condition',['../sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99',1,'beluga']]],
-  ['kld_5fepsilon_87',['kld_epsilon',['../structbeluga_1_1KldLimiterParam.html#a9f90906d8eb1b1d81e5f5707875a4417',1,'beluga::KldLimiterParam']]],
-  ['kld_5fz_88',['kld_z',['../structbeluga_1_1KldLimiterParam.html#a53ebfe742dee0c7b3822f803b4b3e666',1,'beluga::KldLimiterParam']]],
-  ['kldlimiter_89',['KldLimiter',['../classbeluga_1_1KldLimiter.html',1,'beluga::KldLimiter&lt; Mixin &gt;'],['../classbeluga_1_1KldLimiter.html#a8937fc701f4404ccf49b5d01ddecac8a',1,'beluga::KldLimiter::KldLimiter()']]],
+  ['kld_5fepsilon_87',['kld_epsilon',['../structbeluga_1_1KldLimiterParam.html#a451efaa8e29f12d43862eb5f183a506e',1,'beluga::KldLimiterParam']]],
+  ['kld_5fz_88',['kld_z',['../structbeluga_1_1KldLimiterParam.html#a917255482e04f9c06ea9fabb0b76882b',1,'beluga::KldLimiterParam']]],
+  ['kldlimiter_89',['KldLimiter',['../classbeluga_1_1KldLimiter.html',1,'beluga::KldLimiter&lt; Mixin, State &gt;'],['../classbeluga_1_1KldLimiter.html#a0bfb135d82b872706d6c989e397ab49e',1,'beluga::KldLimiter::KldLimiter()']]],
   ['kldlimiterparam_90',['KldLimiterParam',['../structbeluga_1_1KldLimiterParam.html',1,'beluga']]]
 ];

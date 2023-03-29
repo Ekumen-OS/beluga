@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::KldLimiterParam Struct Reference</title>
+<title>Beluga: beluga::KldLimiterParam&lt; State &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ $(function() {
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structbeluga_1_1KldLimiterParam-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::KldLimiterParam Struct Reference</div>  </div>
+<div class="title">beluga::KldLimiterParam&lt; State &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -79,32 +79,50 @@ $(function() {
  <a href="structbeluga_1_1KldLimiterParam.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="sampling_8hpp_source.html">sampling.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for beluga::KldLimiterParam&lt; State &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structbeluga_1_1KldLimiterParam__coll__graph.png" border="0" usemap="#abeluga_1_1KldLimiterParam_3_01State_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="abeluga_1_1KldLimiterParam_3_01State_01_4_coll__map" id="abeluga_1_1KldLimiterParam_3_01State_01_4_coll__map">
+<area shape="rect" title="Parameters used to construct a KldLimiter instance." alt="" coords="5,109,188,151"/>
+<area shape="rect" href="structbeluga_1_1spatial__hash.html" title=" " alt="" coords="19,5,175,47"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a93f905b428a28f427501b32b06c0318a"><td class="memItemLeft" align="right" valign="top"><a id="a93f905b428a28f427501b32b06c0318a"></a>
-std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#a93f905b428a28f427501b32b06c0318a">min_samples</a></td></tr>
-<tr class="memdesc:a93f905b428a28f427501b32b06c0318a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum number of particles to be sampled. <br /></td></tr>
-<tr class="separator:a93f905b428a28f427501b32b06c0318a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5451ee43898d50151be34bc20c98e0ae"><td class="memItemLeft" align="right" valign="top"><a id="a5451ee43898d50151be34bc20c98e0ae"></a>
-std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#a5451ee43898d50151be34bc20c98e0ae">max_samples</a></td></tr>
-<tr class="memdesc:a5451ee43898d50151be34bc20c98e0ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of particles to be sampled. <br /></td></tr>
-<tr class="separator:a5451ee43898d50151be34bc20c98e0ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae05f707335fb0853a2335f7731a82f93"><td class="memItemLeft" align="right" valign="top"><a id="ae05f707335fb0853a2335f7731a82f93"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#ae05f707335fb0853a2335f7731a82f93">spatial_resolution</a></td></tr>
-<tr class="memdesc:ae05f707335fb0853a2335f7731a82f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cluster resolution in any axis, used to compute the spatial hash. <br /></td></tr>
-<tr class="separator:ae05f707335fb0853a2335f7731a82f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f90906d8eb1b1d81e5f5707875a4417"><td class="memItemLeft" align="right" valign="top"><a id="a9f90906d8eb1b1d81e5f5707875a4417"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#a9f90906d8eb1b1d81e5f5707875a4417">kld_epsilon</a></td></tr>
-<tr class="memdesc:a9f90906d8eb1b1d81e5f5707875a4417"><td class="mdescLeft">&#160;</td><td class="mdescRight">See <a class="el" href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99" title="Returns a callable object that verifies if the KLD condition is being satisfied.">beluga::kld_condition()</a> for details. <br /></td></tr>
-<tr class="separator:a9f90906d8eb1b1d81e5f5707875a4417"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53ebfe742dee0c7b3822f803b4b3e666"><td class="memItemLeft" align="right" valign="top"><a id="a53ebfe742dee0c7b3822f803b4b3e666"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#a53ebfe742dee0c7b3822f803b4b3e666">kld_z</a></td></tr>
-<tr class="memdesc:a53ebfe742dee0c7b3822f803b4b3e666"><td class="mdescLeft">&#160;</td><td class="mdescRight">See <a class="el" href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99" title="Returns a callable object that verifies if the KLD condition is being satisfied.">beluga::kld_condition()</a> for details. <br /></td></tr>
-<tr class="separator:a53ebfe742dee0c7b3822f803b4b3e666"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5508d8a71932cd46fe23b966edeebc51"><td class="memItemLeft" align="right" valign="top"><a id="a5508d8a71932cd46fe23b966edeebc51"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#a5508d8a71932cd46fe23b966edeebc51">min_samples</a></td></tr>
+<tr class="memdesc:a5508d8a71932cd46fe23b966edeebc51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum number of particles to be sampled. <br /></td></tr>
+<tr class="separator:a5508d8a71932cd46fe23b966edeebc51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a663c86603c35ee10e75ef9f1cba414e5"><td class="memItemLeft" align="right" valign="top"><a id="a663c86603c35ee10e75ef9f1cba414e5"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#a663c86603c35ee10e75ef9f1cba414e5">max_samples</a></td></tr>
+<tr class="memdesc:a663c86603c35ee10e75ef9f1cba414e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of particles to be sampled. <br /></td></tr>
+<tr class="separator:a663c86603c35ee10e75ef9f1cba414e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f0a27c66e30a2ffe3f5fb3a765797a5"><td class="memItemLeft" align="right" valign="top"><a id="a4f0a27c66e30a2ffe3f5fb3a765797a5"></a>
+<a class="el" href="structbeluga_1_1spatial__hash.html">spatial_hash</a>&lt; State &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#a4f0a27c66e30a2ffe3f5fb3a765797a5">spatial_hasher</a></td></tr>
+<tr class="memdesc:a4f0a27c66e30a2ffe3f5fb3a765797a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hasher instance used to compute the spatial cluster for a given state. <br /></td></tr>
+<tr class="separator:a4f0a27c66e30a2ffe3f5fb3a765797a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a451efaa8e29f12d43862eb5f183a506e"><td class="memItemLeft" align="right" valign="top"><a id="a451efaa8e29f12d43862eb5f183a506e"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#a451efaa8e29f12d43862eb5f183a506e">kld_epsilon</a></td></tr>
+<tr class="memdesc:a451efaa8e29f12d43862eb5f183a506e"><td class="mdescLeft">&#160;</td><td class="mdescRight">See <a class="el" href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99" title="Returns a callable object that verifies if the KLD condition is being satisfied.">beluga::kld_condition()</a> for details. <br /></td></tr>
+<tr class="separator:a451efaa8e29f12d43862eb5f183a506e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a917255482e04f9c06ea9fabb0b76882b"><td class="memItemLeft" align="right" valign="top"><a id="a917255482e04f9c06ea9fabb0b76882b"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html#a917255482e04f9c06ea9fabb0b76882b">kld_z</a></td></tr>
+<tr class="memdesc:a917255482e04f9c06ea9fabb0b76882b"><td class="mdescLeft">&#160;</td><td class="mdescRight">See <a class="el" href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99" title="Returns a callable object that verifies if the KLD condition is being satisfied.">beluga::kld_condition()</a> for details. <br /></td></tr>
+<tr class="separator:a917255482e04f9c06ea9fabb0b76882b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Parameters used to construct a <a class="el" href="classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria.">KldLimiter</a> instance. </p>
+<div class="textblock"><h3>template&lt;class State&gt;<br />
+struct beluga::KldLimiterParam&lt; State &gt;</h3>
+
+<p>Parameters used to construct a <a class="el" href="classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria.">KldLimiter</a> instance. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">State</td><td>Type that represents the state of the particle. </td></tr>
+  </table>
+  </dd>
+</dl>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm/<a class="el" href="sampling_8hpp_source.html">sampling.hpp</a></li>
 </ul>

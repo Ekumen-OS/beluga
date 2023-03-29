@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::KldLimiter&lt; Mixin &gt; Class Template Reference</title>
+<title>Beluga: beluga::KldLimiter&lt; Mixin, State &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classbeluga_1_1KldLimiter-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::KldLimiter&lt; Mixin &gt; Class Template Reference</div>  </div>
+<div class="title">beluga::KldLimiter&lt; Mixin, State &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -81,19 +81,19 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="sampling_8hpp_source.html">sampling.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for beluga::KldLimiter&lt; Mixin &gt;:</div>
+Inheritance diagram for beluga::KldLimiter&lt; Mixin, State &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classbeluga_1_1KldLimiter__inherit__graph.png" border="0" usemap="#abeluga_1_1KldLimiter_3_01Mixin_01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="abeluga_1_1KldLimiter_3_01Mixin_01_4_inherit__map" id="abeluga_1_1KldLimiter_3_01Mixin_01_4_inherit__map">
+<div class="center"><img src="classbeluga_1_1KldLimiter__inherit__graph.png" border="0" usemap="#abeluga_1_1KldLimiter_3_01Mixin_00_01State_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="abeluga_1_1KldLimiter_3_01Mixin_00_01State_01_4_inherit__map" id="abeluga_1_1KldLimiter_3_01Mixin_00_01State_01_4_inherit__map">
 <area shape="rect" title="Limiter policy that takes a number of particles defined by the KLD criteria." alt="" coords="5,80,147,121"/>
 <area shape="rect" title=" " alt="" coords="47,5,105,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
-Collaboration diagram for beluga::KldLimiter&lt; Mixin &gt;:</div>
+Collaboration diagram for beluga::KldLimiter&lt; Mixin, State &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classbeluga_1_1KldLimiter__coll__graph.png" border="0" usemap="#abeluga_1_1KldLimiter_3_01Mixin_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="abeluga_1_1KldLimiter_3_01Mixin_01_4_coll__map" id="abeluga_1_1KldLimiter_3_01Mixin_01_4_coll__map">
+<div class="center"><img src="classbeluga_1_1KldLimiter__coll__graph.png" border="0" usemap="#abeluga_1_1KldLimiter_3_01Mixin_00_01State_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="abeluga_1_1KldLimiter_3_01Mixin_00_01State_01_4_coll__map" id="abeluga_1_1KldLimiter_3_01Mixin_00_01State_01_4_coll__map">
 <area shape="rect" title="Limiter policy that takes a number of particles defined by the KLD criteria." alt="" coords="5,80,147,121"/>
 <area shape="rect" title=" " alt="" coords="47,5,105,32"/>
 </map>
@@ -101,37 +101,38 @@ Collaboration diagram for beluga::KldLimiter&lt; Mixin &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a79851e3ea0a4e40b5d5de5055c2a8b8e"><td class="memItemLeft" align="right" valign="top"><a id="a79851e3ea0a4e40b5d5de5055c2a8b8e"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#a79851e3ea0a4e40b5d5de5055c2a8b8e">param_type</a> = <a class="el" href="structbeluga_1_1KldLimiterParam.html">KldLimiterParam</a></td></tr>
-<tr class="memdesc:a79851e3ea0a4e40b5d5de5055c2a8b8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters type used to construct a <a class="el" href="classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria.">KldLimiter</a> instance. <br /></td></tr>
-<tr class="separator:a79851e3ea0a4e40b5d5de5055c2a8b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac369521e27c552b4a0bf55f6de6b1139"><td class="memItemLeft" align="right" valign="top"><a id="ac369521e27c552b4a0bf55f6de6b1139"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#ac369521e27c552b4a0bf55f6de6b1139">param_type</a> = <a class="el" href="structbeluga_1_1KldLimiterParam.html">KldLimiterParam</a>&lt; State &gt;</td></tr>
+<tr class="memdesc:ac369521e27c552b4a0bf55f6de6b1139"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters type used to construct a <a class="el" href="classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria.">KldLimiter</a> instance. <br /></td></tr>
+<tr class="separator:ac369521e27c552b4a0bf55f6de6b1139"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8937fc701f4404ccf49b5d01ddecac8a"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:a8937fc701f4404ccf49b5d01ddecac8a"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#a8937fc701f4404ccf49b5d01ddecac8a">KldLimiter</a> (const <a class="el" href="classbeluga_1_1KldLimiter.html#a79851e3ea0a4e40b5d5de5055c2a8b8e">param_type</a> &amp;parameters, Args &amp;&amp;... rest)</td></tr>
-<tr class="memdesc:a8937fc701f4404ccf49b5d01ddecac8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria.">KldLimiter</a> instance.  <a href="classbeluga_1_1KldLimiter.html#a8937fc701f4404ccf49b5d01ddecac8a">More...</a><br /></td></tr>
-<tr class="separator:a8937fc701f4404ccf49b5d01ddecac8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ebfdb10de1a836ad400163d373e82f0"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#a7ebfdb10de1a836ad400163d373e82f0">min_samples</a> () const</td></tr>
-<tr class="memdesc:a7ebfdb10de1a836ad400163d373e82f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the minimum number of particles to be sampled.  <a href="classbeluga_1_1KldLimiter.html#a7ebfdb10de1a836ad400163d373e82f0">More...</a><br /></td></tr>
-<tr class="separator:a7ebfdb10de1a836ad400163d373e82f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26938f700e9d7ae88140c1f227cfd95c"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#a26938f700e9d7ae88140c1f227cfd95c">max_samples</a> () const</td></tr>
-<tr class="memdesc:a26938f700e9d7ae88140c1f227cfd95c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum number of particles to be sampled.  <a href="classbeluga_1_1KldLimiter.html#a26938f700e9d7ae88140c1f227cfd95c">More...</a><br /></td></tr>
-<tr class="separator:a26938f700e9d7ae88140c1f227cfd95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b60c7b6ec0c91e75cb2330001d864ed"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#a0b60c7b6ec0c91e75cb2330001d864ed">take_samples</a> () const</td></tr>
-<tr class="memdesc:a0b60c7b6ec0c91e75cb2330001d864ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes samples from a range of states.  <a href="classbeluga_1_1KldLimiter.html#a0b60c7b6ec0c91e75cb2330001d864ed">More...</a><br /></td></tr>
-<tr class="separator:a0b60c7b6ec0c91e75cb2330001d864ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bfb135d82b872706d6c989e397ab49e"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; </td></tr>
+<tr class="memitem:a0bfb135d82b872706d6c989e397ab49e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#a0bfb135d82b872706d6c989e397ab49e">KldLimiter</a> (const <a class="el" href="classbeluga_1_1KldLimiter.html#ac369521e27c552b4a0bf55f6de6b1139">param_type</a> &amp;parameters, Args &amp;&amp;... rest)</td></tr>
+<tr class="memdesc:a0bfb135d82b872706d6c989e397ab49e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria.">KldLimiter</a> instance.  <a href="classbeluga_1_1KldLimiter.html#a0bfb135d82b872706d6c989e397ab49e">More...</a><br /></td></tr>
+<tr class="separator:a0bfb135d82b872706d6c989e397ab49e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a840515ba6a2192d0f9cd300f990a67b2"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#a840515ba6a2192d0f9cd300f990a67b2">min_samples</a> () const</td></tr>
+<tr class="memdesc:a840515ba6a2192d0f9cd300f990a67b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the minimum number of particles to be sampled.  <a href="classbeluga_1_1KldLimiter.html#a840515ba6a2192d0f9cd300f990a67b2">More...</a><br /></td></tr>
+<tr class="separator:a840515ba6a2192d0f9cd300f990a67b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad579e1a306d9cd1868200d7d654da814"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#ad579e1a306d9cd1868200d7d654da814">max_samples</a> () const</td></tr>
+<tr class="memdesc:ad579e1a306d9cd1868200d7d654da814"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum number of particles to be sampled.  <a href="classbeluga_1_1KldLimiter.html#ad579e1a306d9cd1868200d7d654da814">More...</a><br /></td></tr>
+<tr class="separator:ad579e1a306d9cd1868200d7d654da814"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6f9a6b6dac63d606acbdb5448540bba"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html#af6f9a6b6dac63d606acbdb5448540bba">take_samples</a> () const</td></tr>
+<tr class="memdesc:af6f9a6b6dac63d606acbdb5448540bba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes samples from a range of states.  <a href="classbeluga_1_1KldLimiter.html#af6f9a6b6dac63d606acbdb5448540bba">More...</a><br /></td></tr>
+<tr class="separator:af6f9a6b6dac63d606acbdb5448540bba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Mixin&gt;<br />
-class beluga::KldLimiter&lt; Mixin &gt;</h3>
+<div class="textblock"><h3>template&lt;class Mixin, class State&gt;<br />
+class beluga::KldLimiter&lt; Mixin, State &gt;</h3>
 
 <p>Limiter policy that takes a number of particles defined by the KLD criteria. </p>
 <p>An implementation of <a class="el" href="LimiterPage.html">Beluga named requirements: Limiter</a>.</p>
 <p>See KLD-Sampling: Adaptive Particle Filters <a class="el" href="citelist.html#CITEREF_fox2001adaptivekldsampling">[1]</a>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mixin</td><td>The mixed-in type. <code>Mixin::self_type::particle_type</code> must exist and satisfy <a class="el" href="ParticlePage.html">Beluga named requirements: Particle</a>.</td></tr>
+    <tr><td class="paramname">Mixin</td><td>The mixed-in type. <code>Mixin::self_type::particle_type</code> must exist and satisfy <a class="el" href="ParticlePage.html">Beluga named requirements: Particle</a>. </td></tr>
+    <tr><td class="paramname">State</td><td>Type that represents the state of a particle. It should match with particle_traits&lt;Mixin::self_type::particle_type::state&gt;::state_type.</td></tr>
   </table>
   </dd>
 </dl>
@@ -147,13 +148,13 @@ class beluga::KldLimiter&lt; Mixin &gt;</h3>
  i.e. after the assignment <code>h</code> == <code>particle_traits&lt;P&gt;::cluster(p)</code> is true. </li>
 </ul>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a8937fc701f4404ccf49b5d01ddecac8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8937fc701f4404ccf49b5d01ddecac8a">&#9670;&nbsp;</a></span>KldLimiter()</h2>
+<a id="a0bfb135d82b872706d6c989e397ab49e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bfb135d82b872706d6c989e397ab49e">&#9670;&nbsp;</a></span>KldLimiter()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin &gt; </div>
+template&lt;class Mixin , class State &gt; </div>
 <div class="memtemplate">
 template&lt;class... Args&gt; </div>
 <table class="mlabels">
@@ -161,9 +162,9 @@ template&lt;class... Args&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter</a>&lt; Mixin &gt;::<a class="el" href="classbeluga_1_1KldLimiter.html">KldLimiter</a> </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter</a>&lt; Mixin, State &gt;::<a class="el" href="classbeluga_1_1KldLimiter.html">KldLimiter</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classbeluga_1_1KldLimiter.html#a79851e3ea0a4e40b5d5de5055c2a8b8e">param_type</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classbeluga_1_1KldLimiter.html#ac369521e27c552b4a0bf55f6de6b1139">param_type</a> &amp;&#160;</td>
           <td class="paramname"><em>parameters</em>, </td>
         </tr>
         <tr>
@@ -203,19 +204,19 @@ template&lt;class... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a26938f700e9d7ae88140c1f227cfd95c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26938f700e9d7ae88140c1f227cfd95c">&#9670;&nbsp;</a></span>max_samples()</h2>
+<a id="ad579e1a306d9cd1868200d7d654da814"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad579e1a306d9cd1868200d7d654da814">&#9670;&nbsp;</a></span>max_samples()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin &gt; </div>
+template&lt;class Mixin , class State &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t <a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter</a>&lt; Mixin &gt;::max_samples </td>
+          <td class="memname">std::size_t <a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter</a>&lt; Mixin, State &gt;::max_samples </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -229,24 +230,24 @@ template&lt;class Mixin &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the maximum number of particles to be sampled. </p>
-<p>This is equal to what was specified in the <a class="el" href="structbeluga_1_1KldLimiterParam.html#a5451ee43898d50151be34bc20c98e0ae" title="Maximum number of particles to be sampled.">KldLimiterParam::max_samples</a> parameter passed in the constructor.</p>
+<p>This is equal to what was specified in the <a class="el" href="structbeluga_1_1KldLimiterParam.html#a663c86603c35ee10e75ef9f1cba414e5" title="Maximum number of particles to be sampled.">KldLimiterParam::max_samples</a> parameter passed in the constructor.</p>
 <dl class="section return"><dt>Returns</dt><dd>Maximum number of particles to be sampled. </dd></dl>
 
 </div>
 </div>
-<a id="a7ebfdb10de1a836ad400163d373e82f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ebfdb10de1a836ad400163d373e82f0">&#9670;&nbsp;</a></span>min_samples()</h2>
+<a id="a840515ba6a2192d0f9cd300f990a67b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a840515ba6a2192d0f9cd300f990a67b2">&#9670;&nbsp;</a></span>min_samples()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin &gt; </div>
+template&lt;class Mixin , class State &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t <a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter</a>&lt; Mixin &gt;::min_samples </td>
+          <td class="memname">std::size_t <a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter</a>&lt; Mixin, State &gt;::min_samples </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -260,24 +261,24 @@ template&lt;class Mixin &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the minimum number of particles to be sampled. </p>
-<p>This is equal to what was specified in the <a class="el" href="structbeluga_1_1KldLimiterParam.html#a93f905b428a28f427501b32b06c0318a" title="Minimum number of particles to be sampled.">KldLimiterParam::min_samples</a> parameter passed in the constructor.</p>
+<p>This is equal to what was specified in the <a class="el" href="structbeluga_1_1KldLimiterParam.html#a5508d8a71932cd46fe23b966edeebc51" title="Minimum number of particles to be sampled.">KldLimiterParam::min_samples</a> parameter passed in the constructor.</p>
 <dl class="section return"><dt>Returns</dt><dd>Minimum number of particles to be sampled. </dd></dl>
 
 </div>
 </div>
-<a id="a0b60c7b6ec0c91e75cb2330001d864ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b60c7b6ec0c91e75cb2330001d864ed">&#9670;&nbsp;</a></span>take_samples()</h2>
+<a id="af6f9a6b6dac63d606acbdb5448540bba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6f9a6b6dac63d606acbdb5448540bba">&#9670;&nbsp;</a></span>take_samples()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin &gt; </div>
+template&lt;class Mixin , class State &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter</a>&lt; Mixin &gt;::take_samples </td>
+          <td class="memname">auto <a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter</a>&lt; Mixin, State &gt;::take_samples </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>

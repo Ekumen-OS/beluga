@@ -157,10 +157,10 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1FixedLimiter.html">beluga::FixedLimiter&lt; Mixin &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Limiter policy that takes a fixed number of particles.  <a href="classbeluga_1_1FixedLimiter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html">beluga::KldLimiterParam</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1KldLimiterParam.html">beluga::KldLimiterParam&lt; State &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct a <a class="el" href="classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria.">KldLimiter</a> instance.  <a href="structbeluga_1_1KldLimiterParam.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter&lt; Mixin &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter&lt; Mixin, State &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Limiter policy that takes a number of particles defined by the KLD criteria.  <a href="classbeluga_1_1KldLimiter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -174,9 +174,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a36c342c9b7f61d63964b39b75c9bff84"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a36c342c9b7f61d63964b39b75c9bff84">beluga::random_sample</a> (const Range &amp;samples, const Weights &amp;weights, RandomNumberGenerator &amp;generator)</td></tr>
 <tr class="memdesc:a36c342c9b7f61d63964b39b75c9bff84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Picks a sample randomly from a range according to the weights of the samples.  <a href="sampling_8hpp.html#a36c342c9b7f61d63964b39b75c9bff84">More...</a><br /></td></tr>
 <tr class="separator:a36c342c9b7f61d63964b39b75c9bff84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3067c4d9759031795ba98ac43dc80dc7"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a3067c4d9759031795ba98ac43dc80dc7">beluga::set_cluster</a> (double resolution)</td></tr>
-<tr class="memdesc:a3067c4d9759031795ba98ac43dc80dc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a callable object that allows setting the cluster of a particle.  <a href="sampling_8hpp.html#a3067c4d9759031795ba98ac43dc80dc7">More...</a><br /></td></tr>
-<tr class="separator:a3067c4d9759031795ba98ac43dc80dc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a820000facae52460b6f147af07afe199"><td class="memTemplParams" colspan="2">template&lt;class Hasher &gt; </td></tr>
+<tr class="memitem:a820000facae52460b6f147af07afe199"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a820000facae52460b6f147af07afe199">beluga::set_cluster</a> (Hasher &amp;&amp;hasher)</td></tr>
+<tr class="memdesc:a820000facae52460b6f147af07afe199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a callable object that allows setting the cluster of a particle.  <a href="sampling_8hpp.html#a820000facae52460b6f147af07afe199">More...</a><br /></td></tr>
+<tr class="separator:a820000facae52460b6f147af07afe199"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99">beluga::kld_condition</a> (std::size_t min, double epsilon, double z=3.)</td></tr>
 <tr class="memdesc:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a callable object that verifies if the KLD condition is being satisfied.  <a href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99">More...</a><br /></td></tr>
 <tr class="separator:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -373,11 +374,13 @@ template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt;
 
 </div>
 </div>
-<a id="a3067c4d9759031795ba98ac43dc80dc7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3067c4d9759031795ba98ac43dc80dc7">&#9670;&nbsp;</a></span>set_cluster()</h2>
+<a id="a820000facae52460b6f147af07afe199"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a820000facae52460b6f147af07afe199">&#9670;&nbsp;</a></span>set_cluster()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class Hasher &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -385,8 +388,8 @@ template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt;
         <tr>
           <td class="memname">auto beluga::set_cluster </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>resolution</em></td><td>)</td>
+          <td class="paramtype">Hasher &amp;&amp;&#160;</td>
+          <td class="paramname"><em>hasher</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -400,14 +403,13 @@ template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt;
 <p>Returns a callable object that allows setting the cluster of a particle. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">resolution</td><td>The size along any axis of the spatial cluster cell. </td></tr>
+    <tr><td class="paramname">hasher</td><td>A copyable callable object with signature (const decltype(state(particle)) &amp;) -&gt; std::size_t, that returns a spatial cluster for a given particle state. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A callable object with prototype <code>(ParticleT &amp;&amp; p) -&gt; ParticleT</code>. <br  />
- <code>ParticleT</code> must satisfy <a class="el" href="ParticlePage.html">Beluga named requirements: Particle</a>. <br  />
- The expression <code>particle_traits&lt;ParticleT&gt;::cluster(p)</code> must also be valid and return a <code>std::size_t &amp;</code>. <br  />
- After the returned object is applied to a particle <code>p</code>, <code>cluster(p)</code> will be updated with the calculated spatial hash according to the specified resolution. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A callable object with prototype <code>(ParticleT &amp;&amp; p) -&gt;ParticleT</code>. <br  />
+ <code>ParticleT</code> must satisfy <a class="el" href="ParticlePage.html">Beluga named requirements: Particle</a>. \ n The expression <code>particle_traits&lt;ParticleT&gt;::cluster(p)</code> must also be valid and return a <code>std::size_t &amp;</code>. <br  />
+ After the returned object is applied to a particle <code>p</code>, <code>cluster(p)</code> will be updated with the calculated spatial hash according to the specified resolutions in each axis. </dd></dl>
 
 </div>
 </div>
