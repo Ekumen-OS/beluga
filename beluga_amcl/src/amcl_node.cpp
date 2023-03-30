@@ -824,7 +824,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     covariance.coeffRef(1, 2) = this->get_parameter("initial_pose.covariance_yyaw").as_double();
     covariance.coeffRef(2, 1) = covariance.coeffRef(1, 2);
     this->reinitialize_with_pose(mean, covariance);
-
+    initial_pose_is_known_ = true;
     RCLCPP_INFO_STREAM(
       this->get_logger(),
       "Particle filter initialized with initial pose x=" <<
