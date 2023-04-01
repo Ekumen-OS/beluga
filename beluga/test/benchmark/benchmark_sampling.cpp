@@ -56,7 +56,7 @@ void BM_FixedResample(benchmark::State& state) {
   }
 
   for (auto _ : state) {
-    auto&& samples = ranges::views::generate(beluga::random_sample(
+    auto&& samples = ranges::views::generate(beluga::make_multinomial_sampler(
                          beluga::views::all(container), beluga::views::weights(container), generator)) |
                      ranges::views::take_exactly(container_size) | ranges::views::common;
     auto first = std::begin(beluga::views::all(new_container));
@@ -93,9 +93,9 @@ void BM_AdaptiveResample(benchmark::State& state) {
   double kld_z = 3.;
 
   for (auto _ : state) {
-    auto&& samples = ranges::views::generate(beluga::random_sample(
+    auto&& samples = ranges::views::generate(beluga::make_multinomial_sampler(
                          beluga::views::all(container), beluga::views::weights(container), generator)) |
-                     ranges::views::transform(beluga::set_cluster(hasher)) |
+                     ranges::views::transform(beluga::make_clusterization_function(hasher)) |
                      ranges::views::take_while(
                          beluga::kld_condition(min_samples, kld_epsilon, kld_z), beluga::cluster<const Particle&>) |
                      ranges::views::take(container_size) | ranges::views::common;

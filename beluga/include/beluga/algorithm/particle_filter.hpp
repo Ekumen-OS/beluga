@@ -53,7 +53,7 @@ struct BaseParticleFilterInterface {
   /// Update the states of the particles.
   /**
    * This step generates a hyphotetical state based on the current
-   * particle state and controls.
+   * particle state and controls, while leaving their importance weights unchanged.
    */
   virtual void sample() = 0;
 
@@ -94,6 +94,10 @@ struct BaseParticleFilterInterface {
    * This step creates a new particle set drawing samples from the
    * current particle set. The probability of drawing each particle
    * is given by its importance weight.
+   *
+   * The resampling process can be inhibited by the resampling policies.
+   *
+   * If resampling is performed, the importance weights of all particles are reset to 1.0.
    */
   virtual void resample() = 0;
 };
@@ -189,9 +193,11 @@ class BootstrapParticleFilter : public Mixin {
   template <typename ExecutionPolicy>
   void importance_sample_impl(ExecutionPolicy&& policy) {
     auto states = this->self().states() | ranges::views::common;
+    auto weights = this->self().weights() | ranges::views::common;
     std::transform(
-        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states), std::begin(this->self().weights()),
-        [this](const auto& state) { return this->self().importance_weight(state); });
+        std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states), std::begin(weights),
+        std::begin(weights),
+        [this](const auto& state, auto weight) { return weight * this->self().importance_weight(state); });
   }
 };
 

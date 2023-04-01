@@ -258,6 +258,7 @@ template <class Particle, class T = typename particle_traits<Particle>::state_ty
 constexpr auto make_from_state(T&& value) {
   auto particle = Particle{};
   state(particle) = std::forward<T>(value);
+  weight(particle) = 1.0;
   return particle;
 }
 

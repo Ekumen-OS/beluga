@@ -102,11 +102,11 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
     kResolution};
 
   const double expected_likelihood_field[] = {  // NOLINT(modernize-avoid-c-arrays)
-    0.025, 0.025, 0.025, 0.070, 1.020,
-    0.025, 0.027, 0.070, 1.020, 0.070,
-    0.025, 0.070, 1.020, 0.070, 0.025,
-    0.070, 1.020, 0.070, 0.027, 0.025,
-    1.020, 0.070, 0.025, 0.025, 0.025
+    0.025, 0.025, 0.025, 0.069, 1.022,
+    0.025, 0.027, 0.069, 1.022, 0.069,
+    0.025, 0.069, 1.022, 0.069, 0.025,
+    0.069, 1.022, 0.069, 0.027, 0.025,
+    1.022, 0.069, 0.025, 0.025, 0.025
   };
   // clang-format on
 
@@ -131,19 +131,19 @@ TEST(LikelihoodFieldModel, ImportanceWeight) {
   auto mixin = UUT{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{1.25, 1.25}});
-  ASSERT_NEAR(1.020, mixin.importance_weight(grid.origin()), 0.003);
+  ASSERT_NEAR(2.068, mixin.importance_weight(grid.origin()), 0.003);
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{2.25, 2.25}});
-  ASSERT_NEAR(0.025, mixin.importance_weight(grid.origin()), 0.003);
+  ASSERT_NEAR(1.000, mixin.importance_weight(grid.origin()), 0.003);
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{-50.0, 50.0}});
-  ASSERT_NEAR(0.000, mixin.importance_weight(grid.origin()), 0.003);
+  ASSERT_NEAR(1.000, mixin.importance_weight(grid.origin()), 0.003);
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{1.20, 1.20}, {1.25, 1.25}, {1.30, 1.30}});
-  ASSERT_NEAR(3.060, mixin.importance_weight(grid.origin()), 0.01);
+  ASSERT_NEAR(4.205, mixin.importance_weight(grid.origin()), 0.01);
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{0.0, 0.0}});
-  ASSERT_NEAR(1.020, mixin.importance_weight(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.25, 1.25}}), 0.003);
+  ASSERT_NEAR(2.068, mixin.importance_weight(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.25, 1.25}}), 0.003);
 }
 
 TEST(LikelihoodFieldModel, GridWithOffset) {
@@ -163,10 +163,10 @@ TEST(LikelihoodFieldModel, GridWithOffset) {
   auto mixin = UUT{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{4.5, 4.5}});
-  ASSERT_NEAR(1.020, mixin.importance_weight(Sophus::SE2d{}), 0.003);
+  ASSERT_NEAR(2.068, mixin.importance_weight(Sophus::SE2d{}), 0.003);
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
-  ASSERT_NEAR(1.020, mixin.importance_weight(grid.origin()), 0.003);
+  ASSERT_NEAR(2.068, mixin.importance_weight(grid.origin()), 0.003);
 }
 
 TEST(LikelihoodFieldModel, GridWithRotation) {
@@ -186,10 +186,10 @@ TEST(LikelihoodFieldModel, GridWithRotation) {
   auto mixin = UUT{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{-9.5, 9.5}});
-  ASSERT_NEAR(1.020, mixin.importance_weight(Sophus::SE2d{}), 0.003);
+  ASSERT_NEAR(2.068, mixin.importance_weight(Sophus::SE2d{}), 0.003);
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
-  ASSERT_NEAR(1.020, mixin.importance_weight(grid.origin()), 0.003);
+  ASSERT_NEAR(2.068, mixin.importance_weight(grid.origin()), 0.003);
 }
 
 TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
@@ -212,10 +212,10 @@ TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
   auto mixin = UUT{params, grid};
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{-4.5, 4.5}});
-  ASSERT_NEAR(1.020, mixin.importance_weight(Sophus::SE2d{}), 0.003);
+  ASSERT_NEAR(2.068, mixin.importance_weight(Sophus::SE2d{}), 0.003);
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
-  ASSERT_NEAR(1.020, mixin.importance_weight(grid.origin()), 0.003);
+  ASSERT_NEAR(2.068, mixin.importance_weight(grid.origin()), 0.003);
 }
 
 }  // namespace

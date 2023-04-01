@@ -127,15 +127,17 @@ namespace beluga {
  *  The return type is `decltype(first())`.
  */
 template <class Function1, class Function2, class RandomNumberGenerator>
-auto random_select(Function1 first, Function2 second, RandomNumberGenerator& generator, double probability) {
-  return [first = std::move(first), second = std::move(second), &generator,
+auto make_random_selector(Function1&& first, Function2&& second, RandomNumberGenerator& generator, double probability) {
+  return [first = std::forward<Function1>(first), second = std::forward<Function2>(second), &generator,
           distribution = std::bernoulli_distribution{probability}]() mutable {
     return distribution(generator) ? first() : second();
   };
 }
 
-/// Picks a sample randomly from a range according to the weights of the samples.
+/// Returns multinomial resampler function.
 /**
+ * Returns a function that when called picks randomly a sample from the input range, with individual
+ * probabilities given by the weights of each.
  * \tparam Range A [Range](https://en.cppreference.com/w/cpp/ranges/range) type, its iterator
  *  must be [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator).
  * \tparam Weights A [Range](https://en.cppreference.com/w/cpp/ranges/range) type,
@@ -147,11 +149,11 @@ auto random_select(Function1 first, Function2 second, RandomNumberGenerator& gen
  *  The size of the container must be the same as the size of samples.
  *  For a sample `samples[i]`, its weight is `weights[i]`.
  * \param generator The random number generator used.
- * \return The picked sample.
+ * \return The sampler function.
  *  Its type is the same as the `Range` value type.
  */
 template <class Range, class Weights, class RandomNumberGenerator>
-auto random_sample(const Range& samples, const Weights& weights, RandomNumberGenerator& generator) {
+auto make_multinomial_sampler(const Range& samples, const Weights& weights, RandomNumberGenerator& generator) {
   auto weights_begin = std::begin(weights);
   auto weights_end = std::end(weights);
   using difference_type = decltype(weights_end - weights_begin);
@@ -172,7 +174,7 @@ auto random_sample(const Range& samples, const Weights& weights, RandomNumberGen
  * hash according to the specified resolutions in each axis.
  */
 template <class Hasher>
-inline auto set_cluster(Hasher&& hasher) {
+inline auto make_clusterization_function(Hasher&& hasher) {
   return [hasher](auto&& particle) {
     auto new_particle = particle;
     cluster(new_particle) = hasher(state(particle));
@@ -249,7 +251,7 @@ class RandomStateGenerator : public Mixin {
   template <class... Args>
   explicit RandomStateGenerator(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
-  /// Generates new random states.
+  /// Generates new random state samples.
   /**
    * The states are generated according to the `make_random_state()` method
    * provided by the mixin.
@@ -258,7 +260,7 @@ class RandomStateGenerator : public Mixin {
    *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
    *  requirements.
    * \param gen An uniform random bit generator object.
-   * \return A range view that can generate random states.
+   * \return A range view that sources a sequence of random states.
    */
   template <class Generator>
   [[nodiscard]] auto generate_samples(Generator& gen) {
@@ -288,7 +290,7 @@ class NaiveSampler : public Mixin {
   template <class... Args>
   explicit NaiveSampler(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
-  /// Generates new samples from the current particles.
+  /// Returns a view that sources a sequence of with-replacement samples from the existing set.
   /**
    * The new states are generated according to the `states()` and `weights()` methods
    * provided by the mixin.
@@ -297,11 +299,12 @@ class NaiveSampler : public Mixin {
    *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
    *  requirements.
    * \param gen An uniform random bit generator object.
-   * \return A range view that can generate samples from the current set of particles.
+   * \return A range view that consists of with-replacement samples from the existing set.
    */
   template <class Generator>
   [[nodiscard]] auto generate_samples_from_particles(Generator& gen) const {
-    return ranges::views::generate(beluga::random_sample(this->self().states(), this->self().weights(), gen));
+    return ranges::views::generate(
+        beluga::make_multinomial_sampler(this->self().states(), this->self().weights(), gen));
   }
 };
 
@@ -359,7 +362,8 @@ class AdaptiveSampler : public Mixin {
    *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
    *  requirements.
    * \param gen An uniform random bit generator object.
-   * \return A range view that can generate samples from the current set of particles.
+   * \return A range view that consists of a mixture of with-replacement samples from the existing set and brand new
+   * random samples.
    */
   template <class Generator>
   [[nodiscard]] auto generate_samples_from_particles(Generator& gen) {
@@ -373,9 +377,10 @@ class AdaptiveSampler : public Mixin {
       slow_filter_.reset();
     }
 
-    return ranges::views::generate(random_select(
-        [this, &gen]() { return this->self().make_random_state(gen); },
-        random_sample(this->self().states(), weights, gen), gen, random_state_probability));
+    auto create_random_state = [this, &gen] { return this->self().make_random_state(gen); };
+    auto sample_existing_state = make_multinomial_sampler(this->self().states(), weights, gen);
+    return ranges::views::generate(make_random_selector(
+        std::move(create_random_state), std::move(sample_existing_state), gen, random_state_probability));
   }
 
  private:
@@ -538,7 +543,7 @@ class KldLimiter : public Mixin {
   [[nodiscard]] auto take_samples() const {
     using particle_type = typename Mixin::self_type::particle_type;
     return ranges::views::transform(beluga::make_from_state<particle_type>) |
-           ranges::views::transform(beluga::set_cluster(parameters_.spatial_hasher)) |
+           ranges::views::transform(beluga::make_clusterization_function(parameters_.spatial_hasher)) |
            ranges::views::take_while(
                beluga::kld_condition(parameters_.min_samples, parameters_.kld_epsilon, parameters_.kld_z),
                [](auto&& particle) { return cluster(particle); }) |
