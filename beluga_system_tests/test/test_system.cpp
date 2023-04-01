@@ -94,7 +94,7 @@ TEST_P(BelugaSystemTest, testEstimatedPath) {
     pf.sample();
     auto scan_copy = data_point.scan;
     pf.update_sensor(std::move(scan_copy));
-    pf.importance_sample();
+    pf.reweight();
     pf.resample();
     auto estimation = pf.estimate();
     auto error = data_point.ground_truth.inverse() * estimation.first;

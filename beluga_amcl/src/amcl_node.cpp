@@ -846,7 +846,7 @@ void AmclNode::laser_callback(
         static_cast<std::size_t>(get_parameter("max_beams").as_int()),
         static_cast<float>(get_parameter("laser_min_range").as_double()),
         static_cast<float>(get_parameter("laser_max_range").as_double())));
-    particle_filter_->importance_sample(exec_policy);
+    particle_filter_->reweight(exec_policy);
     const auto time3 = std::chrono::high_resolution_clock::now();
     particle_filter_->resample();
     const auto time4 = std::chrono::high_resolution_clock::now();
