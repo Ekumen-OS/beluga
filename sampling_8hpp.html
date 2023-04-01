@@ -166,18 +166,18 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a44e8e08696f783db65b95e70b4cf5c63"><td class="memTemplParams" colspan="2">template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt; </td></tr>
-<tr class="memitem:a44e8e08696f783db65b95e70b4cf5c63"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a44e8e08696f783db65b95e70b4cf5c63">beluga::random_select</a> (Function1 first, Function2 second, RandomNumberGenerator &amp;generator, double probability)</td></tr>
-<tr class="memdesc:a44e8e08696f783db65b95e70b4cf5c63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects between executing one function or another randomly.  <a href="sampling_8hpp.html#a44e8e08696f783db65b95e70b4cf5c63">More...</a><br /></td></tr>
-<tr class="separator:a44e8e08696f783db65b95e70b4cf5c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36c342c9b7f61d63964b39b75c9bff84"><td class="memTemplParams" colspan="2">template&lt;class Range , class Weights , class RandomNumberGenerator &gt; </td></tr>
-<tr class="memitem:a36c342c9b7f61d63964b39b75c9bff84"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a36c342c9b7f61d63964b39b75c9bff84">beluga::random_sample</a> (const Range &amp;samples, const Weights &amp;weights, RandomNumberGenerator &amp;generator)</td></tr>
-<tr class="memdesc:a36c342c9b7f61d63964b39b75c9bff84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Picks a sample randomly from a range according to the weights of the samples.  <a href="sampling_8hpp.html#a36c342c9b7f61d63964b39b75c9bff84">More...</a><br /></td></tr>
-<tr class="separator:a36c342c9b7f61d63964b39b75c9bff84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a820000facae52460b6f147af07afe199"><td class="memTemplParams" colspan="2">template&lt;class Hasher &gt; </td></tr>
-<tr class="memitem:a820000facae52460b6f147af07afe199"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a820000facae52460b6f147af07afe199">beluga::set_cluster</a> (Hasher &amp;&amp;hasher)</td></tr>
-<tr class="memdesc:a820000facae52460b6f147af07afe199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a callable object that allows setting the cluster of a particle.  <a href="sampling_8hpp.html#a820000facae52460b6f147af07afe199">More...</a><br /></td></tr>
-<tr class="separator:a820000facae52460b6f147af07afe199"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01472d3e768837b5586985ef49337d27"><td class="memTemplParams" colspan="2">template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt; </td></tr>
+<tr class="memitem:a01472d3e768837b5586985ef49337d27"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a01472d3e768837b5586985ef49337d27">beluga::make_random_selector</a> (Function1 &amp;&amp;first, Function2 &amp;&amp;second, RandomNumberGenerator &amp;generator, double probability)</td></tr>
+<tr class="memdesc:a01472d3e768837b5586985ef49337d27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects between executing one function or another randomly.  <a href="sampling_8hpp.html#a01472d3e768837b5586985ef49337d27">More...</a><br /></td></tr>
+<tr class="separator:a01472d3e768837b5586985ef49337d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20eae38886cb586def210def2b98ca57"><td class="memTemplParams" colspan="2">template&lt;class Range , class Weights , class RandomNumberGenerator &gt; </td></tr>
+<tr class="memitem:a20eae38886cb586def210def2b98ca57"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a20eae38886cb586def210def2b98ca57">beluga::make_multinomial_sampler</a> (const Range &amp;samples, const Weights &amp;weights, RandomNumberGenerator &amp;generator)</td></tr>
+<tr class="memdesc:a20eae38886cb586def210def2b98ca57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns multinomial resampler function.  <a href="sampling_8hpp.html#a20eae38886cb586def210def2b98ca57">More...</a><br /></td></tr>
+<tr class="separator:a20eae38886cb586def210def2b98ca57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a959ff6407d74a1e7c72c1e5ea0cdc9bd"><td class="memTemplParams" colspan="2">template&lt;class Hasher &gt; </td></tr>
+<tr class="memitem:a959ff6407d74a1e7c72c1e5ea0cdc9bd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a959ff6407d74a1e7c72c1e5ea0cdc9bd">beluga::make_clusterization_function</a> (Hasher &amp;&amp;hasher)</td></tr>
+<tr class="memdesc:a959ff6407d74a1e7c72c1e5ea0cdc9bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a callable object that allows setting the cluster of a particle.  <a href="sampling_8hpp.html#a959ff6407d74a1e7c72c1e5ea0cdc9bd">More...</a><br /></td></tr>
+<tr class="separator:a959ff6407d74a1e7c72c1e5ea0cdc9bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99">beluga::kld_condition</a> (std::size_t min, double epsilon, double z=3.)</td></tr>
 <tr class="memdesc:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a callable object that verifies if the KLD condition is being satisfied.  <a href="sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99">More...</a><br /></td></tr>
 <tr class="separator:a4ef2ecb4492a73ec5d8c0c1c10b7ea99"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -257,8 +257,47 @@ Z is the upper standard normal quantile for P, where P is the probability that t
 
 </div>
 </div>
-<a id="a36c342c9b7f61d63964b39b75c9bff84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36c342c9b7f61d63964b39b75c9bff84">&#9670;&nbsp;</a></span>random_sample()</h2>
+<a id="a959ff6407d74a1e7c72c1e5ea0cdc9bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a959ff6407d74a1e7c72c1e5ea0cdc9bd">&#9670;&nbsp;</a></span>make_clusterization_function()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Hasher &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto beluga::make_clusterization_function </td>
+          <td>(</td>
+          <td class="paramtype">Hasher &amp;&amp;&#160;</td>
+          <td class="paramname"><em>hasher</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a callable object that allows setting the cluster of a particle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">hasher</td><td>A copyable callable object with signature (const decltype(state(particle)) &amp;) -&gt; std::size_t, that returns a spatial cluster for a given particle state. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A callable object with prototype <code>(ParticleT &amp;&amp; p) -&gt;ParticleT</code>. <br  />
+ <code>ParticleT</code> must satisfy <a class="el" href="ParticlePage.html">Beluga named requirements: Particle</a>. \ n The expression <code>particle_traits&lt;ParticleT&gt;::cluster(p)</code> must also be valid and return a <code>std::size_t &amp;</code>. <br  />
+ After the returned object is applied to a particle <code>p</code>, <code>cluster(p)</code> will be updated with the calculated spatial hash according to the specified resolutions in each axis. </dd></dl>
+
+</div>
+</div>
+<a id="a20eae38886cb586def210def2b98ca57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20eae38886cb586def210def2b98ca57">&#9670;&nbsp;</a></span>make_multinomial_sampler()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,7 +305,7 @@ Z is the upper standard normal quantile for P, where P is the probability that t
 template&lt;class Range , class Weights , class RandomNumberGenerator &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto beluga::random_sample </td>
+          <td class="memname">auto beluga::make_multinomial_sampler </td>
           <td>(</td>
           <td class="paramtype">const Range &amp;&#160;</td>
           <td class="paramname"><em>samples</em>, </td>
@@ -291,8 +330,8 @@ template&lt;class Range , class Weights , class RandomNumberGenerator &gt; </div
       </table>
 </div><div class="memdoc">
 
-<p>Picks a sample randomly from a range according to the weights of the samples. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>Returns multinomial resampler function. </p>
+<p>Returns a function that when called picks randomly a sample from the input range, with individual probabilities given by the weights of each. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/range">Range</a> type, its iterator must be <a href="https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator">random access</a>. </td></tr>
     <tr><td class="paramname">Weights</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/range">Range</a> type, its values must be convertible to double. </td></tr>
@@ -308,12 +347,12 @@ template&lt;class Range , class Weights , class RandomNumberGenerator &gt; </div
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The picked sample. Its type is the same as the <code>Range</code> value type. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The sampler function. Its type is the same as the <code>Range</code> value type. </dd></dl>
 
 </div>
 </div>
-<a id="a44e8e08696f783db65b95e70b4cf5c63"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44e8e08696f783db65b95e70b4cf5c63">&#9670;&nbsp;</a></span>random_select()</h2>
+<a id="a01472d3e768837b5586985ef49337d27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01472d3e768837b5586985ef49337d27">&#9670;&nbsp;</a></span>make_random_selector()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -321,15 +360,15 @@ template&lt;class Range , class Weights , class RandomNumberGenerator &gt; </div
 template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto beluga::random_select </td>
+          <td class="memname">auto beluga::make_random_selector </td>
           <td>(</td>
-          <td class="paramtype">Function1&#160;</td>
+          <td class="paramtype">Function1 &amp;&amp;&#160;</td>
           <td class="paramname"><em>first</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Function2&#160;</td>
+          <td class="paramtype">Function2 &amp;&amp;&#160;</td>
           <td class="paramname"><em>second</em>, </td>
         </tr>
         <tr>
@@ -371,45 +410,6 @@ template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt;
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The result of the called function. The return type is <code>decltype(first())</code>. </dd></dl>
-
-</div>
-</div>
-<a id="a820000facae52460b6f147af07afe199"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a820000facae52460b6f147af07afe199">&#9670;&nbsp;</a></span>set_cluster()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Hasher &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto beluga::set_cluster </td>
-          <td>(</td>
-          <td class="paramtype">Hasher &amp;&amp;&#160;</td>
-          <td class="paramname"><em>hasher</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns a callable object that allows setting the cluster of a particle. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">hasher</td><td>A copyable callable object with signature (const decltype(state(particle)) &amp;) -&gt; std::size_t, that returns a spatial cluster for a given particle state. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A callable object with prototype <code>(ParticleT &amp;&amp; p) -&gt;ParticleT</code>. <br  />
- <code>ParticleT</code> must satisfy <a class="el" href="ParticlePage.html">Beluga named requirements: Particle</a>. \ n The expression <code>particle_traits&lt;ParticleT&gt;::cluster(p)</code> must also be valid and return a <code>std::size_t &amp;</code>. <br  />
- After the returned object is applied to a particle <code>p</code>, <code>cluster(p)</code> will be updated with the calculated spatial hash according to the specified resolutions in each axis. </dd></dl>
 
 </div>
 </div>

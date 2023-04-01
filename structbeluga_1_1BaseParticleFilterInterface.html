@@ -213,7 +213,9 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 </div><div class="memdoc">
 
 <p>Resample particles based on their weights. </p>
-<p>This step creates a new particle set drawing samples from the current particle set. The probability of drawing each particle is given by its importance weight. </p>
+<p>This step creates a new particle set drawing samples from the current particle set. The probability of drawing each particle is given by its importance weight.</p>
+<p>The resampling process can be inhibited by the resampling policies.</p>
+<p>If resampling is performed, the importance weights of all particles are reset to 1.0. </p>
 
 </div>
 </div>
@@ -241,7 +243,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 </div><div class="memdoc">
 
 <p>Update the states of the particles. </p>
-<p>This step generates a hyphotetical state based on the current particle state and controls. </p>
+<p>This step generates a hyphotetical state based on the current particle state and controls, while leaving their importance weights unchanged. </p>
 
 </div>
 </div>

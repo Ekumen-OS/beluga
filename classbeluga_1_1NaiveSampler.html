@@ -106,7 +106,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afaadbeb8bbaee3a9bcb200c8ad5debf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31bed5cb5375d427cb1ca484e81925f9"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
 <tr class="memitem:a31bed5cb5375d427cb1ca484e81925f9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NaiveSampler.html#a31bed5cb5375d427cb1ca484e81925f9">generate_samples_from_particles</a> (Generator &amp;gen) const</td></tr>
-<tr class="memdesc:a31bed5cb5375d427cb1ca484e81925f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates new samples from the current particles.  <a href="classbeluga_1_1NaiveSampler.html#a31bed5cb5375d427cb1ca484e81925f9">More...</a><br /></td></tr>
+<tr class="memdesc:a31bed5cb5375d427cb1ca484e81925f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a view that sources a sequence of with-replacement samples from the existing set.  <a href="classbeluga_1_1NaiveSampler.html#a31bed5cb5375d427cb1ca484e81925f9">More...</a><br /></td></tr>
 <tr class="separator:a31bed5cb5375d427cb1ca484e81925f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -199,7 +199,7 @@ template&lt;class Generator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Generates new samples from the current particles. </p>
+<p>Returns a view that sources a sequence of with-replacement samples from the existing set. </p>
 <p>The new states are generated according to the <code><a class="el" href="particle__traits_8hpp.html#a214647d034338678c85811d4647ad292">states()</a></code> and <code><a class="el" href="particle__traits_8hpp.html#a2587f0f5353e49219ab8720e7e48b613">weights()</a></code> methods provided by the mixin.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -213,7 +213,7 @@ template&lt;class Generator &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A range view that can generate samples from the current set of particles. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A range view that consists of with-replacement samples from the existing set. </dd></dl>
 
 </div>
 </div>
