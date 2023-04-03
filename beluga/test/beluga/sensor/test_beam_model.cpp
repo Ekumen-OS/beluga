@@ -102,8 +102,8 @@ BeamModelParams GetParams() {
   ret.z_short = 0.05;
   ret.sigma_hit = 0.2;
   ret.lambda_short = 0.1;
-  ret.max_beams = 60;
   ret.laser_max_range = 60;
+  ret.max_beams = 60;
   return ret;
 }
 TEST(BeamSensorModel, ImportanceWeight) {

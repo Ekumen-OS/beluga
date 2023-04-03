@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef BELUGA_ALGORITHM_RAYCASTING_HPP
+#define BELUGA_ALGORITHM_RAYCASTING_HPP
+
 #include <iostream>
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
@@ -104,3 +107,4 @@ inline double raycast(
 }
 
 }  // namespace beluga
+#endif

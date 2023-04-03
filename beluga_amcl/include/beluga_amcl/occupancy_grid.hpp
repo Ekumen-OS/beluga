@@ -113,6 +113,11 @@ public:
     return result;
   }
 
+  double resolution() const
+  {
+    return grid_->info.resolution;
+  }
+
 private:
   nav_msgs::msg::OccupancyGrid::SharedPtr grid_;
   Sophus::SE2d origin_;
@@ -127,10 +132,6 @@ private:
     return grid_->info.height;
   }
 
-  double resolution() const
-  {
-    return grid_->info.resolution;
-  }
 
   static Sophus::SE2d make_origin_transform(const geometry_msgs::msg::Pose & origin)
   {
