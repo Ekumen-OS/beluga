@@ -56,6 +56,7 @@ constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::Differential
 constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
 
 constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
+constexpr std::string_view kBeamSensorModelName = "beam";
 
 }  // namespace
 
@@ -704,7 +705,11 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     ciabatta::curry<beluga::LikelihoodFieldModel, OccupancyGrid>::mixin,
     beluga::LikelihoodFieldModelParam>;
 
-  using SensorDescriptor = std::variant<LikelihoodField>;
+  using BeamSensorModel = beluga::mixin::descriptor<
+    ciabatta::curry<beluga::BeamSensorModel, OccupancyGrid>::mixin,
+    beluga::BeamModelParams>;
+
+  using SensorDescriptor = std::variant<LikelihoodField, BeamSensorModel>;
   auto get_sensor_descriptor = [this](std::string_view name) -> SensorDescriptor {
       if (name == kLikelihoodFieldModelName) {
         auto params = beluga::LikelihoodFieldModelParam{};
@@ -714,6 +719,10 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
         params.z_random = get_parameter("z_rand").as_double();
         params.sigma_hit = get_parameter("sigma_hit").as_double();
         return LikelihoodField{params};
+      }
+      if (name == kBeamSensorModelName) {
+        auto params = beluga::BeamModelParams{};
+        return BeamSensorModel{params};
       }
       throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
     };

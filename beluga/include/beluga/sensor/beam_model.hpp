@@ -41,21 +41,21 @@ namespace beluga {
  */
 struct BeamModelParams {
   /// Weight associated with good but noisy readings.
-  double z_hit;
+  double z_hit{0.5};
   /// Weight associated with unexpected obstacles.
-  double z_short;
+  double z_short{0.5};
   /// Weight associated with max range readings.
-  double z_max;
+  double z_max{0.05};
   /// Weight associated with random readings.
-  double z_rand;
+  double z_rand{0.05};
   /// Standard deviation of the gaussian noise associated with hits.
-  double sigma_hit;
-  /// Intrinsic parameter used to represent the short readings distributions.
-  double lambda_short;
+  double sigma_hit{0.2};
+  /// Intrinsic parameter assoaciated with short readings distribution.
+  double lambda_short{0.1};
   /// Maximum range of a laser ray. This is the value expected in case of a miss.
-  double laser_max_range;
+  double laser_max_range{60};
   /// How many evenly-spaced beams in each scan to be used when applying the sensor model.
-  std::size_t max_beams;
+  std::size_t max_beams{60};
 };
 
 /// Beam sensor model for range finders.
