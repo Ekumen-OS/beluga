@@ -17,11 +17,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include <random>
 #include <shared_mutex>
-#include "beluga/algorithm/raycasting.hpp"
 #include <vector>
-#include <iostream>
+#include "beluga/algorithm/raycasting.hpp"
 
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
@@ -57,7 +57,6 @@ struct BeamModelParams {
   /// How many evenly-spaced beams in each scan to be used when applying the sensor model.
   std::size_t max_beams;
 };
-
 
 /// Beam sensor model for range finders.
 /**
@@ -134,58 +133,57 @@ class BeamSensorModel : public Mixin {
    */
   [[nodiscard]] weight_type importance_weight(const state_type& state) const {
     const auto lock = std::shared_lock<std::shared_mutex>{points_mutex_};
-    return std::transform_reduce(
-        points_.cbegin(), points_.cend(), 0.0, std::plus{},
-        [this, state](const auto& point) {
+    return std::transform_reduce(points_.cbegin(), points_.cend(), 0.0, std::plus{}, [this, state](const auto& point) {
+      // TODO(Ramiro): We're converting from range + bearing to cartesian points in the ROS node, but we want range +
+      // bearing here. We might want to make that conversion in the likelihood model instead, and let the measurement
+      // type be range, bearing instead of x, y.
 
-          // TODO(Ramiro): We're converting from range + bearing to cartesian points in the ROS node, but we want range + bearing here.
-          // We might want to make that conversion in the likelihood model instead, and let the measurement type be range, bearing instead of x, y.
+      // Compute the range according to the measurement.
+      const double observation_range = std::sqrt(point.first * point.first + point.second * point.second);
+      const auto beam_bearing = Sophus::SO2d{point.first, point.second};
 
-          // Compute the range according to the measurement.
-          const double observation_range = std::sqrt(point.first * point.first + point.second * point.second);
-          const auto beam_bearing = Sophus::SO2d{point.first, point.second};
+      // Compute the range according to the map (raycasting).
+      const double map_range = raycast(grid_, state, beam_bearing, options_.laser_max_range);
 
-          // Compute the range according to the map (raycasting).
-          const double map_range = raycast(grid_, state, beam_bearing, options_.laser_max_range);
+      std::cerr << "Map range " << map_range << std::endl;
 
-          std::cerr << "Map range " << map_range << std::endl;
+      double pz = 0.0;
 
-          double pz = 0.0;
+      // 1: Correct range with local measurement noise.
+      const double z = observation_range - map_range;
+      std::cerr << "observation range " << observation_range << std::endl;
+      std::cerr << "Z: " << z << std::endl;
+      pz += options_.z_hit * std::exp(-(z * z) / (2. * options_.sigma_hit * options_.sigma_hit));
 
-          // 1: Correct range with local measurement noise.
-          const double z = observation_range - map_range;
-          std::cerr << "observation range " << observation_range << std::endl;
-          std::cerr << "Z: " << z << std::endl;
-          pz += options_.z_hit * std::exp(-(z * z) / (2. * options_.sigma_hit * options_.sigma_hit));
+      // 2: Unexpected objects.
+      if (z < 0) {
+        pz += options_.z_short * options_.lambda_short * std::exp(-options_.lambda_short * observation_range);
+      }
 
-          // 2: Unexpected objects.
-          if (z < 0) {
-            pz += options_.z_short * options_.lambda_short * std::exp(-options_.lambda_short * observation_range);
-          }
+      // 3 and 4: Max range return or random return.
+      if (observation_range >= options_.laser_max_range) {
+        pz += options_.z_max;
+      } else {
+        pz += options_.z_rand / options_.laser_max_range;
+      }
 
-          // 3 and 4: Max range return or random return.
-          if (observation_range >= options_.laser_max_range) {
-            pz += options_.z_max;
-          }else{
-            pz += options_.z_rand / options_.laser_max_range;
-          }
-
-          // Use the same ad-hoc accumulating strategy that nav2 uses.
-          return pz * pz * pz;
-        });
+      // Use the same ad-hoc accumulating strategy that nav2 uses.
+      return pz * pz * pz;
+    });
   }
 
   /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
   void update_sensor(measurement_type&& points) final {
-  const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
-  points_ = std::move(points);
-}
-private:
-OccupancyGrid grid_;
-std::vector<std::pair<double, double>> points_;
-std::vector<std::size_t> free_cells_;
-mutable std::shared_mutex points_mutex_;
-param_type options_;
+    const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
+    points_ = std::move(points);
+  }
+
+ private:
+  OccupancyGrid grid_;
+  std::vector<std::pair<double, double>> points_;
+  std::vector<std::size_t> free_cells_;
+  mutable std::shared_mutex points_mutex_;
+  param_type options_;
 };
 
 }  // namespace beluga

@@ -1,10 +1,24 @@
-#include "beluga/algorithm/raycasting.hpp"
-#include "beluga/sensor/beam_model.hpp"
-#include "beluga/sensor.hpp"
-#include "ciabatta/ciabatta.hpp"
-#include <gmock/gmock.h>
+// Copyright 2023 Ekumen, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-namespace beluga{
+#include <gmock/gmock.h>
+#include "beluga/algorithm/raycasting.hpp"
+#include "beluga/sensor.hpp"
+#include "beluga/sensor/beam_model.hpp"
+#include "ciabatta/ciabatta.hpp"
+
+namespace beluga {
 
 template <std::size_t Rows, std::size_t Cols>
 class StaticOccupancyGrid {
@@ -28,7 +42,6 @@ class StaticOccupancyGrid {
   [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
   [[nodiscard]] const Sophus::SE2d& origin_inverse() const { return origin_inverse_; }
-
 
   [[nodiscard]] std::size_t index(double x, double y) const {
     const auto x_index = static_cast<std::size_t>(std::floor(x / resolution()));
@@ -88,7 +101,7 @@ TEST(Raycasting, casting) {
   // Positive Y -> Down
 
   // clang-format off
-  const auto grid_1m_resolution = StaticOccupancyGrid<5, 5>{{
+  const auto grid = StaticOccupancyGrid<5, 5>{{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
@@ -98,28 +111,32 @@ TEST(Raycasting, casting) {
   // clang-format on
 
   // Horizontal ray that hits the middle occupied cell.
-  double ray_len = raycast(grid_1m_resolution, Sophus::SE2d{0, Eigen::Vector2d{0.5, 0.}}, Sophus::SO2d{0}, 5);
+  double ray_len = raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0.5, 0.}}, Sophus::SO2d{0}, 5);
   EXPECT_NEAR(ray_len, 2.5495097567963922, 1E-8);
 
   // Downwards ray that hits the map boundary.
-  ray_len = raycast(grid_1m_resolution, Sophus::SE2d{0, Eigen::Vector2d{0., 1.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
+  ray_len =
+      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 1.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
   EXPECT_NEAR(ray_len, 2.6925824035672519, 1E-8);
 
   // Start cell is occupied, should return 0.
-  ray_len = raycast(grid_1m_resolution, Sophus::SE2d{0, Eigen::Vector2d{1., 1.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
+  ray_len =
+      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{1., 1.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
   EXPECT_EQ(ray_len, 0);
 
   // Downwards ray that is limited by beam range.
-  ray_len = raycast(grid_1m_resolution, Sophus::SE2d{0, Eigen::Vector2d{0., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 1);
+  ray_len =
+      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 1);
   EXPECT_EQ(ray_len, 1);
 
-
   // Downwards ray that hits the occupied cell.
-  ray_len = raycast(grid_1m_resolution, Sophus::SE2d{0, Eigen::Vector2d{1., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
+  ray_len =
+      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{1., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
   EXPECT_EQ(ray_len, 1);
 
   // Diagonal ray that hits the occupied cell.
-  ray_len = raycast(grid_1m_resolution, Sophus::SE2d{0, Eigen::Vector2d{0., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 4.}, 5);
+  ray_len =
+      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 4.}, 5);
   EXPECT_EQ(ray_len, std::sqrt(2));
-  }
-} // namespace beluga
+}
+}  // namespace beluga
