@@ -36,7 +36,7 @@
  *
  * The following is satisfied:
  * - `b.sample()` updates the particles based on the latest motion update.
- * - `b.importance_sample()` updates the particles weight based on the latest sensor update.
+ * - `b.reweight()` updates the particles weight based on the latest sensor update.
  * - `b.resample()` generates new particles from the old ones based on their importance weights.
  *
  * \section BaseParticleFilterLinks See also
@@ -75,19 +75,19 @@ struct BaseParticleFilterInterface {
    * to incorporate measurements. The importance is proportional to the
    * probability of seeing the measurement given the current particle state.
    */
-  virtual void importance_sample() = 0;
+  virtual void reweight() = 0;
 
   /**
    * \overload
    * It allows specifying a sequenced execution policy.
    */
-  virtual void importance_sample(std::execution::sequenced_policy) { return this->importance_sample(); };
+  virtual void reweight(std::execution::sequenced_policy) { return this->reweight(); };
 
   /**
    * \overload
    * It allows specifying a parallel execution policy.
    */
-  virtual void importance_sample(std::execution::parallel_policy) { return this->importance_sample(); };
+  virtual void reweight(std::execution::parallel_policy) { return this->reweight(); };
 
   /// Resample particles based on their weights.
   /**
@@ -151,18 +151,18 @@ class BootstrapParticleFilter : public Mixin {
   void sample(std::execution::parallel_policy policy) final { this->sample_impl(policy); }
 
   /**
-   * \copydoc BaseParticleFilterInterface::importance_sample()
+   * \copydoc BaseParticleFilterInterface::reweight()
    *
    * The update will be done based on the `Mixin` implementation of the
    * \ref SensorModelPage "SensorModel" named requirements.
    */
-  void importance_sample() final { this->importance_sample_impl(std::execution::seq); }
+  void reweight() final { this->reweight_impl(std::execution::seq); }
 
-  /// \copydoc BaseParticleFilterInterface::importance_sample(std::execution::sequenced_policy policy)
-  void importance_sample(std::execution::sequenced_policy policy) final { this->importance_sample_impl(policy); }
+  /// \copydoc BaseParticleFilterInterface::reweight(std::execution::sequenced_policy policy)
+  void reweight(std::execution::sequenced_policy policy) final { this->reweight_impl(policy); }
 
-  /// \copydoc BaseParticleFilterInterface::importance_sample(std::execution::parallel_policy policy)
-  void importance_sample(std::execution::parallel_policy policy) final { this->importance_sample_impl(policy); }
+  /// \copydoc BaseParticleFilterInterface::reweight(std::execution::parallel_policy policy)
+  void reweight(std::execution::parallel_policy policy) final { this->reweight_impl(policy); }
 
   /**
    * \copydoc BaseParticleFilterInterface::resample()
@@ -191,7 +191,7 @@ class BootstrapParticleFilter : public Mixin {
   }
 
   template <typename ExecutionPolicy>
-  void importance_sample_impl(ExecutionPolicy&& policy) {
+  void reweight_impl(ExecutionPolicy&& policy) {
     auto states = this->self().states() | ranges::views::common;
     auto weights = this->self().weights() | ranges::views::common;
     std::transform(

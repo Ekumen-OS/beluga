@@ -123,7 +123,7 @@ TEST(BootstrapParticleFilter, UpdateWithoutResampling) {
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_initial_weight));
 
     // updating particle weights, particles will have updated weights, but unchanged state
-    filter.importance_sample();
+    filter.reweight();
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_final_weight));
 
@@ -162,7 +162,7 @@ TEST(BootstrapParticleFilter, UpdateWithResampling) {
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_initial_weight));
 
     // updating particle weights, particles will have updated weights, but unchanged state
-    filter.importance_sample();
+    filter.reweight();
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_final_weight));
 
