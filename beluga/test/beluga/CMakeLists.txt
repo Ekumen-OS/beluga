@@ -4,6 +4,7 @@ add_executable(test_beluga
   algorithm/test_exponential_filter.cpp
   algorithm/test_particle_filter.cpp
   algorithm/test_sampling.cpp
+  algorithm/test_raycasting.cpp
   mixin/test_descriptor.cpp
   mixin/test_utility.cpp
   motion/test_differential_drive_model.cpp
@@ -14,6 +15,7 @@ add_executable(test_beluga
   resampling_policies/test_resampling_policies_poller.cpp
   resampling_policies/test_selective_resampling_policy.cpp
   sensor/test_likelihood_field_model.cpp
+  sensor/test_beam_model.cpp
   test_mixin.cpp
   test_tuple_vector.cpp
   test_spatial_hash.cpp
