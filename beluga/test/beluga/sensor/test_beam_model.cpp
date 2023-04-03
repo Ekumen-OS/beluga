@@ -1,10 +1,24 @@
-#include "beluga/algorithm/raycasting.hpp"
-#include "beluga/sensor/beam_model.hpp"
-#include "beluga/sensor.hpp"
-#include "ciabatta/ciabatta.hpp"
-#include <gmock/gmock.h>
+// Copyright 2023 Ekumen, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-namespace beluga{
+#include <gmock/gmock.h>
+#include "beluga/algorithm/raycasting.hpp"
+#include "beluga/sensor.hpp"
+#include "beluga/sensor/beam_model.hpp"
+#include "ciabatta/ciabatta.hpp"
+
+namespace beluga {
 
 template <std::size_t Rows, std::size_t Cols>
 class StaticOccupancyGrid {
@@ -80,17 +94,17 @@ using UUT = ciabatta::mixin<
     ciabatta::curry<beluga::BeamSensorModel, StaticOccupancyGrid<5, 5>>::mixin,
     ciabatta::provides<beluga::LaserSensorModelInterface2d>::mixin>;
 
-BeamModelParams GetParams(){
-    BeamModelParams ret;
-    ret.z_hit = 0.5;
-    ret.z_rand = 0.5;
-    ret.z_max = 0.05;
-    ret.z_short = 0.05;
-    ret.sigma_hit = 0.2;
-    ret.lambda_short = 0.1;
-    ret.max_beams = 60;
-    ret.laser_max_range = 60;
-    return ret;
+BeamModelParams GetParams() {
+  BeamModelParams ret;
+  ret.z_hit = 0.5;
+  ret.z_rand = 0.5;
+  ret.z_max = 0.05;
+  ret.z_short = 0.05;
+  ret.sigma_hit = 0.2;
+  ret.lambda_short = 0.1;
+  ret.max_beams = 60;
+  ret.laser_max_range = 60;
+  return ret;
 }
 TEST(BeamSensorModel, ImportanceWeight) {
   constexpr double kResolution = 0.5;
@@ -120,11 +134,9 @@ TEST(BeamSensorModel, ImportanceWeight) {
   mixin.update_sensor(std::vector<std::pair<double, double>>{{2.25, 2.25}});
   EXPECT_NEAR(0.000, mixin.importance_weight(grid.origin()), 1e-6);
 
-
-  // Range return longer than laser_max_dist, so the random measurement distribution kicks in and this shouldn't be zero.
+  // Range return longer than laser_max_dist, so the random measurement distribution kicks in and this shouldn't be
+  // zero.
   mixin.update_sensor(std::vector<std::pair<double, double>>{{params.laser_max_range, params.laser_max_range}});
   EXPECT_NEAR(0.00012500000000000003, mixin.importance_weight(grid.origin()), 1e-6);
-
-
-    }
-    } // namespace beluga
+}
+}  // namespace beluga
