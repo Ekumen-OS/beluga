@@ -526,14 +526,6 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Requires that AMCL is provided an initial pose either"
-      "via topic or initial_pose* parameter when reset. Otherwise, by default AMCL will use the last known pose to initialize";
-    descriptor.read_only = true;
-    declare_parameter("always_reset_initial_pose", false, descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.read_only = true;
     descriptor.description =
       "Execution policy used to process particles [seq, par].";
@@ -577,10 +569,6 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "pose",
     rclcpp::SystemDefaultsQoS());
-
-  if (get_parameter("always_reset_initial_pose").as_bool()) {
-    initial_pose_is_known_ = false;
-  }
 
   return CallbackReturn::SUCCESS;
 }

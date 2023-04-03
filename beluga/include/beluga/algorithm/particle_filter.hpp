@@ -149,7 +149,7 @@ class BootstrapParticleFilter : public Mixin {
   void reinitialize() final {
     this->self().initialize_particles(this->self().generate_samples(generator_) | this->self().take_samples());
   }
-  
+
   /**
    * \copydoc BaseParticleFilterInterface::sample()
    *
