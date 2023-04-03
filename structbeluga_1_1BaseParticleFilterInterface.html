@@ -93,13 +93,13 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 <tr class="separator:a385b3f970d2d8e617877a17f51bb4352"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae935fce109c4e66cbabd8505698bcea"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#aae935fce109c4e66cbabd8505698bcea">sample</a> (std::execution::parallel_policy)</td></tr>
 <tr class="separator:aae935fce109c4e66cbabd8505698bcea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4019130eb8099a89fb768b70644a1e1b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#a4019130eb8099a89fb768b70644a1e1b">importance_sample</a> ()=0</td></tr>
-<tr class="memdesc:a4019130eb8099a89fb768b70644a1e1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the weights of the particles.  <a href="structbeluga_1_1BaseParticleFilterInterface.html#a4019130eb8099a89fb768b70644a1e1b">More...</a><br /></td></tr>
-<tr class="separator:a4019130eb8099a89fb768b70644a1e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adacd06e9df013c48e57af3e3c40dc894"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#adacd06e9df013c48e57af3e3c40dc894">importance_sample</a> (std::execution::sequenced_policy)</td></tr>
-<tr class="separator:adacd06e9df013c48e57af3e3c40dc894"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af19ac9e7c5415d5137e44b57a749ada3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#af19ac9e7c5415d5137e44b57a749ada3">importance_sample</a> (std::execution::parallel_policy)</td></tr>
-<tr class="separator:af19ac9e7c5415d5137e44b57a749ada3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c00e78ec3e8c8c72f3c9d42e88ea91e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#a5c00e78ec3e8c8c72f3c9d42e88ea91e">reweight</a> ()=0</td></tr>
+<tr class="memdesc:a5c00e78ec3e8c8c72f3c9d42e88ea91e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the weights of the particles.  <a href="structbeluga_1_1BaseParticleFilterInterface.html#a5c00e78ec3e8c8c72f3c9d42e88ea91e">More...</a><br /></td></tr>
+<tr class="separator:a5c00e78ec3e8c8c72f3c9d42e88ea91e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae97215ae634b529c7e79f5b6494ba6af"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#ae97215ae634b529c7e79f5b6494ba6af">reweight</a> (std::execution::sequenced_policy)</td></tr>
+<tr class="separator:ae97215ae634b529c7e79f5b6494ba6af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d8d73e463dfca151e8809eca345aec6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#a2d8d73e463dfca151e8809eca345aec6">reweight</a> (std::execution::parallel_policy)</td></tr>
+<tr class="separator:a2d8d73e463dfca151e8809eca345aec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bb56e38e0c7933cac008be54ddc5510"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#a6bb56e38e0c7933cac008be54ddc5510">resample</a> ()=0</td></tr>
 <tr class="memdesc:a6bb56e38e0c7933cac008be54ddc5510"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resample particles based on their weights.  <a href="structbeluga_1_1BaseParticleFilterInterface.html#a6bb56e38e0c7933cac008be54ddc5510">More...</a><br /></td></tr>
 <tr class="separator:a6bb56e38e0c7933cac008be54ddc5510"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,88 +107,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Pure abstract class representing the base particle filter interface. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4019130eb8099a89fb768b70644a1e1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4019130eb8099a89fb768b70644a1e1b">&#9670;&nbsp;</a></span>importance_sample() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void beluga::BaseParticleFilterInterface::importance_sample </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Update the weights of the particles. </p>
-<p>This step computes the importance factor or weight of each particle to incorporate measurements. The importance is proportional to the probability of seeing the measurement given the current particle state. </p>
-
-</div>
-</div>
-<a id="af19ac9e7c5415d5137e44b57a749ada3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af19ac9e7c5415d5137e44b57a749ada3">&#9670;&nbsp;</a></span>importance_sample() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void beluga::BaseParticleFilterInterface::importance_sample </td>
-          <td>(</td>
-          <td class="paramtype">std::execution::parallel_policy&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. It allows specifying a parallel execution policy. </p>
-
-</div>
-</div>
-<a id="adacd06e9df013c48e57af3e3c40dc894"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adacd06e9df013c48e57af3e3c40dc894">&#9670;&nbsp;</a></span>importance_sample() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void beluga::BaseParticleFilterInterface::importance_sample </td>
-          <td>(</td>
-          <td class="paramtype">std::execution::sequenced_policy&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. It allows specifying a sequenced execution policy. </p>
-
-</div>
-</div>
 <a id="a6bb56e38e0c7933cac008be54ddc5510"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6bb56e38e0c7933cac008be54ddc5510">&#9670;&nbsp;</a></span>resample()</h2>
 
@@ -216,6 +134,88 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 <p>This step creates a new particle set drawing samples from the current particle set. The probability of drawing each particle is given by its importance weight.</p>
 <p>The resampling process can be inhibited by the resampling policies.</p>
 <p>If resampling is performed, the importance weights of all particles are reset to 1.0. </p>
+
+</div>
+</div>
+<a id="a5c00e78ec3e8c8c72f3c9d42e88ea91e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c00e78ec3e8c8c72f3c9d42e88ea91e">&#9670;&nbsp;</a></span>reweight() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void beluga::BaseParticleFilterInterface::reweight </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the weights of the particles. </p>
+<p>This step computes the importance factor or weight of each particle to incorporate measurements. The importance is proportional to the probability of seeing the measurement given the current particle state. </p>
+
+</div>
+</div>
+<a id="a2d8d73e463dfca151e8809eca345aec6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d8d73e463dfca151e8809eca345aec6">&#9670;&nbsp;</a></span>reweight() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void beluga::BaseParticleFilterInterface::reweight </td>
+          <td>(</td>
+          <td class="paramtype">std::execution::parallel_policy&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. It allows specifying a parallel execution policy. </p>
+
+</div>
+</div>
+<a id="ae97215ae634b529c7e79f5b6494ba6af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae97215ae634b529c7e79f5b6494ba6af">&#9670;&nbsp;</a></span>reweight() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void beluga::BaseParticleFilterInterface::reweight </td>
+          <td>(</td>
+          <td class="paramtype">std::execution::sequenced_policy&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. It allows specifying a sequenced execution policy. </p>
 
 </div>
 </div>
