@@ -526,14 +526,6 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Requires that AMCL is provided an initial pose either"
-      "via topic or initial_pose* parameter when reset. Otherwise, by default AMCL will use the last known pose to initialize";
-    descriptor.read_only = true;
-    declare_parameter("always_reset_initial_pose", false, descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.read_only = true;
     descriptor.description =
       "Execution policy used to process particles [seq, par].";
@@ -577,10 +569,6 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "pose",
     rclcpp::SystemDefaultsQoS());
-
-  if (get_parameter("always_reset_initial_pose").as_bool()) {
-    initial_pose_is_known_ = false;
-  }
 
   return CallbackReturn::SUCCESS;
 }
@@ -680,6 +668,29 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   pose_pub_.reset();
+  global_localization_server_.reset();
+
+  particle_filter_.reset();
+  initial_pose_is_known_ = false;
+  if (this->get_parameter("set_initial_pose").as_bool()) {
+    const auto [pose, covariance] = particle_filter_->estimate();
+    this->set_parameter(
+      rclcpp::Parameter(
+        "initial_pose.x",
+        rclcpp::ParameterValue(pose.translation().x())));
+    this->set_parameter(
+      rclcpp::Parameter(
+        "initial_pose.y",
+        rclcpp::ParameterValue(pose.translation().y())));
+    this->set_parameter(
+      rclcpp::Parameter(
+        "initial_pose.z",
+        rclcpp::ParameterValue(0.0)));
+    this->set_parameter(
+      rclcpp::Parameter(
+        "initial_pose.yaw",
+        rclcpp::ParameterValue(pose.so2().log())));
+  }
   return CallbackReturn::SUCCESS;
 }
 
@@ -1014,7 +1025,7 @@ AmclNode::global_localization_callback(
   if (!particle_filter_) {
     return;
   }
-  particle_filter_->distribute_particles();
+  particle_filter_->reinitialize();
   RCLCPP_INFO(get_logger(), "Global initialisation done!");
   initial_pose_is_known_ = true;
 }
