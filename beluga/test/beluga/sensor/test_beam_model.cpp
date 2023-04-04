@@ -97,9 +97,9 @@ using UUT = ciabatta::mixin<
 BeamModelParams GetParams() {
   BeamModelParams ret;
   ret.z_hit = 0.5;
-  ret.z_rand = 0.5;
-  ret.z_max = 0.05;
   ret.z_short = 0.05;
+  ret.z_max = 0.05;
+  ret.z_rand = 0.5;
   ret.sigma_hit = 0.2;
   ret.lambda_short = 0.1;
   ret.laser_max_range = 60;
@@ -122,12 +122,12 @@ TEST(BeamSensorModel, ImportanceWeight) {
   auto mixin = UUT{params, grid};
 
   // Perfect hit.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
+  mixin.update_sensor(std::vector<std::pair<double, double>>{{0.5, 0.5}});
   EXPECT_NEAR(0.13135474537037034, mixin.importance_weight(grid.origin()), 1e-6);
 
   // This is a hit that's before the obstacle, hence is affected by the unexpected obstacle part of the distribution.
   mixin.update_sensor(std::vector<std::pair<double, double>>{{0.6, 0.6}});
-  EXPECT_NEAR(1.0771005220646571e-05, mixin.importance_weight(grid.origin()), 1e-6);
+  EXPECT_NEAR(0.062918339501104509, mixin.importance_weight(grid.origin()), 1e-6);
 
   // Hit that's past the obstacle, hence is not affected by the unexpected obstacle part of the distribution.
   // This should be really close to zero.
