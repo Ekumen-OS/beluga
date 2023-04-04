@@ -110,9 +110,13 @@ TEST(Raycasting, casting) {
     kResolution};
   // clang-format on
 
-  // Horizontal ray that hits the middle occupied cell.
+  // Horizontal ray that hits the map boundary.
   double ray_len = raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0.5, 0.}}, Sophus::SO2d{0}, 5);
   EXPECT_EQ(ray_len, 1.5);
+
+  // Horizontal ray that hits the occupied cell.
+  ray_len = raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 1.}}, Sophus::SO2d{0}, 5);
+  EXPECT_EQ(ray_len, 0.5);
 
   // Downwards ray that hits the map boundary.
   ray_len =

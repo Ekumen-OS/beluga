@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include <random>
 #include <shared_mutex>
 #include <vector>
@@ -114,17 +115,6 @@ class BeamSensorModel : public Mixin {
         Sophus::SO2d::sampleUniform(gen), grid_.origin() * grid_.point(free_cells_[index_distribution(gen)])};
   }
 
-  static std::vector<std::size_t> make_free_cells_vector(const OccupancyGrid& grid) {
-    auto free_cells = std::vector<std::size_t>{};
-    free_cells.reserve(grid.size());
-    for (std::size_t index = 0; index < grid.size(); ++index) {
-      if (OccupancyGrid::Traits::is_free(grid.data()[index])) {
-        free_cells.push_back(index);
-      }
-    }
-    return free_cells;
-  }
-
   /// Gets the importance weight for a particle with the provided state.
   /**
    * \param state State of the particle to calculate its importance weight.
@@ -144,11 +134,18 @@ class BeamSensorModel : public Mixin {
       // Compute the range according to the map (raycasting).
       const double map_range = raycast(grid_, state, beam_bearing, options_.laser_max_range);
 
+      std::cerr << "Map range " << map_range << std::endl;
+      std::cerr << "observation_range" << observation_range << std::endl;
+
       double pz = 0.0;
 
       // 1: Correct range with local measurement noise.
       const double z = observation_range - map_range;
+
+      std::cerr << "z : " << z << std::endl;
       pz += options_.z_hit * std::exp(-(z * z) / (2. * options_.sigma_hit * options_.sigma_hit));
+
+      std::cerr << "pz : " << pz << std::endl;
 
       // 2: Unexpected objects.
       if (z < 0) {
@@ -174,6 +171,17 @@ class BeamSensorModel : public Mixin {
   }
 
  private:
+  static std::vector<std::size_t> make_free_cells_vector(const OccupancyGrid& grid) {
+    auto free_cells = std::vector<std::size_t>{};
+    free_cells.reserve(grid.size());
+    for (std::size_t index = 0; index < grid.size(); ++index) {
+      if (OccupancyGrid::Traits::is_free(grid.data()[index])) {
+        free_cells.push_back(index);
+      }
+    }
+    return free_cells;
+  }
+
   OccupancyGrid grid_;
   std::vector<std::pair<double, double>> points_;
   std::vector<std::size_t> free_cells_;
