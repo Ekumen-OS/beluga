@@ -15,7 +15,6 @@
 #ifndef BELUGA_ALGORITHM_RAYCASTING_HPP
 #define BELUGA_ALGORITHM_RAYCASTING_HPP
 
-#include <iostream>
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
@@ -45,19 +44,14 @@ inline double raycast(
 
   auto grid_at = [&grid](std::size_t index) { return grid.data()[index]; };
 
-  const auto bearing_in_grid_frame =
-      Sophus::SE2d{laser_position_in_grid_frame.so2() * bearing_in_laser_frame, Eigen::Vector2d::Zero()};
-  const auto ray_in_grid_frame =
-      bearing_in_grid_frame * Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{max_beam_range, 0}};
+  const auto ray_in_laser_frame = Sophus::SE2d{bearing_in_laser_frame, Eigen::Vector2d::Zero()} *
+                                  Sophus::SE2d{Sophus::SO2d{0}, Eigen::Vector2d{max_beam_range, 0}};
 
   auto double_to_int_grid_coords = [&](const Eigen::Vector2d& point) -> Eigen::Vector2i {
     return Eigen::Vector2d{(point / grid.resolution()).array().floor()}.cast<int>();
   };
   const auto pt_0 = double_to_int_grid_coords(laser_position_in_grid_frame.translation());
-  const auto pt_1 = double_to_int_grid_coords((laser_position_in_grid_frame * ray_in_grid_frame).translation());
-
-  std::cerr << " Point 0 : " << pt_0 << std::endl;
-  std::cerr << " Point 1 : " << pt_1 << std::endl;
+  const auto pt_1 = double_to_int_grid_coords((laser_position_in_grid_frame * ray_in_laser_frame).translation());
 
   int x0 = pt_0.x();
   int y0 = pt_0.y();
@@ -70,7 +64,6 @@ inline double raycast(
 
   const bool steep = delta_y > delta_x;
   if (steep) {
-    std::cerr << "Steep" << std::endl;
     std::swap(x0, y0);
     std::swap(x1, y1);
     delta_x = std::abs(x1 - x0);
@@ -83,22 +76,22 @@ inline double raycast(
   const int x_step = x0 < x1 ? 1 : -1;
   const int y_step = y0 < y1 ? 1 : -1;
 
-  const auto center_of_first_cell = grid.point(grid.index(x0 * grid.resolution(), y0 * grid.resolution()));
   int error = 0;
+  // Needed because of the way OccupancyGrid signals an out of bounds index.
+  std::size_t last_ok_index = steep ? grid.index(y * grid.resolution(), x * grid.resolution())
+                                    : grid.index(x * grid.resolution(), y * grid.resolution());
+  const auto center_of_first_cell = grid.point(last_ok_index);
   while (x != (x1 + x_step)) {
     const std::size_t index = steep ? grid.index(y * grid.resolution(), x * grid.resolution())
                                     : grid.index(x * grid.resolution(), y * grid.resolution());
-    auto pt = grid.point(index);
-    std::cerr << "Testing " << pt.x() << " , " << pt.y() << std::endl;
 
     if (index == grid.size() || is_not_free(grid_at(index))) {
-      std::cerr << "here 3" << std::endl;
-      return (grid.point(index) - center_of_first_cell).norm();
+      return (grid.point(last_ok_index) - center_of_first_cell).norm();
     }
+    last_ok_index = index;
     x += 1;
     error += delta_y;
     if (2 * error >= delta_x) {
-      std::cerr << "Updating Y " << std::endl;
       y += y_step;
       error -= delta_x;
     }

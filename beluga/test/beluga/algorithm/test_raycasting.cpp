@@ -112,12 +112,12 @@ TEST(Raycasting, casting) {
 
   // Horizontal ray that hits the middle occupied cell.
   double ray_len = raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0.5, 0.}}, Sophus::SO2d{0}, 5);
-  EXPECT_NEAR(ray_len, 2.5495097567963922, 1E-8);
+  EXPECT_EQ(ray_len, 1.5);
 
   // Downwards ray that hits the map boundary.
   ray_len =
       raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 1.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
-  EXPECT_NEAR(ray_len, 2.6925824035672519, 1E-8);
+  EXPECT_EQ(ray_len, 1.);
 
   // Start cell is occupied, should return 0.
   ray_len =
@@ -126,17 +126,17 @@ TEST(Raycasting, casting) {
 
   // Downwards ray that is limited by beam range.
   ray_len =
-      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 1);
+      raycast(grid, Sophus::SE2d{Sophus::Constants<double>::pi() / 2., Eigen::Vector2d{0., 0.}}, Sophus::SO2d{0}, 1);
   EXPECT_EQ(ray_len, 1);
 
   // Downwards ray that hits the occupied cell.
   ray_len =
       raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{1., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
-  EXPECT_EQ(ray_len, 1);
+  EXPECT_EQ(ray_len, 0.5);
 
   // Diagonal ray that hits the occupied cell.
   ray_len =
       raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 4.}, 5);
-  EXPECT_EQ(ray_len, std::sqrt(2));
+  EXPECT_EQ(ray_len, std::sqrt(2) / 2.);
 }
 }  // namespace beluga
