@@ -721,6 +721,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
         return LikelihoodField{params};
       }
       if (name == kBeamSensorModelName) {
+        // TODO(Ramiro) : Expose parameters.
         auto params = beluga::BeamModelParams{};
         return BeamSensorModel{params};
       }

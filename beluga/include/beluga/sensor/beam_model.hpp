@@ -17,7 +17,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 #include <random>
 #include <shared_mutex>
 #include <vector>
@@ -145,14 +144,10 @@ class BeamSensorModel : public Mixin {
       // Compute the range according to the map (raycasting).
       const double map_range = raycast(grid_, state, beam_bearing, options_.laser_max_range);
 
-      std::cerr << "Map range " << map_range << std::endl;
-
       double pz = 0.0;
 
       // 1: Correct range with local measurement noise.
       const double z = observation_range - map_range;
-      std::cerr << "observation range " << observation_range << std::endl;
-      std::cerr << "Z: " << z << std::endl;
       pz += options_.z_hit * std::exp(-(z * z) / (2. * options_.sigma_hit * options_.sigma_hit));
 
       // 2: Unexpected objects.
