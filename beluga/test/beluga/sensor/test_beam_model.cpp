@@ -126,15 +126,15 @@ TEST(BeamSensorModel, ImportanceWeight) {
   EXPECT_NEAR(0.13135474537037034, mixin.importance_weight(grid.origin()), 1e-6);
 
   // This is a hit that's before the obstacle, hence is affected by the unexpected obstacle part of the distribution.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{0.6, 0.6}});
-  EXPECT_NEAR(0.062918339501104509, mixin.importance_weight(grid.origin()), 1e-6);
+  mixin.update_sensor(std::vector<std::pair<double, double>>{{0.4, 0.4}});
+  EXPECT_NEAR(0.065187461347907719, mixin.importance_weight(grid.origin()), 1e-6);
 
   // Hit that's past the obstacle, hence is not affected by the unexpected obstacle part of the distribution.
   // This should be really close to zero.
   mixin.update_sensor(std::vector<std::pair<double, double>>{{2.25, 2.25}});
   EXPECT_NEAR(0.000, mixin.importance_weight(grid.origin()), 1e-6);
 
-  // Range return longer than laser_max_dist, so the random measurement distribution kicks in and this shouldn't be
+  // Range return longer than laser_max_dist, so the max measurement distribution kicks in and this shouldn't be
   // zero.
   mixin.update_sensor(std::vector<std::pair<double, double>>{{params.laser_max_range, params.laser_max_range}});
   EXPECT_NEAR(0.00012500000000000003, mixin.importance_weight(grid.origin()), 1e-6);

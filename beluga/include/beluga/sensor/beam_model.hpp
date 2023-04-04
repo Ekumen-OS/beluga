@@ -16,12 +16,11 @@
 #define BELUGA_SENSOR_BEAM_MODEL_HPP
 
 #include <algorithm>
+#include <beluga/algorithm/raycasting.hpp>
 #include <cmath>
-#include <iostream>
 #include <random>
 #include <shared_mutex>
 #include <vector>
-#include "beluga/algorithm/raycasting.hpp"
 
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
@@ -134,18 +133,11 @@ class BeamSensorModel : public Mixin {
       // Compute the range according to the map (raycasting).
       const double map_range = raycast(grid_, state, beam_bearing, options_.laser_max_range);
 
-      std::cerr << "Map range " << map_range << std::endl;
-      std::cerr << "observation_range" << observation_range << std::endl;
-
       double pz = 0.0;
 
       // 1: Correct range with local measurement noise.
       const double z = observation_range - map_range;
-
-      std::cerr << "z : " << z << std::endl;
       pz += options_.z_hit * std::exp(-(z * z) / (2. * options_.sigma_hit * options_.sigma_hit));
-
-      std::cerr << "pz : " << pz << std::endl;
 
       // 2: Unexpected objects.
       if (z < 0) {
