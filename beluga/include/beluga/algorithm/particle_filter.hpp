@@ -101,7 +101,12 @@ struct BaseParticleFilterInterface {
    */
   virtual void resample() = 0;
 
-  /// distribute the particles over all the space.
+  /// Distribute the particles over all the space.
+  /**
+   * \overload
+   * this step will reinitialize the position of each particle based
+   * in some predefined distribution.
+   */
   virtual void reinitialize() = 0;
 };
 
@@ -139,7 +144,7 @@ class BootstrapParticleFilter : public Mixin {
     reinitialize();
   }
   /*
-   Distribute the particles base in a uniform distribution using the \ref StateGeneratorPage "StateGenerator"
+   Distribute the particles using the \ref StateGeneratorPage "StateGenerator"
   */
   void reinitialize() final {
     this->self().initialize_particles(this->self().generate_samples(generator_) | this->self().take_samples());

@@ -852,8 +852,8 @@ void AmclNode::timer_callback()
   if (!particle_filter_) {
     return;
   }
-
-  if (particle_cloud_pub_->get_subscription_count() == 0 || !initial_pose_is_known_) {
+  //we decide to publish the particles when !initial_pose_is_known_
+  if (particle_cloud_pub_->get_subscription_count() == 0) {
     return;
   }
 
@@ -939,16 +939,16 @@ void AmclNode::laser_callback(
 
   const auto [pose, covariance] = particle_filter_->estimate();
 
-  if (initial_pose_is_known_) {
-    {
-      auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
-      message.header.stamp = laser_scan->header.stamp;
-      message.header.frame_id = get_parameter("global_frame_id").as_string();
-      tf2::toMsg(pose, message.pose.pose);
-      message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
-      pose_pub_->publish(message);
-    }
 
+  {
+    auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
+    message.header.stamp = laser_scan->header.stamp;
+    message.header.frame_id = get_parameter("global_frame_id").as_string();
+    tf2::toMsg(pose, message.pose.pose);
+    message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
+    pose_pub_->publish(message);
+  }
+  if (initial_pose_is_known_) {
     if (get_parameter("tf_broadcast").as_bool()) {
       auto message = geometry_msgs::msg::TransformStamped{};
       // Sending a transform that is valid into the future so that odom can be used.
