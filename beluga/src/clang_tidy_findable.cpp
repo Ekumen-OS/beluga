@@ -22,4 +22,6 @@
 
 #include <beluga/beluga.hpp>
 
-int main() {}
+int main() {
+  return 0;
+}
