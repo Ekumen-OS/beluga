@@ -44,12 +44,6 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
 
 #### Make changes locally
 
-1. Install `git-lfs`
-   ```bash
-   sudo apt install git-lfs
-   git lfs install
-   ```
-
 1. Clone the repository.
    ```bash
    git clone --recursive git@github.com:ekumenlabs/beluga.git
