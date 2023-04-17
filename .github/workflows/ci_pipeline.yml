@@ -22,13 +22,12 @@ jobs:
       - name: Install debian packages
         run: |
           sudo apt-get update
-          sudo apt-get install clang-tidy lcov python3-colcon-coveragepy-result python3-pip git-lfs -y
+          sudo apt-get install clang-tidy lcov python3-colcon-coveragepy-result python3-pip -y
 
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           path: ${{ github.workspace }}/src
-          lfs: True
 
       - name: Install python packages
         run: pip install colcon-lcov-result==0.5.0 lcov_cobertura==2.0.2 pre-commit==2.20.0
