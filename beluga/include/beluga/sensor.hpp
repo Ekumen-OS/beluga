@@ -53,14 +53,18 @@
 namespace beluga {
 
 /// Pure abstract class representing the laser sensor model interface.
+/**
+ * \tparam LaserScan Type representing a planar scan It must satisfy \ref Scan2dPage.
+ */
+template <class LaserScan>
 struct LaserSensorModelInterface2d {
-  /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<std::pair<double, double>>;
+  /// Measurement type of the sensor: a scan from the range finder.
+  using measurement_type = LaserScan;
 
   /// Virtual destructor.
   virtual ~LaserSensorModelInterface2d() = default;
 
-  /// Update the sensor model with the measured points.
+  /// Update the sensor model with the measured scan.
   /**
    * This method updates the sensor model with the information
    * it needs to compute the weight of each particle.
@@ -68,9 +72,9 @@ struct LaserSensorModelInterface2d {
    * the `importance_weight()` method provided by the same mixin
    * component.
    *
-   * \param points The range finder points in the reference frame of the particle.
+   * \param scan The range finder scan in the reference frame of the particle.
    */
-  virtual void update_sensor(measurement_type&& points) = 0;
+  virtual void update_sensor(measurement_type&& scan) = 0;
 };
 
 }  // namespace beluga

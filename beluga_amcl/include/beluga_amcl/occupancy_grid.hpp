@@ -53,8 +53,9 @@ public:
   };
 
   explicit OccupancyGrid(nav_msgs::msg::OccupancyGrid::SharedPtr grid)
-  : grid_{std::move(grid)},
-    origin_{make_origin_transform(grid_->info.origin)} {}
+    : grid_{std::move(grid)}, origin_{make_origin_transform(grid_->info.origin)}
+  {
+  }
 
   std::size_t size() const
   {
@@ -71,14 +72,43 @@ public:
     return origin_;
   }
 
+  Eigen::Vector2i cell(double x, double y) const
+  {
+    const auto xi = static_cast<std::size_t>(
+        std::max(std::floor(x / resolution()), 0.));
+    const auto yi = static_cast<std::size_t>(
+        std::max(std::floor(y / resolution()), 0.));
+    return Eigen::Vector2i{
+      static_cast<int>(std::min(xi, width() - 1)),
+      static_cast<int>(std::min(yi, height() - 1))};
+  }
+
+  Eigen::Vector2i cell(const Eigen::Vector2d & point) const
+  {
+    return cell(point.x(), point.y());
+  }
+
+  std::size_t index(int xi, int yi) const
+  {
+    if (xi < 0 || static_cast<std::size_t>(xi) >= width()) {
+      return size();
+    }
+    if (yi < 0 || static_cast<std::size_t>(yi) >= height()) {
+      return size();
+    }
+    return xi + yi * width();
+  }
+
+  std::size_t index(const Eigen::Vector2i & cell) const
+  {
+    return index(cell.x(), cell.y());
+  }
+
   std::size_t index(double x, double y) const
   {
-    const auto x_index = static_cast<std::size_t>(std::floor(x / resolution()));
-    const auto y_index = static_cast<std::size_t>(std::floor(y / resolution()));
-    if (x_index >= width() || y_index >= height()) {
-      return size();  // If the point is outside the map, return an invalid index
-    }
-    return x_index + y_index * width();
+    const auto xi = static_cast<int>(std::floor(x / resolution()));
+    const auto yi = static_cast<int>(std::floor(y / resolution()));
+    return index(xi, yi);
   }
 
   std::size_t index(const Eigen::Vector2d & point) const
@@ -86,11 +116,22 @@ public:
     return index(point.x(), point.y());
   }
 
-  Eigen::Vector2d point(std::size_t index) const
+  Eigen::Vector2d point(int xi, int yi) const
   {
     return Eigen::Vector2d{
-      (static_cast<double>(index % width()) + 0.5) * resolution(),
-      (static_cast<double>(index / width()) + 0.5) * resolution()};
+      (static_cast<double>(xi) + 0.5) * resolution(),
+      (static_cast<double>(yi) + 0.5) * resolution()};
+  }
+
+  Eigen::Vector2d point(const Eigen::Vector2i & cell) const
+  {
+    return point(cell.x(), cell.y());
+  }
+
+  Eigen::Vector2d point(std::size_t index) const
+  {
+    return point(static_cast<int>(index % width()),
+                 static_cast<int>(index / width()));
   }
 
   auto neighbors(std::size_t index) const
@@ -113,15 +154,6 @@ public:
     return result;
   }
 
-  double resolution() const
-  {
-    return grid_->info.resolution;
-  }
-
-private:
-  nav_msgs::msg::OccupancyGrid::SharedPtr grid_;
-  Sophus::SE2d origin_;
-
   std::size_t width() const
   {
     return grid_->info.width;
@@ -132,6 +164,14 @@ private:
     return grid_->info.height;
   }
 
+  double resolution() const
+  {
+    return grid_->info.resolution;
+  }
+
+private:
+  nav_msgs::msg::OccupancyGrid::SharedPtr grid_;
+  Sophus::SE2d origin_;
 
   static Sophus::SE2d make_origin_transform(const geometry_msgs::msg::Pose & origin)
   {

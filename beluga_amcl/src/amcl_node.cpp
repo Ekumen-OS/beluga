@@ -38,6 +38,7 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include "beluga_amcl/amcl_node_utils.hpp"
+#include "beluga_amcl/laser_scan.hpp"
 #include "beluga_amcl/occupancy_grid.hpp"
 #include "beluga_amcl/tf2_sophus.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
@@ -405,6 +406,36 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Mixture weight for the probability of getting max range measurements.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("z_max", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Mixture weight for the probability of getting short measurements.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("z_short", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Short readings' exponential distribution parameter.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("lambda_short", rclcpp::ParameterValue(0.1), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Standard deviation of the hit distribution.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
@@ -528,9 +559,6 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Configuring");
 
-  using namespace std::chrono_literals;
-  timer_ = create_wall_timer(200ms, std::bind(&AmclNode::timer_callback, this));
-
   particle_cloud_pub_ = create_publisher<nav2_msgs::msg::ParticleCloud>(
     "particle_cloud",
     rclcpp::SensorDataQoS());
@@ -538,6 +566,9 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
     "pose",
     rclcpp::SystemDefaultsQoS());
+
+  using namespace std::chrono_literals;
+  timer_ = create_wall_timer(200ms, std::bind(&AmclNode::timer_callback, this));
 
   return CallbackReturn::SUCCESS;
 }
@@ -590,17 +621,19 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
   // Message filter that caches laser scan readings until it is possible to transform
   // from laser frame to odom frame and update the particle filter.
   laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
-    *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 50,
-    get_node_logging_interface(),
-    get_node_clock_interface(),
-    tf2::durationFromSec(1.0));
+    *laser_scan_sub_, *tf_buffer_, get_parameter("base_frame_id").as_string(), 50,
+    get_node_logging_interface(), get_node_clock_interface(), tf2::durationFromSec(1.0));
+  laser_scan_filter_->setTargetFrames({
+    get_parameter("odom_frame_id").as_string(),
+    get_parameter("base_frame_id").as_string()
+  });
 
-  using LaserCallback = std::function<void (sensor_msgs::msg::LaserScan::ConstSharedPtr)>;
+  using LaserCallback = std::function<void (sensor_msgs::msg::LaserScan::SharedPtr)>;
   laser_scan_connection_ = laser_scan_filter_->registerCallback(
     std::visit(
       [this](const auto & policy) -> LaserCallback
       {
-        return [this, &policy](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+        return [this, &policy](sensor_msgs::msg::LaserScan::SharedPtr laser_scan) {
           this->laser_callback(policy, std::move(laser_scan));
         };
       }, execution_policy_));
@@ -622,7 +655,11 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State &
   tf_listener_.reset();
   tf_broadcaster_.reset();
   tf_buffer_.reset();
+
+  // NOTE(hidmic): https://github.com/ros/bond_core/issues/92
+  // will cause SIGABRT on node destruction until fixed
   bond_.reset();
+
   return CallbackReturn::SUCCESS;
 }
 
@@ -631,6 +668,7 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   pose_pub_.reset();
+  timer_.reset();
   return CallbackReturn::SUCCESS;
 }
 
@@ -639,6 +677,12 @@ AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State &)
   RCLCPP_INFO(get_logger(), "Shutting down");
   return CallbackReturn::SUCCESS;
 }
+
+using LaserLocalizationInterface2d = beluga::LaserLocalizationInterface2d<LaserScan>;
+
+template<class MotionDescriptor, class SensorDescriptor>
+using AdaptiveMonteCarloLocalization2d =
+    beluga::AdaptiveMonteCarloLocalization2d<MotionDescriptor, SensorDescriptor, LaserScan>;
 
 void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 {
@@ -702,18 +746,19 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     };
 
   using LikelihoodField = beluga::mixin::descriptor<
-    ciabatta::curry<beluga::LikelihoodFieldModel, OccupancyGrid>::mixin,
+    ciabatta::curry<beluga::LikelihoodFieldModel, OccupancyGrid, LaserScan>::mixin,
     beluga::LikelihoodFieldModelParam>;
 
   using BeamSensorModel = beluga::mixin::descriptor<
-    ciabatta::curry<beluga::BeamSensorModel, OccupancyGrid>::mixin,
-    beluga::BeamModelParams>;
+    ciabatta::curry<beluga::BeamSensorModel, OccupancyGrid, LaserScan>::mixin,
+    beluga::BeamModelParam>;
 
   using SensorDescriptor = std::variant<LikelihoodField, BeamSensorModel>;
   auto get_sensor_descriptor = [this](std::string_view name) -> SensorDescriptor {
       if (name == kLikelihoodFieldModelName) {
         auto params = beluga::LikelihoodFieldModelParam{};
         params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
+        params.min_laser_distance = get_parameter("laser_min_range").as_double();
         params.max_laser_distance = get_parameter("laser_max_range").as_double();
         params.z_hit = get_parameter("z_hit").as_double();
         params.z_random = get_parameter("z_rand").as_double();
@@ -721,8 +766,14 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
         return LikelihoodField{params};
       }
       if (name == kBeamSensorModelName) {
-        // TODO(Ramiro) : Expose parameters.
-        auto params = beluga::BeamModelParams{};
+        auto params = beluga::BeamModelParam{};
+        params.z_hit = get_parameter("z_hit").as_double();
+        params.z_short = get_parameter("z_short").as_double();
+        params.z_max = get_parameter("z_max").as_double();
+        params.z_rand = get_parameter("z_rand").as_double();
+        params.sigma_hit = get_parameter("sigma_hit").as_double();
+        params.lambda_short = get_parameter("lambda_short").as_double();
+        params.beam_max_range = get_parameter("laser_max_range").as_double();
         return BeamSensorModel{params};
       }
       throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
@@ -735,8 +786,6 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
   try {
     using beluga::mixin::make_mixin;
-    using beluga::LaserLocalizationInterface2d;
-    using beluga::AdaptiveMonteCarloLocalization2d;
     particle_filter_ = make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
       sampler_params,
       limiter_params,
@@ -810,7 +859,7 @@ void AmclNode::timer_callback()
 template<typename ExecutionPolicy>
 void AmclNode::laser_callback(
   ExecutionPolicy && exec_policy,
-  sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
+  sensor_msgs::msg::LaserScan::SharedPtr scan_message)
 {
   if (!particle_filter_) {
     return;
@@ -824,20 +873,20 @@ void AmclNode::laser_callback(
       tf_buffer_->lookupTransform(
         get_parameter("odom_frame_id").as_string(),
         get_parameter("base_frame_id").as_string(),
-        tf2_ros::fromMsg(laser_scan->header.stamp)).transform,
+        tf2_ros::fromMsg(scan_message->header.stamp)).transform,
       odom_to_base_transform);
   } catch (const tf2::TransformException & error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
     return;
   }
 
-  auto base_to_laser_transform = Sophus::SE3d{};
+  auto base_to_laser_transform = Sophus::SE2d{};
   try {
     tf2::convert(
       tf_buffer_->lookupTransform(
         get_parameter("base_frame_id").as_string(),
-        laser_scan->header.frame_id,
-        tf2_ros::fromMsg(laser_scan->header.stamp)).transform,
+        scan_message->header.frame_id,
+        tf2_ros::fromMsg(scan_message->header.stamp)).transform,
       base_to_laser_transform);
   } catch (const tf2::TransformException & error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from base to laser: %s", error.what());
@@ -849,13 +898,9 @@ void AmclNode::laser_callback(
     particle_filter_->update_motion(odom_to_base_transform);
     particle_filter_->sample(exec_policy);
     const auto time2 = std::chrono::high_resolution_clock::now();
-    particle_filter_->update_sensor(
-      utils::make_points_from_laser_scan(
-        *laser_scan,
-        base_to_laser_transform,
-        static_cast<std::size_t>(get_parameter("max_beams").as_int()),
-        static_cast<float>(get_parameter("laser_min_range").as_double()),
-        static_cast<float>(get_parameter("laser_max_range").as_double())));
+    const auto max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
+    particle_filter_->update_sensor(LaserScan{
+        scan_message, max_beams, base_to_laser_transform});
     particle_filter_->reweight(exec_policy);
     const auto time3 = std::chrono::high_resolution_clock::now();
     particle_filter_->resample();
@@ -865,7 +910,7 @@ void AmclNode::laser_callback(
       get_logger(), *get_clock(), 2000,
       "Particle filter update stats: %ld particles %ld points - %.3fms %.3fms %.3fms",
       particle_filter_->particle_count(),
-      laser_scan->ranges.size(),
+      scan_message->ranges.size(),
       std::chrono::duration<double, std::milli>(time2 - time1).count(),
       std::chrono::duration<double, std::milli>(time3 - time2).count(),
       std::chrono::duration<double, std::milli>(time4 - time3).count());
@@ -874,23 +919,23 @@ void AmclNode::laser_callback(
   const auto [pose, covariance] = particle_filter_->estimate();
 
   {
-    auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
-    message.header.stamp = laser_scan->header.stamp;
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
-    tf2::toMsg(pose, message.pose.pose);
-    message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
-    pose_pub_->publish(message);
+    auto pose_message = geometry_msgs::msg::PoseWithCovarianceStamped{};
+    pose_message.header.stamp = scan_message->header.stamp;
+    pose_message.header.frame_id = get_parameter("global_frame_id").as_string();
+    tf2::toMsg(pose, pose_message.pose.pose);
+    pose_message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
+    pose_pub_->publish(pose_message);
   }
 
   if (get_parameter("tf_broadcast").as_bool()) {
-    auto message = geometry_msgs::msg::TransformStamped{};
+    auto tf_message = geometry_msgs::msg::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
-    message.header.stamp = now() +
+    tf_message.header.stamp = now() +
       tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
-    message.child_frame_id = get_parameter("odom_frame_id").as_string();
-    message.transform = tf2::toMsg(odom_to_base_transform * pose.inverse());
-    tf_broadcaster_->sendTransform(message);
+    tf_message.header.frame_id = get_parameter("global_frame_id").as_string();
+    tf_message.child_frame_id = get_parameter("odom_frame_id").as_string();
+    tf_message.transform = tf2::toMsg(odom_to_base_transform * pose.inverse());
+    tf_broadcaster_->sendTransform(tf_message);
   }
 }
 

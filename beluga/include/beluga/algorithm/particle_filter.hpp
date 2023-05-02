@@ -19,6 +19,7 @@
 #include <random>
 #include <utility>
 
+#include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/view/common.hpp>
 
 /**
@@ -176,6 +177,13 @@ class BootstrapParticleFilter : public Mixin {
     if (resampling_vote_result) {
       this->self().initialize_particles(
           this->self().generate_samples_from_particles(generator_) | this->self().take_samples());
+    }
+    auto weights = this->self().weights() | ranges::views::common;
+    const auto weight_sum = ranges::accumulate(weights, 0.);
+    if (weight_sum > 0.) {
+      std::transform(std::begin(weights), std::end(weights), std::begin(weights), [weight_sum](auto weight) {
+        return weight / weight_sum;
+      });
     }
   }
 

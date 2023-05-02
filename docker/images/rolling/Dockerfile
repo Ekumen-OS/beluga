@@ -1,4 +1,4 @@
-FROM ros:humble-ros-base-jammy
+FROM ros:rolling-ros-base-jammy
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -70,9 +70,11 @@ RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 
 COPY --chown=$USER:$GROUP . $USER_WS/src/beluga
 
-RUN sudo apt-get update \
+RUN git -C $USER_WS/src clone https://github.com/ros-planning/navigation2.git
+
+RUN sudo apt-get update && sudo apt-get -y dist-upgrade \
   && rosdep update \
-  && rosdep install -i --from-path src -y \
+  && rosdep install -i --from-path src -y --skip-keys 'slam_toolbox' \
   && sudo rm -rf /var/lib/apt/lists/*
 
 ENV WITHIN_DEV 1

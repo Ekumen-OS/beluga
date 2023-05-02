@@ -86,9 +86,27 @@ class StaticOccupancyGrid {
   [[nodiscard]] double resolution() const { return resolution_; }
 };
 
+class SimpleLaserScan {
+ public:
+  explicit SimpleLaserScan(std::vector<Eigen::Vector2d> points) : points_(std::move(points)) {}
+
+  [[nodiscard]] Sophus::SE2d origin() { return Sophus::SE2d{}; }
+
+  [[nodiscard]] auto range_bounds() const { return std::make_pair(0., 100.); };
+
+  [[nodiscard]] auto ranges() const {
+    return points_ | ranges::views::transform([](const auto& point) { return point.norm(); });
+  }
+
+  [[nodiscard]] const auto& points_in_cartesian_coordinates() const { return points_; }
+
+ private:
+  std::vector<Eigen::Vector2d> points_;
+};
+
 using UUT = ciabatta::mixin<
-    ciabatta::curry<beluga::LikelihoodFieldModel, StaticOccupancyGrid<5, 5>>::mixin,
-    ciabatta::provides<beluga::LaserSensorModelInterface2d>::mixin>;
+    ciabatta::curry<beluga::LikelihoodFieldModel, StaticOccupancyGrid<5, 5>, SimpleLaserScan>::mixin,
+    ciabatta::provides<beluga::LaserSensorModelInterface2d<SimpleLaserScan>>::mixin>;
 
 TEST(LikelihoodFieldModel, LikelihoodField) {
   constexpr double kResolution = 0.5;
@@ -110,7 +128,7 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
   };
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
   ASSERT_THAT(mixin.likelihood_field(), testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
 }
@@ -127,22 +145,22 @@ TEST(LikelihoodFieldModel, ImportanceWeight) {
     kResolution};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{1.25, 1.25}});
+  mixin.update_sensor(SimpleLaserScan{{{1.25, 1.25}}});
   ASSERT_NEAR(2.068, mixin.importance_weight(grid.origin()), 0.003);
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{2.25, 2.25}});
+  mixin.update_sensor(SimpleLaserScan{{{2.25, 2.25}}});
   ASSERT_NEAR(1.000, mixin.importance_weight(grid.origin()), 0.003);
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{-50.0, 50.0}});
+  mixin.update_sensor(SimpleLaserScan{{{-50.0, 50.0}}});
   ASSERT_NEAR(1.000, mixin.importance_weight(grid.origin()), 0.003);
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{1.20, 1.20}, {1.25, 1.25}, {1.30, 1.30}});
+  mixin.update_sensor(SimpleLaserScan{{{1.20, 1.20}, {1.25, 1.25}, {1.30, 1.30}}});
   ASSERT_NEAR(4.205, mixin.importance_weight(grid.origin()), 0.01);
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{0.0, 0.0}});
+  mixin.update_sensor(SimpleLaserScan{{{0.0, 0.0}}});
   ASSERT_NEAR(2.068, mixin.importance_weight(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.25, 1.25}}), 0.003);
 }
 
@@ -159,13 +177,13 @@ TEST(LikelihoodFieldModel, GridWithOffset) {
     Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{-5, -5}}};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{4.5, 4.5}});
+  mixin.update_sensor(SimpleLaserScan{{{4.5, 4.5}}});
   ASSERT_NEAR(2.068, mixin.importance_weight(Sophus::SE2d{}), 0.003);
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
+  mixin.update_sensor(SimpleLaserScan{{{9.5, 9.5}}});
   ASSERT_NEAR(2.068, mixin.importance_weight(grid.origin()), 0.003);
 }
 
@@ -182,13 +200,13 @@ TEST(LikelihoodFieldModel, GridWithRotation) {
     Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2}, Eigen::Vector2d{0.0, 0.0}}};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{-9.5, 9.5}});
+  mixin.update_sensor(SimpleLaserScan{{{-9.5, 9.5}}});
   ASSERT_NEAR(2.068, mixin.importance_weight(Sophus::SE2d{}), 0.003);
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
+  mixin.update_sensor(SimpleLaserScan{{{9.5, 9.5}}});
   ASSERT_NEAR(2.068, mixin.importance_weight(grid.origin()), 0.003);
 }
 
@@ -208,13 +226,13 @@ TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
     origin};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 0.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{-4.5, 4.5}});
+  mixin.update_sensor(SimpleLaserScan{{{-4.5, 4.5}}});
   ASSERT_NEAR(2.068, mixin.importance_weight(Sophus::SE2d{}), 0.003);
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
+  mixin.update_sensor(SimpleLaserScan{{{9.5, 9.5}}});
   ASSERT_NEAR(2.068, mixin.importance_weight(grid.origin()), 0.003);
 }
 

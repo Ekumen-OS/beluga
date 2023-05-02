@@ -54,6 +54,33 @@ class StaticOccupancyGrid {
 
   [[nodiscard]] std::size_t index(const Eigen::Vector2d& point) const { return index(point.x(), point.y()); }
 
+  [[nodiscard]] std::size_t index(int xi, int yi) const {
+    if (xi < 0 || static_cast<std::size_t>(xi) >= width()) {
+      return size();
+    }
+    if (yi < 0 || static_cast<std::size_t>(yi) >= height()) {
+      return size();
+    }
+    return xi + yi * width();
+  }
+
+  [[nodiscard]] std::size_t index(const Eigen::Vector2i& cell) const { return index(cell.x(), cell.y()); }
+
+  [[nodiscard]] Eigen::Vector2i cell(double x, double y) const {
+    const auto xi = static_cast<std::size_t>(std::max(std::floor(x / resolution()), 0.));
+    const auto yi = static_cast<std::size_t>(std::max(std::floor(y / resolution()), 0.));
+    return Eigen::Vector2i{static_cast<int>(std::min(xi, width() - 1)), static_cast<int>(std::min(yi, height() - 1))};
+  }
+
+  [[nodiscard]] Eigen::Vector2i cell(const Eigen::Vector2d& point) const { return cell(point.x(), point.y()); }
+
+  [[nodiscard]] Eigen::Vector2d point(int xi, int yi) const {
+    return Eigen::Vector2d{
+        (static_cast<double>(xi) + 0.5) * resolution(), (static_cast<double>(yi) + 0.5) * resolution()};
+  }
+
+  [[nodiscard]] Eigen::Vector2d point(const Eigen::Vector2i& cell) const { return point(cell.x(), cell.y()); }
+
   [[nodiscard]] Eigen::Vector2d point(std::size_t index) const {
     return Eigen::Vector2d{
         (static_cast<double>(index % width()) + 0.5) * resolution(),
@@ -78,32 +105,47 @@ class StaticOccupancyGrid {
     }
     return result;
   }
+
   [[nodiscard]] double resolution() const { return resolution_; }
+  [[nodiscard]] std::size_t width() const { return Cols; }
+  [[nodiscard]] std::size_t height() const { return Rows; }
 
  private:
   std::array<bool, Rows * Cols> grid_;
   Sophus::SE2d origin_;
   Sophus::SE2d origin_inverse_;
   double resolution_;
+};
 
-  [[nodiscard]] std::size_t width() const { return Cols; }
-  [[nodiscard]] std::size_t height() const { return Rows; }
+class SimpleLaserScan {
+ public:
+  explicit SimpleLaserScan(std::vector<Eigen::Vector2d> points) : points_(std::move(points)) {}
+
+  [[nodiscard]] Sophus::SE2d origin() { return Sophus::SE2d{}; }
+
+  [[nodiscard]] auto points_in_polar_coordinates() const {
+    return points_ | ranges::views::transform([](const auto& point) {
+             return Eigen::Vector2d{point.norm(), std::atan2(point.y(), point.x())};
+           });
+  }
+
+ private:
+  std::vector<Eigen::Vector2d> points_;
 };
 
 using UUT = ciabatta::mixin<
-    ciabatta::curry<beluga::BeamSensorModel, StaticOccupancyGrid<5, 5>>::mixin,
-    ciabatta::provides<beluga::LaserSensorModelInterface2d>::mixin>;
+    ciabatta::curry<beluga::BeamSensorModel, StaticOccupancyGrid<5, 5>, SimpleLaserScan>::mixin,
+    ciabatta::provides<beluga::LaserSensorModelInterface2d<SimpleLaserScan>>::mixin>;
 
-BeamModelParams GetParams() {
-  BeamModelParams ret;
+BeamModelParam GetParams() {
+  BeamModelParam ret;
   ret.z_hit = 0.5;
-  ret.z_short = 0.05;
+  ret.z_short = 0.15;
   ret.z_max = 0.05;
-  ret.z_rand = 0.5;
+  ret.z_rand = 0.3;
   ret.sigma_hit = 0.2;
   ret.lambda_short = 0.1;
-  ret.laser_max_range = 60;
-  ret.max_beams = 60;
+  ret.beam_max_range = 60;
   return ret;
 }
 TEST(BeamSensorModel, ImportanceWeight) {
@@ -122,21 +164,22 @@ TEST(BeamSensorModel, ImportanceWeight) {
   auto mixin = UUT{params, grid};
 
   // Perfect hit.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{0.5, 0.5}});
-  EXPECT_NEAR(0.13135474537037034, mixin.importance_weight(grid.origin()), 1e-6);
+  mixin.update_sensor(SimpleLaserScan{{{1., 1.}}});
+  EXPECT_NEAR(1.0070837640672667, mixin.importance_weight(grid.origin()), 1e-6);
 
-  // This is a hit that's before the obstacle, hence is affected by the unexpected obstacle part of the distribution.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{0.4, 0.4}});
-  EXPECT_NEAR(0.065187461347907719, mixin.importance_weight(grid.origin()), 1e-6);
+  // This is a hit that's before the obstacle, hence is affected by
+  // the unexpected obstacle part of the distribution.
+  mixin.update_sensor(SimpleLaserScan{{{0.75, 0.75}}});
+  EXPECT_NEAR(0.031660475111335608, mixin.importance_weight(grid.origin()), 1e-6);
 
-  // Hit that's past the obstacle, hence is not affected by the unexpected obstacle part of the distribution.
-  // This should be really close to zero.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{2.25, 2.25}});
-  EXPECT_NEAR(0.000, mixin.importance_weight(grid.origin()), 1e-6);
+  // Hit that's past the obstacle, hence is not affected by the unexpected
+  // obstacle part of the distribution. This should be really close to zero.
+  mixin.update_sensor(SimpleLaserScan{{{2.25, 2.25}}});
+  EXPECT_NEAR(0.0, mixin.importance_weight(grid.origin()), 1e-6);
 
-  // Range return longer than laser_max_dist, so the max measurement distribution kicks in and this shouldn't be
-  // zero.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{params.laser_max_range, params.laser_max_range}});
-  EXPECT_NEAR(0.00012500000000000003, mixin.importance_weight(grid.origin()), 1e-6);
+  // Range return longer than laser_max_dist, so the max measurement distribution
+  // kicks in and this shouldn't be zero.
+  mixin.update_sensor(SimpleLaserScan{{{params.beam_max_range, params.beam_max_range}}});
+  EXPECT_NEAR(std::pow(params.z_max, 3), mixin.importance_weight(grid.origin()), 1e-6);
 }
 }  // namespace beluga

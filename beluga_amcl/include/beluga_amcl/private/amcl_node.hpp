@@ -32,6 +32,7 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 
 #include "beluga_amcl/private/execution_policy.hpp"
+#include "beluga_amcl/laser_scan.hpp"
 
 namespace beluga_amcl
 {
@@ -56,11 +57,11 @@ protected:
   template<typename ExecutionPolicy>
   void laser_callback(
     ExecutionPolicy && exec_policy,
-    sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan);
+    sensor_msgs::msg::LaserScan::SharedPtr laser_scan);
   void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
   void reinitialize_with_pose(const Eigen::Vector3d & mean, const Eigen::Matrix3d & covariance);
 
-  std::unique_ptr<beluga::LaserLocalizationInterface2d> particle_filter_;
+  std::unique_ptr<beluga::LaserLocalizationInterface2d<LaserScan>> particle_filter_;
   execution::Policy execution_policy_;
 
   std::unique_ptr<bond::Bond> bond_;

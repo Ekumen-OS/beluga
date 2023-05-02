@@ -52,12 +52,16 @@ namespace beluga {
  */
 
 /// Pure abstract class representing an interface for laser-based localization algorithms.
+/**
+ * \tparam LaserScan Planar laser scan type that implements \ref Scan2dPage.
+ */
+template <class LaserScan>
 using LaserLocalizationInterface2d = beluga::mixin::compose_interfaces<
     BaseParticleFilterInterface,
     StorageInterface<Sophus::SE2d, beluga::Weight>,
     EstimationInterface2d,
     OdometryMotionModelInterface2d,
-    LaserSensorModelInterface2d>;
+    LaserSensorModelInterface2d<LaserScan>>;
 
 /// Commonly used resampling policies combined in a single mixin.
 using CombinedResamplingPolicy = ciabatta::
@@ -70,8 +74,10 @@ using CombinedResamplingPolicy = ciabatta::
  *
  * \tparam MotionDescriptor A descriptor of a mixin that implements \ref MotionModelPage.
  * \tparam SensorDescriptor A descriptor of a mixin that implements \ref SensorModelPage.
+ * \tparam LaserScan Planar laser scan type that implements \ref Scan2dPage.
  */
-template <class MotionDescriptor, class SensorDescriptor>
+template <class MotionDescriptor, class SensorDescriptor, class LaserScan>
+
 using MonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
     ciabatta::curry<StructureOfArrays, Sophus::SE2d, beluga::Weight>::mixin,
@@ -82,7 +88,7 @@ using MonteCarloLocalization2d = ciabatta::mixin<
     CombinedResamplingPolicy::template mixin,
     MotionDescriptor::template mixin,
     SensorDescriptor::template mixin,
-    ciabatta::provides<LaserLocalizationInterface2d>::mixin>;
+    ciabatta::provides<LaserLocalizationInterface2d<LaserScan>>::template mixin>;
 
 /// An implementation of Adaptive Monte Carlo Localization.
 /**
@@ -91,8 +97,9 @@ using MonteCarloLocalization2d = ciabatta::mixin<
  *
  * \tparam MotionDescriptor A descriptor of a mixin that implements \ref MotionModelPage.
  * \tparam SensorDescriptor A descriptor of a mixin that implements \ref SensorModelPage.
+ * \tparam LaserScan Planar laser scan type that implements \ref Scan2dPage.
  */
-template <class MotionDescriptor, class SensorDescriptor>
+template <class MotionDescriptor, class SensorDescriptor, class LaserScan>
 using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
     ciabatta::curry<StructureOfArrays, Sophus::SE2d, beluga::Weight, beluga::Cluster>::mixin,
@@ -103,7 +110,7 @@ using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     CombinedResamplingPolicy::template mixin,
     MotionDescriptor::template mixin,
     SensorDescriptor::template mixin,
-    ciabatta::provides<LaserLocalizationInterface2d>::mixin>;
+    ciabatta::provides<LaserLocalizationInterface2d<LaserScan>>::template mixin>;
 
 }  // namespace beluga
 

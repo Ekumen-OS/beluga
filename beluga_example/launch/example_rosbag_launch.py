@@ -155,6 +155,10 @@ def generate_launch_description(
                 name='amcl',
                 output='screen',
                 arguments=['--ros-args', '--log-level', 'info'],
+                additional_env={
+                    'LD_PRELOAD': '/usr/lib/x86_64-linux-gnu/libprofiler.so',
+                    'CPUPROFILE': '/tmp/amcl_node.pprof',
+                },
                 prefix=prefix,
                 params_file=amcl_parameters_file,
             ),

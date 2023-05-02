@@ -18,8 +18,7 @@
 #include <utility>
 #include <vector>
 
-#include <sensor_msgs/msg/laser_scan.hpp>
-#include <sophus/se3.hpp>
+#include <Eigen/Core>
 
 namespace beluga_amcl::utils
 {
@@ -37,22 +36,6 @@ inline Eigen::IOFormat make_eigen_comma_format()
     ", ",  // row separator
   };
 }
-
-/// Generates a vector of points to update the measurement model.
-/**
- * \param laser_scan Laser scan message to process.
- * \param laser_transform Transform from laser frame to robot frame.
- * \param max_beam_count Maximum number of evenly-spaced beams to be taken from the scan.
- * \param range_min Minimum range value. Beams with a range below this value will be ignored.
- * \param range_max Maximum range value. Beams with a range above this value will be ignored.
- * \return A vector of pairs of coordinates in the robot's reference frame.
- */
-std::vector<std::pair<double, double>> make_points_from_laser_scan(
-  const sensor_msgs::msg::LaserScan & laser_scan,
-  const Sophus::SE3d & laser_transform,
-  std::size_t max_beam_count,
-  float range_min,
-  float range_max);
 
 }  // namespace beluga_amcl::utils
 

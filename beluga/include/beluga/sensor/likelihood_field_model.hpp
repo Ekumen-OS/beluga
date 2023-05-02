@@ -46,6 +46,8 @@ struct LikelihoodFieldModelParam {
    * then this value will be used.
    */
   double max_obstacle_distance;
+  /// Minimum range of a laser ray.
+  double min_laser_distance;
   /// Maximum range of a laser ray.
   double max_laser_distance;
   /// Weight used to combine the probability of hitting an obstacle.
@@ -94,8 +96,10 @@ struct LikelihoodFieldModelParam {
  * \tparam Mixin The mixed-in type with no particular requirements.
  * \tparam OccupancyGrid Type representing an occupancy grid.
  *  It must satisfy \ref OccupancyGrid2dPage.
+ * \tparam Scan Type representing a planar scan.
+ *  It must satisfy \ref Scan2dPage.
  */
-template <class Mixin, class OccupancyGrid>
+template <class Mixin, class OccupancyGrid, class Scan>
 class LikelihoodFieldModel : public Mixin {
  public:
   /// State type of a particle.
@@ -103,7 +107,7 @@ class LikelihoodFieldModel : public Mixin {
   /// Weight type of the particle.
   using weight_type = double;
   /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<std::pair<double, double>>;
+  using measurement_type = Scan;
 
   /// Parameter type that the constructor uses to configure the likelihood field model.
   using param_type = LikelihoodFieldModelParam;
@@ -154,30 +158,42 @@ class LikelihoodFieldModel : public Mixin {
    * \return Calculated importance weight.
    */
   [[nodiscard]] weight_type importance_weight(const state_type& state) const {
+    const auto lock = std::shared_lock<std::shared_mutex>{scan_mutex_};
     const auto transform = grid_.origin().inverse() * state;
-    const auto lock = std::shared_lock<std::shared_mutex>{points_mutex_};
-    // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
-    // See https://github.com/ekumenlabs/beluga/issues/153
     return std::transform_reduce(
-        points_.cbegin(), points_.cend(), 1.0, std::plus{},
+        scan_points_.begin(), scan_points_.end(), 1.0, std::plus{},
         [this, x_offset = transform.translation().x(), y_offset = transform.translation().y(),
          cos_theta = transform.so2().unit_complex().x(), sin_theta = transform.so2().unit_complex().y(),
          unknown_space_occupancy_prob = 1. / params_.max_laser_distance](const auto& point) {
           // Transform the end point of the laser to the global coordinate system.
           // Not using Eigen/Sophus because they make the routine x10 slower.
           // See `benchmark_likelihood_field_model.cpp` for reference.
-          const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
-          const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
+          const auto x = point.x() * cos_theta - point.y() * sin_theta + x_offset;
+          const auto y = point.x() * sin_theta + point.y() * cos_theta + y_offset;
           const auto index = grid_.index(x, y);
           const auto pz = index < likelihood_field_.size() ? likelihood_field_[index] : unknown_space_occupancy_prob;
+          // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
+          // See https://github.com/ekumenlabs/beluga/issues/153
           return pz * pz * pz;
         });
   }
 
-  /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
-  void update_sensor(measurement_type&& points) final {
-    const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
-    points_ = std::move(points);
+  /// \copydoc LaserSensorModelInterface2d::update_sensor(Scan&& scan)
+  void update_sensor(Scan&& scan) final {
+    const auto lock = std::lock_guard<std::shared_mutex>{scan_mutex_};
+    auto [r_min, r_max] = scan.range_bounds();
+    r_min = std::max(r_min, params_.min_laser_distance);
+    r_max = std::min(r_max, params_.max_laser_distance);
+    scan_points_ = ranges::views::zip(scan.ranges(), scan.points_in_cartesian_coordinates()) |
+                   ranges::views::filter([&](const auto& tuple) {
+                     const auto& [r, _] = tuple;
+                     return r >= r_min && r < r_max;
+                   }) |
+                   ranges::views::transform([&](const auto& tuple) {
+                     const auto& [_, point] = tuple;
+                     return scan.origin() * point;
+                   }) |
+                   ranges::to<std::vector>;
   }
 
  private:
@@ -185,8 +201,8 @@ class LikelihoodFieldModel : public Mixin {
   OccupancyGrid grid_;
   std::vector<std::size_t> free_cells_;
   std::vector<double> likelihood_field_;
-  std::vector<std::pair<double, double>> points_;
-  mutable std::shared_mutex points_mutex_;
+  std::vector<Eigen::Vector2d> scan_points_;
+  mutable std::shared_mutex scan_mutex_;
 
   static std::vector<std::size_t> make_free_cells_vector(const OccupancyGrid& grid) {
     auto free_cells = std::vector<std::size_t>{};
