@@ -670,7 +670,7 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
   pose_pub_.reset();
   global_localization_server_.reset();
 
-  particle_filter_.reset();
+
   initial_pose_is_known_ = false;
   if (this->get_parameter("set_initial_pose").as_bool()) {
     const auto [pose, covariance] = particle_filter_->estimate();
@@ -691,6 +691,7 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
         "initial_pose.yaw",
         rclcpp::ParameterValue(pose.so2().log())));
   }
+  particle_filter_.reset();
   return CallbackReturn::SUCCESS;
 }
 
