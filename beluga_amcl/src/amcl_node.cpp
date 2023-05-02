@@ -672,25 +672,6 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
 
 
   initial_pose_is_known_ = false;
-  if (this->get_parameter("set_initial_pose").as_bool()) {
-    const auto [pose, covariance] = particle_filter_->estimate();
-    this->set_parameter(
-      rclcpp::Parameter(
-        "initial_pose.x",
-        rclcpp::ParameterValue(pose.translation().x())));
-    this->set_parameter(
-      rclcpp::Parameter(
-        "initial_pose.y",
-        rclcpp::ParameterValue(pose.translation().y())));
-    this->set_parameter(
-      rclcpp::Parameter(
-        "initial_pose.z",
-        rclcpp::ParameterValue(0.0)));
-    this->set_parameter(
-      rclcpp::Parameter(
-        "initial_pose.yaw",
-        rclcpp::ParameterValue(pose.so2().log())));
-  }
   particle_filter_.reset();
   return CallbackReturn::SUCCESS;
 }
