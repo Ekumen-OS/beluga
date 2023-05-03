@@ -279,8 +279,8 @@ class Bresenham2i {
    * \return subtended bresenham2i::line.
    */
   template <class Vector2i = Eigen::Vector2i>
-  auto operator()(const Vector2i& p0, const Vector2i& p1) const {
-    return Line{p0, p1, variant_};
+  auto operator()(Vector2i p0, Vector2i p1) const {
+    return Line{std::move(p0), std::move(p1), variant_};
   }
 
  private:

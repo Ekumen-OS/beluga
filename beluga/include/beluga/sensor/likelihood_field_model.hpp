@@ -80,12 +80,12 @@ struct LikelihoodFieldModelParam {
  *   coordinates in the grid frame of the centroid of the cell at those discrete coordinates
  *   as a `Eigen::Vector2d`.
  * - Given a possible const `Eigen::Vector2i` `c`, `g.point(c)` is equivalent to `g.point(c.x(), c.y())`.
- * - Give possibly const values `x` and `y` of type `double`, `g.index(x, y)` returns a `std::size`,
+ * - Given possibly const values `x` and `y` of type `double`, `g.index(x, y)` returns a `std::size`,
  *   representing the index of the cell.
- * - Give a possibly const `Eigen::Vector2d` `p`, `g.index(p)` is equivalent to `g.index(p.x(), p.y())`.
- * - Give possibly const values `x` and `y` of type `int`, `g.index(x, y)` returns a `std::size`,
+ * - Given a possibly const `Eigen::Vector2d` `p`, `g.index(p)` is equivalent to `g.index(p.x(), p.y())`.
+ * - Given possibly const values `x` and `y` of type `int`, `g.index(x, y)` returns a `std::size`,
  *   representing the index of the cell at those discrete coordinates.
- * - Give a possibly const `Eigen::Vector2i` `c`, `g.index(c)` is equivalent to `g.index(c.x(), c.y())`.
+ * - Given a possibly const `Eigen::Vector2i` `c`, `g.index(c)` is equivalent to `g.index(c.x(), c.y())`.
  *
  * Given c a possible const instance of C:
  * - OccupancyGrid::Traits::is_free(c) returns true if the cell is free, false if not.
