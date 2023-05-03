@@ -14,7 +14,7 @@
 
 #ifndef BELUGA_ALGORITHM_RAYCASTING_HPP
 #define BELUGA_ALGORITHM_RAYCASTING_HPP
-#include <iostream>
+
 #include <optional>
 
 #include <range/v3/view/all.hpp>
