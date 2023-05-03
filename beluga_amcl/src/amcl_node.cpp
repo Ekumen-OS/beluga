@@ -834,7 +834,7 @@ void AmclNode::timer_callback()
   if (!particle_filter_) {
     return;
   }
-  //we decide to publish the particles when !initial_pose_is_known_
+  // we decide to publish the particles when !initial_pose_is_known_
   if (particle_cloud_pub_->get_subscription_count() == 0) {
     return;
   }
