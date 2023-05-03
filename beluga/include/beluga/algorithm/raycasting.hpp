@@ -41,6 +41,12 @@ class bresenham2i {
   };
 
   /// Bresenham's 2D line drawing as a range.
+  /**
+   * \tparam Vector2 2D vector type. Must be default constructible,
+   *   copy constructible, and implement `Vector2d::x()` and `Vector2::y()`
+   *   methods returning both lvalues (for mutation) and rvalues.
+   * \tparam Integer Integer scalar type.
+   */
   template <class Vector2, typename Integer = typename Vector2::Scalar>
   class line : public ranges::view_interface<line<Vector2, Integer>> {
    public:
@@ -49,25 +55,44 @@ class bresenham2i {
      public:
       /// Past-of-end iterator sentinel.
       struct sentinel {
-        // Abide to std::sentinel_for concept
+        /// Equality operator overload, for symmetry (as required by ranges::sentinel_for).
         bool operator==(const iterator& other) const { return other == *this; }
+
+        /// Inequality operator overload, for symmetry (as required by ranges::sentinel_for).
         bool operator!=(const iterator& other) const { return !(other == *this); }
       };
 
+      /// Iterator category tag.
       using iterator_category = std::forward_iterator_tag;
+
+      /// Iterator difference type (as required by ranges::view_).
       using difference_type = std::ptrdiff_t;
+
+      /// Iterated value type.
       using value_type = Vector2;
+
+      /// Pointer to iterated value type.
       using pointer = Vector2*;
+
+      /// Reference to iterated value type.
       using reference = Vector2&;
 
-      // Abide to std::semiregular concept
+      /// Default constructor.
       iterator() = default;
+
+      /// Default copy constructor.
       iterator(const iterator&) = default;
+
+      /// Default move constructor.
       iterator(iterator&&) = default;
+
+      /// Default copy assignment operator overload.
       iterator& operator=(const iterator&) = default;
+
+      /// Default move assignment operator overload.
       iterator& operator=(iterator&&) = default;
 
-      /// Constructs a Bresenham's 2D line iterator
+      /// Constructs a Bresenham's 2D `line` iterator.
       explicit iterator(const line* line) : p_(line->p0_), x_(line->p0_.x()), y_(line->p0_.y()) {
         xspan_ = line->p1_.x() - line->p0_.x();
         xstep_ = static_cast<decltype(xspan_)>(1);
@@ -98,12 +123,14 @@ class bresenham2i {
         modified_ = line->variant_ == bresenham2i::MODIFIED;
       }
 
+      /// Post-fix operator overload.
       iterator operator++(int) {
         iterator other = *this;
         this->operator++();
         return other;
       }
 
+      /// Prefix operator overload.
       iterator& operator++() {
         if (checks_ == 0) {
           if (++step_ > xspan_) {
@@ -144,20 +171,26 @@ class bresenham2i {
         return *this;
       }
 
+      /// Dereference operator overload (only const).
       const Vector2& operator*() const { return p_; }
 
+      /// Arrow operator overload (only const).
       const Vector2* operator->() const { return &p_; }
 
+      /// Equality operator overload (as required by std::forward_iterator).
       bool operator==(const iterator& other) const {
         return x_ == other.x_ && y_ == other.y_ && xstep_ == other.xstep_ && ystep_ == other.ystep_ &&
                xspan_ == other.xspan_ && yspan_ == other.yspan_ && step_ == other.step_ && checks_ == other.checks_ &&
                modified_ == other.modified_ && reversed_ == other.reversed_;
       }
 
+      /// Inequality operator overload (as required by std::forward_iterator).
       bool operator!=(const iterator& other) const { return !(*this == other); }
 
+      /// Sentinel equality operator overload.
       bool operator==(const sentinel&) const { return step_ > xspan_; }
 
+      /// Sentinel inequality operator overload.
       bool operator!=(const sentinel& other) const { return !(*this == other); }
 
      private:
@@ -182,22 +215,33 @@ class bresenham2i {
       bool reversed_{false};
     };
 
-    // Abide to std::semiregular concept
+    /// Constructs point line.
     line() = default;
+
+    /// Default copy constructor.
     line(const line&) = default;
+
+    /// Default move constructor.
     line(line&&) = default;
+
+    /// Default copy assignment operator overload.
     line& operator=(const line&) = default;
+
+    /// Default move assignment operator overload.
     line& operator=(line&&) = default;
 
     /// Constructs a Bresenham's 2D line drawing.
     /**
-     * \param _p0 Line start point in 2D space.
-     * \param _p1 Line end point in 2D space.
-     * \param _variant Bresenham's algorithm variant to be used.
+     * \param p0 Line start point in 2D space.
+     * \param p1 Line end point in 2D space.
+     * \param variant Bresenham's algorithm variant to be used.
      */
     explicit line(const Vector2& p0, const Vector2& p1, Variant variant) : p0_(p0), p1_(p1), variant_(variant) {}
 
+    /// Returns an iterator pointing to the first point in the line.
     auto begin() const { return line::iterator{this}; }
+
+    /// Returns a sentinel as past-of-end iterator.
     auto end() const { return typename line::iterator::sentinel{}; }
 
    private:
@@ -211,10 +255,16 @@ class bresenham2i {
   /// Constructs standard Bresenham 2D line drawing algorithm.
   bresenham2i() = default;
 
-  // Abide to std::semiregular concept
+  /// Default copy constructor.
   bresenham2i(const bresenham2i&) = default;
+
+  /// Default move constructor.
   bresenham2i(bresenham2i&&) = default;
+
+  /// Default copy assignment operator overload.
   bresenham2i& operator=(const bresenham2i&) = default;
+
+  /// Default move assignment operator overload.
   bresenham2i& operator=(bresenham2i&&) = default;
 
   /// Constructs specific Bresenham 2D line drawing algorithm `variant`.
