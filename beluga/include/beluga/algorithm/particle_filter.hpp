@@ -146,7 +146,7 @@ class BootstrapParticleFilter : public Mixin {
 
   /**
    * \copydoc BaseParticleFilterInterface::reinitialize()
-   * 
+   *
    * Distribute the particles using the \ref StateGeneratorPage "StateGenerator"
    */
   void reinitialize() final {
