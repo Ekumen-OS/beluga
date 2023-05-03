@@ -405,6 +405,36 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Mixture weight for the probability of getting max range measurements.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("z_max", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Mixture weight for the probability of getting short measurements.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("z_short", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Short readings' exponential distribution parameter.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("lambda_short", rclcpp::ParameterValue(0.1), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Standard deviation of the hit distribution.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
@@ -707,7 +737,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
   using BeamSensorModel = beluga::mixin::descriptor<
     ciabatta::curry<beluga::BeamSensorModel, OccupancyGrid>::mixin,
-    beluga::BeamModelParams>;
+    beluga::BeamModelParam>;
 
   using SensorDescriptor = std::variant<LikelihoodField, BeamSensorModel>;
   auto get_sensor_descriptor = [this](std::string_view name) -> SensorDescriptor {
@@ -721,8 +751,14 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
         return LikelihoodField{params};
       }
       if (name == kBeamSensorModelName) {
-        // TODO(Ramiro) : Expose parameters.
-        auto params = beluga::BeamModelParams{};
+        auto params = beluga::BeamModelParam{};
+        params.z_hit = get_parameter("z_hit").as_double();
+        params.z_short = get_parameter("z_short").as_double();
+        params.z_max = get_parameter("z_max").as_double();
+        params.z_rand = get_parameter("z_rand").as_double();
+        params.sigma_hit = get_parameter("sigma_hit").as_double();
+        params.lambda_short = get_parameter("lambda_short").as_double();
+        params.beam_max_range = get_parameter("laser_max_range").as_double();
         return BeamSensorModel{params};
       }
       throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
