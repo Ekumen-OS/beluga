@@ -71,11 +71,21 @@ struct LikelihoodFieldModelParam {
  *   The elements of the range are valid cell indexes, i.e. for each `i` of the returned range `i < g.size()` is true
  *   and `g.data()[i]` is valid.
  * - `g.origin()` return the occupancy grid origin as a `Sophus::SE2d`.
- * - Given a possibly const `std::size_t` `i` less than `g.size()`, `g.point(i)` returns the
- *   coordinates of the cell of index `i` as a `Eigen::Vector2d`.
+ * - Given possibly const values `x` and `y` of type `int`, `g.valid(x, y)` returns whether a cell at those
+ *   discrete coordinates exists.
+ * - Given possibly const `Eigen::Vector2i` `c`, `g.valid(c)` is equivalent to `g.point(c.x(), c.y())`.
+ * - Given a possibly const `std::size_t` `i` less than `g.size()`, `g.point(i)` returns the continuous
+ *   coordinates of the centroid of the cell at index `i` in the grid frame as a `Eigen::Vector2d`.
+ * - Given possibly const values `x` and `y` of type `int`, `g.point(x, y)` returns the continuous
+ *   coordinates in the grid frame of the centroid of the cell at those discrete coordinates
+ *   as a `Eigen::Vector2d`.
+ * - Given a possible const `Eigen::Vector2i` `c`, `g.point(c)` is equivalent to `g.point(c.x(), c.y())`.
  * - Give possibly const values `x` and `y` of type `double`, `g.index(x, y)` returns a `std::size`,
  *   representing the index of the cell.
  * - Give a possibly const `Eigen::Vector2d` `p`, `g.index(p)` is equivalent to `g.index(p.x(), p.y())`.
+ * - Give possibly const values `x` and `y` of type `int`, `g.index(x, y)` returns a `std::size`,
+ *   representing the index of the cell at those discrete coordinates.
+ * - Give a possibly const `Eigen::Vector2i` `c`, `g.index(c)` is equivalent to `g.index(c.x(), c.y())`.
  *
  * Given c a possible const instance of C:
  * - OccupancyGrid::Traits::is_free(c) returns true if the cell is free, false if not.

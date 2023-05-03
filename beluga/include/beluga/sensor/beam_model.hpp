@@ -134,9 +134,8 @@ class BeamSensorModel : public Mixin {
       const double z_mean = beam.cast(beam_bearing).value_or(params_.beam_max_range);
 
       // 1: Correct range with local measurement noise.
-      const double eta_hit =
-          2. / (std::erf((params_.beam_max_range - z_mean) / (std::sqrt(2.) * params_.sigma_hit)) -
-                std::erf(-z_mean / (std::sqrt(2.) * params_.sigma_hit)));
+      const double eta_hit = 2. / (std::erf((params_.beam_max_range - z_mean) / (std::sqrt(2.) * params_.sigma_hit)) -
+                                   std::erf(-z_mean / (std::sqrt(2.) * params_.sigma_hit)));
       const double d = (z - z_mean) / params_.sigma_hit;
       const double n = 1. / (std::sqrt(2. * M_PI) * params_.sigma_hit);
       double pz = params_.z_hit * eta_hit * n * std::exp(-(d * d) / 2.);
@@ -153,6 +152,7 @@ class BeamSensorModel : public Mixin {
       } else {
         pz += params_.z_max;
       }
+
       // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
       // See https://github.com/ekumenlabs/beluga/issues/153
       return pz * pz * pz;

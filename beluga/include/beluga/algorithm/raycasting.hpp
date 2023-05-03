@@ -37,6 +37,7 @@ class bresenham2i {
   enum Variant {
     STANDARD = 0,  ///< Standard Bresenham's algorithm.
     MODIFIED       ///< Modified, aka supercover, Bresenham's algorithm.
+                   ///  See http://eugen.dedu.free.fr/projects/bresenham.
   };
 
   /// Bresenham's 2D line drawing as a range.
@@ -46,7 +47,9 @@ class bresenham2i {
     /// Bresenham's 2D line drawing iterator, one cell at a time.
     class iterator {
      public:
+      /// Past-of-end iterator sentinel.
       struct sentinel {
+        // Abide to std::sentinel_for concept
         bool operator==(const iterator& other) const { return other == *this; }
         bool operator!=(const iterator& other) const { return !(other == *this); }
       };
@@ -57,12 +60,14 @@ class bresenham2i {
       using pointer = Vector2*;
       using reference = Vector2&;
 
+      // Abide to std::semiregular concept
       iterator() = default;
       iterator(const iterator&) = default;
       iterator(iterator&&) = default;
       iterator& operator=(const iterator&) = default;
       iterator& operator=(iterator&&) = default;
 
+      /// Constructs a Bresenham's 2D line iterator
       explicit iterator(const line* line) : p_(line->p0_), x_(line->p0_.x()), y_(line->p0_.y()) {
         xspan_ = line->p1_.x() - line->p0_.x();
         xstep_ = static_cast<decltype(xspan_)>(1);
@@ -177,6 +182,7 @@ class bresenham2i {
       bool reversed_{false};
     };
 
+    // Abide to std::semiregular concept
     line() = default;
     line(const line&) = default;
     line(line&&) = default;
@@ -189,29 +195,29 @@ class bresenham2i {
      * \param _p1 Line end point in 2D space.
      * \param _variant Bresenham's algorithm variant to be used.
      */
-    explicit line(const Vector2& p0, const Vector2& p1, Variant variant)
-      : p0_(p0), p1_(p1), variant_(variant) {}
+    explicit line(const Vector2& p0, const Vector2& p1, Variant variant) : p0_(p0), p1_(p1), variant_(variant) {}
 
     auto begin() const { return line::iterator{this}; }
     auto end() const { return typename line::iterator::sentinel{}; }
 
    private:
     friend class iterator;
-    /// Line drawing start point.
+
     Vector2 p0_{};
-    /// Line drawing end point.
     Vector2 p1_{};
-    /// Bresenham's algorithm variant used.
     Variant variant_{};
   };
 
+  /// Constructs standard Bresenham 2D line drawing algorithm.
   bresenham2i() = default;
+
+  // Abide to std::semiregular concept
   bresenham2i(const bresenham2i&) = default;
   bresenham2i(bresenham2i&&) = default;
   bresenham2i& operator=(const bresenham2i&) = default;
   bresenham2i& operator=(bresenham2i&&) = default;
 
-  /// Constructs specific Bresenham 2D line drawing `variant`.
+  /// Constructs specific Bresenham 2D line drawing algorithm `variant`.
   explicit bresenham2i(Variant variant) : variant_(variant) {}
 
   /// Computes 2D line from `p0` to `p1`.
@@ -219,19 +225,18 @@ class bresenham2i {
    * \tparam Vector2i Point in 2D integer space ie. ℤ × ℤ.
    * \param p0 Start point in 2D integer space.
    * \param p1 End point in 2D integer space.
-   * \return bresenham2i::line subtended.
+   * \return subtended bresenham2i::line.
    */
   template <class Vector2i = Eigen::Vector2i>
   auto operator()(const Vector2i& p0, const Vector2i& p1) const {
     return line{p0, p1, variant_};
   }
 
-  /// Chosen algorithm variant.
  private:
   Variant variant_{};
 };
 
-/// 2D ray casting
+/// Castable 2D ray.
 /**
  * \tparam Grid A 2D grid
  * \tparam Algorithm A callable type, taking start and end
@@ -240,30 +245,27 @@ class bresenham2i {
 template <class Grid, typename Algorithm = bresenham2i>
 class ray2d {
  public:
-  /// Constructs 2D ray with default algorithm.
+  /// Constructs 2D ray with default ray tracing algorithm.
   /**
    * See ray2d(const Grid &, Algorithm, const Sophus::SE2d&, double)
    * for further reference on constructor arguments.
    */
-  ray2d(const Grid& grid, const Sophus::SE2d& source_pose, double max_range)
-    : ray2d(grid, Algorithm{}, source_pose, max_range)
-  {
-  }
+  explicit ray2d(const Grid& grid, const Sophus::SE2d& source_pose, double max_range)
+      : ray2d(grid, Algorithm{}, source_pose, max_range) {}
 
-  /// Constructs 2D ray.
+  /// Constructs 2D ray with an specific ray tracing algorithm.
   /**
    * \param grid Grid on which to perform ray casting.
    * \param algorithm Ray tracing algorithm implementation.
-   * \param source_pose Pose of the source of the ray
-   *   in the same frame as that of the `grid` origin.
+   * \param source_pose Pose of the source of the ray in the
+   *   same frame as that on which the `grid` origin is defined.
    * \param max_range Maximum range for the ray, in meters.
    */
-  ray2d(const Grid& grid, Algorithm algorithm, const Sophus::SE2d& source_pose, double max_range)
-    : grid_(grid), algorithm_(std::move(algorithm)),
-      source_pose_in_grid_frame_(grid_.origin().inverse() * source_pose),
-      max_range_(max_range)
-  {
-  }
+  explicit ray2d(const Grid& grid, Algorithm algorithm, const Sophus::SE2d& source_pose, double max_range)
+      : grid_(grid),
+        algorithm_(std::move(algorithm)),
+        source_pose_in_grid_frame_(grid_.origin().inverse() * source_pose),
+        max_range_(max_range) {}
 
   /// Computes ray trace along a given direction.
   /**
@@ -273,11 +275,8 @@ class ray2d {
    */
   [[nodiscard]] auto trace(const Sophus::SO2d& bearing) const {
     const auto far_end_pose_in_source_frame = Sophus::SE2d{
-        Sophus::SO2d{0.}, Eigen::Vector2d{
-          max_range_ * std::cos(bearing.log()),
-          max_range_ * std::sin(bearing.log())}};
-    const auto far_end_pose_in_grid_frame =
-        source_pose_in_grid_frame_ * far_end_pose_in_source_frame;
+        Sophus::SO2d{0.}, Eigen::Vector2d{max_range_ * std::cos(bearing.log()), max_range_ * std::sin(bearing.log())}};
+    const auto far_end_pose_in_grid_frame = source_pose_in_grid_frame_ * far_end_pose_in_source_frame;
     const auto start_cell = grid_.cell(source_pose_in_grid_frame_.translation());
     const auto end_cell = grid_.cell(far_end_pose_in_grid_frame.translation());
     const auto cell_is_valid = [this](const auto& cell) { return grid_.valid(cell); };
@@ -289,7 +288,7 @@ class ray2d {
    * Distances are measured from cell centroid to cell centroid.
    *
    * \param bearing Direction for ray casting.
-   * \return Distance in meters to first occupied cell hit by the ray, if any.
+   * \return Distance in meters to first non free cell hit by the ray, if any.
    */
   [[nodiscard]] std::optional<double> cast(const Sophus::SO2d& bearing) const {
     const auto is_free = [this](const auto& cell) {
@@ -313,18 +312,6 @@ class ray2d {
   const double max_range_;
 };
 
-/// Leverages a Brasenham raycasting technique to cast a ray on the occupancy grid, \n
-/// from the laser frame and with the provided bearing until \n
-///  it hits an unknown/occupied cell or reaches `max_beam_range`.
-/// Unknown cells are treated as occupied.
-/**
- * \tparam OccupancyGrid Type that satisfies \ref OccupancyGridPage.
- * \param grid Grid to cast the ray on.
- * \param starting_position Position of the laser in map frame.
- * \param bearing_in_laser_frame An SO2 rotation that represents the bearing of the beam in laser frame.
- * \param max_beam_range Maximum range of the sensor in meters.
- * \return double Length in meters of the casted ray.
- */
-
 }  // namespace beluga
+
 #endif

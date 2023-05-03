@@ -44,8 +44,7 @@ class StaticOccupancyGrid {
   [[nodiscard]] const Sophus::SE2d& origin_inverse() const { return origin_inverse_; }
 
   [[nodiscard]] bool valid(int xi, int yi) const {
-    return xi >= 0 && xi < static_cast<int>(width()) &&
-        yi >= 0 && yi < static_cast<int>(height());
+    return xi >= 0 && xi < static_cast<int>(width()) && yi >= 0 && yi < static_cast<int>(height());
   }
 
   [[nodiscard]] bool valid(const Eigen::Vector2i& cell) const { return valid(cell.x(), cell.y()); }

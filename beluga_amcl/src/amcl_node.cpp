@@ -405,7 +405,8 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Mixture weight for the probability of getting max range measurements.";
+    descriptor.description =
+      "Mixture weight for the probability of getting max range measurements.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;

@@ -44,13 +44,10 @@ class StaticOccupancyGrid {
   [[nodiscard]] const Sophus::SE2d& origin_inverse() const { return origin_inverse_; }
 
   [[nodiscard]] bool valid(int xi, int yi) const {
-    return xi >= 0 && xi < static_cast<int>(width()) &&
-        yi >= 0 && yi < static_cast<int>(height());
+    return xi >= 0 && xi < static_cast<int>(width()) && yi >= 0 && yi < static_cast<int>(height());
   }
 
-  [[nodiscard]] bool valid(const Eigen::Vector2i& cell) const {
-    return valid(cell.x(), cell.y());
-  }
+  [[nodiscard]] bool valid(const Eigen::Vector2i& cell) const { return valid(cell.x(), cell.y()); }
 
   [[nodiscard]] Eigen::Vector2i cell(double x, double y) const {
     const auto xi = static_cast<int>(std::floor(x / resolution() + 0.5));
@@ -58,9 +55,7 @@ class StaticOccupancyGrid {
     return Eigen::Vector2i{xi, yi};
   }
 
-  [[nodiscard]] Eigen::Vector2i cell(const Eigen::Vector2d& point) const {
-    return cell(point.x(), point.y());
-  }
+  [[nodiscard]] Eigen::Vector2i cell(const Eigen::Vector2d& point) const { return cell(point.x(), point.y()); }
 
   [[nodiscard]] std::size_t index(int xi, int yi) const {
     if (!valid(xi, yi)) {
@@ -81,14 +76,14 @@ class StaticOccupancyGrid {
 
   [[nodiscard]] Eigen::Vector2d point(int xi, int yi) const {
     return Eigen::Vector2d{
-        (static_cast<double>(xi) + 0.5) * resolution(),
-        (static_cast<double>(yi) + 0.5) * resolution()};
+        (static_cast<double>(xi) + 0.5) * resolution(), (static_cast<double>(yi) + 0.5) * resolution()};
   }
 
   [[nodiscard]] Eigen::Vector2d point(const Eigen::Vector2i& cell) const { return point(cell.x(), cell.y()); }
 
   [[nodiscard]] Eigen::Vector2d point(std::size_t index) const {
-    return point(static_cast<int>(index % width()), static_cast<int>(index / width()));  // NOLINT(bugprone-integer-division)
+    return point(
+        static_cast<int>(index % width()), static_cast<int>(index / width()));  // NOLINT(bugprone-integer-division)
   }
 
   [[nodiscard]] auto neighbors(std::size_t index) const {

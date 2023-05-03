@@ -71,52 +71,60 @@ public:
     return origin_;
   }
 
-  bool valid(int xi, int yi) const {
+  bool valid(int xi, int yi) const
+  {
     return xi >= 0 && xi < static_cast<int>(width()) &&
-        yi >= 0 && yi < static_cast<int>(height());
+           yi >= 0 && yi < static_cast<int>(height());
   }
 
-  bool valid(const Eigen::Vector2i& cell) const {
+  bool valid(const Eigen::Vector2i & cell) const
+  {
     return valid(cell.x(), cell.y());
   }
 
-  Eigen::Vector2i cell(double x, double y) const {
+  Eigen::Vector2i cell(double x, double y) const
+  {
     const auto xi = static_cast<int>(std::floor(x / resolution() + 0.5));
     const auto yi = static_cast<int>(std::floor(y / resolution() + 0.5));
     return Eigen::Vector2i{xi, yi};
   }
 
-  Eigen::Vector2i cell(const Eigen::Vector2d& point) const {
+  Eigen::Vector2i cell(const Eigen::Vector2d & point) const
+  {
     return cell(point.x(), point.y());
   }
 
-  std::size_t index(int xi, int yi) const {
+  std::size_t index(int xi, int yi) const
+  {
     if (!valid(xi, yi)) {
       return size();  // If the point is outside the map, return an invalid index
     }
     return xi + yi * width();
   }
 
-  std::size_t index(const Eigen::Vector2i& cell) const { return index(cell.x(), cell.y()); }
+  std::size_t index(const Eigen::Vector2i & cell) const {return index(cell.x(), cell.y());}
 
-  std::size_t index(double x, double y) const {
+  std::size_t index(double x, double y) const
+  {
     const auto xi = static_cast<int>(std::floor(x / resolution() + 0.5));
     const auto yi = static_cast<int>(std::floor(y / resolution() + 0.5));
     return index(xi, yi);
   }
 
-  std::size_t index(const Eigen::Vector2d& point) const { return index(point.x(), point.y()); }
+  std::size_t index(const Eigen::Vector2d & point) const {return index(point.x(), point.y());}
 
-  Eigen::Vector2d point(int xi, int yi) const {
+  Eigen::Vector2d point(int xi, int yi) const
+  {
     return Eigen::Vector2d{
-        (static_cast<double>(xi) + 0.5) * resolution(),
-        (static_cast<double>(yi) + 0.5) * resolution()};
+      (static_cast<double>(xi) + 0.5) * resolution(),
+      (static_cast<double>(yi) + 0.5) * resolution()};
   }
 
-  Eigen::Vector2d point(const Eigen::Vector2i& cell) const { return point(cell.x(), cell.y()); }
+  Eigen::Vector2d point(const Eigen::Vector2i & cell) const {return point(cell.x(), cell.y());}
 
-  Eigen::Vector2d point(std::size_t index) const {
-    return point(static_cast<int>(index % width()), static_cast<int>(index / width()));  // NOLINT(bugprone-integer-division)
+  Eigen::Vector2d point(std::size_t index) const
+  {
+    return point(static_cast<int>(index % width()), static_cast<int>(index / width()));
   }
 
   auto neighbors(std::size_t index) const
