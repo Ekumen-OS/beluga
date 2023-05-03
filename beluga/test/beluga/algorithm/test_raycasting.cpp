@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
 #include "beluga/algorithm/raycasting.hpp"
+
 #include "beluga/sensor.hpp"
 #include "beluga/sensor/beam_model.hpp"
 #include "ciabatta/ciabatta.hpp"
+
+#include <gmock/gmock.h>
 
 namespace beluga {
 
@@ -61,7 +63,7 @@ class StaticOccupancyGrid {
     if (!valid(xi, yi)) {
       return size();
     }
-    return xi + yi * width();
+    return static_cast<std::size_t>(xi) + static_cast<std::size_t>(yi) * width();
   }
 
   [[nodiscard]] std::size_t index(const Eigen::Vector2i& cell) const { return index(cell.x(), cell.y()); }
@@ -117,7 +119,7 @@ class StaticOccupancyGrid {
 };
 
 TEST(Raycasting, StandardBresenham) {
-  auto algorithm = bresenham2i{bresenham2i::STANDARD};
+  auto algorithm = Bresenham2i{Bresenham2i::kStandard};
 
   {
     // +---+---+
@@ -191,7 +193,7 @@ TEST(Raycasting, StandardBresenham) {
 }
 
 TEST(Raycasting, ModifiedBresenham) {
-  auto algorithm = bresenham2i{bresenham2i::MODIFIED};
+  auto algorithm = Bresenham2i{Bresenham2i::kModified};
 
   {
     // +---+---+
@@ -285,21 +287,21 @@ TEST(Raycasting, Nominal) {
   {
     // Horizontal ray that hits the map boundary.
     const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0.5, 0.}};
-    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto ray = Ray2d{grid, pose, kMaxRange};
     EXPECT_EQ(ray.cast(Sophus::SO2d{0.}), std::nullopt);
   }
 
   {
     // Horizontal ray that hits the occupied cell.
     const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0., 1.}};
-    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto ray = Ray2d{grid, pose, kMaxRange};
     EXPECT_EQ(ray.cast(Sophus::SO2d{0.}), 1.);
   }
 
   {
     // Downwards ray that hits the map boundary.
     const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0., 1.}};
-    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto ray = Ray2d{grid, pose, kMaxRange};
     const auto distance = ray.cast(Sophus::SO2d{Sophus::Constants<double>::pi() / 2.});
     EXPECT_EQ(distance, std::nullopt);
   }
@@ -307,7 +309,7 @@ TEST(Raycasting, Nominal) {
   {
     // Start cell is occupied, should return 0.
     const auto pose = Sophus::SE2d{0., Eigen::Vector2d{1., 1.}};
-    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto ray = Ray2d{grid, pose, kMaxRange};
     const auto distance = ray.cast(Sophus::SO2d{Sophus::Constants<double>::pi() / 2.});
     EXPECT_EQ(distance, 0.);
   }
@@ -316,14 +318,14 @@ TEST(Raycasting, Nominal) {
     // Downwards ray that is limited by beam range.
     constexpr double kShortenedRange = 1.;
     const auto pose = Sophus::SE2d{Sophus::Constants<double>::pi() / 2., Eigen::Vector2d{0., 0.}};
-    const auto ray = ray2d{grid, pose, kShortenedRange};
+    const auto ray = Ray2d{grid, pose, kShortenedRange};
     EXPECT_EQ(ray.cast(Sophus::SO2d{0}), std::nullopt);
   }
 
   {
     // Downwards ray that hits the occupied cell.
     const auto pose = Sophus::SE2d{0., Eigen::Vector2d{1., 0.}};
-    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto ray = Ray2d{grid, pose, kMaxRange};
     const auto distance = ray.cast(Sophus::SO2d{Sophus::Constants<double>::pi() / 2.});
     EXPECT_EQ(distance, 1.);
   }
@@ -331,7 +333,7 @@ TEST(Raycasting, Nominal) {
   {
     // Diagonal ray that hits the occupied cell.
     const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0., 0.}};
-    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto ray = Ray2d{grid, pose, kMaxRange};
     const auto distance = ray.cast(Sophus::SO2d{Sophus::Constants<double>::pi() / 4.});
     EXPECT_EQ(distance, std::sqrt(2));
   }
@@ -340,7 +342,7 @@ TEST(Raycasting, Nominal) {
 TEST(Raycasting, NonIdentityGridOrigin) {
   constexpr double kResolution = 0.5;
 
-  const auto kOrigin = Sophus::SE2d{Sophus::SO2d{-Sophus::Constants<double>::pi() / 4.}, Eigen::Vector2d{0.5, 0.}};
+  const auto origin = Sophus::SE2d{Sophus::SO2d{-Sophus::Constants<double>::pi() / 4.}, Eigen::Vector2d{0.5, 0.}};
   // Note that axes are:
   // Positive X -> Diagonal downwards right
   // Positive Y -> Diagonal downwards left
@@ -352,7 +354,7 @@ TEST(Raycasting, NonIdentityGridOrigin) {
     false, false, true , false, false,
     false, false, false, false, false,
     false, false, false, false, false},
-    kResolution, kOrigin};
+    kResolution, origin};
   // clang-format on
 
   constexpr double kMaxRange = 5.;
@@ -360,7 +362,7 @@ TEST(Raycasting, NonIdentityGridOrigin) {
   {
     // Diagonal ray that hits the occupied cell.
     const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0.5, 0.}};
-    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto ray = Ray2d{grid, pose, kMaxRange};
     const auto distance = ray.cast(Sophus::SO2d{0.});
     EXPECT_EQ(distance, std::sqrt(2));
   }

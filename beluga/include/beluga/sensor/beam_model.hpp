@@ -120,7 +120,7 @@ class BeamSensorModel : public Mixin {
    */
   [[nodiscard]] weight_type importance_weight(const state_type& state) const {
     const auto lock = std::shared_lock<std::shared_mutex>{points_mutex_};
-    const auto beam = ray2d{grid_, state, params_.beam_max_range};
+    const auto beam = Ray2d{grid_, state, params_.beam_max_range};
     return std::transform_reduce(points_.cbegin(), points_.cend(), 0.0, std::plus{}, [this, &beam](const auto& point) {
       // TODO(Ramiro): We're converting from range + bearing to cartesian points in the ROS node, but we want range +
       // bearing here. We might want to make that conversion in the likelihood model instead, and let the measurement

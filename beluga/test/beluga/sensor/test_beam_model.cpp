@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
 #include "beluga/algorithm/raycasting.hpp"
 #include "beluga/sensor.hpp"
 #include "beluga/sensor/beam_model.hpp"
 #include "ciabatta/ciabatta.hpp"
+
+#include <gmock/gmock.h>
 
 namespace beluga {
 
@@ -61,7 +62,7 @@ class StaticOccupancyGrid {
     if (!valid(xi, yi)) {
       return size();  // If the point is outside the map, return an invalid index
     }
-    return xi + yi * width();
+    return static_cast<std::size_t>(xi) + static_cast<std::size_t>(yi) * width();
   }
 
   [[nodiscard]] std::size_t index(const Eigen::Vector2i& cell) const { return index(cell.x(), cell.y()); }

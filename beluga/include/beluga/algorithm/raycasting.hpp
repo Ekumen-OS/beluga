@@ -31,13 +31,13 @@
 namespace beluga {
 
 /// Bresenham's 2D line drawing algorithm, optimized for integer arithmetic.
-class bresenham2i {
+class Bresenham2i {
  public:
   /// Bresenham's 2D line drawing algorithm variants.
   enum Variant {
-    STANDARD = 0,  ///< Standard Bresenham's algorithm.
-    MODIFIED       ///< Modified, aka supercover, Bresenham's algorithm.
-                   ///  See http://eugen.dedu.free.fr/projects/bresenham.
+    kStandard = 0,  ///< Standard Bresenham's algorithm.
+    kModified       ///< Modified, aka supercover, Bresenham's algorithm.
+                    ///  See http://eugen.dedu.free.fr/projects/bresenham.
   };
 
   /// Bresenham's 2D line drawing as a range.
@@ -48,10 +48,10 @@ class bresenham2i {
    * \tparam Integer Integer scalar type.
    */
   template <class Vector2, typename Integer = typename Vector2::Scalar>
-  class line : public ranges::view_interface<line<Vector2, Integer>> {
+  class Line : public ranges::view_interface<Line<Vector2, Integer>> {
    public:
     /// Bresenham's 2D line drawing iterator, one cell at a time.
-    class iterator {
+    class iterator {  // NOLINT(readability-identifier-naming)
      public:
       /// Past-of-end iterator sentinel.
       struct sentinel {
@@ -78,22 +78,22 @@ class bresenham2i {
       using reference = Vector2&;
 
       /// Default constructor.
-      iterator() = default;
+      iterator() noexcept = default;
 
       /// Default copy constructor.
-      iterator(const iterator&) = default;
+      iterator(const iterator&) noexcept = default;
 
       /// Default move constructor.
-      iterator(iterator&&) = default;
+      iterator(iterator&&) noexcept = default;
 
       /// Default copy assignment operator overload.
-      iterator& operator=(const iterator&) = default;
+      iterator& operator=(const iterator&) noexcept = default;
 
       /// Default move assignment operator overload.
-      iterator& operator=(iterator&&) = default;
+      iterator& operator=(iterator&&) noexcept = default;
 
       /// Constructs a Bresenham's 2D `line` iterator.
-      explicit iterator(const line* line) : p_(line->p0_), x_(line->p0_.x()), y_(line->p0_.y()) {
+      explicit iterator(const Line* line) noexcept : p_(line->p0_), x_(line->p0_.x()), y_(line->p0_.y()) {
         xspan_ = line->p1_.x() - line->p0_.x();
         xstep_ = static_cast<decltype(xspan_)>(1);
         if (xspan_ < 0) {
@@ -120,7 +120,7 @@ class bresenham2i {
         dyspan_ = 2 * yspan_;
 
         error_ = prev_error_ = xspan_;
-        modified_ = line->variant_ == bresenham2i::MODIFIED;
+        modified_ = line->variant_ == Bresenham2i::kModified;
       }
 
       /// Post-fix operator overload.
@@ -216,19 +216,19 @@ class bresenham2i {
     };
 
     /// Constructs point line.
-    line() = default;
+    Line() noexcept = default;
 
     /// Default copy constructor.
-    line(const line&) = default;
+    Line(const Line&) noexcept = default;
 
     /// Default move constructor.
-    line(line&&) = default;
+    Line(Line&&) noexcept = default;
 
     /// Default copy assignment operator overload.
-    line& operator=(const line&) = default;
+    Line& operator=(const Line&) noexcept = default;
 
     /// Default move assignment operator overload.
-    line& operator=(line&&) = default;
+    Line& operator=(Line&&) noexcept = default;
 
     /// Constructs a Bresenham's 2D line drawing.
     /**
@@ -236,13 +236,14 @@ class bresenham2i {
      * \param p1 Line end point in 2D space.
      * \param variant Bresenham's algorithm variant to be used.
      */
-    explicit line(const Vector2& p0, const Vector2& p1, Variant variant) : p0_(p0), p1_(p1), variant_(variant) {}
+    explicit Line(Vector2 p0, Vector2 p1, Variant variant) noexcept
+        : p0_(std::move(p0)), p1_(std::move(p1)), variant_(variant) {}
 
     /// Returns an iterator pointing to the first point in the line.
-    auto begin() const { return line::iterator{this}; }
+    [[nodiscard]] auto begin() const { return Line::iterator{this}; }
 
     /// Returns a sentinel as past-of-end iterator.
-    auto end() const { return typename line::iterator::sentinel{}; }
+    [[nodiscard]] auto end() const { return typename Line::iterator::sentinel{}; }
 
    private:
     friend class iterator;
@@ -253,22 +254,22 @@ class bresenham2i {
   };
 
   /// Constructs standard Bresenham 2D line drawing algorithm.
-  bresenham2i() = default;
+  Bresenham2i() noexcept = default;
 
   /// Default copy constructor.
-  bresenham2i(const bresenham2i&) = default;
+  Bresenham2i(const Bresenham2i&) noexcept = default;
 
   /// Default move constructor.
-  bresenham2i(bresenham2i&&) = default;
+  Bresenham2i(Bresenham2i&&) noexcept = default;
 
   /// Default copy assignment operator overload.
-  bresenham2i& operator=(const bresenham2i&) = default;
+  Bresenham2i& operator=(const Bresenham2i&) noexcept = default;
 
   /// Default move assignment operator overload.
-  bresenham2i& operator=(bresenham2i&&) = default;
+  Bresenham2i& operator=(Bresenham2i&&) noexcept = default;
 
   /// Constructs specific Bresenham 2D line drawing algorithm `variant`.
-  explicit bresenham2i(Variant variant) : variant_(variant) {}
+  explicit Bresenham2i(Variant variant) noexcept : variant_(variant) {}
 
   /// Computes 2D line from `p0` to `p1`.
   /**
@@ -279,7 +280,7 @@ class bresenham2i {
    */
   template <class Vector2i = Eigen::Vector2i>
   auto operator()(const Vector2i& p0, const Vector2i& p1) const {
-    return line{p0, p1, variant_};
+    return Line{p0, p1, variant_};
   }
 
  private:
@@ -292,16 +293,16 @@ class bresenham2i {
  * \tparam Algorithm A callable type, taking start and end
  *   grid cells for a ray and returning the full trace.
  */
-template <class Grid, typename Algorithm = bresenham2i>
-class ray2d {
+template <class Grid, typename Algorithm = Bresenham2i>
+class Ray2d {
  public:
   /// Constructs 2D ray with default ray tracing algorithm.
   /**
    * See ray2d(const Grid &, Algorithm, const Sophus::SE2d&, double)
    * for further reference on constructor arguments.
    */
-  explicit ray2d(const Grid& grid, const Sophus::SE2d& source_pose, double max_range)
-      : ray2d(grid, Algorithm{}, source_pose, max_range) {}
+  explicit Ray2d(const Grid& grid, const Sophus::SE2d& source_pose, double max_range) noexcept
+      : Ray2d(grid, Algorithm{}, source_pose, max_range) {}
 
   /// Constructs 2D ray with an specific ray tracing algorithm.
   /**
@@ -311,7 +312,7 @@ class ray2d {
    *   same frame as that on which the `grid` origin is defined.
    * \param max_range Maximum range for the ray, in meters.
    */
-  explicit ray2d(const Grid& grid, Algorithm algorithm, const Sophus::SE2d& source_pose, double max_range)
+  explicit Ray2d(const Grid& grid, Algorithm algorithm, const Sophus::SE2d& source_pose, double max_range) noexcept
       : grid_(grid),
         algorithm_(std::move(algorithm)),
         source_pose_in_grid_frame_(grid_.origin().inverse() * source_pose),

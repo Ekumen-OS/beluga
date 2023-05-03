@@ -25,24 +25,24 @@
 
 namespace {
 
-void BM_Bresenham2i(benchmark::State& state, beluga::bresenham2i::Variant variant) {
-  const auto N = state.range(0);
-  const auto algorithm = beluga::bresenham2i{variant};
+void BM_Bresenham2i(benchmark::State& state, beluga::Bresenham2i::Variant variant) {
+  const auto n = state.range(0);
+  const auto algorithm = beluga::Bresenham2i{variant};
   for (auto _ : state) {
     Eigen::Vector2i storage;
-    for (const auto& cell : algorithm({0, 0}, {N, N})) {
+    for (const auto& cell : algorithm({0, 0}, {n, n})) {
       benchmark::DoNotOptimize(storage = cell);
     }
   }
-  state.SetComplexityN(N);
+  state.SetComplexityN(n);
 }
 
-BENCHMARK_CAPTURE(BM_Bresenham2i, Standard, beluga::bresenham2i::STANDARD)
+BENCHMARK_CAPTURE(BM_Bresenham2i, Standard, beluga::Bresenham2i::kStandard)
     ->RangeMultiplier(2)
     ->Range(128, 4096)
     ->Complexity();
 
-BENCHMARK_CAPTURE(BM_Bresenham2i, Modified, beluga::bresenham2i::MODIFIED)
+BENCHMARK_CAPTURE(BM_Bresenham2i, Modified, beluga::Bresenham2i::kModified)
     ->RangeMultiplier(2)
     ->Range(128, 4096)
     ->Complexity();
@@ -88,7 +88,7 @@ class StaticOccupancyGrid {
     if (!valid(xi, yi)) {
       return size();
     }
-    return xi + yi * width();
+    return static_cast<std::size_t>(xi) + static_cast<std::size_t>(yi) * width();
   }
 
   [[nodiscard]] std::size_t index(const Eigen::Vector2i& cell) const { return index(cell.x(), cell.y()); }
@@ -128,17 +128,17 @@ void BM_RayCasting2d(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
 
-  const auto N = static_cast<int>(state.range(0));
+  const auto n = static_cast<int>(state.range(0));
   auto grid = StaticOccupancyGrid<1280, 1280>{{}, kResolution};
-  grid.data()[grid.index(N, N)] = true;
+  grid.data()[grid.index(n, n)] = true;
 
   const auto source_pose = Sophus::SE2d{0., Eigen::Vector2d{1., 1.}};
   const auto beam_bearing = Sophus::SO2d{Sophus::Constants<double>::pi() / 4.};
-  const auto beam = beluga::ray2d{grid, source_pose, kMaxRange};
+  const auto beam = beluga::Ray2d{grid, source_pose, kMaxRange};
   for (auto _ : state) {
     benchmark::DoNotOptimize(beam.cast(beam_bearing));
   }
-  state.SetComplexityN(N);
+  state.SetComplexityN(n);
 }
 
 BENCHMARK(BM_RayCasting2d)->RangeMultiplier(2)->Range(128, 1024)->Complexity();
