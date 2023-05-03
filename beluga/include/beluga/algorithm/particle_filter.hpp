@@ -143,9 +143,12 @@ class BootstrapParticleFilter : public Mixin {
   explicit BootstrapParticleFilter(Args&&... args) : Mixin(std::forward<Args>(args)...) {
     reinitialize();
   }
-  /*
-   Distribute the particles using the \ref StateGeneratorPage "StateGenerator"
-  */
+
+  /**
+   * \copydoc BaseParticleFilterInterface::reinitialize()
+   * 
+   * Distribute the particles using the \ref StateGeneratorPage "StateGenerator"
+   */
   void reinitialize() final {
     this->self().initialize_particles(this->self().generate_samples(generator_) | this->self().take_samples());
   }
