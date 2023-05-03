@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <gmock/gmock.h>
 #include "beluga/algorithm/raycasting.hpp"
 #include "beluga/sensor.hpp"
 #include "beluga/sensor/beam_model.hpp"
 #include "ciabatta/ciabatta.hpp"
-#include <gmock/gmock.h>
 
 namespace beluga {
 
@@ -43,20 +43,44 @@ class StaticOccupancyGrid {
 
   [[nodiscard]] const Sophus::SE2d& origin_inverse() const { return origin_inverse_; }
 
-  [[nodiscard]] std::size_t index(double x, double y) const {
-    const auto x_index = static_cast<std::size_t>(std::floor(x / resolution()));
-    const auto y_index = static_cast<std::size_t>(std::floor(y / resolution()));
-    return index(x_index, y_index);
+  [[nodiscard]] bool valid(int xi, int yi) const {
+    return xi >= 0 && xi < static_cast<int>(width()) &&
+        yi >= 0 && yi < static_cast<int>(height());
   }
 
-  [[nodiscard]] std::size_t index(std::size_t x_index, std::size_t y_index) const {
-    if (x_index >= width() || y_index >= height()) {
-      return size();  // If the point is outside the map, return an invalid index
-    }
-    return x_index + y_index * width();
+  [[nodiscard]] bool valid(const Eigen::Vector2i& cell) const { return valid(cell.x(), cell.y()); }
+
+  [[nodiscard]] std::size_t index(double x, double y) const {
+    const auto xi = static_cast<int>(std::floor(x / resolution() + 0.5));
+    const auto yi = static_cast<int>(std::floor(y / resolution() + 0.5));
+    return index(xi, yi);
   }
 
   [[nodiscard]] std::size_t index(const Eigen::Vector2d& point) const { return index(point.x(), point.y()); }
+
+  [[nodiscard]] std::size_t index(int xi, int yi) const {
+    if (!valid(xi, yi)) {
+      return size();
+    }
+    return xi + yi * width();
+  }
+
+  [[nodiscard]] std::size_t index(const Eigen::Vector2i& cell) const { return index(cell.x(), cell.y()); }
+
+  [[nodiscard]] Eigen::Vector2i cell(double x, double y) const {
+    const auto xi = static_cast<int>(std::floor(x / resolution() + 0.5));
+    const auto yi = static_cast<int>(std::floor(y / resolution() + 0.5));
+    return Eigen::Vector2i{xi, yi};
+  }
+
+  [[nodiscard]] Eigen::Vector2i cell(const Eigen::Vector2d& point) const { return cell(point.x(), point.y()); }
+
+  [[nodiscard]] Eigen::Vector2d point(int xi, int yi) const {
+    return Eigen::Vector2d{
+        (static_cast<double>(xi) + 0.5) * resolution(), (static_cast<double>(yi) + 0.5) * resolution()};
+  }
+
+  [[nodiscard]] Eigen::Vector2d point(const Eigen::Vector2i& cell) const { return point(cell.x(), cell.y()); }
 
   [[nodiscard]] Eigen::Vector2d point(std::size_t index) const {
     return Eigen::Vector2d{
@@ -83,18 +107,165 @@ class StaticOccupancyGrid {
     return result;
   }
   [[nodiscard]] double resolution() const { return resolution_; }
+  [[nodiscard]] std::size_t width() const { return Cols; }
+  [[nodiscard]] std::size_t height() const { return Rows; }
 
  private:
   std::array<bool, Rows * Cols> grid_;
   Sophus::SE2d origin_;
   Sophus::SE2d origin_inverse_;
   double resolution_;
-
-  [[nodiscard]] std::size_t width() const { return Cols; }
-  [[nodiscard]] std::size_t height() const { return Rows; }
 };
 
-TEST(Raycasting, casting) {
+TEST(Raycasting, StandardBresenham) {
+  auto algorithm = bresenham2i{bresenham2i::STANDARD};
+
+  {
+    // +---+---+
+    // |   | > |
+    // +---+---+
+    // | > |   |
+    // +---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 0}, {1, 1}};
+    const auto trace = algorithm({0, 0}, {1, 1}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+
+    // |   | < |
+    // +---+---+
+    // | < |   |
+    // +---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{1, 1}, {0, 0}};
+    const auto trace = algorithm({1, 1}, {0, 0}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+---+
+    // |   |   | > |
+    // +---+---+---+
+    // | > | > |   |
+    // +---+---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 0}, {1, 0}, {2, 1}};
+    const auto trace = algorithm({0, 0}, {2, 1}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+---+
+    // |   | < | < |
+    // +---+---+---+
+    // | < |   |   |
+    // +---+---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{2, 1}, {1, 1}, {0, 0}};
+    const auto trace = algorithm({2, 1}, {0, 0}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+
+    // | v |   |
+    // +---+---+
+    // | v |   |
+    // +---+---+
+    // | v |   |
+    // +---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 2}, {0, 1}, {0, 0}};
+    const auto trace = algorithm({0, 2}, {0, 0}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+---+---+
+    // |   |   |   | < |
+    // +---+---+---+---+
+    // |   | < | < |   |
+    // +---+---+---+---+
+    // | < |   |   |   |
+    // +---+---+---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{3, 2}, {2, 1}, {1, 1}, {0, 0}};
+    const auto trace = algorithm({3, 2}, {0, 0}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+}
+
+TEST(Raycasting, ModifiedBresenham) {
+  auto algorithm = bresenham2i{bresenham2i::MODIFIED};
+
+  {
+    // +---+---+
+    // | > | > |
+    // +---+---+
+    // | > | > |
+    // +---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 0}, {1, 0}, {0, 1}, {1, 1}};
+    const auto trace = algorithm({0, 0}, {1, 1}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+
+    // | < | < |
+    // +---+---+
+    // | < | < |
+    // +---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{1, 1}, {0, 1}, {1, 0}, {0, 0}};
+    const auto trace = algorithm({1, 1}, {0, 0}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+---+
+    // |   | > | > |
+    // +---+---+---+
+    // | > | > |   |
+    // +---+---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 0}, {1, 0}, {1, 1}, {2, 1}};
+    const auto trace = algorithm({0, 0}, {2, 1}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+---+
+    // |   | < | < |
+    // +---+---+---+
+    // | < | < |   |
+    // +---+---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{2, 1}, {1, 1}, {1, 0}, {0, 0}};
+    const auto trace = algorithm({2, 1}, {0, 0}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+
+    // | v |   |
+    // +---+---+
+    // | v |   |
+    // +---+---+
+    // | v |   |
+    // +---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 2}, {0, 1}, {0, 0}};
+    const auto trace = algorithm({0, 2}, {0, 0}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+
+  {
+    // +---+---+---+---+
+    // |   |   | < | < |
+    // +---+---+---+---+
+    // |   | < | < |   |
+    // +---+---+---+---+
+    // | < | < |   |   |
+    // +---+---+---+---+
+    const auto expected_trace = std::vector<Eigen::Vector2i>{{3, 2}, {2, 2}, {2, 1}, {1, 1}, {1, 0}, {0, 0}};
+    const auto trace = algorithm({3, 2}, {0, 0}) | ranges::to<std::vector>;
+    EXPECT_EQ(trace, expected_trace);
+  }
+}
+
+TEST(Raycasting, Nominal) {
   constexpr double kResolution = 0.5;
   // Note that axes are:
   // Positive X -> Right
@@ -110,37 +281,90 @@ TEST(Raycasting, casting) {
     kResolution};
   // clang-format on
 
-  // Horizontal ray that hits the map boundary.
-  double ray_len = raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0.5, 0.}}, Sophus::SO2d{0}, 5);
-  EXPECT_EQ(ray_len, 1.5);
+  constexpr double kMaxRange = 5.;
 
-  // Horizontal ray that hits the occupied cell.
-  ray_len = raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 1.}}, Sophus::SO2d{0}, 5);
-  EXPECT_EQ(ray_len, 0.5);
+  {
+    // Horizontal ray that hits the map boundary.
+    const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0.5, 0.}};
+    const auto ray = ray2d{grid, pose, kMaxRange};
+    EXPECT_EQ(ray.cast(Sophus::SO2d{0.}), std::nullopt);
+  }
 
-  // Downwards ray that hits the map boundary.
-  ray_len =
-      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 1.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
-  EXPECT_EQ(ray_len, 1.);
+  {
+    // Horizontal ray that hits the occupied cell.
+    const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0., 1.}};
+    const auto ray = ray2d{grid, pose, kMaxRange};
+    EXPECT_EQ(ray.cast(Sophus::SO2d{0.}), 1.);
+  }
 
-  // Start cell is occupied, should return 0.
-  ray_len =
-      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{1., 1.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
-  EXPECT_EQ(ray_len, 0);
+  {
+    // Downwards ray that hits the map boundary.
+    const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0., 1.}};
+    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto distance = ray.cast(Sophus::SO2d{Sophus::Constants<double>::pi() / 2.});
+    EXPECT_EQ(distance, std::nullopt);
+  }
 
-  // Downwards ray that is limited by beam range.
-  ray_len =
-      raycast(grid, Sophus::SE2d{Sophus::Constants<double>::pi() / 2., Eigen::Vector2d{0., 0.}}, Sophus::SO2d{0}, 1);
-  EXPECT_EQ(ray_len, 1);
+  {
+    // Start cell is occupied, should return 0.
+    const auto pose = Sophus::SE2d{0., Eigen::Vector2d{1., 1.}};
+    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto distance = ray.cast(Sophus::SO2d{Sophus::Constants<double>::pi() / 2.});
+    EXPECT_EQ(distance, 0.);
+  }
 
-  // Downwards ray that hits the occupied cell.
-  ray_len =
-      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{1., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, 5);
-  EXPECT_EQ(ray_len, 0.5);
+  {
+    // Downwards ray that is limited by beam range.
+    constexpr double kShortenedRange = 1.;
+    const auto pose = Sophus::SE2d{Sophus::Constants<double>::pi() / 2., Eigen::Vector2d{0., 0.}};
+    const auto ray = ray2d{grid, pose, kShortenedRange};
+    EXPECT_EQ(ray.cast(Sophus::SO2d{0}), std::nullopt);
+  }
 
-  // Diagonal ray that hits the occupied cell.
-  ray_len =
-      raycast(grid, Sophus::SE2d{0, Eigen::Vector2d{0., 0.}}, Sophus::SO2d{Sophus::Constants<double>::pi() / 4.}, 5);
-  EXPECT_EQ(ray_len, std::sqrt(2) / 2.);
+  {
+    // Downwards ray that hits the occupied cell.
+    const auto pose = Sophus::SE2d{0., Eigen::Vector2d{1., 0.}};
+    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto distance = ray.cast(Sophus::SO2d{Sophus::Constants<double>::pi() / 2.});
+    EXPECT_EQ(distance, 1.);
+  }
+
+  {
+    // Diagonal ray that hits the occupied cell.
+    const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0., 0.}};
+    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto distance = ray.cast(Sophus::SO2d{Sophus::Constants<double>::pi() / 4.});
+    EXPECT_EQ(distance, std::sqrt(2));
+  }
 }
+
+TEST(Raycasting, NonIdentityGridOrigin) {
+  constexpr double kResolution = 0.5;
+
+  const auto kOrigin = Sophus::SE2d{Sophus::SO2d{-Sophus::Constants<double>::pi() / 4.}, Eigen::Vector2d{0.5, 0.}};
+  // Note that axes are:
+  // Positive X -> Diagonal downwards right
+  // Positive Y -> Diagonal downwards left
+
+  // clang-format off
+  const auto grid = StaticOccupancyGrid<5, 5>{{
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, true , false, false,
+    false, false, false, false, false,
+    false, false, false, false, false},
+    kResolution, kOrigin};
+  // clang-format on
+
+  constexpr double kMaxRange = 5.;
+
+  {
+    // Diagonal ray that hits the occupied cell.
+    const auto pose = Sophus::SE2d{0., Eigen::Vector2d{0.5, 0.}};
+    const auto ray = ray2d{grid, pose, kMaxRange};
+    const auto distance = ray.cast(Sophus::SO2d{0.});
+    EXPECT_EQ(distance, std::sqrt(2));
+  }
+}
+
 }  // namespace beluga
