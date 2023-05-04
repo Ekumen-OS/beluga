@@ -14,11 +14,9 @@
 
 #include "beluga/algorithm/raycasting.hpp"
 
-#include "beluga/sensor.hpp"
-#include "beluga/sensor/beam_model.hpp"
-#include "ciabatta/ciabatta.hpp"
-
 #include <gmock/gmock.h>
+
+#include <sophus/se2.hpp>
 
 namespace beluga {
 
@@ -117,154 +115,6 @@ class StaticOccupancyGrid {
   Sophus::SE2d origin_inverse_;
   double resolution_;
 };
-
-TEST(Raycasting, StandardBresenham) {
-  auto algorithm = Bresenham2i{Bresenham2i::kStandard};
-
-  {
-    // +---+---+
-    // |   | > |
-    // +---+---+
-    // | > |   |
-    // +---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 0}, {1, 1}};
-    const auto trace = algorithm({0, 0}, {1, 1}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+
-    // |   | < |
-    // +---+---+
-    // | < |   |
-    // +---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{1, 1}, {0, 0}};
-    const auto trace = algorithm({1, 1}, {0, 0}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+---+
-    // |   |   | > |
-    // +---+---+---+
-    // | > | > |   |
-    // +---+---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 0}, {1, 0}, {2, 1}};
-    const auto trace = algorithm({0, 0}, {2, 1}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+---+
-    // |   | < | < |
-    // +---+---+---+
-    // | < |   |   |
-    // +---+---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{2, 1}, {1, 1}, {0, 0}};
-    const auto trace = algorithm({2, 1}, {0, 0}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+
-    // | v |   |
-    // +---+---+
-    // | v |   |
-    // +---+---+
-    // | v |   |
-    // +---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 2}, {0, 1}, {0, 0}};
-    const auto trace = algorithm({0, 2}, {0, 0}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+---+---+
-    // |   |   |   | < |
-    // +---+---+---+---+
-    // |   | < | < |   |
-    // +---+---+---+---+
-    // | < |   |   |   |
-    // +---+---+---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{3, 2}, {2, 1}, {1, 1}, {0, 0}};
-    const auto trace = algorithm({3, 2}, {0, 0}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-}
-
-TEST(Raycasting, ModifiedBresenham) {
-  auto algorithm = Bresenham2i{Bresenham2i::kModified};
-
-  {
-    // +---+---+
-    // | > | > |
-    // +---+---+
-    // | > | > |
-    // +---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 0}, {1, 0}, {0, 1}, {1, 1}};
-    const auto trace = algorithm({0, 0}, {1, 1}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+
-    // | < | < |
-    // +---+---+
-    // | < | < |
-    // +---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{1, 1}, {0, 1}, {1, 0}, {0, 0}};
-    const auto trace = algorithm({1, 1}, {0, 0}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+---+
-    // |   | > | > |
-    // +---+---+---+
-    // | > | > |   |
-    // +---+---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 0}, {1, 0}, {1, 1}, {2, 1}};
-    const auto trace = algorithm({0, 0}, {2, 1}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+---+
-    // |   | < | < |
-    // +---+---+---+
-    // | < | < |   |
-    // +---+---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{2, 1}, {1, 1}, {1, 0}, {0, 0}};
-    const auto trace = algorithm({2, 1}, {0, 0}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+
-    // | v |   |
-    // +---+---+
-    // | v |   |
-    // +---+---+
-    // | v |   |
-    // +---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{0, 2}, {0, 1}, {0, 0}};
-    const auto trace = algorithm({0, 2}, {0, 0}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-
-  {
-    // +---+---+---+---+
-    // |   |   | < | < |
-    // +---+---+---+---+
-    // |   | < | < |   |
-    // +---+---+---+---+
-    // | < | < |   |   |
-    // +---+---+---+---+
-    const auto expected_trace = std::vector<Eigen::Vector2i>{{3, 2}, {2, 2}, {2, 1}, {1, 1}, {1, 0}, {0, 0}};
-    const auto trace = algorithm({3, 2}, {0, 0}) | ranges::to<std::vector>;
-    EXPECT_EQ(trace, expected_trace);
-  }
-}
 
 TEST(Raycasting, Nominal) {
   constexpr double kResolution = 0.5;

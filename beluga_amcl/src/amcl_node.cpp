@@ -335,7 +335,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
-      "Which observartion model to use [beam, likelihood_field].";
+      "Which observation model to use [beam, likelihood_field].";
     declare_parameter(
       "laser_model_type",
       rclcpp::ParameterValue(std::string(kLikelihoodFieldModelName)), descriptor);

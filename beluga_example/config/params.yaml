@@ -49,9 +49,8 @@ amcl:
     update_min_a: 0.2
     # Maximum angle difference from last resample for resampling to happen again.
     update_min_d: 0.25
-    # TODO(Ramiro): Revert this to 'likelihood_field'
     # Laser sensor model type.
-    laser_model_type: beam
+    laser_model_type: likelihood_field
     # Maximum distance of an obstacle (if the distance is higher, this one will be used in the likelihood map).
     laser_likelihood_max_dist: 2.0
     # Maximum range of the laser.
