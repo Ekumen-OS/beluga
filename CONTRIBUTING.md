@@ -58,6 +58,11 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    ```bash
    docker/run.sh --build
    ```
+   To target an specific ROS distribution, use:
+   ```bash
+   ROSDISTRO=humble docker/run.sh
+   ```
+   Supported distributions include `humble` and `rolling`.
 
 1. **[Optional]** Install pre-commit hooks. _This will probably cause you to not be able to create commits from your host machine since the hooks have dependencies that exist only in the development container._
    ```bash

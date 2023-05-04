@@ -3,7 +3,7 @@ services:
   dev:
     build:
       context: ..
-      dockerfile: docker/images/humble/Dockerfile
+      dockerfile: docker/images/${ROSDISTRO:-humble}/Dockerfile
     container_name: beluga-dev
     environment:
       - DISPLAY
@@ -16,7 +16,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /tmp/.docker.xauth:/tmp/.docker.xauth
-      - ..:/ws/src
+      - ..:/ws/src/beluga
       - beluga_ccache:/home/developer/.ccache
 volumes:
   beluga_ccache:
