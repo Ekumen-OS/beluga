@@ -66,6 +66,9 @@ $(function() {
 &#160;
 
 <h3><a id="index_d"></a>- d -</h3><ul>
+<li>difference_type
+: <a class="el" href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a16fea874ae17dc122f0e8abd5f780578">beluga::Bresenham2i::Line&lt; Vector2, Integer &gt;::iterator</a>
+</li>
 <li>distribution_type
 : <a class="el" href="classbeluga_1_1MultivariateNormalDistribution_1_1Param.html#a9978e145e026637e87026fc8014a9fd2">beluga::MultivariateNormalDistribution&lt; Matrix &gt;::Param</a>
 </li>
@@ -77,12 +80,16 @@ $(function() {
 : <a class="el" href="structbeluga_1_1StorageInterface.html#a00e61ffcc51e487cab72622bab3e528b">beluga::StorageInterface&lt; State, Weight &gt;</a>
 , <a class="el" href="classbeluga_1_1StoragePolicy.html#aeeae05d8a0b4af495030a1ec3448dbbc">beluga::StoragePolicy&lt; Mixin, Container, Particle, State, Weight &gt;</a>
 </li>
+<li>iterator_category
+: <a class="el" href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#aa96e49057e25f4d99b9bb5c783684185">beluga::Bresenham2i::Line&lt; Vector2, Integer &gt;::iterator</a>
+</li>
 </ul>
 
 
 <h3><a id="index_m"></a>- m -</h3><ul>
 <li>measurement_type
-: <a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e">beluga::LaserSensorModelInterface2d</a>
+: <a class="el" href="classbeluga_1_1BeamSensorModel.html#ae8c48f1b0980120892530de3e830fb1b">beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;</a>
+, <a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e">beluga::LaserSensorModelInterface2d</a>
 , <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a9d326f9aea9643cce21a2413d15f655a">beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</a>
 </li>
 <li>mixin
@@ -106,6 +113,7 @@ $(function() {
 <h3><a id="index_p"></a>- p -</h3><ul>
 <li>param_type
 : <a class="el" href="classbeluga_1_1AdaptiveSampler.html#acec4e9523c4cdfff0d068b9629111a0d">beluga::AdaptiveSampler&lt; Mixin &gt;</a>
+, <a class="el" href="classbeluga_1_1BeamSensorModel.html#a7a4a60b25e4e5ace58dd76f0a3e28ac2">beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;</a>
 , <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#ac9fa2bb96a3e85a434ca24dacfd0ff7d">beluga::DifferentialDriveModel&lt; Mixin &gt;</a>
 , <a class="el" href="classbeluga_1_1FixedLimiter.html#afb2253f4831d59a714f1d6b9441b81ff">beluga::FixedLimiter&lt; Mixin &gt;</a>
 , <a class="el" href="classbeluga_1_1KldLimiter.html#ac369521e27c552b4a0bf55f6de6b1139">beluga::KldLimiter&lt; Mixin, State &gt;</a>
@@ -119,10 +127,16 @@ $(function() {
 <li>particle_type
 : <a class="el" href="classbeluga_1_1StoragePolicy.html#a48c3ea032b39126ca6cab19d22aadac3">beluga::StoragePolicy&lt; Mixin, Container, Particle, State, Weight &gt;</a>
 </li>
+<li>pointer
+: <a class="el" href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#aac485ef67aec20c3b6d8498e5720073b">beluga::Bresenham2i::Line&lt; Vector2, Integer &gt;::iterator</a>
+</li>
 </ul>
 
 
 <h3><a id="index_r"></a>- r -</h3><ul>
+<li>reference
+: <a class="el" href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a25ee273f669a412432f6dbc5586253dd">beluga::Bresenham2i::Line&lt; Vector2, Integer &gt;::iterator</a>
+</li>
 <li>resolution_in_each_axis_t
 : <a class="el" href="classbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01st82aee1c4aa004416efdc2dd54a3ad958.html#a2b89a203f062ee3d2a1ea4e0d544a8ef">beluga::spatial_hash&lt; std::array&lt; T, N &gt;, std::enable_if_t&lt; std::is_arithmetic_v&lt; T &gt;, void &gt; &gt;</a>
 , <a class="el" href="classbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1_7c7412bd4d4b17eb2e661212dfcf682d.html#a08692e76e34cc1e34ac1e0de4674f0be">beluga::spatial_hash&lt; Tuple&lt; Types... &gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt; Types &gt; &amp;&amp;...), void &gt; &gt;</a>
@@ -143,7 +157,8 @@ $(function() {
 , <a class="el" href="classbeluga_1_1TupleContainer.html#a52e7d341a10751701c6cb682bbbcd894">beluga::TupleContainer&lt; InternalContainer, Types &gt;</a>
 </li>
 <li>state_type
-: <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a3da7c73b8ecd087785acf7ccd077dd50">beluga::DifferentialDriveModel&lt; Mixin &gt;</a>
+: <a class="el" href="classbeluga_1_1BeamSensorModel.html#aed17d785c2af5480dffcc1e2a452115e">beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;</a>
+, <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a3da7c73b8ecd087785acf7ccd077dd50">beluga::DifferentialDriveModel&lt; Mixin &gt;</a>
 , <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#ac088f5c1a0bf60d5eca535e1979b5564">beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</a>
 , <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">beluga::OmnidirectionalDriveModel&lt; Mixin &gt;</a>
 , <a class="el" href="structbeluga_1_1particle__traits_3_01Pair_3_01State_00_01Weight_00_01Extra_8_8_8_01_4_01_4.html#aad145317b91a8ac35666aafab6c717dd">beluga::particle_traits&lt; Pair&lt; State, Weight, Extra... &gt; &gt;</a>
@@ -181,7 +196,8 @@ $(function() {
 
 <h3><a id="index_v"></a>- v -</h3><ul>
 <li>value_type
-: <a class="el" href="structbeluga_1_1container__traits.html#ae580aa173655ccc25802c0ba6e94151a">beluga::container_traits&lt; T &gt;</a>
+: <a class="el" href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a47c01d3ee0b39824a13ad4a6d1b21343">beluga::Bresenham2i::Line&lt; Vector2, Integer &gt;::iterator</a>
+, <a class="el" href="structbeluga_1_1container__traits.html#ae580aa173655ccc25802c0ba6e94151a">beluga::container_traits&lt; T &gt;</a>
 , <a class="el" href="structbeluga_1_1container__traits_3_01TupleContainer_3_01InternalContainer_00_01Types_8_8_8_01_4_01_4.html#a8197a131674aa39e6008577f461d6cf0">beluga::container_traits&lt; TupleContainer&lt; InternalContainer, Types... &gt; &gt;</a>
 , <a class="el" href="structbeluga_1_1particle__traits_3_01Pair_3_01State_00_01Weight_00_01Extra_8_8_8_01_4_01_4.html#abcb296a63bc937282aae9ab965b82a38">beluga::particle_traits&lt; Pair&lt; State, Weight, Extra... &gt; &gt;</a>
 , <a class="el" href="structbeluga_1_1particle__traits_3_01Tuple_3_01State_00_01Weight_00_01Cluster_00_01Extra_8_8_8_01_4_01_4.html#aeef6638a4f00ff475838c4d5dc8f183a">beluga::particle_traits&lt; Tuple&lt; State, Weight, Cluster, Extra... &gt; &gt;</a>
@@ -195,7 +211,8 @@ $(function() {
 
 <h3><a id="index_w"></a>- w -</h3><ul>
 <li>weight_type
-: <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a411eaec04a3b4eb68016d3dbda492f86">beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</a>
+: <a class="el" href="classbeluga_1_1BeamSensorModel.html#a53e6dfd600998fd2950ee3ec8a057388">beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;</a>
+, <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a411eaec04a3b4eb68016d3dbda492f86">beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</a>
 , <a class="el" href="structbeluga_1_1particle__traits_3_01Pair_3_01State_00_01Weight_00_01Extra_8_8_8_01_4_01_4.html#a1b27dbacf2bb51620e32d60a7a392ec2">beluga::particle_traits&lt; Pair&lt; State, Weight, Extra... &gt; &gt;</a>
 , <a class="el" href="structbeluga_1_1particle__traits_3_01Tuple_3_01State_00_01Weight_00_01Cluster_00_01Extra_8_8_8_01_4_01_4.html#a8a0ebdc3cf9a3d0462e5b0827beac62b">beluga::particle_traits&lt; Tuple&lt; State, Weight, Cluster, Extra... &gt; &gt;</a>
 , <a class="el" href="structbeluga_1_1StorageInterface.html#a9ca5b84bcb20379729187016740490c5">beluga::StorageInterface&lt; State, Weight &gt;</a>

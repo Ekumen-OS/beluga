@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['has_5fparams_5fv_442',['has_params_v',['../descriptor_8hpp.html#a36a6f395864eacbf4610d0b6e3cf89c6',1,'beluga::mixin']]]
+  ['elements_494',['elements',['../views_8hpp.html#a7d1f7ebcb951cae428545b13119990ee',1,'beluga::views']]],
+  ['enabled_495',['enabled',['../structbeluga_1_1SelectiveResamplingPolicyParam.html#a4af280403ea017ed0178969df9a11608',1,'beluga::SelectiveResamplingPolicyParam']]]
 ];

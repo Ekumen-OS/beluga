@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['update_5fmin_5fa_461',['update_min_a',['../structbeluga_1_1ResampleOnMotionPolicyParam.html#ac65b68e51b4e2bedd8a0fc5b352b004b',1,'beluga::ResampleOnMotionPolicyParam']]],
-  ['update_5fmin_5fd_462',['update_min_d',['../structbeluga_1_1ResampleOnMotionPolicyParam.html#aeffa05da22fc1fb8907e5142740b53a0',1,'beluga::ResampleOnMotionPolicyParam']]]
+  ['sigma_5fhit_511',['sigma_hit',['../structbeluga_1_1BeamModelParam.html#a8965d830f6b3fe181e91c2006a49cf69',1,'beluga::BeamModelParam::sigma_hit()'],['../structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db',1,'beluga::LikelihoodFieldModelParam::sigma_hit()']]],
+  ['spatial_5fhasher_512',['spatial_hasher',['../structbeluga_1_1KldLimiterParam.html#a4f0a27c66e30a2ffe3f5fb3a765797a5',1,'beluga::KldLimiterParam']]],
+  ['strafe_5fnoise_5ffrom_5ftranslation_513',['strafe_noise_from_translation',['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a51327f31df0f15909a66753067dd7d15',1,'beluga::OmnidirectionalDriveModelParam']]]
 ];

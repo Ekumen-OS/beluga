@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['distance_5fthreshold_439',['distance_threshold',['../structbeluga_1_1DifferentialDriveModelParam.html#aa12b1f7cfcdd06234b0992c43976377e',1,'beluga::DifferentialDriveModelParam::distance_threshold()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a93f701e6239ffd39b7e0076c86991e1a',1,'beluga::OmnidirectionalDriveModelParam::distance_threshold()']]]
+  ['beam_5fmax_5frange_492',['beam_max_range',['../structbeluga_1_1BeamModelParam.html#a4948b1a67140c2ef8db8bfcaea3540f5',1,'beluga::BeamModelParam']]]
 ];

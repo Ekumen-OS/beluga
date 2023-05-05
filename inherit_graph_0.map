@@ -1,17 +1,18 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,438,64,465"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,470,64,497"/>
 <area shape="rect" id="node2" href="$classbeluga_1_1AdaptiveSampler.html" title="Generation of samples from input particles with a recovery strategy." alt="" coords="135,5,321,47"/>
-<area shape="rect" id="node3" href="$classbeluga_1_1BootstrapParticleFilter.html" title="Base implementation of a particle filter." alt="" coords="135,71,321,112"/>
-<area shape="rect" id="node4" href="$classbeluga_1_1DifferentialDriveModel.html" title="Sampled odometry model for a differential drive." alt="" coords="137,136,319,177"/>
-<area shape="rect" id="node5" href="$classbeluga_1_1FixedLimiter.html" title="Limiter policy that takes a fixed number of particles." alt="" coords="151,201,305,243"/>
-<area shape="rect" id="node6" href="$classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria." alt="" coords="157,267,299,308"/>
-<area shape="rect" id="node7" href="$classbeluga_1_1LikelihoodFieldModel.html" title="Likelihood field sensor model for range finders." alt="" coords="123,332,333,373"/>
-<area shape="rect" id="node8" href="$classbeluga_1_1NaiveSampler.html" title="Generation of samples from input particles." alt="" coords="145,397,311,439"/>
-<area shape="rect" id="node9" href="$classbeluga_1_1OmnidirectionalDriveModel.html" title="Sampled odometry model for an omnidirectional drive." alt="" coords="121,463,335,504"/>
-<area shape="rect" id="node10" href="$classbeluga_1_1RandomStateGenerator.html" title="A random state generator." alt="" coords="115,528,341,569"/>
-<area shape="rect" id="node11" href="$classbeluga_1_1ResamplingPoliciesPoller.html" title="Resampling policy poller." alt="" coords="127,593,329,635"/>
-<area shape="rect" id="node12" href="$classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html" title="Partial template specialization for simple state estimator in 2D." alt="" coords="120,659,336,700"/>
-<area shape="rect" id="node13" href="$classbeluga_1_1StationaryModel.html" title="A stationary motion model." alt="" coords="137,724,319,765"/>
-<area shape="rect" id="node14" href="$classbeluga_1_1StoragePolicy.html" title="Configurable storage policy." alt="" coords="126,790,330,846"/>
-<area shape="rect" id="node15" href="$classbeluga_1_1WeightedStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html" title="Partial template specialization for weighted state estimator in 2D." alt="" coords="112,871,344,912"/>
+<area shape="rect" id="node3" href="$classbeluga_1_1BeamSensorModel.html" title="Beam sensor model for range finders." alt="" coords="130,71,326,112"/>
+<area shape="rect" id="node4" href="$classbeluga_1_1BootstrapParticleFilter.html" title="Base implementation of a particle filter." alt="" coords="135,136,321,177"/>
+<area shape="rect" id="node5" href="$classbeluga_1_1DifferentialDriveModel.html" title="Sampled odometry model for a differential drive." alt="" coords="137,201,319,243"/>
+<area shape="rect" id="node6" href="$classbeluga_1_1FixedLimiter.html" title="Limiter policy that takes a fixed number of particles." alt="" coords="151,267,305,308"/>
+<area shape="rect" id="node7" href="$classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria." alt="" coords="157,332,299,373"/>
+<area shape="rect" id="node8" href="$classbeluga_1_1LikelihoodFieldModel.html" title="Likelihood field sensor model for range finders." alt="" coords="123,397,333,439"/>
+<area shape="rect" id="node9" href="$classbeluga_1_1NaiveSampler.html" title="Generation of samples from input particles." alt="" coords="145,463,311,504"/>
+<area shape="rect" id="node10" href="$classbeluga_1_1OmnidirectionalDriveModel.html" title="Sampled odometry model for an omnidirectional drive." alt="" coords="121,528,335,569"/>
+<area shape="rect" id="node11" href="$classbeluga_1_1RandomStateGenerator.html" title="A random state generator." alt="" coords="115,593,341,635"/>
+<area shape="rect" id="node12" href="$classbeluga_1_1ResamplingPoliciesPoller.html" title="Resampling policy poller." alt="" coords="127,659,329,700"/>
+<area shape="rect" id="node13" href="$classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html" title="Partial template specialization for simple state estimator in 2D." alt="" coords="120,724,336,765"/>
+<area shape="rect" id="node14" href="$classbeluga_1_1StationaryModel.html" title="A stationary motion model." alt="" coords="137,789,319,831"/>
+<area shape="rect" id="node15" href="$classbeluga_1_1StoragePolicy.html" title="Configurable storage policy." alt="" coords="126,855,330,911"/>
+<area shape="rect" id="node16" href="$classbeluga_1_1WeightedStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html" title="Partial template specialization for weighted state estimator in 2D." alt="" coords="112,936,344,977"/>
 </map>

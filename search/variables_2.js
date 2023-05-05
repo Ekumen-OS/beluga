@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['elements_440',['elements',['../views_8hpp.html#a7d1f7ebcb951cae428545b13119990ee',1,'beluga::views']]],
-  ['enabled_441',['enabled',['../structbeluga_1_1SelectiveResamplingPolicyParam.html#a4af280403ea017ed0178969df9a11608',1,'beluga::SelectiveResamplingPolicyParam']]]
+  ['distance_5fthreshold_493',['distance_threshold',['../structbeluga_1_1DifferentialDriveModelParam.html#aa12b1f7cfcdd06234b0992c43976377e',1,'beluga::DifferentialDriveModelParam::distance_threshold()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a93f701e6239ffd39b7e0076c86991e1a',1,'beluga::OmnidirectionalDriveModelParam::distance_threshold()']]]
 ];

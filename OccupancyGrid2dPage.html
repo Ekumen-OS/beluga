@@ -72,9 +72,15 @@ $(function() {
 <li><code>g.data()</code> returns a const <a href="https://en.cppreference.com/w/cpp/ranges/random_access_range">rancom access range</a>, with value type <code>C</code>.</li>
 <li><code>g.neighbors()</code> returns a range with value type std::size_t. The elements of the range are valid cell indexes, i.e. for each <code>i</code> of the returned range <code>i &lt; g.size()</code> is true and <code>g.data()[i]</code> is valid.</li>
 <li><code>g.origin()</code> return the occupancy grid origin as a <code>Sophus::SE2d</code>.</li>
-<li>Given a possibly const <code>std::size_t</code> <code>i</code> less than <code>g.size()</code>, <code>g.point(i)</code> returns the coordinates of the cell of index <code>i</code> as a <code>Eigen::Vector2d</code>.</li>
-<li>Give possibly const values <code>x</code> and <code>y</code> of type <code>double</code>, <code>g.index(x, y)</code> returns a <code>std::size</code>, representing the index of the cell.</li>
-<li>Give a possibly const <code>Eigen::Vector2d</code> <code>p</code>, <code>g.index(p)</code> is equivalent to <code>g.index(p.x(), p.y())</code>.</li>
+<li>Given possibly const values <code>x</code> and <code>y</code> of type <code>int</code>, <code>g.valid(x, y)</code> returns whether a cell at those discrete coordinates exists.</li>
+<li>Given possibly const <code>Eigen::Vector2i</code> <code>c</code>, <code>g.valid(c)</code> is equivalent to <code>g.point(c.x(), c.y())</code>.</li>
+<li>Given a possibly const <code>std::size_t</code> <code>i</code> less than <code>g.size()</code>, <code>g.point(i)</code> returns the continuous coordinates of the centroid of the cell at index <code>i</code> in the grid frame as a <code>Eigen::Vector2d</code>.</li>
+<li>Given possibly const values <code>x</code> and <code>y</code> of type <code>int</code>, <code>g.point(x, y)</code> returns the continuous coordinates in the grid frame of the centroid of the cell at those discrete coordinates as a <code>Eigen::Vector2d</code>.</li>
+<li>Given a possibly const <code>Eigen::Vector2i</code> <code>c</code>, <code>g.point(c)</code> is equivalent to <code>g.point(c.x(), c.y())</code>.</li>
+<li>Given possibly const values <code>x</code> and <code>y</code> of type <code>double</code>, <code>g.index(x, y)</code> returns a <code>std::size</code>, representing the index of the cell.</li>
+<li>Given a possibly const <code>Eigen::Vector2d</code> <code>p</code>, <code>g.index(p)</code> is equivalent to <code>g.index(p.x(), p.y())</code>.</li>
+<li>Given possibly const values <code>x</code> and <code>y</code> of type <code>int</code>, <code>g.index(x, y)</code> returns a <code>std::size</code>, representing the index of the cell at those discrete coordinates.</li>
+<li>Given a possibly const <code>Eigen::Vector2i</code> <code>c</code>, <code>g.index(c)</code> is equivalent to <code>g.index(c.x(), c.y())</code>.</li>
 </ul>
 <p>Given c a possible const instance of C:</p><ul>
 <li>OccupancyGrid::Traits::is_free(c) returns true if the cell is free, false if not.</li>

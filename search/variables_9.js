@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['sigma_5fhit_456',['sigma_hit',['../structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db',1,'beluga::LikelihoodFieldModelParam']]],
-  ['spatial_5fhasher_457',['spatial_hasher',['../structbeluga_1_1KldLimiterParam.html#a4f0a27c66e30a2ffe3f5fb3a765797a5',1,'beluga::KldLimiterParam']]],
-  ['strafe_5fnoise_5ffrom_5ftranslation_458',['strafe_noise_from_translation',['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a51327f31df0f15909a66753067dd7d15',1,'beluga::OmnidirectionalDriveModelParam']]]
+  ['params_507',['params',['../structbeluga_1_1mixin_1_1descriptor_3_01Mixin_00_01Param_01_4.html#a49a8c4f4490b637aa1db44bcf400a7ec',1,'beluga::mixin::descriptor&lt; Mixin, Param &gt;']]]
 ];

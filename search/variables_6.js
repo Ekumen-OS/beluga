@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['max_5flaser_5fdistance_448',['max_laser_distance',['../structbeluga_1_1LikelihoodFieldModelParam.html#a7d71848306f0d0e2a6601b240ff847b1',1,'beluga::LikelihoodFieldModelParam']]],
-  ['max_5fobstacle_5fdistance_449',['max_obstacle_distance',['../structbeluga_1_1LikelihoodFieldModelParam.html#a3e34aea5149234747783753e5f905c70',1,'beluga::LikelihoodFieldModelParam']]],
-  ['max_5fsamples_450',['max_samples',['../structbeluga_1_1FixedLimiterParam.html#a9d55d6e549b8c3641d0182107e37c716',1,'beluga::FixedLimiterParam::max_samples()'],['../structbeluga_1_1KldLimiterParam.html#a663c86603c35ee10e75ef9f1cba414e5',1,'beluga::KldLimiterParam::max_samples()']]],
-  ['min_5fsamples_451',['min_samples',['../structbeluga_1_1KldLimiterParam.html#a5508d8a71932cd46fe23b966edeebc51',1,'beluga::KldLimiterParam']]]
+  ['kld_5fepsilon_500',['kld_epsilon',['../structbeluga_1_1KldLimiterParam.html#a451efaa8e29f12d43862eb5f183a506e',1,'beluga::KldLimiterParam']]],
+  ['kld_5fz_501',['kld_z',['../structbeluga_1_1KldLimiterParam.html#a917255482e04f9c06ea9fabb0b76882b',1,'beluga::KldLimiterParam']]]
 ];
