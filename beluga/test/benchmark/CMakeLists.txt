@@ -3,6 +3,7 @@ option(BELUGA_RUN_PERFORMANCE_TESTS
 
 add_executable(benchmark_beluga
   benchmark_likelihood_field_model.cpp
+  benchmark_raycasting.cpp
   benchmark_sampling.cpp
   benchmark_spatial_hash.cpp
   benchmark_tuple_vector.cpp)
