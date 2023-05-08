@@ -30,7 +30,7 @@ the code they are contributing to the project according to the
 #### Create a new issue
 
 If you spot a problem or have a feature request you'd like to discuss, [search if an issue already exists](https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments).
-If a related issue doesn't exist, you can [open a new issue](https://github.com/ekumenlabs/beluga/issues/new/choose).
+If a related issue doesn't exist, you can [open a new issue](https://github.com/Ekumen-OS/beluga/issues/new/choose).
 
 ### Make changes
 
@@ -46,7 +46,7 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
 
 1. Clone the repository.
    ```bash
-   git clone --recursive git@github.com:ekumenlabs/beluga.git
+   git clone --recursive git@github.com:Ekumen-OS/beluga.git
    ```
 
 1. Build and run the development docker container.
@@ -103,7 +103,7 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    ros2 run teleop_twist_keyboard teleop_twist_keyboard
    ```
 
-1. Push your changes and [create a PR](https://github.com/ekumenlabs/beluga/compare)!
+1. Push your changes and [create a PR](https://github.com/Ekumen-OS/beluga/compare)!
 
 1. At the time a feature branch is squashed-and-merged into `main`, the commit message should adhere to the following good practices:
    - Limit the subject line to 50 characters.

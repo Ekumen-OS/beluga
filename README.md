@@ -1,6 +1,6 @@
 # Beluga
 
-![CI badge](https://github.com/ekumenlabs/beluga/actions/workflows/ci_pipeline.yml/badge.svg?event=push)
+![CI badge](https://github.com/Ekumen-OS/beluga/actions/workflows/ci_pipeline.yml/badge.svg?event=push)
 
 ## Overview
 

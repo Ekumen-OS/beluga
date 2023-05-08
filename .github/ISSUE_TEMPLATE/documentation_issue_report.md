@@ -16,7 +16,7 @@ Description of what the error consists of, it could be a typographical error,
 incorrect documentation, missing content, etc.
 
 Important: If you're trying to report a functional bug, open a Bug Report instead
-(see https://github.com/ekumenlabs/beluga/issues/new/choose).
+(see https://github.com/Ekumen-OS/beluga/issues/new/choose).
 -->
 
 ## Additional information

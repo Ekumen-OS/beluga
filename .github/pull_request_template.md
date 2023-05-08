@@ -18,7 +18,7 @@ NOTE: The larger description should be done in the linked issue, not here.
 -->
 
 ## Checklist
-- [ ] Read the [contributing guidelines](https://github.com/ekumenlabs/beluga/blob/main/CONTRIBUTING.md).
+- [ ] Read the [contributing guidelines](https://github.com/Ekumen-OS/beluga/blob/main/CONTRIBUTING.md).
 - [ ] Configured pre-commit and ran colcon test locally.
 - [ ] Signed all commits for DCO.
 - [ ] Added tests (regression tests for bugs, coverage of new code for features).
