@@ -151,7 +151,7 @@ $(function() {
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> transform = grid_.origin().inverse() * <a class="code" href="particle__traits_8hpp.html#ac3c1a0c8eb406538bb4e6bcc1d1066d5">state</a>;</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> lock = std::shared_lock&lt;std::shared_mutex&gt;{points_mutex_};</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="comment">// TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.</span></div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="comment">// See https://github.com/ekumenlabs/beluga/issues/153</span></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="comment">// See https://github.com/Ekumen-OS/beluga/issues/153</span></div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keywordflow">return</span> std::transform_reduce(</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        points_.cbegin(), points_.cend(), 1.0, std::plus{},</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        [<span class="keyword">this</span>, x_offset = transform.translation().x(), y_offset = transform.translation().y(),</div>
