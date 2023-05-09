@@ -8,7 +8,7 @@ Beluga is an extensible library with a ground-up implementation of the Monte Car
 including sensor and motion models.
 It also provides a _drop-in_ replacement for the `amcl` node used in [navigation2](https://github.com/ros-planning/navigation2).
 
-https://user-images.githubusercontent.com/26796393/222827672-b8ab8421-5933-42f3-8144-be8d417e8aeb.mp4
+https://github.com/Ekumen-OS/beluga/assets/33042669/df2a5e61-3d97-4350-b171-71bb1a09a6d0
 
 ## Packages
 
