@@ -137,9 +137,8 @@ template&lt;std::size_t N&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= ranges::views::transform([](<span class="keyword">auto</span>&amp;&amp; particle) -&gt; decltype(<span class="keyword">auto</span>) {</div>
-<div class="line">  <span class="keywordflow">return</span> std::get&lt;N&gt;(std::forward&lt;decltype(particle)&gt;(particle));</div>
-<div class="line">})</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= ranges::views::transform(</div>
+<div class="line">    [](<span class="keyword">auto</span>&amp;&amp; particle) -&gt; decltype(<span class="keyword">auto</span>) { <span class="keywordflow">return</span> std::get&lt;N&gt;(std::forward&lt;decltype(particle)&gt;(particle)); })</div>
 </div><!-- fragment --><p>Returns <a href="https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject">range adaptor object</a> that will apply <code>std::get&lt;N&gt;</code> to each value in the range lazily. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">N</td><td>Element to get from the array or tuple. </td></tr>
