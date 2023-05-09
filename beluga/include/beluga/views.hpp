@@ -33,9 +33,8 @@ namespace beluga::views {
  * \param particle Tuple or array instance, with at least `N + 1` elements.
  */
 template <std::size_t N>
-inline auto elements = ranges::views::transform([](auto&& particle) -> decltype(auto) {
-  return std::get<N>(std::forward<decltype(particle)>(particle));
-});
+inline auto elements = ranges::views::transform(
+    [](auto&& particle) -> decltype(auto) { return std::get<N>(std::forward<decltype(particle)>(particle)); });
 
 }  // namespace beluga::views
 
