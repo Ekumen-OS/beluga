@@ -120,9 +120,7 @@ TEST(VisitEverything, VariantAndValues) {
 }
 
 TEST(VisitEverything, FowardSingleParameter) {
-  const auto forward = [](auto&& value) -> auto&& {
-    return value;
-  };
+  const auto forward = [](auto&& value) -> auto&& { return value; };
   int value = 5;
   int& alias = beluga::mixin::visit_everything(forward, value);
   ASSERT_EQ(alias, 5);
