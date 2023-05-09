@@ -154,7 +154,7 @@ class BeamSensorModel : public Mixin {
       }
 
       // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
-      // See https://github.com/ekumenlabs/beluga/issues/153
+      // See https://github.com/Ekumen-OS/beluga/issues/153
       return pz * pz * pz;
     });
   }

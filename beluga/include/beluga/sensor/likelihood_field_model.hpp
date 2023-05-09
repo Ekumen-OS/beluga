@@ -167,7 +167,7 @@ class LikelihoodFieldModel : public Mixin {
     const auto transform = grid_.origin().inverse() * state;
     const auto lock = std::shared_lock<std::shared_mutex>{points_mutex_};
     // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
-    // See https://github.com/ekumenlabs/beluga/issues/153
+    // See https://github.com/Ekumen-OS/beluga/issues/153
     return std::transform_reduce(
         points_.cbegin(), points_.cend(), 1.0, std::plus{},
         [this, x_offset = transform.translation().x(), y_offset = transform.translation().y(),
