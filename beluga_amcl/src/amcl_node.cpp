@@ -815,6 +815,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     covariance.coeffRef(1, 2) = this->get_parameter("initial_pose.covariance_yyaw").as_double();
     covariance.coeffRef(2, 1) = covariance.coeffRef(1, 2);
     this->reinitialize_with_pose(mean, covariance);
+
     RCLCPP_INFO_STREAM(
       this->get_logger(),
       "Particle filter initialized with initial pose x=" <<
@@ -831,6 +832,7 @@ void AmclNode::timer_callback()
   if (!particle_filter_) {
     return;
   }
+
   if (particle_cloud_pub_->get_subscription_count() == 0) {
     return;
   }
@@ -916,6 +918,7 @@ void AmclNode::laser_callback(
   }
 
   const auto [pose, covariance] = particle_filter_->estimate();
+
   {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
     message.header.stamp = laser_scan->header.stamp;
@@ -924,6 +927,7 @@ void AmclNode::laser_callback(
     message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
     pose_pub_->publish(message);
   }
+
   if (enable_tf_broadcast_ && get_parameter("tf_broadcast").as_bool()) {
     auto message = geometry_msgs::msg::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.

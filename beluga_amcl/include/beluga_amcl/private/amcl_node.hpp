@@ -31,6 +31,7 @@
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
+
 #include "beluga_amcl/private/execution_policy.hpp"
 
 namespace beluga_amcl
