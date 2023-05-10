@@ -66,12 +66,12 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
 
 1. **[Optional]** Install pre-commit hooks. _This will probably cause you to not be able to create commits from your host machine since the hooks have dependencies that only exist in the development container._
    ```bash
-   cd /ws/src
+   cd /ws/src/beluga
    pre-commit install
    ```
    Alternatively, you can run the hooks manually.
    ```bash
-   cd /ws/src
+   cd /ws/src/beluga
    pre-commit run --all-files
    ```
 
