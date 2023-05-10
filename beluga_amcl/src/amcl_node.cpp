@@ -598,6 +598,12 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     rclcpp::SystemDefaultsQoS(),
     std::bind(&AmclNode::initial_pose_callback, this, std::placeholders::_1));
 
+  global_localization_server_ = create_service<std_srvs::srv::Empty>(
+    "reinitialize_global_localization",
+    std::bind(
+      &AmclNode::global_localization_callback, this, std::placeholders::_1,
+      std::placeholders::_2, std::placeholders::_3));
+
   RCLCPP_INFO(
     get_logger(),
     "Subscribed to initial_pose_topic: %s",
@@ -653,6 +659,7 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State &
   tf_listener_.reset();
   tf_broadcaster_.reset();
   tf_buffer_.reset();
+  global_localization_server_.reset();
   bond_.reset();
   return CallbackReturn::SUCCESS;
 }
@@ -662,6 +669,8 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   pose_pub_.reset();
+  enable_tf_broadcast_ = false;
+  particle_filter_.reset();
   return CallbackReturn::SUCCESS;
 }
 
@@ -919,7 +928,7 @@ void AmclNode::laser_callback(
     pose_pub_->publish(message);
   }
 
-  if (get_parameter("tf_broadcast").as_bool()) {
+  if (enable_tf_broadcast_ && get_parameter("tf_broadcast").as_bool()) {
     auto message = geometry_msgs::msg::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
     message.header.stamp = now() +
@@ -978,9 +987,24 @@ void AmclNode::reinitialize_with_pose(
           const auto sample = distribution(generator);
           return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
         }));
+    enable_tf_broadcast_ = true;
   } catch (const std::runtime_error & error) {
     RCLCPP_ERROR(get_logger(), "Could not generate particles: %s", error.what());
   }
+}
+
+void AmclNode::global_localization_callback(
+  [[maybe_unused]] const std::shared_ptr<rmw_request_id_t> request_header,
+  [[maybe_unused]] const std::shared_ptr<std_srvs::srv::Empty::Request> req,
+  [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res)
+{
+  if (!particle_filter_) {
+    return;
+  }
+  RCLCPP_INFO(get_logger(), "Initializing with uniform distribution");
+  particle_filter_->reinitialize();
+  RCLCPP_INFO(get_logger(), "Global initialization done!");
+  enable_tf_broadcast_ = true;
 }
 
 }  // namespace beluga_amcl

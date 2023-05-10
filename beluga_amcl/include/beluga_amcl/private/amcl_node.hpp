@@ -30,6 +30,7 @@
 #include <nav2_msgs/msg/particle_cloud.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+#include <std_srvs/srv/empty.hpp>
 
 #include "beluga_amcl/private/execution_policy.hpp"
 
@@ -58,6 +59,10 @@ protected:
     ExecutionPolicy && exec_policy,
     sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan);
   void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
+  void global_localization_callback(
+    const std::shared_ptr<rmw_request_id_t> request_header,
+    const std::shared_ptr<std_srvs::srv::Empty::Request> request,
+    std::shared_ptr<std_srvs::srv::Empty::Response> response);
   void reinitialize_with_pose(const Eigen::Vector3d & mean, const Eigen::Matrix3d & covariance);
 
   std::unique_ptr<beluga::LaserLocalizationInterface2d> particle_filter_;
@@ -75,6 +80,7 @@ protected:
   rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
     initial_pose_sub_;
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
+  rclcpp::Service<std_srvs::srv::Empty>::SharedPtr global_localization_server_;
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
@@ -85,6 +91,8 @@ protected:
   message_filters::Connection laser_scan_connection_;
 
   Sophus::SE2d last_odom_to_base_transform_;
+
+  bool enable_tf_broadcast_{false};
 };
 
 }  // namespace beluga_amcl
