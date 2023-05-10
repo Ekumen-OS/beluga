@@ -104,6 +104,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a85018dd550270b3f8b3f4e5dcc23c7f2"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BootstrapParticleFilter.html#a85018dd550270b3f8b3f4e5dcc23c7f2">BootstrapParticleFilter</a> (Args &amp;&amp;... args)</td></tr>
 <tr class="memdesc:a85018dd550270b3f8b3f4e5dcc23c7f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1BootstrapParticleFilter.html" title="Base implementation of a particle filter.">BootstrapParticleFilter</a>.  <a href="classbeluga_1_1BootstrapParticleFilter.html#a85018dd550270b3f8b3f4e5dcc23c7f2">More...</a><br /></td></tr>
 <tr class="separator:a85018dd550270b3f8b3f4e5dcc23c7f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6acb044224cde93aaefe4e3fccba0216"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BootstrapParticleFilter.html#a6acb044224cde93aaefe4e3fccba0216">reinitialize</a> () final</td></tr>
+<tr class="memdesc:a6acb044224cde93aaefe4e3fccba0216"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distribute the particles over all the space.  <a href="classbeluga_1_1BootstrapParticleFilter.html#a6acb044224cde93aaefe4e3fccba0216">More...</a><br /></td></tr>
+<tr class="separator:a6acb044224cde93aaefe4e3fccba0216"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af64b65916b2f5a788c5f42819f37c064"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BootstrapParticleFilter.html#af64b65916b2f5a788c5f42819f37c064">sample</a> () final</td></tr>
 <tr class="memdesc:af64b65916b2f5a788c5f42819f37c064"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the states of the particles.  <a href="classbeluga_1_1BootstrapParticleFilter.html#af64b65916b2f5a788c5f42819f37c064">More...</a><br /></td></tr>
 <tr class="separator:af64b65916b2f5a788c5f42819f37c064"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -189,6 +192,37 @@ template&lt;class... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6acb044224cde93aaefe4e3fccba0216"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6acb044224cde93aaefe4e3fccba0216">&#9670;&nbsp;</a></span>reinitialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Mixin &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classbeluga_1_1BootstrapParticleFilter.html">beluga::BootstrapParticleFilter</a>&lt; Mixin &gt;::reinitialize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Distribute the particles over all the space. </p>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. this step will reinitialize the position of each particle based in some predefined distribution.</p>
+<p>Distribute the particles using the <a class="el" href="StateGeneratorPage.html">StateGenerator</a> </p>
+
+</div>
+</div>
 <a id="adda3f710cbef2651af6bdbc715ebbedc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adda3f710cbef2651af6bdbc715ebbedc">&#9670;&nbsp;</a></span>resample()</h2>
 

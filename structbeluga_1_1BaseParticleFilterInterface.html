@@ -103,10 +103,41 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 <tr class="memitem:a6bb56e38e0c7933cac008be54ddc5510"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#a6bb56e38e0c7933cac008be54ddc5510">resample</a> ()=0</td></tr>
 <tr class="memdesc:a6bb56e38e0c7933cac008be54ddc5510"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resample particles based on their weights.  <a href="structbeluga_1_1BaseParticleFilterInterface.html#a6bb56e38e0c7933cac008be54ddc5510">More...</a><br /></td></tr>
 <tr class="separator:a6bb56e38e0c7933cac008be54ddc5510"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa668e30338406662eec4f43502ab91f9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1BaseParticleFilterInterface.html#aa668e30338406662eec4f43502ab91f9">reinitialize</a> ()=0</td></tr>
+<tr class="memdesc:aa668e30338406662eec4f43502ab91f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distribute the particles over all the space.  <a href="structbeluga_1_1BaseParticleFilterInterface.html#aa668e30338406662eec4f43502ab91f9">More...</a><br /></td></tr>
+<tr class="separator:aa668e30338406662eec4f43502ab91f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Pure abstract class representing the base particle filter interface. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa668e30338406662eec4f43502ab91f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa668e30338406662eec4f43502ab91f9">&#9670;&nbsp;</a></span>reinitialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void beluga::BaseParticleFilterInterface::reinitialize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Distribute the particles over all the space. </p>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. this step will reinitialize the position of each particle based in some predefined distribution. </p>
+
+</div>
+</div>
 <a id="a6bb56e38e0c7933cac008be54ddc5510"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6bb56e38e0c7933cac008be54ddc5510">&#9670;&nbsp;</a></span>resample()</h2>
 
