@@ -90,8 +90,8 @@ protected:
   message_filters::Connection laser_scan_connection_;
 
   Sophus::SE2d last_odom_to_base_transform_;
-  // TODO(olmerg): it is required std:atomic<>?
-  bool initial_pose_is_known_{false};
+
+  bool enable_tf_broadcast_{false};
 };
 
 }  // namespace beluga_amcl
