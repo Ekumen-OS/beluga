@@ -5,7 +5,7 @@ Thank you for investing your time in contributing to this project!
 ## Contributions
 
 Any contribution that you make to this repository will
-be under the Apache 2 License, as dictated by that
+be under the Apache 2 License, as dictated by the
 [license](./LICENSE):
 
 ~~~
@@ -64,7 +64,7 @@ If a related issue doesn't exist, you can [open a new issue](https://github.com/
    ```
    Supported distributions include `humble` and `rolling`.
 
-1. **[Optional]** Install pre-commit hooks. _This will probably cause you to not be able to create commits from your host machine since the hooks have dependencies that exist only in the development container._
+1. **[Optional]** Install pre-commit hooks. _This will probably cause you to not be able to create commits from your host machine since the hooks have dependencies that only exist in the development container._
    ```bash
    cd /ws/src
    pre-commit install
