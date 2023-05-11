@@ -15,10 +15,12 @@
 #ifndef BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 #define BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
 
+#include <algorithm>
 #include <execution>
 #include <random>
 #include <utility>
 
+#include <range/v3/algorithm/max_element.hpp>
 #include <range/v3/view/common.hpp>
 
 /**
@@ -193,6 +195,13 @@ class BootstrapParticleFilter : public Mixin {
     if (resampling_vote_result) {
       this->self().initialize_particles(
           this->self().generate_samples_from_particles(generator_) | this->self().take_samples());
+    } else {
+      // max normalize weights to avoid unbounded growth
+      auto weights_view = this->self().weights() | ranges::views::common;
+      const auto weight_maximum_norm = *ranges::max_element(weights_view);
+      std::transform(
+          std::begin(weights_view), std::end(weights_view), std::begin(weights_view),
+          [weight_maximum_norm](auto weight) { return weight / weight_maximum_norm; });
     }
   }
 
