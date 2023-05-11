@@ -106,34 +106,32 @@ TEST(BootstrapParticleFilter, UpdateWithoutResampling) {
 
   auto expected_initial_state = 0.0;
   auto expected_final_state = motion_increment;
-  auto expected_initial_weight = 1.0;
-  auto expected_final_weight = weight_reduction_factor;
 
   EXPECT_CALL(filter, apply_motion(::testing::_)).WillRepeatedly(ReturnPointee(&expected_final_state));
   EXPECT_CALL(filter, importance_weight(::testing::_)).WillRepeatedly(Return(weight_reduction_factor));
   EXPECT_CALL(filter, do_resampling_vote()).WillRepeatedly(Return(false));
 
   for (auto iteration = 0; iteration < 5; ++iteration) {
+    // at the start of the iteration weights are max normalized
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_initial_state));
-    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_initial_weight));
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
-    // apply motion on all particles, particles will have updated states, but unchanged weight
+    // apply motion on all particles; particles will have updated states, but unchanged weights
     filter.sample();
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
-    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_initial_weight));
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     // updating particle weights, particles will have updated weights, but unchanged state
     filter.reweight();
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
-    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_final_weight));
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(weight_reduction_factor));
 
-    // resample, but with sampling policy preventing decimation
+    // resample, but with sampling policy preventing decimation. Particle weights will be renormalized.
     filter.resample();
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     expected_initial_state = expected_final_state;
-    expected_initial_weight = expected_final_weight;
     expected_final_state += motion_increment;
-    expected_final_weight *= weight_reduction_factor;
   }
 }
 
@@ -145,29 +143,29 @@ TEST(BootstrapParticleFilter, UpdateWithResampling) {
 
   auto expected_initial_state = 0.0;
   auto expected_final_state = motion_increment;
-  const auto expected_initial_weight = 1.0;
-  const auto expected_final_weight = weight_reduction_factor;
 
   EXPECT_CALL(filter, apply_motion(::testing::_)).WillRepeatedly(ReturnPointee(&expected_final_state));
   EXPECT_CALL(filter, importance_weight(::testing::_)).WillRepeatedly(Return(weight_reduction_factor));
   EXPECT_CALL(filter, do_resampling_vote()).WillRepeatedly(Return(true));
 
   for (auto iteration = 0; iteration < 4; ++iteration) {
+    // at the start of the iteration weights are max normalized
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_initial_state));
-    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_initial_weight));
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
-    // apply motion on all particles, particles will have updated states, but unchanged weight
+    // apply motion on all particles, particles will have updated states, but unchanged weights
     filter.sample();
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
-    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_initial_weight));
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     // updating particle weights, particles will have updated weights, but unchanged state
     filter.reweight();
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
-    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(expected_final_weight));
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(weight_reduction_factor));
 
-    // resample, resampling will reset weights
+    // resample, resampling will reset weights to 1.0 (therefore keeping them max normalized)
     filter.resample();
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     expected_initial_state = expected_final_state;
     expected_final_state += motion_increment;
