@@ -8,9 +8,9 @@ Its modularity allows users to compose solutions from reusable modules and to co
 The current set of features includes:
 
 - A configurable particle filter with support for:
-  - [Structure of arrays and array of structures](https://en.wikipedia.org/wiki/AoS_and_SoA) storage policies.
-  - Fixed resampling and adaptive KLD resampling policies to determine how many samples to take per iteration.
-  - Selective resampling, on-motion resampling, interval resampling policies to determine when to resample.
+  - [Structure of arrays and array of structures][aos_soa] storage policies.
+  - Fixed resampling and [adaptive KLD resampling][fox2001] policies to determine how many samples to take per iteration.
+  - [Selective resampling][grisetti2007], on-motion resampling, interval resampling policies to determine when to resample.
   - Sequential and parallel execution policies.
   - Weighted mean and covariance statistics for pose estimation.
 - Likelihood field and beam sensor models.
@@ -24,3 +24,7 @@ Beluga is built on top of the following open source libraries:
 - [Sophus](https://github.com/strasdat/Sophus): A C++ implementation of Lie groups using Eigen.
 - [Range](https://github.com/ericniebler/range-v3): The basis library for C++20's `std::ranges`.
 - [libciabatta](https://github.com/atomgalaxy/libciabatta): A composable mixin support library.
+
+[aos_soa]: https://en.wikipedia.org/wiki/AoS_and_SoA
+[fox2001]: https://dl.acm.org/doi/10.5555/2980539.2980632
+[grisetti2007]: https://doi.org/10.1109/TRO.2006.889486
