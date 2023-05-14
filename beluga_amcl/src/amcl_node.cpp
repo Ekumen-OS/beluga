@@ -596,69 +596,89 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
   particle_cloud_pub_->on_activate();
   pose_pub_->on_activate();
 
-  RCLCPP_INFO(get_logger(), "Creating bond (%s) to lifecycle manager.", get_name());
+  {
+    bond_ = std::make_unique<bond::Bond>("bond", get_name(), shared_from_this());
+    bond_->setHeartbeatPeriod(0.10);
+    bond_->setHeartbeatTimeout(4.0);
+    bond_->start();
+    RCLCPP_INFO(get_logger(), "Created bond (%s) to lifecycle manager.", get_name());
+  }
 
-  bond_ = std::make_unique<bond::Bond>("bond", get_name(), shared_from_this());
-  bond_->setHeartbeatPeriod(0.10);
-  bond_->setHeartbeatTimeout(4.0);
-  bond_->start();
+  auto main_callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+  auto common_subscription_options = rclcpp::SubscriptionOptions{};
+  common_subscription_options.callback_group = main_callback_group;
 
-  map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
-    get_parameter("map_topic").as_string(),
-    rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
-    std::bind(&AmclNode::map_callback, this, std::placeholders::_1));
+  {
+    map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
+      get_parameter("map_topic").as_string(),
+      rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
+      std::bind(&AmclNode::map_callback, this, std::placeholders::_1),
+      common_subscription_options);
+    RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
+  }
 
-  RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
+  {
+    initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
+      get_parameter("initial_pose_topic").as_string(),
+      rclcpp::SystemDefaultsQoS(),
+      std::bind(&AmclNode::initial_pose_callback, this, std::placeholders::_1),
+      common_subscription_options);
+    RCLCPP_INFO(
+      get_logger(),
+      "Subscribed to initial_pose_topic: %s",
+      initial_pose_sub_->get_topic_name());
+  }
 
-  initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-    get_parameter("initial_pose_topic").as_string(),
-    rclcpp::SystemDefaultsQoS(),
-    std::bind(&AmclNode::initial_pose_callback, this, std::placeholders::_1));
+  {
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(get_clock());
+    tf_buffer_->setCreateTimerInterface(
+      std::make_shared<tf2_ros::CreateTimerROS>(
+        get_node_base_interface(),
+        get_node_timers_interface()));
+    tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(shared_from_this());
+    tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
+      *tf_buffer_,
+      this,
+      false);  // avoid using dedicated tf thread
 
-  global_localization_server_ = create_service<std_srvs::srv::Empty>(
-    "reinitialize_global_localization",
-    std::bind(
-      &AmclNode::global_localization_callback, this, std::placeholders::_1,
-      std::placeholders::_2, std::placeholders::_3));
+    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
+        rclcpp_lifecycle::LifecycleNode>>(
+      shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data,
+      common_subscription_options);
 
-  RCLCPP_INFO(
-    get_logger(),
-    "Subscribed to initial_pose_topic: %s",
-    initial_pose_sub_->get_topic_name());
+    // Message filter that caches laser scan readings until it is possible to transform
+    // from laser frame to odom frame and update the particle filter.
+    laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
+      *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 50,
+      get_node_logging_interface(),
+      get_node_clock_interface(),
+      tf2::durationFromSec(1.0));
 
-  tf_buffer_ = std::make_unique<tf2_ros::Buffer>(get_clock());
-  tf_buffer_->setCreateTimerInterface(
-    std::make_shared<tf2_ros::CreateTimerROS>(
-      get_node_base_interface(),
-      get_node_timers_interface()));
-  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(shared_from_this());
-  tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
-    *tf_buffer_,
-    this,
-    false);  // avoid using dedicated tf thread
+    using LaserCallback = std::function<void (sensor_msgs::msg::LaserScan::ConstSharedPtr)>;
+    laser_scan_connection_ = laser_scan_filter_->registerCallback(
+      std::visit(
+        [this](const auto & policy) -> LaserCallback
+        {
+          return [this, &policy](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+            laser_callback(policy, std::move(laser_scan));
+          };
+        }, execution_policy_));
+    RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
+  }
 
-  laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
-      rclcpp_lifecycle::LifecycleNode>>(
-    shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data);
-
-  // Message filter that caches laser scan readings until it is possible to transform
-  // from laser frame to odom frame and update the particle filter.
-  laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
-    *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 50,
-    get_node_logging_interface(),
-    get_node_clock_interface(),
-    tf2::durationFromSec(1.0));
-
-  using LaserCallback = std::function<void (sensor_msgs::msg::LaserScan::ConstSharedPtr)>;
-  laser_scan_connection_ = laser_scan_filter_->registerCallback(
-    std::visit(
-      [this](const auto & policy) -> LaserCallback
-      {
-        return [this, &policy](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
-          laser_callback(policy, std::move(laser_scan));
-        };
-      }, execution_policy_));
-  RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
+  {
+    global_localization_server_ = create_service<std_srvs::srv::Empty>(
+      "reinitialize_global_localization",
+      std::bind(
+        &AmclNode::global_localization_callback,
+        this,
+        std::placeholders::_1,
+        std::placeholders::_2,
+        std::placeholders::_3),
+      rmw_qos_profile_services_default,
+      main_callback_group);
+    RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
+  }
 
   return CallbackReturn::SUCCESS;
 }
@@ -821,7 +841,6 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   if (last_known_estimate_.has_value() && !get_parameter("always_reset_initial_pose").as_bool()) {
     const auto & [pose, covariance] = last_known_estimate_.value();
     reinitialize_with_pose(pose, covariance);
-
   } else if (get_parameter("set_initial_pose").as_bool()) {
     const auto pose = Sophus::SE2d{
       Sophus::SO2d{get_parameter("initial_pose.yaw").as_double()},
