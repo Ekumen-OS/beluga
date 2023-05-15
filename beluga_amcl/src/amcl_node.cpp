@@ -576,9 +576,6 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Configuring");
 
-  using namespace std::chrono_literals;
-  timer_ = create_wall_timer(200ms, std::bind(&AmclNode::timer_callback, this));
-
   particle_cloud_pub_ = create_publisher<nav2_msgs::msg::ParticleCloud>(
     "particle_cloud",
     rclcpp::SensorDataQoS());
@@ -604,9 +601,19 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     RCLCPP_INFO(get_logger(), "Created bond (%s) to lifecycle manager", get_name());
   }
 
-  auto main_callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+  // Accessing the particle filter is not thread safe.
+  // This ensures that different callbacks are not called concurrently.
+  auto common_callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
   auto common_subscription_options = rclcpp::SubscriptionOptions{};
-  common_subscription_options.callback_group = main_callback_group;
+  common_subscription_options.callback_group = common_callback_group;
+
+  {
+    using namespace std::chrono_literals;
+    timer_ = create_wall_timer(
+      200ms,
+      std::bind(&AmclNode::timer_callback, this),
+      common_callback_group);
+  }
 
   {
     map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
@@ -676,7 +683,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
         std::placeholders::_2,
         std::placeholders::_3),
       rmw_qos_profile_services_default,
-      main_callback_group);
+      common_callback_group);
     RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
   }
 
