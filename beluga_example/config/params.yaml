@@ -76,11 +76,15 @@ amcl:
     execution_policy: seq
     # If to set initial pose based on parameters.
     # When enabled, particles will be initialized with the specified pose coordinates and covariance.
-    set_initial_pose: false
+    set_initial_pose: true
+    # If false, AMCL will use the last known pose to initialize when a new map is received.
+    always_reset_initial_pose: false
+    # Set this to true when you want to load only the first published map from map_server and ignore subsequent ones.
+    first_map_only: false
     # Initial pose x coodinate.
     initial_pose.x: 0.0
     # Initial pose y coodinate.
-    initial_pose.y: 0.0
+    initial_pose.y: 2.0
     # Initial pose yaw coodinate.
     initial_pose.yaw: 0.0
     # Initial pose xx covariance.

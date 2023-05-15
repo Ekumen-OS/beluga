@@ -446,6 +446,23 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "If false, AMCL will use the last known pose to initialize when a new map is received.";
+    descriptor.read_only = true;
+    declare_parameter("always_reset_initial_pose", false, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+      "Set this to true when you want to load only the first published map from map_server "
+      "and ignore subsequent ones.";
+    descriptor.read_only = true;
+    declare_parameter("first_map_only", false, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Set the initial pose from the initial_pose parameters.";
     descriptor.read_only = true;
     declare_parameter("set_initial_pose", false, descriptor);
@@ -535,7 +552,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
       execution_policy_ = beluga_amcl::execution::policy_from_string(execution_policy_string);
     } catch (const std::invalid_argument &) {
       RCLCPP_WARN_STREAM(
-        this->get_logger(),
+        get_logger(),
         "execution_policy param should be [seq, par], got: " <<
           execution_policy_string << "\nUsing the default parallel policy.");
       execution_policy_ = std::execution::par;
@@ -559,9 +576,6 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(get_logger(), "Configuring");
 
-  using namespace std::chrono_literals;
-  timer_ = create_wall_timer(200ms, std::bind(&AmclNode::timer_callback, this));
-
   particle_cloud_pub_ = create_publisher<nav2_msgs::msg::ParticleCloud>(
     "particle_cloud",
     rclcpp::SensorDataQoS());
@@ -579,69 +593,100 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
   particle_cloud_pub_->on_activate();
   pose_pub_->on_activate();
 
-  RCLCPP_INFO(get_logger(), "Creating bond (%s) to lifecycle manager.", get_name());
+  {
+    bond_ = std::make_unique<bond::Bond>("bond", get_name(), shared_from_this());
+    bond_->setHeartbeatPeriod(0.10);
+    bond_->setHeartbeatTimeout(4.0);
+    bond_->start();
+    RCLCPP_INFO(get_logger(), "Created bond (%s) to lifecycle manager", get_name());
+  }
 
-  bond_ = std::make_unique<bond::Bond>("bond", get_name(), shared_from_this());
-  bond_->setHeartbeatPeriod(0.10);
-  bond_->setHeartbeatTimeout(4.0);
-  bond_->start();
+  // Accessing the particle filter is not thread safe.
+  // This ensures that different callbacks are not called concurrently.
+  auto common_callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+  auto common_subscription_options = rclcpp::SubscriptionOptions{};
+  common_subscription_options.callback_group = common_callback_group;
 
-  map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
-    get_parameter("map_topic").as_string(),
-    rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
-    std::bind(&AmclNode::map_callback, this, std::placeholders::_1));
+  {
+    using namespace std::chrono_literals;
+    timer_ = create_wall_timer(
+      200ms,
+      std::bind(&AmclNode::timer_callback, this),
+      common_callback_group);
+  }
 
-  RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
+  {
+    map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
+      get_parameter("map_topic").as_string(),
+      rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
+      std::bind(&AmclNode::map_callback, this, std::placeholders::_1),
+      common_subscription_options);
+    RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
+  }
 
-  initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-    get_parameter("initial_pose_topic").as_string(),
-    rclcpp::SystemDefaultsQoS(),
-    std::bind(&AmclNode::initial_pose_callback, this, std::placeholders::_1));
+  {
+    initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
+      get_parameter("initial_pose_topic").as_string(),
+      rclcpp::SystemDefaultsQoS(),
+      std::bind(&AmclNode::initial_pose_callback, this, std::placeholders::_1),
+      common_subscription_options);
+    RCLCPP_INFO(
+      get_logger(),
+      "Subscribed to initial_pose_topic: %s",
+      initial_pose_sub_->get_topic_name());
+  }
 
-  global_localization_server_ = create_service<std_srvs::srv::Empty>(
-    "reinitialize_global_localization",
-    std::bind(
-      &AmclNode::global_localization_callback, this, std::placeholders::_1,
-      std::placeholders::_2, std::placeholders::_3));
+  {
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(get_clock());
+    tf_buffer_->setCreateTimerInterface(
+      std::make_shared<tf2_ros::CreateTimerROS>(
+        get_node_base_interface(),
+        get_node_timers_interface()));
+    tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(shared_from_this());
+    tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
+      *tf_buffer_,
+      this,
+      false);  // avoid using dedicated tf thread
 
-  RCLCPP_INFO(
-    get_logger(),
-    "Subscribed to initial_pose_topic: %s",
-    initial_pose_sub_->get_topic_name());
+    using LaserScanSubscriber = message_filters::Subscriber<
+      sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode>;
+    laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
+      shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data,
+      common_subscription_options);
 
-  tf_buffer_ = std::make_unique<tf2_ros::Buffer>(get_clock());
-  tf_buffer_->setCreateTimerInterface(
-    std::make_shared<tf2_ros::CreateTimerROS>(
-      get_node_base_interface(),
-      get_node_timers_interface()));
-  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(shared_from_this());
-  tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
-    *tf_buffer_,
-    this,
-    false);  // avoid using dedicated tf thread
+    // Message filter that caches laser scan readings until it is possible to transform
+    // from laser frame to odom frame and update the particle filter.
+    laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
+      *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 50,
+      get_node_logging_interface(),
+      get_node_clock_interface(),
+      tf2::durationFromSec(1.0));
 
-  laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
-      rclcpp_lifecycle::LifecycleNode>>(
-    shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data);
+    using LaserCallback = std::function<void (sensor_msgs::msg::LaserScan::ConstSharedPtr)>;
+    laser_scan_connection_ = laser_scan_filter_->registerCallback(
+      std::visit(
+        [this](const auto & policy) -> LaserCallback
+        {
+          return [this, &policy](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+            laser_callback(policy, std::move(laser_scan));
+          };
+        }, execution_policy_));
+    RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
+  }
 
-  // Message filter that caches laser scan readings until it is possible to transform
-  // from laser frame to odom frame and update the particle filter.
-  laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
-    *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 50,
-    get_node_logging_interface(),
-    get_node_clock_interface(),
-    tf2::durationFromSec(1.0));
-
-  using LaserCallback = std::function<void (sensor_msgs::msg::LaserScan::ConstSharedPtr)>;
-  laser_scan_connection_ = laser_scan_filter_->registerCallback(
-    std::visit(
-      [this](const auto & policy) -> LaserCallback
-      {
-        return [this, &policy](sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
-          this->laser_callback(policy, std::move(laser_scan));
-        };
-      }, execution_policy_));
-  RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
+  {
+    global_localization_server_ = create_service<std_srvs::srv::Empty>(
+      "reinitialize_global_localization",
+      std::bind(
+        &AmclNode::global_localization_callback,
+        this,
+        std::placeholders::_1,
+        std::placeholders::_2,
+        std::placeholders::_3),
+      rmw_qos_profile_services_default,
+      common_callback_group);
+    RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
+  }
 
   return CallbackReturn::SUCCESS;
 }
@@ -670,6 +715,7 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
   particle_cloud_pub_.reset();
   pose_pub_.reset();
   enable_tf_broadcast_ = false;
+  last_known_estimate_.reset();
   particle_filter_.reset();
   return CallbackReturn::SUCCESS;
 }
@@ -683,6 +729,22 @@ AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State &)
 void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 {
   RCLCPP_INFO(get_logger(), "A new map was received");
+
+  if (particle_filter_ && get_parameter("first_map_only").as_bool()) {
+    RCLCPP_WARN(
+      get_logger(),
+      "Ignoring new map because the particle filter has already been initialized");
+    return;
+  }
+
+  const auto global_frame_id = get_parameter("global_frame_id").as_string();
+  if (map->header.frame_id != global_frame_id) {
+    RCLCPP_WARN(
+      get_logger(),
+      "Map frame \"%s\" doesn't match global frame \"%s\"",
+      map->header.frame_id.c_str(),
+      global_frame_id.c_str());
+  }
 
   auto sampler_params = beluga::AdaptiveSamplerParam{};
   sampler_params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
@@ -774,11 +836,6 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
       throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
     };
 
-  // Only when we get the first map we should use the parameters, not later.
-  // TODO(ivanpauno): Intialize later maps from last known pose.
-  const bool initialize_from_params = !particle_filter_ &&
-    this->get_parameter("set_initial_pose").as_bool();
-
   try {
     using beluga::mixin::make_mixin;
     using beluga::LaserLocalizationInterface2d;
@@ -794,32 +851,33 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
       OccupancyGrid{map}
     );
   } catch (const std::invalid_argument & error) {
-    RCLCPP_ERROR(this->get_logger(), "Coudn't instantiate the particle filter: %s", error.what());
+    RCLCPP_ERROR(get_logger(), "Coudn't instantiate the particle filter: %s", error.what());
     return;
   }
 
-  if (initialize_from_params) {
-    Eigen::Vector3d mean;
+  if (last_known_estimate_.has_value() && !get_parameter("always_reset_initial_pose").as_bool()) {
+    const auto & [pose, covariance] = last_known_estimate_.value();
+    reinitialize_with_pose(pose, covariance);
+  } else if (get_parameter("set_initial_pose").as_bool()) {
+    const auto pose = Sophus::SE2d{
+      Sophus::SO2d{get_parameter("initial_pose.yaw").as_double()},
+      Eigen::Vector2d{
+        get_parameter("initial_pose.x").as_double(),
+        get_parameter("initial_pose.y").as_double(),
+      },
+    };
+
     Eigen::Matrix3d covariance;
-
-    mean.x() = this->get_parameter("initial_pose.x").as_double();
-    mean.y() = this->get_parameter("initial_pose.y").as_double();
-    mean.z() = this->get_parameter("initial_pose.yaw").as_double();
-    covariance.coeffRef(0, 0) = this->get_parameter("initial_pose.covariance_x").as_double();
-    covariance.coeffRef(1, 1) = this->get_parameter("initial_pose.covariance_y").as_double();
-    covariance.coeffRef(2, 2) = this->get_parameter("initial_pose.covariance_yaw").as_double();
-    covariance.coeffRef(0, 1) = this->get_parameter("initial_pose.covariance_xy").as_double();
+    covariance.coeffRef(0, 0) = get_parameter("initial_pose.covariance_x").as_double();
+    covariance.coeffRef(1, 1) = get_parameter("initial_pose.covariance_y").as_double();
+    covariance.coeffRef(2, 2) = get_parameter("initial_pose.covariance_yaw").as_double();
+    covariance.coeffRef(0, 1) = get_parameter("initial_pose.covariance_xy").as_double();
     covariance.coeffRef(1, 0) = covariance.coeffRef(0, 1);
-    covariance.coeffRef(0, 2) = this->get_parameter("initial_pose.covariance_xyaw").as_double();
+    covariance.coeffRef(0, 2) = get_parameter("initial_pose.covariance_xyaw").as_double();
     covariance.coeffRef(2, 0) = covariance.coeffRef(0, 2);
-    covariance.coeffRef(1, 2) = this->get_parameter("initial_pose.covariance_yyaw").as_double();
+    covariance.coeffRef(1, 2) = get_parameter("initial_pose.covariance_yyaw").as_double();
     covariance.coeffRef(2, 1) = covariance.coeffRef(1, 2);
-    this->reinitialize_with_pose(mean, covariance);
-
-    RCLCPP_INFO_STREAM(
-      this->get_logger(),
-      "Particle filter initialized with initial pose x=" <<
-        mean.x() << ", y=" << mean.y() << ", yaw=" << mean.z());
+    reinitialize_with_pose(pose, covariance);
   }
 
   RCLCPP_INFO(
@@ -859,6 +917,9 @@ void AmclNode::laser_callback(
   sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
 {
   if (!particle_filter_) {
+    RCLCPP_WARN_THROTTLE(
+      get_logger(), *get_clock(), 2000,
+      "Ignoring laser data because the particle filter has not been initialized");
     return;
   }
 
@@ -917,7 +978,8 @@ void AmclNode::laser_callback(
       std::chrono::duration<double, std::milli>(time4 - time3).count());
   }
 
-  const auto [pose, covariance] = particle_filter_->estimate();
+  last_known_estimate_ = particle_filter_->estimate();
+  const auto & [pose, covariance] = last_known_estimate_.value();
 
   {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
@@ -944,6 +1006,9 @@ void AmclNode::initial_pose_callback(
   geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message)
 {
   if (!particle_filter_) {
+    RCLCPP_WARN(
+      get_logger(),
+      "Ignoring initial pose request because the particle filter has not been initialized");
     return;
   }
 
@@ -962,32 +1027,28 @@ void AmclNode::initial_pose_callback(
   auto covariance = Eigen::Matrix3d{};
   tf2::covarianceRowMajorToEigen(message->pose.covariance, covariance);
 
-  const auto mean =
-    Eigen::Vector3d{pose.translation().x(), pose.translation().y(), pose.so2().log()};
-
-  {
-    const auto eigen_format = utils::make_eigen_comma_format();
-    RCLCPP_INFO(get_logger(), "Initial pose received");
-    RCLCPP_INFO_STREAM(
-      get_logger(),
-      "Mean value: " << mean.format(eigen_format) <<
-        " - Covariance coefficients: " << covariance.format(eigen_format));
-  }
-  this->reinitialize_with_pose(mean, covariance);
+  reinitialize_with_pose(pose, covariance);
 }
 
 void AmclNode::reinitialize_with_pose(
-  const Eigen::Vector3d & mean, const Eigen::Matrix3d & covariance)
+  const Sophus::SE2d & pose, const Eigen::Matrix3d & covariance)
 {
   try {
+    const auto mean =
+      Eigen::Vector3d{pose.translation().x(), pose.translation().y(), pose.so2().log()};
+    auto distribution = beluga::MultivariateNormalDistribution{mean, covariance};
     particle_filter_->initialize_states(
       ranges::views::generate(
-        [distribution = beluga::MultivariateNormalDistribution{mean, covariance}]() mutable {
+        [&distribution]() mutable {
           static auto generator = std::mt19937{std::random_device()()};
           const auto sample = distribution(generator);
           return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
         }));
     enable_tf_broadcast_ = true;
+    RCLCPP_INFO_STREAM(
+      get_logger(),
+      "Particle filter initialized with initial pose x=" <<
+        mean.x() << ", y=" << mean.y() << ", yaw=" << mean.z());
   } catch (const std::runtime_error & error) {
     RCLCPP_ERROR(get_logger(), "Could not generate particles: %s", error.what());
   }
@@ -999,9 +1060,11 @@ void AmclNode::global_localization_callback(
   [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res)
 {
   if (!particle_filter_) {
+    RCLCPP_WARN(
+      get_logger(),
+      "Ignoring global localization request because the particle filter has not been initialized");
     return;
   }
-  RCLCPP_INFO(get_logger(), "Initializing with uniform distribution");
   particle_filter_->reinitialize();
   RCLCPP_INFO(get_logger(), "Global initialization done!");
   enable_tf_broadcast_ = true;

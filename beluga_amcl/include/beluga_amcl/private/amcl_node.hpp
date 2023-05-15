@@ -22,6 +22,7 @@
 #include <tf2_ros/transform_listener.h>
 
 #include <memory>
+#include <utility>
 
 #include <beluga/localization.hpp>
 #include <bondcpp/bond.hpp>
@@ -63,7 +64,7 @@ protected:
     const std::shared_ptr<rmw_request_id_t> request_header,
     const std::shared_ptr<std_srvs::srv::Empty::Request> request,
     std::shared_ptr<std_srvs::srv::Empty::Response> response);
-  void reinitialize_with_pose(const Eigen::Vector3d & mean, const Eigen::Matrix3d & covariance);
+  void reinitialize_with_pose(const Sophus::SE2d & pose, const Eigen::Matrix3d & covariance);
 
   std::unique_ptr<beluga::LaserLocalizationInterface2d> particle_filter_;
   execution::Policy execution_policy_;
@@ -73,8 +74,6 @@ protected:
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp_lifecycle::LifecyclePublisher<nav2_msgs::msg::ParticleCloud>::SharedPtr
     particle_cloud_pub_;
-  rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr
-    likelihood_field_pub_;
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
     pose_pub_;
   rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
@@ -90,7 +89,7 @@ protected:
     rclcpp_lifecycle::LifecycleNode>> laser_scan_sub_;
   message_filters::Connection laser_scan_connection_;
 
-  Sophus::SE2d last_odom_to_base_transform_;
+  std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_;
 
   bool enable_tf_broadcast_{false};
 };
