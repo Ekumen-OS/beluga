@@ -601,7 +601,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     bond_->setHeartbeatPeriod(0.10);
     bond_->setHeartbeatTimeout(4.0);
     bond_->start();
-    RCLCPP_INFO(get_logger(), "Created bond (%s) to lifecycle manager.", get_name());
+    RCLCPP_INFO(get_logger(), "Created bond (%s) to lifecycle manager", get_name());
   }
 
   auto main_callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
@@ -725,8 +725,17 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   if (particle_filter_ && get_parameter("first_map_only").as_bool()) {
     RCLCPP_WARN(
       get_logger(),
-      "Ignoring new map because the particle filter has already been initialized.");
+      "Ignoring new map because the particle filter has already been initialized");
     return;
+  }
+
+  const auto global_frame_id = get_parameter("global_frame_id").as_string();
+  if (map->header.frame_id != global_frame_id) {
+    RCLCPP_WARN(
+      get_logger(),
+      "Map frame \"%s\" doesn't match global frame \"%s\"",
+      map->header.frame_id.c_str(),
+      global_frame_id.c_str());
   }
 
   auto sampler_params = beluga::AdaptiveSamplerParam{};
@@ -902,7 +911,7 @@ void AmclNode::laser_callback(
   if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
       get_logger(), *get_clock(), 2000,
-      "Ignoring laser data because the particle filter has not been initialized.");
+      "Ignoring laser data because the particle filter has not been initialized");
     return;
   }
 
@@ -991,7 +1000,7 @@ void AmclNode::initial_pose_callback(
   if (!particle_filter_) {
     RCLCPP_WARN(
       get_logger(),
-      "Ignoring initial pose request because the particle filter has not been initialized.");
+      "Ignoring initial pose request because the particle filter has not been initialized");
     return;
   }
 
@@ -1045,7 +1054,7 @@ void AmclNode::global_localization_callback(
   if (!particle_filter_) {
     RCLCPP_WARN(
       get_logger(),
-      "Ignoring global localization request because the particle filter has not been initialized.");
+      "Ignoring global localization request because the particle filter has not been initialized");
     return;
   }
   particle_filter_->reinitialize();
