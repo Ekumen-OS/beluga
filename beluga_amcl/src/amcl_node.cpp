@@ -648,8 +648,9 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
       this,
       false);  // avoid using dedicated tf thread
 
-    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
-        rclcpp_lifecycle::LifecycleNode>>(
+    using LaserScanSubscriber = message_filters::Subscriber<
+      sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode>;
+    laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
       shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data,
       common_subscription_options);
 
