@@ -1,6 +1,6 @@
 ---
 name: Documentation Issue Report
-about: Report a documentation issue, typographical error or missing content in this project.
+about: Report a documentation issue, typographical error or missing content in this repository.
 title: ''
 labels: [bug, documentation]
 

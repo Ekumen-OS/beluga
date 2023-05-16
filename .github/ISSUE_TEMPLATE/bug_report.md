@@ -24,7 +24,7 @@ _Code snippets or minimal examples are always helpful, if not necessary._
 _A clear and concise description of what you expected to happen._
 
 **Actual behavior**
-_A clear and concise description of what you actually happened._
+_A clear and concise description of what actually happened._
 
 ### Additional context
 _Any other information you think could be meaningful to this issue._

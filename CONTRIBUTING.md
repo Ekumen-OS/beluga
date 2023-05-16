@@ -25,7 +25,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 
 > If you want to ask a question, we assume that you have read the available [Documentation](https://github.com/Ekumen-OS/beluga).
 
-Before you ask a question, it is best to search for existing [Issues](https://github.com/Ekumen-OS/beluga/issues) that might help you. In case you have found a suitable issue and still need clarification, you can write your question in this issue. It is also advisable to search the internet for answers first.
+Before opening a new issue to ask for help, it is best to check for already existing [Issues](https://github.com/Ekumen-OS/beluga/issues) that might be relevant to your question. In case you have found a suitable issue and still need clarification, you can write your question in there. It is also advisable to search the internet for answers first.
 
 If you then still feel the need to ask a question and need clarification, we recommend the following:
 
@@ -33,7 +33,7 @@ If you then still feel the need to ask a question and need clarification, we rec
 - Provide as much context as you can about what you're running into.
 - Provide project and platform versions, depending on what seems relevant.
 
-We will then take care of the issue as soon as possible.
+We will try to answer back as soon as possible.
 
 ## I Want To Contribute
 
@@ -72,8 +72,8 @@ We use GitHub issues to track bugs and errors. If you run into an issue with the
 Once it's filed:
 
 - The project team will label the issue accordingly.
-- A team member will try to reproduce the issue with your provided steps. If there are no reproduction steps or no obvious way to reproduce the issue, the team will ask you for those steps and label the issue as `needs-repro`. Bugs with the `needs-repro` label will not be addressed until they are reproduced.
-- If the team is able to reproduce the issue, it will be labelled `needs-fix`, as well as possibly other labels, and the issue will be left to be [implemented by someone](#your-first-code-contribution).
+- A team member will try to reproduce the issue with the steps you provided. If no reproducible sequence of steps was provided or if the provided sequence does not seem to trigger the issue being reported, the team will ask you for further information about this and they will label the issue as `needs-repro`. Bugs with the `needs-repro` label will not be addressed until they've been successfully reproduced.
+- If the team is able to reproduce the issue it will be labeled `needs-fix`, as well as possibly other labels, and the issue will be left to be [implemented by someone](#your-first-code-contribution).
 
 ### Requesting Features
 
@@ -107,7 +107,7 @@ This projects adopts a [feature branch workflow](https://about.gitlab.com/topics
 
 #### How Do I Submit a Good Code Contribution?
 
-- **Pull latest `main` branch**. Clone repository (or repository fork) locally if you haven't yet.
+- **Pull the latest `main` branch**. Clone repository (or repository fork) locally if you haven't yet.
 - **Branch from `main` branch**. Use a descriptive name for your feature branch. Make sure to prefix it with the associated issue number.
 - **Work on your contribution**. See [instructions](GETTING_STARTED.md) on how to get started with Beluga development.
 - **Lint and test your changes**. For bug fixes, make sure regression tests are included.

@@ -5,7 +5,7 @@
 
 ## Overview
 
-Beluga is an extensible C++ library with a ground-up implementation of the Monte Carlo Localization (MCL) family of estimation algorithms featuring:
+Beluga is an extensible C++17 library with a ground-up implementation of the Monte Carlo Localization (MCL) family of estimation algorithms featuring:
 
 - A modular design based on orthogonal components that can be merged together using the mixin pattern.
 - Good test coverage to prevent regressions and facilitate code improvements.
