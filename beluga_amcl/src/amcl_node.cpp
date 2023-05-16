@@ -683,7 +683,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
         std::placeholders::_1,
         std::placeholders::_2,
         std::placeholders::_3),
-      rmw_qos_profile_services_default,
+      rclcpp::ServicesQoS(),
       common_callback_group);
     RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
   }
