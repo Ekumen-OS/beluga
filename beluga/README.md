@@ -3,7 +3,7 @@
 Beluga is a ROS-agnostic C++17 library that provides implementations for Monte Carlo-based localization algorithms widely used in robotics applications.
 Its modularity allows users to compose solutions from reusable modules and to combine them with new ones to configure the MCL algorithm that best suits their needs.
 
-![Beluga diagram](https://github.com/Ekumen-OS/beluga/assets/33042669/c3a37ef3-e9c3-463d-99f5-7e290f96bd9f)
+![Beluga diagram](https://github.com/Ekumen-OS/beluga/assets/33042669/c3a9375c-8beb-44ee-bcde-d4c0f62f576e)
 
 ## Features
 
