@@ -97,9 +97,7 @@ class LikelihoodFieldModel : public Mixin {
       : Mixin(std::forward<Args>(rest)...),
         params_{params},
         grid_{std::move(grid)},
-        free_states_{
-            grid_.coordinates_for(grid_.free_cells(), OccupancyGrid::Frame::kGlobal) |
-            ranges::to<std::vector<Eigen::Vector2d>>},
+        free_states_{compute_free_states(grid_)},
         likelihood_field_{make_likelihood_field(params, grid_)} {}
 
   /// Returns the likelihood field, constructed from the provided map.
@@ -152,12 +150,24 @@ class LikelihoodFieldModel : public Mixin {
   /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
   void update_sensor(measurement_type&& points) final { points_ = std::move(points); }
 
+  /// \copydoc LaserSensorModelInterface2d::update_map(Map&& map)
+  void update_map(OccupancyGrid&& map) final {
+    grid_ = std::move(map);
+    free_states_ = compute_free_states(grid_);
+    likelihood_field_ = make_likelihood_field(params_, grid_);
+  }
+
  private:
   param_type params_;
   OccupancyGrid grid_;
   std::vector<Eigen::Vector2d> free_states_;
   ValueGrid2<double> likelihood_field_;
   std::vector<std::pair<double, double>> points_;
+
+  static std::vector<Eigen::Vector2d> compute_free_states(const OccupancyGrid& grid) {
+    constexpr auto kFrame = OccupancyGrid::Frame::kGlobal;
+    return grid.coordinates_for(grid.free_cells(), kFrame) | ranges::to<std::vector>;
+  }
 
   static ValueGrid2<double> make_likelihood_field(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid) {
     const auto squared_distance = [&grid,

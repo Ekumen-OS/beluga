@@ -26,7 +26,7 @@ using beluga::testing::StaticOccupancyGrid;
 
 using UUT = ciabatta::mixin<
     ciabatta::curry<beluga::LikelihoodFieldModel, StaticOccupancyGrid<5, 5>>::mixin,
-    ciabatta::provides<beluga::LaserSensorModelInterface2d>::mixin>;
+    ciabatta::provides<beluga::LaserSensorModelInterface2d<StaticOccupancyGrid<5, 5>>>::mixin>;
 
 TEST(LikelihoodFieldModel, LikelihoodField) {
   constexpr double kResolution = 0.5;
@@ -155,6 +155,41 @@ TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
   ASSERT_NEAR(2.068, mixin.importance_weight(grid.origin()), 0.003);
+}
+
+TEST(LikelihoodFieldModel, GridUpdates) {
+  const auto origin = Sophus::SE2d{};
+
+  constexpr double kResolution = 0.5;
+  // clang-format off
+  auto grid = StaticOccupancyGrid<5, 5>{{
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, true , false, false,
+    false, false, false, false, false,
+    false, false, false, false, false},
+    kResolution, origin};
+  // clang-format on
+
+  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  auto mixin = UUT{params, std::move(grid)};
+
+  mixin.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
+  EXPECT_NEAR(2.068577607986223, mixin.importance_weight(origin), 1e-6);
+
+  // clang-format off
+  grid = StaticOccupancyGrid<5, 5>{{
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, false, false, true},
+    kResolution, origin};
+  // clang-format on
+  mixin.update_map(std::move(grid));
+
+  mixin.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
+  EXPECT_NEAR(1.0, mixin.importance_weight(origin), 1e-3);
 }
 
 }  // namespace

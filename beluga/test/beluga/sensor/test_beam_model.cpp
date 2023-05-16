@@ -28,7 +28,7 @@ using beluga::testing::StaticOccupancyGrid;
 
 using UUT = ciabatta::mixin<
     ciabatta::curry<beluga::BeamSensorModel, StaticOccupancyGrid<5, 5>>::mixin,
-    ciabatta::provides<beluga::LaserSensorModelInterface2d>::mixin>;
+    ciabatta::provides<beluga::LaserSensorModelInterface2d<StaticOccupancyGrid<5, 5>>>::mixin>;
 
 BeamModelParam GetParams() {
   BeamModelParam ret;
@@ -74,4 +74,41 @@ TEST(BeamSensorModel, ImportanceWeight) {
   mixin.update_sensor(std::vector<std::pair<double, double>>{{params.beam_max_range, params.beam_max_range}});
   EXPECT_NEAR(0.00012500000000000003, mixin.importance_weight(grid.origin()), 1e-6);
 }
+
+TEST(BeamSensorModel, GridUpdates) {
+  const auto origin = Sophus::SE2d{};
+
+  constexpr double kResolution = 0.5;
+  // clang-format off
+  auto grid = StaticOccupancyGrid<5, 5>{{
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, true , false, false,
+    false, false, false, false, false,
+    false, false, false, false, false},
+    kResolution, origin};
+  // clang-format on
+
+  const auto params = GetParams();
+  auto mixin = UUT{params, std::move(grid)};
+
+  mixin.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
+  EXPECT_NEAR(1.0171643824743635, mixin.importance_weight(origin), 1e-6);
+
+  // clang-format off
+  grid = StaticOccupancyGrid<5, 5>{{
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, false, false, false},
+    kResolution, origin};
+  // clang-format on
+
+  mixin.update_map(std::move(grid));
+
+  mixin.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
+  EXPECT_NEAR(0.0, mixin.importance_weight(origin), 1e-3);
+}
+
 }  // namespace beluga

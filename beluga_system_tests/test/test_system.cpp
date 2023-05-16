@@ -42,9 +42,16 @@
 
 namespace {
 
-using beluga::AdaptiveMonteCarloLocalization2d;
-using beluga::LaserLocalizationInterface2d;
-using beluga::MonteCarloLocalization2d;
+using LaserLocalizationInterface2d = beluga::LaserLocalizationInterface2d<beluga_amcl::OccupancyGrid>;
+
+template <class MotionDescriptor, class SensorDescriptor>
+using AdaptiveMonteCarloLocalization2d =
+    beluga::AdaptiveMonteCarloLocalization2d<MotionDescriptor, SensorDescriptor, beluga_amcl::OccupancyGrid>;
+
+template <class MotionDescriptor, class SensorDescriptor>
+using MonteCarloLocalization2d =
+    beluga::MonteCarloLocalization2d<MotionDescriptor, SensorDescriptor, beluga_amcl::OccupancyGrid>;
+
 using beluga::MultivariateNormalDistribution;
 
 struct InitialPose {
