@@ -11,7 +11,7 @@ Beluga is an extensible C++ library with a ground-up implementation of the Monte
 - Good test coverage to prevent regressions and facilitate code improvements.
 - Automated benchmarks that can be used to validate different configurations.
 
-https://github.com/Ekumen-OS/beluga/assets/33042669/df2a5e61-3d97-4350-b171-71bb1a09a6d0
+https://github.com/Ekumen-OS/beluga/assets/33042669/4481cc43-f0cd-40df-a5b4-7e0a8ccb87c6
 
 ## Packages
 
