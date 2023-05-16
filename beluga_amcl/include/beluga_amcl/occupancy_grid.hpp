@@ -22,6 +22,8 @@
 #include <utility>
 #include <vector>
 
+#include <beluga/sensor/data/occupancy_grid.hpp>
+
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
@@ -29,132 +31,51 @@
 namespace beluga_amcl
 {
 
-class OccupancyGrid
+class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid>
 {
 public:
-  struct Traits
+  struct ValueTraits
   {
     // https://wiki.ros.org/map_server#Value_Interpretation
+    static constexpr std::int8_t free_value = 0;
+    static constexpr std::int8_t unknown_value = -1;
+    static constexpr std::int8_t occupied_value = 100;
 
-    static bool is_free(std::int8_t value)
+    bool is_free(std::int8_t value) const
     {
-      return value == 0;
+      return value == free_value;
     }
 
-    static bool is_unknown(std::int8_t value)
+    bool is_unknown(std::int8_t value) const
     {
-      return value == -1;
+      return value == unknown_value;
     }
 
-    static bool is_occupied(std::int8_t value)
+    bool is_occupied(std::int8_t value) const
     {
-      return value == 100;
+      return value == occupied_value;
     }
   };
 
   explicit OccupancyGrid(nav_msgs::msg::OccupancyGrid::SharedPtr grid)
-  : grid_{std::move(grid)},
-    origin_{make_origin_transform(grid_->info.origin)} {}
+  : grid_(std::move(grid)), origin_(make_origin_transform(grid_->info.origin))
+  {
+  }
+
+  [[nodiscard]] const Sophus::SE2d & origin() const
+  {
+    return origin_;
+  }
 
   std::size_t size() const
   {
     return grid_->data.size();
   }
 
-  const auto & data() const
+  [[nodiscard]] const auto & data() const
   {
     return grid_->data;
   }
-
-  const Sophus::SE2d & origin() const
-  {
-    return origin_;
-  }
-
-  bool valid(int xi, int yi) const
-  {
-    return xi >= 0 && xi < static_cast<int>(width()) &&
-           yi >= 0 && yi < static_cast<int>(height());
-  }
-
-  bool valid(const Eigen::Vector2i & cell) const
-  {
-    return valid(cell.x(), cell.y());
-  }
-
-  Eigen::Vector2i cell(double x, double y) const
-  {
-    const auto xi = static_cast<int>(std::floor(x / resolution() + 0.5));
-    const auto yi = static_cast<int>(std::floor(y / resolution() + 0.5));
-    return Eigen::Vector2i{xi, yi};
-  }
-
-  Eigen::Vector2i cell(const Eigen::Vector2d & point) const
-  {
-    return cell(point.x(), point.y());
-  }
-
-  std::size_t index(int xi, int yi) const
-  {
-    if (!valid(xi, yi)) {
-      return size();  // If the point is outside the map, return an invalid index
-    }
-    return xi + yi * width();
-  }
-
-  std::size_t index(const Eigen::Vector2i & cell) const {return index(cell.x(), cell.y());}
-
-  std::size_t index(double x, double y) const
-  {
-    const auto xi = static_cast<int>(std::floor(x / resolution() + 0.5));
-    const auto yi = static_cast<int>(std::floor(y / resolution() + 0.5));
-    return index(xi, yi);
-  }
-
-  std::size_t index(const Eigen::Vector2d & point) const {return index(point.x(), point.y());}
-
-  Eigen::Vector2d point(int xi, int yi) const
-  {
-    return Eigen::Vector2d{
-      (static_cast<double>(xi) + 0.5) * resolution(),
-      (static_cast<double>(yi) + 0.5) * resolution()};
-  }
-
-  Eigen::Vector2d point(const Eigen::Vector2i & cell) const {return point(cell.x(), cell.y());}
-
-  Eigen::Vector2d point(std::size_t index) const
-  {
-    return point(static_cast<int>(index % width()), static_cast<int>(index / width()));
-  }
-
-  auto neighbors(std::size_t index) const
-  {
-    auto result = std::vector<std::size_t>{};
-    const std::size_t row = index / width();
-    const std::size_t col = index % width();
-    if (row < (height() - 1)) {
-      result.push_back(index + width());
-    }
-    if (row > 0) {
-      result.push_back(index - width());
-    }
-    if (col < (width() - 1)) {
-      result.push_back(index + 1);
-    }
-    if (col > 0) {
-      result.push_back(index - 1);
-    }
-    return result;
-  }
-
-  double resolution() const
-  {
-    return grid_->info.resolution;
-  }
-
-private:
-  nav_msgs::msg::OccupancyGrid::SharedPtr grid_;
-  Sophus::SE2d origin_;
 
   std::size_t width() const
   {
@@ -166,6 +87,19 @@ private:
     return grid_->info.height;
   }
 
+  [[nodiscard]] double resolution() const
+  {
+    return grid_->info.resolution;
+  }
+
+  [[nodiscard]] auto value_traits() const
+  {
+    return ValueTraits{};
+  }
+
+private:
+  nav_msgs::msg::OccupancyGrid::SharedPtr grid_;
+  Sophus::SE2d origin_;
 
   static Sophus::SE2d make_origin_transform(const geometry_msgs::msg::Pose & origin)
   {

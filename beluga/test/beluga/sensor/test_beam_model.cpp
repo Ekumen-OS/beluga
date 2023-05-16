@@ -12,110 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <gmock/gmock.h>
+
 #include "beluga/algorithm/raycasting.hpp"
 #include "beluga/sensor.hpp"
 #include "beluga/sensor/beam_model.hpp"
-#include "ciabatta/ciabatta.hpp"
 
-#include <gmock/gmock.h>
+#include "beluga/test/static_occupancy_grid.hpp"
+
+#include "ciabatta/ciabatta.hpp"
 
 namespace beluga {
 
-template <std::size_t Rows, std::size_t Cols>
-class StaticOccupancyGrid {
- public:
-  struct Traits {
-    static bool is_free(bool value) { return !value; }
-    static bool is_unknown(bool) { return false; }
-    static bool is_occupied(bool value) { return value; }
-  };
-
-  explicit StaticOccupancyGrid(
-      std::array<bool, Rows * Cols> array,
-      double resolution = 1.0,
-      const Sophus::SE2d& origin = Sophus::SE2d{})
-      : grid_{array}, origin_{origin}, origin_inverse_{origin.inverse()}, resolution_{resolution} {}
-
-  [[nodiscard]] std::size_t size() const { return grid_.size(); }
-
-  [[nodiscard]] const auto& data() const { return grid_; }
-
-  [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
-
-  [[nodiscard]] const Sophus::SE2d& origin_inverse() const { return origin_inverse_; }
-
-  [[nodiscard]] bool valid(int xi, int yi) const {
-    return xi >= 0 && xi < static_cast<int>(width()) && yi >= 0 && yi < static_cast<int>(height());
-  }
-
-  [[nodiscard]] bool valid(const Eigen::Vector2i& cell) const { return valid(cell.x(), cell.y()); }
-
-  [[nodiscard]] Eigen::Vector2i cell(double x, double y) const {
-    const auto xi = static_cast<int>(std::floor(x / resolution() + 0.5));
-    const auto yi = static_cast<int>(std::floor(y / resolution() + 0.5));
-    return Eigen::Vector2i{xi, yi};
-  }
-
-  [[nodiscard]] Eigen::Vector2i cell(const Eigen::Vector2d& point) const { return cell(point.x(), point.y()); }
-
-  [[nodiscard]] std::size_t index(int xi, int yi) const {
-    if (!valid(xi, yi)) {
-      return size();  // If the point is outside the map, return an invalid index
-    }
-    return static_cast<std::size_t>(xi) + static_cast<std::size_t>(yi) * width();
-  }
-
-  [[nodiscard]] std::size_t index(const Eigen::Vector2i& cell) const { return index(cell.x(), cell.y()); }
-
-  [[nodiscard]] std::size_t index(double x, double y) const {
-    const auto xi = static_cast<int>(std::floor(x / resolution() + 0.5));
-    const auto yi = static_cast<int>(std::floor(y / resolution() + 0.5));
-    return index(xi, yi);
-  }
-
-  [[nodiscard]] std::size_t index(const Eigen::Vector2d& point) const { return index(point.x(), point.y()); }
-
-  [[nodiscard]] Eigen::Vector2d point(int xi, int yi) const {
-    return Eigen::Vector2d{
-        (static_cast<double>(xi) + 0.5) * resolution(), (static_cast<double>(yi) + 0.5) * resolution()};
-  }
-
-  [[nodiscard]] Eigen::Vector2d point(const Eigen::Vector2i& cell) const { return point(cell.x(), cell.y()); }
-
-  [[nodiscard]] Eigen::Vector2d point(std::size_t index) const {
-    return point(
-        static_cast<int>(index % width()), static_cast<int>(index / width()));  // NOLINT(bugprone-integer-division)
-  }
-
-  [[nodiscard]] auto neighbors(std::size_t index) const {
-    auto result = std::vector<std::size_t>{};
-    const std::size_t row = index / width();
-    const std::size_t col = index % width();
-    if (row < (height() - 1)) {
-      result.push_back(index + width());
-    }
-    if (row > 0) {
-      result.push_back(index - width());
-    }
-    if (col < (width() - 1)) {
-      result.push_back(index + 1);
-    }
-    if (col > 0) {
-      result.push_back(index - 1);
-    }
-    return result;
-  }
-  [[nodiscard]] double resolution() const { return resolution_; }
-
- private:
-  std::array<bool, Rows * Cols> grid_;
-  Sophus::SE2d origin_;
-  Sophus::SE2d origin_inverse_;
-  double resolution_;
-
-  [[nodiscard]] std::size_t width() const { return Cols; }
-  [[nodiscard]] std::size_t height() const { return Rows; }
-};
+using beluga::testing::StaticOccupancyGrid;
 
 using UUT = ciabatta::mixin<
     ciabatta::curry<beluga::BeamSensorModel, StaticOccupancyGrid<5, 5>>::mixin,

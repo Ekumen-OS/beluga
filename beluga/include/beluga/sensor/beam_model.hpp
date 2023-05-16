@@ -23,6 +23,7 @@
 
 #include <beluga/algorithm/raycasting.hpp>
 
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
 #include <sophus/se2.hpp>
@@ -90,7 +91,12 @@ class BeamSensorModel : public Mixin {
    */
   template <class... Args>
   explicit BeamSensorModel(const param_type& params, const OccupancyGrid& grid, Args&&... rest)
-      : Mixin(std::forward<Args>(rest)...), grid_{grid}, free_cells_{make_free_cells_vector(grid)}, params_{params} {}
+      : Mixin(std::forward<Args>(rest)...),
+        params_{params},
+        grid_{grid},
+        free_states_{
+            grid_.coordinates_for(grid_.free_cells(), OccupancyGrid::Frame::kGlobal) |
+            ranges::to<std::vector<Eigen::Vector2d>>} {}
 
   // TODO(ivanpauno): is sensor model the best place for this?
   // Maybe the map could be provided by a different part of the mixin,
@@ -108,9 +114,8 @@ class BeamSensorModel : public Mixin {
    */
   template <class Generator>
   [[nodiscard]] state_type make_random_state(Generator& gen) const {
-    auto index_distribution = std::uniform_int_distribution<std::size_t>{0, free_cells_.size() - 1};
-    return Sophus::SE2d{
-        Sophus::SO2d::sampleUniform(gen), grid_.origin() * grid_.point(free_cells_[index_distribution(gen)])};
+    auto index_distribution = std::uniform_int_distribution<std::size_t>{0, free_states_.size() - 1};
+    return Sophus::SE2d{Sophus::SO2d::sampleUniform(gen), free_states_[index_distribution(gen)]};
   }
 
   /// Gets the importance weight for a particle with the provided state.
@@ -166,22 +171,11 @@ class BeamSensorModel : public Mixin {
   }
 
  private:
-  static std::vector<std::size_t> make_free_cells_vector(const OccupancyGrid& grid) {
-    auto free_cells = std::vector<std::size_t>{};
-    free_cells.reserve(grid.size());
-    for (std::size_t index = 0; index < grid.size(); ++index) {
-      if (OccupancyGrid::Traits::is_free(grid.data()[index])) {
-        free_cells.push_back(index);
-      }
-    }
-    return free_cells;
-  }
-
-  OccupancyGrid grid_;
-  std::vector<std::pair<double, double>> points_;
-  std::vector<std::size_t> free_cells_;
-  mutable std::shared_mutex points_mutex_;
   param_type params_;
+  OccupancyGrid grid_;
+  std::vector<Eigen::Vector2d> free_states_;
+  std::vector<std::pair<double, double>> points_;
+  mutable std::shared_mutex points_mutex_;
 };
 
 }  // namespace beluga

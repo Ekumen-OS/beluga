@@ -7,6 +7,7 @@ add_executable(benchmark_beluga
   benchmark_sampling.cpp
   benchmark_spatial_hash.cpp
   benchmark_tuple_vector.cpp)
+target_include_directories(benchmark_beluga PRIVATE ../beluga/include)
 target_link_libraries(benchmark_beluga
   PUBLIC benchmark::benchmark_main
   PRIVATE ${PROJECT_NAME} beluga_compile_options)
