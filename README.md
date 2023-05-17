@@ -8,7 +8,7 @@
 Beluga is an extensible C++17 library with a ground-up implementation of the Monte Carlo Localization (MCL) family of estimation algorithms featuring:
 
 - A modular design based on orthogonal components that can be merged together using the mixin pattern.
-- Good test coverage to prevent regressions and facilitate code improvements.
+- Emphasis on the prevention of regressions and facilitation of code improvements through test coverage.
 - Automated benchmarks that can be used to validate different configurations.
 
 https://github.com/Ekumen-OS/beluga/assets/33042669/4481cc43-f0cd-40df-a5b4-7e0a8ccb87c6
