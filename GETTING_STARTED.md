@@ -3,11 +3,13 @@
 ## Crash course
 
 1. **Clone the repository**. You will need `git`.
+
    ```bash
    git clone --recursive git@github.com:Ekumen-OS/beluga.git
    ```
 
 1. **Build and run the development docker container**. You will need [`docker-compose v2.10+`](https://github.com/docker/compose/tree/v2).
+
    ```bash
    (cd beluga && docker/run.sh)
    ```
@@ -57,6 +59,13 @@
     cd /ws/src/beluga
     pre-commit run --all-files
     ```
+
+1. **Build documentation** (inside development container).
+
+   ```bash
+   cd /ws
+   ./src/beluga/docs/generate_docs.sh
+   ```
 
 ## Next steps
 
