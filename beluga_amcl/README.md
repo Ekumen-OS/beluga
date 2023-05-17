@@ -11,10 +11,7 @@ This package can be easily integrated with code that currently uses `nav2's AMCL
 Beluga AMCL currently supports the majority of ROS parameters used in [nav2's AMCL][nav2_amcl].
 See the [nav2's configuration guide][nav2_configuration_guide] and
 [Beluga examples](../beluga_example/config/params.yaml) for reference.
-
-#### Extra Parameters
-
-Additionally, this node supports the following extra parameters:
+In addition, it supports the following extra parameters:
 
 | Parameter                                                          | Description                                                                       |
 |--------------------------------------------------------------------|-----------------------------------------------------------------------------------|
@@ -50,7 +47,7 @@ Defaults are `map`, `odom` and `base`.
 | `base` to `laser` | Input transform used to convert laser scan points to base frame.                                   |
 | `map` to `odom`   | Output transform calculated from the estimated pose mean and the current _odom-to-base_ transform. |
 
-### Exposed Services
+### Services
 
 | Topic                              | Type             | Description                                                                   |
 |------------------------------------|------------------|-------------------------------------------------------------------------------|
