@@ -73,7 +73,7 @@ Once it's filed:
 
 - The project team will label the issue accordingly.
 - A team member will try to reproduce the issue with the steps you provided. If no reproducible sequence of steps was provided or if the provided sequence does not seem to trigger the issue being reported, the team will ask you for further information about this and they will label the issue as `needs-repro`. Bugs with the `needs-repro` label will not be addressed until they've been successfully reproduced.
-- If the team is able to reproduce the issue it will be labeled `needs-fix`, as well as possibly other labels, and the issue will be left to be [implemented by someone](#your-first-code-contribution).
+- If the team is able to reproduce the issue it will be labeled `needs-fix`, as well as possibly other labels, and the issue will be left to be [fixed by someone](#your-first-code-contribution).
 
 ### Requesting Features
 
