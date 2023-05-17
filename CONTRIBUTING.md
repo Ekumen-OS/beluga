@@ -108,7 +108,7 @@ This projects adopts a [feature branch workflow](https://about.gitlab.com/topics
 #### How Do I Submit a Good Code Contribution?
 
 - **Pull the latest `main` branch**. Clone repository (or repository fork) locally if you haven't yet.
-- **Branch from `main` branch**. Use a descriptive name for your feature branch. Make sure to prefix it with the associated issue number.
+- **Create a feature branch from `main`**. Use a descriptive name and make sure to prefix it with the associated issue number.
 - **Work on your contribution**. See [instructions](GETTING_STARTED.md) on how to get started with Beluga development.
 - **Lint and test your changes**. For bug fixes, make sure regression tests are included.
 - **Document your changes as needed**. For new features, make sure added functionality is clearly documented.
