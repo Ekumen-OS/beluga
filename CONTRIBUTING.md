@@ -69,7 +69,7 @@ We use GitHub issues to track bugs and errors. If you run into an issue with the
 - Please provide as much context as possible and describe the *reproduction steps* that someone else can follow to recreate the issue on their own. This usually includes your code. For good bug reports you should isolate the problem and create a reduced test case.
 - Provide the information you collected in the previous section.
 
-Once it's filed:
+After the issue has been submitted:
 
 - The project team will label the issue accordingly.
 - A team member will try to reproduce the issue with the steps you provided. If no reproducible sequence of steps was provided or if the provided sequence does not seem to trigger the issue being reported, the team will ask you for further information about this and they will label the issue as `needs-repro`. Bugs with the `needs-repro` label will not be addressed until they've been successfully reproduced.
