@@ -30,7 +30,7 @@ jobs:
           path: ${{ github.workspace }}/src
 
       - name: Install python packages
-        run: pip install colcon-lcov-result==0.5.0 lcov_cobertura==2.0.2 pre-commit==2.20.0
+        run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
 
       - name: Install dependencies
         run: |
