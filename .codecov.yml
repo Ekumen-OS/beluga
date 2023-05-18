@@ -1,30 +1,29 @@
 codecov:
-  require_ci_to_pass: false
+  require_ci_to_pass: no
 
 comment: false
 
 component_management:
-  default_rules:
-    statuses:
-      - type: project
-        target: auto
-        threshold: 5%
   individual_components:
     - component_id: module_beluga
       name: beluga
       paths:
         - beluga/**
+      statuses:
+        - type: project
+          target: auto
     - component_id: module_beluga_amcl
       name: beluga_amcl
       paths:
         - beluga_amcl/**
+      statuses:
+        - type: project
+          target: auto
+          informational: true
 
 coverage:
   status:
-    project:
-      default:
-        target: auto
-        threshold: 5%
+    project: off
     patch: off
 
 fixes:
