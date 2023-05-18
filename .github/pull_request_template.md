@@ -1,26 +1,25 @@
-<!--
-Add link to the connected issue.
-If this PR closes the issue, use:
+### Proposed changes
 
-Fixes #<NUMBER>
+_Describe the big picture of your changes here to communicate to the maintainers why we should accept this pull request.
+If it fixes a bug or resolves a feature request, be sure to link to that issue._
 
-If not, use (or similar):
+#### Type of change
 
-Related to #<NUMBER>
--->
+- [ ] 🐛 Bugfix (change which fixes an issue)
+- [ ] 🚀 Feature (change which adds functionality)
+- [ ] 📚 Documentation (change which fixes or extends documentation)
 
-## Summary
-<!--
-For bugs, describe how this PR solves the issue, how to check if it's fixed, etc.
-For features request, describe shortly what's this solving.
+💥 **Breaking change!** _Explain why a non-backwards compatible change is necessary or remove this line entirely if not applicable._
 
-NOTE: The larger description should be done in the linked issue, not here.
--->
+### Checklist
 
-## Checklist
-- [ ] Read the [contributing guidelines](https://github.com/Ekumen-OS/beluga/blob/main/CONTRIBUTING.md).
-- [ ] Configured pre-commit and ran colcon test locally.
-- [ ] Signed all commits for DCO.
-- [ ] Added tests (regression tests for bugs, coverage of new code for features).
-- [ ] Updated documentation (as needed).
-- [ ] Checked that CI is passing.
+_Put an `x` in the boxes that apply. This is simply a reminder of what we will require before merging your code._
+
+- [ ] Lint and unit tests (if any) pass locally with my changes
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] I have added necessary documentation (if appropriate)
+- [ ] All commmits have been signed for [DCO](https://developercertificate.org/)
+
+### Additional comments
+
+_Anything worth mentioning to the reviewers._

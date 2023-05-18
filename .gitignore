@@ -1,0 +1,8 @@
+# Colcon build
+build/
+install/
+logs/
+
+# Development environments
+.vscode/
+.idea/

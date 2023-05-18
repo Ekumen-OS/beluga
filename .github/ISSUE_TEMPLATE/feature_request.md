@@ -1,22 +1,16 @@
 ---
 name: Feature Request
-about: Request a new feature for beluga.
+about: Suggest an idea for a new feature.
 title: ''
 labels: enhancement
+assignees: ''
 
 ---
 
-## Description
-<!--
-Description of what the feature consists of and what problem it will solve.
--->
+### Feature description
 
-## Definition of done
-<!--
-Preferedly, use a task list here.
--->
+_A clear and concise description of the feature, as well as to why it is relevant (e.g. the problem it solves, the use cases it supports, how it improves usability, etc.)_.
 
-## Additional considerations
-<!--
-Alternatives, potential issues, etc.
--->
+### Implementation considerations
+
+_Any special considerations meaningful when implementing this feature._
