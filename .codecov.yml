@@ -12,4 +12,4 @@ fixes:
 ignore:
   - "beluga/test"
   - "beluga_amcl/test"
-  - "beluga_system_test/test"
+  - "beluga_system_tests/test"
