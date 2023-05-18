@@ -65,6 +65,15 @@ jobs:
           colcon lcov-result --packages-select ${{ env.ROS_PACKAGES }} --verbose
           colcon coveragepy-result --packages-select ${{ env.ROS_PACKAGES }} --verbose --coverage-report-args -m
 
+      - name: Check code coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: lcov/total_coverage.info,coveragepy/.coverage
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          verbose: true
+
       - name: Lint
         working-directory: ${{ github.workspace }}/src
         shell: bash
@@ -83,23 +92,6 @@ jobs:
         shell: bash
         run: |
           ./run-clang-tidy.sh
-
-      - name: Upload code coverage artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: lcov_output
-          path: lcov/
-          retention-days: 7
-
-      - name: Convert code coverage report to XML
-        run: lcov_cobertura lcov/total_coverage.info
-
-      - name: Check code coverage
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: coverage.xml
-          fail_below_min: true
-          thresholds: '50 75'
 
   build-docs:
     runs-on: ubuntu-22.04
