@@ -53,7 +53,7 @@ class Ray2d {
 
   /// Constructs 2D ray with an specific ray tracing algorithm.
   /**
-   * \param OccupancyGrid Grid on which to perform ray casting.
+   * \param grid Grid on which to perform ray casting.
    * \param algorithm Ray tracing algorithm implementation.
    * \param source_pose Pose of the source of the ray in the
    *   same frame as that on which the `grid` origin is defined.

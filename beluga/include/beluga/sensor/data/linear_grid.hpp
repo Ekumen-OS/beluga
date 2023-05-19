@@ -23,13 +23,19 @@
 
 #include <Eigen/Core>
 
+/**
+ * \file
+ * \brief Concepts and abstract implementations of linear (ie. contiguous storage) grids.
+ */
+
 namespace beluga {
 
 /**
  * \page LinearGrid2Page Beluga named requirements: LinearGrid2
  *
- * Linear grids use contiguous memory layouts, and thus afford
- * integer indexes. Linear grids are dense grids.
+ * Linear grids use contiguous memory layouts, and thus afford integer
+ * indexes. Linear grids are dense grids, meaning they satisfy
+ * \ref DenseGrid2Page requirements.
  *
  * A type `G` satisfies `LinearGrid2` requirements if it satisfies
  * \ref DenseGrid2Page and given `g` a possibly const instance of `G`:
@@ -57,16 +63,20 @@ namespace beluga {
 template <typename Derived>
 class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
  public:
-  using BaseDenseGrid2<Derived>::index_at;
-
   /// Computes index for given grid cell coordinates.
   /*
    * \param xi Grid cell x-axis coordinate.
    * \param yi Grid cell y-axis coordinate.
    */
   [[nodiscard]] std::size_t index_at(int xi, int yi) const {
-    return static_cast<std::size_t>(yi * static_cast<int>(this->self().width()) + xi);
+    return static_cast<std::size_t>(yi) * this->self().width() + static_cast<std::size_t>(xi);
   }
+
+  /// Computes index for given grid cell coordinates.
+  /**
+   * \param pi Grid cell coordinates.
+   */
+  [[nodiscard]] std::size_t index_at(const Eigen::Vector2i& pi) const { return this->self().index_at(pi.x(), pi.y()); }
 
   using BaseDenseGrid2<Derived>::coordinates_at;
 

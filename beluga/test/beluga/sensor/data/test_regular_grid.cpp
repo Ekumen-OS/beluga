@@ -22,7 +22,7 @@ namespace {
 
 class TestRegularGrid2 : public beluga::BaseRegularGrid2<TestRegularGrid2> {
  public:
-  [[nodiscard]] double resolution() const { return 1.; }
+  [[nodiscard]] static double resolution() { return 1.; }
 };
 
 TEST(RegularGrid2, NearestCells) {

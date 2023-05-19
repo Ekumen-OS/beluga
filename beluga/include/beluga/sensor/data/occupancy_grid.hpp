@@ -27,15 +27,21 @@
 
 #include <Eigen/Core>
 
+/**
+ * \file
+ * \brief Concepts and abstract implementations of occupancy grids.
+ */
+
 namespace beluga {
 
 /**
- * \page OccupancyGrid2dPage Beluga named requirements: OccupancyGrid2d
+ * \page OccupancyGrid2Page Beluga named requirements: OccupancyGrid2d
  *
  * Occupancy grids model obstacle probability. These grids also define
  * their own frame in the grid embedding space, adding so called global
  * coordinates to regular (aka local) coordinates. Occupancy grids as
- * defined in Beluga are linear grids.
+ * defined in Beluga are linear grids, meaning they satisfy
+ * \ref LinearGrid2Page requirements.
  *
  * A type `G` satisfies `OccupancyGrid2d` requirements if it satisfies
  * \ref LinearGrid2Page and given `g` a possible const instance of `G`:
@@ -43,6 +49,8 @@ namespace beluga {
  *    data value `v`:
  *    - `t.is_free(v)` returns true if the value is consistent with a free grid cell;
  *    - `t.is_occupied(v)` returns true if the value is consistent with an occupied grid cell;
+ * - `g.origin()` returns the transform, of `Sophus::SE2d` type, from the global to local
+ *   frame in the grid embedding space;
  * - given possibly const grid cell index `i` of `std::size_t` type,
  *   `g.free_at(i)` returns true if such cell is free;
  * - given possibly const grid cell coordinates `xi` and `yi` of type `int`,
@@ -87,8 +95,9 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    */
   [[nodiscard]] bool free_at(std::size_t index) const {
     const auto data = this->self().data_at(index);
-    if (!data.has_value())
+    if (!data.has_value()) {
       return false;
+    }
     return this->self().value_traits().is_free(data.value());
   }
 

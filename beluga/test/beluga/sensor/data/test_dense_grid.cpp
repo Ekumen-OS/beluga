@@ -38,11 +38,11 @@ class Image : public beluga::BaseDenseGrid2<Image<W, H>> {
 
   explicit Image(std::array<std::array<value_type, W>, H> data) : data_(std::move(data)) {}
 
-  using beluga::BaseDenseGrid2<Image<W, H>>::index_at;
-
   [[nodiscard]] index_type index_at(int xi, int yi) const {
     return index_type{static_cast<std::size_t>(xi), static_cast<std::size_t>(yi)};
   }
+
+  [[nodiscard]] index_type index_at(const Eigen::Vector2i& pi) const { return index_at(pi.x(), pi.y()); }
 
   using beluga::BaseDenseGrid2<Image<W, H>>::data_at;
 

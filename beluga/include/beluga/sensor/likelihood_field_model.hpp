@@ -70,7 +70,7 @@ struct LikelihoodFieldModelParam {
  *
  * \tparam Mixin The mixed-in type with no particular requirements.
  * \tparam OccupancyGrid Type representing an occupancy grid.
- *  It must satisfy \ref OccupancyGrid2dPage.
+ *  It must satisfy \ref OccupancyGrid2Page.
  */
 template <class Mixin, class OccupancyGrid>
 class LikelihoodFieldModel : public Mixin {

@@ -23,6 +23,11 @@
 
 #include <Eigen/Core>
 
+/**
+ * \file
+ * \brief Concepts and abstract implementations of regular grids.
+ */
+
 namespace beluga {
 
 /**

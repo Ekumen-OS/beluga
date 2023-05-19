@@ -22,16 +22,15 @@
 
 #include <sophus/se2.hpp>
 
-namespace beluga {
-namespace testing {
+namespace beluga::testing {
 
 template <std::size_t Rows, std::size_t Cols>
 class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, Cols>> {
  public:
   struct ValueTraits {
-    bool is_free(bool value) const { return !value; }
-    bool is_unknown(bool) const { return false; }
-    bool is_occupied(bool value) const { return value; }
+    [[nodiscard]] bool is_free(bool value) const { return !value; }
+    [[nodiscard]] bool is_unknown(bool) const { return false; }
+    [[nodiscard]] bool is_occupied(bool value) const { return value; }
   };
 
   explicit StaticOccupancyGrid(
@@ -58,7 +57,6 @@ class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, 
   double resolution_;
 };
 
-}  // namespace testing
-}  // namespace beluga
+}  // namespace beluga::testing
 
 #endif

@@ -21,6 +21,11 @@
 
 #include <beluga/sensor/data/linear_grid.hpp>
 
+/**
+ * \file
+ * \brief Implementation of generic value grid.
+ */
+
 namespace beluga {
 
 /// Generic 2D linear value grid.

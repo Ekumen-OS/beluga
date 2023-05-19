@@ -62,12 +62,12 @@ TEST(OccupancyGrid2, FreeNearCell) {
 
 TEST(OccupancyGrid2, GlobalCoordinatesAtCell) {
   constexpr double kResolution = 1.;
-  const auto kOrigin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, Eigen::Vector2d{1., 1.}};
+  const auto origin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, Eigen::Vector2d{1., 1.}};
   const auto grid = StaticOccupancyGrid<5, 5>{
       {false, false, false, false, true,  false, false, false, true,  false, false, false, true,
        false, false, false, true,  false, false, false, true,  false, false, false, false},
       kResolution,
-      kOrigin};
+      origin};
 
   constexpr auto kFrame = StaticOccupancyGrid<5, 5>::Frame::kGlobal;
   EXPECT_TRUE(grid.coordinates_at(grid.index_at(2, 2), kFrame).isApprox(Eigen::Vector2d(-1.5, 3.5)));
@@ -89,8 +89,8 @@ TEST(OccupancyGrid2, ObstacleData) {
 
 TEST(OccupancyGrid2, GlobalCoordinatesForCells) {
   constexpr double kResolution = 1.;
-  const auto kOrigin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, Eigen::Vector2d{1., 1.}};
-  const auto grid = StaticOccupancyGrid<2, 3>{{false, true, false, true, false, true}, kResolution, kOrigin};
+  const auto origin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, Eigen::Vector2d{1., 1.}};
+  const auto grid = StaticOccupancyGrid<2, 3>{{false, true, false, true, false, true}, kResolution, origin};
 
   constexpr auto kFrame = StaticOccupancyGrid<2, 3>::Frame::kGlobal;
   const auto coordinates = grid.coordinates_for(grid.free_cells(), kFrame) | ranges::to<std::vector>;

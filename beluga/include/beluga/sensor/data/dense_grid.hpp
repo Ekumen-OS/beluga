@@ -22,13 +22,20 @@
 
 #include <Eigen/Core>
 
+/**
+ * \file
+ * \brief Concepts and abstract implementations of dense grids.
+ */
+
 namespace beluga {
 
 /**
  * \page DenseGrid2Page Beluga named requirements: DenseGrid2
  *
- * Dense grids have a finite extent and thus can hold cell data
- * in finite memory. Dense grids are regular grids.
+ * Dense grids support random, indexed access to each cell. These
+ * grids have a finite extent and thus can hold cell data in finite
+ * memory. Dense grids are regular grids, meaning they satisfy
+ * \ref RegularGrid2Page requirements.
  *
  * A type `G` satisfies `DenseGrid2` requirements if it satisfies
  * \ref RegularGrid2Page and given `g` a possibly const instance of `G`:
@@ -90,8 +97,6 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    */
   [[nodiscard]] bool contains(const Eigen::Vector2i& pi) const { return this->self().contains(pi.x(), pi.y()); }
 
-  [[nodiscard]] std::size_t index_at(const Eigen::Vector2i& pi) const { return this->self().index_at(pi.x(), pi.y()); }
-
   /// Gets cell data, if included.
   /**
    * \param xi Grid cell x-axis coordinate.
@@ -133,16 +138,16 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
   [[nodiscard]] auto neighborhood4(int xi, int yi) const {
     auto result = std::vector<Eigen::Vector2i>{};
     if (xi < static_cast<int>(this->self().width() - 1)) {
-      result.push_back({xi + 1, yi});
+      result.emplace_back(xi + 1, yi);
     }
     if (yi < static_cast<int>(this->self().height() - 1)) {
-      result.push_back({xi, yi + 1});
+      result.emplace_back(xi, yi + 1);
     }
     if (xi > 0) {
-      result.push_back({xi - 1, yi});
+      result.emplace_back(xi - 1, yi);
     }
     if (yi > 0) {
-      result.push_back({xi, yi - 1});
+      result.emplace_back(xi, yi - 1);
     }
     return result;
   }
