@@ -10,6 +10,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(DIRECTORY
   scripts/profiling
   scripts/benchmarking
+  USE_SOURCE_PERMISSIONS
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)

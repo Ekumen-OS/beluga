@@ -137,9 +137,14 @@ def main():
     )
     other_series = create_parameterized_series(args.other_results).add_prefix('other_')
 
-    ax = beluga_series.plot(subplots=True, color='red')
-    other_series.plot(ax=ax, subplots=True, color='blue')
+    ax = beluga_series.plot(subplots=True, color='red', marker='o', linestyle='dashed')
+    other_series.plot(
+        ax=ax, subplots=True, color='blue', marker='o', linestyle='dashed'
+    )
     for ax in plt.gcf().axes:
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        ax.grid(True, which="both", ls="-")
         ax.legend(fontsize='small', loc='upper left', bbox_to_anchor=(1.01, 1))
         current_bounds = ax.get_position().bounds
         new_bounds = (0.05, *current_bounds[1:])
