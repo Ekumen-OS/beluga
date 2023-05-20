@@ -64,7 +64,7 @@
 
    ```bash
    cd /ws
-   ./src/beluga/docs/generate_docs.sh
+   ./src/beluga/beluga/docs/generate_docs.sh
    ```
 
 ## Next steps

@@ -48,6 +48,7 @@
  *
  * \section SensorModelLinks See also
  * - beluga::LikelihoodFieldModel
+ * - beluga::BeamSensorModel
  */
 
 namespace beluga {
