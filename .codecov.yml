@@ -25,13 +25,6 @@ component_management:
       name: beluga_amcl
       paths:
         - beluga_amcl/**
-      # Custom status definition to not block PRs on this check.
-      # TODO(nahuel): Remove this once it's easy to add tests for this
-      # component. See https://github.com/Ekumen-OS/beluga/issues/101.
-      statuses:
-        - type: project
-          target: auto
-          informational: true
 
 coverage:
   # Disable project and patch level coverage status check in favor of
