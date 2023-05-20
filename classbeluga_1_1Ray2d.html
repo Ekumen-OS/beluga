@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::Ray2d&lt; Grid, Algorithm &gt; Class Template Reference</title>
+<title>Beluga: beluga::Ray2d&lt; OccupancyGrid, Algorithm &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classbeluga_1_1Ray2d-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::Ray2d&lt; Grid, Algorithm &gt; Class Template Reference</div>  </div>
+<div class="title">beluga::Ray2d&lt; OccupancyGrid, Algorithm &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -82,47 +82,47 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a42ef63199aea45a694783727f4ec046e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1Ray2d.html#a42ef63199aea45a694783727f4ec046e">Ray2d</a> (const Grid &amp;grid, const Sophus::SE2d &amp;source_pose, double max_range) noexcept</td></tr>
-<tr class="memdesc:a42ef63199aea45a694783727f4ec046e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs 2D ray with default ray tracing algorithm.  <a href="classbeluga_1_1Ray2d.html#a42ef63199aea45a694783727f4ec046e">More...</a><br /></td></tr>
-<tr class="separator:a42ef63199aea45a694783727f4ec046e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe80cdee1184e3ad3b8a06031e7d8bdc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1Ray2d.html#afe80cdee1184e3ad3b8a06031e7d8bdc">Ray2d</a> (const Grid &amp;grid, Algorithm algorithm, const Sophus::SE2d &amp;source_pose, double max_range) noexcept</td></tr>
-<tr class="memdesc:afe80cdee1184e3ad3b8a06031e7d8bdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs 2D ray with an specific ray tracing algorithm.  <a href="classbeluga_1_1Ray2d.html#afe80cdee1184e3ad3b8a06031e7d8bdc">More...</a><br /></td></tr>
-<tr class="separator:afe80cdee1184e3ad3b8a06031e7d8bdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae13be540a451b992b20b8061f4d41370"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1Ray2d.html#ae13be540a451b992b20b8061f4d41370">trace</a> (const Sophus::SO2d &amp;bearing) const</td></tr>
-<tr class="memdesc:ae13be540a451b992b20b8061f4d41370"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes ray trace along a given direction.  <a href="classbeluga_1_1Ray2d.html#ae13be540a451b992b20b8061f4d41370">More...</a><br /></td></tr>
-<tr class="separator:ae13be540a451b992b20b8061f4d41370"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc85e1af02d537ff5d28a14b86296376"><td class="memItemLeft" align="right" valign="top">std::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1Ray2d.html#adc85e1af02d537ff5d28a14b86296376">cast</a> (const Sophus::SO2d &amp;bearing) const</td></tr>
-<tr class="memdesc:adc85e1af02d537ff5d28a14b86296376"><td class="mdescLeft">&#160;</td><td class="mdescRight">Casts ray along a given direction.  <a href="classbeluga_1_1Ray2d.html#adc85e1af02d537ff5d28a14b86296376">More...</a><br /></td></tr>
-<tr class="separator:adc85e1af02d537ff5d28a14b86296376"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4d78825b7c949fa66afccce10ec4f4b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1Ray2d.html#aa4d78825b7c949fa66afccce10ec4f4b">Ray2d</a> (const OccupancyGrid &amp;grid, const Sophus::SE2d &amp;source_pose, double max_range) noexcept</td></tr>
+<tr class="memdesc:aa4d78825b7c949fa66afccce10ec4f4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs 2D ray with default ray tracing algorithm.  <a href="classbeluga_1_1Ray2d.html#aa4d78825b7c949fa66afccce10ec4f4b">More...</a><br /></td></tr>
+<tr class="separator:aa4d78825b7c949fa66afccce10ec4f4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86c0e5b959cffe3fc6c418f41ac2c1e0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1Ray2d.html#a86c0e5b959cffe3fc6c418f41ac2c1e0">Ray2d</a> (const OccupancyGrid &amp;grid, Algorithm algorithm, const Sophus::SE2d &amp;source_pose, double max_range) noexcept</td></tr>
+<tr class="memdesc:a86c0e5b959cffe3fc6c418f41ac2c1e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs 2D ray with an specific ray tracing algorithm.  <a href="classbeluga_1_1Ray2d.html#a86c0e5b959cffe3fc6c418f41ac2c1e0">More...</a><br /></td></tr>
+<tr class="separator:a86c0e5b959cffe3fc6c418f41ac2c1e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a184f0fb1f6e2653eb50416cadf5c3bc6"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1Ray2d.html#a184f0fb1f6e2653eb50416cadf5c3bc6">trace</a> (const Sophus::SO2d &amp;bearing) const</td></tr>
+<tr class="memdesc:a184f0fb1f6e2653eb50416cadf5c3bc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes ray trace along a given direction.  <a href="classbeluga_1_1Ray2d.html#a184f0fb1f6e2653eb50416cadf5c3bc6">More...</a><br /></td></tr>
+<tr class="separator:a184f0fb1f6e2653eb50416cadf5c3bc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19cc15b91616e1555759998574bb25c8"><td class="memItemLeft" align="right" valign="top">std::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1Ray2d.html#a19cc15b91616e1555759998574bb25c8">cast</a> (const Sophus::SO2d &amp;bearing) const</td></tr>
+<tr class="memdesc:a19cc15b91616e1555759998574bb25c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Casts ray along a given direction.  <a href="classbeluga_1_1Ray2d.html#a19cc15b91616e1555759998574bb25c8">More...</a><br /></td></tr>
+<tr class="separator:a19cc15b91616e1555759998574bb25c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Grid, typename Algorithm = Bresenham2i&gt;<br />
-class beluga::Ray2d&lt; Grid, Algorithm &gt;</h3>
+<div class="textblock"><h3>template&lt;class OccupancyGrid, typename Algorithm = Bresenham2i&gt;<br />
+class beluga::Ray2d&lt; OccupancyGrid, Algorithm &gt;</h3>
 
 <p>Castable 2D ray. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Grid</td><td>A 2D grid </td></tr>
+    <tr><td class="paramname">OccupancyGrid</td><td>A 2D occupancy grid </td></tr>
     <tr><td class="paramname">Algorithm</td><td>A callable type, taking start and end grid cells for a ray and returning the full trace. </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a42ef63199aea45a694783727f4ec046e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42ef63199aea45a694783727f4ec046e">&#9670;&nbsp;</a></span>Ray2d() <span class="overload">[1/2]</span></h2>
+<a id="aa4d78825b7c949fa66afccce10ec4f4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4d78825b7c949fa66afccce10ec4f4b">&#9670;&nbsp;</a></span>Ray2d() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Grid , typename Algorithm  = Bresenham2i&gt; </div>
+template&lt;class OccupancyGrid , typename Algorithm  = Bresenham2i&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1Ray2d.html">beluga::Ray2d</a>&lt; Grid, Algorithm &gt;::<a class="el" href="classbeluga_1_1Ray2d.html">Ray2d</a> </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1Ray2d.html">beluga::Ray2d</a>&lt; OccupancyGrid, Algorithm &gt;::<a class="el" href="classbeluga_1_1Ray2d.html">Ray2d</a> </td>
           <td>(</td>
-          <td class="paramtype">const Grid &amp;&#160;</td>
+          <td class="paramtype">const OccupancyGrid &amp;&#160;</td>
           <td class="paramname"><em>grid</em>, </td>
         </tr>
         <tr>
@@ -151,25 +151,25 @@ template&lt;class Grid , typename Algorithm  = Bresenham2i&gt; </div>
 </div><div class="memdoc">
 
 <p>Constructs 2D ray with default ray tracing algorithm. </p>
-<p>See <a class="el" href="classbeluga_1_1Ray2d.html#afe80cdee1184e3ad3b8a06031e7d8bdc" title="Constructs 2D ray with an specific ray tracing algorithm.">Ray2d(const Grid &amp;, Algorithm, const Sophus::SE2d&amp;, double)</a> for further reference on constructor arguments. </p>
+<p>See <a class="el" href="classbeluga_1_1Ray2d.html#a86c0e5b959cffe3fc6c418f41ac2c1e0" title="Constructs 2D ray with an specific ray tracing algorithm.">Ray2d(const OccupancyGrid &amp;, Algorithm, const Sophus::SE2d&amp;, double)</a> for further reference on constructor arguments. </p>
 
 </div>
 </div>
-<a id="afe80cdee1184e3ad3b8a06031e7d8bdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe80cdee1184e3ad3b8a06031e7d8bdc">&#9670;&nbsp;</a></span>Ray2d() <span class="overload">[2/2]</span></h2>
+<a id="a86c0e5b959cffe3fc6c418f41ac2c1e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86c0e5b959cffe3fc6c418f41ac2c1e0">&#9670;&nbsp;</a></span>Ray2d() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Grid , typename Algorithm  = Bresenham2i&gt; </div>
+template&lt;class OccupancyGrid , typename Algorithm  = Bresenham2i&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1Ray2d.html">beluga::Ray2d</a>&lt; Grid, Algorithm &gt;::<a class="el" href="classbeluga_1_1Ray2d.html">Ray2d</a> </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1Ray2d.html">beluga::Ray2d</a>&lt; OccupancyGrid, Algorithm &gt;::<a class="el" href="classbeluga_1_1Ray2d.html">Ray2d</a> </td>
           <td>(</td>
-          <td class="paramtype">const Grid &amp;&#160;</td>
+          <td class="paramtype">const OccupancyGrid &amp;&#160;</td>
           <td class="paramname"><em>grid</em>, </td>
         </tr>
         <tr>
@@ -217,19 +217,19 @@ template&lt;class Grid , typename Algorithm  = Bresenham2i&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="adc85e1af02d537ff5d28a14b86296376"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc85e1af02d537ff5d28a14b86296376">&#9670;&nbsp;</a></span>cast()</h2>
+<a id="a19cc15b91616e1555759998574bb25c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19cc15b91616e1555759998574bb25c8">&#9670;&nbsp;</a></span>cast()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Grid , typename Algorithm  = Bresenham2i&gt; </div>
+template&lt;class OccupancyGrid , typename Algorithm  = Bresenham2i&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::optional&lt;double&gt; <a class="el" href="classbeluga_1_1Ray2d.html">beluga::Ray2d</a>&lt; Grid, Algorithm &gt;::cast </td>
+          <td class="memname">std::optional&lt;double&gt; <a class="el" href="classbeluga_1_1Ray2d.html">beluga::Ray2d</a>&lt; OccupancyGrid, Algorithm &gt;::cast </td>
           <td>(</td>
           <td class="paramtype">const Sophus::SO2d &amp;&#160;</td>
           <td class="paramname"><em>bearing</em></td><td>)</td>
@@ -255,19 +255,19 @@ template&lt;class Grid , typename Algorithm  = Bresenham2i&gt; </div>
 
 </div>
 </div>
-<a id="ae13be540a451b992b20b8061f4d41370"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae13be540a451b992b20b8061f4d41370">&#9670;&nbsp;</a></span>trace()</h2>
+<a id="a184f0fb1f6e2653eb50416cadf5c3bc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a184f0fb1f6e2653eb50416cadf5c3bc6">&#9670;&nbsp;</a></span>trace()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Grid , typename Algorithm  = Bresenham2i&gt; </div>
+template&lt;class OccupancyGrid , typename Algorithm  = Bresenham2i&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classbeluga_1_1Ray2d.html">beluga::Ray2d</a>&lt; Grid, Algorithm &gt;::trace </td>
+          <td class="memname">auto <a class="el" href="classbeluga_1_1Ray2d.html">beluga::Ray2d</a>&lt; OccupancyGrid, Algorithm &gt;::trace </td>
           <td>(</td>
           <td class="paramtype">const Sophus::SO2d &amp;&#160;</td>
           <td class="paramname"><em>bearing</em></td><td>)</td>

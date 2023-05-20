@@ -1,0 +1,7 @@
+<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/sensor/data/value_grid.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/sensor/data/value_grid.hpp">
+<area shape="rect" id="node1" title="Implementation of generic value grid." alt="" coords="22,5,223,76"/>
+<area shape="rect" id="node2" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="5,124,240,195"/>
+<area shape="rect" id="node3" href="$sensor_8hpp.html" title="Includes all Beluga sensor models." alt="" coords="25,243,220,299"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="24,451,221,507"/>
+<area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="85,347,313,403"/>
+</map>
