@@ -1,0 +1,56 @@
+codecov:
+  # Don't wait for all other statuses to pass before sending codecov status.
+  require_ci_to_pass: no
+
+# Disable pull request comments.
+comment: false
+
+# Use filters to classify coverage data by package.
+component_management:
+  # Rules inherited by all components.
+  default_rules:
+    statuses:
+      - type: project  # Measure overall project coverage.
+        # The minimum coverage ratio to send a success status is the base
+        # commit coverage (pull request base or parent commit).
+        target: auto
+
+  individual_components:
+    - component_id: package_beluga
+      name: beluga
+      paths:
+        - beluga/**
+
+    - component_id: package_beluga_amcl
+      name: beluga_amcl
+      paths:
+        - beluga_amcl/**
+      # Custom status definition to not block PRs on this check.
+      # TODO(nahuel): Remove this once it's easy to add tests for this
+      # component. See https://github.com/Ekumen-OS/beluga/issues/101.
+      statuses:
+        - type: project
+          target: auto
+          informational: true
+
+coverage:
+  # Disable project and patch level coverage status check in favor of
+  # individual component status checks.
+  status:
+    project: off
+    patch: off
+
+# Fixes to correctly map coverage information in our uploaded report
+# to the corresponding files in the repository.
+fixes:
+  - "src/::"  # "src/path/" => "path/"
+
+github_checks:
+  # Disable GitHub line-by-line annotations.
+  annotations: false
+
+# Exclude test and benchmark directories from code coverage reports.
+ignore:
+  - "beluga/test"
+  - "beluga_amcl/test"
+  - "beluga_system_tests/test"
