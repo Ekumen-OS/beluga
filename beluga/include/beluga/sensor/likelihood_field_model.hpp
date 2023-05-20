@@ -94,14 +94,14 @@ class LikelihoodFieldModel : public Mixin {
    * \param ...rest Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit LikelihoodFieldModel(const param_type& params, const OccupancyGrid& grid, Args&&... rest)
+  explicit LikelihoodFieldModel(const param_type& params, OccupancyGrid grid, Args&&... rest)
       : Mixin(std::forward<Args>(rest)...),
         params_{params},
-        grid_{grid},
+        grid_{std::move(grid)},
         free_states_{
             grid_.coordinates_for(grid_.free_cells(), OccupancyGrid::Frame::kGlobal) |
             ranges::to<std::vector<Eigen::Vector2d>>},
-        likelihood_field_{make_likelihood_field(params, grid)} {}
+        likelihood_field_{make_likelihood_field(params, grid_)} {}
 
   /// Returns the likelihood field, constructed from the provided map.
   const auto& likelihood_field() const { return likelihood_field_; }

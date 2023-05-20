@@ -90,10 +90,10 @@ class BeamSensorModel : public Mixin {
    * \param ...rest Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit BeamSensorModel(const param_type& params, const OccupancyGrid& grid, Args&&... rest)
+  explicit BeamSensorModel(const param_type& params, OccupancyGrid grid, Args&&... rest)
       : Mixin(std::forward<Args>(rest)...),
         params_{params},
-        grid_{grid},
+        grid_{std::move(grid)},
         free_states_{
             grid_.coordinates_for(grid_.free_cells(), OccupancyGrid::Frame::kGlobal) |
             ranges::to<std::vector<Eigen::Vector2d>>} {}
