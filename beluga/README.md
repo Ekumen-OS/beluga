@@ -18,6 +18,10 @@ The current set of features includes:
 - Likelihood field and beam sensor models.
 - Differential drive and omnidirectional motion models.
 
+## Documentation
+
+Auto-generated Doxygen documentation can be found in [ekumen-os.github.io/beluga/](https://ekumen-os.github.io/beluga/) .
+
 ## Dependencies
 
 Beluga is built on top of the following open source libraries:

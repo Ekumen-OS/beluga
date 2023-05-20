@@ -44,6 +44,7 @@
  *
  * \section StateEstimationLinks See also
  * - beluga::SimpleStateEstimator<Mixin, Sophus::SE2d>
+ * - beluga::WeightedStateEstimator<Mixin, Sophus::SE2d>
  */
 
 namespace beluga {
