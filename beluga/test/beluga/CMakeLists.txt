@@ -15,6 +15,10 @@ add_executable(test_beluga
   resampling_policies/test_resample_on_motion_policy.cpp
   resampling_policies/test_resampling_policies_poller.cpp
   resampling_policies/test_selective_resampling_policy.cpp
+  sensor/data/test_dense_grid.cpp
+  sensor/data/test_linear_grid.cpp
+  sensor/data/test_occupancy_grid.cpp
+  sensor/data/test_regular_grid.cpp
   sensor/test_beam_model.cpp
   sensor/test_likelihood_field_model.cpp
   test_mixin.cpp

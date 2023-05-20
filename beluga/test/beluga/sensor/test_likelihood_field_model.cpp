@@ -12,79 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include "beluga/sensor.hpp"
+#include "beluga/sensor/likelihood_field_model.hpp"
+#include "beluga/test/static_occupancy_grid.hpp"
 
-#include <beluga/sensor.hpp>
-#include <ciabatta/ciabatta.hpp>
+#include "ciabatta/ciabatta.hpp"
+
+#include <gmock/gmock.h>
 
 namespace {
 
-template <std::size_t Rows, std::size_t Cols>
-class StaticOccupancyGrid {
- public:
-  struct Traits {
-    static bool is_free(bool value) { return !value; }
-    static bool is_unknown(bool) { return false; }
-    static bool is_occupied(bool value) { return value; }
-  };
-
-  explicit StaticOccupancyGrid(
-      std::array<bool, Rows * Cols> array,
-      double resolution = 1.0,
-      const Sophus::SE2d& origin = Sophus::SE2d{})
-      : grid_{array}, origin_{origin}, origin_inverse_{origin.inverse()}, resolution_{resolution} {}
-
-  [[nodiscard]] std::size_t size() const { return grid_.size(); }
-  [[nodiscard]] const auto& data() const { return grid_; }
-  [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
-  [[nodiscard]] const Sophus::SE2d& origin_inverse() const { return origin_inverse_; }
-
-  [[nodiscard]] std::size_t index(double x, double y) const {
-    const auto x_index = static_cast<std::size_t>(std::floor(x / resolution()));
-    const auto y_index = static_cast<std::size_t>(std::floor(y / resolution()));
-    if (x_index >= width() || y_index >= height()) {
-      return size();  // If the point is outside the map, return an invalid index
-    }
-    return x_index + y_index * width();
-  }
-
-  [[nodiscard]] std::size_t index(const Eigen::Vector2d& point) const { return index(point.x(), point.y()); }
-
-  [[nodiscard]] Eigen::Vector2d point(std::size_t index) const {
-    return Eigen::Vector2d{
-        (static_cast<double>(index % width()) + 0.5) * resolution(),
-        (static_cast<double>(index / width()) + 0.5) * resolution()};  // NOLINT(bugprone-integer-division)
-  }
-
-  [[nodiscard]] auto neighbors(std::size_t index) const {
-    auto result = std::vector<std::size_t>{};
-    const std::size_t row = index / width();
-    const std::size_t col = index % width();
-    if (row < (height() - 1)) {
-      result.push_back(index + width());
-    }
-    if (row > 0) {
-      result.push_back(index - width());
-    }
-    if (col < (width() - 1)) {
-      result.push_back(index + 1);
-    }
-    if (col > 0) {
-      result.push_back(index - 1);
-    }
-    return result;
-  }
-
- private:
-  std::array<bool, Rows * Cols> grid_;
-  Sophus::SE2d origin_;
-  Sophus::SE2d origin_inverse_;
-  double resolution_;
-
-  [[nodiscard]] std::size_t width() const { return Cols; }
-  [[nodiscard]] std::size_t height() const { return Rows; }
-  [[nodiscard]] double resolution() const { return resolution_; }
-};
+using beluga::testing::StaticOccupancyGrid;
 
 using UUT = ciabatta::mixin<
     ciabatta::curry<beluga::LikelihoodFieldModel, StaticOccupancyGrid<5, 5>>::mixin,
@@ -112,7 +50,8 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
-  ASSERT_THAT(mixin.likelihood_field(), testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
+  ASSERT_THAT(
+      mixin.likelihood_field().data(), testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
 }
 
 TEST(LikelihoodFieldModel, ImportanceWeight) {

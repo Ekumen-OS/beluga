@@ -36,19 +36,19 @@ namespace beluga {
 
 /// Castable 2D ray.
 /**
- * \tparam Grid A 2D grid
+ * \tparam OccupancyGrid A 2D occupancy grid
  * \tparam Algorithm A callable type, taking start and end
  *   grid cells for a ray and returning the full trace.
  */
-template <class Grid, typename Algorithm = Bresenham2i>
+template <class OccupancyGrid, typename Algorithm = Bresenham2i>
 class Ray2d {
  public:
   /// Constructs 2D ray with default ray tracing algorithm.
   /**
-   * See Ray2d(const Grid &, Algorithm, const Sophus::SE2d&, double)
+   * See Ray2d(const OccupancyGrid &, Algorithm, const Sophus::SE2d&, double)
    * for further reference on constructor arguments.
    */
-  explicit Ray2d(const Grid& grid, const Sophus::SE2d& source_pose, double max_range) noexcept
+  explicit Ray2d(const OccupancyGrid& grid, const Sophus::SE2d& source_pose, double max_range) noexcept
       : Ray2d(grid, Algorithm{}, source_pose, max_range) {}
 
   /// Constructs 2D ray with an specific ray tracing algorithm.
@@ -59,10 +59,15 @@ class Ray2d {
    *   same frame as that on which the `grid` origin is defined.
    * \param max_range Maximum range for the ray, in meters.
    */
-  explicit Ray2d(const Grid& grid, Algorithm algorithm, const Sophus::SE2d& source_pose, double max_range) noexcept
+  explicit Ray2d(
+      const OccupancyGrid& grid,
+      Algorithm algorithm,
+      const Sophus::SE2d& source_pose,
+      double max_range) noexcept
       : grid_(grid),
         algorithm_(std::move(algorithm)),
-        source_pose_in_grid_frame_(grid_.origin().inverse() * source_pose),
+        source_pose_in_local_frame_(grid_.origin().inverse() * source_pose),
+        source_cell_(grid_.cell_near(source_pose_in_local_frame_.translation())),
         max_range_(max_range) {}
 
   /// Computes ray trace along a given direction.
@@ -75,11 +80,10 @@ class Ray2d {
     const auto far_end_pose_in_source_frame = Sophus::SE2d{
         Sophus::SO2d{0.},
         Eigen::Vector2d{max_range_ * bearing.unit_complex().x(), max_range_ * bearing.unit_complex().y()}};
-    const auto far_end_pose_in_grid_frame = source_pose_in_grid_frame_ * far_end_pose_in_source_frame;
-    const auto start_cell = grid_.cell(source_pose_in_grid_frame_.translation());
-    const auto end_cell = grid_.cell(far_end_pose_in_grid_frame.translation());
-    const auto cell_is_valid = [this](const auto& cell) { return grid_.valid(cell); };
-    return algorithm_(start_cell, end_cell) | ranges::views::take_while(cell_is_valid);
+    const auto far_end_pose_in_local_frame = source_pose_in_local_frame_ * far_end_pose_in_source_frame;
+    const auto far_end_cell = grid_.cell_near(far_end_pose_in_local_frame.translation());
+    const auto cell_is_valid = [this](const auto& cell) { return grid_.contains(cell); };
+    return algorithm_(source_cell_, far_end_cell) | ranges::views::take_while(cell_is_valid);
   }
 
   /// Casts ray along a given direction.
@@ -90,14 +94,11 @@ class Ray2d {
    * \return Distance in meters to first non free cell hit by the ray, if any.
    */
   [[nodiscard]] std::optional<double> cast(const Sophus::SO2d& bearing) const {
-    const auto is_free = [this](const auto& cell) {
-      // TODO(hidmic): move to occupancy grid API
-      return Grid::Traits::is_free(grid_.data()[grid_.index(cell)]);
-    };
     for (const auto& cell : trace(bearing)) {
-      if (!is_free(cell)) {
-        const auto start_cell = grid_.cell(source_pose_in_grid_frame_.translation());
-        const auto distance = (grid_.point(cell) - grid_.point(start_cell)).norm();
+      if (!grid_.free_at(cell)) {
+        const auto source_position = grid_.coordinates_at(source_cell_);
+        const auto cell_position = grid_.coordinates_at(cell);
+        const auto distance = (cell_position - source_position).norm();
         return std::make_optional(std::min(distance, max_range_));
       }
     }
@@ -105,9 +106,10 @@ class Ray2d {
   }
 
  private:
-  const Grid& grid_;
+  const OccupancyGrid& grid_;
   const Algorithm algorithm_;
-  const Sophus::SE2d source_pose_in_grid_frame_;
+  const Sophus::SE2d source_pose_in_local_frame_;
+  const Eigen::Vector2i source_cell_;
   const double max_range_;
 };
 
