@@ -20,7 +20,7 @@ The current set of features includes:
 
 ## Documentation
 
-Auto-generated Doxygen documentation can be found in [ekumen-os.github.io/beluga/](https://ekumen-os.github.io/beluga/) .
+Auto-generated Doxygen documentation can be found in https://ekumen-os.github.io/beluga/.
 
 ## Dependencies
 
