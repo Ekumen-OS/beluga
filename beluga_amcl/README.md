@@ -1,7 +1,6 @@
 # Beluga AMCL
 
-Beluga AMCL is a ROS 2 node based on [Beluga](../beluga) featuring interface parity with
-[nav2's AMCL][nav2_amcl].
+Beluga AMCL is a ROS 2 node based on [Beluga](../beluga) featuring interface parity with [nav2's AMCL][nav2_amcl].
 This package can be easily integrated with code that currently uses `nav2's AMCL`.
 
 ## ROS 2 Interface
@@ -52,6 +51,20 @@ Defaults are `map`, `odom` and `base`.
 | Topic                              | Type             | Description                                                                   |
 |------------------------------------|------------------|-------------------------------------------------------------------------------|
 | `reinitialize_global_localization` | `std_srvs/Empty` | Request to reinitialize global localization without an initial pose estimate. |
+
+## Performance
+
+In the [beluga_benchmark](../beluga_benchmark) package a set of scripts can be found that benchmark the performance of `beluga_amcl` against that of `nav2_amcl` using a synthetic dataset.
+
+The following plot displays the RSS (Resident Set Size), CPU usage and APE (Absolute Pose Error) statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `likelihood field`.
+
+![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-05-20/likelihood_seq_beluga_vs_amcl.png)
+
+The following plot displays the RSS (Resident Set Size), CPU usage and APE (Absolute Pose Error) statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `beam`.
+
+![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-05-20/beam_seq_beluga_vs_amcl.png)
+
+Further details can be found in [the reports folder here](../beluga_benchmark/docs/reports/).
 
 ## Next Steps
 
