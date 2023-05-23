@@ -18,7 +18,6 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
-#include <shared_mutex>
 #include <vector>
 
 #include <beluga/algorithm/raycasting.hpp>
@@ -124,7 +123,6 @@ class BeamSensorModel : public Mixin {
    * \return Calculated importance weight.
    */
   [[nodiscard]] weight_type importance_weight(const state_type& state) const {
-    const auto lock = std::shared_lock<std::shared_mutex>{points_mutex_};
     const auto beam = Ray2d{grid_, state, params_.beam_max_range};
     return std::transform_reduce(points_.cbegin(), points_.cend(), 0.0, std::plus{}, [this, &beam](const auto& point) {
       // TODO(Ramiro): We're converting from range + bearing to cartesian points in the ROS node, but we want range +
@@ -165,17 +163,13 @@ class BeamSensorModel : public Mixin {
   }
 
   /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
-  void update_sensor(measurement_type&& points) final {
-    const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
-    points_ = std::move(points);
-  }
+  void update_sensor(measurement_type&& points) final { points_ = std::move(points); }
 
  private:
   param_type params_;
   OccupancyGrid grid_;
   std::vector<Eigen::Vector2d> free_states_;
   std::vector<std::pair<double, double>> points_;
-  mutable std::shared_mutex points_mutex_;
 };
 
 }  // namespace beluga

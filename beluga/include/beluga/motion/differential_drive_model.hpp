@@ -17,7 +17,6 @@
 
 #include <optional>
 #include <random>
-#include <shared_mutex>
 
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
@@ -104,7 +103,6 @@ class DifferentialDriveModel : public Mixin {
   template <class Generator>
   [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) const {
     static thread_local auto distribution = std::normal_distribution<double>{};
-    const auto lock = std::shared_lock<std::shared_mutex>{params_mutex_};
     const auto first_rotation = Sophus::SO2d{distribution(gen, first_rotation_params_)};
     const auto translation = Eigen::Vector2d{distribution(gen, translation_params_), 0.0};
     const auto second_rotation = Sophus::SO2d{distribution(gen, second_rotation_params_)};
@@ -128,7 +126,6 @@ class DifferentialDriveModel : public Mixin {
       const auto combined_rotation = first_rotation * second_rotation;
 
       {
-        const auto lock = std::lock_guard<std::shared_mutex>{params_mutex_};
         first_rotation_params_ = DistributionParam{
             first_rotation.log(), std::sqrt(
                                       params_.rotation_noise_from_rotation * rotation_variance(first_rotation) +
@@ -161,7 +158,6 @@ class DifferentialDriveModel : public Mixin {
   DistributionParam first_rotation_params_{0.0, 0.0};
   DistributionParam second_rotation_params_{0.0, 0.0};
   DistributionParam translation_params_{0.0, 0.0};
-  mutable std::shared_mutex params_mutex_;
 
   static double rotation_variance(const Sophus::SO2d& rotation) {
     // Treat backward and forward motion symmetrically for the noise models.
