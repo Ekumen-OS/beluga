@@ -699,7 +699,6 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
   particle_cloud_pub_.reset();
   pose_pub_.reset();
   enable_tf_broadcast_ = false;
-  last_known_estimate_.reset();
   particle_filter_.reset();
   return CallbackReturn::SUCCESS;
 }
@@ -1077,6 +1076,6 @@ void AmclNode::global_localization_callback(
 
 }  // namespace beluga_amcl
 
-// LCOV_EXCL_BR_STOP
-
 RCLCPP_COMPONENTS_REGISTER_NODE(beluga_amcl::AmclNode)
+
+// LCOV_EXCL_BR_STOP

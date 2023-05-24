@@ -673,6 +673,46 @@ TEST_F(TestNode, KeepCurrentEstimate)
   }
 }
 
+TEST_F(TestNode, KeepCurrentEstimateAfterCleanup)
+{
+  amcl_node->set_parameter(rclcpp::Parameter{"always_reset_initial_pose", false});
+  amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
+  {
+    // Set initial pose values to simulate an estimate that has converged.
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 34.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 2.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", 0.3});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_x", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_y", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yaw", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xy", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xyaw", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yyaw", 0.0});
+  }
+  ASSERT_TRUE(activate_amcl());
+  tester_node->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  tester_node->publish_laser_scan();
+  ASSERT_TRUE(wait_for_pose_estimate());
+  ASSERT_EQ(amcl_node->deactivate().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
+  ASSERT_EQ(amcl_node->cleanup().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED);
+  {
+    // Set new initial pose values that will be ignored.
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 12.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 1.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", 0.7});
+  }
+  ASSERT_EQ(amcl_node->configure().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
+  ASSERT_EQ(amcl_node->activate().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
+  ASSERT_EQ(amcl_node->particle_filter().get(), nullptr);
+  tester_node->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  const auto [pose, _] = amcl_node->particle_filter()->estimate();
+  ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
+  ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
+  ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
+}
+
 TEST_F(TestNode, InvalidMotionModel)
 {
   amcl_node->set_parameter(rclcpp::Parameter{"robot_model_type", "non_existing_model"});
