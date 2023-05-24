@@ -118,32 +118,55 @@ def main():
         ' implementation (e.g. nav2_amcl, another beluga version, etc).'
     )
     arg_parser.add_argument(
-        '--beluga-results',
-        '-b',
+        '--series',
+        '-s',
         type=Path,
-        help='Folder with parameterized beluga benchmark results',
+        action='append',
+        help='Folder with parameterized benchmark results',
         required=True,
     )
     arg_parser.add_argument(
-        '--other-results',
-        '-o',
-        type=Path,
-        help='Folder with parameterized benchmark results for the other implementation',
+        '--label',
+        '-l',
+        type=str,
+        action='append',
+        help='Label for a series',
         required=True,
     )
-    args = arg_parser.parse_args()
-    beluga_series = create_parameterized_series(args.beluga_results).add_prefix(
-        'beluga_'
-    )
-    other_series = create_parameterized_series(args.other_results).add_prefix('other_')
 
-    ax = beluga_series.plot(subplots=True, color='red', marker='o', linestyle='dashed')
-    other_series.plot(
-        ax=ax, subplots=True, color='blue', marker='o', linestyle='dashed'
+    arg_parser.add_argument(
+        '--use-ylog',
+        action='store_true',
+        help='Use log scale on y axis',
     )
+
+    args = arg_parser.parse_args()
+
+    assert len(args.series) == len(args.label), 'Number of series and labels must match'
+
+    series = [
+        create_parameterized_series(series).add_prefix(label + '_')
+        for label, series in zip(args.label, args.series)
+    ]
+
+    ax = series[0].plot(subplots=True, marker='o', linestyle='dashed')
+
+    # a generator to get colors for each series
+
+    def get_color():
+        colors = ['red', 'green', 'blue', 'orange', 'purple', 'brown', 'pink', 'gray']
+        for index in range(len(series) - 1):
+            yield colors[index % len(colors)]
+
+    for other_series, curve_color in zip(series[1:], get_color()):
+        other_series.plot(
+            ax=ax, subplots=True, color=curve_color, marker='o', linestyle='dashed'
+        )
+
     for ax in plt.gcf().axes:
         ax.set_xscale('log')
-        ax.set_yscale('log')
+        if args.use_ylog:
+            ax.set_yscale('log')
         ax.grid(True, which="both", ls="-")
         ax.legend(fontsize='small', loc='upper left', bbox_to_anchor=(1.01, 1))
         current_bounds = ax.get_position().bounds

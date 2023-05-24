@@ -17,7 +17,6 @@
 
 #include <optional>
 #include <random>
-#include <shared_mutex>
 
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
@@ -107,7 +106,6 @@ class OmnidirectionalDriveModel : public Mixin {
   template <class Generator>
   [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) const {
     static thread_local auto distribution = std::normal_distribution<double>{};
-    const auto lock = std::shared_lock<std::shared_mutex>{params_mutex_};
     // This is an implementation based on the same set of parameters that is used in
     // nav2's omni_motion_model. To simplify the implementation, the following
     // variable substitutions were performed:
@@ -134,7 +132,6 @@ class OmnidirectionalDriveModel : public Mixin {
       const auto rotation = current_orientation * previous_orientation.inverse();
 
       {
-        const auto lock = std::lock_guard<std::shared_mutex>{params_mutex_};
         first_rotation_ =
             distance > params_.distance_threshold
                 ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()
@@ -173,7 +170,6 @@ class OmnidirectionalDriveModel : public Mixin {
   DistributionParam strafe_params_{0.0, 0.0};
   DistributionParam translation_params_{0.0, 0.0};
   Sophus::SO2d first_rotation_;
-  mutable std::shared_mutex params_mutex_;
 
   static double rotation_variance(const Sophus::SO2d& rotation) {
     // Treat backward and forward motion symmetrically for the noise models.

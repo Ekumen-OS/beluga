@@ -55,14 +55,20 @@ This will print APE metrics (mean, median, max, std, rmse, etc), and also plot A
 
 ## Comparing parameterized runs
 
-This is useful to compare beluga vs another amcl node, e.g. `nav2_amcl`.
-It's also useful to compare beluga using different settings.
+The following command allows to compare the results of different benchmarking runs in a single plot for each metric being measured.
 
-```
-ros2 run beluga_benchmark compare_results -b <BELUGA_RESULTS_PATH> -o <OTHER_RESULTS_PATH>
-```
+This can be used to compare different `beluga_amcl` and/or `nav2_amcl` runs, or to compare the same node with different base configuration settings.
 
-The results path should be the one where `parameterized_run` was run, i.e. the one containing the `benchmark_*_particles_output` directories.
+The command is
+```
+ros2 run beluga_benchmark compare_results -s <PATH1> -l <LABEL1> -s <PATH2> -l <LABEL2> ...
+```
+where `PATH1` and `PATH2` are the paths to the output directories of the benchmarking runs to compare, and `LABEL1` and `LABEL2` are the labels to use in the plot for each of them. Any number of runs can be added in the same plot by providing additional `-s <PATH> -l <LABEL>` pairs.
+
+Additionally, the Y axis of the plot can be configured to be plotted in log scale using the `--use-logy` flag. If not specificied, the plot will default to linear scale.
+
+Notice that the result paths passed to `compare_results` must be the ones where `parameterized_run` was run, i.e. the one containing the `benchmark_*_particles_output` directories.
+
 The script will plot the following metrics vs the number of particles:
 
 - RSS memory

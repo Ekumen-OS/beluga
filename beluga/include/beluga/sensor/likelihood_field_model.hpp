@@ -18,7 +18,6 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
-#include <shared_mutex>
 #include <vector>
 
 #include <beluga/algorithm/distance_map.hpp>
@@ -104,7 +103,7 @@ class LikelihoodFieldModel : public Mixin {
         likelihood_field_{make_likelihood_field(params, grid_)} {}
 
   /// Returns the likelihood field, constructed from the provided map.
-  const auto& likelihood_field() const { return likelihood_field_; }
+  [[nodiscard]] const auto& likelihood_field() const { return likelihood_field_; }
 
   // TODO(ivanpauno): is sensor model the best place for this?
   // Maybe the map could be provided by a different part of the mixin,
@@ -133,7 +132,6 @@ class LikelihoodFieldModel : public Mixin {
    */
   [[nodiscard]] weight_type importance_weight(const state_type& state) const {
     const auto transform = grid_.origin().inverse() * state;
-    const auto lock = std::shared_lock<std::shared_mutex>{points_mutex_};
     // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
     // See https://github.com/Ekumen-OS/beluga/issues/153
     return std::transform_reduce(
@@ -152,10 +150,7 @@ class LikelihoodFieldModel : public Mixin {
   }
 
   /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
-  void update_sensor(measurement_type&& points) final {
-    const auto lock = std::lock_guard<std::shared_mutex>{points_mutex_};
-    points_ = std::move(points);
-  }
+  void update_sensor(measurement_type&& points) final { points_ = std::move(points); }
 
  private:
   param_type params_;
@@ -163,7 +158,6 @@ class LikelihoodFieldModel : public Mixin {
   std::vector<Eigen::Vector2d> free_states_;
   ValueGrid2<double> likelihood_field_;
   std::vector<std::pair<double, double>> points_;
-  mutable std::shared_mutex points_mutex_;
 
   static ValueGrid2<double> make_likelihood_field(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid) {
     const auto squared_distance = [&grid,
