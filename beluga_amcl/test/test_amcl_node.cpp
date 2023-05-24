@@ -300,9 +300,15 @@ class BaseNodeFixture : public T
 public:
   void SetUp() override
   {
+    rclcpp::init(0, nullptr);
     amcl_node = std::make_shared<AmclNodeUnderTest>();
     tester_node = std::make_shared<TesterNode>();
     tester_node->create_transform_buffer();
+  }
+
+  void TearDown() override
+  {
+    rclcpp::shutdown();
   }
 
   bool activate_amcl()
@@ -364,7 +370,9 @@ protected:
   std::shared_ptr<TesterNode> tester_node;
 };
 
-TEST(TestLifecycle, FullSpin)
+class TestLifecycle : public BaseNodeFixture<::testing::Test> {};
+
+TEST_F(TestLifecycle, FullSpin)
 {
   using lifecycle_msgs::msg::State;
   auto node = std::make_shared<beluga_amcl::AmclNode>();
@@ -381,7 +389,7 @@ TEST(TestLifecycle, FullSpin)
   ASSERT_EQ(node->shutdown().id(), State::PRIMARY_STATE_FINALIZED);
 }
 
-TEST(TestLifecycle, ShutdownWhenActive)
+TEST_F(TestLifecycle, ShutdownWhenActive)
 {
   using lifecycle_msgs::msg::State;
   auto node = std::make_shared<beluga_amcl::AmclNode>();
@@ -394,7 +402,7 @@ TEST(TestLifecycle, ShutdownWhenActive)
   ASSERT_EQ(node->shutdown().id(), State::PRIMARY_STATE_FINALIZED);
 }
 
-TEST(TestLifecycle, ShutdownWhenInactive)
+TEST_F(TestLifecycle, ShutdownWhenInactive)
 {
   using lifecycle_msgs::msg::State;
   auto node = std::make_shared<beluga_amcl::AmclNode>();
@@ -405,7 +413,7 @@ TEST(TestLifecycle, ShutdownWhenInactive)
   ASSERT_EQ(node->shutdown().id(), State::PRIMARY_STATE_FINALIZED);
 }
 
-TEST(TestLifecycle, ShutdownWhenUnconfigured)
+TEST_F(TestLifecycle, ShutdownWhenUnconfigured)
 {
   using lifecycle_msgs::msg::State;
   auto node = std::make_shared<beluga_amcl::AmclNode>();
@@ -414,7 +422,7 @@ TEST(TestLifecycle, ShutdownWhenUnconfigured)
   ASSERT_EQ(node->shutdown().id(), State::PRIMARY_STATE_FINALIZED);
 }
 
-TEST(TestLifecycle, DestroyWhenActive)
+TEST_F(TestLifecycle, DestroyWhenActive)
 {
   using lifecycle_msgs::msg::State;
   auto node = std::make_shared<beluga_amcl::AmclNode>();
@@ -425,7 +433,7 @@ TEST(TestLifecycle, DestroyWhenActive)
   ASSERT_EQ(node->activate().id(), State::PRIMARY_STATE_ACTIVE);
 }
 
-TEST(TestLifecycle, DestroyWhenInactive)
+TEST_F(TestLifecycle, DestroyWhenInactive)
 {
   using lifecycle_msgs::msg::State;
   auto node = std::make_shared<beluga_amcl::AmclNode>();
@@ -434,7 +442,7 @@ TEST(TestLifecycle, DestroyWhenInactive)
   ASSERT_EQ(node->configure().id(), State::PRIMARY_STATE_INACTIVE);
 }
 
-TEST(TestLifecycle, DestroyWhenUnconfigured)
+TEST_F(TestLifecycle, DestroyWhenUnconfigured)
 {
   using lifecycle_msgs::msg::State;
   auto node = std::make_shared<beluga_amcl::AmclNode>();
@@ -777,24 +785,15 @@ INSTANTIATE_TEST_SUITE_P(
 
 TEST_P(TestParameterValue, InvalidValue)
 {
-  auto options = rclcpp::NodeOptions().parameter_overrides({GetParam()});
+  const auto options = rclcpp::NodeOptions().parameter_overrides({GetParam()});
   ASSERT_ANY_THROW(std::make_shared<beluga_amcl::AmclNode>(options));
 }
 
-TEST(TestParameter, InvalidValueDoesNotThrow)
+TEST_F(TestNode, InvalidValueDoesNotThrow)
 {
-  auto options = rclcpp::NodeOptions()
+  const auto options = rclcpp::NodeOptions()
     .parameter_overrides({rclcpp::Parameter("execution_policy", "x")});
   ASSERT_NO_THROW(std::make_shared<beluga_amcl::AmclNode>(options));
 }
 
 }  // namespace
-
-int main(int argc, char ** argv)
-{
-  rclcpp::init(argc, argv);
-  ::testing::InitGoogleTest(&argc, argv);
-  auto result = RUN_ALL_TESTS();
-  rclcpp::shutdown();
-  return result;
-}
