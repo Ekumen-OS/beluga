@@ -54,6 +54,10 @@
 namespace beluga {
 
 /// Pure abstract class representing the laser sensor model interface.
+/**
+ * \tparam Map Environment representation type.
+ */
+template <class Map>
 struct LaserSensorModelInterface2d {
   /// Measurement type of the sensor: a point cloud for the range finder.
   using measurement_type = std::vector<std::pair<double, double>>;
@@ -72,6 +76,16 @@ struct LaserSensorModelInterface2d {
    * \param points The range finder points in the reference frame of the particle.
    */
   virtual void update_sensor(measurement_type&& points) = 0;
+
+  /// Update the sensor model with a new map.
+  /**
+   * This method updates the sensor model with a new map,
+   * i.e. a representation of the environment, that it needs
+   * to compute the weight of each particle.
+   *
+   * \param map The range finder map.
+   */
+  virtual void update_map(Map&& map) = 0;
 };
 
 }  // namespace beluga

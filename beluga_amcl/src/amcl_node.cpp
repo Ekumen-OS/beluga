@@ -726,26 +726,14 @@ AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State &)
   return CallbackReturn::SUCCESS;
 }
 
-void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
+template<class MotionDescriptor, class SensorDescriptor>
+using AdaptiveMonteCarloLocalization2d =
+  beluga::AdaptiveMonteCarloLocalization2d<
+  MotionDescriptor, SensorDescriptor, OccupancyGrid>;
+
+std::unique_ptr<LaserLocalizationInterface2d>
+AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 {
-  RCLCPP_INFO(get_logger(), "A new map was received");
-
-  if (particle_filter_ && get_parameter("first_map_only").as_bool()) {
-    RCLCPP_WARN(
-      get_logger(),
-      "Ignoring new map because the particle filter has already been initialized");
-    return;
-  }
-
-  const auto global_frame_id = get_parameter("global_frame_id").as_string();
-  if (map->header.frame_id != global_frame_id) {
-    RCLCPP_WARN(
-      get_logger(),
-      "Map frame \"%s\" doesn't match global frame \"%s\"",
-      map->header.frame_id.c_str(),
-      global_frame_id.c_str());
-  }
-
   auto sampler_params = beluga::AdaptiveSamplerParam{};
   sampler_params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
   sampler_params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
@@ -838,9 +826,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 
   try {
     using beluga::mixin::make_mixin;
-    using beluga::LaserLocalizationInterface2d;
-    using beluga::AdaptiveMonteCarloLocalization2d;
-    particle_filter_ = make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
+    return make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
       sampler_params,
       limiter_params,
       resample_on_motion_params,
@@ -852,13 +838,44 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     );
   } catch (const std::invalid_argument & error) {
     RCLCPP_ERROR(get_logger(), "Coudn't instantiate the particle filter: %s", error.what());
+  }
+  return nullptr;
+}
+
+void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
+{
+  RCLCPP_INFO(get_logger(), "A new map was received");
+
+  if (particle_filter_ && get_parameter("first_map_only").as_bool()) {
+    RCLCPP_WARN(
+      get_logger(),
+      "Ignoring new map because the particle filter has already been initialized");
     return;
   }
 
-  if (last_known_estimate_.has_value() && !get_parameter("always_reset_initial_pose").as_bool()) {
-    const auto & [pose, covariance] = last_known_estimate_.value();
-    reinitialize_with_pose(pose, covariance);
-  } else if (get_parameter("set_initial_pose").as_bool()) {
+  const auto global_frame_id = get_parameter("global_frame_id").as_string();
+  if (map->header.frame_id != global_frame_id) {
+    RCLCPP_WARN(
+      get_logger(),
+      "Map frame \"%s\" doesn't match global frame \"%s\"",
+      map->header.frame_id.c_str(),
+      global_frame_id.c_str());
+  }
+
+  bool should_reset_initial_pose = true;
+  if (!particle_filter_) {
+    particle_filter_ = make_particle_filter(std::move(map));
+    if (last_known_estimate_.has_value() && !get_parameter("always_reset_initial_pose").as_bool()) {
+      const auto & [pose, covariance] = last_known_estimate_.value();
+      reinitialize_with_pose(pose, covariance);
+      should_reset_initial_pose = false;
+    }
+  } else {
+    particle_filter_->update_map(OccupancyGrid{std::move(map)});
+    should_reset_initial_pose = get_parameter("always_reset_initial_pose").as_bool();
+  }
+
+  if (should_reset_initial_pose && get_parameter("set_initial_pose").as_bool()) {
     const auto pose = Sophus::SE2d{
       Sophus::SO2d{get_parameter("initial_pose.yaw").as_double()},
       Eigen::Vector2d{
@@ -879,10 +896,6 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     covariance.coeffRef(2, 1) = covariance.coeffRef(1, 2);
     reinitialize_with_pose(pose, covariance);
   }
-
-  RCLCPP_INFO(
-    get_logger(), "Particle filter initialized with %ld particles",
-    particle_filter_->particle_count());
 }
 
 void AmclNode::timer_callback()
@@ -1045,10 +1058,10 @@ void AmclNode::reinitialize_with_pose(
           return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
         }));
     enable_tf_broadcast_ = true;
-    RCLCPP_INFO_STREAM(
+    RCLCPP_INFO(
       get_logger(),
-      "Particle filter initialized with initial pose x=" <<
-        mean.x() << ", y=" << mean.y() << ", yaw=" << mean.z());
+      "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, yaw=%g",
+      particle_filter_->particle_count(), mean.x(), mean.y(), mean.z());
   } catch (const std::runtime_error & error) {
     RCLCPP_ERROR(get_logger(), "Could not generate particles: %s", error.what());
   }

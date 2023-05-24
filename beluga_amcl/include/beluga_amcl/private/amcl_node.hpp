@@ -33,10 +33,14 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 
+#include "beluga_amcl/occupancy_grid.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
 
 namespace beluga_amcl
 {
+
+using LaserLocalizationInterface2d =
+  beluga::LaserLocalizationInterface2d<OccupancyGrid>;
 
 class AmclNode : public rclcpp_lifecycle::LifecycleNode
 {
@@ -54,6 +58,8 @@ protected:
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State &) override;
 
   void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
+  std::unique_ptr<LaserLocalizationInterface2d>
+  make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr);
   void timer_callback();
   template<typename ExecutionPolicy>
   void laser_callback(
@@ -66,7 +72,7 @@ protected:
     std::shared_ptr<std_srvs::srv::Empty::Response> response);
   void reinitialize_with_pose(const Sophus::SE2d & pose, const Eigen::Matrix3d & covariance);
 
-  std::unique_ptr<beluga::LaserLocalizationInterface2d> particle_filter_;
+  std::unique_ptr<LaserLocalizationInterface2d> particle_filter_;
   execution::Policy execution_policy_;
 
   std::unique_ptr<bond::Bond> bond_;
