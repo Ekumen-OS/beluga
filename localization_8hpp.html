@@ -159,36 +159,36 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a552aec6b3cc7e7c9c97a1a6c0eb382f5"><td class="memItemLeft" align="right" valign="top"><a id="a552aec6b3cc7e7c9c97a1a6c0eb382f5"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="localization_8hpp.html#a552aec6b3cc7e7c9c97a1a6c0eb382f5">beluga::LaserLocalizationInterface2d</a> = <a class="el" href="structbeluga_1_1mixin_1_1compose__interfaces.html">beluga::mixin::compose_interfaces</a>&lt; BaseParticleFilterInterface, StorageInterface&lt; Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt;, EstimationInterface2d, OdometryMotionModelInterface2d, LaserSensorModelInterface2d &gt;</td></tr>
-<tr class="memdesc:a552aec6b3cc7e7c9c97a1a6c0eb382f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure abstract class representing an interface for laser-based localization algorithms. <br /></td></tr>
-<tr class="separator:a552aec6b3cc7e7c9c97a1a6c0eb382f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a2315412ed5102352ec06ad8dc0a4e6"><td class="memTemplParams" colspan="2">template&lt;class Map &gt; </td></tr>
+<tr class="memitem:a0a2315412ed5102352ec06ad8dc0a4e6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="localization_8hpp.html#a0a2315412ed5102352ec06ad8dc0a4e6">beluga::LaserLocalizationInterface2d</a> = <a class="el" href="structbeluga_1_1mixin_1_1compose__interfaces.html">beluga::mixin::compose_interfaces</a>&lt; BaseParticleFilterInterface, StorageInterface&lt; Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt;, EstimationInterface2d, OdometryMotionModelInterface2d, LaserSensorModelInterface2d&lt; Map &gt; &gt;</td></tr>
+<tr class="memdesc:a0a2315412ed5102352ec06ad8dc0a4e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure abstract class representing an interface for laser-based localization algorithms.  <a href="localization_8hpp.html#a0a2315412ed5102352ec06ad8dc0a4e6">More...</a><br /></td></tr>
+<tr class="separator:a0a2315412ed5102352ec06ad8dc0a4e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74b2244283d1f3c6cdc20be64227db06"><td class="memItemLeft" align="right" valign="top"><a id="a74b2244283d1f3c6cdc20be64227db06"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="localization_8hpp.html#a74b2244283d1f3c6cdc20be64227db06">beluga::CombinedResamplingPolicy</a> = ciabatta::curry&lt; ResamplingPoliciesPoller, ResampleOnMotionPolicy, ResampleIntervalPolicy, SelectiveResamplingPolicy &gt;</td></tr>
 <tr class="memdesc:a74b2244283d1f3c6cdc20be64227db06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Commonly used resampling policies combined in a single mixin. <br /></td></tr>
 <tr class="separator:a74b2244283d1f3c6cdc20be64227db06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31c6d86b987cddee6dbbfc35e1d2b935"><td class="memTemplParams" colspan="2">template&lt;class MotionDescriptor , class SensorDescriptor &gt; </td></tr>
-<tr class="memitem:a31c6d86b987cddee6dbbfc35e1d2b935"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="localization_8hpp.html#a31c6d86b987cddee6dbbfc35e1d2b935">beluga::MonteCarloLocalization2d</a> = ciabatta::mixin&lt; BootstrapParticleFilter, ciabatta::curry&lt; StructureOfArrays, Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt;::mixin, WeightedStateEstimator2d, RandomStateGenerator, NaiveSampler, FixedLimiter, CombinedResamplingPolicy::template mixin, MotionDescriptor::template mixin, SensorDescriptor::template mixin, ciabatta::provides&lt; LaserLocalizationInterface2d &gt;::mixin &gt;</td></tr>
-<tr class="memdesc:a31c6d86b987cddee6dbbfc35e1d2b935"><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of Monte Carlo Localization.  <a href="localization_8hpp.html#a31c6d86b987cddee6dbbfc35e1d2b935">More...</a><br /></td></tr>
-<tr class="separator:a31c6d86b987cddee6dbbfc35e1d2b935"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc17cd8bc88b73212767287fd9c88c59"><td class="memTemplParams" colspan="2">template&lt;class MotionDescriptor , class SensorDescriptor &gt; </td></tr>
-<tr class="memitem:acc17cd8bc88b73212767287fd9c88c59"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="localization_8hpp.html#acc17cd8bc88b73212767287fd9c88c59">beluga::AdaptiveMonteCarloLocalization2d</a> = ciabatta::mixin&lt; BootstrapParticleFilter, ciabatta::curry&lt; StructureOfArrays, Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>, <a class="el" href="particle__traits_8hpp.html#a5f17811828f632529bca9b868d8c4d12">beluga::Cluster</a> &gt;::mixin, WeightedStateEstimator2d, RandomStateGenerator, AdaptiveSampler, ciabatta::curry&lt; KldLimiter, Sophus::SE2d &gt;::mixin, CombinedResamplingPolicy::template mixin, MotionDescriptor::template mixin, SensorDescriptor::template mixin, ciabatta::provides&lt; LaserLocalizationInterface2d &gt;::mixin &gt;</td></tr>
-<tr class="memdesc:acc17cd8bc88b73212767287fd9c88c59"><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of Adaptive Monte Carlo Localization.  <a href="localization_8hpp.html#acc17cd8bc88b73212767287fd9c88c59">More...</a><br /></td></tr>
-<tr class="separator:acc17cd8bc88b73212767287fd9c88c59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1145621b74369f9a4b13b5c9d7ca1cb"><td class="memTemplParams" colspan="2">template&lt;class MotionDescriptor , class SensorDescriptor , class Map &gt; </td></tr>
+<tr class="memitem:aa1145621b74369f9a4b13b5c9d7ca1cb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="localization_8hpp.html#aa1145621b74369f9a4b13b5c9d7ca1cb">beluga::MonteCarloLocalization2d</a> = ciabatta::mixin&lt; BootstrapParticleFilter, ciabatta::curry&lt; StructureOfArrays, Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt;::mixin, WeightedStateEstimator2d, RandomStateGenerator, NaiveSampler, FixedLimiter, CombinedResamplingPolicy::template mixin, MotionDescriptor::template mixin, SensorDescriptor::template mixin, ciabatta::provides&lt; LaserLocalizationInterface2d&lt; Map &gt; &gt;::template mixin &gt;</td></tr>
+<tr class="memdesc:aa1145621b74369f9a4b13b5c9d7ca1cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of Monte Carlo Localization.  <a href="localization_8hpp.html#aa1145621b74369f9a4b13b5c9d7ca1cb">More...</a><br /></td></tr>
+<tr class="separator:aa1145621b74369f9a4b13b5c9d7ca1cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5217a68b81b231077e5e7a662b917f9c"><td class="memTemplParams" colspan="2">template&lt;class MotionDescriptor , class SensorDescriptor , class Map &gt; </td></tr>
+<tr class="memitem:a5217a68b81b231077e5e7a662b917f9c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="localization_8hpp.html#a5217a68b81b231077e5e7a662b917f9c">beluga::AdaptiveMonteCarloLocalization2d</a> = ciabatta::mixin&lt; BootstrapParticleFilter, ciabatta::curry&lt; StructureOfArrays, Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>, <a class="el" href="particle__traits_8hpp.html#a5f17811828f632529bca9b868d8c4d12">beluga::Cluster</a> &gt;::mixin, WeightedStateEstimator2d, RandomStateGenerator, AdaptiveSampler, ciabatta::curry&lt; KldLimiter, Sophus::SE2d &gt;::mixin, CombinedResamplingPolicy::template mixin, MotionDescriptor::template mixin, SensorDescriptor::template mixin, ciabatta::provides&lt; LaserLocalizationInterface2d&lt; Map &gt; &gt;::template mixin &gt;</td></tr>
+<tr class="memdesc:a5217a68b81b231077e5e7a662b917f9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An implementation of Adaptive Monte Carlo Localization.  <a href="localization_8hpp.html#a5217a68b81b231077e5e7a662b917f9c">More...</a><br /></td></tr>
+<tr class="separator:a5217a68b81b231077e5e7a662b917f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of localization algorithms. </p>
 </div><h2 class="groupheader">Typedef Documentation</h2>
-<a id="acc17cd8bc88b73212767287fd9c88c59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc17cd8bc88b73212767287fd9c88c59">&#9670;&nbsp;</a></span>AdaptiveMonteCarloLocalization2d</h2>
+<a id="a5217a68b81b231077e5e7a662b917f9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5217a68b81b231077e5e7a662b917f9c">&#9670;&nbsp;</a></span>AdaptiveMonteCarloLocalization2d</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class MotionDescriptor , class SensorDescriptor &gt; </div>
+template&lt;class MotionDescriptor , class SensorDescriptor , class Map &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="localization_8hpp.html#acc17cd8bc88b73212767287fd9c88c59">beluga::AdaptiveMonteCarloLocalization2d</a> = typedef ciabatta::mixin&lt; BootstrapParticleFilter, ciabatta::curry&lt;StructureOfArrays, Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>, <a class="el" href="particle__traits_8hpp.html#a5f17811828f632529bca9b868d8c4d12">beluga::Cluster</a>&gt;::mixin, WeightedStateEstimator2d, RandomStateGenerator, AdaptiveSampler, ciabatta::curry&lt;KldLimiter, Sophus::SE2d&gt;::mixin, CombinedResamplingPolicy::template mixin, MotionDescriptor::template mixin, SensorDescriptor::template mixin, ciabatta::provides&lt;LaserLocalizationInterface2d&gt;::mixin&gt;</td>
+          <td class="memname">using <a class="el" href="localization_8hpp.html#a5217a68b81b231077e5e7a662b917f9c">beluga::AdaptiveMonteCarloLocalization2d</a> = typedef ciabatta::mixin&lt; BootstrapParticleFilter, ciabatta::curry&lt;StructureOfArrays, Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>, <a class="el" href="particle__traits_8hpp.html#a5f17811828f632529bca9b868d8c4d12">beluga::Cluster</a>&gt;::mixin, WeightedStateEstimator2d, RandomStateGenerator, AdaptiveSampler, ciabatta::curry&lt;KldLimiter, Sophus::SE2d&gt;::mixin, CombinedResamplingPolicy::template mixin, MotionDescriptor::template mixin, SensorDescriptor::template mixin, ciabatta::provides&lt;LaserLocalizationInterface2d&lt;Map&gt; &gt;::template mixin&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -199,22 +199,47 @@ template&lt;class MotionDescriptor , class SensorDescriptor &gt; </div>
   <table class="tparams">
     <tr><td class="paramname">MotionDescriptor</td><td>A descriptor of a mixin that implements <a class="el" href="MotionModelPage.html">Beluga named requirements: MotionModel</a>. </td></tr>
     <tr><td class="paramname">SensorDescriptor</td><td>A descriptor of a mixin that implements <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>. </td></tr>
+    <tr><td class="paramname">Map</td><td>Environment representation type consistent with the sensor descriptor. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a31c6d86b987cddee6dbbfc35e1d2b935"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31c6d86b987cddee6dbbfc35e1d2b935">&#9670;&nbsp;</a></span>MonteCarloLocalization2d</h2>
+<a id="a0a2315412ed5102352ec06ad8dc0a4e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a2315412ed5102352ec06ad8dc0a4e6">&#9670;&nbsp;</a></span>LaserLocalizationInterface2d</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class MotionDescriptor , class SensorDescriptor &gt; </div>
+template&lt;class Map &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="localization_8hpp.html#a31c6d86b987cddee6dbbfc35e1d2b935">beluga::MonteCarloLocalization2d</a> = typedef ciabatta::mixin&lt; BootstrapParticleFilter, ciabatta::curry&lt;StructureOfArrays, Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>&gt;::mixin, WeightedStateEstimator2d, RandomStateGenerator, NaiveSampler, FixedLimiter, CombinedResamplingPolicy::template mixin, MotionDescriptor::template mixin, SensorDescriptor::template mixin, ciabatta::provides&lt;LaserLocalizationInterface2d&gt;::mixin&gt;</td>
+          <td class="memname">using <a class="el" href="localization_8hpp.html#a0a2315412ed5102352ec06ad8dc0a4e6">beluga::LaserLocalizationInterface2d</a> = typedef <a class="el" href="structbeluga_1_1mixin_1_1compose__interfaces.html">beluga::mixin::compose_interfaces</a>&lt; BaseParticleFilterInterface, StorageInterface&lt;Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>&gt;, EstimationInterface2d, OdometryMotionModelInterface2d, LaserSensorModelInterface2d&lt;Map&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Pure abstract class representing an interface for laser-based localization algorithms. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Map</td><td>Environment representation type. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa1145621b74369f9a4b13b5c9d7ca1cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1145621b74369f9a4b13b5c9d7ca1cb">&#9670;&nbsp;</a></span>MonteCarloLocalization2d</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class MotionDescriptor , class SensorDescriptor , class Map &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="localization_8hpp.html#aa1145621b74369f9a4b13b5c9d7ca1cb">beluga::MonteCarloLocalization2d</a> = typedef ciabatta::mixin&lt; BootstrapParticleFilter, ciabatta::curry&lt;StructureOfArrays, Sophus::SE2d, <a class="el" href="particle__traits_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>&gt;::mixin, WeightedStateEstimator2d, RandomStateGenerator, NaiveSampler, FixedLimiter, CombinedResamplingPolicy::template mixin, MotionDescriptor::template mixin, SensorDescriptor::template mixin, ciabatta::provides&lt;LaserLocalizationInterface2d&lt;Map&gt; &gt;::template mixin&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -225,6 +250,7 @@ template&lt;class MotionDescriptor , class SensorDescriptor &gt; </div>
   <table class="tparams">
     <tr><td class="paramname">MotionDescriptor</td><td>A descriptor of a mixin that implements <a class="el" href="MotionModelPage.html">Beluga named requirements: MotionModel</a>. </td></tr>
     <tr><td class="paramname">SensorDescriptor</td><td>A descriptor of a mixin that implements <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>. </td></tr>
+    <tr><td class="paramname">Map</td><td>Environment representation type consistent with the sensor descriptor. </td></tr>
   </table>
   </dd>
 </dl>

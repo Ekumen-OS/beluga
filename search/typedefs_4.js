@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['laserlocalizationinterface2d_598',['LaserLocalizationInterface2d',['../localization_8hpp.html#a552aec6b3cc7e7c9c97a1a6c0eb382f5',1,'beluga']]]
+  ['laserlocalizationinterface2d_600',['LaserLocalizationInterface2d',['../localization_8hpp.html#a0a2315412ed5102352ec06ad8dc0a4e6',1,'beluga']]]
 ];

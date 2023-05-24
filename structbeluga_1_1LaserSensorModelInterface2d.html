@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::LaserSensorModelInterface2d Struct Reference</title>
+<title>Beluga: beluga::LaserSensorModelInterface2d&lt; Map &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structbeluga_1_1LaserSensorModelInterface2d-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::LaserSensorModelInterface2d Struct Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">beluga::LaserSensorModelInterface2d&lt; Map &gt; Struct Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -83,37 +83,88 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ae5eb21ebfecad52da373cce26a5ba65e"><td class="memItemLeft" align="right" valign="top"><a id="ae5eb21ebfecad52da373cce26a5ba65e"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e">measurement_type</a> = std::vector&lt; std::pair&lt; double, double &gt; &gt;</td></tr>
-<tr class="memdesc:ae5eb21ebfecad52da373cce26a5ba65e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement type of the sensor: a point cloud for the range finder. <br /></td></tr>
-<tr class="separator:ae5eb21ebfecad52da373cce26a5ba65e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad42083fa2ead255f6a57ee5296cc452d"><td class="memItemLeft" align="right" valign="top"><a id="ad42083fa2ead255f6a57ee5296cc452d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ad42083fa2ead255f6a57ee5296cc452d">measurement_type</a> = std::vector&lt; std::pair&lt; double, double &gt; &gt;</td></tr>
+<tr class="memdesc:ad42083fa2ead255f6a57ee5296cc452d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement type of the sensor: a point cloud for the range finder. <br /></td></tr>
+<tr class="separator:ad42083fa2ead255f6a57ee5296cc452d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a105135fb02b03618aa3909599e2e1d08"><td class="memItemLeft" align="right" valign="top"><a id="a105135fb02b03618aa3909599e2e1d08"></a>
-virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#a105135fb02b03618aa3909599e2e1d08">~LaserSensorModelInterface2d</a> ()=default</td></tr>
-<tr class="memdesc:a105135fb02b03618aa3909599e2e1d08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor. <br /></td></tr>
-<tr class="separator:a105135fb02b03618aa3909599e2e1d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d15eebdbc444ab28c39e9ad24abb164"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#a1d15eebdbc444ab28c39e9ad24abb164">update_sensor</a> (<a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e">measurement_type</a> &amp;&amp;points)=0</td></tr>
-<tr class="memdesc:a1d15eebdbc444ab28c39e9ad24abb164"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="structbeluga_1_1LaserSensorModelInterface2d.html#a1d15eebdbc444ab28c39e9ad24abb164">More...</a><br /></td></tr>
-<tr class="separator:a1d15eebdbc444ab28c39e9ad24abb164"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac23bc6bd9d5e3f88bf696f0f6caf8613"><td class="memItemLeft" align="right" valign="top"><a id="ac23bc6bd9d5e3f88bf696f0f6caf8613"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ac23bc6bd9d5e3f88bf696f0f6caf8613">~LaserSensorModelInterface2d</a> ()=default</td></tr>
+<tr class="memdesc:ac23bc6bd9d5e3f88bf696f0f6caf8613"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor. <br /></td></tr>
+<tr class="separator:ac23bc6bd9d5e3f88bf696f0f6caf8613"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34aa59e09795483ee2f402744c0255c9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#a34aa59e09795483ee2f402744c0255c9">update_sensor</a> (<a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ad42083fa2ead255f6a57ee5296cc452d">measurement_type</a> &amp;&amp;points)=0</td></tr>
+<tr class="memdesc:a34aa59e09795483ee2f402744c0255c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="structbeluga_1_1LaserSensorModelInterface2d.html#a34aa59e09795483ee2f402744c0255c9">More...</a><br /></td></tr>
+<tr class="separator:a34aa59e09795483ee2f402744c0255c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab896608d775f3c765ba7e6d2562aa5e2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ab896608d775f3c765ba7e6d2562aa5e2">update_map</a> (Map &amp;&amp;map)=0</td></tr>
+<tr class="memdesc:ab896608d775f3c765ba7e6d2562aa5e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with a new map.  <a href="structbeluga_1_1LaserSensorModelInterface2d.html#ab896608d775f3c765ba7e6d2562aa5e2">More...</a><br /></td></tr>
+<tr class="separator:ab896608d775f3c765ba7e6d2562aa5e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Pure abstract class representing the laser sensor model interface. </p>
+<div class="textblock"><h3>template&lt;class Map&gt;<br />
+struct beluga::LaserSensorModelInterface2d&lt; Map &gt;</h3>
+
+<p>Pure abstract class representing the laser sensor model interface. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Map</td><td>Environment representation type. </td></tr>
+  </table>
+  </dd>
+</dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a1d15eebdbc444ab28c39e9ad24abb164"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d15eebdbc444ab28c39e9ad24abb164">&#9670;&nbsp;</a></span>update_sensor()</h2>
+<a id="ab896608d775f3c765ba7e6d2562aa5e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab896608d775f3c765ba7e6d2562aa5e2">&#9670;&nbsp;</a></span>update_map()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class Map &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void beluga::LaserSensorModelInterface2d::update_sensor </td>
+          <td class="memname">virtual void <a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html">beluga::LaserSensorModelInterface2d</a>&lt; Map &gt;::update_map </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ae5eb21ebfecad52da373cce26a5ba65e">measurement_type</a> &amp;&amp;&#160;</td>
+          <td class="paramtype">Map &amp;&amp;&#160;</td>
+          <td class="paramname"><em>map</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the sensor model with a new map. </p>
+<p>This method updates the sensor model with a new map, i.e. a representation of the environment, that it needs to compute the weight of each particle.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">map</td><td>The range finder map. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a34aa59e09795483ee2f402744c0255c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34aa59e09795483ee2f402744c0255c9">&#9670;&nbsp;</a></span>update_sensor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Map &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html">beluga::LaserSensorModelInterface2d</a>&lt; Map &gt;::update_sensor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ad42083fa2ead255f6a57ee5296cc452d">measurement_type</a> &amp;&amp;&#160;</td>
           <td class="paramname"><em>points</em></td><td>)</td>
           <td></td>
         </tr>

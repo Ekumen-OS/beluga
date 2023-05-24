@@ -138,6 +138,9 @@ const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 <tr class="memitem:aa0025fd6c1fb449e091db8fdca0f9fba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#aa0025fd6c1fb449e091db8fdca0f9fba">update_sensor</a> (<a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a9d326f9aea9643cce21a2413d15f655a">measurement_type</a> &amp;&amp;points) final</td></tr>
 <tr class="memdesc:aa0025fd6c1fb449e091db8fdca0f9fba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="classbeluga_1_1LikelihoodFieldModel.html#aa0025fd6c1fb449e091db8fdca0f9fba">More...</a><br /></td></tr>
 <tr class="separator:aa0025fd6c1fb449e091db8fdca0f9fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e4cb92e99802ef0fce27d6607fa7f29"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a4e4cb92e99802ef0fce27d6607fa7f29">update_map</a> (OccupancyGrid &amp;&amp;map) final</td></tr>
+<tr class="memdesc:a4e4cb92e99802ef0fce27d6607fa7f29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with a new map.  <a href="classbeluga_1_1LikelihoodFieldModel.html#a4e4cb92e99802ef0fce27d6607fa7f29">More...</a><br /></td></tr>
+<tr class="separator:a4e4cb92e99802ef0fce27d6607fa7f29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Mixin, class OccupancyGrid&gt;<br />
@@ -297,6 +300,43 @@ template&lt;class Generator &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The generated random state. </dd></dl>
+
+</div>
+</div>
+<a id="a4e4cb92e99802ef0fce27d6607fa7f29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e4cb92e99802ef0fce27d6607fa7f29">&#9670;&nbsp;</a></span>update_map()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Mixin , class OccupancyGrid &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html">beluga::LikelihoodFieldModel</a>&lt; Mixin, OccupancyGrid &gt;::update_map </td>
+          <td>(</td>
+          <td class="paramtype">OccupancyGrid &amp;&amp;&#160;</td>
+          <td class="paramname"><em>map</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the sensor model with a new map. </p>
+<p>This method updates the sensor model with a new map, i.e. a representation of the environment, that it needs to compute the weight of each particle.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">map</td><td>The range finder map. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
