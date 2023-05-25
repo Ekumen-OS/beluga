@@ -81,7 +81,7 @@ void spin_for(
 class AmclNodeUnderTest : public beluga_amcl::AmclNode
 {
 public:
-  /// Get particle fitler pointer.
+  /// Get particle filter pointer.
   const auto & particle_filter()
   {
     return particle_filter_;
@@ -164,7 +164,7 @@ public:
     return latest_particle_cloud_;
   }
 
-  auto make_dummy_map()
+  static auto make_dummy_map()
   {
     auto map = nav_msgs::msg::OccupancyGrid{};
     map.header.frame_id = "map";
@@ -247,13 +247,14 @@ public:
     tf_broadcaster_->sendTransform(transform_laser);
   }
 
-  bool can_transform(const std::string & source, const std::string & target)
+  bool can_transform(const std::string & source, const std::string & target) const
   {
     return tf_buffer_ && tf_buffer_->canTransform(source, target, tf2::TimePointZero);
   }
 
   template<class Rep, class Period>
-  bool wait_for_global_localization_service(const std::chrono::duration<Rep, Period> & timeout)
+  bool wait_for_global_localization_service(
+    const std::chrono::duration<Rep, Period> & timeout) const
   {
     return global_localization_client_->wait_for_service(timeout);
   }
@@ -309,19 +310,6 @@ public:
   void TearDown() override
   {
     rclcpp::shutdown();
-  }
-
-  bool activate_amcl()
-  {
-    using lifecycle_msgs::msg::State;
-    if (amcl_node->get_current_state().id() == State::PRIMARY_STATE_UNCONFIGURED) {
-      if (amcl_node->configure().id() == State::PRIMARY_STATE_INACTIVE) {
-        if (amcl_node->activate().id() == State::PRIMARY_STATE_ACTIVE) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 
   bool wait_for_initialization()
@@ -469,7 +457,8 @@ TEST_P(TestInitializationWithModel, ParticleCount)
   amcl_node->set_parameter(rclcpp::Parameter{"min_particles", 10});
   amcl_node->set_parameter(rclcpp::Parameter{"max_particles", 30});
 
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 
@@ -481,7 +470,8 @@ class TestNode : public BaseNodeFixture<::testing::Test> {};
 
 TEST_F(TestNode, MapWithWrongFrame)
 {
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map_with_wrong_frame();
   ASSERT_TRUE(wait_for_initialization());
 }
@@ -498,7 +488,8 @@ TEST_F(TestNode, SetInitialPose)
   amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xy", 0.0});
   amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xyaw", 0.0});
   amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yyaw", 0.0});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   const auto [pose, _] = amcl_node->particle_filter()->estimate();
@@ -510,7 +501,8 @@ TEST_F(TestNode, SetInitialPose)
 TEST_F(TestNode, BroadcastWhenInitialPoseSet)
 {
   amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node->can_transform("map", "odom"));
@@ -522,7 +514,8 @@ TEST_F(TestNode, BroadcastWhenInitialPoseSet)
 TEST_F(TestNode, NoBroadcastWhenNoInitialPose)
 {
   amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node->can_transform("map", "odom"));
@@ -534,7 +527,8 @@ TEST_F(TestNode, NoBroadcastWhenNoInitialPose)
 TEST_F(TestNode, BroadcastWithGlobalLocalization)
 {
   amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node->can_transform("map", "odom"));
@@ -547,7 +541,8 @@ TEST_F(TestNode, BroadcastWithGlobalLocalization)
 TEST_F(TestNode, IgnoreGlobalLocalizationBeforeInitialize)
 {
   amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   ASSERT_TRUE(request_global_localization());
   tester_node->publish_laser_scan();
   ASSERT_FALSE(wait_for_pose_estimate());
@@ -559,7 +554,8 @@ TEST_F(TestNode, NoBroadcastWhenInitialPoseInvalid)
   amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_x", 0.0});
   amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_y", 0.0});
   amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xy", -50.0});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node->can_transform("map", "odom"));
@@ -573,38 +569,45 @@ TEST_F(TestNode, FirstMapOnly)
   amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   amcl_node->set_parameter(rclcpp::Parameter{"always_reset_initial_pose", true});
 
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_x", 0.001});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_y", 0.001});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yaw", 0.001});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xy", 0.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xyaw", 0.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yyaw", 0.0});
-
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 34.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 2.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", 0.3});
+  {
+    // Set initial pose values to simulate an estimate that has converged.
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 34.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 2.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", 0.3});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_x", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_y", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yaw", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xy", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xyaw", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yyaw", 0.0});
+  }
 
   amcl_node->set_parameter(rclcpp::Parameter{"first_map_only", true});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
+  tester_node->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
 
   {
-    // Initializing with the first map and initial pose values.
-    tester_node->publish_map();
-    ASSERT_TRUE(wait_for_initialization());
+    // Initialized with the first map and initial pose values.
     const auto [pose, _] = amcl_node->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
   }
 
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 1.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 29.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", -0.4});
+  {
+    // Set new initial pose values that will be ignored.
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 1.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 29.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", -0.4});
+  }
+
+  tester_node->publish_map();
+  spin_for(50ms, tester_node, amcl_node);
 
   {
-    // Ignoring the new initial pose values (and map).
-    tester_node->publish_map();
-    spin_for(50ms, tester_node, amcl_node);
+    // Ignored the new initial pose values (and map).
     const auto [pose, _] = amcl_node->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
@@ -612,11 +615,11 @@ TEST_F(TestNode, FirstMapOnly)
   }
 
   amcl_node->set_parameter(rclcpp::Parameter{"first_map_only", false});
+  tester_node->publish_map();
+  spin_for(50ms, tester_node, amcl_node);
 
   {
-    // Using the new initial pose values (and map).
-    tester_node->publish_map();
-    spin_for(50ms, tester_node, amcl_node);
+    // Initialized with the new initial pose values (and map).
     const auto [pose, _] = amcl_node->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 29.0, 0.01);
@@ -630,53 +633,6 @@ TEST_F(TestNode, KeepCurrentEstimate)
   amcl_node->set_parameter(rclcpp::Parameter{"always_reset_initial_pose", false});
   amcl_node->set_parameter(rclcpp::Parameter{"first_map_only", false});
 
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_x", 0.001});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_y", 0.001});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yaw", 0.001});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xy", 0.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xyaw", 0.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yyaw", 0.0});
-
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 34.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 2.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", 0.3});
-
-  ASSERT_TRUE(activate_amcl());
-
-  {
-    // Initializing with the first map and initial pose values.
-    tester_node->publish_map();
-    ASSERT_TRUE(wait_for_initialization());
-    const auto [pose, _] = amcl_node->particle_filter()->estimate();
-    ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
-    ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
-    ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
-  }
-
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 1.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 29.0});
-  amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", -0.4});
-
-  tester_node->publish_laser_scan();
-  ASSERT_TRUE(wait_for_pose_estimate());
-  const auto [estimate, _] = amcl_node->particle_filter()->estimate();
-
-  {
-    // Initializing with the second map but keeping the old estimate.
-    // Ignoring the new initial pose values.
-    tester_node->publish_map();
-    spin_for(50ms, tester_node, amcl_node);
-    const auto [pose, _] = amcl_node->particle_filter()->estimate();
-    ASSERT_NEAR(pose.translation().x(), estimate.translation().x(), 0.01);
-    ASSERT_NEAR(pose.translation().y(), estimate.translation().y(), 0.01);
-    ASSERT_NEAR(pose.so2().log(), estimate.so2().log(), 0.01);
-  }
-}
-
-TEST_F(TestNode, KeepCurrentEstimateAfterCleanup)
-{
-  amcl_node->set_parameter(rclcpp::Parameter{"always_reset_initial_pose", false});
-  amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   {
     // Set initial pose values to simulate an estimate that has converged.
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 34.0});
@@ -689,21 +645,80 @@ TEST_F(TestNode, KeepCurrentEstimateAfterCleanup)
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xyaw", 0.0});
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yyaw", 0.0});
   }
-  ASSERT_TRUE(activate_amcl());
+
+  amcl_node->configure();
+  amcl_node->activate();
+
+  {
+    // Initializing with the first map and initial pose values.
+    tester_node->publish_map();
+    ASSERT_TRUE(wait_for_initialization());
+    const auto [pose, _] = amcl_node->particle_filter()->estimate();
+    ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
+    ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
+    ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
+  }
+
+  tester_node->publish_laser_scan();
+  ASSERT_TRUE(wait_for_pose_estimate());
+  const auto [estimate, _] = amcl_node->particle_filter()->estimate();
+
+  {
+    // Set new initial pose values that will be ignored.
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 1.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 29.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", -0.4});
+  }
+
+  tester_node->publish_map();
+  spin_for(50ms, tester_node, amcl_node);
+
+  {
+    // Initializing with the second map but keeping the old estimate.
+    // Ignoring the new initial pose values.
+    const auto [pose, _] = amcl_node->particle_filter()->estimate();
+    ASSERT_NEAR(pose.translation().x(), estimate.translation().x(), 0.01);
+    ASSERT_NEAR(pose.translation().y(), estimate.translation().y(), 0.01);
+    ASSERT_NEAR(pose.so2().log(), estimate.so2().log(), 0.01);
+  }
+}
+
+TEST_F(TestNode, KeepCurrentEstimateAfterCleanup)
+{
+  amcl_node->set_parameter(rclcpp::Parameter{"always_reset_initial_pose", false});
+  amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
+
+  {
+    // Set initial pose values to simulate an estimate that has converged.
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 34.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 2.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", 0.3});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_x", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_y", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yaw", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xy", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xyaw", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yyaw", 0.0});
+  }
+
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   tester_node->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_EQ(amcl_node->deactivate().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
-  ASSERT_EQ(amcl_node->cleanup().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED);
+  amcl_node->deactivate();
+  amcl_node->cleanup();
+
   {
     // Set new initial pose values that will be ignored.
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 12.0});
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 1.0});
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.yaw", 0.7});
   }
-  ASSERT_EQ(amcl_node->configure().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
-  ASSERT_EQ(amcl_node->activate().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
+
+  amcl_node->configure();
+  amcl_node->activate();
   ASSERT_EQ(amcl_node->particle_filter().get(), nullptr);
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
@@ -716,7 +731,8 @@ TEST_F(TestNode, KeepCurrentEstimateAfterCleanup)
 TEST_F(TestNode, InvalidMotionModel)
 {
   amcl_node->set_parameter(rclcpp::Parameter{"robot_model_type", "non_existing_model"});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_FALSE(wait_for_initialization());
 }
@@ -724,7 +740,8 @@ TEST_F(TestNode, InvalidMotionModel)
 TEST_F(TestNode, InvalidSensorModel)
 {
   amcl_node->set_parameter(rclcpp::Parameter{"laser_model_type", "non_existing_model"});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_FALSE(wait_for_initialization());
 }
@@ -732,7 +749,8 @@ TEST_F(TestNode, InvalidSensorModel)
 TEST_F(TestNode, InitialPoseBeforeInitialize)
 {
   amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_default_initial_pose();
   tester_node->publish_laser_scan();
   ASSERT_FALSE(wait_for_pose_estimate());
@@ -740,7 +758,8 @@ TEST_F(TestNode, InitialPoseBeforeInitialize)
 
 TEST_F(TestNode, InitialPoseAfterInitialize)
 {
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node->can_transform("map", "odom"));
@@ -752,7 +771,8 @@ TEST_F(TestNode, InitialPoseAfterInitialize)
 
 TEST_F(TestNode, InitialPoseWithWrongFrame)
 {
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node->can_transform("map", "odom"));
@@ -764,7 +784,8 @@ TEST_F(TestNode, InitialPoseWithWrongFrame)
 
 TEST_F(TestNode, IsPublishingParticleCloud)
 {
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   tester_node->create_particle_cloud_subscriber();
@@ -773,7 +794,8 @@ TEST_F(TestNode, IsPublishingParticleCloud)
 
 TEST_F(TestNode, LaserScanWithNoOdomToBase)
 {
-  ASSERT_TRUE(activate_amcl());
+  amcl_node->configure();
+  amcl_node->activate();
   tester_node->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   tester_node->publish_laser_scan_with_no_odom_to_base();
