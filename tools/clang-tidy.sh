@@ -24,4 +24,4 @@ ROS_PACKAGES="beluga beluga_system_tests"
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
-echo ${ROS_PACKAGES} | xargs -n1 echo | xargs -I{} run-clang-tidy -quiet -p  ./build/{}
+echo ${ROS_PACKAGES} | xargs -n1 echo | xargs -I{} run-clang-tidy -quiet -j 4 -p ./build/{}
