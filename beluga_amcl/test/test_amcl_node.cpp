@@ -40,14 +40,12 @@ bool spin_until(
   rclcpp::executors::SingleThreadedExecutor executor;
   (executor.add_node(nodes->get_node_base_interface()), ...);
 
-  auto start = std::chrono::high_resolution_clock::now();
-  while (std::chrono::high_resolution_clock::now() - start < timeout) {
-    executor.spin_some();
-    if (predicate()) {
-      return true;
-    }
+  const auto deadline = std::chrono::high_resolution_clock::now() + timeout;
+  while (rclcpp::ok() && !predicate() && std::chrono::high_resolution_clock::now() < deadline) {
+    executor.spin_once(deadline - std::chrono::high_resolution_clock::now());  // wait for it
+    executor.spin_some(deadline - std::chrono::high_resolution_clock::now());  // flush it all out
   }
-  return false;  // timed out
+  return predicate();  // last minute check
 }
 
 /// Spin a group of nodes until a condition is met with a default timeout.
@@ -74,7 +72,8 @@ void spin_for(
   const std::chrono::duration<Rep, Period> & duration,
   const std::shared_ptr<Nodes> & ... nodes)
 {
-  spin_until([]() {return false;}, duration, nodes ...);
+  const auto duration_is_over = []() {return false;};
+  spin_until(duration_is_over, duration, nodes ...);
 }
 
 /// Test class that provides convenient public accessors.
