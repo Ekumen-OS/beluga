@@ -42,6 +42,8 @@
 #include "beluga_amcl/tf2_sophus.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
 
+// LCOV_EXCL_BR_START: Disable branch coverage.
+
 namespace beluga_amcl
 {
 
@@ -199,7 +201,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
       "Resolution in radians for the theta axis to divide the space in buckets for KLD resampling.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].to_value = 2 * Sophus::Constants<double>::pi();
     descriptor.floating_point_range[0].step = 0;
     declare_parameter(
       "spatial_resolution_theta",
@@ -317,7 +319,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.description = "Rotational movement required before performing a filter update.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 2 * M_PI;
+    descriptor.floating_point_range[0].to_value = 2 * Sophus::Constants<double>::pi();
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("update_min_a", rclcpp::ParameterValue(0.2), descriptor);
   }
@@ -448,7 +450,6 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
       "If false, AMCL will use the last known pose to initialize when a new map is received.";
-    descriptor.read_only = true;
     declare_parameter("always_reset_initial_pose", false, descriptor);
   }
 
@@ -457,63 +458,54 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
     descriptor.description =
       "Set this to true when you want to load only the first published map from map_server "
       "and ignore subsequent ones.";
-    descriptor.read_only = true;
     declare_parameter("first_map_only", false, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Set the initial pose from the initial_pose parameters.";
-    descriptor.read_only = true;
     declare_parameter("set_initial_pose", false, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose x axis coordinate.";
-    descriptor.read_only = true;
     declare_parameter("initial_pose.x", 0.0, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose y axis coordinate.";
-    descriptor.read_only = true;
     declare_parameter("initial_pose.y", 0.0, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose z axis coordinate.";
-    descriptor.read_only = true;
     declare_parameter("initial_pose.z", 0.0, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose yaw rotation.";
-    descriptor.read_only = true;
     declare_parameter("initial_pose.yaw", 0.0, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose x axis covariance.";
-    descriptor.read_only = true;
     declare_parameter("initial_pose.covariance_x", 0.5 * 0.5, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose y axis covariance.";
-    descriptor.read_only = true;
     declare_parameter("initial_pose.covariance_y", 0.5 * 0.5, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose yaw covariance.";
-    descriptor.read_only = true;
     declare_parameter(
       "initial_pose.covariance_yaw",
       Sophus::Constants<double>::pi() / 12. * Sophus::Constants<double>::pi() / 12.,
@@ -523,29 +515,26 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose xy covariance.";
-    descriptor.read_only = true;
     declare_parameter("initial_pose.covariance_xy", 0.0, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose xyaw covariance.";
-    descriptor.read_only = true;
     declare_parameter("initial_pose.covariance_xyaw", 0.0, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose yyaw covariance.";
-    descriptor.read_only = true;
     declare_parameter("initial_pose.covariance_yyaw", 0.0, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.read_only = true;
     descriptor.description =
       "Execution policy used to process particles [seq, par].";
+    descriptor.read_only = true;
     auto execution_policy_string = declare_parameter(
       "execution_policy", "par", descriptor);
     try {
@@ -564,12 +553,7 @@ AmclNode::~AmclNode()
 {
   RCLCPP_INFO(get_logger(), "Destroying");
   // In case this lifecycle node wasn't properly shut down, do it here
-  if (get_current_state().id() ==
-    lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
-  {
-    on_deactivate(get_current_state());
-    on_cleanup(get_current_state());
-  }
+  on_shutdown(get_current_state());
 }
 
 AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State &)
@@ -715,14 +699,20 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State &)
   particle_cloud_pub_.reset();
   pose_pub_.reset();
   enable_tf_broadcast_ = false;
-  last_known_estimate_.reset();
   particle_filter_.reset();
   return CallbackReturn::SUCCESS;
 }
 
-AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State &)
+AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State & state)
 {
   RCLCPP_INFO(get_logger(), "Shutting down");
+  if (state.id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+    on_deactivate(state);
+    on_cleanup(state);
+  }
+  if (state.id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+    on_cleanup(state);
+  }
   return CallbackReturn::SUCCESS;
 }
 
@@ -1032,6 +1022,7 @@ void AmclNode::initial_pose_callback(
       "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\"",
       message->header.frame_id.c_str(),
       global_frame_id.c_str());
+    return;
   }
 
   auto pose = Sophus::SE2d{};
@@ -1086,3 +1077,5 @@ void AmclNode::global_localization_callback(
 }  // namespace beluga_amcl
 
 RCLCPP_COMPONENTS_REGISTER_NODE(beluga_amcl::AmclNode)
+
+// LCOV_EXCL_BR_STOP
