@@ -1,6 +1,7 @@
 # Colcon build
 build/
 install/
+lcov/
 logs/
 
 # Development environments

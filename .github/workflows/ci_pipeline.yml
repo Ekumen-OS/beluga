@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ROS_DISTRO: humble
-      ROS_PACKAGES: beluga beluga_amcl beluga_system_tests
     container:
       image: ros:humble-ros-base-jammy
     steps:
@@ -27,7 +26,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          path: ${{ github.workspace }}/src
+          path: ${{ github.workspace }}/src/beluga
 
       - name: Install python packages
         run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
@@ -45,25 +44,10 @@ jobs:
           api_token: ${{ secrets.GITHUB_TOKEN }}
           update_packager_index: false
 
-      - name: Build
+      - name: Build and test
         working-directory: ${{ github.workspace }}
         shell: bash
-        # Do a build without coverage flags first to avoid generating .gcno files
-        # that prevent the html output from lcov from being generated correctly.
-        run: |
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
-          colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
-          colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest
-
-      - name: Test
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        run: |
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
-          colcon lcov-result --initial
-          colcon test --packages-select ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --return-code-on-test-failure --mixin coverage-pytest
-          colcon lcov-result --packages-select ${{ env.ROS_PACKAGES }} --verbose
-          colcon coveragepy-result --packages-select ${{ env.ROS_PACKAGES }} --verbose --coverage-report-args -m
+        run: ./src/beluga/tools/test.sh
 
       - name: Upload code coverage report
         uses: codecov/codecov-action@v3
@@ -75,23 +59,16 @@ jobs:
           verbose: true
 
       - name: Lint
-        working-directory: ${{ github.workspace }}/src
+        working-directory: ${{ github.workspace }}/src/beluga/
         shell: bash
         run: |
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
 
-      - name: "Static Analysis (beluga)"
-        working-directory: ${{ github.workspace }}/src/beluga
+      - name: Static analysis
+        working-directory: ${{ github.workspace }}
         shell: bash
-        run: |
-          ./run-clang-tidy.sh
-
-      - name: "Static Analysis (beluga_system_tests)"
-        working-directory: ${{ github.workspace }}/src/beluga_system_tests
-        shell: bash
-        run: |
-          ./run-clang-tidy.sh
+        run: ./src/beluga/tools/clang-tidy.sh
 
   build-docs:
     runs-on: ubuntu-22.04
@@ -117,7 +94,7 @@ jobs:
 
       - name: Generate documentation
         working-directory: ${{ env.REPOSITORY_CHECKOUT_PATH }}
-        run: beluga/docs/generate_docs.sh
+        run: ./tools/doxygen.sh
 
       - if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         name: Deploy documentation
