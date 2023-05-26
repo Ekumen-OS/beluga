@@ -38,7 +38,7 @@ This page describes the parameters supported by Beluga AMCL including a comparis
 | `recovery_alpha_fast` | Exponential decay rate for the fast average weight filter, used in deciding when to recover from a bad approximation by adding random poses. | ✅ | ✅ |
 | `recovery_alpha_slow` | Exponential decay rate for the slow average weight filter, used in deciding when to recover from a bad approximation by adding random poses. | ✅ | ✅ |
 | `resample_interval` | Number of filter updates required before resampling. | ✅ | ✅ |
-| `selective_resampling` | When set to true, it will reduce the resampling rate when not needed and help avoid particle deprivation. The resampling will only happen if the effective number of particles $(N_{eff} = 1/ {\sum w_i^2})$ is lower than half the current number of particles where $w_i$ refers to the normalized weight of particle $i$ [[2]](#2). _This feature is currently supported by Nav AMCL in ROS 1 but it hasn't been ported to ROS 2 at the time of this writing._ | | ✅ |
+| `selective_resampling` | Whether to enable selective resampling [[2]](#2) to help avoid loss of diversity in the particle population. The resampling step will only happen if the effective number of particles $(N_{eff} = 1/ {\sum w_i^2})$ is lower than half the current number of particles, where $w_i$ refers to the normalized weight of each particle. _This feature is currently supported by Nav AMCL in ROS 1 but it hasn't been ported to ROS 2 at the time of this writing._ | | ✅ |
 | `update_min_a` | Rotational movement required from last resample for resampling to happen again. _Nav2 AMCL skips the filter update completely while Beluga AMCL only skips the resampling step. Sensor and motion updates are not skipped._ | ✅ | ✅ |
 | `update_min_d` | Translational movement required from last resample for resampling to happen again. _Nav2 AMCL skips the filter update completely while Beluga AMCL only skips the resampling step. Sensor and motion updates are not skipped._ | ✅ | ✅ |
 | `execution_policy` | Execution policy used to apply the motion update and importance weight steps to each particle [`seq`: sequential, `par`: parallel]. | | ✅ |
@@ -85,7 +85,7 @@ This page describes the parameters supported by Beluga AMCL including a comparis
 
 <a id="2">[2]</a> Giorgio Grisetti, Cyrill Stachniss, and Wolfram Burgard. Improved techniques for grid mapping with rao-blackwellized particle filters. IEEE Transactions on Robotics, 23(1):34–46, 2007. https://doi.org/10.1109/TRO.2006.889486
 
-<a id="3">[3]</a> Dieter Fox. Kld-sampling: Adaptive particle filters. In Proceedings of the 14th International Conference on Neural Information Processing Systems: Natural and Synthetic, NIPS'01, pages 713–720, Cambridge, MA, USA, 2001. MIT Press. https://books.google.com.ar/books?id=jtSMEAAAQBAJ
+<a id="3">[3]</a> S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. https://books.google.com.ar/books?id=jtSMEAAAQBAJ
 
 [fox2001]: https://dl.acm.org/doi/10.5555/2980539.2980632
 [grisetti2007]: https://doi.org/10.1109/TRO.2006.889486
