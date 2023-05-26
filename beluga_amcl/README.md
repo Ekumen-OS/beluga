@@ -1,7 +1,7 @@
 # Beluga AMCL
 
-Beluga AMCL is a ROS 2 node based on [Beluga](../beluga) featuring interface parity with [Navigation 2 AMCL][nav2_amcl].<br/>
-This package can be easily integrated with code that currently uses `nav2_amcl`.
+Beluga AMCL is a ROS 2 node based on the [Beluga](../beluga) library that aims to be fully compatible with the [Navigation 2 AMCL][nav2_amcl] node.<br/>
+The compatibility between `beluga_amcl` and `nav2_amcl` provides a simple migration path for projects that want to be able to integrate the power and modularity of the Beluga library in an existing `nav2_amcl`-based project.
 
 ## ROS 2 Interface
 
