@@ -1,6 +1,6 @@
 # Tools
 
-Repository-level tools for static analysis, code coverage and documentation generation for Beluga.
+Repository-level tools for static analysis, code coverage, and documentation generation for Beluga.
 
 See the [getting started](../GETTING_STARTED.md) tutorial to create a development container where you can run the following commands.
 
