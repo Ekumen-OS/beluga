@@ -23,11 +23,20 @@ set -o errexit
 ROS_PACKAGES="beluga beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
+
+echo "::group::Build"
 # Do a build without coverage flags first to avoid generating .gcno files
 # that prevent the html output from lcov from being generated correctly.
 colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
 colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest
+echo "::endgroup::"
+
+echo "::group::Test"
 colcon lcov-result --initial
 colcon test --packages-select ${ROS_PACKAGES} --event-handlers=console_cohesion+ --return-code-on-test-failure --mixin coverage-pytest
+echo "::endgroup::"
+
+echo "::group::Generate code coverage results"
 colcon lcov-result --packages-select ${ROS_PACKAGES} --verbose
 colcon coveragepy-result --packages-select ${ROS_PACKAGES} --verbose --coverage-report-args -m
+echo "::endgroup::"
