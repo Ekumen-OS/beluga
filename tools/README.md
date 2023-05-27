@@ -1,23 +1,17 @@
 # Tools
 
-Repository-level tools for static analysis, code coverage, and documentation generation for Beluga.
+Repository-level tools for generating code coverage reports and static analysis for Beluga.
 
 See the [getting started](../GETTING_STARTED.md) tutorial to create a development container where you can run the following commands.
 
-1. **Run tests and generate code coverage report**. You will find a report in `lcov/index.html`.
+1. **Build project, run tests, and generate code coverage report**. You will find a report in `./lcov/index.html`.
    ```bash
    cd /ws
-   ./src/beluga/tools/test.sh
+   ./src/beluga/tools/build-and-test.sh
    ```
 
 1. **Run static analysis tools**.
    ```bash
    cd /ws
-   ./src/beluga/tools/clang-tidy.sh
-   ```
-
-1. **Generate API documentation**.
-   ```bash
-   cd /ws
-   ./src/beluga/tools/doxygen.sh
+   ./src/beluga/tools/run-clang-tidy.sh
    ```

@@ -35,9 +35,14 @@ target_link_libraries(clang_tidy_findable PRIVATE ${PROJECT_NAME} beluga_compile
 option(BUILD_TESTING "Build the testing tree." ON)
 if(BUILD_TESTING)
   message(STATUS "Build testing enabled.")
-
   enable_testing()
   add_subdirectory(test)
+endif()
+
+option(BUILD_DOCUMENTATION "Build API documentation." ON)
+if(BUILD_DOCUMENTATION)
+  message(STATUS "Build API documentation enabled.")
+  add_subdirectory(docs)
 endif()
 
 set(INSTALL_CMAKEDIR ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/cmake)

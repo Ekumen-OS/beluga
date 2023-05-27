@@ -22,6 +22,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install clang-tidy lcov python3-colcon-coveragepy-result python3-pip -y
+          sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -46,14 +47,20 @@ jobs:
 
       - name: Build and test
         working-directory: ${{ github.workspace }}
-        shell: bash
-        run: ./src/beluga/tools/test.sh
+        run: ./src/beluga/tools/build-and-test.sh
+
+      - name: Upload documentation artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: ./build/beluga/docs/html/
+          retention-days: 7
 
       - name: Upload code coverage report
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: lcov/total_coverage.info,coveragepy/.coverage
+          files: ./lcov/total_coverage.info,./coveragepy/.coverage
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
@@ -67,44 +74,37 @@ jobs:
 
       - name: Static analysis
         working-directory: ${{ github.workspace }}
-        shell: bash
-        run: ./src/beluga/tools/clang-tidy.sh
+        run: ./src/beluga/tools/run-clang-tidy.sh
 
-  build-docs:
+  deploy-docs:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    needs: build-test-lint
     runs-on: ubuntu-22.04
-    env:
-      REPOSITORY_CHECKOUT_PATH: ${{ github.workspace }}/repository
-      DOXYGEN_HTML_OUTPUT: ${{ github.workspace }}/docs
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          path: ${{ env.REPOSITORY_CHECKOUT_PATH }}
-
       - name: Checkout documentation branch
         uses: actions/checkout@v3
         with:
-          path: ${{ env.DOXYGEN_HTML_OUTPUT }}
           ref: gh-pages
 
-      - name: Install debian packages
+      - name: Configure username
         run: |
-          sudo apt-get update
-          sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Generate documentation
-        working-directory: ${{ env.REPOSITORY_CHECKOUT_PATH }}
-        run: ./tools/doxygen.sh
+      - name: Remove current documentation
+        run: |
+          git rm -rf .
 
-      - if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        name: Deploy documentation
-        working-directory: ${{ env.DOXYGEN_HTML_OUTPUT }}
+      - name: Download documentation artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: docs
+
+      - name: Deploy documentation
         env:
           COMMIT_MESSAGE: "Triggered by commit ${{ github.sha }}."
           COMMIT_CO_AUTHOR: "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
           git commit -m "Update documentation" -m "${{ env.COMMIT_MESSAGE }}" -m "${{ env.COMMIT_CO_AUTHOR }}" || true
           git push
