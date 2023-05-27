@@ -1,0 +1,7 @@
+<library path="@CATKIN_PACKAGE_LIB_DESTINATION@/$<TARGET_FILE_PREFIX:@NODELET_LIBRARY@>$<TARGET_FILE_BASE_NAME:@NODELET_LIBRARY@>">
+  <class name="@NODELET_NAME@" type="@NODELET_TYPE@" base_class_type="nodelet::Nodelet">
+    <description>
+      @NODELET_DESCRIPTION@
+    </description>
+  </class>
+</library>

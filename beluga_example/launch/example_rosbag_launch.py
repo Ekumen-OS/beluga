@@ -36,7 +36,7 @@ from beluga_example.launch_utils import (
 
 def get_launch_arguments():
     example_dir_path = Path(get_package_share_directory('beluga_example'))
-    params_file_path = example_dir_path / 'config' / 'params.yaml'
+    params_file_path = example_dir_path / 'params' / 'node.yaml'
     rosbag_path = example_dir_path / 'bags' / 'perfect_odometry'
     return [
         DeclareLaunchArgument(

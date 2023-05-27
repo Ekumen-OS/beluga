@@ -70,7 +70,7 @@ def generate_launch_description():
                         package='beluga_amcl',
                         plugin='beluga_amcl::AmclNode',
                         name='amcl',
-                        parameters=[os.path.join(example_dir, 'config', 'params.yaml')],
+                        parameters=[os.path.join(example_dir, 'params', 'node.yaml')],
                     )
                 ],
             ),

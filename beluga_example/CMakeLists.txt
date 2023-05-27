@@ -1,25 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 project(beluga_example)
 
-find_package(ament_cmake REQUIRED)
-find_package(ament_cmake_python REQUIRED)
-find_package(beluga_amcl REQUIRED)
-
-ament_python_install_package(${PROJECT_NAME})
-
-install(DIRECTORY
-  bags
-  config
-  launch
-  maps
-  models
-  rviz
-  worlds
-  DESTINATION share/${PROJECT_NAME})
-
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
+set(ROS_VERSION $ENV{ROS_VERSION})
+if(ROS_VERSION EQUAL 1)
+  include(cmake/catkin.cmake)
+elseif(ROS_VERSION EQUAL 2)
+  include(cmake/ament.cmake)
+else()
+  message(FATAL_ERROR "Unknown ROS distribution version: ${ROS_VERSION}")
 endif()
-
-ament_package()

@@ -66,7 +66,7 @@ def generate_launch_description():
                 output='screen',
                 respawn=True,
                 respawn_delay=2.0,
-                parameters=[os.path.join(example_dir, 'config', 'params.yaml')],
+                parameters=[os.path.join(example_dir, 'params', 'node.yaml')],
                 arguments=['--ros-args', '--log-level', 'info'],
             ),
         ]

@@ -1,0 +1,26 @@
+<launch>
+  <arg name="package" default="beluga_amcl" doc="Package that provides the localization node to launch."/>
+  <arg name="node" default="amcl_node" doc="Localization node to launch."/>
+  <arg name="prefix" default="" doc="Set of commands/arguments to preceed the node command (e.g. 'timem --')."/>
+  <arg name="start_paused" default="false" doc="Start the rosbag player in a paused state."/>
+  <arg name="playback_rate" default="3.0" doc="Rate used to playback the bag."/>
+  <arg name="rosbag_path" default="$(find beluga_example)/bags/perfect_odometry.bag" doc="Path of the rosbag to playback."/>
+  <arg name="amcl_parameters_file" default="$(find beluga_example)/params/nodelet.yaml" doc="Parameters file to be used to run amcl."/>
+  <arg name="record_bag" default="false" doc="Whether to record a bagfile or not."/>
+  <arg name="topics_to_record" default="/tf /amcl_pose /pose /odometry/ground_truth" doc="Topics to record in a new bagfile."/>
+  <arg name="bagfile_output" default="" doc="Destination bagfile to create, defaults to timestamped folder"/>
+
+  <param name="use_sim_time" value="true"/>
+
+  <include file="$(find beluga_example)/launch/utils/common_nodes.launch"/>
+
+  <node pkg="rosbag" type="play" name="rosbag_player" required="true"
+        args="$(eval ' '.join(['--rate', str(playback_rate), '--pause' if start_paused else '', rosbag_path]))"/>
+
+  <node if="$(arg record_bag)" pkg="rosbag" type="record" name="rosbag_recorder"
+        args="$(eval ' '.join(['-o ' + bagfile_output if bagfile_output else '', topics_to_record]))"/>
+
+  <node pkg="$(arg package)" type="$(arg node)" name="amcl_node" output="screen" launch-prefix="$(arg prefix)">
+    <rosparam command="load" file="$(arg amcl_parameters_file)"/>
+  </node>
+</launch>

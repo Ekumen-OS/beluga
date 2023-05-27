@@ -17,13 +17,22 @@
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
+
+#if BELUGA_AMCL_ROS_VERSION == 2
 #include <tf2_eigen/tf2_eigen.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#elif BELUGA_AMCL_ROS_VERSION == 1
+#include <tf2_eigen/tf2_eigen.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#else
+#error BELUGA_AMCL_ROS_VERSION is not defined or invalid
+#endif
 
-#include <geometry_msgs/msg/pose.hpp>
-#include <geometry_msgs/msg/transform.hpp>
+#include <beluga_amcl/ros_interfaces.hpp>
+
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
+#include <sophus/types.hpp>
 
 namespace tf2
 {
@@ -37,9 +46,9 @@ namespace tf2
  * \return The pose converted to a Pose message.
  */
 template<class Scalar>
-inline geometry_msgs::msg::Pose & toMsg(
+inline beluga_amcl::messages::Pose & toMsg(
   const Sophus::SE2<Scalar> & in,
-  geometry_msgs::msg::Pose & out)
+  beluga_amcl::messages::Pose & out)
 {
   const double theta = in.so2().log();
   out.position.x = in.translation().x();
@@ -61,9 +70,9 @@ inline geometry_msgs::msg::Pose & toMsg(
  * \return The pose converted to a Pose message.
  */
 template<class Scalar>
-inline geometry_msgs::msg::Pose & toMsg(
+inline beluga_amcl::messages::Pose & toMsg(
   const Sophus::SE3<Scalar> & in,
-  geometry_msgs::msg::Pose & out)
+  beluga_amcl::messages::Pose & out)
 {
   out.position.x = in.translation().x();
   out.position.y = in.translation().y();
@@ -83,9 +92,9 @@ inline geometry_msgs::msg::Pose & toMsg(
  * \return The transform converted to a Transform message.
  */
 template<class Scalar>
-inline geometry_msgs::msg::Transform toMsg(const Sophus::SE2<Scalar> & in)
+inline beluga_amcl::messages::Transform toMsg(const Sophus::SE2<Scalar> & in)
 {
-  auto msg = geometry_msgs::msg::Transform{};
+  auto msg = beluga_amcl::messages::Transform{};
   const double theta = in.so2().log();
   msg.translation.x = in.translation().x();
   msg.translation.y = in.translation().y();
@@ -105,9 +114,9 @@ inline geometry_msgs::msg::Transform toMsg(const Sophus::SE2<Scalar> & in)
  * \return The transform converted to a Transform message.
  */
 template<class Scalar>
-inline geometry_msgs::msg::Transform toMsg(const Sophus::SE3<Scalar> & in)
+inline beluga_amcl::messages::Transform toMsg(const Sophus::SE3<Scalar> & in)
 {
-  auto msg = geometry_msgs::msg::Transform{};
+  auto msg = beluga_amcl::messages::Transform{};
   msg.translation.x = in.translation().x();
   msg.translation.y = in.translation().y();
   msg.translation.z = in.translation().z();
@@ -126,9 +135,9 @@ inline geometry_msgs::msg::Transform toMsg(const Sophus::SE3<Scalar> & in)
  * \param out The transform converted to a Sophus SE2 element.
  */
 template<class Scalar>
-inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE2<Scalar> & out)
+inline void fromMsg(const beluga_amcl::messages::Transform & msg, Sophus::SE2<Scalar> & out)
 {
-  out.translation() = Eigen::Vector2<Scalar>{
+  out.translation() = Sophus::Vector2<Scalar>{
     msg.translation.x,
     msg.translation.y,
   };
@@ -143,9 +152,9 @@ inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE2<Scala
  * \param out The transform converted to a Sophus SE3 element.
  */
 template<class Scalar>
-inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scalar> & out)
+inline void fromMsg(const beluga_amcl::messages::Transform & msg, Sophus::SE3<Scalar> & out)
 {
-  out.translation() = Eigen::Vector3<Scalar>{
+  out.translation() = Sophus::Vector3<Scalar>{
     msg.translation.x,
     msg.translation.y,
     msg.translation.z,
@@ -168,9 +177,9 @@ inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scala
  * \param out The pose converted to a Sophus SE2 element.
  */
 template<class Scalar>
-inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE2<Scalar> & out)
+inline void fromMsg(const beluga_amcl::messages::Pose & msg, Sophus::SE2<Scalar> & out)
 {
-  out.translation() = Eigen::Vector2<Scalar>{
+  out.translation() = Sophus::Vector2<Scalar>{
     msg.position.x,
     msg.position.y,
   };
@@ -185,9 +194,9 @@ inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE2<Scalar> & 
  * \param out The pose converted to a Sophus SE3 element.
  */
 template<class Scalar>
-inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE3<Scalar> & out)
+inline void fromMsg(const beluga_amcl::messages::Pose & msg, Sophus::SE3<Scalar> & out)
 {
-  out.translation() = Eigen::Vector3<Scalar>{
+  out.translation() = Sophus::Vector3<Scalar>{
     msg.position.x,
     msg.position.y,
     msg.position.z,
@@ -202,38 +211,40 @@ inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE3<Scalar> & 
   };
 }
 
-/// Converts an Eigen 3x3 covariance matrix to a 6x6 row-major array.
+/// Converts a Sophus (ie. Eigen) 3x3 covariance matrix to a 6x6 row-major array.
 /**
- * \param in An Eigen 3x3 covariance matrix of a 2D pose (x, y, yaw).
- * \return A row-major array of 36 covariance values of a 3D pose.
+ * \param in A Sophus (ie. Eigen) 3x3 covariance matrix of a 2D pose (x, y, yaw).
+ * \parma out A row-major array of 36 covariance values of a 3D pose.
+ * \return a reference to `out`.
  */
-template<class Scalar>
-inline std::array<Scalar, 36> covarianceEigenToRowMajor(const Eigen::Matrix3<Scalar> & in)
+template<template<typename, std::size_t> class Array, typename Scalar>
+inline Array<Scalar, 36> & covarianceEigenToRowMajor(
+  const Sophus::Matrix3<Scalar> & in,
+  Array<Scalar, 36> & out)
 {
-  auto covariance = std::array<Scalar, 36>{};
-  covariance.fill(0);
-  covariance[0] = in.coeff(0, 0);
-  covariance[1] = in.coeff(0, 1);
-  covariance[5] = in.coeff(0, 2);
-  covariance[6] = in.coeff(1, 0);
-  covariance[7] = in.coeff(1, 1);
-  covariance[11] = in.coeff(1, 2);
-  covariance[30] = in.coeff(2, 0);
-  covariance[31] = in.coeff(2, 1);
-  covariance[35] = in.coeff(2, 2);
-  return covariance;
+  out.fill(0);
+  out[0] = in.coeff(0, 0);
+  out[1] = in.coeff(0, 1);
+  out[5] = in.coeff(0, 2);
+  out[6] = in.coeff(1, 0);
+  out[7] = in.coeff(1, 1);
+  out[11] = in.coeff(1, 2);
+  out[30] = in.coeff(2, 0);
+  out[31] = in.coeff(2, 1);
+  out[35] = in.coeff(2, 2);
+  return out;
 }
 
 /// Converts a 6x6 row-major array to an Eigen 3x3 covariance matrix.
 /**
  * \param in A row-major array of 36 covariance values of a 3D pose.
- * \param out An Eigen 3x3 covariance matrix of a 2D pose (x, y, yaw).
- * \return An Eigen 3x3 covariance matrix of a 2D pose (x, y, yaw).
+ * \param out A Sophus (ie. Eigen) 3x3 covariance matrix of a 2D pose (x, y, yaw).
+ * \return A Sophus (ie. Eigen) 3x3 covariance matrix of a 2D pose (x, y, yaw).
  */
-template<class Scalar>
-inline Eigen::Matrix3<Scalar> & covarianceRowMajorToEigen(
-  const std::array<Scalar, 36> & in,
-  Eigen::Matrix3<Scalar> & out)
+template<template<typename, std::size_t> class Array, typename Scalar>
+inline Sophus::Matrix3<Scalar> & covarianceRowMajorToEigen(
+  const Array<Scalar, 36> & in,
+  Sophus::Matrix3<Scalar> & out)
 {
   out.coeffRef(0, 0) = in[0];
   out.coeffRef(0, 1) = in[1];
@@ -255,37 +266,37 @@ namespace Sophus
 // them findable by ADL when calling tf2::convert().
 
 template<class Scalar>
-inline geometry_msgs::msg::Transform toMsg(const Sophus::SE2<Scalar> & in)
+inline beluga_amcl::messages::Transform toMsg(const Sophus::SE2<Scalar> & in)
 {
   return tf2::toMsg(in);
 }
 
 template<class Scalar>
-inline geometry_msgs::msg::Transform toMsg(const Sophus::SE3<Scalar> & in)
+inline beluga_amcl::messages::Transform toMsg(const Sophus::SE3<Scalar> & in)
 {
   return tf2::toMsg(in);
 }
 
 template<class Scalar>
-inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE2<Scalar> & out)
+inline void fromMsg(const beluga_amcl::messages::Transform & msg, Sophus::SE2<Scalar> & out)
 {
   tf2::fromMsg(msg, out);
 }
 
 template<class Scalar>
-inline void fromMsg(const geometry_msgs::msg::Transform & msg, Sophus::SE3<Scalar> & out)
+inline void fromMsg(const beluga_amcl::messages::Transform & msg, Sophus::SE3<Scalar> & out)
 {
   tf2::fromMsg(msg, out);
 }
 
 template<class Scalar>
-inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE2<Scalar> & out)
+inline void fromMsg(const beluga_amcl::messages::Pose & msg, Sophus::SE2<Scalar> & out)
 {
   tf2::fromMsg(msg, out);
 }
 
 template<class Scalar>
-inline void fromMsg(const geometry_msgs::msg::Pose & msg, Sophus::SE3<Scalar> & out)
+inline void fromMsg(const beluga_amcl::messages::Pose & msg, Sophus::SE3<Scalar> & out)
 {
   tf2::fromMsg(msg, out);
 }

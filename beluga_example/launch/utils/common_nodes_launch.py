@@ -33,7 +33,7 @@ def generate_launch_description():
                 output='own_log',
                 arguments=[
                     '--display-config',
-                    os.path.join(example_dir, 'rviz', 'rviz.rviz'),
+                    os.path.join(example_dir, 'rviz', 'rviz.rviz2'),
                 ],
             ),
             Node(

@@ -45,21 +45,6 @@
 namespace beluga_amcl
 {
 
-namespace
-{
-
-constexpr std::string_view kDifferentialModelName = "differential_drive";
-constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
-constexpr std::string_view kStationaryModelName = "stationary";
-
-constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::DifferentialMotionModel";
-constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
-
-constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
-constexpr std::string_view kBeamSensorModelName = "beam";
-
-}  // namespace
-
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 : rclcpp_lifecycle::LifecycleNode{"amcl", "", options}
 {
@@ -714,11 +699,6 @@ AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State & s
   return CallbackReturn::SUCCESS;
 }
 
-template<class MotionDescriptor, class SensorDescriptor>
-using AdaptiveMonteCarloLocalization2d =
-  beluga::AdaptiveMonteCarloLocalization2d<
-  MotionDescriptor, SensorDescriptor, OccupancyGrid>;
-
 std::unique_ptr<LaserLocalizationInterface2d>
 AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map)
 {
@@ -987,7 +967,7 @@ void AmclNode::laser_callback(
     message.header.stamp = laser_scan->header.stamp;
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     tf2::toMsg(pose, message.pose.pose);
-    message.pose.covariance = tf2::covarianceEigenToRowMajor(covariance);
+    tf2::covarianceEigenToRowMajor(covariance, message.pose.covariance);
     pose_pub_->publish(message);
   }
 
@@ -1036,21 +1016,13 @@ void AmclNode::reinitialize_with_pose(
   const Sophus::SE2d & pose, const Eigen::Matrix3d & covariance)
 {
   try {
-    const auto mean =
-      Eigen::Vector3d{pose.translation().x(), pose.translation().y(), pose.so2().log()};
-    auto distribution = beluga::MultivariateNormalDistribution{mean, covariance};
-    particle_filter_->initialize_states(
-      ranges::views::generate(
-        [&distribution]() mutable {
-          static auto generator = std::mt19937{std::random_device()()};
-          const auto sample = distribution(generator);
-          return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
-        }));
+    initialize_with_pose(pose, covariance, particle_filter_.get());
     enable_tf_broadcast_ = true;
     RCLCPP_INFO(
       get_logger(),
-      "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, yaw=%g",
-      particle_filter_->particle_count(), mean.x(), mean.y(), mean.z());
+      "Particle filter initialized with %ld particles about "
+      "initial pose x=%g, y=%g, yaw=%g", particle_filter_->particle_count(),
+      pose.translation().x(), pose.translation().y(), pose.so2().log());
   } catch (const std::runtime_error & error) {
     RCLCPP_ERROR(get_logger(), "Could not generate particles: %s", error.what());
   }

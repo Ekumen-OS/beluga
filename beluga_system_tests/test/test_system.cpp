@@ -29,6 +29,7 @@
 #include <beluga/sensor/likelihood_field_model.hpp>
 #include <beluga_amcl/amcl_node_utils.hpp>
 #include <beluga_amcl/occupancy_grid.hpp>
+#include <beluga_amcl/particle_filtering.hpp>
 #include <beluga_amcl/tf2_sophus.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rosbag2_cpp/reader.hpp>
@@ -42,17 +43,10 @@
 
 namespace {
 
-using LaserLocalizationInterface2d = beluga::LaserLocalizationInterface2d<beluga_amcl::OccupancyGrid>;
-
-template <class MotionDescriptor, class SensorDescriptor>
-using AdaptiveMonteCarloLocalization2d =
-    beluga::AdaptiveMonteCarloLocalization2d<MotionDescriptor, SensorDescriptor, beluga_amcl::OccupancyGrid>;
-
-template <class MotionDescriptor, class SensorDescriptor>
-using MonteCarloLocalization2d =
-    beluga::MonteCarloLocalization2d<MotionDescriptor, SensorDescriptor, beluga_amcl::OccupancyGrid>;
-
 using beluga::MultivariateNormalDistribution;
+using beluga_amcl::AdaptiveMonteCarloLocalization2d;
+using beluga_amcl::LaserLocalizationInterface2d;
+using beluga_amcl::MonteCarloLocalization2d;
 
 struct InitialPose {
   Eigen::Vector3d mean;

@@ -1,0 +1,8 @@
+<launch>
+  <node pkg="rviz" type="rviz" name="rviz"
+        args="-d $(find beluga_example)/rviz/rviz.rviz"/>
+
+  <node pkg="map_server" type="map_server" name="map_server"
+        args="$(find beluga_example)/maps/turtlebot3_world.yaml"
+        respawn="true" output="screen"/>
+</launch>
