@@ -1,22 +1,14 @@
 # Beluga AMCL
 
-Beluga AMCL is a ROS 2 node based on [Beluga](../beluga) featuring interface parity with [nav2's AMCL][nav2_amcl].
-This package can be easily integrated with code that currently uses `nav2's AMCL`.
+Beluga AMCL is a ROS 2 node based on the [Beluga](../beluga) library that aims to be fully compatible with the [Navigation 2 AMCL][nav2_amcl] node.<br/>
+The compatibility between `beluga_amcl` and `nav2_amcl` provides a simple migration path for projects that want to be able to integrate the power and modularity of the Beluga library in an existing `nav2_amcl`-based project.
 
 ## ROS 2 Interface
 
 ### Parameters
 
-Beluga AMCL currently supports the majority of ROS parameters used in [nav2's AMCL][nav2_amcl].
-See the [nav2's configuration guide][nav2_configuration_guide] and
-[Beluga examples](../beluga_example/config/params.yaml) for reference.
-In addition, it supports the following extra parameters:
-
-| Parameter                                                          | Description                                                                       |
-|--------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| `spatial_resolution_[x, y, theta]`                                 | Resolution for [adaptive KLD resampling][fox2001].                                |
-| <nobr>`initial_pose.covariance_[x, y, yaw, xy, xyaw, yyaw]`</nobr> | Covariance to use with the initial pose when initializing the particle filter.    |
-| `execution_policy`                                                 | Execution policy used to process particles [seq: sequential, par: parallel].      |
+Beluga AMCL currently supports the majority of ROS parameters used in [Navigation 2 AMCL][nav2_amcl].<br/>
+See [Beluga AMCL parameter reference](docs/PARAMETERS.md) for detailed information.
 
 ### Subscribed Topics
 
