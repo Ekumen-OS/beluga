@@ -1,5 +1,5 @@
-<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/algorithm.hpp">
-<area shape="rect" id="node1" title="Includes all beluga algorithms." alt="" coords="1831,5,2047,61"/>
+<map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm.hpp">
+<area shape="rect" id="node1" title="Includes all beluga algorithms." alt="" coords="1843,5,2035,61"/>
 <area shape="rect" id="node2" href="$distance__map_8hpp.html" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="346,109,538,151"/>
 <area shape="rect" id="node8" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="1025,117,1259,143"/>
 <area shape="rect" id="node14" href="$exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="3616,199,3831,240"/>

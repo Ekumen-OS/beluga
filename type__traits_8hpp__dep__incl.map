@@ -1,9 +1,9 @@
-<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/type_traits.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/type_traits.hpp">
-<area shape="rect" id="node1" title="Includes all Beluga type traits." alt="" coords="132,5,355,61"/>
-<area shape="rect" id="node2" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="110,213,303,284"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="298,436,496,492"/>
-<area shape="rect" id="node6" href="$storage_8hpp.html" title="Implementation of storage policies." alt="" coords="328,221,530,277"/>
-<area shape="rect" id="node7" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="312,109,546,165"/>
-<area shape="rect" id="node3" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="42,332,258,388"/>
-<area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="283,332,511,388"/>
+<map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits.hpp">
+<area shape="rect" id="node1" title="Includes all Beluga type traits." alt="" coords="106,5,298,61"/>
+<area shape="rect" id="node2" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="49,213,278,269"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="258,421,450,477"/>
+<area shape="rect" id="node6" href="$storage_8hpp.html" title="Implementation of storage policies." alt="" coords="302,213,494,269"/>
+<area shape="rect" id="node7" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="302,109,494,165"/>
+<area shape="rect" id="node3" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="42,317,234,373"/>
+<area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="258,317,450,373"/>
 </map>

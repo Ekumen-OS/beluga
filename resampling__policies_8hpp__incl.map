@@ -1,13 +1,13 @@
-<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/resampling_policies.hpp">
-<area shape="rect" id="node1" title="Includes all resampling policy related headers." alt="" coords="390,5,589,76"/>
-<area shape="rect" id="node2" href="$resample__interval__policy_8hpp.html" title="Implementation of the resample interval algorithm for resampling." alt="" coords="5,124,221,165"/>
-<area shape="rect" id="node4" href="$resample__on__motion__policy_8hpp.html" title="Implementation of the resample&#45;on&#45;motion algorithm for resampling." alt="" coords="245,124,480,165"/>
-<area shape="rect" id="node6" href="$resampling__policies__poller_8hpp.html" title="Implementation of a resampling policies poller." alt="" coords="504,124,731,165"/>
-<area shape="rect" id="node9" href="$selective__resampling__policy_8hpp.html" title="Implementation of the selective resampling algorithm for resampling." alt="" coords="755,124,992,165"/>
-<area shape="rect" id="node3" title=" " alt="" coords="140,213,215,240"/>
-<area shape="rect" id="node5" title=" " alt="" coords="301,213,424,240"/>
-<area shape="rect" id="node7" title=" " alt="" coords="465,213,519,240"/>
-<area shape="rect" id="node8" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="544,213,704,240"/>
-<area shape="rect" id="node10" title=" " alt="" coords="743,213,987,240"/>
-<area shape="rect" id="node11" title=" " alt="" coords="1012,213,1223,240"/>
+<map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/resampling_policies.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/resampling_policies.hpp">
+<area shape="rect" id="node1" title="Includes all resampling policy related headers." alt="" coords="373,5,605,61"/>
+<area shape="rect" id="node2" href="$resample__interval__policy_8hpp.html" title="Implementation of the resample interval algorithm for resampling." alt="" coords="5,109,221,151"/>
+<area shape="rect" id="node4" href="$resample__on__motion__policy_8hpp.html" title="Implementation of the resample&#45;on&#45;motion algorithm for resampling." alt="" coords="245,109,480,151"/>
+<area shape="rect" id="node6" href="$resampling__policies__poller_8hpp.html" title="Implementation of a resampling policies poller." alt="" coords="504,109,731,151"/>
+<area shape="rect" id="node9" href="$selective__resampling__policy_8hpp.html" title="Implementation of the selective resampling algorithm for resampling." alt="" coords="755,109,992,151"/>
+<area shape="rect" id="node3" title=" " alt="" coords="140,199,215,225"/>
+<area shape="rect" id="node5" title=" " alt="" coords="301,199,424,225"/>
+<area shape="rect" id="node7" title=" " alt="" coords="465,199,519,225"/>
+<area shape="rect" id="node8" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="544,199,704,225"/>
+<area shape="rect" id="node10" title=" " alt="" coords="743,199,987,225"/>
+<area shape="rect" id="node11" title=" " alt="" coords="1012,199,1223,225"/>
 </map>

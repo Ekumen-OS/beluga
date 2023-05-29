@@ -1,5 +1,5 @@
-<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/motion.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/motion.hpp">
-<area shape="rect" id="node1" title="Includes all Beluga motion models." alt="" coords="5,5,204,61"/>
-<area shape="rect" id="node2" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="6,213,203,269"/>
-<area shape="rect" id="node3" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="67,109,295,165"/>
+<map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/motion.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/motion.hpp">
+<area shape="rect" id="node1" title="Includes all Beluga motion models." alt="" coords="5,5,197,61"/>
+<area shape="rect" id="node2" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,213,197,269"/>
+<area shape="rect" id="node3" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="72,109,264,165"/>
 </map>

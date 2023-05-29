@@ -1,5 +1,5 @@
-<map id="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/localization.hpp" name="/home/runner/work/beluga/beluga/repository/beluga/include/beluga/localization.hpp">
-<area shape="rect" id="node1" title="Implementation of localization algorithms." alt="" coords="3098,5,3326,61"/>
+<map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/localization.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/localization.hpp">
+<area shape="rect" id="node1" title="Implementation of localization algorithms." alt="" coords="3116,5,3308,61"/>
 <area shape="rect" id="node2" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="280,206,515,233"/>
 <area shape="rect" id="node10" href="$particle__filter_8hpp.html" title="Implementation of particle filters." alt="" coords="1344,199,1531,240"/>
 <area shape="rect" id="node16" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="2290,117,2515,143"/>
