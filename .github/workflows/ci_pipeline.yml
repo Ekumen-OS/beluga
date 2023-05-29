@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ROS_DISTRO: humble
-      ROS_PACKAGES: beluga beluga_amcl beluga_system_tests
     container:
       image: ros:humble-ros-base-jammy
     steps:
@@ -23,11 +22,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install clang-tidy lcov python3-colcon-coveragepy-result python3-pip -y
+          sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
 
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          path: ${{ github.workspace }}/src
+          path: ${{ github.workspace }}/src/beluga
 
       - name: Install python packages
         run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
@@ -45,89 +45,66 @@ jobs:
           api_token: ${{ secrets.GITHUB_TOKEN }}
           update_packager_index: false
 
-      - name: Build
+      - name: Build and test
         working-directory: ${{ github.workspace }}
-        shell: bash
-        # Do a build without coverage flags first to avoid generating .gcno files
-        # that prevent the html output from lcov from being generated correctly.
-        run: |
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
-          colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
-          colcon build --packages-up-to ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest
+        run: ./src/beluga/tools/build-and-test.sh
 
-      - name: Test
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        run: |
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
-          colcon lcov-result --initial
-          colcon test --packages-select ${{ env.ROS_PACKAGES }} --event-handlers=console_cohesion+ --return-code-on-test-failure --mixin coverage-pytest
-          colcon lcov-result --packages-select ${{ env.ROS_PACKAGES }} --verbose
-          colcon coveragepy-result --packages-select ${{ env.ROS_PACKAGES }} --verbose --coverage-report-args -m
+      - name: Upload documentation artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: ./build/beluga/docs/html/
+          retention-days: 7
 
       - name: Upload code coverage report
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: lcov/total_coverage.info,coveragepy/.coverage
+          files: ./lcov/total_coverage.info,./coveragepy/.coverage
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
 
       - name: Lint
-        working-directory: ${{ github.workspace }}/src
+        working-directory: ${{ github.workspace }}/src/beluga/
         shell: bash
         run: |
           source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
           pre-commit run --all-files --verbose --show-diff-on-failure
 
-      - name: "Static Analysis (beluga)"
-        working-directory: ${{ github.workspace }}/src/beluga
-        shell: bash
-        run: |
-          ./run-clang-tidy.sh
+      - name: Static analysis
+        working-directory: ${{ github.workspace }}
+        run: ./src/beluga/tools/run-clang-tidy.sh
 
-      - name: "Static Analysis (beluga_system_tests)"
-        working-directory: ${{ github.workspace }}/src/beluga_system_tests
-        shell: bash
-        run: |
-          ./run-clang-tidy.sh
-
-  build-docs:
+  deploy-docs:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    needs: build-test-lint
     runs-on: ubuntu-22.04
-    env:
-      REPOSITORY_CHECKOUT_PATH: ${{ github.workspace }}/repository
-      DOXYGEN_HTML_OUTPUT: ${{ github.workspace }}/docs
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          path: ${{ env.REPOSITORY_CHECKOUT_PATH }}
-
       - name: Checkout documentation branch
         uses: actions/checkout@v3
         with:
-          path: ${{ env.DOXYGEN_HTML_OUTPUT }}
           ref: gh-pages
 
-      - name: Install debian packages
+      - name: Configure username
         run: |
-          sudo apt-get update
-          sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Generate documentation
-        working-directory: ${{ env.REPOSITORY_CHECKOUT_PATH }}
-        run: beluga/docs/generate_docs.sh
+      - name: Remove current documentation
+        run: |
+          git rm -rf .
 
-      - if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        name: Deploy documentation
-        working-directory: ${{ env.DOXYGEN_HTML_OUTPUT }}
+      - name: Download documentation artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: docs
+
+      - name: Deploy documentation
         env:
           COMMIT_MESSAGE: "Triggered by commit ${{ github.sha }}."
           COMMIT_CO_AUTHOR: "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
           git commit -m "Update documentation" -m "${{ env.COMMIT_MESSAGE }}" -m "${{ env.COMMIT_CO_AUTHOR }}" || true
           git push

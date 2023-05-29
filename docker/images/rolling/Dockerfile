@@ -9,11 +9,13 @@ RUN apt-get update \
     doxygen \
     gdb \
     git \
+    lcov \
     linux-cloud-tools-generic \
     linux-tools-common \
     linux-tools-generic \
     perl \
     python3-pip \
+    python3-colcon-coveragepy \
     texlive-base \
     texlive-binaries \
     tmux \
@@ -32,6 +34,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
+  colcon-lcov-result==0.5.0 \
   evo==1.21.0 \
   pre-commit==2.20.0 \
   # Note: Installing timemory takes a long time.

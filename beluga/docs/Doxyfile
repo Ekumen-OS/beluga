@@ -7,7 +7,6 @@ RECURSIVE              = YES
 USE_MDFILE_AS_MAINPAGE = ./README.md
 GENERATE_HTML          = YES
 GENERATE_LATEX         = NO
-HTML_OUTPUT            = $(DOXYGEN_HTML_OUTPUT)
 HTML_EXTRA_STYLESHEET  = ./doxygen_extra.css
 CITE_BIB_FILES         = ./doxygen_cites.bib
 WARN_AS_ERROR          = YES

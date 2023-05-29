@@ -36,7 +36,7 @@ coverage:
 # Fixes to correctly map coverage information in our uploaded report
 # to the corresponding files in the repository.
 fixes:
-  - "src/::"  # "src/path/" => "path/"
+  - "src/beluga/::"  # "src/beluga/path/" => "path/"
 
 github_checks:
   # Disable GitHub line-by-line annotations.

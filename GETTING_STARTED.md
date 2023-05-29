@@ -60,13 +60,8 @@
     pre-commit run --all-files
     ```
 
-1. **Build documentation** (inside development container).
-
-   ```bash
-   cd /ws
-   ./src/beluga/beluga/docs/generate_docs.sh
-   ```
-
 ## Next steps
 
 If you want to contribute to this project, please read the [contribuing guidelines](CONTRIBUTING.md).
+
+For more advanced tools useful for contributing, check out the [tools](./tools/) directory.
