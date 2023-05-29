@@ -51,75 +51,36 @@ BENCHMARK_CAPTURE(BM_Bresenham2i, Modified, beluga::Bresenham2i::kModified)
 using beluga::testing::StaticOccupancyGrid;
 
 template <std::size_t Rows, std::size_t Cols>
-struct BaselineGrid {
+class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>> {
  public:
+  struct ValueTraits {
+    [[nodiscard]] bool is_free(bool value) const { return !value; }
+    [[nodiscard]] bool is_unknown(bool) const { return false; }
+    [[nodiscard]] bool is_occupied(bool value) const { return value; }
+  };
+
   explicit BaselineGrid(std::initializer_list<bool>, double resolution) : resolution_{resolution} {
     std::fill(std::begin(data()), std::end(data()), false);
   }
 
-  [[nodiscard]] auto origin() const { return Sophus::SE2d{}; }
+  [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
-  [[nodiscard]] const auto& data() const { return data_; }
+  [[nodiscard]] auto& data() { return grid_; }
+  [[nodiscard]] const auto& data() const { return grid_; }
+  [[nodiscard]] std::size_t size() const { return grid_.size(); }
 
-  [[nodiscard]] auto& data() { return data_; }
-
+  [[nodiscard]] std::size_t width() const { return Cols; }
+  [[nodiscard]] std::size_t height() const { return Rows; }
   [[nodiscard]] double resolution() const { return resolution_; }
 
-  [[nodiscard]] auto index_at(int i, int j) const {
-    return static_cast<std::size_t>(i) + static_cast<std::size_t>(j) * kWidth;
-  }
-
-  [[nodiscard]] bool contains(int i, int j) const {
-    return (i >= 0) && (i < static_cast<int>(kWidth)) && (j >= 0) && (j < static_cast<int>(kHeight));
-  }
-
-  [[nodiscard]] bool contains(Eigen::Vector2i cell) const { return contains(cell.x(), cell.y()); }
-
-  [[nodiscard]] auto data_at(std::size_t index) const {
-    return index < Rows * Cols ? std::make_optional(data()[index]) : std::nullopt;
-  }
-
-  [[nodiscard]] auto data_at(int i, int j) const {
-    return contains(i, j) ? std::make_optional(data()[index_at(i, j)]) : std::nullopt;
-  }
-
-  [[nodiscard]] auto data_at(const Eigen::Vector2i& pi) const { return data_at(pi.x(), pi.y()); }
-
-  [[nodiscard]] auto cell_near(double x, double y) const {
-    const auto xi = static_cast<int>(std::floor(x / resolution()));
-    const auto yi = static_cast<int>(std::floor(y / resolution()));
-    return Eigen::Vector2i{xi, yi};
-  }
-
-  [[nodiscard]] auto cell_near(const Eigen::Vector2d& p) const { return cell_near(p.x(), p.y()); }
-
-  [[nodiscard]] bool free_at(std::size_t index) const {
-    const auto data = data_at(index);
-    if (!data.has_value()) {
-      return false;
-    }
-    return !data.value();
-  }
-
-  [[nodiscard]] bool free_at(int xi, int yi) const { return free_at(index_at(xi, yi)); }
-
-  [[nodiscard]] bool free_at(const Eigen::Vector2i& pi) const { return free_at(pi.x(), pi.y()); }
-
-  [[nodiscard]] auto coordinates_at(int xi, int yi) const {
-    return resolution() * Eigen::Vector2d{
-                              (static_cast<double>(xi) + 0.5),
-                              (static_cast<double>(yi) + 0.5),
-                          };
-  }
-
-  [[nodiscard]] auto coordinates_at(const Eigen::Vector2i& pi) const { return coordinates_at(pi.x(), pi.y()); }
+  [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
 
  private:
   double resolution_;
+  Sophus::SE2d origin_;
+  std::array<bool, Rows * Cols> grid_;
   static constexpr std::size_t kWidth = Cols;
   static constexpr std::size_t kHeight = Rows;
-
-  std::array<bool, Rows * Cols> data_;
 };
 
 template <class Map>
