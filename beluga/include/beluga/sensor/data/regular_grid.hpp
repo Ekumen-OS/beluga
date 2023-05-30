@@ -74,8 +74,14 @@ class BaseRegularGrid2 : public ciabatta::ciabatta_top<Derived> {
    * \return Grid cell coordinates.
    */
   [[nodiscard]] Eigen::Vector2i cell_near(double x, double y) const {
-    const auto xi = static_cast<int>(std::floor(x / this->self().resolution()));
-    const auto yi = static_cast<int>(std::floor(y / this->self().resolution()));
+    const auto inv_resolution = 1. / this->self().resolution();
+    const auto scaled_x = x * inv_resolution;
+    const auto scaled_y = y * inv_resolution;
+    // Use a poor man's replacement of `std::floor` because
+    // the later is awfully slow and this function is performance
+    // critical.
+    const auto xi = static_cast<int>(scaled_x) - (scaled_x < 0.0);
+    const auto yi = static_cast<int>(scaled_y) - (scaled_y < 0.0);
     return Eigen::Vector2i{xi, yi};
   }
 

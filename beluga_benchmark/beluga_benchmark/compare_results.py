@@ -21,6 +21,7 @@ from evo.tools import file_interface
 import matplotlib.pyplot as plt
 from rosbag2_py._info import Info as Bag2Info
 import pandas as pd
+from itertools import cycle
 
 from . import timem_results
 from .exceptions import ScriptError
@@ -149,18 +150,33 @@ def main():
         for label, series in zip(args.label, args.series)
     ]
 
-    ax = series[0].plot(subplots=True, marker='o', linestyle='dashed')
+    color_gen = cycle(
+        [
+            'red',
+            'green',
+            'blue',
+            'brown',
+            'purple',
+            'gray',
+            'orange',
+        ]
+    )
+    marker_gen = cycle('o^sDvP*')
 
-    # a generator to get colors for each series
+    ax = series[0].plot(
+        subplots=True,
+        color=next(color_gen),
+        marker=next(marker_gen),
+        linestyle='dashed',
+    )
 
-    def get_color():
-        colors = ['red', 'green', 'blue', 'orange', 'purple', 'brown', 'pink', 'gray']
-        for index in range(len(series) - 1):
-            yield colors[index % len(colors)]
-
-    for other_series, curve_color in zip(series[1:], get_color()):
+    for other_series in series[1:]:
         other_series.plot(
-            ax=ax, subplots=True, color=curve_color, marker='o', linestyle='dashed'
+            ax=ax,
+            subplots=True,
+            color=next(color_gen),
+            marker=next(marker_gen),
+            linestyle='dashed',
         )
 
     for ax in plt.gcf().axes:
@@ -172,4 +188,10 @@ def main():
         current_bounds = ax.get_position().bounds
         new_bounds = (0.05, *current_bounds[1:])
         ax.set_position(new_bounds)
+        current_ylimits = ax.get_ylim()
+        new_limits = (
+            min(0.0, current_ylimits[0]),  # include zero below
+            max(0.0, current_ylimits[1]),  # include zero above
+        )
+        ax.set_ylim(new_limits)
     plt.show()

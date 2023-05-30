@@ -87,8 +87,9 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \param yi Grid cell y-axis coordinate.
    */
   [[nodiscard]] bool contains(int xi, int yi) const {
-    return xi >= 0 && xi < static_cast<int>(this->self().width()) && yi >= 0 &&
-           yi < static_cast<int>(this->self().height());
+    const auto width = static_cast<int>(this->self().width());
+    const auto height = static_cast<int>(this->self().height());
+    return xi >= 0 && yi >= 0 && xi < width && yi < height;
   }
 
   /// Checks if a cell is included in the grid.
