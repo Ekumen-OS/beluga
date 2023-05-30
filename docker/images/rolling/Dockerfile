@@ -14,8 +14,8 @@ RUN apt-get update \
     linux-tools-common \
     linux-tools-generic \
     perl \
+    python3-colcon-coveragepy-result \
     python3-pip \
-    python3-colcon-coveragepy \
     texlive-base \
     texlive-binaries \
     tmux \
