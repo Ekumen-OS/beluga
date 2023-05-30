@@ -99,9 +99,8 @@ class BaseRegularGrid2 : public ciabatta::ciabatta_top<Derived> {
    * \return Plane coordinates of the cell centroid.
    */
   [[nodiscard]] Eigen::Vector2d coordinates_at(int xi, int yi) const {
-    return Eigen::Vector2d{
-        (static_cast<double>(xi) + 0.5) * this->self().resolution(),
-        (static_cast<double>(yi) + 0.5) * this->self().resolution()};
+    const auto resolution = this->self().resolution();
+    return Eigen::Vector2d{(static_cast<double>(xi) + 0.5), (static_cast<double>(yi) + 0.5)} * resolution;
   }
 
   /// Compute plane coordinates given grid cell coordinates.
