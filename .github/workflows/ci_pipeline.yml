@@ -28,6 +28,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: ${{ github.workspace }}/src/beluga
+          submodules: recursive
 
       - name: Install python packages
         run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
