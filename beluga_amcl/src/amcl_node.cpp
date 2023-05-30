@@ -536,15 +536,15 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
       "Execution policy used to process particles [seq, par].";
     descriptor.read_only = true;
     auto execution_policy_string = declare_parameter(
-      "execution_policy", "par", descriptor);
+      "execution_policy", "seq", descriptor);
     try {
       execution_policy_ = beluga_amcl::execution::policy_from_string(execution_policy_string);
     } catch (const std::invalid_argument &) {
       RCLCPP_WARN_STREAM(
         get_logger(),
-        "execution_policy param should be [seq, par], got: " <<
-          execution_policy_string << "\nUsing the default parallel policy.");
-      execution_policy_ = std::execution::par;
+        "execution_policy param should be one of [seq, par], but got " <<
+          execution_policy_string << " instead, defaulting to using sequential policy.");
+      execution_policy_ = std::execution::seq;
     }
   }
 }
