@@ -17,6 +17,7 @@
 #include <benchmark/benchmark.h>
 
 #include <beluga/algorithm/raycasting.hpp>
+#include <beluga/test/raycasting.hpp>
 #include <beluga/test/static_occupancy_grid.hpp>
 
 #include <range/v3/range/conversion.hpp>
@@ -83,55 +84,6 @@ class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>>
   static constexpr std::size_t kHeight = Rows;
 };
 
-template <class Map>
-std::optional<double> baseline_raycast(const Map& map, Eigen::Vector2i source, Eigen::Vector2i target) {
-  const bool steep = std::abs(target.y() - source.y()) > std::abs(target.x() - source.x());
-
-  if (steep) {
-    std::swap(source.x(), source.y());
-    std::swap(target.x(), target.y());
-  }
-
-  const auto delta = Eigen::Vector2i{
-      std::abs(target.x() - source.x()),
-      std::abs(target.y() - source.y()),
-  };
-
-  int error = 0;
-
-  const auto step = Eigen::Vector2i{
-      source.x() < target.x() ? 1 : -1,
-      source.y() < target.y() ? 1 : -1,
-  };
-
-  auto current = source;
-
-  do {
-    if (steep) {
-      if (map.data_at(current.y(), current.x()).value_or(true)) {
-        break;
-      }
-    } else {
-      if (map.data_at(current.x(), current.y()).value_or(true)) {
-        break;
-      }
-    }
-
-    if (current.x() == (target.x() + step.x())) {
-      return std::nullopt;
-    }
-
-    current.x() += step.x();
-    error += delta.y();
-    if (delta.x() <= 2 * error) {
-      current.y() += step.y();
-      error -= delta.x();
-    }
-  } while (true);
-
-  return (current - source).norm() * map.resolution();
-}
-
 template <template <std::size_t, std::size_t> class Grid>
 void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
@@ -149,7 +101,7 @@ void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   const auto target = map.cell_near(source_pose + kMaxRange * beam_bearing.unit_complex());
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(baseline_raycast(map, source, target));
+    benchmark::DoNotOptimize(beluga::testing::raycast(map, source, target));
   }
 
   state.SetComplexityN(n);

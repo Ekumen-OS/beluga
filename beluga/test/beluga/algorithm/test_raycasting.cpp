@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "beluga/algorithm/raycasting.hpp"
+#include "beluga/test/raycasting.hpp"
 #include "beluga/test/static_occupancy_grid.hpp"
 
 #include <gmock/gmock.h>
@@ -122,6 +123,84 @@ TEST(Raycasting, NonIdentityGridOrigin) {
     const auto ray = Ray2d{grid, pose, kMaxRange};
     const auto distance = ray.cast(Sophus::SO2d{0.});
     EXPECT_EQ(distance, std::sqrt(2));
+  }
+}
+
+TEST(BaselineRaycasting, Nominal) {
+  constexpr double kResolution = 0.5;
+  // Note that axes are:
+  // Positive X -> Right
+  // Positive Y -> Down
+
+  // clang-format off
+  const auto grid = StaticOccupancyGrid<5, 5>{{
+    false, false, false, false, false,
+    false, false, false, false, false,
+    false, false, true , false, false,
+    false, false, false, false, false,
+    false, false, false, false, false},
+    kResolution};
+  // clang-format on
+
+  constexpr double kMaxRange = 5.;
+
+  using Constants = Sophus::Constants<double>;
+
+  {
+    // Horizontal ray that hits the map boundary.
+    const auto pose = Eigen::Vector2d{0.5, 0.};
+    const auto source = grid.cell_near(pose);
+    const auto target = grid.cell_near(pose + kMaxRange * Sophus::SO2d{0.}.unit_complex());
+    EXPECT_EQ(beluga::testing::raycast(grid, source, target), std::nullopt);
+  }
+
+  {
+    // Horizontal ray that hits the occupied cell.
+    const auto pose = Eigen::Vector2d{0., 1.};
+    const auto source = grid.cell_near(pose);
+    const auto target = grid.cell_near(pose + kMaxRange * Sophus::SO2d{0.}.unit_complex());
+    EXPECT_EQ(beluga::testing::raycast(grid, source, target), 1.);
+  }
+
+  {
+    // Downwards ray that hits the map boundary.
+    const auto pose = Eigen::Vector2d{0., 1.};
+    const auto source = grid.cell_near(pose);
+    const auto target = grid.cell_near(pose + kMaxRange * Sophus::SO2d{Constants::pi() / 2.}.unit_complex());
+    EXPECT_EQ(beluga::testing::raycast(grid, source, target), std::nullopt);
+  }
+
+  {
+    // Start cell is occupied, should return 0.
+    const auto pose = Eigen::Vector2d{1., 1.};
+    const auto source = grid.cell_near(pose);
+    const auto target = grid.cell_near(pose + kMaxRange * Sophus::SO2d{Constants::pi() / 2.}.unit_complex());
+    EXPECT_EQ(beluga::testing::raycast(grid, source, target), 0.);
+  }
+
+  {
+    // Downwards ray that is limited by beam range.
+    constexpr double kShortenedRange = 1.;
+    const auto pose = Eigen::Vector2d{0., 0.};
+    const auto source = grid.cell_near(pose);
+    const auto target = grid.cell_near(pose + kShortenedRange * Sophus::SO2d{Constants::pi() / 2.}.unit_complex());
+    EXPECT_EQ(beluga::testing::raycast(grid, source, target), std::nullopt);
+  }
+
+  {
+    // Downwards ray that hits the occupied cell.
+    const auto pose = Eigen::Vector2d{1., 0.};
+    const auto source = grid.cell_near(pose);
+    const auto target = grid.cell_near(pose + kMaxRange * Sophus::SO2d{Constants::pi() / 2.}.unit_complex());
+    EXPECT_EQ(beluga::testing::raycast(grid, source, target), 1.);
+  }
+
+  {
+    // Diagonal ray that hits the occupied cell.
+    const auto pose = Eigen::Vector2d{0., 0.};
+    const auto source = grid.cell_near(pose);
+    const auto target = grid.cell_near(pose + kMaxRange * Sophus::SO2d{Constants::pi() / 4.}.unit_complex());
+    EXPECT_EQ(beluga::testing::raycast(grid, source, target), std::sqrt(2));
   }
 }
 
