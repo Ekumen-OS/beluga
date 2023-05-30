@@ -124,43 +124,44 @@ $(function() {
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="classbeluga_1_1Ray2d.html#a184f0fb1f6e2653eb50416cadf5c3bc6">   79</a></span>&#160;  [[nodiscard]] <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1Ray2d.html#a184f0fb1f6e2653eb50416cadf5c3bc6">trace</a>(<span class="keyword">const</span> Sophus::SO2d&amp; bearing)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> far_end_pose_in_source_frame = Sophus::SE2d{</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        Sophus::SO2d{0.},</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        Eigen::Vector2d{max_range_ * bearing.unit_complex().x(), max_range_ * bearing.unit_complex().y()}};</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> far_end_pose_in_local_frame = source_pose_in_local_frame_ * far_end_pose_in_source_frame;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> far_end_cell = grid_.cell_near(far_end_pose_in_local_frame.translation());</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> cell_is_valid = [<span class="keyword">this</span>](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cell) { <span class="keywordflow">return</span> grid_.contains(cell); };</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">return</span> algorithm_(source_cell_, far_end_cell) | ranges::views::take_while(cell_is_valid);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  }</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classbeluga_1_1Ray2d.html#a19cc15b91616e1555759998574bb25c8">   96</a></span>&#160;  [[nodiscard]] std::optional&lt;double&gt; <a class="code" href="classbeluga_1_1Ray2d.html#a19cc15b91616e1555759998574bb25c8">cast</a>(<span class="keyword">const</span> Sophus::SO2d&amp; bearing)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cell : <a class="code" href="classbeluga_1_1Ray2d.html#a184f0fb1f6e2653eb50416cadf5c3bc6">trace</a>(bearing)) {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      <span class="keywordflow">if</span> (!grid_.free_at(cell)) {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> source_position = grid_.coordinates_at(source_cell_);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> cell_position = grid_.coordinates_at(cell);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> distance = (cell_position - source_position).norm();</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordflow">return</span> std::make_optional(std::min(distance, max_range_));</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;      }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  }</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keyword">const</span> OccupancyGrid&amp; grid_;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keyword">const</span> Algorithm algorithm_;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keyword">const</span> Sophus::SE2d source_pose_in_local_frame_;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keyword">const</span> Eigen::Vector2i source_cell_;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">double</span> max_range_;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;};</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Don&#39;t do the multiplication in SE2, it&#39;s slower</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; r1 = source_pose_in_local_frame_.so2();</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; t1 = source_pose_in_local_frame_.translation();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> t2 = bearing.unit_complex() * max_range_;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> far_end_pose_in_local_frame = Sophus::SE2d{r1, r1 * t2 + t1};</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> far_end_cell = grid_.cell_near(far_end_pose_in_local_frame.translation());</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> cell_is_valid = [<span class="keyword">this</span>](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cell) { <span class="keywordflow">return</span> grid_.contains(cell); };</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> algorithm_(source_cell_, far_end_cell) | ranges::views::take_while(cell_is_valid);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="classbeluga_1_1Ray2d.html#a19cc15b91616e1555759998574bb25c8">   97</a></span>&#160;  [[nodiscard]] std::optional&lt;double&gt; <a class="code" href="classbeluga_1_1Ray2d.html#a19cc15b91616e1555759998574bb25c8">cast</a>(<span class="keyword">const</span> Sophus::SO2d&amp; bearing)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cell : <a class="code" href="classbeluga_1_1Ray2d.html#a184f0fb1f6e2653eb50416cadf5c3bc6">trace</a>(bearing)) {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="keywordflow">if</span> (!grid_.free_at(cell)) {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> source_position = grid_.coordinates_at(source_cell_);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> cell_position = grid_.coordinates_at(cell);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> distance = (cell_position - source_position).norm();</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">return</span> std::make_optional(std::min(distance, max_range_));</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;      }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keyword">const</span> OccupancyGrid&amp; grid_;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keyword">const</span> Algorithm algorithm_;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keyword">const</span> Sophus::SE2d source_pose_in_local_frame_;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keyword">const</span> Eigen::Vector2i source_cell_;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">double</span> max_range_;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;};</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="abresenham_8hpp_html"><div class="ttname"><a href="bresenham_8hpp.html">bresenham.hpp</a></div><div class="ttdoc">Implementation of Bresenham-like raytracing algorithms.</div></div>
 <div class="ttc" id="aclassbeluga_1_1Ray2d_html"><div class="ttname"><a href="classbeluga_1_1Ray2d.html">beluga::Ray2d</a></div><div class="ttdoc">Castable 2D ray.</div><div class="ttdef"><b>Definition:</b> raycasting.hpp:44</div></div>
 <div class="ttc" id="aclassbeluga_1_1Ray2d_html_a184f0fb1f6e2653eb50416cadf5c3bc6"><div class="ttname"><a href="classbeluga_1_1Ray2d.html#a184f0fb1f6e2653eb50416cadf5c3bc6">beluga::Ray2d::trace</a></div><div class="ttdeci">auto trace(const Sophus::SO2d &amp;bearing) const</div><div class="ttdoc">Computes ray trace along a given direction.</div><div class="ttdef"><b>Definition:</b> raycasting.hpp:79</div></div>
-<div class="ttc" id="aclassbeluga_1_1Ray2d_html_a19cc15b91616e1555759998574bb25c8"><div class="ttname"><a href="classbeluga_1_1Ray2d.html#a19cc15b91616e1555759998574bb25c8">beluga::Ray2d::cast</a></div><div class="ttdeci">std::optional&lt; double &gt; cast(const Sophus::SO2d &amp;bearing) const</div><div class="ttdoc">Casts ray along a given direction.</div><div class="ttdef"><b>Definition:</b> raycasting.hpp:96</div></div>
+<div class="ttc" id="aclassbeluga_1_1Ray2d_html_a19cc15b91616e1555759998574bb25c8"><div class="ttname"><a href="classbeluga_1_1Ray2d.html#a19cc15b91616e1555759998574bb25c8">beluga::Ray2d::cast</a></div><div class="ttdeci">std::optional&lt; double &gt; cast(const Sophus::SO2d &amp;bearing) const</div><div class="ttdoc">Casts ray along a given direction.</div><div class="ttdef"><b>Definition:</b> raycasting.hpp:97</div></div>
 <div class="ttc" id="aclassbeluga_1_1Ray2d_html_a86c0e5b959cffe3fc6c418f41ac2c1e0"><div class="ttname"><a href="classbeluga_1_1Ray2d.html#a86c0e5b959cffe3fc6c418f41ac2c1e0">beluga::Ray2d::Ray2d</a></div><div class="ttdeci">Ray2d(const OccupancyGrid &amp;grid, Algorithm algorithm, const Sophus::SE2d &amp;source_pose, double max_range) noexcept</div><div class="ttdoc">Constructs 2D ray with an specific ray tracing algorithm.</div><div class="ttdef"><b>Definition:</b> raycasting.hpp:62</div></div>
 <div class="ttc" id="aclassbeluga_1_1Ray2d_html_aa4d78825b7c949fa66afccce10ec4f4b"><div class="ttname"><a href="classbeluga_1_1Ray2d.html#aa4d78825b7c949fa66afccce10ec4f4b">beluga::Ray2d::Ray2d</a></div><div class="ttdeci">Ray2d(const OccupancyGrid &amp;grid, const Sophus::SE2d &amp;source_pose, double max_range) noexcept</div><div class="ttdoc">Constructs 2D ray with default ray tracing algorithm.</div><div class="ttdef"><b>Definition:</b> raycasting.hpp:51</div></div>
 </div><!-- fragment --></div><!-- contents -->
