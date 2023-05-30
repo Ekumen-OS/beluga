@@ -641,7 +641,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     // Message filter that caches laser scan readings until it is possible to transform
     // from laser frame to odom frame and update the particle filter.
     laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
-      *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 50,
+      *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10,
       get_node_logging_interface(),
       get_node_clock_interface(),
       tf2::durationFromSec(1.0));
