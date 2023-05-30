@@ -39,5 +39,5 @@ jobs:
           context: .
           file: docker/images/${{ matrix.ros_distro }}/Dockerfile
           tags: ekumen/beluga-${{ matrix.ros_distro }}-dev:latest
-          platform: ${{ matrix.platform }}
+          platforms: ${{ matrix.platform }}
           push: false
