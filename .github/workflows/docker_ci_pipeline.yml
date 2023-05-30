@@ -1,0 +1,43 @@
+name: Docker CI pipeline
+
+on:
+  push:
+    branches: [ main ]
+    paths: 'docker/**'
+  pull_request:
+    branches: [ main ]
+    paths: 'docker/**'
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distro:
+          - humble
+          - rolling
+        platform:
+          - linux/amd64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: docker/images/${{ matrix.ros_distro }}/Dockerfile
+          tags: ekumen/beluga-${{ matrix.ros_distro }}-dev:latest
+          platforms: ${{ matrix.platform }}
+          push: false
