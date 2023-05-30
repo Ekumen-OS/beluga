@@ -2,6 +2,3 @@
   path = flatland
   url = git@github.com:avidbots/flatland.git
   branch = ros2-humble
-[submodule "beluga/docs/doxygen-awesome-css"]
-  path = beluga/docs/doxygen-awesome-css
-  url = git@github.com:jothepro/doxygen-awesome-css.git
