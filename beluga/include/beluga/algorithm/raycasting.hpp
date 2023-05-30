@@ -77,10 +77,11 @@ class Ray2d {
    *   That is, regardless of grid cells' state.
    */
   [[nodiscard]] auto trace(const Sophus::SO2d& bearing) const {
-    const auto far_end_pose_in_source_frame = Sophus::SE2d{
-        Sophus::SO2d{0.},
-        Eigen::Vector2d{max_range_ * bearing.unit_complex().x(), max_range_ * bearing.unit_complex().y()}};
-    const auto far_end_pose_in_local_frame = source_pose_in_local_frame_ * far_end_pose_in_source_frame;
+    // Don't do the multiplication in SE2, it's slower
+    const auto& r1 = source_pose_in_local_frame_.so2();
+    const auto& t1 = source_pose_in_local_frame_.translation();
+    const auto t2 = bearing.unit_complex() * max_range_;
+    const auto far_end_pose_in_local_frame = Sophus::SE2d{r1, r1 * t2 + t1};
     const auto far_end_cell = grid_.cell_near(far_end_pose_in_local_frame.translation());
     const auto cell_is_valid = [this](const auto& cell) { return grid_.contains(cell); };
     return algorithm_(source_cell_, far_end_cell) | ranges::views::take_while(cell_is_valid);
