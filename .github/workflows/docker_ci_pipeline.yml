@@ -14,8 +14,13 @@ jobs:
   build-image:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        ros_distro: [humble, rolling]
+        ros_distro:
+          - humble
+          - rolling
+        platform:
+          - linux/amd64
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -34,4 +39,5 @@ jobs:
           context: .
           file: docker/images/${{ matrix.ros_distro }}/Dockerfile
           tags: ekumen/beluga-${{ matrix.ros_distro }}-dev:latest
+          platform: ${{ matrix.platform }}
           push: false
