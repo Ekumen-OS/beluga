@@ -7,6 +7,6 @@ RECURSIVE              = YES
 USE_MDFILE_AS_MAINPAGE = ./README.md
 GENERATE_HTML          = YES
 GENERATE_LATEX         = NO
-HTML_EXTRA_STYLESHEET  = ./doxygen-awesome-css/doxygen-awesome.css
+HTML_EXTRA_STYLESHEET  = $(DOXYGEN_HTML_STYLESHEET)
 CITE_BIB_FILES         = ./doxygen_cites.bib
 WARN_AS_ERROR          = YES
