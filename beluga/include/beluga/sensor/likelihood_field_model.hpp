@@ -130,20 +130,25 @@ class LikelihoodFieldModel : public Mixin {
    */
   [[nodiscard]] weight_type importance_weight(const state_type& state) const {
     const auto transform = grid_.origin().inverse() * state;
+    const auto x_offset = transform.translation().x();
+    const auto y_offset = transform.translation().y();
+    const auto cos_theta = transform.so2().unit_complex().x();
+    const auto sin_theta = transform.so2().unit_complex().y();
+    const auto unknown_space_occupancy_prob = 1. / params_.max_laser_distance;
     // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
     // See https://github.com/Ekumen-OS/beluga/issues/153
+    const auto unknown_space_occupancy_likelihood_cubed =
+        unknown_space_occupancy_prob * unknown_space_occupancy_prob * unknown_space_occupancy_prob;
     return std::transform_reduce(
         points_.cbegin(), points_.cend(), 1.0, std::plus{},
-        [this, x_offset = transform.translation().x(), y_offset = transform.translation().y(),
-         cos_theta = transform.so2().unit_complex().x(), sin_theta = transform.so2().unit_complex().y(),
-         unknown_space_occupancy_prob = 1. / params_.max_laser_distance](const auto& point) {
+        [this, x_offset, y_offset, cos_theta, sin_theta, unknown_space_occupancy_likelihood_cubed](const auto& point) {
           // Transform the end point of the laser to the grid local coordinate system.
           // Not using Eigen/Sophus because they make the routine x10 slower.
           // See `benchmark_likelihood_field_model.cpp` for reference.
           const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
           const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
-          const auto pz = likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob);
-          return pz * pz * pz;
+          // for performance, we store the likelihood already elevated to the cube
+          return likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_likelihood_cubed);
         });
   }
 
@@ -187,7 +192,12 @@ class LikelihoodFieldModel : public Mixin {
       return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
     };
 
-    auto likelihood_data = distance_map | ranges::views::transform(to_likelihood) | ranges::to<std::vector>;
+    // we store the likelihood elevated to the cube to save a few runtime computations
+    // when calculating the importance weight
+    const auto to_the_cube = [](auto likelihood) { return likelihood * likelihood * likelihood; };
+
+    auto likelihood_data = distance_map | ranges::views::transform(to_likelihood) |
+                           ranges::views::transform(to_the_cube) | ranges::to<std::vector>;
     return ValueGrid2<double>{std::move(likelihood_data), grid.width(), grid.resolution()};
   }
 };
