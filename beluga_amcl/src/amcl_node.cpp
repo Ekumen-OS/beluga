@@ -536,15 +536,15 @@ AmclNode::AmclNode(const rclcpp::NodeOptions & options)
       "Execution policy used to process particles [seq, par].";
     descriptor.read_only = true;
     auto execution_policy_string = declare_parameter(
-      "execution_policy", "par", descriptor);
+      "execution_policy", "seq", descriptor);
     try {
       execution_policy_ = beluga_amcl::execution::policy_from_string(execution_policy_string);
     } catch (const std::invalid_argument &) {
       RCLCPP_WARN_STREAM(
         get_logger(),
-        "execution_policy param should be [seq, par], got: " <<
-          execution_policy_string << "\nUsing the default parallel policy.");
-      execution_policy_ = std::execution::par;
+        "execution_policy param should be one of [seq, par], but got " <<
+          execution_policy_string << " instead, defaulting to using sequential policy.");
+      execution_policy_ = std::execution::seq;
     }
   }
 }
@@ -641,7 +641,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
     // Message filter that caches laser scan readings until it is possible to transform
     // from laser frame to odom frame and update the particle filter.
     laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
-      *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 50,
+      *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10,
       get_node_logging_interface(),
       get_node_clock_interface(),
       tf2::durationFromSec(1.0));
