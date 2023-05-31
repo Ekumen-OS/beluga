@@ -42,8 +42,6 @@
 #include "beluga_amcl/tf2_sophus.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
 
-// LCOV_EXCL_BR_START: Disable branch coverage.
-
 namespace beluga_amcl
 {
 
@@ -1077,5 +1075,3 @@ void AmclNode::global_localization_callback(
 }  // namespace beluga_amcl
 
 RCLCPP_COMPONENTS_REGISTER_NODE(beluga_amcl::AmclNode)
-
-// LCOV_EXCL_BR_STOP

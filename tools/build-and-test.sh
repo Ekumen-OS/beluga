@@ -18,6 +18,8 @@
 
 [[ -z "${WITHIN_DEV}" ]] && echo -e "\033[1;33mWARNING: Try running this script inside the development container if you experience any issues.\033[0m"
 
+SCRIPT_PATH=$(dirname "$(readlink -f "$0")")
+
 set -o errexit
 
 ROS_PACKAGES="beluga beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
@@ -36,7 +38,9 @@ colcon lcov-result --initial
 colcon test --packages-select ${ROS_PACKAGES} --event-handlers=console_cohesion+ --return-code-on-test-failure --mixin coverage-pytest
 echo "::endgroup::"
 
+LCOV_CONFIG_PATH=${SCRIPT_PATH}/../.lcovrc
+
 echo "::group::Generate code coverage results"
-colcon lcov-result --packages-select ${ROS_PACKAGES} --verbose
+colcon lcov-result --packages-select ${ROS_PACKAGES} --lcov-config-file ${LCOV_CONFIG_PATH} --verbose
 colcon coveragepy-result --packages-select ${ROS_PACKAGES} --verbose --coverage-report-args -m
 echo "::endgroup::"
