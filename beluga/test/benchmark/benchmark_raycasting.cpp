@@ -84,33 +84,55 @@ class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>>
   static constexpr std::size_t kHeight = Rows;
 };
 
+const auto kBearingAngles = std::array{
+    0.,                                    // Horizontal
+    Sophus::Constants<double>::pi() / 2.,  // Vertical
+    Sophus::Constants<double>::pi() / 4.,  // Diagonal
+};
+
+const auto kBearingLabels = std::array{
+    "Horizontal",
+    "Vertical",
+    "Diagonal",
+};
+
 template <template <std::size_t, std::size_t> class Grid>
 void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
 
-  Grid<1280, 1280> map{{}, kResolution};
+  const auto bearing_index = static_cast<std::size_t>(state.range(0));
+  const auto n = static_cast<int>(state.range(1));
+  Grid<1280, 1280> grid{{}, kResolution};
+  grid.data()[grid.index_at(n, n)] = true;
+  grid.data()[grid.index_at(0, n)] = true;
+  grid.data()[grid.index_at(n, 0)] = true;
 
-  const auto n = static_cast<int>(state.range(0));
-  map.data()[map.index_at(n, n)] = true;
+  const auto source_pose = Eigen::Vector2d{0., 0.};
+  const auto beam_bearing = Sophus::SO2d{kBearingAngles.at(bearing_index)};
 
-  const auto source_pose = Eigen::Vector2d{1., 1.};
-  const auto beam_bearing = Sophus::SO2d{Sophus::Constants<double>::pi() / 4.};
-
-  const auto source = map.cell_near(source_pose);
-  const auto target = map.cell_near(source_pose + kMaxRange * beam_bearing.unit_complex());
+  const auto source = grid.cell_near(source_pose);
+  const auto target = grid.cell_near(source_pose + kMaxRange * beam_bearing.unit_complex());
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(beluga::testing::raycast(map, source, target));
+    benchmark::DoNotOptimize(beluga::testing::raycast(grid, source, target));
   }
-
   state.SetComplexityN(n);
+  state.SetLabel(kBearingLabels.at(bearing_index));
 }
 
-BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, BaselineGrid)->RangeMultiplier(2)->Range(128, 1024)->Complexity();
+BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, BaselineGrid)
+    ->ArgsProduct({
+        {0, 1, 2},
+        {128, 256, 512, 1024},
+    })
+    ->Complexity();
+
 BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, StaticOccupancyGrid)
-    ->RangeMultiplier(2)
-    ->Range(128, 1024)
+    ->ArgsProduct({
+        {0, 1, 2},
+        {128, 256, 512, 1024},
+    })
     ->Complexity();
 
 template <template <std::size_t, std::size_t> class Grid>
@@ -118,20 +140,35 @@ void BM_RayCasting2d(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
 
-  const auto n = static_cast<int>(state.range(0));
+  const auto bearing_index = static_cast<std::size_t>(state.range(0));
+  const auto n = static_cast<int>(state.range(1));
   auto grid = Grid<1280, 1280>{{}, kResolution};
   grid.data()[grid.index_at(n, n)] = true;
+  grid.data()[grid.index_at(0, n)] = true;
+  grid.data()[grid.index_at(n, 0)] = true;
 
-  const auto source_pose = Sophus::SE2d{0., Eigen::Vector2d{1., 1.}};
-  const auto beam_bearing = Sophus::SO2d{Sophus::Constants<double>::pi() / 4.};
+  const auto source_pose = Sophus::SE2d{0., Eigen::Vector2d{0., 0.}};
+  const auto beam_bearing = Sophus::SO2d{kBearingAngles.at(bearing_index)};
   const auto beam = beluga::Ray2d{grid, source_pose, kMaxRange};
   for (auto _ : state) {
     benchmark::DoNotOptimize(beam.cast(beam_bearing));
   }
   state.SetComplexityN(n);
+  state.SetLabel(kBearingLabels.at(bearing_index));
 }
 
-BENCHMARK_TEMPLATE(BM_RayCasting2d, BaselineGrid)->RangeMultiplier(2)->Range(128, 1024)->Complexity();
-BENCHMARK_TEMPLATE(BM_RayCasting2d, StaticOccupancyGrid)->RangeMultiplier(2)->Range(128, 1024)->Complexity();
+BENCHMARK_TEMPLATE(BM_RayCasting2d, BaselineGrid)
+    ->ArgsProduct({
+        {0, 1, 2},
+        {128, 256, 512, 1024},
+    })
+    ->Complexity();
+
+BENCHMARK_TEMPLATE(BM_RayCasting2d, StaticOccupancyGrid)
+    ->ArgsProduct({
+        {0, 1, 2},
+        {128, 256, 512, 1024},
+    })
+    ->Complexity();
 
 }  // namespace
