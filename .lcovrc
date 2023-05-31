@@ -1,0 +1,27 @@
+# Specify size of tabs
+genhtml_num_spaces = 2
+
+# Include color legend in HTML output if non-zero
+genhtml_legend = 1
+
+# Include function coverage data display
+genhtml_function_coverage = 0
+
+# Include branch coverage data display
+genhtml_branch_coverage = 0
+
+# Specify if geninfo should try to automatically determine
+# the base-directory when collecting coverage data.
+geninfo_auto_base = 1
+
+# Specify whether to capture coverage data for external source
+# files
+geninfo_external = 0
+
+# Specify if function coverage data should be collected and
+# processed.
+lcov_function_coverage = 0
+
+# Specify if branch coverage data should be collected and
+# processed.
+lcov_branch_coverage = 0
