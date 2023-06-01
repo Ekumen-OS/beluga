@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <numeric>
+#include <random>
 #include <vector>
 
 #include <benchmark/benchmark.h>
@@ -84,24 +86,42 @@ class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>>
   static constexpr std::size_t kHeight = Rows;
 };
 
-const auto kBearingAngles = std::array{
-    0.,                                    // Horizontal
-    Sophus::Constants<double>::pi() / 2.,  // Vertical
-    Sophus::Constants<double>::pi() / 4.,  // Diagonal
-};
+enum class RaycastBearing { kHorizontal, kVertical, kDiagonal };
 
-const auto kBearingLabels = std::array{
-    "Horizontal",
-    "Vertical",
-    "Diagonal",
-};
+constexpr auto bearingOrdinal(RaycastBearing bearing) {
+  return static_cast<int>(bearing);
+}
+
+constexpr auto bearingAngle(RaycastBearing bearing) {
+  switch (bearing) {
+    case RaycastBearing::kHorizontal:
+      return 0.0;
+    case RaycastBearing::kVertical:
+      return Sophus::Constants<double>::pi() / 2.0;
+    case RaycastBearing::kDiagonal:
+      return Sophus::Constants<double>::pi() / 4.0;
+  }
+  throw std::runtime_error{"Invalid bearing"};
+}
+
+constexpr auto bearingLabels(RaycastBearing bearing) {
+  switch (bearing) {
+    case RaycastBearing::kHorizontal:
+      return "Horizontal";
+    case RaycastBearing::kVertical:
+      return "Vertical";
+    case RaycastBearing::kDiagonal:
+      return "Diagonal";
+  }
+  throw std::runtime_error{"Invalid bearing"};
+}
 
 template <template <std::size_t, std::size_t> class Grid>
 void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
 
-  const auto bearing_index = static_cast<std::size_t>(state.range(0));
+  const auto bearing_index = static_cast<RaycastBearing>(state.range(0));
   const auto n = static_cast<int>(state.range(1));
   Grid<1280, 1280> grid{{}, kResolution};
   grid.data()[grid.index_at(n, n)] = true;
@@ -109,7 +129,7 @@ void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   grid.data()[grid.index_at(n, 0)] = true;
 
   const auto source_pose = Eigen::Vector2d{0., 0.};
-  const auto beam_bearing = Sophus::SO2d{kBearingAngles.at(bearing_index)};
+  const auto beam_bearing = Sophus::SO2d{bearingAngle(bearing_index)};
 
   const auto source = grid.cell_near(source_pose);
   const auto target = grid.cell_near(source_pose + kMaxRange * beam_bearing.unit_complex());
@@ -118,37 +138,37 @@ void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
     benchmark::DoNotOptimize(beluga::testing::raycast(grid, source, target));
   }
   state.SetComplexityN(n);
-  state.SetLabel(kBearingLabels.at(bearing_index));
+  state.SetLabel(bearingLabels(bearing_index));
 }
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, BaselineGrid)
-    ->Args({0, 128})
-    ->Args({0, 256})
-    ->Args({0, 512})
-    ->Args({0, 1024})
-    ->Args({1, 128})
-    ->Args({1, 256})
-    ->Args({1, 512})
-    ->Args({1, 1024})
-    ->Args({2, 128})
-    ->Args({2, 256})
-    ->Args({2, 512})
-    ->Args({2, 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 1024})
     ->Complexity();
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, StaticOccupancyGrid)
-    ->Args({0, 128})
-    ->Args({0, 256})
-    ->Args({0, 512})
-    ->Args({0, 1024})
-    ->Args({1, 128})
-    ->Args({1, 256})
-    ->Args({1, 512})
-    ->Args({1, 1024})
-    ->Args({2, 128})
-    ->Args({2, 256})
-    ->Args({2, 512})
-    ->Args({2, 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 1024})
     ->Complexity();
 
 template <template <std::size_t, std::size_t> class Grid>
@@ -156,7 +176,7 @@ void BM_RayCasting2d(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
 
-  const auto bearing_index = static_cast<std::size_t>(state.range(0));
+  const auto bearing_index = static_cast<RaycastBearing>(state.range(0));
   const auto n = static_cast<int>(state.range(1));
   auto grid = Grid<1280, 1280>{{}, kResolution};
   grid.data()[grid.index_at(n, n)] = true;
@@ -164,43 +184,110 @@ void BM_RayCasting2d(benchmark::State& state) {
   grid.data()[grid.index_at(n, 0)] = true;
 
   const auto source_pose = Sophus::SE2d{0., Eigen::Vector2d{0., 0.}};
-  const auto beam_bearing = Sophus::SO2d{kBearingAngles.at(bearing_index)};
+  const auto beam_bearing = Sophus::SO2d{bearingAngle(bearing_index)};
   const auto beam = beluga::Ray2d{grid, source_pose, kMaxRange};
   for (auto _ : state) {
     benchmark::DoNotOptimize(beam.cast(beam_bearing));
   }
   state.SetComplexityN(n);
-  state.SetLabel(kBearingLabels.at(bearing_index));
+  state.SetLabel(bearingLabels(bearing_index));
 }
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d, BaselineGrid)
-    ->Args({0, 128})
-    ->Args({0, 256})
-    ->Args({0, 512})
-    ->Args({0, 1024})
-    ->Args({1, 128})
-    ->Args({1, 256})
-    ->Args({1, 512})
-    ->Args({1, 1024})
-    ->Args({2, 128})
-    ->Args({2, 256})
-    ->Args({2, 512})
-    ->Args({2, 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 1024})
     ->Complexity();
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d, StaticOccupancyGrid)
-    ->Args({0, 128})
-    ->Args({0, 256})
-    ->Args({0, 512})
-    ->Args({0, 1024})
-    ->Args({1, 128})
-    ->Args({1, 256})
-    ->Args({1, 512})
-    ->Args({1, 1024})
-    ->Args({2, 128})
-    ->Args({2, 256})
-    ->Args({2, 512})
-    ->Args({2, 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kVertical), 1024})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 128})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 256})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 512})
+    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 1024})
+    ->Complexity();
+
+template <template <std::size_t, std::size_t> class Grid>
+void BM_RayCasting2d_GridCacheFriendlyness(benchmark::State& state) {
+  // This benchmark is intended to measure the effecto of the direction of traversal of the grid due to cache locality
+  // effects
+  constexpr double kMaxRange = 100.0;
+  constexpr double kResolution = 0.05;
+  constexpr auto kGridSize = 1280;
+
+  // whether to apply randomness to the source pose or not. If not we'll hit the same cache lines over and over again
+  const auto apply_randomness = static_cast<bool>(state.range(0));
+  // raycast distance to obstacle
+  const auto n = static_cast<int>(state.range(1));
+  // direction of the raycast (horizontal or vertical only)
+  const auto bearing_index = static_cast<RaycastBearing>(state.range(2));
+
+  auto grid = Grid<kGridSize, kGridSize>{{}, kResolution};
+  // draw an obstacle at the limits of the grid
+  for (int i = 0; i < kGridSize; ++i) {
+    grid.data()[grid.index_at(kGridSize - 1, i)] = true;
+    grid.data()[grid.index_at(i, kGridSize - 1)] = true;
+  }
+
+  const auto end_of_grid_coord = static_cast<double>(kGridSize - 1) * kResolution;
+  const auto distance_to_obstacle = static_cast<double>(n) * kResolution;
+
+  std::default_random_engine fixed_seed_generator;
+  std::uniform_real_distribution<double> uniform_dist(0.0, end_of_grid_coord);
+
+  const auto beam_bearing = Sophus::SO2d{bearingAngle(bearing_index)};
+  auto source_pose = Sophus::SE2d{};
+
+  const auto flush_cache = [] {
+    static std::array<int, 32 * 1024 * 1024 / sizeof(int)> v;
+    return std::accumulate(v.begin(), v.end(), 0);
+  };
+  benchmark::DoNotOptimize(flush_cache());
+
+  for (auto _ : state) {
+    const auto offset = apply_randomness ? uniform_dist(fixed_seed_generator) : 0.0;
+    if (bearing_index == RaycastBearing::kHorizontal) {
+      source_pose = Sophus::SE2d{0., Eigen::Vector2d{end_of_grid_coord - distance_to_obstacle, offset}};
+    } else if (bearing_index == RaycastBearing::kVertical) {
+      source_pose = Sophus::SE2d{0., Eigen::Vector2d{offset, end_of_grid_coord - distance_to_obstacle}};
+    }
+    const auto beam = beluga::Ray2d{grid, source_pose, kMaxRange};
+    benchmark::DoNotOptimize(beam.cast(beam_bearing));
+  }
+  state.SetComplexityN(n);
+  state.SetLabel(std::string{} + bearingLabels(bearing_index) + "/" + (apply_randomness ? "random" : "deterministic"));
+}
+
+BENCHMARK_TEMPLATE(BM_RayCasting2d_GridCacheFriendlyness, BaselineGrid)
+    ->ArgsProduct({
+        {true, false},
+        {128, 256, 512, 1024},
+        {bearingOrdinal(RaycastBearing::kHorizontal), bearingOrdinal(RaycastBearing::kVertical)},
+    })
+    ->Complexity();
+
+BENCHMARK_TEMPLATE(BM_RayCasting2d_GridCacheFriendlyness, StaticOccupancyGrid)
+    ->ArgsProduct({
+        {true, false},
+        {128, 256, 512, 1024},
+        {bearingOrdinal(RaycastBearing::kHorizontal), bearingOrdinal(RaycastBearing::kVertical)},
+    })
     ->Complexity();
 
 }  // namespace
