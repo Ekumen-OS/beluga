@@ -14,6 +14,7 @@ The following configuration was used during the experiments:
 - The benchmarks were run using 250, 300, 400, 500, 750, 1000, 2000, 5000, 10000, 20000, 50000, 100000 and 200000 particles.
 - `beluga_amcl` was run both using multithreaded and non-multithreaded configurations. `nav2_amcl` only provides non-multithreaded execution.
 - Both the `beam sensor` and the `likelihood field` sensor model were tested.
+- The bagfile containing the synthetic dataset was replayed at 3x speed.
 
 More specific configuration details can be found in the `params.yaml` files:
 
