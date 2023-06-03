@@ -17,12 +17,72 @@
 
 #include <array>
 #include <cstdint>
+#include <initializer_list>
+#include <vector>
 
 #include "beluga/sensor/data/occupancy_grid.hpp"
 
 #include <sophus/se2.hpp>
 
 namespace beluga::testing {
+
+template <std::size_t Rows, std::size_t Cols>
+class PlainGridStorage {
+ public:
+  using StorageType = std::array<bool, Rows * Cols>;
+
+  /// @brief Default constructor. Constructs a map with all cells marked as empty.
+  PlainGridStorage() : grid_storage_(std::make_unique<StorageType>()) { grid_storage_->fill(false); }
+
+  /// @brief Constructs a map with the given initial values.
+  /// @param init_values Initial contents of the map, in row-major order.
+  PlainGridStorage(std::initializer_list<bool> array) : grid_storage_(std::make_unique<StorageType>()) {
+    const auto n = std::min(array.size(), grid_storage_->size());
+    std::copy_n(array.begin(), n, grid_storage_->begin());
+    if (n < grid_storage_->size()) {
+      std::fill(grid_storage_->begin() + n, grid_storage_->end(), false);
+    }
+  }
+
+  /// @brief  Returns a reference to the underlying data. Too low level, will be removed in the future.
+  /// @return A reference to the underlying data.
+  [[nodiscard]] auto& data() { return *grid_storage_; }
+
+  /// @brief  Returns a const reference to the underlying data. Too low level, will be removed in the future.
+  /// @return A const reference to the underlying data.
+  [[nodiscard]] const auto& data() const { return *grid_storage_; }
+
+  /// @brief Access to the cell at the given coordinates.
+  /// @param x X coordinate.
+  /// @param y Y coordinate.
+  /// @return Reference to the cell at the given coordinates.
+  [[nodiscard]] auto& cell(int x, int y) { return (*grid_storage_)[y * Cols + x]; }
+
+  /// @brief Reading access to the cell at the given coordinates.
+  /// @param x X coordinate.
+  /// @param y Y coordinate.
+  /// @return Const reference to the cell at the given coordinates.
+  [[nodiscard]] const auto& cell(int x, int y) const { return (*grid_storage_)[y * Cols + x]; }
+
+  /// @brief Returns the virtual size of the map (number of cells).
+  [[nodiscard]] auto size() const { return Rows * Cols; }
+
+  /// @brief Returns the width of the map (number of cells).
+  [[nodiscard]] auto width() const { return Cols; }
+
+  /// @brief Returns the height of the map (number of cells).
+  [[nodiscard]] auto height() const { return Rows; }
+
+  // Somewhere in the code something needs the copy constructor to be exist, probably something to fix.
+  PlainGridStorage(const PlainGridStorage& src) { grid_storage_ = std::make_unique<StorageType>(*src.grid_storage_); }
+  PlainGridStorage& operator=(const PlainGridStorage& src) = delete;
+
+  PlainGridStorage(PlainGridStorage&&) = default;
+  PlainGridStorage& operator=(PlainGridStorage&&) = default;
+
+ private:
+  std::unique_ptr<StorageType> grid_storage_;
+};
 
 template <std::size_t Rows, std::size_t Cols>
 class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, Cols>> {
@@ -34,16 +94,16 @@ class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, 
   };
 
   explicit StaticOccupancyGrid(
-      std::array<bool, Rows * Cols> array,
+      PlainGridStorage<Rows, Cols>&& grid_storage,
       double resolution = 1.0,
       const Sophus::SE2d& origin = Sophus::SE2d{})
-      : grid_{array}, origin_(origin), resolution_{resolution} {}
+      : grid_storage_{std::move(grid_storage)}, origin_(origin), resolution_{resolution} {}
 
   [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
-  [[nodiscard]] auto& data() { return grid_; }
-  [[nodiscard]] const auto& data() const { return grid_; }
-  [[nodiscard]] std::size_t size() const { return grid_.size(); }
+  [[nodiscard]] auto& data() { return grid_storage_.data(); }
+  [[nodiscard]] const auto& data() const { return grid_storage_.data(); }
+  [[nodiscard]] std::size_t size() const { return grid_storage_.size(); }
 
   [[nodiscard]] std::size_t width() const { return Cols; }
   [[nodiscard]] std::size_t height() const { return Rows; }
@@ -52,7 +112,7 @@ class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, 
   [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
 
  private:
-  std::array<bool, Rows * Cols> grid_;
+  PlainGridStorage<Rows, Cols> grid_storage_;
   Sophus::SE2d origin_;
   double resolution_;
 };

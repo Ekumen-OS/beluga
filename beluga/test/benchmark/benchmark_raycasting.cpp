@@ -14,7 +14,7 @@
 
 #include <numeric>
 #include <random>
-#include <vector>
+#include <utility>
 
 #include <benchmark/benchmark.h>
 
@@ -26,6 +26,9 @@
 
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
+
+using beluga::testing::PlainGridStorage;
+using beluga::testing::StaticOccupancyGrid;
 
 namespace {
 
@@ -51,8 +54,6 @@ BENCHMARK_CAPTURE(BM_Bresenham2i, Modified, beluga::Bresenham2i::kModified)
     ->Range(128, 4096)
     ->Complexity();
 
-using beluga::testing::StaticOccupancyGrid;
-
 template <std::size_t Rows, std::size_t Cols>
 class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>> {
  public:
@@ -62,14 +63,13 @@ class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>>
     [[nodiscard]] bool is_occupied(bool value) const { return value; }
   };
 
-  explicit BaselineGrid(std::initializer_list<bool>, double resolution) : resolution_{resolution} {
-    std::fill(std::begin(data()), std::end(data()), false);
-  }
+  explicit BaselineGrid(PlainGridStorage<Rows, Cols>&& grid, double resolution)
+      : grid_{std::move(grid)}, resolution_{resolution} {}
 
   [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
-  [[nodiscard]] auto& data() { return grid_; }
-  [[nodiscard]] const auto& data() const { return grid_; }
+  [[nodiscard]] auto& data() { return grid_.data(); }
+  [[nodiscard]] const auto& data() const { return grid_.data(); }
   [[nodiscard]] std::size_t size() const { return grid_.size(); }
 
   [[nodiscard]] std::size_t width() const { return Cols; }
@@ -79,9 +79,9 @@ class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>>
   [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
 
  private:
+  PlainGridStorage<Rows, Cols> grid_;
   double resolution_;
   Sophus::SE2d origin_;
-  std::array<bool, Rows * Cols> grid_;
   static constexpr std::size_t kWidth = Cols;
   static constexpr std::size_t kHeight = Rows;
 };
@@ -238,12 +238,13 @@ void BM_RayCasting2d_GridCacheFriendlyness(benchmark::State& state) {
   // direction of the raycast (horizontal or vertical only)
   const auto bearing_index = static_cast<RaycastBearing>(state.range(2));
 
-  auto grid = Grid<kGridSize, kGridSize>{{}, kResolution};
   // draw an obstacle at the limits of the grid
+  auto grid_storage = PlainGridStorage<kGridSize, kGridSize>{};
   for (int i = 0; i < kGridSize; ++i) {
-    grid.data()[grid.index_at(kGridSize - 1, i)] = true;
-    grid.data()[grid.index_at(i, kGridSize - 1)] = true;
+    grid_storage.cell(kGridSize - 1, i) = true;
+    grid_storage.cell(i, kGridSize - 1) = true;
   }
+  auto grid = Grid<kGridSize, kGridSize>{std::move(grid_storage), kResolution};
 
   const auto end_of_grid_coord = static_cast<double>(kGridSize - 1) * kResolution;
   const auto distance_to_obstacle = static_cast<double>(n) * kResolution;
