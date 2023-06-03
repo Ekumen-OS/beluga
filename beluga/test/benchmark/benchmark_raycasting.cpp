@@ -229,7 +229,7 @@ void BM_RayCasting2d_GridCacheFriendlyness(benchmark::State& state) {
   // effects
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
-  constexpr auto kGridSize = 1280;
+  constexpr auto kGridSize = 4100;
 
   // whether to apply randomness to the source pose or not. If not we'll hit the same cache lines over and over again
   const auto apply_randomness = static_cast<bool>(state.range(0));
@@ -277,16 +277,16 @@ void BM_RayCasting2d_GridCacheFriendlyness(benchmark::State& state) {
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d_GridCacheFriendlyness, BaselineGrid)
     ->ArgsProduct({
-        {true, false},
-        {128, 256, 512, 1024},
+        {false, true},
+        {128, 256, 512, 1024, 2048, 4096},
         {bearingOrdinal(RaycastBearing::kHorizontal), bearingOrdinal(RaycastBearing::kVertical)},
     })
     ->Complexity();
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d_GridCacheFriendlyness, StaticOccupancyGrid)
     ->ArgsProduct({
-        {true, false},
-        {128, 256, 512, 1024},
+        {false, true},
+        {128, 256, 512, 1024, 2048, 4096},
         {bearingOrdinal(RaycastBearing::kHorizontal), bearingOrdinal(RaycastBearing::kVertical)},
     })
     ->Complexity();
