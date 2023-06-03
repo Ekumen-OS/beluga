@@ -27,14 +27,14 @@ Usage: $(basename $0) [...] <PARTICLES_0> ... <PARTICLES_N>\n
     [--initial-pose-yaw] Set initial yaw pose.\n
     [--params-file] Use a different params file, defaults to "beluga_example/config/params.yaml".\n
     [-b|--rosbag] Use a different rosbag, defaults to "beluga_example/bags/perfect_odometry".\n
-    [-f|--playback-frequency] Rosbag playback frequency, defaults to 3.\n
+    [-r|--playback-rate] Rosbag playback frequency, defaults to 1.\n
     [-p|--profile] Create a perf cpu profile of the benchmark.
 EOM
 
 set +o errexit
 VALID_ARGS=$( \
-    OPTERR=1 getopt -o b:f:ph --long \
-    package:,executable:,initial-pose-x:,initial-pose-y:,initial-pose-yaw:,rosbag:,playback-frequency:,params-file:,profile,help \
+    OPTERR=1 getopt -o b:r:ph --long \
+    package:,executable:,initial-pose-x:,initial-pose-y:,initial-pose-yaw:,rosbag:,playback-rate:,params-file:,profile,help \
     -- "$@")
 RET_CODE=$?
 set -o errexit
@@ -68,8 +68,8 @@ while : ;do
         EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS rosbag_path:=$2"
         shift 2
         ;;
-    -f | --playback-frequency)
-        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS playback_frequency:=$2"
+    -r | --playback-rate)
+        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS playback_rate:=$2"
         shift 2
         ;;
     --params-file)

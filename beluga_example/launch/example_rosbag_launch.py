@@ -62,7 +62,7 @@ def get_launch_arguments():
         ),
         DeclareLaunchArgument(
             name='playback_rate',
-            default_value='3.',
+            default_value='1.',
             description='Rate used to playback the bag.',
         ),
         DeclareLaunchArgument(
