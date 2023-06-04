@@ -110,6 +110,7 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
    */
   [[nodiscard]] auto neighborhood4(std::size_t index) const {
     auto result = std::vector<std::size_t>{};
+    result.reserve(4);
     const std::size_t xi = index % this->self().width();
     const std::size_t yi = index / this->self().width();
     if (xi < (this->self().width() - 1)) {

@@ -138,6 +138,7 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    */
   [[nodiscard]] auto neighborhood4(int xi, int yi) const {
     auto result = std::vector<Eigen::Vector2i>{};
+    result.reserve(4);
     if (xi < static_cast<int>(this->self().width() - 1)) {
       result.emplace_back(xi + 1, yi);
     }
