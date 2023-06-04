@@ -32,6 +32,8 @@ def read_timem_output(dir_path: Path):
             output = json.load(f)
     except (FileExistsError, FileNotFoundError) as ex:
         raise ScriptError(f"Failed to open file '{file.absolute()}': {ex}")
+    except json.decoder.JSONDecodeError:
+        return None
     return output['timemory']['timem'][0]
 
 

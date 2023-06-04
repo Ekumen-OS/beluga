@@ -642,7 +642,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
       *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10,
       get_node_logging_interface(),
       get_node_clock_interface(),
-      tf2::durationFromSec(1.0));
+      tf2::durationFromSec(get_parameter("transform_tolerance").as_double()));
 
     using LaserCallback = std::function<void (sensor_msgs::msg::LaserScan::ConstSharedPtr)>;
     laser_scan_connection_ = laser_scan_filter_->registerCallback(

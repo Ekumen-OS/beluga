@@ -86,7 +86,11 @@ def create_parameterized_series(results_path: Path):
             continue
         particles.append(int(m[1]))
         timem_results_output = timem_results.read_timem_output(dir)
-        rss, cpu = timem_results.get_timem_metrics_values(timem_results_output)
+        rss, cpu = (
+            timem_results.get_timem_metrics_values(timem_results_output)
+            if timem_results_output
+            else (None, None)
+        )
         peak_rss.append(rss)
         cpu_usage.append(cpu)
         run_evo_ape(dir)
