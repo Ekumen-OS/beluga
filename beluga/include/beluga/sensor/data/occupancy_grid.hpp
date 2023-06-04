@@ -19,8 +19,6 @@
 #include <tuple>
 #include <vector>
 
-#include <beluga/sensor/data/linear_grid.hpp>
-
 #include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/transform.hpp>
@@ -81,11 +79,16 @@ namespace beluga {
  * `Derived::index_at(int, int)`, `Derived::data()`, and
  * `Derived::value_traits()` as described in \ref OccupancyGrid2Page.
  */
-template <typename Derived>
-class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
+template <typename Mixin>
+class BaseOccupancyGrid2Mixin : public Mixin {
  public:
   /// Coordinate frames.
   enum class Frame { kLocal, kGlobal };
+
+  /// @brief Mixin constructor
+  /// @param ...args arguments to be forwarded to other mixins in the chain
+  template <typename... Args>
+  explicit BaseOccupancyGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
   /// Checks if cell is free.
   /**
@@ -127,7 +130,7 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    */
   [[nodiscard]] bool free_near(const Eigen::Vector2d& p) const { return this->self().free_near(p.x(), p.y()); }
 
-  using BaseLinearGrid2<Derived>::coordinates_at;
+  using Mixin::coordinates_at;
 
   /// Compute plane coordinates given grid cell coordinates.
   /**

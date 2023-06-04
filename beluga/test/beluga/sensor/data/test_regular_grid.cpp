@@ -16,14 +16,17 @@
 
 #include "beluga/sensor/data/regular_grid.hpp"
 
+#include <ciabatta/ciabatta.hpp>
 #include <range/v3/range/conversion.hpp>
-
 namespace {
 
-class TestRegularGrid2 : public beluga::BaseRegularGrid2<TestRegularGrid2> {
+template <typename Mixin>
+class TestRegularGrid2Mixin : public Mixin {
  public:
   [[nodiscard]] static double resolution() { return 1.; }
 };
+
+using TestRegularGrid2 = ciabatta::mixin<TestRegularGrid2Mixin, beluga::BaseRegularGrid2Mixin>;
 
 TEST(RegularGrid2, NearestCells) {
   const auto grid = TestRegularGrid2{};

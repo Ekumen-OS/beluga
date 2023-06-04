@@ -199,7 +199,7 @@ class LikelihoodFieldModel : public Mixin {
 
     auto likelihood_data = distance_map | ranges::views::transform(to_likelihood) |
                            ranges::views::transform(to_the_cube) | ranges::to<std::vector>;
-    return ValueGrid2<double>{std::move(likelihood_data), grid.width(), grid.resolution()};
+    return ValueGrid2<double>(std::move(likelihood_data), grid.width(), grid.resolution());
   }
 };
 

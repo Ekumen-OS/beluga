@@ -21,33 +21,57 @@
 #include <vector>
 
 #include "beluga/sensor/data/dense_grid.hpp"
+#include "beluga/sensor/data/regular_grid.hpp"
 
 #include <range/v3/range/conversion.hpp>
 
 #include <Eigen/Core>
 
+#include <ciabatta/ciabatta.hpp>
+
 namespace {
 
 template <std::size_t W, std::size_t H>
-class Image : public beluga::BaseDenseGrid2<Image<W, H>> {
+struct ImageSize {
+  static constexpr std::size_t Width = W;
+  static constexpr std::size_t Height = H;
+};
+
+template <typename Mixin, typename ImageSize>
+class ImageMixin : public Mixin {
  public:
   using value_type = uint8_t;
+  using data_storage = std::array<std::array<value_type, ImageSize::Width>, ImageSize::Height>;
 
-  Image() = default;
+  template <typename... Args>
+  explicit ImageMixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
-  explicit Image(std::array<std::array<value_type, W>, H> data) : data_(std::move(data)) {}
+  template <typename... Args>
+  explicit ImageMixin(data_storage data, Args&&... args) : Mixin(std::forward<Args>(args)...), data_(std::move(data)) {}
 
-  using beluga::BaseDenseGrid2<Image<W, H>>::data_at;
+  using Mixin::data_at;
   [[nodiscard]] std::optional<value_type> data_at(int xi, int yi) const {
-    return xi < W && yi < H ? std::make_optional(data_[xi][yi]) : std::nullopt;
+    return xi < ImageSize::Width && yi < ImageSize::Height ? std::make_optional(data_[xi][yi]) : std::nullopt;
   }
 
-  [[nodiscard]] std::size_t width() const { return W; }
-  [[nodiscard]] std::size_t height() const { return H; }
+  [[nodiscard]] std::size_t width() const { return ImageSize::Width; }
+  [[nodiscard]] std::size_t height() const { return ImageSize::Height; }
   [[nodiscard]] double resolution() const { return 1.; }
 
  private:
-  std::array<std::array<value_type, W>, H> data_;
+  std::array<std::array<value_type, ImageSize::Width>, ImageSize::Height> data_;
+};
+
+template <std::size_t W, std::size_t H>
+using ImageCombined = ciabatta::mixin<
+    ciabatta::curry<ImageMixin, ImageSize<W, H>>::template mixin,
+    beluga::BaseDenseGrid2Mixin,
+    beluga::BaseRegularGrid2Mixin>;
+
+template <std::size_t W, std::size_t H>
+struct Image : public ImageCombined<W, H> {
+  template <typename... Args>
+  explicit Image(Args&&... args) : ImageCombined<W, H>(std::forward<Args>(args)...) {}
 };
 
 TEST(DenseGrid2, Limits) {
@@ -69,8 +93,8 @@ TEST(DenseGrid2, Limits) {
 }
 
 TEST(DenseGrid2, Data) {
-  const auto grid =
-      Image<5, 5>({{{0, 0, 0, 0, 0}, {0, 1, 1, 1, 0}, {0, 1, 2, 1, 0}, {0, 1, 1, 1, 0}, {0, 0, 0, 0, 0}}});
+  const auto grid = Image<5, 5>(
+      Image<5, 5>::data_storage{{{0, 0, 0, 0, 0}, {0, 1, 1, 1, 0}, {0, 1, 2, 1, 0}, {0, 1, 1, 1, 0}, {0, 0, 0, 0, 0}}});
 
   EXPECT_EQ(grid.data_at(Eigen::Vector2i(0, 0)), 0);
   EXPECT_EQ(grid.data_at(Eigen::Vector2i(2, 2)), 2);
@@ -82,8 +106,8 @@ TEST(DenseGrid2, Data) {
 }
 
 TEST(DenseGrid2, NearestData) {
-  const auto grid =
-      Image<5, 5>({{{0, 0, 0, 0, 0}, {0, 1, 1, 1, 0}, {0, 1, 2, 1, 0}, {0, 1, 1, 1, 0}, {0, 0, 0, 0, 0}}});
+  const auto grid = Image<5, 5>(
+      Image<5, 5>::data_storage{{{0, 0, 0, 0, 0}, {0, 1, 1, 1, 0}, {0, 1, 2, 1, 0}, {0, 1, 1, 1, 0}, {0, 0, 0, 0, 0}}});
 
   EXPECT_EQ(grid.data_near(0.8, 0.2), 0);
   EXPECT_EQ(grid.data_near(2.1, 2.9), 2);

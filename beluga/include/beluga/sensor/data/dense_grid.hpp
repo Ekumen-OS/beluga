@@ -18,8 +18,6 @@
 #include <optional>
 #include <vector>
 
-#include <beluga/sensor/data/regular_grid.hpp>
-
 #include <Eigen/Core>
 
 /**
@@ -78,9 +76,14 @@ namespace beluga {
  * `Derived::data_at(index)`, and `Derived::index_at(int, int)`
  * as described in \ref DenseGrid2Page.
  */
-template <typename Derived>
-class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
+template <typename Mixin>
+class BaseDenseGrid2Mixin : public Mixin {
  public:
+  /// @brief Mixin constructor
+  /// @param ...args arguments to be forwarded to other mixins in the chain
+  template <typename... Args>
+  explicit BaseDenseGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+
   /// Checks if a cell is included in the grid.
   /**
    * \param xi Grid cell x-axis coordinate.

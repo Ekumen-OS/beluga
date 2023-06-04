@@ -19,8 +19,6 @@
 #include <optional>
 #include <vector>
 
-#include <beluga/sensor/data/dense_grid.hpp>
-
 #include <Eigen/Core>
 
 /**
@@ -60,9 +58,14 @@ namespace beluga {
  * `Derived::data_at(std::size_t)`, `Derived::index_at(int, int)`,
  * and `Derived::data()` as described in \ref LinearGrid2Page.
  */
-template <typename Derived>
-class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
+template <typename Mixin>
+class BaseLinearGrid2Mixin : public Mixin {
  public:
+  /// @brief Mixin constructor
+  /// @param ...args arguments to be forwarded to other mixins in the chain
+  template <typename... Args>
+  explicit BaseLinearGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+
   /// Computes index for given grid cell coordinates.
   /*
    * \param xi Grid cell x-axis coordinate.
@@ -78,7 +81,7 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
    */
   [[nodiscard]] std::size_t index_at(const Eigen::Vector2i& pi) const { return this->self().index_at(pi.x(), pi.y()); }
 
-  using BaseDenseGrid2<Derived>::coordinates_at;
+  using Mixin::coordinates_at;
 
   /// Compute plane coordinates given a grid cell index.
   /**
@@ -90,7 +93,7 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
         static_cast<int>(index % this->self().width()), static_cast<int>(index / this->self().width()));
   }
 
-  using BaseDenseGrid2<Derived>::data_at;
+  using Mixin::data_at;
 
   /// Gets cell data, if included.
   /**
@@ -104,7 +107,7 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
                                          : std::nullopt;
   }
 
-  using BaseDenseGrid2<Derived>::neighborhood4;
+  using Mixin::neighborhood4;
 
   /// Computes 4-connected neighborhood for cell.
   /**

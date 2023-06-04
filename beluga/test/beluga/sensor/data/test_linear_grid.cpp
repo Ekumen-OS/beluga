@@ -27,7 +27,8 @@ namespace {
 
 TEST(LinearGrid2, Indices) {
   constexpr std::size_t kWidth = 4;
-  const auto grid = beluga::ValueGrid2<bool>{{{true, false, true, false, false, true, false, true}}, kWidth};
+  const auto grid =
+      beluga::ValueGrid2<bool>(std::vector<bool>{true, false, true, false, false, true, false, true}, kWidth, 1.);
 
   EXPECT_EQ(grid.index_at(0, 0), 0);
   EXPECT_EQ(grid.index_at(3, 1), 7);
@@ -38,9 +39,9 @@ TEST(LinearGrid2, Indices) {
 
 TEST(LinearGrid2, CoordinatesAtIndex) {
   constexpr std::size_t kWidth = 4;
-  constexpr std::size_t kResolution = 1;
-  const auto grid =
-      beluga::ValueGrid2<bool>{{{true, false, true, false, false, true, false, true}}, kWidth, kResolution};
+  constexpr double kResolution = 1.;
+  const auto grid = beluga::ValueGrid2<bool>(
+      std::vector<bool>{true, false, true, false, false, true, false, true}, kWidth, kResolution);
 
   EXPECT_EQ(grid.coordinates_at(0), Eigen::Vector2d(0.5, 0.5));
   EXPECT_EQ(grid.coordinates_at(3), Eigen::Vector2d(3.5, 0.5));

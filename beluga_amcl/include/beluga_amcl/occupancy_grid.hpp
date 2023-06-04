@@ -24,14 +24,19 @@
 
 #include <beluga/sensor/data/occupancy_grid.hpp>
 #include <beluga_amcl/ros_interfaces.hpp>
+#include <beluga/sensor/data/dense_grid.hpp>
+#include <beluga/sensor/data/linear_grid.hpp>
+#include <beluga/sensor/data/regular_grid.hpp>
+#include <beluga/sensor/data/value_grid.hpp>
 
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
 namespace beluga_amcl {
 
-class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
- public:
+template<typename Mixin>
+class OccupancyGridMixin : public Mixin {
+public:
   struct ValueTraits {
     // https://wiki.ros.org/map_server#Value_Interpretation
     static constexpr std::int8_t kFreeValue = 0;
@@ -45,8 +50,10 @@ class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
     [[nodiscard]] static bool is_occupied(std::int8_t value) { return value == kOccupiedValue; }
   };
 
-  explicit OccupancyGrid(messages::OccupancyGridConstSharedPtr grid)
-      : grid_(std::move(grid)), origin_(make_origin_transform(grid_->info.origin)) {}
+  template<typename ... Args>
+  explicit OccupancyGridMixin(messages::OccupancyGridConstSharedPtr grid, Args &&... args)
+    : Mixin(std::forward<Args>(args)...), grid_(std::move(grid)),
+      origin_(make_origin_transform(grid_->info.origin)) {}
 
   [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
@@ -72,6 +79,14 @@ class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
     return Sophus::SE2d{rotation, translation};
   }
 };
+
+using OccupancyGrid = ciabatta::mixin<
+  OccupancyGridMixin,
+  beluga::BaseOccupancyGrid2Mixin,
+  beluga::BaseLinearGrid2Mixin,
+  beluga::BaseDenseGrid2Mixin,
+  beluga::BaseRegularGrid2Mixin>;
+
 
 }  // namespace beluga_amcl
 

@@ -20,6 +20,12 @@
 #include <initializer_list>
 #include <vector>
 
+#include <beluga/sensor/data/dense_grid.hpp>
+#include <beluga/sensor/data/linear_grid.hpp>
+#include <beluga/sensor/data/regular_grid.hpp>
+
+#include <ciabatta/ciabatta.hpp>
+
 #include "beluga/sensor/data/occupancy_grid.hpp"
 
 #include <sophus/se2.hpp>
@@ -85,7 +91,13 @@ class PlainGridStorage {
 };
 
 template <std::size_t Rows, std::size_t Cols>
-class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, Cols>> {
+struct GridSize {
+  static constexpr std::size_t rows = Rows;
+  static constexpr std::size_t cols = Cols;
+};
+
+template <class Mixin, class GridSize>
+class StaticOccupancyGridMixin : public Mixin {
  public:
   struct ValueTraits {
     [[nodiscard]] bool is_free(bool value) const { return !value; }
@@ -93,11 +105,16 @@ class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, 
     [[nodiscard]] bool is_occupied(bool value) const { return value; }
   };
 
-  explicit StaticOccupancyGrid(
-      PlainGridStorage<Rows, Cols>&& grid_storage,
-      double resolution = 1.0,
-      const Sophus::SE2d& origin = Sophus::SE2d{})
-      : grid_storage_{std::move(grid_storage)}, origin_(origin), resolution_{resolution} {}
+  template <typename... Args>
+  explicit StaticOccupancyGridMixin(
+      PlainGridStorage<GridSize::rows, GridSize::cols>&& grid_storage,
+      double resolution,
+      const Sophus::SE2d& origin,
+      Args&&... args)
+      : Mixin(std::forward<Args>(args)...),
+        grid_storage_{std::move(grid_storage)},
+        origin_(origin),
+        resolution_{resolution} {}
 
   [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
@@ -105,17 +122,25 @@ class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, 
   [[nodiscard]] const auto& data() const { return grid_storage_.data(); }
   [[nodiscard]] std::size_t size() const { return grid_storage_.size(); }
 
-  [[nodiscard]] std::size_t width() const { return Cols; }
-  [[nodiscard]] std::size_t height() const { return Rows; }
+  [[nodiscard]] std::size_t width() const { return GridSize::cols; }
+  [[nodiscard]] std::size_t height() const { return GridSize::rows; }
   [[nodiscard]] double resolution() const { return resolution_; }
 
   [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
 
  private:
-  PlainGridStorage<Rows, Cols> grid_storage_;
+  PlainGridStorage<GridSize::rows, GridSize::cols> grid_storage_;
   Sophus::SE2d origin_;
   double resolution_;
 };
+
+template <std::size_t Rows, std::size_t Cols>
+using StaticOccupancyGrid = ciabatta::mixin<
+    ciabatta::curry<StaticOccupancyGridMixin, GridSize<Rows, Cols>>::template mixin,
+    BaseOccupancyGrid2Mixin,
+    BaseLinearGrid2Mixin,
+    BaseDenseGrid2Mixin,
+    BaseRegularGrid2Mixin>;
 
 }  // namespace beluga::testing
 

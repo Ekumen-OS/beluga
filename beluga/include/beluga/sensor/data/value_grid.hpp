@@ -19,7 +19,12 @@
 #include <utility>
 #include <vector>
 
+#include <beluga/sensor/data/dense_grid.hpp>
 #include <beluga/sensor/data/linear_grid.hpp>
+#include <beluga/sensor/data/regular_grid.hpp>
+#include <beluga/sensor/data/value_grid.hpp>
+
+#include <ciabatta/ciabatta.hpp>
 
 /**
  * \file
@@ -30,19 +35,26 @@ namespace beluga {
 
 /// Generic 2D linear value grid.
 /**
+ * \tparam Mixin Base mixin class.
  * \tparam T Any copyable type.
  */
-template <typename T>
-class ValueGrid2 : public BaseLinearGrid2<ValueGrid2<T>> {
+template <typename Mixin, typename T>
+class ValueGrid2Mixin : public Mixin {
  public:
   /// Constructs the grid.
   /**
    * \param data Grid data.
    * \param width Grid width. Must evenly divide `data` size.
    * \param resolution Grid resolution.
+   * \param args Arguments to be forwarded to the mixin components.
    */
-  explicit ValueGrid2(std::vector<T> data, std::size_t width, double resolution = 1.)
-      : data_(std::move(data)), width_(width), height_(data_.size() / width), resolution_(resolution) {
+  template <typename... Args>
+  explicit ValueGrid2Mixin(std::vector<T> data, std::size_t width, double resolution, Args&&... args)
+      : Mixin(std::forward<Args>(args)...),
+        data_(std::move(data)),
+        width_(width),
+        height_(data_.size() / width),
+        resolution_(resolution) {
     assert(data_.size() % width == 0);
   }
 
@@ -67,6 +79,17 @@ class ValueGrid2 : public BaseLinearGrid2<ValueGrid2<T>> {
   std::size_t height_;
   double resolution_;
 };
+
+/// Generic 2D linear value grid.
+/**
+ * \tparam ValueType Type used for grid cell value representation.
+ */
+template <class ValueType>
+using ValueGrid2 = ciabatta::mixin<
+    ciabatta::curry<ValueGrid2Mixin, ValueType>::template mixin,
+    BaseLinearGrid2Mixin,
+    BaseDenseGrid2Mixin,
+    BaseRegularGrid2Mixin>;
 
 }  // namespace beluga
 

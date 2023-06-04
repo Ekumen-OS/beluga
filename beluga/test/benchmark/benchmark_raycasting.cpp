@@ -19,6 +19,9 @@
 #include <benchmark/benchmark.h>
 
 #include <beluga/algorithm/raycasting.hpp>
+#include <beluga/sensor/data/dense_grid.hpp>
+#include <beluga/sensor/data/linear_grid.hpp>
+#include <beluga/sensor/data/regular_grid.hpp>
 #include <beluga/test/raycasting.hpp>
 #include <beluga/test/static_occupancy_grid.hpp>
 
@@ -27,6 +30,9 @@
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
+#include <ciabatta/ciabatta.hpp>
+
+using beluga::testing::GridSize;
 using beluga::testing::PlainGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
@@ -54,8 +60,8 @@ BENCHMARK_CAPTURE(BM_Bresenham2i, Modified, beluga::Bresenham2i::kModified)
     ->Range(128, 4096)
     ->Complexity();
 
-template <std::size_t Rows, std::size_t Cols>
-class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>> {
+template <typename Mixin, typename GridSize>
+class BaselineGridMixin : public Mixin {
  public:
   struct ValueTraits {
     [[nodiscard]] bool is_free(bool value) const { return !value; }
@@ -63,8 +69,13 @@ class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>>
     [[nodiscard]] bool is_occupied(bool value) const { return value; }
   };
 
-  explicit BaselineGrid(PlainGridStorage<Rows, Cols>&& grid, double resolution)
-      : grid_{std::move(grid)}, resolution_{resolution} {}
+  template <typename... Args>
+  explicit BaselineGridMixin(
+      PlainGridStorage<GridSize::rows, GridSize::cols>&& grid,
+      double resolution,
+      [[maybe_unused]] const Sophus::SE2d& origin,
+      Args&&... args)
+      : Mixin(std::forward<Args>(args)...), grid_{std::move(grid)}, resolution_{resolution} {}
 
   [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
@@ -72,19 +83,27 @@ class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>>
   [[nodiscard]] const auto& data() const { return grid_.data(); }
   [[nodiscard]] std::size_t size() const { return grid_.size(); }
 
-  [[nodiscard]] std::size_t width() const { return Cols; }
-  [[nodiscard]] std::size_t height() const { return Rows; }
+  [[nodiscard]] std::size_t width() const { return GridSize::cols; }
+  [[nodiscard]] std::size_t height() const { return GridSize::rows; }
   [[nodiscard]] double resolution() const { return resolution_; }
 
   [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
 
  private:
-  PlainGridStorage<Rows, Cols> grid_;
+  PlainGridStorage<GridSize::rows, GridSize::cols> grid_;
   double resolution_;
   Sophus::SE2d origin_;
-  static constexpr std::size_t kWidth = Cols;
-  static constexpr std::size_t kHeight = Rows;
+  static constexpr std::size_t kWidth = GridSize::cols;
+  static constexpr std::size_t kHeight = GridSize::rows;
 };
+
+template <std::size_t Rows, std::size_t Cols>
+using BaselineGrid = ciabatta::mixin<
+    ciabatta::curry<BaselineGridMixin, GridSize<Rows, Cols>>::template mixin,
+    beluga::BaseOccupancyGrid2Mixin,
+    beluga::BaseLinearGrid2Mixin,
+    beluga::BaseDenseGrid2Mixin,
+    beluga::BaseRegularGrid2Mixin>;
 
 enum class RaycastBearing { kHorizontal, kVertical, kDiagonal };
 
@@ -129,7 +148,7 @@ void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   grid_storage.cell(n, n) = true;
   grid_storage.cell(0, n) = true;
   grid_storage.cell(n, 0) = true;
-  Grid grid{std::move(grid_storage), kResolution};
+  auto grid = Grid<kGridSize, kGridSize>(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const auto source_pose = Eigen::Vector2d{0., 0.};
   const auto beam_bearing = Sophus::SO2d{bearingAngle(bearing_index)};
@@ -187,7 +206,7 @@ void BM_RayCasting2d(benchmark::State& state) {
   grid_storage.cell(n, n) = true;
   grid_storage.cell(0, n) = true;
   grid_storage.cell(n, 0) = true;
-  auto grid = Grid{std::move(grid_storage), kResolution};
+  auto grid = Grid<kGridSize, kGridSize>(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const auto source_pose = Sophus::SE2d{0., Eigen::Vector2d{0., 0.}};
   const auto beam_bearing = Sophus::SO2d{bearingAngle(bearing_index)};
@@ -250,7 +269,7 @@ void BM_RayCasting2d_GridCacheFriendlyness(benchmark::State& state) {
     grid_storage.cell(kGridSize - 1, i) = true;
     grid_storage.cell(i, kGridSize - 1) = true;
   }
-  auto grid = Grid<kGridSize, kGridSize>{std::move(grid_storage), kResolution};
+  auto grid = Grid<kGridSize, kGridSize>(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const auto end_of_grid_coord = static_cast<double>(kGridSize - 1) * kResolution;
   const auto distance_to_obstacle = static_cast<double>(n) * kResolution;

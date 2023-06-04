@@ -17,8 +17,6 @@
 
 #include <cmath>
 
-#include <ciabatta/ciabatta.hpp>
-
 #include <range/v3/view/transform.hpp>
 
 #include <Eigen/Core>
@@ -62,9 +60,14 @@ namespace beluga {
  * \tparam Derived Concrete regular grid type. It must define
  * `Derived::resolution()`, as described in \ref RegularGrid2Page.
  */
-template <typename Derived>
-class BaseRegularGrid2 : public ciabatta::ciabatta_top<Derived> {
+template <typename Mixin>
+class BaseRegularGrid2Mixin : public Mixin {
  public:
+  /// @brief Mixin constructor
+  /// @param ...args arguments to be forwarded to other mixins in the chain
+  template <typename... Args>
+  explicit BaseRegularGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+
   /// Compute nearest grid cell coordinates given plane coordinates.
   /**
    * Note this is a surjective function.

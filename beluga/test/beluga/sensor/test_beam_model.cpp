@@ -24,6 +24,7 @@
 
 namespace beluga {
 
+using beluga::testing::PlainGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
 using UUT = ciabatta::mixin<
@@ -44,14 +45,14 @@ BeamModelParam GetParams() {
 TEST(BeamSensorModel, ImportanceWeight) {
   constexpr double kResolution = 0.5;
   // clang-format off
-  const auto grid = StaticOccupancyGrid<5, 5>{{
+  auto grid_storage = PlainGridStorage<5, 5>{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
     false, false, false, false, false,
-    false, false, false, false, false},
-    kResolution};
+    false, false, false, false, false};
   // clang-format on
+  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const auto params = GetParams();
   auto mixin = UUT{params, grid};
@@ -80,14 +81,14 @@ TEST(BeamSensorModel, GridUpdates) {
 
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid = StaticOccupancyGrid<5, 5>{{
+  auto grid_storage = PlainGridStorage<5, 5>{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
     false, false, false, false, false,
-    false, false, false, false, false},
-    kResolution, origin};
+    false, false, false, false, false};
   // clang-format on
+  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, origin);
 
   const auto params = GetParams();
   auto mixin = UUT{params, std::move(grid)};
@@ -96,16 +97,16 @@ TEST(BeamSensorModel, GridUpdates) {
   EXPECT_NEAR(1.0171643824743635, mixin.importance_weight(origin), 1e-6);
 
   // clang-format off
-  grid = StaticOccupancyGrid<5, 5>{{
+  auto new_grid_storage = PlainGridStorage<5, 5>{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
-    false, false, false, false, false},
-    kResolution, origin};
+    false, false, false, false, false};
   // clang-format on
+  auto new_grid = StaticOccupancyGrid<5, 5>(std::move(new_grid_storage), kResolution, origin);
 
-  mixin.update_map(std::move(grid));
+  mixin.update_map(std::move(new_grid));
 
   mixin.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
   EXPECT_NEAR(0.0, mixin.importance_weight(origin), 1e-3);
