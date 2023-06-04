@@ -175,9 +175,9 @@ class LikelihoodFieldModel : public Mixin {
   }
 
   static ValueGrid2<double> make_likelihood_field(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid) {
-    const auto squared_distance = [&grid,
-                                   squared_max_distance = params.max_obstacle_distance * params.max_obstacle_distance](
-                                      std::size_t first, std::size_t second) {
+    const auto squared_max_distance = params.max_obstacle_distance * params.max_obstacle_distance;
+
+    const auto squared_distance = [&grid, squared_max_distance](std::size_t first, std::size_t second) {
       return std::min((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm(), squared_max_distance);
     };
 
@@ -185,10 +185,11 @@ class LikelihoodFieldModel : public Mixin {
 
     const auto distance_map = nearest_obstacle_distance_map(grid.obstacle_data(), squared_distance, neighborhood);
 
-    const auto to_likelihood = [amplitude =
-                                    params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi())),
-                                two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit,
-                                offset = params.z_random / params.max_laser_distance](double squared_distance) {
+    const auto amplitude = params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()));
+    const auto two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit;
+    const auto offset = params.z_random / params.max_laser_distance;
+
+    const auto to_likelihood = [amplitude, two_squared_sigma, offset](double squared_distance) {
       return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
     };
 
