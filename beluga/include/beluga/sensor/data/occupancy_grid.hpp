@@ -91,24 +91,17 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
   /**
    * Note cells not included in the grid are non-free too.
    *
-   * \param index Grid cell index.
+   * \param xi Grid cell x-axis coordinate.
+   * \param yi Grid cell y-axis coordinate.
    */
-  [[nodiscard]] bool free_at(std::size_t index) const {
+  [[nodiscard]] bool free_at(int xi, int yi) const {
+    const auto index = this->self().index_at(xi, yi);
     const auto data = this->self().data_at(index);
     if (!data.has_value()) {
       return false;
     }
     return this->self().value_traits().is_free(data.value());
   }
-
-  /// Checks if cell is free.
-  /**
-   * Note cells not included in the grid are non-free too.
-   *
-   * \param xi Grid cell x-axis coordinate.
-   * \param yi Grid cell y-axis coordinate.
-   */
-  [[nodiscard]] bool free_at(int xi, int yi) const { return this->self().free_at(this->self().index_at(xi, yi)); }
 
   /// Checks if cell is free.
   /**

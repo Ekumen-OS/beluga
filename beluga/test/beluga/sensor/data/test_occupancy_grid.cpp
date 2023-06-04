@@ -38,8 +38,6 @@ TEST(OccupancyGrid2, FreeAtCell) {
        false, false, false, true,  false, false, false, true,  false, false, false, false},
       kResolution};
 
-  EXPECT_TRUE(grid.free_at(0));
-  EXPECT_FALSE(grid.free_at(8));
   EXPECT_FALSE(grid.free_at(2, 2));
   EXPECT_TRUE(grid.free_at(3, 2));
   EXPECT_FALSE(grid.free_at(Eigen::Vector2i(0, 4)));
