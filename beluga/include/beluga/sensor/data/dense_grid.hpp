@@ -100,16 +100,6 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
 
   /// Gets cell data, if included.
   /**
-   * \param xi Grid cell x-axis coordinate.
-   * \param yi Grid cell y-axis coordinate.
-   * \return Cell data if included, `std::nullopt` otherwise.
-   */
-  [[nodiscard]] auto data_at(int xi, int yi) const {
-    return this->self().contains(xi, yi) ? this->self().data_at(this->self().index_at(xi, yi)) : std::nullopt;
-  }
-
-  /// Gets cell data, if included.
-  /**
    * \param pi Grid cell coordinates.
    * \return Cell data if included, `std::nullopt` otherwise.
    */

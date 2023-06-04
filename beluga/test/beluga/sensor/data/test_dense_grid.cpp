@@ -31,23 +31,15 @@ namespace {
 template <std::size_t W, std::size_t H>
 class Image : public beluga::BaseDenseGrid2<Image<W, H>> {
  public:
-  using index_type = std::pair<std::size_t, std::size_t>;
   using value_type = uint8_t;
 
   Image() = default;
 
   explicit Image(std::array<std::array<value_type, W>, H> data) : data_(std::move(data)) {}
 
-  [[nodiscard]] index_type index_at(int xi, int yi) const {
-    return index_type{static_cast<std::size_t>(xi), static_cast<std::size_t>(yi)};
-  }
-
-  [[nodiscard]] index_type index_at(const Eigen::Vector2i& pi) const { return index_at(pi.x(), pi.y()); }
-
   using beluga::BaseDenseGrid2<Image<W, H>>::data_at;
-
-  [[nodiscard]] std::optional<value_type> data_at(const index_type& index) const {
-    return index.first < W && index.second < H ? std::make_optional(data_[index.first][index.second]) : std::nullopt;
+  [[nodiscard]] std::optional<value_type> data_at(int xi, int yi) const {
+    return xi < W && yi < H ? std::make_optional(data_[xi][yi]) : std::nullopt;
   }
 
   [[nodiscard]] std::size_t width() const { return W; }
@@ -79,14 +71,6 @@ TEST(DenseGrid2, Limits) {
 TEST(DenseGrid2, Data) {
   const auto grid =
       Image<5, 5>({{{0, 0, 0, 0, 0}, {0, 1, 1, 1, 0}, {0, 1, 2, 1, 0}, {0, 1, 1, 1, 0}, {0, 0, 0, 0, 0}}});
-
-  EXPECT_EQ(grid.data_at(0, 0), 0);
-  EXPECT_EQ(grid.data_at(2, 2), 2);
-  EXPECT_EQ(grid.data_at(3, 1), 1);
-  EXPECT_EQ(grid.data_at(-1, 0), std::nullopt);
-  EXPECT_EQ(grid.data_at(0, -1), std::nullopt);
-  EXPECT_EQ(grid.data_at(5, 0), std::nullopt);
-  EXPECT_EQ(grid.data_at(0, 5), std::nullopt);
 
   EXPECT_EQ(grid.data_at(Eigen::Vector2i(0, 0)), 0);
   EXPECT_EQ(grid.data_at(Eigen::Vector2i(2, 2)), 2);

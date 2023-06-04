@@ -95,8 +95,7 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    * \param yi Grid cell y-axis coordinate.
    */
   [[nodiscard]] bool free_at(int xi, int yi) const {
-    const auto index = this->self().index_at(xi, yi);
-    const auto data = this->self().data_at(index);
+    const auto data = this->self().data_at(xi, yi);
     if (!data.has_value()) {
       return false;
     }

@@ -94,11 +94,14 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
 
   /// Gets cell data, if included.
   /**
-   * \param index Grid cell index.
+   * This is not the proper place for this, but I need to pivot.
+   * \param xi Grid cell x-axis coordinate.
+   * \param yi Grid cell y-axis coordinate.
    * \return Cell data if included, `std::nullopt` otherwise.
    */
-  [[nodiscard]] auto data_at(std::size_t index) const {
-    return index < this->self().size() ? std::make_optional(this->self().data()[index]) : std::nullopt;
+  [[nodiscard]] auto data_at(int xi, int yi) const {
+    return this->self().contains(xi, yi) ? std::make_optional(this->self().data()[this->self().index_at(xi, yi)])
+                                         : std::nullopt;
   }
 
   using BaseDenseGrid2<Derived>::neighborhood4;
