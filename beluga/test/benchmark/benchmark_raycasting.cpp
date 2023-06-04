@@ -120,13 +120,16 @@ template <template <std::size_t, std::size_t> class Grid>
 void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
+  constexpr auto kGridSize = 1280;
 
   const auto bearing_index = static_cast<RaycastBearing>(state.range(0));
   const auto n = static_cast<int>(state.range(1));
-  Grid<1280, 1280> grid{{}, kResolution};
-  grid.data()[grid.index_at(n, n)] = true;
-  grid.data()[grid.index_at(0, n)] = true;
-  grid.data()[grid.index_at(n, 0)] = true;
+
+  auto grid_storage = PlainGridStorage<kGridSize, kGridSize>{};
+  grid_storage.cell(n, n) = true;
+  grid_storage.cell(0, n) = true;
+  grid_storage.cell(n, 0) = true;
+  Grid grid{std::move(grid_storage), kResolution};
 
   const auto source_pose = Eigen::Vector2d{0., 0.};
   const auto beam_bearing = Sophus::SO2d{bearingAngle(bearing_index)};
@@ -175,13 +178,16 @@ template <template <std::size_t, std::size_t> class Grid>
 void BM_RayCasting2d(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
+  constexpr auto kGridSize = 1280;
 
   const auto bearing_index = static_cast<RaycastBearing>(state.range(0));
   const auto n = static_cast<int>(state.range(1));
-  auto grid = Grid<1280, 1280>{{}, kResolution};
-  grid.data()[grid.index_at(n, n)] = true;
-  grid.data()[grid.index_at(0, n)] = true;
-  grid.data()[grid.index_at(n, 0)] = true;
+
+  auto grid_storage = PlainGridStorage<kGridSize, kGridSize>{};
+  grid_storage.cell(n, n) = true;
+  grid_storage.cell(0, n) = true;
+  grid_storage.cell(n, 0) = true;
+  auto grid = Grid{std::move(grid_storage), kResolution};
 
   const auto source_pose = Sophus::SE2d{0., Eigen::Vector2d{0., 0.}};
   const auto beam_bearing = Sophus::SO2d{bearingAngle(bearing_index)};
