@@ -67,25 +67,25 @@ amcl:
     z_max: 0.05
     # Standard deviation of a gaussian centered arounds obstacles.
     sigma_hit: 0.2
-    # If to broadcast map to odom transform or not.
+    # Whether to broadcast map to odom transform or not.
     tf_broadcast: true
     # Transform tolerance allowed.
     transform_tolerance: 1.0
-    # Execution policy used to apply the motion update and impotance weight steps.
+    # Execution policy used to apply the motion update and importance weight steps.
     # Valid options: "seq", "par".
     execution_policy: seq
-    # If to set initial pose based on parameters.
+    # Whether to set initial pose based on parameters.
     # When enabled, particles will be initialized with the specified pose coordinates and covariance.
     set_initial_pose: true
     # If false, AMCL will use the last known pose to initialize when a new map is received.
     always_reset_initial_pose: false
     # Set this to true when you want to load only the first published map from map_server and ignore subsequent ones.
     first_map_only: false
-    # Initial pose x coodinate.
+    # Initial pose x coordinate.
     initial_pose.x: 0.0
-    # Initial pose y coodinate.
+    # Initial pose y coordinate.
     initial_pose.y: 2.0
-    # Initial pose yaw coodinate.
+    # Initial pose yaw coordinate.
     initial_pose.yaw: 0.0
     # Initial pose xx covariance.
     initial_pose.covariance_x: 0.25

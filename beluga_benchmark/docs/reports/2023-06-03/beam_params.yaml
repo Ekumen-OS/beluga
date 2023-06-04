@@ -63,21 +63,21 @@ amcl:
     z_rand: 0.5
     # Standard deviation of a gaussian centered arounds obstacles.
     sigma_hit: 0.2
-    # If to broadcast map to odom transform or not.
+    # Whether to broadcast map to odom transform or not.
     tf_broadcast: true
     # Transform tolerance allowed.
     transform_tolerance: 1.0
-    # Execution policy used to apply the motion update and impotance weight steps.
+    # Execution policy used to apply the motion update and importance weight steps.
     # Valid options: "seq", "par".
     execution_policy: seq
-    # If to set initial pose based on parameters.
+    # Whether to set initial pose based on parameters.
     # When enabled, particles will be initialized with the specified pose coordinates and covariance.
     set_initial_pose: false
-    # Initial pose x coodinate.
+    # Initial pose x coordinate.
     initial_pose.x: 0.0
-    # Initial pose y coodinate.
+    # Initial pose y coordinate.
     initial_pose.y: 0.0
-    # Initial pose yaw coodinate.
+    # Initial pose yaw coordinate.
     initial_pose.yaw: 0.0
     # Initial pose xx covariance.
     initial_pose.covariance_x: 0.25
