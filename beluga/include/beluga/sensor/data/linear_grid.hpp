@@ -114,19 +114,20 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
   [[nodiscard]] auto neighborhood4(std::size_t index) const {
     auto result = std::vector<std::size_t>{};
     result.reserve(4);
-    const std::size_t xi = index % this->self().width();
-    const std::size_t yi = index / this->self().width();
-    if (xi < (this->self().width() - 1)) {
-      result.push_back(index + 1);
+    const auto xi = static_cast<int>(index % this->self().width());
+    const auto yi = static_cast<int>(index / this->self().width());
+    // don't assume any particular memory arrangement
+    if (xi + 1 < this->self().width()) {
+      result.push_back(this->self().index_at(xi + 1, yi));
     }
-    if (yi < (this->self().height() - 1)) {
-      result.push_back(index + this->self().width());
+    if (yi + 1 < this->self().height()) {
+      result.push_back(this->self().index_at(xi, yi + 1));
     }
     if (xi > 0) {
-      result.push_back(index - 1);
+      result.push_back(this->self().index_at(xi - 1, yi));
     }
     if (yi > 0) {
-      result.push_back(index - this->self().width());
+      result.push_back(this->self().index_at(xi, yi - 1));
     }
     return result;
   }
