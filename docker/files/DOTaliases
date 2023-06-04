@@ -1,0 +1,1 @@
+alias run_precommit='pushd /ws/src/beluga && (pre-commit run --all-files || true) && popd'

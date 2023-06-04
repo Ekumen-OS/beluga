@@ -90,6 +90,7 @@ WORKDIR $USER_WS
 RUN colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
   && colcon mixin update default
 COPY --chown=$USER:$GROUP docker/files/colcon_defaults.yaml /home/$USER/.colcon/defaults.yaml
+COPY --chown=$USER:$GROUP docker/files/DOTaliases /home/$USER/.bash_aliases
 RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 
 COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
