@@ -46,15 +46,15 @@ Defaults are `map`, `odom` and `base`.
 
 ## Performance
 
-In the [beluga_benchmark](../beluga_benchmark) package a set of scripts can be found that benchmark the performance of `beluga_amcl` against that of `nav2_amcl` using a synthetic dataset.
+ Performance reports are periodically generated and uploaded to track performance improvements and regressions. These reports are generated using a set of scripts in the [beluga_benchmark](../beluga_benchmark) package which can be used to compare the performance of `beluga_amcl` against that of `nav2_amcl` using a synthetic dataset.
 
 The following plot displays the RSS (Resident Set Size), CPU usage and APE (Absolute Pose Error) statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `likelihood field`.
 
-![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-05-20/likelihood_seq_beluga_vs_amcl.png)
+![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-06-03/likelihood_beluga_seq_vs_amcl_log.png)
 
 The following plot displays the RSS (Resident Set Size), CPU usage and APE (Absolute Pose Error) statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `beam`.
 
-![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-05-20/beam_seq_beluga_vs_amcl.png)
+![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-06-03/beam_beluga_seq_vs_amcl_log.png)
 
 Further details can be found in [the reports folder here](../beluga_benchmark/docs/reports/).
 
