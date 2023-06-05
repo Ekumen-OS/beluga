@@ -19,14 +19,15 @@
 
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
+#include <sophus/types.hpp>
 
 namespace testing {
 
 template <class Scalar>
-inline auto Vector2Eq(const Eigen::Vector2<Scalar>& expected) {
+inline auto Vector2Eq(const Sophus::Vector2<Scalar>& expected) {
   return AllOf(
-      Property("x", &Eigen::Vector2<Scalar>::x, DoubleNear(expected.x(), 0.001)),
-      Property("y", &Eigen::Vector2<Scalar>::y, DoubleNear(expected.y(), 0.001)));
+      Property("x", &Sophus::Vector2<Scalar>::x, DoubleNear(expected.x(), 0.001)),
+      Property("y", &Sophus::Vector2<Scalar>::y, DoubleNear(expected.y(), 0.001)));
 }
 
 template <class Scalar>
@@ -42,7 +43,7 @@ inline auto SE2Eq(const Sophus::SE2<Scalar>& expected) {
 }
 
 template <class Scalar>
-inline auto SE2Eq(const Sophus::SO2<Scalar>& rotation, const Eigen::Vector2<Scalar>& translation) {
+inline auto SE2Eq(const Sophus::SO2<Scalar>& rotation, const Sophus::Vector2<Scalar>& translation) {
   return SE2Eq<Scalar>(Sophus::SE2<Scalar>{rotation, translation});
 }
 

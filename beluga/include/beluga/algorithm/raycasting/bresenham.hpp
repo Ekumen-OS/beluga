@@ -77,22 +77,22 @@ class Bresenham2i {
       using reference = Vector2&;
 
       /// Default constructor.
-      iterator() noexcept = default;
+      iterator() = default;
 
       /// Default copy constructor.
-      iterator(const iterator&) noexcept = default;
+      iterator(const iterator& other) = default;
 
       /// Default move constructor.
-      iterator(iterator&&) noexcept = default;
+      iterator(iterator&&) = default;  // NOLINT(performance-noexcept-move-constructor)
 
       /// Default copy assignment operator overload.
-      iterator& operator=(const iterator&) noexcept = default;
+      iterator& operator=(const iterator&) = default;
 
       /// Default move assignment operator overload.
-      iterator& operator=(iterator&&) noexcept = default;
+      iterator& operator=(iterator&&) = default;  // NOLINT(performance-noexcept-move-constructor)
 
       /// Constructs a Bresenham's 2D `line` iterator.
-      explicit iterator(const Line* line) noexcept : current_point_(line->p0_), x_(line->p0_.x()), y_(line->p0_.y()) {
+      explicit iterator(const Line* line) : current_point_(line->p0_), x_(line->p0_.x()), y_(line->p0_.y()) {
         xspan_ = line->p1_.x() - line->p0_.x();
         xstep_ = static_cast<decltype(xspan_)>(1);
         if (xspan_ < 0) {
@@ -215,19 +215,19 @@ class Bresenham2i {
     };
 
     /// Constructs point line.
-    Line() noexcept = default;
+    Line() = default;
 
     /// Default copy constructor.
-    Line(const Line&) noexcept = default;
+    Line(const Line&) = default;
 
     /// Default move constructor.
-    Line(Line&&) noexcept = default;
+    Line(Line&&) = default;  // NOLINT(performance-noexcept-move-constructor)
 
     /// Default copy assignment operator overload.
-    Line& operator=(const Line&) noexcept = default;
+    Line& operator=(const Line&) = default;
 
     /// Default move assignment operator overload.
-    Line& operator=(Line&&) noexcept = default;
+    Line& operator=(Line&&) = default;  // NOLINT(performance-noexcept-move-constructor)
 
     /// Constructs a Bresenham's 2D line drawing.
     /**
@@ -235,7 +235,7 @@ class Bresenham2i {
      * \param p1 Line end point in 2D space.
      * \param variant Bresenham's algorithm variant to be used.
      */
-    explicit Line(Vector2 p0, Vector2 p1, Variant variant) noexcept
+    explicit Line(Vector2 p0, Vector2 p1, Variant variant)
         : p0_(std::move(p0)), p1_(std::move(p1)), variant_(variant) {}
 
     /// Returns an iterator pointing to the first point in the line.

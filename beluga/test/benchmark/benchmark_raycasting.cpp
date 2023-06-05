@@ -122,17 +122,33 @@ void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
 }
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, BaselineGrid)
-    ->ArgsProduct({
-        {0, 1, 2},
-        {128, 256, 512, 1024},
-    })
+    ->Args({0, 128})
+    ->Args({0, 256})
+    ->Args({0, 512})
+    ->Args({0, 1024})
+    ->Args({1, 128})
+    ->Args({1, 256})
+    ->Args({1, 512})
+    ->Args({1, 1024})
+    ->Args({2, 128})
+    ->Args({2, 256})
+    ->Args({2, 512})
+    ->Args({2, 1024})
     ->Complexity();
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, StaticOccupancyGrid)
-    ->ArgsProduct({
-        {0, 1, 2},
-        {128, 256, 512, 1024},
-    })
+    ->Args({0, 128})
+    ->Args({0, 256})
+    ->Args({0, 512})
+    ->Args({0, 1024})
+    ->Args({1, 128})
+    ->Args({1, 256})
+    ->Args({1, 512})
+    ->Args({1, 1024})
+    ->Args({2, 128})
+    ->Args({2, 256})
+    ->Args({2, 512})
+    ->Args({2, 1024})
     ->Complexity();
 
 template <template <std::size_t, std::size_t> class Grid>
@@ -158,17 +174,33 @@ void BM_RayCasting2d(benchmark::State& state) {
 }
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d, BaselineGrid)
-    ->ArgsProduct({
-        {0, 1, 2},
-        {128, 256, 512, 1024},
-    })
+    ->Args({0, 128})
+    ->Args({0, 256})
+    ->Args({0, 512})
+    ->Args({0, 1024})
+    ->Args({1, 128})
+    ->Args({1, 256})
+    ->Args({1, 512})
+    ->Args({1, 1024})
+    ->Args({2, 128})
+    ->Args({2, 256})
+    ->Args({2, 512})
+    ->Args({2, 1024})
     ->Complexity();
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d, StaticOccupancyGrid)
-    ->ArgsProduct({
-        {0, 1, 2},
-        {128, 256, 512, 1024},
-    })
+    ->Args({0, 128})
+    ->Args({0, 256})
+    ->Args({0, 512})
+    ->Args({0, 1024})
+    ->Args({1, 128})
+    ->Args({1, 256})
+    ->Args({1, 512})
+    ->Args({1, 1024})
+    ->Args({2, 128})
+    ->Args({2, 256})
+    ->Args({2, 512})
+    ->Args({2, 1024})
     ->Complexity();
 
 }  // namespace

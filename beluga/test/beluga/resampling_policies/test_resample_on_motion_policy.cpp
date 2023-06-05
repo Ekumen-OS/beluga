@@ -223,8 +223,8 @@ TEST_F(ResampleOnMotionPolicyTests, RandomWalkingTest) {
   ASSERT_FALSE(uut.do_resampling_vote());
 
   for (const auto& test_tuple : relative_motions) {
-    const auto relative_movement = std::get<0>(test_tuple);
-    const auto expected_resampling_flag = std::get<1>(test_tuple);
+    const auto& relative_movement = std::get<0>(test_tuple);
+    const auto& expected_resampling_flag = std::get<1>(test_tuple);
     // apply the relative motion on top of the current pose and test the result
     current_pose = current_pose * relative_movement;
     uut.update_motion(current_pose);

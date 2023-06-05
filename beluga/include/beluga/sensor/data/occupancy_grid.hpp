@@ -181,6 +181,6 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
   }
 };
 
-};  // namespace beluga
+}  // namespace beluga
 
 #endif
