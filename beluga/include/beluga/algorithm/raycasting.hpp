@@ -81,8 +81,8 @@ class Ray2d {
     const auto& r1 = source_pose_in_local_frame_.so2();
     const auto& t1 = source_pose_in_local_frame_.translation();
     const auto t2 = bearing.unit_complex() * max_range_;
-    const auto far_end_pose_in_local_frame = Sophus::SE2d{r1, r1 * t2 + t1};
-    const auto far_end_cell = grid_.cell_near(far_end_pose_in_local_frame.translation());
+    const auto far_end_in_local_frame = (r1 * t2 + t1).eval();
+    const auto far_end_cell = grid_.cell_near(far_end_in_local_frame);
     const auto cell_is_valid = [this](const auto& cell) { return grid_.contains(cell); };
     return algorithm_(source_cell_, far_end_cell) | ranges::views::take_while(cell_is_valid);
   }
