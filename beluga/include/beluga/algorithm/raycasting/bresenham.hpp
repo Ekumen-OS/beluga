@@ -79,18 +79,6 @@ class Bresenham2i {
       /// Default constructor.
       iterator() = default;
 
-      /// Default copy constructor.
-      iterator(const iterator& other) = default;
-
-      /// Default move constructor.
-      iterator(iterator&&) = default;  // NOLINT(performance-noexcept-move-constructor)
-
-      /// Default copy assignment operator overload.
-      iterator& operator=(const iterator&) = default;
-
-      /// Default move assignment operator overload.
-      iterator& operator=(iterator&&) = default;  // NOLINT(performance-noexcept-move-constructor)
-
       /// Constructs a Bresenham's 2D `line` iterator.
       explicit iterator(const Line* line) : current_point_(line->p0_), x_(line->p0_.x()), y_(line->p0_.y()) {
         xspan_ = line->p1_.x() - line->p0_.x();
@@ -216,18 +204,6 @@ class Bresenham2i {
 
     /// Constructs point line.
     Line() = default;
-
-    /// Default copy constructor.
-    Line(const Line&) = default;
-
-    /// Default move constructor.
-    Line(Line&&) = default;  // NOLINT(performance-noexcept-move-constructor)
-
-    /// Default copy assignment operator overload.
-    Line& operator=(const Line&) = default;
-
-    /// Default move assignment operator overload.
-    Line& operator=(Line&&) = default;  // NOLINT(performance-noexcept-move-constructor)
 
     /// Constructs a Bresenham's 2D line drawing.
     /**
