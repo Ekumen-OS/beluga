@@ -68,23 +68,41 @@ TEST(OccupancyGrid2, GlobalCoordinatesAtCell) {
       kResolution, origin);
 
   constexpr auto kFrame = StaticOccupancyGrid<5, 5>::Frame::kGlobal;
-  EXPECT_TRUE(grid.coordinates_at(grid.index_at(2, 2), kFrame).isApprox(Eigen::Vector2d(-1.5, 3.5)));
+  EXPECT_TRUE(grid.coordinates_at({2, 2}, kFrame).isApprox(Eigen::Vector2d(-1.5, 3.5)));
 }
 
 TEST(OccupancyGrid2, AllFreeCells) {
   const auto grid = StaticOccupancyGrid<2, 5>(
-      PlainGridStorage<2, 5>{false, false, false, false, true, false, false, false, true, false}, 1., Sophus::SE2d{});
+      PlainGridStorage<2, 5>{
+          false, false, false, false, true,  //
+          false, false, false, true, false   //
+      },
+      1., Sophus::SE2d{});
 
-  const auto expected_free_cells = std::vector<std::size_t>{0, 1, 2, 3, 5, 6, 7, 9};
+  const auto expected_free_cells = std::vector<Eigen::Vector2i>{
+      {0, 0}, {1, 0}, {2, 0}, {3, 0}, {0, 1}, {1, 1}, {2, 1}, {4, 1},
+  };
   ASSERT_THAT(grid.free_cells() | ranges::to<std::vector>, testing::Pointwise(testing::Eq(), expected_free_cells));
 }
 
 TEST(OccupancyGrid2, ObstacleData) {
-  const auto grid = StaticOccupancyGrid<5, 2>(
-      PlainGridStorage<5, 2>{false, false, false, false, true, false, false, false, true, false}, 1., Sophus::SE2d{});
+  const auto grid = StaticOccupancyGrid<5, 4>(
+      PlainGridStorage<5, 4>{
+          false, false, false, true,   //
+          false, false, true,  false,  //
+          true,  false, false, false,  //
+          false, false, false, false,  //
+          true,  false, false, true    //
+      },
+      1., Sophus::SE2d{});
+
+  const auto expected_obstacle_data = std::vector<Eigen::Vector2i>{
+      {3, 0}, {2, 1}, {0, 2}, {3, 4}, {0, 4},
+  };
 
   // Data and obstacle data are equivalent in this case
-  ASSERT_THAT(grid.obstacle_data() | ranges::to<std::vector>, testing::Pointwise(testing::Eq(), grid.data()));
+  ASSERT_THAT(
+      grid.obstacle_data() | ranges::to<std::vector>, testing::UnorderedElementsAreArray(expected_obstacle_data));
 }
 
 TEST(OccupancyGrid2, GlobalCoordinatesForCells) {

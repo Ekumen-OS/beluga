@@ -24,6 +24,8 @@
 #include <beluga/sensor/data/regular_grid.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
 
+#include <range/v3/view/common.hpp>
+
 #include <ciabatta/ciabatta.hpp>
 
 /**
@@ -72,6 +74,9 @@ class ValueGrid2Mixin : public Mixin {
 
   /// Gets grid data.
   [[nodiscard]] const std::vector<T>& data() const { return data_; }
+
+  /// Return a range containing the grid data in row-major order.
+  [[nodiscard]] const auto row_major_scan() const { return data_ | ranges::views::common; }
 
  private:
   std::vector<T> data_;

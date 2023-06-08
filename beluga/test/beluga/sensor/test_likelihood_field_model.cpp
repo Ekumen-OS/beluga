@@ -18,6 +18,8 @@
 
 #include "ciabatta/ciabatta.hpp"
 
+#include <range/v3/range/conversion.hpp>
+
 #include <gmock/gmock.h>
 
 namespace {
@@ -56,8 +58,8 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
   auto expected_cubed_likelihood =
       expected_likelihood_field | ranges::views::transform([](auto v) { return v * v * v; }) | ranges::to<std::vector>;
 
-  ASSERT_THAT(
-      mixin.likelihood_field().data(), testing::Pointwise(testing::DoubleNear(0.003), expected_cubed_likelihood));
+  const auto likelihood_field = mixin.likelihood_field().row_major_scan() | ranges::to<std::vector>;
+  ASSERT_THAT(likelihood_field, testing::Pointwise(testing::DoubleNear(0.003), expected_cubed_likelihood));
 }
 
 TEST(LikelihoodFieldModel, ImportanceWeight) {

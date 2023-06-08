@@ -21,6 +21,7 @@
 
 #include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/filter.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/view/transform.hpp>
 
 #include <Eigen/Core>
@@ -134,12 +135,12 @@ class BaseOccupancyGrid2Mixin : public Mixin {
 
   /// Compute plane coordinates given grid cell coordinates.
   /**
-   * \param index Grid cell index.
+   * \param cell Grid cell coordinate.
    * \param frame Plane coordinate frame.
    * \return Plane coordinates in the corresponding `frame`.
    */
-  [[nodiscard]] auto coordinates_at(std::size_t index, Frame frame) const {
-    auto position = this->self().coordinates_at(index);
+  [[nodiscard]] auto coordinates_at(const Eigen::Vector2i& cell, Frame frame) const {
+    auto position = this->self().coordinates_at(cell);
     if (frame == Frame::kGlobal) {
       position = this->self().origin() * position;
     }
@@ -148,31 +149,47 @@ class BaseOccupancyGrid2Mixin : public Mixin {
 
   /// Compute plane coordinates for a range of grid cells.
   /**
-   * \param cells Range of grid cell indices or coordinates.
+   * \param cells Range of grid integer coordinates.
    * \param frame Plane coordinate frame.
    * \return Range of plane coordinates in the corresponding `frame`.
    */
   template <class Range>
   [[nodiscard]] auto coordinates_for(Range&& cells, Frame frame) const {
-    return cells | ranges::views::transform(
-                       [this, frame](const auto& cell) { return this->self().coordinates_at(cell, frame); });
+    const auto get_coordinates = [this, frame](const auto& cell) { return this->self().coordinates_at(cell, frame); };
+    return cells | ranges::views::transform(get_coordinates);
   }
 
-  /// Retrieves range of free grid cell indices.
+  /// Retrieves a range containing the ids of free cells.
   [[nodiscard]] auto free_cells() const {
-    return ranges::views::enumerate(this->self().data()) |
-           ranges::views::filter([value_traits = this->self().value_traits()](const auto& tuple) {
-             return value_traits.is_free(std::get<1>(tuple));
-           }) |
-           ranges::views::transform([](const auto& tuple) { return std::get<0>(tuple); });
+    const auto is_free = [value_traits = this->self().value_traits()](const auto& tuple) {
+      return value_traits.is_free(std::get<1>(tuple));
+    };
+    const auto get_cell_id = [](const auto& tuple) { return std::get<0>(tuple); };
+    return this->self().row_major_data() | ranges::views::filter(is_free) | ranges::views::transform(get_cell_id);
   }
 
-  /// Retrieves grid data using true booleans for obstacles.
+  /// Retrieves a range containing the cells that are obstacles only.
   [[nodiscard]] auto obstacle_data() const {
-    return this->self().data() |
-           ranges::views::transform([value_traits = this->self().value_traits()](const auto& value) {
-             return value_traits.is_occupied(value);
-           });
+    const auto is_occupied = [value_traits = this->self().value_traits()](const auto& tuple) {
+      return value_traits.is_occupied(std::get<1>(tuple));
+    };
+    const auto get_cell_id = [](const auto& tuple) { return std::get<0>(tuple); };
+    return this->self().row_major_data() | ranges::views::filter(is_occupied) | ranges::views::transform(get_cell_id);
+  }
+
+ private:
+  /// delivers a range of tuples with cell and cell value
+  [[nodiscard]] auto row_major_data() const {
+    const auto width = this->self().width();
+    const auto height = this->self().height();
+    const auto cell_count = width * height;
+    const auto to_raster_data = [this, width, height](std::size_t raster_index) {
+      const auto xi = static_cast<int>(raster_index % width);
+      const auto yi = static_cast<int>(raster_index / width);
+      const auto cell = Eigen::Vector2i(xi, yi);
+      return std::make_tuple(cell, this->self().data_at(cell).value());
+    };
+    return ranges::views::iota(0, static_cast<int>(cell_count)) | ranges::views::transform(to_raster_data);
   }
 };
 

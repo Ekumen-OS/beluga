@@ -177,13 +177,14 @@ class LikelihoodFieldModel : public Mixin {
   static ValueGrid2<double> make_likelihood_field(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid) {
     const auto squared_max_distance = params.max_obstacle_distance * params.max_obstacle_distance;
 
-    const auto squared_distance = [&grid, squared_max_distance](std::size_t first, std::size_t second) {
+    const auto squared_distance = [&grid, squared_max_distance](const auto& first, const auto& second) {
       return std::min((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm(), squared_max_distance);
     };
 
-    const auto neighborhood = [&grid](std::size_t index) { return grid.neighborhood4(index); };
+    const auto neighborhood = [&grid](const auto& cell) { return grid.neighborhood4(cell); };
 
-    const auto distance_map = nearest_obstacle_distance_map(grid.obstacle_data(), squared_distance, neighborhood);
+    const auto distance_map = nearest_obstacle_distance_map(
+        grid.width(), grid.height(), grid.obstacle_data(), squared_distance, neighborhood);
 
     const auto amplitude = params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()));
     const auto two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit;

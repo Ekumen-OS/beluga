@@ -71,6 +71,7 @@ class BaseLinearGrid2Mixin : public Mixin {
    * \param xi Grid cell x-axis coordinate.
    * \param yi Grid cell y-axis coordinate.
    */
+  // RENAME INDEX AS CELL_ID TO AVOID AMBIGUITIES
   [[nodiscard]] std::size_t index_at(int xi, int yi) const {
     return static_cast<std::size_t>(yi) * this->self().width() + static_cast<std::size_t>(xi);
   }
@@ -88,6 +89,7 @@ class BaseLinearGrid2Mixin : public Mixin {
    * \param index Grid cell index.
    * \return Plane coordinates of the cell centroid.
    */
+  // REMOVE THIS ONE
   [[nodiscard]] Eigen::Vector2d coordinates_at(std::size_t index) const {
     return this->self().coordinates_at(
         static_cast<int>(index % this->self().width()), static_cast<int>(index / this->self().width()));
@@ -105,34 +107,6 @@ class BaseLinearGrid2Mixin : public Mixin {
   [[nodiscard]] auto data_at(int xi, int yi) const {
     return this->self().contains(xi, yi) ? std::make_optional(this->self().data()[this->self().index_at(xi, yi)])
                                          : std::nullopt;
-  }
-
-  using Mixin::neighborhood4;
-
-  /// Computes 4-connected neighborhood for cell.
-  /**
-   * \param index Grid cell index.
-   * \return range of neighbor cells' indices.
-   */
-  [[nodiscard]] auto neighborhood4(std::size_t index) const {
-    auto result = std::vector<std::size_t>{};
-    result.reserve(4);
-    const auto xi = static_cast<int>(index % this->self().width());
-    const auto yi = static_cast<int>(index / this->self().width());
-    // don't assume any particular memory arrangement
-    if (xi + 1 < this->self().width()) {
-      result.push_back(this->self().index_at(xi + 1, yi));
-    }
-    if (yi + 1 < this->self().height()) {
-      result.push_back(this->self().index_at(xi, yi + 1));
-    }
-    if (xi > 0) {
-      result.push_back(this->self().index_at(xi - 1, yi));
-    }
-    if (yi > 0) {
-      result.push_back(this->self().index_at(xi, yi - 1));
-    }
-    return result;
   }
 };
 

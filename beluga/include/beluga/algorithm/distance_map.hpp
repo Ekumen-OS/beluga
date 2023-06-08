@@ -20,7 +20,10 @@
 
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
+#include <range/v3/view/common.hpp>
 #include <range/v3/view/enumerate.hpp>
+
+#include <Eigen/Core>
 
 /**
  * \file
@@ -35,10 +38,12 @@
  *  Its value type must be bool.
  * \tparam DistanceFunction A callable type, its prototype must be
  *  (std::size_t, std::size_t) -> DistanceType. DistanceType must be an scalar type.
- * \tparam NeighborsFunction A callabe type, its prototype must be
+ * \tparam NeighborsFunction A callable type, its prototype must be
  *  (std::size_t) -> NeighborsT, where NeighborsT is a
  *    [Range](https://en.cppreference.com/w/cpp/ranges/range)
  *    with value type std::size_t.
+ * \param width The width of the obstacle map.
+ * \param height The height of the obstacle map.
  * \param obstacle_map A map that represents obstacles in an environment.
  *  If the value of a cell is True, the cell has an obstacle.
  * \param distance_function Given the indexes of two cells in the map i and j,
@@ -50,39 +55,46 @@
  */
 template <class Range, class DistanceFunction, class NeighborsFunction>
 auto nearest_obstacle_distance_map(
+    const std::size_t width,
+    const std::size_t height,
     Range&& obstacle_map,
     DistanceFunction&& distance_function,
     NeighborsFunction&& neighbors_function) {
   struct IndexPair {
-    std::size_t nearest_obstacle_index;
-    std::size_t index;
+    Eigen::Vector2i nearest_obstacle_cell;
+    Eigen::Vector2i cell;
   };
 
-  using DistanceType = std::invoke_result_t<DistanceFunction, std::size_t, std::size_t>;
-  auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_map));
-  auto visited = std::vector<bool>(ranges::size(obstacle_map), false);
+  using DistanceType = std::invoke_result_t<DistanceFunction, Eigen::Vector2i, Eigen::Vector2i>;
 
-  auto compare = [&distance_map](const IndexPair& first, const IndexPair& second) {
-    return distance_map[first.index] > distance_map[second.index];
+  const auto distance_map_size = width * height;
+  auto distance_map = std::vector<DistanceType>(distance_map_size);
+  auto visited = std::vector<bool>(distance_map_size, false);
+
+  const auto linear_index = [width](const auto& cell) { return cell.y() * width + cell.x(); };
+
+  auto compare = [&distance_map, linear_index](const IndexPair& first, const IndexPair& second) {
+    return distance_map[linear_index(first.cell)] > distance_map[linear_index(second.cell)];
   };
+
   auto queue = std::priority_queue<IndexPair, std::vector<IndexPair>, decltype(compare)>{compare};
 
-  for (auto [index, is_obstacle] : ranges::views::enumerate(obstacle_map)) {
-    if (is_obstacle) {
-      visited[index] = true;
-      distance_map[index] = 0;
-      queue.push(IndexPair{index, index});  // The nearest obstacle is itself
-    }
+  for (const auto& cell : obstacle_map | ranges::views::common) {
+    const auto index = linear_index(cell);
+    visited[index] = true;
+    distance_map[index] = 0;
+    queue.push(IndexPair{cell, cell});  // The nearest obstacle is itself
   }
 
   while (!queue.empty()) {
     auto parent = queue.top();
     queue.pop();
-    for (std::size_t index : neighbors_function(parent.index)) {
+    for (const auto& cell : neighbors_function(parent.cell)) {
+      const auto index = linear_index(cell);
       if (!visited[index]) {
         visited[index] = true;
-        distance_map[index] = distance_function(parent.nearest_obstacle_index, index);
-        queue.push(IndexPair{parent.nearest_obstacle_index, index});
+        distance_map[index] = distance_function(parent.nearest_obstacle_cell, cell);
+        queue.push(IndexPair{parent.nearest_obstacle_cell, cell});
       }
     }
   }
