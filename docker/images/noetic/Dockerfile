@@ -54,7 +54,7 @@ RUN apt-get update \
 
 RUN pip install \
   evo==1.21.0 \
-  pre-commit==2.20.0
+  pre-commit==2.20.0 \
   # Note: Installing timemory takes a long time.
   timemory==3.3.0rc4
 
@@ -96,7 +96,8 @@ RUN touch $USER_WS/src/beluga/flatland/CATKIN_IGNORE
 
 RUN sudo apt-get update \
   && rosdep update \
-  && rosdep install -i --from-path src -y \
+  && rosdep install -i -y --from-path src/beluga/beluga \
+       src/beluga/beluga_amcl src/beluga/beluga_example \
   && sudo rm -rf /var/lib/apt/lists/*
 
 ENV WITHIN_DEV 1
