@@ -20,6 +20,7 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
+#include "beluga/test/utils/eigen_initializers.hpp"
 #include "beluga/test/utils/sophus_matchers.hpp"
 
 namespace {
@@ -42,8 +43,7 @@ TEST(MultivariateNormalDistribution, NegativeEigenvaluesMatrix) {
 }
 
 TEST(MultivariateNormalDistribution, NonSymmetricMatrix) {
-  Eigen::Matrix3d covariance;
-  covariance << 1.0, 2.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0;
+  auto covariance = testing::as<Eigen::Matrix3d>({{1.0, 2.0, 0.0}, {1.0, 1.0, 0.0}, {0.0, 0.0, 1.0}});
   EXPECT_THROW(beluga::MultivariateNormalDistribution{covariance}, std::runtime_error);
 }
 
@@ -57,8 +57,8 @@ class MultivariateNormalDistributionWithParam
     : public ::testing::TestWithParam<std::pair<Eigen::Vector2d, Eigen::Matrix2d>> {};
 
 TEST_P(MultivariateNormalDistributionWithParam, DistributionCovarianceAndMean) {
-  const Eigen::Vector2d expected_mean = std::get<0>(GetParam());
-  const Eigen::Matrix2d expected_covariance = std::get<1>(GetParam());
+  const Eigen::Vector2d& expected_mean = std::get<0>(GetParam());
+  const Eigen::Matrix2d& expected_covariance = std::get<1>(GetParam());
   auto distribution = beluga::MultivariateNormalDistribution{expected_mean, expected_covariance};
   const auto sequence = ranges::views::generate([&]() {
                           static auto generator = std::mt19937{std::random_device()()};
@@ -81,9 +81,9 @@ INSTANTIATE_TEST_SUITE_P(
     MeanCovariancePairs,
     MultivariateNormalDistributionWithParam,
     testing::Values(
-        std::make_pair(Eigen::Vector2d{1.0, 2.0}, Eigen::Matrix2d{{0.0, 0.0}, {0.0, 0.0}}),
-        std::make_pair(Eigen::Vector2d{3.0, 4.0}, Eigen::Matrix2d{{1.0, 0.0}, {0.0, 1.0}}),
-        std::make_pair(Eigen::Vector2d{3.0, 4.0}, Eigen::Matrix2d{{1.5, -0.3}, {-0.3, 1.5}}),
-        std::make_pair(Eigen::Vector2d{5.0, 6.0}, Eigen::Matrix2d{{2.0, 0.7}, {0.7, 2.0}})));
+        std::make_pair(Eigen::Vector2d{1.0, 2.0}, testing::as<Eigen::Matrix2d>({{0.0, 0.0}, {0.0, 0.0}})),
+        std::make_pair(Eigen::Vector2d{3.0, 4.0}, testing::as<Eigen::Matrix2d>({{1.0, 0.0}, {0.0, 1.0}})),
+        std::make_pair(Eigen::Vector2d{3.0, 4.0}, testing::as<Eigen::Matrix2d>({{1.5, -0.3}, {-0.3, 1.5}})),
+        std::make_pair(Eigen::Vector2d{5.0, 6.0}, testing::as<Eigen::Matrix2d>({{2.0, 0.7}, {0.7, 2.0}}))));
 
 }  // namespace

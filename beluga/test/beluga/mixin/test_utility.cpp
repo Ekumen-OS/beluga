@@ -21,9 +21,11 @@ namespace {
 struct Object {};
 
 TEST(Filter, FilterWithPredicate) {
-  using arithmetic_list = beluga::mixin::filter<std::is_arithmetic, int, float, Object, bool>;
+  using arithmetic_list = beluga::mixin::filter<std::is_arithmetic, beluga::mixin::list<int, float, Object, bool>>;
   static_assert(std::is_same_v<arithmetic_list, beluga::mixin::list<int, float, bool>>);
-  static_assert(std::is_same_v<beluga::mixin::filter<std::is_void, int, float, Object, bool>, beluga::mixin::list<>>);
+  static_assert(
+      std::is_same_v<
+          beluga::mixin::filter<std::is_void, beluga::mixin::list<int, float, Object, bool>>, beluga::mixin::list<>>);
 }
 
 TEST(IsVariant, Qualified) {

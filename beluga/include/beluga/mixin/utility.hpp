@@ -26,19 +26,13 @@
 
 namespace beluga::mixin {
 
-/// \cond filter
+/// \cond lists
 
 template <typename...>
 struct list;
 
 template <typename... Lists>
 struct concat;
-
-template <template <typename> class Pred, typename T>
-using filter_helper = std::conditional_t<Pred<T>::value, list<T>, list<>>;
-
-template <template <typename> class Pred, typename... Ts>
-using filter = typename concat<filter_helper<Pred, Ts>...>::type;
 
 template <>
 struct concat<> {
@@ -60,11 +54,22 @@ struct concat<list<Ts...>, list<Us...>, Rest...> {
   using type = typename concat<list<Ts..., Us...>, Rest...>::type;
 };
 
-/// \endcond filter
+/// \endcond lists
 
 /// \cond detail
 
 namespace detail {
+
+template <template <typename> class Pred, typename List>
+struct filter_impl;
+
+template <template <typename> class Pred, typename... Ts>
+struct filter_impl<Pred, list<Ts...>> {
+  template <template <typename> class P, typename T>
+  using helper = std::conditional_t<P<T>::value, list<T>, list<>>;
+
+  using type = typename concat<helper<Pred, Ts>...>::type;
+};
 
 template <typename T>
 struct is_variant_impl : std::false_type {};
@@ -81,6 +86,13 @@ struct is_reference_wrapper_impl<std::reference_wrapper<T>> : std::true_type {};
 }  // namespace detail
 
 /// \endcond
+
+/// \cond filter
+
+template <template <typename> class Pred, typename List>
+using filter = typename detail::filter_impl<Pred, List>::type;
+
+/// \endcond filter
 
 /// Type trait to detect that a given type is a variant.
 /**

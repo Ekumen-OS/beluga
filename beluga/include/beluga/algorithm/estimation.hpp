@@ -21,6 +21,7 @@
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/transform.hpp>
 #include <sophus/se2.hpp>
+#include <sophus/types.hpp>
 
 #include <numeric>
 
@@ -52,7 +53,7 @@ namespace beluga {
 /// Calculates the covariance of a range given its mean and the weights of each element.
 /**
  * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
- *  value type is `Eigen::Vector2<Scalar>`.
+ *  value type is `Sophus::Vector2<Scalar>`.
  * \tparam WeightsRange A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
  *  value type is `Scalar`.
  * \tparam Scalar A scalar type, e.g. double or float.
@@ -60,17 +61,17 @@ namespace beluga {
  * \param normalized_weights Range with the normalized (total weight 1.0) weights of the samples in 'range'.
  * \param mean The previously calculated mean of range. The value must be correct for the resulting
  *  covariance to be correct.
- * \return The calculated covariance, as a `Eigen::Matrix2<Scalar>`.
+ * \return The calculated covariance, as a `Sophus::Matrix2<Scalar>`.
  */
 template <class Range, class WeightsRange, class Scalar>
-Eigen::Matrix2<Scalar>
-calculate_covariance(Range&& range, WeightsRange&& normalized_weights, const Eigen::Vector2<Scalar>& mean) {
+Sophus::Matrix2<Scalar>
+calculate_covariance(Range&& range, WeightsRange&& normalized_weights, const Sophus::Vector2<Scalar>& mean) {
   auto translations_view = range | ranges::views::common;
   auto normalized_weights_view = normalized_weights | ranges::views::common;
 
   auto calculate_weighted_sample_covariance = [mean](const auto& value, const auto& weight) {
     const auto centered = value - mean;
-    return Eigen::Vector3<Scalar>{
+    return Sophus::Vector3<Scalar>{
         weight * centered.x() * centered.x(),  // weighted sample x autocovariance
         weight * centered.x() * centered.y(),  // weighted sample xy cross-covariance
         weight * centered.y() * centered.y(),  // weighted sample y autocovariance
@@ -84,14 +85,14 @@ calculate_covariance(Range&& range, WeightsRange&& normalized_weights, const Eig
       [](const auto& weight) { return (weight * weight); });
 
   // calculate the x autocovariance, xy cross-covariance, and y autocovariance
-  Eigen::Vector3<Scalar> coefficients =
+  Sophus::Vector3<Scalar> coefficients =
       std::transform_reduce(
           translations_view.begin(), translations_view.end(), normalized_weights_view.begin(),
-          Eigen::Vector3<Scalar>::Zero().eval(), std::plus{}, calculate_weighted_sample_covariance) /
+          Sophus::Vector3<Scalar>::Zero().eval(), std::plus{}, calculate_weighted_sample_covariance) /
       (1.0 - squared_weight_sum);
 
   // create the symmetric 2x2 translation covariance matrix from the coefficients
-  auto covariance_matrix = Eigen::Matrix2<Scalar>{};
+  auto covariance_matrix = Sophus::Matrix2<Scalar>{};
   covariance_matrix << coefficients(0), coefficients(1), coefficients(1), coefficients(2);
   return covariance_matrix;
 }
@@ -100,15 +101,15 @@ calculate_covariance(Range&& range, WeightsRange&& normalized_weights, const Eig
 /// samples have the same weight.
 /**
  * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
- *  value type is `Eigen::Vector2<Scalar>`.
+ *  value type is `Sophus::Vector2<Scalar>`.
  * \tparam Scalar A scalar type, e.g. double or float.
  * \param range Range to be used to calculate the covariance.
  * \param mean The previously calculated mean of range. The value must be correct for the resulting
  *  covariance to be correct.
- * \return The calculated covariance, as a `Eigen::Matrix2<Scalar>`.
+ * \return The calculated covariance, as a `Sophus::Matrix2<Scalar>`.
  */
 template <class Range, class Scalar>
-Eigen::Matrix2<Scalar> calculate_covariance(Range&& range, const Eigen::Vector2<Scalar>& mean) {
+Sophus::Matrix2<Scalar> calculate_covariance(Range&& range, const Sophus::Vector2<Scalar>& mean) {
   const auto sample_count = range.size();
   return calculate_covariance(
       range,
@@ -140,7 +141,7 @@ template <
     class Pose = ranges::range_value_t<Poses>,
     class Scalar = typename Pose::Scalar,
     typename = std::enable_if_t<std::is_same_v<Pose, typename Sophus::SE2<Scalar>>>>
-std::pair<Sophus::SE2<Scalar>, Eigen::Matrix3<Scalar>> estimate(Poses&& poses, Weights&& weights) {
+std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, Weights&& weights) {
   auto translation_view = poses | ranges::views::transform([](const auto& pose) { return pose.translation(); });
   auto weights_view = weights | ranges::views::common;
   const auto weights_sum = std::accumulate(weights_view.begin(), weights_view.end(), 0.0);
@@ -150,21 +151,21 @@ std::pair<Sophus::SE2<Scalar>, Eigen::Matrix3<Scalar>> estimate(Poses&& poses, W
   // map sophus pose 2D pose into a 4D Eigen vector. Mapping exploits that Sophus stores the 2D transform
   // as two elements for the linear translation, and two more for the orientation (in complex number form)
   const auto pose_to_weighted_eigen_vector = [](const auto& pose, const auto& weight) {
-    return Eigen::Map<const Eigen::Vector4<Scalar>>{pose.data()} * weight;
+    return Eigen::Map<const Sophus::Vector4<Scalar>>{pose.data()} * weight;
   };
 
   // Compute the average of all the coefficients of the SE2 group elements and construct a new SE2 element. Notice
   // that after averaging the complex representation of the orientation the resulting complex is not on the unit circle.
   // This is expected and the value will be renormalized after having used the non-normal result to estimate the
   // orientation autocovariance.
-  const Eigen::Vector4<Scalar> mean_pose_vector = std::transform_reduce(
-      poses.begin(), poses.end(), normalized_weights_view.begin(), Eigen::Vector4<Scalar>::Zero().eval(), std::plus{},
+  const Sophus::Vector4<Scalar> mean_pose_vector = std::transform_reduce(
+      poses.begin(), poses.end(), normalized_weights_view.begin(), Sophus::Vector4<Scalar>::Zero().eval(), std::plus{},
       pose_to_weighted_eigen_vector);
 
   // Calculate the weighted pose estimation
   Sophus::SE2<Scalar> estimated_pose = Eigen::Map<const Sophus::SE2<Scalar>>{mean_pose_vector.data()};
 
-  Eigen::Matrix3<Scalar> covariance_matrix = Eigen::Matrix3<Scalar>::Zero();
+  Sophus::Matrix3<Scalar> covariance_matrix = Sophus::Matrix3<Scalar>::Zero();
 
   // Compute the covariance of the translation part.
   covariance_matrix.template topLeftCorner<2, 2>() =
@@ -205,7 +206,7 @@ template <
     class Pose = ranges::range_value_t<Poses>,
     class Scalar = typename Pose::Scalar,
     typename = std::enable_if_t<std::is_same_v<Pose, typename Sophus::SE2<Scalar>>>>
-std::pair<Sophus::SE2<Scalar>, Eigen::Matrix3<Scalar>> estimate(Poses&& poses) {
+std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses) {
   return beluga::estimate(poses, ranges::views::repeat_n(1.0, static_cast<std::ptrdiff_t>(poses.size())));
 }
 
@@ -218,7 +219,7 @@ struct EstimationInterface2d {
   /**
    * \return The estimated 2D pose and its 3x3 covariance matrix.
    */
-  [[nodiscard]] virtual std::pair<Sophus::SE2d, Eigen::Matrix3d> estimate() const = 0;
+  [[nodiscard]] virtual std::pair<Sophus::SE2d, Sophus::Matrix3d> estimate() const = 0;
 };
 
 /// Primary template for a simple state estimator.

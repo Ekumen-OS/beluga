@@ -41,12 +41,10 @@ TEST_F(CovarianceCalculation, UniformWeightOverload) {
       cov_matrix = cov(translations)
   */
   const auto translation_vector = std::vector{
-      Eigen::Vector2<double>{0, 0}, Eigen::Vector2<double>{2, 2}, Eigen::Vector2<double>{0, 0},
-      Eigen::Vector2<double>{2, 2}, Eigen::Vector2<double>{0, 0}, Eigen::Vector2<double>{2, 0},
-      Eigen::Vector2<double>{0, 2}, Eigen::Vector2<double>{2, 2}, Eigen::Vector2<double>{0, 2},
-      Eigen::Vector2<double>{2, 0},
+      Vector2d{0, 0}, Vector2d{2, 2}, Vector2d{0, 0}, Vector2d{2, 2}, Vector2d{0, 0},
+      Vector2d{2, 0}, Vector2d{0, 2}, Vector2d{2, 2}, Vector2d{0, 2}, Vector2d{2, 0},
   };
-  const auto translation_mean = Eigen::Vector2<double>{1, 1};
+  const auto translation_mean = Vector2d{1, 1};
   const auto covariance = beluga::calculate_covariance(translation_vector, translation_mean);
   ASSERT_NEAR(covariance(0, 0), 1.1111, 0.001);
   ASSERT_NEAR(covariance(0, 1), 0.2222, 0.001);
@@ -66,15 +64,13 @@ TEST_F(CovarianceCalculation, NonUniformWeightOverload) {
       weighted_cov_matrix =  (normalized_weight .* deviations)' * deviations ./ (1 - sum(normalized_weight.^2))
   */
   const auto translation_vector = std::vector{
-      Eigen::Vector2<double>{0, 0}, Eigen::Vector2<double>{2, 2}, Eigen::Vector2<double>{0, 0},
-      Eigen::Vector2<double>{2, 2}, Eigen::Vector2<double>{0, 0}, Eigen::Vector2<double>{2, 0},
-      Eigen::Vector2<double>{0, 2}, Eigen::Vector2<double>{2, 2}, Eigen::Vector2<double>{0, 2},
-      Eigen::Vector2<double>{2, 0},
+      Vector2d{0, 0}, Vector2d{2, 2}, Vector2d{0, 0}, Vector2d{2, 2}, Vector2d{0, 0},
+      Vector2d{2, 0}, Vector2d{0, 2}, Vector2d{2, 2}, Vector2d{0, 2}, Vector2d{2, 0},
   };
   auto weights = std::vector{0.0, 1.0, 2.0, 1.0, 0.0, 1.0, 2.0, 1.0, 0.0, 1.0};
   const auto total_weight = std::accumulate(weights.begin(), weights.end(), 0.0);
   std::for_each(weights.begin(), weights.end(), [total_weight](auto& weight) { weight /= total_weight; });
-  const auto translation_mean = Eigen::Vector2<double>{1.1111, 1.1111};
+  const auto translation_mean = Vector2d{1.1111, 1.1111};
   const auto covariance = beluga::calculate_covariance(translation_vector, weights, translation_mean);
   ASSERT_NEAR(covariance(0, 0), 1.1765, 0.001);
   ASSERT_NEAR(covariance(0, 1), 0.1176, 0.001);

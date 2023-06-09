@@ -45,7 +45,7 @@ class MultivariateNormalDistribution {
   using Scalar = typename Matrix::Scalar;
 
   /// The eigen column vector from Matrix.
-  using Vector = typename Eigen::Vector<typename Matrix::Scalar, Matrix::RowsAtCompileTime>;
+  using Vector = typename Eigen::Matrix<typename Matrix::Scalar, Matrix::RowsAtCompileTime, 1>;
 
   /// Multivariate normal distribution parameter set class.
   class Param {

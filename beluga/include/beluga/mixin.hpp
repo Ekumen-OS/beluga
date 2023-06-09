@@ -87,7 +87,8 @@ template <class Interface, template <class...> class Base, class... Args>
 auto make_mixin(Args&&... args) {
   return visit_everything(
       [](auto&&... args) {
-        using Concrete = mixin_from_descriptors_t<Base, filter<is_descriptor, decltype(args)...>>;
+        using InnerArgs = list<decltype(args)...>;  // avoid https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86859
+        using Concrete = mixin_from_descriptors_t<Base, filter<is_descriptor, InnerArgs>>;
         return std::apply(
             [](auto&&... args) -> std::unique_ptr<Interface> { return std::make_unique<Concrete>(args...); },
             make_tuple_with<is_not_descriptor>(params_or_forward(args)...));

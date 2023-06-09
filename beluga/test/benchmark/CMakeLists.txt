@@ -6,10 +6,11 @@ add_executable(benchmark_beluga
   benchmark_raycasting.cpp
   benchmark_sampling.cpp
   benchmark_spatial_hash.cpp
-  benchmark_tuple_vector.cpp)
+  benchmark_tuple_vector.cpp
+  benchmark_main.cpp)
 target_include_directories(benchmark_beluga PRIVATE ../beluga/include)
 target_link_libraries(benchmark_beluga
-  PUBLIC benchmark::benchmark_main
+  PUBLIC benchmark::benchmark
   PRIVATE ${PROJECT_NAME} beluga_compile_options)
 set(TEST_RESULTS_DIR "${CMAKE_BINARY_DIR}/test_results/${PROJECT_NAME}")
 file(MAKE_DIRECTORY ${TEST_RESULTS_DIR})
