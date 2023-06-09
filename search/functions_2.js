@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['calculate_5fcovariance_438',['calculate_covariance',['../estimation_8hpp.html#adccedbc7eaa68851c7955ccc83fedaf0',1,'beluga::calculate_covariance(Range &amp;&amp;range, const Eigen::Vector2&lt; Scalar &gt; &amp;mean)'],['../estimation_8hpp.html#a0c0a39ce8cd8676b047ebe852d68b945',1,'beluga::calculate_covariance(Range &amp;&amp;range, WeightsRange &amp;&amp;normalized_weights, const Eigen::Vector2&lt; Scalar &gt; &amp;mean)']]],
+  ['calculate_5fcovariance_438',['calculate_covariance',['../estimation_8hpp.html#a6556fb20721eaea6b5a2d4b86ce603b8',1,'beluga::calculate_covariance(Range &amp;&amp;range, const Sophus::Vector2&lt; Scalar &gt; &amp;mean)'],['../estimation_8hpp.html#adcec94ef6e5c1effabe7cced2982d8ae',1,'beluga::calculate_covariance(Range &amp;&amp;range, WeightsRange &amp;&amp;normalized_weights, const Sophus::Vector2&lt; Scalar &gt; &amp;mean)']]],
   ['capacity_439',['capacity',['../classbeluga_1_1TupleContainer.html#a883a25758c473fe3dd0e6474733d6314',1,'beluga::TupleContainer']]],
   ['cast_440',['cast',['../classbeluga_1_1Ray2d.html#a19cc15b91616e1555759998574bb25c8',1,'beluga::Ray2d']]],
   ['cell_5fnear_441',['cell_near',['../classbeluga_1_1BaseRegularGrid2.html#a602cce4a18dfd0b84aae4c0a920d1b72',1,'beluga::BaseRegularGrid2::cell_near(double x, double y) const'],['../classbeluga_1_1BaseRegularGrid2.html#a7396cb465856c940e470342fd83be11c',1,'beluga::BaseRegularGrid2::cell_near(const Eigen::Vector2d &amp;p) const']]],
