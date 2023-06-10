@@ -25,3 +25,8 @@ See the [getting started](../GETTING_STARTED.md) tutorial to setup a development
   ```bash
   ros2 launch beluga_example localization_launch.py use_composition:=True
   ```
+
+- Launch a pre-recorded ROS bag and Beluga AMCL with Carpincho Bot.
+  ```bash
+  ros2 launch beluga_example carpinchobot.launch.xml
+  ```

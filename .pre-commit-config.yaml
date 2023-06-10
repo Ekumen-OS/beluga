@@ -9,7 +9,9 @@ repos:
       - id: check-yaml
       - id: check-xml
       - id: end-of-file-fixer
+        exclude: \.(pgm)
       - id: trailing-whitespace
+        exclude: \.(pgm)
       - id: check-docstring-first
       - id: check-executables-have-shebangs
 

@@ -1,0 +1,15 @@
+<launch>
+  <include file="$(find-pkg-share beluga_example)/launch/utils/localization_launch.py">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="localization_params_file" value="$(find-pkg-share beluga_example)/params/carpinchobot.yaml"/>
+    <arg name="localization_map" value="$(find-pkg-share beluga_example)/maps/ekumen_hq_room_309.yaml"/>
+  </include>
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/rviz_launch.py">
+    <arg name="display_config" value="$(find-pkg-share beluga_example)/rviz/carpinchobot_ekumen_hq_room_309.rviz"/>
+  </include>
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/rosbag_launch.py">
+    <arg name="rosbag_path" value="$(find-pkg-share beluga_example)/bags/carpinchobot_ekumen_hq_room_309"/>
+  </include>
+</launch>
