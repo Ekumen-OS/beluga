@@ -36,7 +36,7 @@
     ```bash
     cd /ws
     source install/setup.bash
-    ros2 launch beluga_example example_rosbag_launch.py
+    ros2 launch beluga_example rosbag_launch.py
     ```
 
 1. **Run an example application using a simulation and teleop controls** (inside development container).
@@ -45,7 +45,7 @@
     ```bash
     cd /ws
     source install/setup.bash
-    ros2 launch beluga_example example_launch.py
+    ros2 launch beluga_example simulation_launch.py
     ```
     ```bash
     cd /ws

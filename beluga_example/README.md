@@ -6,17 +6,22 @@ This package contains example launch files that demonstrate the use of Beluga-ba
 
 See the [getting started](../GETTING_STARTED.md) tutorial to setup a development container or install the package and dependencies from source.
 
-- Launch a pre-recorded ROS bag.
+- Launch a pre-recorded ROS bag and Beluga AMCL.
   ```bash
-  ros2 launch beluga_example example_rosbag_launch.py
+  ros2 launch beluga_example rosbag_launch.py
   ```
 
-- Launch a simulation that can be teleoperated.
+- Launch a pre-recorded ROS bag and Beluga AMCL as a composable node.
   ```bash
-  ros2 launch beluga_example example_launch.py
+  ros2 launch beluga_example rosbag_launch.py use_composition:=True
   ```
 
-- Launch a simulation with Beluga AMCL as a composable node.
+- Launch a simulation that can be teleoperated together with Beluga AMCL.
   ```bash
-  ros2 launch beluga_example example_component_launch.py
+  ros2 launch beluga_example simulation_launch.py
+  ```
+
+- Launch Beluga AMCL, a map server and a lifecycle manager, useful for testing on real robots.
+  ```bash
+  ros2 launch beluga_example localization_launch.py use_composition:=True
   ```

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -22,7 +22,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    example_dir = get_package_share_directory('beluga_example')
+    example_dir = Path(get_package_share_directory('beluga_example'))
 
     load_nodes = GroupAction(
         actions=[
@@ -32,8 +32,8 @@ def generate_launch_description():
                 output='screen',
                 parameters=[
                     {
-                        'world_path': os.path.join(
-                            example_dir, 'worlds', 'turtlebot3_world.yaml'
+                        'world_path': str(
+                            example_dir / 'worlds' / 'turtlebot3_world.yaml'
                         )
                     },
                     {'update_rate': 200.0},
@@ -46,7 +46,4 @@ def generate_launch_description():
         ]
     )
 
-    ld = LaunchDescription()
-    ld.add_action(load_nodes)
-
-    return ld
+    return LaunchDescription([load_nodes])

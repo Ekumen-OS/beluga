@@ -9,10 +9,10 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(DIRECTORY
   bags
-  config
   launch
   maps
   models
+  params
   rviz
   worlds
   DESTINATION share/${PROJECT_NAME})
