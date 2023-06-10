@@ -58,8 +58,6 @@ public:
 
   [[nodiscard]] std::size_t size() const { return grid_->data.size(); }
 
-  [[nodiscard]] const auto& data() const { return grid_->data; }
-
   [[nodiscard]] std::size_t width() const { return grid_->info.width; }
 
   [[nodiscard]] std::size_t height() const { return grid_->info.height; }

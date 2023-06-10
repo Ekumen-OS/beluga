@@ -24,23 +24,23 @@
 
 namespace {
 
-using beluga::testing::PlainGridStorage;
+using beluga::PlainGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
 using UUT = ciabatta::mixin<
-    ciabatta::curry<beluga::LikelihoodFieldModel, StaticOccupancyGrid<5, 5>>::mixin,
-    ciabatta::provides<beluga::LaserSensorModelInterface2d<StaticOccupancyGrid<5, 5>>>::mixin>;
+    ciabatta::curry<beluga::LikelihoodFieldModel, StaticOccupancyGrid>::mixin,
+    ciabatta::provides<beluga::LaserSensorModelInterface2d<StaticOccupancyGrid>>::mixin>;
 
 TEST(LikelihoodFieldModel, LikelihoodField) {
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, true ,
     false, false, false, true , false,
     false, false, true , false, false,
     false, true , false, false, false,
-    true , false, false, false, false};
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, Sophus::SE2d{});
+    true , false, false, false, false});
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const double expected_likelihood_field[] = {  // NOLINT(modernize-avoid-c-arrays)
     0.025, 0.025, 0.025, 0.069, 1.022,
@@ -65,14 +65,14 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
 TEST(LikelihoodFieldModel, ImportanceWeight) {
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
     false, false, false, false, false,
-    false, false, false, false, false};
+    false, false, false, false, false});
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, Sophus::SE2d{});
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
@@ -98,14 +98,14 @@ TEST(LikelihoodFieldModel, GridWithOffset) {
   const auto origin = Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{-5, -5}};
 
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
-    false, false, false, false, true };
+    false, false, false, false, true });
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, origin);
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, origin);
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
@@ -121,14 +121,14 @@ TEST(LikelihoodFieldModel, GridWithRotation) {
   constexpr double kResolution = 2.0;
   const auto origin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2}, Eigen::Vector2d{0.0, 0.0}};
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
-    false, false, false, false, true };
+    false, false, false, false, true });
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, origin);
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, origin);
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
@@ -146,14 +146,14 @@ TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
   const auto origin = Sophus::SE2d{origin_rotation, origin_rotation * Eigen::Vector2d{-5, -5}};
 
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
-    false, false, false, false, true };
+    false, false, false, false, true });
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, origin);
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, origin);
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, grid};
@@ -170,14 +170,14 @@ TEST(LikelihoodFieldModel, GridUpdates) {
 
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
     false, false, false, false, false,
-    false, false, false, false, false};
+    false, false, false, false, false});
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, origin);
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, origin);
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto mixin = UUT{params, std::move(grid)};
@@ -186,14 +186,14 @@ TEST(LikelihoodFieldModel, GridUpdates) {
   EXPECT_NEAR(2.068577607986223, mixin.importance_weight(origin), 1e-6);
 
   // clang-format off
-  auto new_grid_storage = PlainGridStorage<5, 5>{
+  auto new_grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
-    false, false, false, false, true};
+    false, false, false, false, true});
   // clang-format on
-  auto new_grid = StaticOccupancyGrid<5, 5>(std::move(new_grid_storage), kResolution, origin);
+  auto new_grid = StaticOccupancyGrid(std::move(new_grid_storage), kResolution, origin);
 
   mixin.update_map(std::move(new_grid));
 

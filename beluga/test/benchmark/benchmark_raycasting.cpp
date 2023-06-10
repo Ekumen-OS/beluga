@@ -31,8 +31,7 @@
 
 #include <ciabatta/ciabatta.hpp>
 
-using beluga::testing::GridSize;
-using beluga::testing::PlainGridStorage;
+using beluga::PlainGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
 namespace {
@@ -59,9 +58,10 @@ BENCHMARK_CAPTURE(BM_Bresenham2i, Modified, beluga::Bresenham2i::kModified)
     ->Range(128, 4096)
     ->Complexity();
 
-template <typename Mixin, typename GridSize>
+template <typename Mixin>
 class BaselineGridMixin : public Mixin {
  public:
+  using PlainGridStorage = beluga::PlainGridStorage<bool>;
   struct ValueTraits {
     [[nodiscard]] bool is_free(bool value) const { return !value; }
     [[nodiscard]] bool is_unknown(bool) const { return false; }
@@ -70,7 +70,7 @@ class BaselineGridMixin : public Mixin {
 
   template <typename... Args>
   explicit BaselineGridMixin(
-      PlainGridStorage<GridSize::rows, GridSize::cols>&& grid,
+      PlainGridStorage&& grid,
       double resolution,
       [[maybe_unused]] const Sophus::SE2d& origin,
       Args&&... args)
@@ -78,27 +78,25 @@ class BaselineGridMixin : public Mixin {
 
   [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
-  [[nodiscard]] auto& data() { return grid_.data(); }
-  [[nodiscard]] const auto& data() const { return grid_.data(); }
   [[nodiscard]] std::size_t size() const { return grid_.size(); }
 
-  [[nodiscard]] std::size_t width() const { return GridSize::cols; }
-  [[nodiscard]] std::size_t height() const { return GridSize::rows; }
+  [[nodiscard]] std::size_t width() const { return grid_.width(); }
+  [[nodiscard]] std::size_t height() const { return grid_.height(); }
   [[nodiscard]] double resolution() const { return resolution_; }
 
   [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
 
+  [[nodiscard]] const auto& cell(const int x, const int y) const { return grid_.cell(x, y); }
+  [[nodiscard]] auto& cell(const int x, const int y) { return grid_.cell(x, y); }
+
  private:
-  PlainGridStorage<GridSize::rows, GridSize::cols> grid_;
+  PlainGridStorage grid_;
   double resolution_;
   Sophus::SE2d origin_;
-  static constexpr std::size_t kWidth = GridSize::cols;
-  static constexpr std::size_t kHeight = GridSize::rows;
 };
 
-template <std::size_t Rows, std::size_t Cols>
 using BaselineGrid = ciabatta::mixin<
-    ciabatta::curry<BaselineGridMixin, GridSize<Rows, Cols>>::template mixin,
+    ciabatta::curry<BaselineGridMixin>::template mixin,
     beluga::BaseOccupancyGrid2Mixin,
     beluga::BaseDenseGrid2Mixin,
     beluga::BaseRegularGrid2Mixin>;
@@ -133,7 +131,7 @@ constexpr auto bearingLabels(RaycastBearing bearing) {
   throw std::runtime_error{"Invalid bearing"};
 }
 
-template <template <std::size_t, std::size_t> class Grid>
+template <class Grid>
 void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
@@ -142,11 +140,11 @@ void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   const auto bearing_index = static_cast<RaycastBearing>(state.range(0));
   const auto n = static_cast<int>(state.range(1));
 
-  auto grid_storage = PlainGridStorage<kGridSize, kGridSize>{};
+  auto grid_storage = typename Grid::PlainGridStorage(kGridSize, kGridSize);
   grid_storage.cell(n, n) = true;
   grid_storage.cell(0, n) = true;
   grid_storage.cell(n, 0) = true;
-  auto grid = Grid<kGridSize, kGridSize>(std::move(grid_storage), kResolution, Sophus::SE2d{});
+  auto grid = Grid(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const auto source_pose = Eigen::Vector2d{0., 0.};
   const auto beam_bearing = Sophus::SO2d{bearingAngle(bearing_index)};
@@ -191,7 +189,7 @@ BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, StaticOccupancyGrid)
     ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 1024})
     ->Complexity();
 
-template <template <std::size_t, std::size_t> class Grid>
+template <class Grid>
 void BM_RayCasting2d(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
@@ -200,11 +198,11 @@ void BM_RayCasting2d(benchmark::State& state) {
   const auto bearing_index = static_cast<RaycastBearing>(state.range(0));
   const auto n = static_cast<int>(state.range(1));
 
-  auto grid_storage = PlainGridStorage<kGridSize, kGridSize>{};
+  auto grid_storage = typename Grid::PlainGridStorage(kGridSize, kGridSize);
   grid_storage.cell(n, n) = true;
   grid_storage.cell(0, n) = true;
   grid_storage.cell(n, 0) = true;
-  auto grid = Grid<kGridSize, kGridSize>(std::move(grid_storage), kResolution, Sophus::SE2d{});
+  auto grid = Grid(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const auto source_pose = Sophus::SE2d{0., Eigen::Vector2d{0., 0.}};
   const auto beam_bearing = Sophus::SO2d{bearingAngle(bearing_index)};
@@ -246,7 +244,7 @@ BENCHMARK_TEMPLATE(BM_RayCasting2d, StaticOccupancyGrid)
     ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 1024})
     ->Complexity();
 
-template <template <std::size_t, std::size_t> class Grid>
+template <class Grid>
 void BM_RayCasting2d_GridCacheFriendlyness(benchmark::State& state) {
   // This benchmark is intended to measure the effecto of the direction of traversal of the grid due to cache locality
   // effects
@@ -262,12 +260,12 @@ void BM_RayCasting2d_GridCacheFriendlyness(benchmark::State& state) {
   const auto bearing_index = static_cast<RaycastBearing>(state.range(2));
 
   // draw an obstacle at the limits of the grid
-  auto grid_storage = PlainGridStorage<kGridSize, kGridSize>{};
+  auto grid_storage = typename Grid::PlainGridStorage(kGridSize, kGridSize);
   for (int i = 0; i < kGridSize; ++i) {
     grid_storage.cell(kGridSize - 1, i) = true;
     grid_storage.cell(i, kGridSize - 1) = true;
   }
-  auto grid = Grid<kGridSize, kGridSize>(std::move(grid_storage), kResolution, Sophus::SE2d{});
+  auto grid = Grid(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const auto end_of_grid_coord = static_cast<double>(kGridSize - 1) * kResolution;
   const auto distance_to_obstacle = static_cast<double>(n) * kResolution;

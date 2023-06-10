@@ -71,9 +71,6 @@ class ValueGrid2Mixin : public Mixin {
   /// Gets grid size (ie. number of grid cells).
   [[nodiscard]] std::size_t size() const { return data_.size(); }
 
-  /// Gets grid data.
-  [[nodiscard]] const std::vector<T>& data() const { return data_; }
-
   /// Return a range containing the grid data in row-major order.
   [[nodiscard]] const auto row_major_scan() const { return data_ | ranges::views::common; }
 
@@ -89,7 +86,7 @@ class ValueGrid2Mixin : public Mixin {
     const auto index_at = [this](int xi, int yi) {
       return static_cast<std::size_t>(yi) * this->self().width() + static_cast<std::size_t>(xi);
     };
-    return this->self().contains(xi, yi) ? std::make_optional(this->self().data()[index_at(xi, yi)]) : std::nullopt;
+    return this->self().contains(xi, yi) ? std::make_optional(data_[index_at(xi, yi)]) : std::nullopt;
   }
 
  private:

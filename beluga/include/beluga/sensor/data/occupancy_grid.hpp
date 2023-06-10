@@ -75,7 +75,7 @@ namespace beluga {
  * \tparam Derived Concrete occupancy grid type. It must define
  * `Derived::origin()`, `Derived::width()`, `Derived::height()`,
  * `Derived::resolution()`, `Derived::data_at(std::size_t)`,
- * `Derived::data()`, and `Derived::value_traits()` as described in \ref OccupancyGrid2Page.
+ * and `Derived::value_traits()` as described in \ref OccupancyGrid2Page.
  */
 template <typename Mixin>
 class BaseOccupancyGrid2Mixin : public Mixin {
@@ -183,10 +183,7 @@ class BaseOccupancyGrid2Mixin : public Mixin {
    * \return Cell data if included, `std::nullopt` otherwise.
    */
   [[nodiscard]] auto data_at(int xi, int yi) const {
-    const auto index_at = [this](int xi, int yi) {
-      return static_cast<std::size_t>(yi) * this->self().width() + static_cast<std::size_t>(xi);
-    };
-    return this->self().contains(xi, yi) ? std::make_optional(this->self().data()[index_at(xi, yi)]) : std::nullopt;
+    return this->self().contains(xi, yi) ? std::make_optional(this->self().cell(xi, yi)) : std::nullopt;
   }
 
  private:

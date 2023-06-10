@@ -24,12 +24,12 @@
 
 namespace beluga {
 
-using beluga::testing::PlainGridStorage;
+using beluga::PlainGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
 using UUT = ciabatta::mixin<
-    ciabatta::curry<beluga::BeamSensorModel, StaticOccupancyGrid<5, 5>>::mixin,
-    ciabatta::provides<beluga::LaserSensorModelInterface2d<StaticOccupancyGrid<5, 5>>>::mixin>;
+    ciabatta::curry<beluga::BeamSensorModel, StaticOccupancyGrid>::mixin,
+    ciabatta::provides<beluga::LaserSensorModelInterface2d<StaticOccupancyGrid>>::mixin>;
 
 BeamModelParam GetParams() {
   BeamModelParam ret;
@@ -45,14 +45,14 @@ BeamModelParam GetParams() {
 TEST(BeamSensorModel, ImportanceWeight) {
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
     false, false, false, false, false,
-    false, false, false, false, false};
+    false, false, false, false, false});
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, Sophus::SE2d{});
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   const auto params = GetParams();
   auto mixin = UUT{params, grid};
@@ -81,14 +81,14 @@ TEST(BeamSensorModel, GridUpdates) {
 
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
     false, false, false, false, false,
-    false, false, false, false, false};
+    false, false, false, false, false});
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, origin);
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, origin);
 
   const auto params = GetParams();
   auto mixin = UUT{params, std::move(grid)};
@@ -97,14 +97,14 @@ TEST(BeamSensorModel, GridUpdates) {
   EXPECT_NEAR(1.0171643824743635, mixin.importance_weight(origin), 1e-6);
 
   // clang-format off
-  auto new_grid_storage = PlainGridStorage<5, 5>{
+  auto new_grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
-    false, false, false, false, false};
+    false, false, false, false, false});
   // clang-format on
-  auto new_grid = StaticOccupancyGrid<5, 5>(std::move(new_grid_storage), kResolution, origin);
+  auto new_grid = StaticOccupancyGrid(std::move(new_grid_storage), kResolution, origin);
 
   mixin.update_map(std::move(new_grid));
 

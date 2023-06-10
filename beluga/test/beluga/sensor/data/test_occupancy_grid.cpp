@@ -28,15 +28,15 @@
 
 namespace {
 
-using beluga::testing::PlainGridStorage;
+using beluga::PlainGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
 TEST(OccupancyGrid2, FreeAtCell) {
   constexpr double kResolution = 1.;
 
-  const auto grid = StaticOccupancyGrid<5, 5>(
-      PlainGridStorage<5, 5>{false, false, false, false, true,  false, false, false, true,  false, false, false, true,
-                             false, false, false, true,  false, false, false, true,  false, false, false, false},
+  const auto grid = StaticOccupancyGrid(
+      PlainGridStorage(5, 5, {false, false, false, false, true,  false, false, false, true,  false, false, false, true,
+                              false, false, false, true,  false, false, false, true,  false, false, false, false}),
       kResolution, Sophus::SE2d{});
 
   EXPECT_FALSE(grid.free_at(2, 2));
@@ -48,9 +48,9 @@ TEST(OccupancyGrid2, FreeAtCell) {
 TEST(OccupancyGrid2, FreeNearCell) {
   constexpr double kResolution = 1.;
 
-  const auto grid = StaticOccupancyGrid<5, 5>(
-      PlainGridStorage<5, 5>{false, false, false, false, true,  false, false, false, true,  false, false, false, true,
-                             false, false, false, true,  false, false, false, true,  false, false, false, false},
+  const auto grid = StaticOccupancyGrid(
+      PlainGridStorage(5, 5, {false, false, false, false, true,  false, false, false, true,  false, false, false, true,
+                              false, false, false, true,  false, false, false, true,  false, false, false, false}),
       kResolution, Sophus::SE2d{});
 
   EXPECT_FALSE(grid.free_near(3.25, 1.75));
@@ -62,21 +62,30 @@ TEST(OccupancyGrid2, FreeNearCell) {
 TEST(OccupancyGrid2, GlobalCoordinatesAtCell) {
   constexpr double kResolution = 1.;
   const auto origin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, Eigen::Vector2d{1., 1.}};
-  const auto grid = StaticOccupancyGrid<5, 5>(
-      PlainGridStorage<5, 5>{false, false, false, false, true,  false, false, false, true,  false, false, false, true,
-                             false, false, false, true,  false, false, false, true,  false, false, false, false},
+  const auto grid = StaticOccupancyGrid(
+      PlainGridStorage(
+          5, 5,
+          {
+              false, false, false, false, true,   //
+              false, false, false, true,  false,  //
+              false, false, true,  false, false,  //
+              false, true,  false, false, false,  //
+              true,  false, false, false, false   //
+          }),
       kResolution, origin);
 
-  constexpr auto kFrame = StaticOccupancyGrid<5, 5>::Frame::kGlobal;
+  constexpr auto kFrame = StaticOccupancyGrid::Frame::kGlobal;
   EXPECT_TRUE(grid.coordinates_at({2, 2}, kFrame).isApprox(Eigen::Vector2d(-1.5, 3.5)));
 }
 
 TEST(OccupancyGrid2, AllFreeCells) {
-  const auto grid = StaticOccupancyGrid<2, 5>(
-      PlainGridStorage<2, 5>{
-          false, false, false, false, true,  //
-          false, false, false, true, false   //
-      },
+  const auto grid = StaticOccupancyGrid(
+      PlainGridStorage(
+          5, 2,
+          {
+              false, false, false, false, true,  //
+              false, false, false, true, false   //
+          }),
       1., Sophus::SE2d{});
 
   const auto expected_free_cells = std::vector<Eigen::Vector2i>{
@@ -86,14 +95,16 @@ TEST(OccupancyGrid2, AllFreeCells) {
 }
 
 TEST(OccupancyGrid2, ObstacleData) {
-  const auto grid = StaticOccupancyGrid<5, 4>(
-      PlainGridStorage<5, 4>{
-          false, false, false, true,   //
-          false, false, true,  false,  //
-          true,  false, false, false,  //
-          false, false, false, false,  //
-          true,  false, false, true    //
-      },
+  const auto grid = StaticOccupancyGrid(
+      PlainGridStorage(
+          4, 5,
+          {
+              false, false, false, true,   //
+              false, false, true,  false,  //
+              true,  false, false, false,  //
+              false, false, false, false,  //
+              true,  false, false, true    //
+          }),
       1., Sophus::SE2d{});
 
   const auto expected_obstacle_data = std::vector<Eigen::Vector2i>{
@@ -109,9 +120,9 @@ TEST(OccupancyGrid2, GlobalCoordinatesForCells) {
   constexpr double kResolution = 1.;
   const auto origin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, Eigen::Vector2d{1., 1.}};
   const auto grid =
-      StaticOccupancyGrid<2, 3>(PlainGridStorage<2, 3>{false, true, false, true, false, true}, kResolution, origin);
+      StaticOccupancyGrid(PlainGridStorage(2, 3, {false, true, false, true, false, true}), kResolution, origin);
 
-  constexpr auto kFrame = StaticOccupancyGrid<2, 3>::Frame::kGlobal;
+  constexpr auto kFrame = StaticOccupancyGrid::Frame::kGlobal;
   const auto coordinates = grid.coordinates_for(grid.free_cells(), kFrame) | ranges::to<std::vector>;
   EXPECT_EQ(coordinates.size(), 3);
   EXPECT_TRUE(coordinates[0].isApprox(Eigen::Vector2d{0.5, 1.5}));

@@ -22,7 +22,6 @@
 
 namespace beluga {
 
-using testing::PlainGridStorage;
 using testing::StaticOccupancyGrid;
 
 TEST(Raycasting, Nominal) {
@@ -32,14 +31,14 @@ TEST(Raycasting, Nominal) {
   // Positive Y -> Down
 
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
     false, false, false, false, false,
-    false, false, false, false, false};
+    false, false, false, false, false});
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, Sophus::SE2d{});
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   constexpr double kMaxRange = 5.;
 
@@ -107,14 +106,14 @@ TEST(Raycasting, NonIdentityGridOrigin) {
   // Positive Y -> Diagonal downwards left
 
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
     false, false, false, false, false,
-    false, false, false, false, false};
+    false, false, false, false, false});
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, origin);
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, origin);
 
   constexpr double kMaxRange = 5.;
 
@@ -134,14 +133,14 @@ TEST(BaselineRaycasting, Nominal) {
   // Positive Y -> Down
 
   // clang-format off
-  auto grid_storage = PlainGridStorage<5, 5>{
+  auto grid_storage = PlainGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
     false, false, false, false, false,
-    false, false, false, false, false};
+    false, false, false, false, false});
   // clang-format on
-  const auto grid = StaticOccupancyGrid<5, 5>(std::move(grid_storage), kResolution, Sophus::SE2d{});
+  const auto grid = StaticOccupancyGrid(std::move(grid_storage), kResolution, Sophus::SE2d{});
 
   constexpr double kMaxRange = 5.;
 
