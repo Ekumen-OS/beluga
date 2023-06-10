@@ -998,7 +998,7 @@ void AmclNode::laser_callback(
       tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     message.child_frame_id = get_parameter("odom_frame_id").as_string();
-    message.transform = tf2::toMsg(odom_to_base_transform * pose.inverse());
+    message.transform = tf2::toMsg(pose * odom_to_base_transform.inverse());
     tf_broadcaster_->sendTransform(message);
   }
 }

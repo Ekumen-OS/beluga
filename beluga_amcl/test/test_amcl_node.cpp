@@ -16,6 +16,7 @@
 #include <tf2_ros/create_timer_ros.h>
 
 #include <beluga_amcl/private/amcl_node.hpp>
+#include <beluga_amcl/tf2_sophus.hpp>
 
 #include <lifecycle_msgs/msg/state.hpp>
 
@@ -246,9 +247,45 @@ public:
     tf_broadcaster_->sendTransform(transform_laser);
   }
 
+  void publish_laser_scan_with_odom_to_base(const Sophus::SE2d & transform)
+  {
+    const auto timestamp = now();
+
+    auto scan = sensor_msgs::msg::LaserScan{};
+    scan.header.stamp = timestamp;
+    scan.header.frame_id = "laser";
+
+    auto transform_base = geometry_msgs::msg::TransformStamped{};
+    transform_base.header.stamp = timestamp;
+    transform_base.header.frame_id = "odom";
+    transform_base.child_frame_id = "base_footprint";
+    transform_base.transform = tf2::toMsg(transform);
+
+    auto transform_laser = geometry_msgs::msg::TransformStamped{};
+    transform_laser.header.stamp = timestamp;
+    transform_laser.header.frame_id = "base_footprint";
+    transform_laser.child_frame_id = "laser";
+
+    laser_scan_publisher_->publish(scan);
+    tf_broadcaster_->sendTransform(transform_base);
+    tf_broadcaster_->sendTransform(transform_laser);
+  }
+
   bool can_transform(const std::string & source, const std::string & target) const
   {
     return tf_buffer_ && tf_buffer_->canTransform(source, target, tf2::TimePointZero);
+  }
+
+  auto lookup_transform(const std::string & source, const std::string & target) const
+  {
+    auto transform = Sophus::SE2d{};
+    if (tf_buffer_) {
+      tf2::convert(
+        tf_buffer_->lookupTransform(
+          source, target,
+          tf2::TimePointZero).transform, transform);
+    }
+    return transform;
   }
 
   template<class Rep, class Period>
@@ -799,6 +836,47 @@ TEST_F(TestNode, LaserScanWithNoOdomToBase)
   ASSERT_TRUE(wait_for_initialization());
   tester_node->publish_laser_scan_with_no_odom_to_base();
   ASSERT_FALSE(wait_for_pose_estimate());
+}
+
+TEST_F(TestNode, TransformValue)
+{
+  amcl_node->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
+  amcl_node->set_parameter(rclcpp::Parameter{"always_reset_initial_pose", true});
+
+  {
+    // Set initial pose values to simulate an estimate that has converged.
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.x", 1.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 2.0});
+    amcl_node->set_parameter(
+      rclcpp::Parameter{"initial_pose.yaw", Sophus::Constants<double>::pi() / 3});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_x", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_y", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yaw", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xy", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xyaw", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yyaw", 0.0});
+  }
+
+  amcl_node->configure();
+  amcl_node->activate();
+  tester_node->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  tester_node->publish_laser_scan_with_odom_to_base(
+    Sophus::SE2d{
+      Sophus::SO2d{Sophus::Constants<double>::pi() / 3},
+      Sophus::Vector2d{3., 4.},
+    });
+  ASSERT_TRUE(wait_for_pose_estimate());
+
+  const auto [pose, _] = amcl_node->particle_filter()->estimate();
+  ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
+  ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
+  ASSERT_NEAR(pose.so2().log(), Sophus::Constants<double>::pi() / 3, 0.01);
+
+  const auto transform = tester_node->lookup_transform("map", "odom");
+  EXPECT_NEAR(transform.translation().x(), -2.00, 0.01);
+  EXPECT_NEAR(transform.translation().y(), -2.00, 0.01);
+  EXPECT_NEAR(transform.so2().log(), 0.0, 0.01);
 }
 
 class TestParameterValue : public ::testing::TestWithParam<rclcpp::Parameter> {};
