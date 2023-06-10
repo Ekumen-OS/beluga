@@ -38,12 +38,10 @@ namespace beluga {
  *
  * Occupancy grids model obstacle probability. These grids also define
  * their own frame in the grid embedding space, adding so called global
- * coordinates to regular (aka local) coordinates. Occupancy grids as
- * defined in Beluga are linear grids, meaning they satisfy
- * \ref LinearGrid2Page requirements.
+ * coordinates to regular (aka local) coordinates.
  *
  * A type `G` satisfies `OccupancyGrid2d` requirements if it satisfies
- * \ref LinearGrid2Page and given `g` a possible const instance of `G`:
+ * that given `g` a possible const instance of `G`:
  * - `g.value_traits()` returns a value `t` of type `T` such that given a grid cell
  *    data value `v`:
  *    - `t.is_free(v)` returns true if the value is consistent with a free grid cell;
@@ -77,8 +75,7 @@ namespace beluga {
  * \tparam Derived Concrete occupancy grid type. It must define
  * `Derived::origin()`, `Derived::width()`, `Derived::height()`,
  * `Derived::resolution()`, `Derived::data_at(std::size_t)`,
- * `Derived::index_at(int, int)`, `Derived::data()`, and
- * `Derived::value_traits()` as described in \ref OccupancyGrid2Page.
+ * `Derived::data()`, and `Derived::value_traits()` as described in \ref OccupancyGrid2Page.
  */
 template <typename Mixin>
 class BaseOccupancyGrid2Mixin : public Mixin {
@@ -175,6 +172,21 @@ class BaseOccupancyGrid2Mixin : public Mixin {
     };
     const auto get_cell_id = [](const auto& tuple) { return std::get<0>(tuple); };
     return this->self().row_major_data() | ranges::views::filter(is_occupied) | ranges::views::transform(get_cell_id);
+  }
+
+  using Mixin::data_at;
+
+  /// Gets cell data, if included.
+  /**
+   * \param xi Grid cell x-axis coordinate.
+   * \param yi Grid cell y-axis coordinate.
+   * \return Cell data if included, `std::nullopt` otherwise.
+   */
+  [[nodiscard]] auto data_at(int xi, int yi) const {
+    const auto index_at = [this](int xi, int yi) {
+      return static_cast<std::size_t>(yi) * this->self().width() + static_cast<std::size_t>(xi);
+    };
+    return this->self().contains(xi, yi) ? std::make_optional(this->self().data()[index_at(xi, yi)]) : std::nullopt;
   }
 
  private:

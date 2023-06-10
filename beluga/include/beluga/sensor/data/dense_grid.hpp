@@ -46,10 +46,6 @@ namespace beluga {
  * - given possibly const grid cell coordinates `pi` of `Eigen::Vector2i` type,
  *   `g.contains(p)` checks whether such cell is included in the grid;
  * - given possibly const grid cell coordinates `xi` and `yi` of type `int`,
- *   `g.index_at(xi, yi)` retrieves the corresponding cell index of some type;
- * - given possibly const grid cell coordinates `pi` of `Eigen::Vector2i` type,
- *   `g.index_at(pi)` retrieves the corresponding cell index of some type;
- * - given possibly const grid cell coordinates `xi` and `yi` of type `int`,
  *   `g.data_at(xi, yi)` optionally returns cell data, if cell is included;
  * - given possibly const grid cell coordinates `pi` of `Eigen::Vector2i` type,
  *   `g.data_at(p)` optionally returns cell data, if cell is included;
@@ -73,8 +69,7 @@ namespace beluga {
  *
  * \tparam Derived Concrete dense grid type. It must define
  * `Derived::width()`, `Derived::height()`, `Derived::resolution()`,
- * `Derived::data_at(index)`, and `Derived::index_at(int, int)`
- * as described in \ref DenseGrid2Page.
+ * and `Derived::data_at(index)`, as described in \ref DenseGrid2Page.
  */
 template <typename Mixin>
 class BaseDenseGrid2Mixin : public Mixin {

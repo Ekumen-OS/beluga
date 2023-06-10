@@ -20,7 +20,6 @@
 
 #include <beluga/algorithm/raycasting.hpp>
 #include <beluga/sensor/data/dense_grid.hpp>
-#include <beluga/sensor/data/linear_grid.hpp>
 #include <beluga/sensor/data/regular_grid.hpp>
 #include <beluga/test/raycasting.hpp>
 #include <beluga/test/static_occupancy_grid.hpp>
@@ -101,7 +100,6 @@ template <std::size_t Rows, std::size_t Cols>
 using BaselineGrid = ciabatta::mixin<
     ciabatta::curry<BaselineGridMixin, GridSize<Rows, Cols>>::template mixin,
     beluga::BaseOccupancyGrid2Mixin,
-    beluga::BaseLinearGrid2Mixin,
     beluga::BaseDenseGrid2Mixin,
     beluga::BaseRegularGrid2Mixin>;
 

@@ -27,7 +27,6 @@ add_executable(
   motion/test_omnidirectional_drive_model.cpp
   random/test_multivariate_normal_distribution.cpp
   sensor/data/test_dense_grid.cpp
-  sensor/data/test_linear_grid.cpp
   sensor/data/test_occupancy_grid.cpp
   sensor/data/test_regular_grid.cpp
   sensor/test_beam_model.cpp

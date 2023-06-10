@@ -25,7 +25,6 @@
 #include <beluga/sensor/data/occupancy_grid.hpp>
 #include <beluga_amcl/ros_interfaces.hpp>
 #include <beluga/sensor/data/dense_grid.hpp>
-#include <beluga/sensor/data/linear_grid.hpp>
 #include <beluga/sensor/data/regular_grid.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
 
@@ -83,7 +82,6 @@ public:
 using OccupancyGrid = ciabatta::mixin<
   OccupancyGridMixin,
   beluga::BaseOccupancyGrid2Mixin,
-  beluga::BaseLinearGrid2Mixin,
   beluga::BaseDenseGrid2Mixin,
   beluga::BaseRegularGrid2Mixin>;
 

@@ -20,7 +20,6 @@
 #include <vector>
 
 #include <beluga/sensor/data/dense_grid.hpp>
-#include <beluga/sensor/data/linear_grid.hpp>
 #include <beluga/sensor/data/regular_grid.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
 
@@ -78,6 +77,21 @@ class ValueGrid2Mixin : public Mixin {
   /// Return a range containing the grid data in row-major order.
   [[nodiscard]] const auto row_major_scan() const { return data_ | ranges::views::common; }
 
+  using Mixin::data_at;
+
+  /// Gets cell data, if included.
+  /**
+   * \param xi Grid cell x-axis coordinate.
+   * \param yi Grid cell y-axis coordinate.
+   * \return Cell data if included, `std::nullopt` otherwise.
+   */
+  [[nodiscard]] auto data_at(int xi, int yi) const {
+    const auto index_at = [this](int xi, int yi) {
+      return static_cast<std::size_t>(yi) * this->self().width() + static_cast<std::size_t>(xi);
+    };
+    return this->self().contains(xi, yi) ? std::make_optional(this->self().data()[index_at(xi, yi)]) : std::nullopt;
+  }
+
  private:
   std::vector<T> data_;
   std::size_t width_;
@@ -90,11 +104,8 @@ class ValueGrid2Mixin : public Mixin {
  * \tparam ValueType Type used for grid cell value representation.
  */
 template <class ValueType>
-using ValueGrid2 = ciabatta::mixin<
-    ciabatta::curry<ValueGrid2Mixin, ValueType>::template mixin,
-    BaseLinearGrid2Mixin,
-    BaseDenseGrid2Mixin,
-    BaseRegularGrid2Mixin>;
+using ValueGrid2 = ciabatta::
+    mixin<ciabatta::curry<ValueGrid2Mixin, ValueType>::template mixin, BaseDenseGrid2Mixin, BaseRegularGrid2Mixin>;
 
 }  // namespace beluga
 

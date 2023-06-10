@@ -21,7 +21,6 @@
 #include <vector>
 
 #include <beluga/sensor/data/dense_grid.hpp>
-#include <beluga/sensor/data/linear_grid.hpp>
 #include <beluga/sensor/data/regular_grid.hpp>
 
 #include <ciabatta/ciabatta.hpp>
@@ -138,7 +137,6 @@ template <std::size_t Rows, std::size_t Cols>
 using StaticOccupancyGrid = ciabatta::mixin<
     ciabatta::curry<StaticOccupancyGridMixin, GridSize<Rows, Cols>>::template mixin,
     BaseOccupancyGrid2Mixin,
-    BaseLinearGrid2Mixin,
     BaseDenseGrid2Mixin,
     BaseRegularGrid2Mixin>;
 
