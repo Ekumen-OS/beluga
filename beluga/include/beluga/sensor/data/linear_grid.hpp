@@ -82,19 +82,6 @@ class BaseLinearGrid2Mixin : public Mixin {
    */
   [[nodiscard]] std::size_t index_at(const Eigen::Vector2i& pi) const { return this->self().index_at(pi.x(), pi.y()); }
 
-  using Mixin::coordinates_at;
-
-  /// Compute plane coordinates given a grid cell index.
-  /**
-   * \param index Grid cell index.
-   * \return Plane coordinates of the cell centroid.
-   */
-  // REMOVE THIS ONE
-  [[nodiscard]] Eigen::Vector2d coordinates_at(std::size_t index) const {
-    return this->self().coordinates_at(
-        static_cast<int>(index % this->self().width()), static_cast<int>(index / this->self().width()));
-  }
-
   using Mixin::data_at;
 
   /// Gets cell data, if included.

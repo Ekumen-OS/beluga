@@ -37,15 +37,4 @@ TEST(LinearGrid2, Indices) {
   EXPECT_EQ(grid.index_at(Eigen::Vector2i(3, 1)), 7);
 }
 
-TEST(LinearGrid2, CoordinatesAtIndex) {
-  constexpr std::size_t kWidth = 4;
-  constexpr double kResolution = 1.;
-  const auto grid = beluga::ValueGrid2<bool>(
-      std::vector<bool>{true, false, true, false, false, true, false, true}, kWidth, kResolution);
-
-  EXPECT_EQ(grid.coordinates_at(0), Eigen::Vector2d(0.5, 0.5));
-  EXPECT_EQ(grid.coordinates_at(3), Eigen::Vector2d(3.5, 0.5));
-  EXPECT_EQ(grid.coordinates_at(5), Eigen::Vector2d(1.5, 1.5));
-}
-
 }  // namespace
