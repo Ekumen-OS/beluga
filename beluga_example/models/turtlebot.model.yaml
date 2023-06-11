@@ -17,7 +17,6 @@ plugins:
     odom_frame_id: odom
     pub_rate: 10
     enable_odom_pub: true
-    odom_pose_noise: [0.005, 0.005, 0.01]
 
   - type: ModelTfPublisher
     name: tf_publisher
