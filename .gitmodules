@@ -1,4 +1,0 @@
-[submodule "flatland"]
-  path = flatland
-  url = git@github.com:avidbots/flatland.git
-  branch = ros2-humble

@@ -1,4 +1,18 @@
-FROM ros:rolling-ros-base-jammy
+FROM ros:rolling-ros-base-jammy AS cacher
+
+WORKDIR /ws/src
+
+COPY docker/files/rolling.repos .
+RUN vcs import < rolling.repos
+
+COPY . beluga/
+
+RUN mkdir -p /tmp/ws/src \
+  && find ./ -name "package.xml" | xargs cp --parents -t /tmp/ws/src \
+  && find ./ -name "COLCON_IGNORE" | xargs cp --parents -t /tmp/ws/src \
+  || true
+
+FROM ros:rolling-ros-base-jammy as builder
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -73,14 +87,14 @@ RUN colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mix
 COPY --chown=$USER:$GROUP docker/files/colcon_defaults.yaml /home/$USER/.colcon/defaults.yaml
 RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 
-COPY --chown=$USER:$GROUP . $USER_WS/src/beluga
-
-RUN git -C $USER_WS/src clone https://github.com/ros-planning/navigation2.git
+COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
 
 RUN sudo apt-get update && sudo apt-get -y dist-upgrade \
   && rosdep update \
   && rosdep install -i --from-path src -y --skip-keys 'slam_toolbox' \
   && sudo rm -rf /var/lib/apt/lists/*
+
+COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/
 
 ENV WITHIN_DEV 1
 
