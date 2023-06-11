@@ -1,4 +1,4 @@
-# Copyright 2022-2023 Ekumen, Inc.
+# Copyright 2023 Ekumen, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ from launch import LaunchDescription
 from launch.actions import GroupAction
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+
 from launch_ros.actions import SetParameter
 
 
@@ -52,8 +53,11 @@ def generate_launch_description():
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
-                    str(example_dir / 'launch' / 'utils' / 'flatland_launch.py'),
-                )
+                    str(example_dir / 'launch' / 'utils' / 'rosbag_launch.py'),
+                ),
+                launch_arguments={
+                    'rosbag_path': str(example_dir / 'bags' / 'perfect_odometry'),
+                }.items(),
             ),
         ]
     )

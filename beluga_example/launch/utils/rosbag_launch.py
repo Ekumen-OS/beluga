@@ -20,8 +20,6 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import GroupAction
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import ExecuteProcess
 from launch.actions import Shutdown
 from launch.utilities.type_utils import get_typed_value
@@ -76,8 +74,6 @@ def generate_launch_description(
     topics_to_record,
     bagfile_output,
 ):
-    example_dir = Path(get_package_share_directory('beluga_example'))
-
     start_paused = get_typed_value(start_paused, bool)
     record_bag = get_typed_value(record_bag, bool)
     topics_to_record = get_typed_value(topics_to_record, List[str])
@@ -110,16 +106,6 @@ def generate_launch_description(
     load_nodes = GroupAction(
         actions=[
             SetParameter('use_sim_time', True),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    str(example_dir / 'launch' / 'utils' / 'localization_launch.py'),
-                )
-            ),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    str(example_dir / 'launch' / 'utils' / 'rviz_launch.py'),
-                )
-            ),
             ExecuteProcess(
                 cmd=bag_play_cmd,
                 output='own_log',
