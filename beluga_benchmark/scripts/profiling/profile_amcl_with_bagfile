@@ -27,4 +27,4 @@ fi
 
 PERF_PREFIX="perf record -e cycles -F 99 -g --call-graph dwarf -o perf.data --"
 
-ros2 launch beluga_example perfect_odometry_launch.py localization_prefix:="${PERF_PREFIX}" playback_rate:=3
+ros2 launch beluga_example perfect_odometry_launch.py localization_prefix:="${PERF_PREFIX}"
