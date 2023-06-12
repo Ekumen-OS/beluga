@@ -54,7 +54,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install clang-tidy lcov python3-colcon-common-extensions python3-colcon-mixin python3-colcon-coveragepy-result python3-pip -y
-          sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
+          sudo apt-get install git doxygen graphviz perl texlive-base texlive-binaries -y
 
       - name: Checkout repository
         uses: actions/checkout@v3
