@@ -25,7 +25,7 @@ Usage: $(basename $0) [...] <PARTICLES_0> ... <PARTICLES_N>\n
     [--initial-pose-x] Set initial x axis pose.\n
     [--initial-pose-y] Set initial y axis pose.\n
     [--initial-pose-yaw] Set initial yaw pose.\n
-    [--params-file] Use a different params file, defaults to "beluga_example/config/params.yaml".\n
+    [--params-file] Use a different params file, defaults to "beluga_example/params/default.yaml".\n
     [-b|--rosbag] Use a different rosbag, defaults to "beluga_example/bags/perfect_odometry".\n
     [-r|--playback-rate] Rosbag playback frequency, defaults to 1.\n
     [-p|--profile] Create a perf cpu profile of the benchmark.
@@ -56,12 +56,12 @@ eval set -- "$VALID_ARGS"
 while : ;do
     case "$1" in
     --package)
-        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS package:=$2"
+        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS localization_package:=$2"
         shift 2
         ;;
     --executable)
         EXECUTABLE_NAME=$2
-        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS node:=$2"
+        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS localization_node:=$2"
         shift 2
         ;;
     -b | --rosbag)
@@ -73,7 +73,7 @@ while : ;do
         shift 2
         ;;
     --params-file)
-        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS amcl_parameters_file:=../$2"
+        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS localization_params_file:=../$2"
         shift 2
         ;;
     --initial-pose-x)
@@ -120,7 +120,7 @@ for N in $@; do
     cd "benchmark_${N}_particles_output"
     touch timem-output.json  # if not, it's creating a directory by error and not a json....
     script -qefc " \
-        ros2 launch beluga_example example_rosbag_launch.py amcl.max_particles:=${N} amcl.min_particles:=${N} \
+        ros2 launch beluga_example perfect_odometry.launch.xml amcl.max_particles:=${N} amcl.min_particles:=${N} \
             record_bag:=True bagfile_output:=rosbag prefix:=\"timem -o timem-output --\" $EXTRA_LAUNCH_ARGS" \
         /dev/null &
     while ! pgrep "$EXECUTABLE_NAME" > /dev/null; do
