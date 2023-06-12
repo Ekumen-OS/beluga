@@ -23,6 +23,9 @@ jobs:
         with:
           path: ${{ github.workspace }}/src/beluga
 
+      - name: Install python packages
+        run: pip install pre-commit==2.20.0
+
       - name: Lint
         working-directory: ${{ github.workspace }}/src/beluga/
         shell: bash
@@ -55,7 +58,7 @@ jobs:
           path: ${{ github.workspace }}/src/beluga
 
       - name: Install python packages
-        run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
+        run: pip install colcon-lcov-result==0.5.0
 
       - name: Install dependencies
         run: |
