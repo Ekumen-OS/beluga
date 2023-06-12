@@ -20,7 +20,11 @@
 
 set -o errexit -o xtrace
 
-ROS_PACKAGES="beluga beluga_system_tests"
+if [ "${ROS_DISTRO}" != "noetic" ]; then
+    ROS_PACKAGES="beluga beluga_system_tests"
+else
+    ROS_PACKAGES="beluga"
+fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache

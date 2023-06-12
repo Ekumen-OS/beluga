@@ -22,7 +22,11 @@ SCRIPT_PATH=$(dirname "$(readlink -f "$0")")
 
 set -o errexit
 
-ROS_PACKAGES="beluga beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
+if [ "${ROS_DISTRO}" != "noetic" ]; then
+    ROS_PACKAGES="beluga beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
+else
+    ROS_PACKAGES="beluga"
+fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 
