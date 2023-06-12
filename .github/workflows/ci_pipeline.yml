@@ -14,9 +14,9 @@ jobs:
   lint:
     runs-on: ubuntu-22.04
     container:
-      image: ros:rolling-ros-base
+      image: ros:humble-ros-base
     env:
-      ROS_DISTRO: rolling
+      ROS_DISTRO: humble
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -47,7 +47,6 @@ jobs:
         ros_distro:
           - noetic
           - humble
-          - rolling
     container:
       image: ros:${{ matrix.ros_distro }}-ros-base
     steps:
