@@ -21,7 +21,7 @@ See the [getting started](../GETTING_STARTED.md) tutorial to setup a development
   ros2 launch beluga_example simulation.launch.xml
   ```
 
-- Launch Beluga AMCL, a map server and a lifecycle manager, useful for testing on real robots.
+- Launch Beluga AMCL, a map server, and a lifecycle manager. Useful for testing on real robots.
   ```bash
   ros2 launch beluga_example localization_launch.py use_composition:=True
   ```
