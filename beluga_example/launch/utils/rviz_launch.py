@@ -22,6 +22,8 @@ from launch.actions import GroupAction
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
+from launch_ros.actions import SetParameter
+
 
 def generate_launch_description():
     example_dir = get_package_share_directory('beluga_example')
@@ -35,6 +37,7 @@ def generate_launch_description():
 
     load_nodes = GroupAction(
         actions=[
+            SetParameter('use_sim_time', True),
             Node(
                 package='rviz2',
                 executable='rviz2',

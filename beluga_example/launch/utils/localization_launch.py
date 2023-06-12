@@ -24,6 +24,8 @@ from launch_ros.actions import Node
 from launch_ros.descriptions.composable_node import ComposableNode
 from launch.utilities.type_utils import get_typed_value
 
+from launch_ros.actions import SetParameter
+
 from beluga_example.launch_utils import with_launch_arguments
 from beluga_example.launch_utils import (
     get_node_with_arguments_declared_from_params_file,
@@ -67,7 +69,12 @@ def get_launch_arguments():
         DeclareLaunchArgument(
             name='use_composition',
             default_value='False',
-            description='Use composed bringup if true.',
+            description='Whether to use composed node bringup.',
+        ),
+        DeclareLaunchArgument(
+            name='use_sim_time',
+            default_value='False',
+            description='Whether to use simulation clock.',
         ),
     ]
 
@@ -81,8 +88,10 @@ def generate_launch_description(
     localization_parameters_file,
     localization_map,
     use_composition,
+    use_sim_time,
 ):
     use_composition = get_typed_value(use_composition, bool)
+    use_sim_time = get_typed_value(use_sim_time, bool)
 
     load_nodes = GroupAction(
         actions=[
@@ -160,4 +169,9 @@ def generate_launch_description(
         ]
     )
 
-    return LaunchDescription([load_composable_nodes if use_composition else load_nodes])
+    return LaunchDescription(
+        [
+            SetParameter('use_sim_time', use_sim_time),
+            load_composable_nodes if use_composition else load_nodes,
+        ]
+    )

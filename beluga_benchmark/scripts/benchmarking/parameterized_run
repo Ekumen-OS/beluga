@@ -120,7 +120,7 @@ for N in $@; do
     cd "benchmark_${N}_particles_output"
     touch timem-output.json  # if not, it's creating a directory by error and not a json....
     script -qefc " \
-        ros2 launch beluga_example perfect_odometry_launch.py amcl.max_particles:=${N} amcl.min_particles:=${N} \
+        ros2 launch beluga_example perfect_odometry.launch.xml amcl.max_particles:=${N} amcl.min_particles:=${N} \
             record_bag:=True bagfile_output:=rosbag prefix:=\"timem -o timem-output --\" $EXTRA_LAUNCH_ARGS" \
         /dev/null &
     while ! pgrep "$EXECUTABLE_NAME" > /dev/null; do

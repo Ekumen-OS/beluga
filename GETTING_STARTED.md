@@ -36,7 +36,7 @@
     ```bash
     cd /ws
     source install/setup.bash
-    ros2 launch beluga_example perfect_odometry_launch.py
+    ros2 launch beluga_example perfect_odometry.launch.xml
     ```
 
 1. **Run an example application using a simulation and teleop controls** (inside development container).
@@ -45,7 +45,7 @@
     ```bash
     cd /ws
     source install/setup.bash
-    ros2 launch beluga_example simulation_launch.py
+    ros2 launch beluga_example simulation.launch.xml
     ```
     ```bash
     cd /ws
