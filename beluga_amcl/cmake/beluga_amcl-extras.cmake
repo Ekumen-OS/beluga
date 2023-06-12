@@ -1,0 +1,1 @@
+add_compile_definitions(-DBELUGA_AMCL_ROS_VERSION=1)

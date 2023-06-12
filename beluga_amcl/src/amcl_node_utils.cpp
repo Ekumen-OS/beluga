@@ -18,7 +18,7 @@ namespace beluga_amcl::utils
 {
 
 std::vector<std::pair<double, double>> make_points_from_laser_scan(
-  const sensor_msgs::msg::LaserScan & laser_scan,
+  const beluga_amcl::messages::LaserScan & laser_scan,
   const Sophus::SE3d & laser_transform,
   std::size_t max_beam_count,
   float range_min,

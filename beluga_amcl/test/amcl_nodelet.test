@@ -1,0 +1,3 @@
+<launch>
+  <test test-name="test_amcl_nodelet" pkg="beluga_amcl" type="test_amcl_nodelet" />
+</launch>

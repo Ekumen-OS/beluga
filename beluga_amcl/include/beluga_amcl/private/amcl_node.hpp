@@ -24,7 +24,6 @@
 #include <memory>
 #include <utility>
 
-#include <beluga/localization.hpp>
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
@@ -34,13 +33,11 @@
 #include <std_srvs/srv/empty.hpp>
 
 #include "beluga_amcl/occupancy_grid.hpp"
+#include "beluga_amcl/particle_filtering.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
 
 namespace beluga_amcl
 {
-
-using LaserLocalizationInterface2d =
-  beluga::LaserLocalizationInterface2d<OccupancyGrid>;
 
 class AmclNode : public rclcpp_lifecycle::LifecycleNode
 {

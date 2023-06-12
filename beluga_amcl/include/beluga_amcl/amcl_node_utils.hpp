@@ -18,7 +18,8 @@
 #include <utility>
 #include <vector>
 
-#include <sensor_msgs/msg/laser_scan.hpp>
+#include <beluga_amcl/ros_interfaces.hpp>
+
 #include <sophus/se3.hpp>
 
 namespace beluga_amcl::utils
@@ -48,7 +49,7 @@ inline Eigen::IOFormat make_eigen_comma_format()
  * \return A vector of pairs of coordinates in the robot's reference frame.
  */
 std::vector<std::pair<double, double>> make_points_from_laser_scan(
-  const sensor_msgs::msg::LaserScan & laser_scan,
+  const beluga_amcl::messages::LaserScan & laser_scan,
   const Sophus::SE3d & laser_transform,
   std::size_t max_beam_count,
   float range_min,
