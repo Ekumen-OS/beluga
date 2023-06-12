@@ -47,6 +47,9 @@ jobs:
         ros_distro:
           - noetic
           - humble
+        include:
+          - ros_distro: humble
+            upload_artifacts: true
     container:
       image: ros:${{ matrix.ros_distro }}-ros-base
     steps:
@@ -87,6 +90,7 @@ jobs:
           name: docs
           path: ./build/beluga/docs/html/
           retention-days: 7
+        if: ${{ matrix.upload_artifacts }}
 
       - name: Upload code coverage report
         uses: codecov/codecov-action@v3
@@ -96,6 +100,7 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
+        if: ${{ matrix.upload_artifacts }}
 
       - name: Static analysis
         working-directory: ${{ github.workspace }}
