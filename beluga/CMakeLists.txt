@@ -11,7 +11,7 @@ endif()
 
 add_library(beluga_compile_options INTERFACE)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  target_compile_options(beluga_compile_options INTERFACE -Wall -Wconversion -Werror -Wextra -Wpedantic)
+  target_compile_options(beluga_compile_options INTERFACE -Wall -Wconversion -Werror -Wextra -Wpedantic -Wno-gnu-zero-variadic-macro-arguments)
 endif()
 
 find_package(Eigen3 REQUIRED NO_MODULE)
