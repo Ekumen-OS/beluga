@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
+
 #include <beluga/type_traits/strongly_typed_numeric.hpp>
 
 namespace beluga {

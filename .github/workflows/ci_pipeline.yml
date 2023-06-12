@@ -11,18 +11,53 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-test-lint:
+  lint:
     runs-on: ubuntu-22.04
+    container:
+      image: ros:humble-ros-base
     env:
       ROS_DISTRO: humble
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: ${{ github.workspace }}/src/beluga
+
+      - name: Install debian packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install python3-pip -y
+
+      - name: Install python packages
+        run: pip install pre-commit==2.20.0
+
+      - name: Lint
+        working-directory: ${{ github.workspace }}/src/beluga/
+        shell: bash
+        run: |
+          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
+          pre-commit run --all-files --verbose --show-diff-on-failure
+
+  build-test:
+    runs-on: ubuntu-22.04
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distro:
+          - noetic
+          - humble
+        include:
+          - ros_distro: humble
+            upload_artifacts: true
     container:
-      image: ros:humble-ros-base-jammy
+      image: ros:${{ matrix.ros_distro }}-ros-base
     steps:
       - name: Install debian packages
         run: |
           sudo apt-get update
-          sudo apt-get install clang-tidy lcov python3-colcon-coveragepy-result python3-pip -y
-          sudo apt-get install doxygen graphviz perl texlive-base texlive-binaries -y
+          sudo apt-get install clang-tidy lcov python3-colcon-common-extensions python3-colcon-mixin python3-colcon-coveragepy-result python3-pip -y
+          sudo apt-get install git doxygen graphviz perl texlive-base texlive-binaries -y
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -30,12 +65,12 @@ jobs:
           path: ${{ github.workspace }}/src/beluga
 
       - name: Install python packages
-        run: pip install colcon-lcov-result==0.5.0 pre-commit==2.20.0
+        run: pip install colcon-lcov-result==0.5.0
 
       - name: Install dependencies
         run: |
           rosdep update
-          rosdep install --rosdistro ${{ env.ROS_DISTRO }} -r --from-paths src/ --default-yes --ignore-src --dependency-types build --dependency-types test
+          rosdep install --rosdistro ${{ matrix.ros_distro }} -r --from-paths src/ --default-yes --ignore-src --dependency-types build --dependency-types test
           colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
           colcon mixin update default
 
@@ -55,6 +90,7 @@ jobs:
           name: docs
           path: ./build/beluga/docs/html/
           retention-days: 7
+        if: ${{ matrix.upload_artifacts }}
 
       - name: Upload code coverage report
         uses: codecov/codecov-action@v3
@@ -64,13 +100,7 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
-
-      - name: Lint
-        working-directory: ${{ github.workspace }}/src/beluga/
-        shell: bash
-        run: |
-          source /opt/ros/${{ env.ROS_DISTRO }}/setup.sh
-          pre-commit run --all-files --verbose --show-diff-on-failure
+        if: ${{ matrix.upload_artifacts }}
 
       - name: Static analysis
         working-directory: ${{ github.workspace }}
@@ -78,7 +108,7 @@ jobs:
 
   deploy-docs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: build-test-lint
+    needs: build-test
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout documentation branch
