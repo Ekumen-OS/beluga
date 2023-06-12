@@ -23,6 +23,11 @@ jobs:
         with:
           path: ${{ github.workspace }}/src/beluga
 
+      - name: Install debian packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install python3-pip -y
+
       - name: Install python packages
         run: pip install pre-commit==2.20.0
 
