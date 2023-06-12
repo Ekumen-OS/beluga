@@ -1,7 +1,7 @@
 <launch>
   <include file="$(find-pkg-share beluga_example)/launch/utils/localization_launch.py">
     <arg name="use_sim_time" value="true"/>
-    <arg name="localization_parameters_file" value="$(find-pkg-share beluga_example)/params/default.yaml"/>
+    <arg name="localization_params_file" value="$(find-pkg-share beluga_example)/params/default.yaml"/>
     <arg name="localization_map" value="$(find-pkg-share beluga_example)/maps/turtlebot3_world.yaml"/>
   </include>
 

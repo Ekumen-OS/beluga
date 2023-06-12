@@ -73,7 +73,7 @@ while : ;do
         shift 2
         ;;
     --params-file)
-        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS localization_parameters_file:=../$2"
+        EXTRA_LAUNCH_ARGS="$EXTRA_LAUNCH_ARGS localization_params_file:=../$2"
         shift 2
         ;;
     --initial-pose-x)

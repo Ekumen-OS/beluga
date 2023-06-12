@@ -57,7 +57,7 @@ def get_launch_arguments():
             description='Set of commands/arguments to precede the node command (e.g. "timem --").',
         ),
         DeclareLaunchArgument(
-            name='localization_parameters_file',
+            name='localization_params_file',
             default_value=str(example_dir_path / 'params' / 'default.yaml'),
             description='Parameters file to be used to run the localization node.',
         ),
@@ -85,7 +85,7 @@ def generate_launch_description(
     localization_node,
     localization_plugin,
     localization_prefix,
-    localization_parameters_file,
+    localization_params_file,
     localization_map,
     use_composition,
     use_sim_time,
@@ -103,7 +103,7 @@ def generate_launch_description(
                 output='screen',
                 arguments=['--ros-args', '--log-level', 'info'],
                 prefix=localization_prefix,
-                params_file=localization_parameters_file,
+                params_file=localization_params_file,
             ),
             Node(
                 package='nav2_map_server',
@@ -145,7 +145,7 @@ def generate_launch_description(
                         package=localization_package,
                         plugin=localization_plugin,
                         name='amcl',
-                        parameters=[localization_parameters_file],
+                        parameters=[localization_params_file],
                     ),
                     ComposableNode(
                         package='nav2_map_server',
