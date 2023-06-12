@@ -2,10 +2,15 @@ FROM ros:noetic-ros-base-focal AS cacher
 
 WORKDIR /ws/src
 
-COPY beluga beluga/beluga
+COPY . beluga/
+RUN touch beluga/beluga_amcl/CATKIN_IGNORE \
+   beluga/beluga_benchmark/CATKIN_IGNORE \
+   beluga/beluga_example/CATKIN_IGNORE \
+   beluga/beluga_system_tests/CATKIN_IGNORE
 
 RUN mkdir -p /tmp/ws/src \
   && find ./ -name "package.xml" | xargs cp --parents -t /tmp/ws/src \
+  && find ./ -name "CATKIN_IGNORE" | xargs cp --parents -t /tmp/ws/src \
   && find ./ -name "COLCON_IGNORE" | xargs cp --parents -t /tmp/ws/src \
   || true
 
