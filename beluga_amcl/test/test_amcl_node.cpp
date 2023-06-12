@@ -849,9 +849,9 @@ TEST_F(TestNode, TransformValue)
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.y", 2.0});
     amcl_node->set_parameter(
       rclcpp::Parameter{"initial_pose.yaw", Sophus::Constants<double>::pi() / 3});
-    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_x", 0.001});
-    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_y", 0.001});
-    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yaw", 0.001});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_x", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_y", 0.0});
+    amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yaw", 0.0});
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xy", 0.0});
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_xyaw", 0.0});
     amcl_node->set_parameter(rclcpp::Parameter{"initial_pose.covariance_yyaw", 0.0});
