@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <ros/ros.h>
-#include <bondcpp/bond.h>
 #include <nodelet/nodelet.h>
 #include <pluginlib/class_list_macros.h>
 
@@ -58,12 +57,6 @@ void AmclNodelet::onInit()
     ros::Duration(0.2), &AmclNodelet::particle_cloud_timer_callback, this);
   particle_cloud_pub_ = nh.advertise<geometry_msgs::PoseArray>("particlecloud", 2);
   pose_pub_ = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 2);
-
-  bond_ = std::make_unique<bond::Bond>("bond", getName());
-  bond_->setHeartbeatPeriod(0.10);
-  bond_->setHeartbeatTimeout(4.0);
-  bond_->start();
-  NODELET_INFO("Created bond (%s)", getName().c_str());
 
   if (config_.use_map_topic) {
     map_sub_ = nh.subscribe<nav_msgs::OccupancyGrid>(

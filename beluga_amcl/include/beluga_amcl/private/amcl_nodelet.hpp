@@ -15,7 +15,6 @@
 #ifndef BELUGA_AMCL__PRIVATE__AMCL_NODELET_HPP_
 #define BELUGA_AMCL__PRIVATE__AMCL_NODELET_HPP_
 
-#include <bondcpp/bond.h>
 #include <nodelet/nodelet.h>
 #include <ros/ros.h>
 
@@ -100,7 +99,6 @@ protected:
   std::unique_ptr<LaserLocalizationInterface2d> particle_filter_;
 
   std::mutex mutex_;
-  std::unique_ptr<bond::Bond> bond_;
 
   ros::Timer particle_cloud_timer_;
   ros::Publisher particle_cloud_pub_;
