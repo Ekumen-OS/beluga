@@ -71,6 +71,9 @@ jobs:
             texlive-base \
             texlive-binaries
 
+      - name: Install python packages
+        run: pip install colcon-lcov-result==0.5.0
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
@@ -80,9 +83,6 @@ jobs:
         working-directory: ${{ github.workspace }}/src
         run: |
           vcs import < ./beluga/docker/files/${{ matrix.ros_distro }}.repos
-
-      - name: Install python packages
-        run: pip install colcon-lcov-result==0.5.0
 
       - name: Install dependencies
         run: |
