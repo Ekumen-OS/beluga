@@ -90,8 +90,8 @@ RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
 
 RUN sudo apt-get update && sudo apt-get -y dist-upgrade \
-  && rosdep update \
-  && ROS_VERSION=2 rosdep install -i --from-path src -y --skip-keys 'slam_toolbox' \
+  && . /opt/ros/rolling/setup.sh && rosdep update \
+  && rosdep install -i --from-path src -y --skip-keys 'slam_toolbox' \
   && sudo rm -rf /var/lib/apt/lists/*
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/

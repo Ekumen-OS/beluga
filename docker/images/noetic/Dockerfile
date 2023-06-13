@@ -110,8 +110,8 @@ RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
 
 RUN sudo apt-get update \
-  && rosdep update \
-  && ROS_VERSION=1 rosdep install -i -y --from-path src \
+  && . /opt/ros/noetic/setup.sh && rosdep update \
+  && rosdep install -i -y --from-path src \
   && sudo rm -rf /var/lib/apt/lists/*
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/
