@@ -55,10 +55,21 @@ jobs:
       image: ros:${{ matrix.ros_distro }}-ros-base
     steps:
       - name: Install debian packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install clang-tidy lcov python3-colcon-common-extensions python3-colcon-mixin python3-colcon-coveragepy-result python3-pip -y
-          sudo apt-get install git doxygen graphviz perl texlive-base texlive-binaries -y
+        run: >-
+          sudo apt-get update && sudo apt-get install -y \
+            clang-tidy \
+            doxygen \
+            git \
+            graphviz \
+            lcov \
+            perl \
+            python3-colcon-common-extensions \
+            python3-colcon-coveragepy-result \
+            python3-colcon-mixin \
+            python3-pip \
+            python3-vcstool \
+            texlive-base \
+            texlive-binaries
 
       - name: Checkout repository
         uses: actions/checkout@v3
