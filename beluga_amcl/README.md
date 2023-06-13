@@ -3,6 +3,24 @@
 Beluga AMCL is a ROS node based on the [Beluga](../beluga) library that aims to be fully compatible with both [Navigation 2 AMCL][nav2_amcl] and [Navigation AMCL][amcl] nodes.<br/>
 The compatibility between `beluga_amcl` and its longstanding counterparts in the ROS ecosystem provides a simple migration path for projects that want to be able to integrate the power and modularity of the Beluga library in an existing `nav2_amcl`-based (or `amcl`-based) project.
 
+## Table of Contents
+
+- [ROS 2 Interface](#ros-2-interface)
+  - [Parameters](#parameters)
+  - [Subscribed Topics](#subscribed-topics)
+  - [Published Topics](#published-topics)
+  - [Published Transforms](#published-transforms)
+  - [Advertised Services](#advertised-services)
+- [ROS 1 Interface](#ros-1-interface)
+  - [Parameters](#parameters-1)
+  - [Subscribed Topics](#subscribed-topics-1)
+  - [Published Topics](#published-topics-1)
+  - [Published Transforms](#published-transforms-1)
+  - [Advertised Services](#advertised-services-1)
+  - [Called Services](#called-services)
+- [Performance](#performance)
+- [Next Steps](#next-steps)
+
 ## ROS 2 Interface
 
 ### Parameters
@@ -38,7 +56,7 @@ Defaults are `map`, `odom` and `base`.
 | `base` to `laser` | Input transform used to convert laser scan points to base frame.                                   |
 | `map` to `odom`   | Output transform calculated from the estimated pose mean and the current _odom-to-base_ transform. |
 
-### Services
+### Advertised Services
 
 | Topic                              | Type             | Description                                                                   |
 |------------------------------------|------------------|-------------------------------------------------------------------------------|
@@ -69,7 +87,7 @@ The subscribed topic names can be changed with the parameters `map_topic`, `scan
 | `amcl_pose`      | `geometry_msgs/PoseWithCovarianceStamped` | Output topic for estimated pose mean and covariance in map frame.        |
 | `diagnostics`    | `diagnostic_msgs/DiagnosticArray`         | Output topic for node diagnostics.                                       |
 
-### Transforms
+### Published Transforms
 
 The frame names can be changed with the parameters `global_frame_id`, `odom_frame_id` and `base_frame_id`.
 Defaults are `map`, `odom` and `base`.

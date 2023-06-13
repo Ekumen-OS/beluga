@@ -2,7 +2,26 @@
 
 This page describes the parameters supported by Beluga AMCL including comparison tables with Nav2 AMCL and AMCL, along with relevant compatibility notes.
 
-## ROS 2
+## Table of Contents
+
+- [ROS 2 Reference](#ros-2-reference)
+  - [Interface Parameters](#interface-parameters)
+  - [Initial Pose and Transform Broadcast Parameters](#initial-pose-and-transform-broadcast-parameters)
+  - [Particle Filter Parameters](#particle-filter-parameters)
+  - [Motion Model Parameters](#motion-model-parameters)
+  - [Observation Model Parameters](#observation-model-parameters)
+  - [Compatibility Notes](#compatibility-notes)
+- [ROS 1 Reference](#ros-1-reference)
+  - [Interface Parameters](#interface-parameters-1)
+  - [Initial Pose and Transform Broadcast Parameters](#initial-pose-and-transform-broadcast-parameters-1)
+  - [Particle Filter Parameters](#particle-filter-parameters-1)
+  - [Motion Model Parameters](#motion-model-parameters-1)
+  - [Observation Model Parameters](#observation-model-parameters-1)
+  - [Compatibility Notes](#compatibility-notes-1)
+- [Additional Notes](#additional-notes)
+- [References](#references)
+
+## ROS 2 Reference
 
 ### Interface Parameters
 
@@ -41,15 +60,15 @@ This page describes the parameters supported by Beluga AMCL including comparison
 | `recovery_alpha_slow` | Exponential decay rate for the slow average weight filter, used in deciding when to recover from a bad approximation by adding random poses [[3]](#3). | ✅ | ✅ |
 | `resample_interval` | Number of filter updates required before resampling. | ✅ | ✅ |
 | `selective_resampling` | Whether to enable selective resampling [[2]](#2) to help avoid loss of diversity in the particle population. The resampling step will only happen if the effective number of particles $(N_{eff} = 1/ {\sum w_i^2})$ is lower than half the current number of particles, where $w_i$ refers to the normalized weight of each particle.<br/> _This feature is currently supported by Nav AMCL in ROS 1 but it hasn't been ported to ROS 2 at the time of this writing._ | | ✅ |
-| `update_min_a` | Rotational movement required from last resample for resampling to happen again. See [compatibility notes](#compatibility-notes-ros2). | ✅ | ✅ |
-| `update_min_d` | Translational movement required from last resample for resampling to happen again. See [compatibility notes](#compatibility-notes-ros2). | ✅ | ✅ |
+| `update_min_a` | Rotational movement required from last resample for resampling to happen again. See [compatibility notes](#compatibility-notes). | ✅ | ✅ |
+| `update_min_d` | Translational movement required from last resample for resampling to happen again. See [compatibility notes](#compatibility-notes). | ✅ | ✅ |
 | `execution_policy` | Execution policy used to apply the motion update and importance weight steps to each particle (`seq` for sequential execution and `par` for parallel execution). | | ✅ |
 
 ### Motion Model Parameters
 
 | Parameter | Description | Navigation 2 AMCL | Beluga AMCL |
 |-----------|-------------|:-----------------:|:-----------:|
-| `robot_model_type` | Which odometry motion model to use. Supported models are `differential_drive` [[3]](#3), `omnidirectional_drive` and `stationary`. See [compatibility notes](#compatibility-notes-ros2). | ✅ | ✅ |
+| `robot_model_type` | Which odometry motion model to use. Supported models are `differential_drive` [[3]](#3), `omnidirectional_drive` and `stationary`. See [compatibility notes](#compatibility-notes). | ✅ | ✅ |
 | `alpha1` | Expected process noise in odometry’s rotation estimate from rotation for the differential and omnidirectional drive models. | ✅ | ✅ |
 | `alpha2` | Expected process noise in odometry’s rotation estimate from translation for the differential and omnidirectional drive models. | ✅ | ✅ |
 | `alpha3` | Expected process noise in odometry’s translation estimate from translation for the differential and omnidirectional drive models. | ✅ | ✅ |
@@ -76,12 +95,12 @@ This page describes the parameters supported by Beluga AMCL including comparison
 | `beam_skip_threshold` | Minimum percentage of particles for which a particular beam must match the map to not be skipped. | ✅ | |
 | `beam_skip_error_threshold` | Maximum percentage of skipped beams. Too many skipped beams trigger a full update to recover in case of bad convergence. | ✅ | |
 
-### Compatibility Notes {#compatibility-notes-ros2}
+### Compatibility Notes
 
 - When applying any of the resampling policies (see `resample_interval`, `selective_resampling`, `update_min_a`, `update_min_d`), Nav2 AMCL skips the filter update entirely until the conditions are met, while Beluga AMCL skips only the resampling step (sensor and motion updates are not skipped).
 - Beluga AMCL supports Nav2 AMCL plugin names (`nav2_amcl::DifferentialMotionModel`, `nav2_amcl::OmniMotionModel`) as a value in the `robot_model_type` parameter, but will load the equivalent Beluga model.
 
-## ROS 1
+## ROS 1 Reference
 
 ### Interface Parameters
 
@@ -121,15 +140,15 @@ This page describes the parameters supported by Beluga AMCL including comparison
 | `recovery_alpha_slow` | Exponential decay rate for the slow average weight filter, used in deciding when to recover from a bad approximation by adding random poses [[3]](#3). | ✅ | ✅ |
 | `resample_interval` | Number of filter updates required before resampling. | ✅ | ✅ |
 | `selective_resampling` | Whether to enable selective resampling [[2]](#2) to help avoid loss of diversity in the particle population. The resampling step will only happen if the effective number of particles $(N_{eff} = 1/ {\sum w_i^2})$ is lower than half the current number of particles, where $w_i$ refers to the normalized weight of each particle. | ✅ | ✅ |
-| `update_min_a` | Rotational movement required from last resample for resampling to happen again. See [compatibility notes](#compatibility-notes-ros1). | ✅ | ✅ |
-| `update_min_d` | Translational movement required from last resample for resampling to happen again. See [compatibility notes](#compatibility-notes-ros1). | ✅ | ✅ |
+| `update_min_a` | Rotational movement required from last resample for resampling to happen again. See [compatibility notes](#compatibility-notes-1). | ✅ | ✅ |
+| `update_min_d` | Translational movement required from last resample for resampling to happen again. See [compatibility notes](#compatibility-notes-1). | ✅ | ✅ |
 | `execution_policy` | Execution policy used to apply the motion update and importance weight steps to each particle (`seq` for sequential execution and `par` for parallel execution). | | ✅ |
 
 ### Motion Model Parameters
 
 | Parameter | Description | Navigation AMCL   | Beluga AMCL |
 |-----------|-------------|:-----------------:|:-----------:|
-| `odom_model_type` | Which odometry motion model to use. Supported models are `diff` for differential drive [[3]](#3), `omni` for omnidirectional drive, and `stationary`. See [compatibility notes](#compatibility-notes-ros1). | ✅ | ✅ |
+| `odom_model_type` | Which odometry motion model to use. Supported models are `diff` for differential drive [[3]](#3), `omni` for omnidirectional drive, and `stationary`. See [compatibility notes](#compatibility-notes-1). | ✅ | ✅ |
 | `odom_alpha1` | Expected process noise in odometry’s rotation estimate from rotation for the differential and omnidirectional drive models. | ✅ | ✅ |
 | `odom_alpha2` | Expected process noise in odometry’s rotation estimate from translation for the differential and omnidirectional drive models. | ✅ | ✅ |
 | `odom_alpha3` | Expected process noise in odometry’s translation estimate from translation for the differential and omnidirectional drive models. | ✅ | ✅ |
@@ -141,8 +160,8 @@ This page describes the parameters supported by Beluga AMCL including comparison
 | Parameter | Description | Navigation AMCL   | Beluga AMCL |
 |-----------|-------------|:-----------------:|:-----------:|
 | `laser_model_type` | Which observation model to use. Supported models are `beam` and `likelihood_field` as described in [[3]](#3) with the same aggregation formula used in Nav AMCL. | ✅ | ✅ |
-| `laser_max_range` | Maximum scan range to be considered. See [compatibility notes](#compatibility-notes-ros1). | ✅ | ✅ |
-| `laser_min_range` | Minimum scan range to be considered. See [compatibility notes](#compatibility-notes-ros1). | ✅ | ✅ |
+| `laser_max_range` | Maximum scan range to be considered. See [compatibility notes](#compatibility-notes-1). | ✅ | ✅ |
+| `laser_min_range` | Minimum scan range to be considered. See [compatibility notes](#compatibility-notes-1). | ✅ | ✅ |
 | `laser_max_beams` | How many evenly spaced beams in each scan will be used when updating the filter. | ✅ | ✅ |
 | `laser_sigma_hit` | Standard deviation of the hit distribution used in likelihood field and beam models. | ✅ | ✅ |
 | `laser_z_hit` | Mixture weight for the probability of hitting an obstacle used in likelihood field and beam models. | ✅ | ✅ |
