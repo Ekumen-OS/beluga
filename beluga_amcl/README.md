@@ -45,7 +45,7 @@ The subscribed topic names can be changed with the parameters `map_topic`, `scan
 | `particle_cloud` | `nav2_msgs/ParticleCloud`                 | Output topic for particle cloud published at a fixed frequency.          |
 | `pose`           | `geometry_msgs/PoseWithCovarianceStamped` | Output topic for estimated pose mean and covariance in map frame.        |
 
-### Transforms
+### Published Transforms
 
 The frame names can be changed with the parameters `global_frame_id`, `odom_frame_id` and `base_frame_id`.
 Defaults are `map`, `odom` and `base`.

@@ -17,6 +17,7 @@ This page describes the parameters supported by Beluga AMCL including comparison
   - [Particle Filter Parameters](#particle-filter-parameters-1)
   - [Motion Model Parameters](#motion-model-parameters-1)
   - [Observation Model Parameters](#observation-model-parameters-1)
+  - [Diagnostics Parameters](#diagnostics-parameters)
   - [Compatibility Notes](#compatibility-notes-1)
 - [Additional Notes](#additional-notes)
 - [References](#references)
@@ -183,7 +184,7 @@ This page describes the parameters supported by Beluga AMCL including comparison
 | `std_warn_level_y` | Standard deviation upper bound for pose y position estimates before triggering a warning. | ✅ | ✅ |
 | `std_warn_level_yaw` | Standard deviation upper bound for pose yaw rotation estimates before triggering a warning. | ✅ | ✅ |
 
-### Compatibility Notes {#compatibility-notes-ros1}
+### Compatibility Notes
 
 - Both `diff` and `omni` motion models in Beluga AMCL correspond to `diff-corrected` and `omni-corrected` motion models in Naviation AMCL.
 - Unlike Navigation AMCL, Beluga AMCL needs both `laser_max_range` and `laser_min_range` to be specified (ie. -1.0 is not a valid value).
