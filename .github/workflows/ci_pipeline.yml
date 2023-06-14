@@ -83,8 +83,7 @@ jobs:
         working-directory: ${{ github.workspace }}/src
         run: |
           vcs import < ./beluga/docker/files/${{ matrix.ros_distro }}.repos
-          mkdir -p ./flatland/ && touch ./flatland/COLCON_IGNORE
-          mkdir -p ./flatland/ && touch ./flatland/CATKIN_IGNORE
+          mkdir -p ./flatland/ && touch ./flatland/{COLCON_IGNORE,CATKIN_IGNORE}
 
       - name: Install dependencies
         run: |
