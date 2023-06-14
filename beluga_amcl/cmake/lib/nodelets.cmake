@@ -14,7 +14,7 @@
 
 function(add_nodelet_executable target)
   set(EXECUTABLE ${target})
-  if (ARGC LESS 2)
+  if(ARGC LESS 2)
     message(FATAL_ERROR "No nodelets specified for ${target} executable.")
   endif()
   string(REPLACE ";" "\",\"" NODELETS "${ARGN}")
