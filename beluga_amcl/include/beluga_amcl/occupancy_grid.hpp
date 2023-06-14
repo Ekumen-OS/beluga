@@ -23,8 +23,8 @@
 #include <vector>
 
 #include <beluga/sensor/data/occupancy_grid.hpp>
+#include <beluga_amcl/ros_interfaces.hpp>
 
-#include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
@@ -57,7 +57,7 @@ public:
     }
   };
 
-  explicit OccupancyGrid(nav_msgs::msg::OccupancyGrid::SharedPtr grid)
+  explicit OccupancyGrid(messages::OccupancyGridConstSharedPtr grid)
   : grid_(std::move(grid)), origin_(make_origin_transform(grid_->info.origin))
   {
   }
@@ -98,10 +98,10 @@ public:
   }
 
 private:
-  nav_msgs::msg::OccupancyGrid::SharedPtr grid_;
+  messages::OccupancyGridConstSharedPtr grid_;
   Sophus::SE2d origin_;
 
-  static Sophus::SE2d make_origin_transform(const geometry_msgs::msg::Pose & origin)
+  static Sophus::SE2d make_origin_transform(const messages::Pose & origin)
   {
     const auto rotation = Sophus::SO2d{tf2::getYaw(origin.orientation)};
     const auto translation = Eigen::Vector2d{origin.position.x, origin.position.y};

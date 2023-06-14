@@ -3,7 +3,7 @@ FROM ros:noetic-ros-base-focal AS cacher
 WORKDIR /ws/src
 
 COPY . beluga/
-RUN touch beluga/beluga_amcl/CATKIN_IGNORE \
+RUN touch \
    beluga/beluga_benchmark/CATKIN_IGNORE \
    beluga/beluga_example/CATKIN_IGNORE \
    beluga/beluga_system_tests/CATKIN_IGNORE
@@ -110,6 +110,7 @@ RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
 
 RUN sudo apt-get update \
+  && . /opt/ros/noetic/setup.sh \
   && rosdep update \
   && rosdep install -i -y --from-path src \
   && sudo rm -rf /var/lib/apt/lists/*

@@ -1,0 +1,7 @@
+<library path="lib/libbeluga_amcl_nodelet">
+  <class name="beluga_amcl/AmclNodelet" type="beluga_amcl::AmclNodelet" base_class_type="nodelet::Nodelet">
+    <description>
+      Laser based AMCL nodelet.
+    </description>
+  </class>
+</library>

@@ -90,6 +90,7 @@ RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
 
 RUN sudo apt-get update \
+  && . /opt/ros/humble/setup.sh \
   && rosdep update \
   && rosdep install -i --from-path src -y \
   && sudo rm -rf /var/lib/apt/lists/*
