@@ -1,0 +1,24 @@
+<launch>
+  <arg name="localization_package" default="beluga_amcl" doc="Package that provides the localization node to launch."/>
+  <arg name="localization_node" default="amcl_node" doc="Localization node to launch."/>
+  <arg name="localization_plugin" default="beluga_amcl/AmclNodelet" doc="Localization nodelet plugin to use if nodelets are enabled."/>
+  <arg name="localization_prefix" default="" doc="Set of commands/arguments to precede the node command (e.g. 'timem --')."/>
+  <arg name="localization_params_file" default="$(find beluga_example)/params/default.ros.yaml" doc="Parameters file to be used to run the localization node."/>
+  <arg name="localization_map" default="$(find beluga_example)/maps/turtlebot3_world.yaml" doc="Map YAML file to be used by the localization node."/>
+  <arg name="use_nodelets" default="false" doc="Map YAML file to be used by the localization node."/>
+
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg localization_map)" output="screen"/>
+
+  <node unless="$(arg use_nodelets)" pkg="$(arg localization_package)" type="$(arg localization_node)" name="amcl" launch-prefix="$(arg localization_prefix)" output="screen">
+    <rosparam command="load" file="$(arg localization_params_file)"/>
+  </node>
+
+  <group if="$(arg use_nodelets)">
+    <node pkg="nodelet" type="nodelet" name="localization_nodelet_manager" args="manager"/>
+
+    <node pkg="nodelet" type="nodelet" name="amcl"
+          args="load $(arg localization_plugin) localization_nodelet_manager">
+      <rosparam command="load" file="$(arg localization_params_file)"/>
+    </node>
+  </group>
+</launch>

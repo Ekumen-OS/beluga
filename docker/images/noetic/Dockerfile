@@ -2,10 +2,14 @@ FROM ros:noetic-ros-base-focal AS cacher
 
 WORKDIR /ws/src
 
+COPY docker/files/noetic.repos .
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y git python3-vcstool \
+  && vcs import < noetic.repos
+
 COPY . beluga/
 RUN touch \
    beluga/beluga_benchmark/CATKIN_IGNORE \
-   beluga/beluga_example/CATKIN_IGNORE \
    beluga/beluga_system_tests/CATKIN_IGNORE
 
 RUN mkdir -p /tmp/ws/src \

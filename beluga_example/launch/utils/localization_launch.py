@@ -49,7 +49,7 @@ def get_launch_arguments():
         DeclareLaunchArgument(
             name='localization_plugin',
             default_value='beluga_amcl::AmclNode',
-            description='Localization node plugin to use if composition is enabled.',
+            description='Localization node plugin to use if composition is enabled. ',
         ),
         DeclareLaunchArgument(
             name='localization_prefix',
@@ -58,7 +58,7 @@ def get_launch_arguments():
         ),
         DeclareLaunchArgument(
             name='localization_params_file',
-            default_value=str(example_dir_path / 'params' / 'default.yaml'),
+            default_value=str(example_dir_path / 'params' / 'default.ros2.yaml'),
             description='Parameters file to be used to run the localization node.',
         ),
         DeclareLaunchArgument(

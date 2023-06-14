@@ -1,0 +1,5 @@
+<launch>
+  <arg name="display_config" default="$(find beluga_example)/rviz/rviz.rviz" doc="A display config file (.rviz) to load."/>
+
+  <node pkg="rviz" type="rviz" name="rviz" output="log" args="--display-config $(arg display_config)"/>
+</launch>

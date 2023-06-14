@@ -25,7 +25,7 @@ set -o errexit
 if [ "${ROS_DISTRO}" != "noetic" ]; then
     ROS_PACKAGES="beluga beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
 else
-    ROS_PACKAGES="beluga beluga_amcl"
+    ROS_PACKAGES="beluga beluga_amcl beluga_example"
 fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh

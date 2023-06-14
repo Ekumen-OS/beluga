@@ -1,0 +1,9 @@
+<launch>
+  <node pkg="flatland_server" type="flatland_server" name="flatland_server" output="screen">
+    <param name="world_path" value="$(find beluga_example)/worlds/turtlebot3_world.yaml"/>
+    <param name="update_rate" value="200.0"/>
+    <param name="step_size" value="0.005"/>
+    <param name="show_viz" value="false"/>
+    <param name="viz_pub_rate" value="30.0"/>
+  </node>
+</launch>
