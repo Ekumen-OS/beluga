@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
-<package format="2">
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>beluga_system_tests</name>
   <version>1.0.0</version>
 
@@ -14,10 +14,10 @@
 
   <test_depend>beluga</test_depend>
   <test_depend>beluga_amcl</test_depend>
-  <test_depend>google-mock</test_depend>
-  <test_depend>gmock_vendor</test_depend>
-  <test_depend>rosbag2_cpp</test_depend>
-  <test_depend>rosbag2_storage_default_plugins</test_depend>
+  <test_depend condition="$ROS_VERSION == 2">google-mock</test_depend>
+  <test_depend condition="$ROS_VERSION == 2">gmock_vendor</test_depend>
+  <test_depend condition="$ROS_VERSION == 2">rosbag2_cpp</test_depend>
+  <test_depend condition="$ROS_VERSION == 2">rosbag2_storage_default_plugins</test_depend>
 
   <export>
     <build_type>cmake</build_type>
