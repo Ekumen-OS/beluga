@@ -18,7 +18,9 @@ Checks: >
   -misc-non-private-member-variables-in-classes,
   -modernize-return-braced-init-list,
   -modernize-use-trailing-return-type,
+  -modernize-avoid-bind,
   -performance-move-const-arg,
+  -performance-unnecessary-value-param,
   -readability-braces-around-statements,
   -readability-identifier-length,
   -readability-magic-numbers,
@@ -29,12 +31,12 @@ Checks: >
   -bugprone-easily-swappable-parameters,
   -bugprone-implicit-widening-of-multiplication-result
 
-HeaderFilterRegex: ".*"
+HeaderFilterRegex: '^.*\.hpp$'
 
 WarningsAsErrors: '*'
 
-ExtraArgs:
-  - "-std=c++17"
+ExtraArgsBefore:
+  - '-std=c++17'
 
 CheckOptions:
   - { key: readability-identifier-naming.NamespaceCase,          value: lower_case }

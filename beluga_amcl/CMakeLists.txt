@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 project(beluga_amcl)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "Setting build type to 'Release' as none was specified.")
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
