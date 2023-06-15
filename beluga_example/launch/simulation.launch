@@ -1,0 +1,25 @@
+<launch>
+  <arg name="localization_package" default="beluga_amcl" doc="Package that provides the localization node to launch."/>
+  <arg name="localization_node" default="amcl_node" doc="Localization node to launch."/>
+  <arg name="localization_plugin" default="beluga_amcl/AmclNodelet" doc="Localization nodelet plugin to use if nodelets are enabled."/>
+  <arg name="localization_prefix" default="" doc="Set of commands/arguments to precede the node command (e.g. 'timem --')."/>
+  <arg name="use_nodelets" default="false" doc="Map YAML file to be used by the localization node."/>
+
+  <param name="/use_sim_time" value="true"/>
+
+  <include file="$(find beluga_example)/launch/utils/localization.launch">
+    <arg name="localization_params_file" value="$(find beluga_example)/params/default.ros.yaml"/>
+    <arg name="localization_map" value="$(find beluga_example)/maps/turtlebot3_world.yaml"/>
+    <arg name="localization_package" value="$(arg localization_package)"/>
+    <arg name="localization_node" value="$(arg localization_node)"/>
+    <arg name="localization_plugin" value="$(arg localization_plugin)"/>
+    <arg name="localization_prefix" value="$(arg localization_prefix)"/>
+    <arg name="use_nodelets" value="$(arg use_nodelets)"/>
+  </include>
+
+  <include file="$(find beluga_example)/launch/utils/rviz.launch">
+    <arg name="display_config" value="$(find beluga_example)/rviz/rviz.ros.rviz"/>
+  </include>
+
+  <include file="$(find beluga_example)/launch/utils/flatland.launch"/>
+</launch>
