@@ -47,6 +47,7 @@ jobs:
         ros_distro:
           - noetic
           - humble
+          - rolling
         include:
           - ros_distro: humble
             upload_artifacts: true
@@ -54,18 +55,35 @@ jobs:
       image: ros:${{ matrix.ros_distro }}-ros-base
     steps:
       - name: Install debian packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install clang-tidy lcov python3-colcon-common-extensions python3-colcon-mixin python3-colcon-coveragepy-result python3-pip -y
-          sudo apt-get install git doxygen graphviz perl texlive-base texlive-binaries -y
+        run: >-
+          sudo apt-get update && sudo apt-get install -y \
+            clang-tidy \
+            doxygen \
+            git \
+            graphviz \
+            lcov \
+            perl \
+            python3-colcon-common-extensions \
+            python3-colcon-coveragepy-result \
+            python3-colcon-mixin \
+            python3-pip \
+            python3-vcstool \
+            texlive-base \
+            texlive-binaries
+
+      - name: Install python packages
+        run: pip install colcon-lcov-result==0.5.0
 
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           path: ${{ github.workspace }}/src/beluga
 
-      - name: Install python packages
-        run: pip install colcon-lcov-result==0.5.0
+      - name: Import external repositories
+        working-directory: ${{ github.workspace }}/src
+        run: |
+          vcs import < ./beluga/docker/files/${{ matrix.ros_distro }}.repos
+          find ./flatland -type d | xargs -I{} touch {}/{COLCON_IGNORE,CATKIN_IGNORE}
 
       - name: Install dependencies
         run: |
@@ -80,6 +98,10 @@ jobs:
         with:
           api_token: ${{ secrets.GITHUB_TOKEN }}
           update_packager_index: false
+          override_cache_key: ccache-${{ matrix.ros_distro }}-${{ github.head_ref || github.ref }}
+          override_cache_key_fallback: |
+            ccache-${{ matrix.ros_distro }}-${{ github.base_ref || github.ref }}
+            ccache-${{ matrix.ros_distro }}-
 
       - name: Build and test
         working-directory: ${{ github.workspace }}

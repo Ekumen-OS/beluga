@@ -644,6 +644,10 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
   }
 
   {
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    // Ignore deprecated declaration warning to support Humble.
+    // Message: use rclcpp::QoS instead of rmw_qos_profile_t
     global_localization_server_ = create_service<std_srvs::srv::Empty>(
       "reinitialize_global_localization",
       std::bind(
@@ -654,6 +658,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State &)
         std::placeholders::_3),
       rmw_qos_profile_services_default,
       common_callback_group);
+    #pragma GCC diagnostic pop
     RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
   }
 
