@@ -21,7 +21,7 @@ This repository contains the following packages:
 | Package                                      | Description                                                                                                             |
 |----------------------------------------------| ------------------------------------------------------------------------------------------------------------------------|
 | [`beluga`](beluga)                           | A ROS-agnostic extensible library to implement algorithms based on particle filters.                                    |
-| [`beluga_amcl`](beluga_amcl)                 | A ROS 2 wrapper, providing an executable node and a ROS 2 component.<br> It provides interface parity with `nav2_amcl`. |
+| [`beluga_amcl`](beluga_amcl)                 | A ROS wrapper, providing an executable node and component (or nodelet).<br> It provides interface parity with `nav2_amcl` (and `amcl`). |
 | [`beluga_example`](beluga_example)           | Example launch files, showing how to run Beluga-based nodes.                                                            |
 | [`beluga_benchmark`](beluga_benchmark)       | Scripts to benchmark, profile and also compare Beluga with other MCL implementations.                                   |
 | [`beluga_system_tests`](beluga_system_tests) | System integration tests for Beluga.                                                                                    |

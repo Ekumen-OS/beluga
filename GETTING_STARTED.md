@@ -21,7 +21,7 @@
    ```bash
    (cd beluga && ROSDISTRO=humble docker/run.sh)
    ```
-   Supported distributions include `humble` and `rolling`.
+   Supported distributions include `noetic`, `humble`, and `rolling`.
 
 1. **Build and test the project** (inside development container).
 
@@ -31,26 +31,44 @@
     colcon test
     ```
 
+    You may also use `catkin_make_isolated` and `catkin-tools` in ROS 1 distributions.
+
 1. **Run an example application using a ROS bag** (inside development container).
 
+    For ROS 2 distributions, run:
     ```bash
     cd /ws
     source install/setup.bash
     ros2 launch beluga_example perfect_odometry.launch.xml
     ```
 
+    For ROS 1 distributions, run:
+    ```bash
+    cd /ws
+    source devel*/setup.bash
+    roslaunch beluga_example perfect_odometry.launch
+    ```
+
 1. **Run an example application using a simulation and teleop controls** (inside development container).
 
-    In two separate terminals run:
+    For ROS 2 distributions, in two separate terminals run:
     ```bash
     cd /ws
     source install/setup.bash
     ros2 launch beluga_example simulation.launch.xml
     ```
     ```bash
-    cd /ws
-    source install/setup.bash
     ros2 run teleop_twist_keyboard teleop_twist_keyboard
+    ```
+
+    For ROS 1 distributions, in two separate terminals run:
+    ```bash
+    cd /ws
+    source devel*/setup.bash
+    roslaunch beluga_example simulation.launch
+    ```
+    ```bash
+    rosrun teleop_twist_keyboard teleop_twist_keyboard
     ```
 
 1. **Lint your code**. You will need [`pre-commit`](https://pre-commit.com/) and ROS dependencies (already installed in the development container).
