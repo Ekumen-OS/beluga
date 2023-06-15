@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__OCCUPANCY_GRID_HPP_
-#define BELUGA_AMCL__OCCUPANCY_GRID_HPP_
+#ifndef BELUGA_AMCL_OCCUPANCY_GRID_HPP
+#define BELUGA_AMCL_OCCUPANCY_GRID_HPP
 
 #include <tf2/utils.h>
 
@@ -34,15 +34,15 @@ class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
  public:
   struct ValueTraits {
     // https://wiki.ros.org/map_server#Value_Interpretation
-    static constexpr std::int8_t free_value = 0;
-    static constexpr std::int8_t unknown_value = -1;
-    static constexpr std::int8_t occupied_value = 100;
+    static constexpr std::int8_t kFreeValue = 0;
+    static constexpr std::int8_t kUnknownValue = -1;
+    static constexpr std::int8_t kOccupiedValue = 100;
 
-    bool is_free(std::int8_t value) const { return value == free_value; }
+    [[nodiscard]] static bool is_free(std::int8_t value) { return value == kFreeValue; }
 
-    bool is_unknown(std::int8_t value) const { return value == unknown_value; }
+    [[nodiscard]] static bool is_unknown(std::int8_t value) { return value == kUnknownValue; }
 
-    bool is_occupied(std::int8_t value) const { return value == occupied_value; }
+    [[nodiscard]] static bool is_occupied(std::int8_t value) { return value == kOccupiedValue; }
   };
 
   explicit OccupancyGrid(messages::OccupancyGridConstSharedPtr grid)
@@ -50,17 +50,17 @@ class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
 
   [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
-  std::size_t size() const { return grid_->data.size(); }
+  [[nodiscard]] std::size_t size() const { return grid_->data.size(); }
 
   [[nodiscard]] const auto& data() const { return grid_->data; }
 
-  std::size_t width() const { return grid_->info.width; }
+  [[nodiscard]] std::size_t width() const { return grid_->info.width; }
 
-  std::size_t height() const { return grid_->info.height; }
+  [[nodiscard]] std::size_t height() const { return grid_->info.height; }
 
   [[nodiscard]] double resolution() const { return grid_->info.resolution; }
 
-  [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
+  [[nodiscard]] static auto value_traits() { return ValueTraits{}; }
 
  private:
   messages::OccupancyGridConstSharedPtr grid_;
@@ -75,4 +75,4 @@ class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL__OCCUPANCY_GRID_HPP_
+#endif  // BELUGA_AMCL_OCCUPANCY_GRID_HPP

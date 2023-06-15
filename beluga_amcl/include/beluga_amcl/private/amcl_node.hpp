@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__PRIVATE__AMCL_NODE_HPP_
-#define BELUGA_AMCL__PRIVATE__AMCL_NODE_HPP_
+#ifndef BELUGA_AMCL_PRIVATE_AMCL_NODE_HPP
+#define BELUGA_AMCL_PRIVATE_AMCL_NODE_HPP
 
 #include <message_filters/subscriber.h>
 #include <tf2_ros/buffer.h>
@@ -43,7 +43,7 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
   using rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
   explicit AmclNode(const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
-  virtual ~AmclNode();
+  ~AmclNode() override;
 
  protected:
   CallbackReturn on_configure(const rclcpp_lifecycle::State&) override;
@@ -59,8 +59,8 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
   void laser_callback(ExecutionPolicy&& exec_policy, sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan);
   void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
   void global_localization_callback(
-      const std::shared_ptr<rmw_request_id_t> request_header,
-      const std::shared_ptr<std_srvs::srv::Empty::Request> request,
+      std::shared_ptr<rmw_request_id_t> request_header,
+      std::shared_ptr<std_srvs::srv::Empty::Request> request,
       std::shared_ptr<std_srvs::srv::Empty::Response> response);
   void reinitialize_with_pose(const Sophus::SE2d& pose, const Eigen::Matrix3d& covariance);
 
@@ -92,4 +92,4 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL__PRIVATE__AMCL_NODE_HPP_
+#endif  // BELUGA_AMCL_PRIVATE_AMCL_NODE_HPP

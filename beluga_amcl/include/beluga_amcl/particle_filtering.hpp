@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__PARTICLE_FILTERING_HPP_
-#define BELUGA_AMCL__PARTICLE_FILTERING_HPP_
+#ifndef BELUGA_AMCL_PARTICLE_FILTERING_HPP
+#define BELUGA_AMCL_PARTICLE_FILTERING_HPP
 
 #include <string_view>
 #include <variant>
@@ -35,16 +35,12 @@
 
 namespace beluga_amcl {
 
-namespace {
+static constexpr std::string_view kDifferentialModelName = "differential_drive";
+static constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
+static constexpr std::string_view kStationaryModelName = "stationary";
 
-constexpr std::string_view kDifferentialModelName = "differential_drive";
-constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
-constexpr std::string_view kStationaryModelName = "stationary";
-
-constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
-constexpr std::string_view kBeamSensorModelName = "beam";
-
-}  // namespace
+static constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
+static constexpr std::string_view kBeamSensorModelName = "beam";
 
 using LaserLocalizationInterface2d =
   beluga::LaserLocalizationInterface2d<OccupancyGrid, FilterUpdateControlInterface>;
@@ -86,10 +82,10 @@ using AdaptiveMonteCarloLocalization2d =
  * \param particle_filter Particle filter to be initialized.
  */
 void initialize_with_pose(
-    const Sophus::SE2d& mean,
+    const Sophus::SE2d& pose,
     const Eigen::Matrix3d& covariance,
     LaserLocalizationInterface2d* particle_filter);
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL__PARTICLE_FILTERING_HPP_
+#endif  // BELUGA_AMCL_PARTICLE_FILTERING_HPP

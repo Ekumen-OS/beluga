@@ -593,8 +593,8 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
   }
 
   {
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     // Ignore deprecated declaration warning to support Humble.
     // Message: use rclcpp::QoS instead of rmw_qos_profile_t
     global_localization_server_ = create_service<std_srvs::srv::Empty>(
@@ -603,7 +603,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
             &AmclNode::global_localization_callback, this, std::placeholders::_1, std::placeholders::_2,
             std::placeholders::_3),
         rmw_qos_profile_services_default, common_callback_group);
-    #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
     RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
   }
 
@@ -691,7 +691,8 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
       params.translation_noise_from_translation = get_parameter("alpha3").as_double();
       params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
       return DifferentialDrive{params};
-    } else if (name == kOmnidirectionalModelName || name == kNav2OmnidirectionalModelName) {
+    }
+    if (name == kOmnidirectionalModelName || name == kNav2OmnidirectionalModelName) {
       auto params = beluga::OmnidirectionalDriveModelParam{};
       params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
       params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
@@ -699,7 +700,8 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
       params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
       params.strafe_noise_from_translation = get_parameter("alpha5").as_double();
       return OmnidirectionalDrive{params};
-    } else if (name == kStationaryModelName) {
+    }
+    if (name == kStationaryModelName) {
       return Stationary{};
     }
     throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
@@ -965,8 +967,8 @@ void AmclNode::reinitialize_with_pose(const Sophus::SE2d& pose, const Eigen::Mat
 }
 
 void AmclNode::global_localization_callback(
-    [[maybe_unused]] const std::shared_ptr<rmw_request_id_t> request_header,
-    [[maybe_unused]] const std::shared_ptr<std_srvs::srv::Empty::Request> req,
+    [[maybe_unused]] std::shared_ptr<rmw_request_id_t> request_header,
+    [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Request> req,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res) {
   if (!particle_filter_) {
     RCLCPP_WARN(

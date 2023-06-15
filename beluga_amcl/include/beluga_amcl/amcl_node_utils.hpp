@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__AMCL_NODE_UTILS_HPP_
-#define BELUGA_AMCL__AMCL_NODE_UTILS_HPP_
+#ifndef BELUGA_AMCL_AMCL_NODE_UTILS_HPP
+#define BELUGA_AMCL_AMCL_NODE_UTILS_HPP
 
 #include <utility>
 #include <vector>
@@ -54,4 +54,4 @@ std::vector<std::pair<double, double>> make_points_from_laser_scan(
 
 }  // namespace beluga_amcl::utils
 
-#endif  // BELUGA_AMCL__AMCL_NODE_UTILS_HPP_
+#endif  // BELUGA_AMCL_AMCL_NODE_UTILS_HPP

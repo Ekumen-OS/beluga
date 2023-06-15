@@ -198,7 +198,8 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
       params.translation_noise_from_translation = config_.odom_alpha3;
       params.translation_noise_from_rotation = config_.odom_alpha4;
       return DifferentialDrive{params};
-    } else if (name == kOmnidirectionalModelName || name == kAMCLOmnidirectionalModelName) {
+    }
+    if (name == kOmnidirectionalModelName || name == kAMCLOmnidirectionalModelName) {
       auto params = beluga::OmnidirectionalDriveModelParam{};
       params.rotation_noise_from_rotation = config_.odom_alpha1;
       params.rotation_noise_from_translation = config_.odom_alpha2;
@@ -206,7 +207,8 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
       params.translation_noise_from_rotation = config_.odom_alpha4;
       params.strafe_noise_from_translation = config_.odom_alpha5;
       return OmnidirectionalDrive{params};
-    } else if (name == kStationaryModelName) {
+    }
+    if (name == kStationaryModelName) {
       return Stationary{};
     }
     throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
@@ -280,7 +282,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
     NODELET_WARN(
         "Ignoring set map request because the "
         "particle filter has not been initialized");
-    response.success = false;
+    response.success = 0U;
     return true;
   }
 
@@ -294,7 +296,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
     NODELET_WARN(
         "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\".",
         request.initial_pose.header.frame_id.c_str(), config_.global_frame_id.c_str());
-    response.success = false;
+    response.success = 0U;
     return true;
   }
 
@@ -314,7 +316,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
 
   initialize_with_pose(pose, covariance);
 
-  response.success = true;
+  response.success = 1U;
   return true;
 }
 

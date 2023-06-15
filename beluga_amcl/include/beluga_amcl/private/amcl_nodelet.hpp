@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__PRIVATE__AMCL_NODELET_HPP_
-#define BELUGA_AMCL__PRIVATE__AMCL_NODELET_HPP_
+#ifndef BELUGA_AMCL_PRIVATE_AMCL_NODELET_HPP
+#define BELUGA_AMCL_PRIVATE_AMCL_NODELET_HPP
 
 #include <nodelet/nodelet.h>
 #include <ros/ros.h>
@@ -50,7 +50,7 @@ namespace beluga_amcl {
 class AmclNodelet : public nodelet::Nodelet {
  public:
   AmclNodelet() = default;
-  virtual ~AmclNodelet() = default;
+  ~AmclNodelet() override = default;
 
  protected:
   void onInit() override;
@@ -63,9 +63,9 @@ class AmclNodelet : public nodelet::Nodelet {
 
   bool set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs::SetMap::Response& response);
 
-  void handle_map_with_default_initial_pose(const nav_msgs::OccupancyGrid::ConstPtr& message);
+  void handle_map_with_default_initial_pose(const nav_msgs::OccupancyGrid::ConstPtr& map);
 
-  std::unique_ptr<LaserLocalizationInterface2d> make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& message);
+  std::unique_ptr<LaserLocalizationInterface2d> make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& map);
 
   void particle_cloud_timer_callback(const ros::TimerEvent& ev);
 
@@ -122,4 +122,4 @@ class AmclNodelet : public nodelet::Nodelet {
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL__PRIVATE__AMCL_NODELET_HPP_
+#endif  // BELUGA_AMCL_PRIVATE_AMCL_NODELET_HPP

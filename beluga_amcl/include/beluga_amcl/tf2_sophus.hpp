@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__TF2_SOPHUS_HPP_
-#define BELUGA_AMCL__TF2_SOPHUS_HPP_
+#ifndef BELUGA_AMCL_TF2_SOPHUS_HPP
+#define BELUGA_AMCL_TF2_SOPHUS_HPP
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
@@ -237,7 +237,7 @@ inline Sophus::Matrix3<Scalar>& covarianceRowMajorToEigen(const Array<Scalar, 36
 
 }  // namespace tf2
 
-namespace Sophus {
+namespace Sophus {  // NOLINT(readability-identifier-naming)
 // The following conversion functions need to be inside the Sophus namespace to make
 // them findable by ADL when calling tf2::convert().
 
@@ -273,4 +273,4 @@ inline void fromMsg(const beluga_amcl::messages::Pose& msg, Sophus::SE3<Scalar>&
 
 }  // namespace Sophus
 
-#endif  // BELUGA_AMCL__TF2_SOPHUS_HPP_
+#endif  // BELUGA_AMCL_TF2_SOPHUS_HPP

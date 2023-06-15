@@ -58,10 +58,10 @@ class AmclNodeletUnderTest : public beluga_amcl::AmclNodelet {
   const auto& particle_filter() { return particle_filter_; }
 
   /// Return true if the particle filter has been initialized.
-  bool is_initialized() const { return particle_filter_.get(); }
+  bool is_initialized() const { return particle_filter_ != nullptr; }
 
   /// Retrieve nodelet default configuration (may fail).
-  bool default_(beluga_amcl::AmclConfig& config) {
+  bool default_config(beluga_amcl::AmclConfig& config) {
     if (!config_client_) {
       config_client_ = std::make_unique<AmclConfigClient>(getName() + "/config_client", getPrivateNodeHandle());
     }
@@ -90,7 +90,7 @@ class Tester {
   Tester() : tf_listener_(tf_buffer_) {
     map_publisher_ = nh_.advertise<nav_msgs::OccupancyGrid>("map", 1);
 
-    map_server_ = nh_.advertiseService("static_map", &Tester::static_map_callback, this);
+    map_server_ = nh_.advertiseService("static_map", &Tester::static_map_callback);
 
     set_map_client_ = nh_.serviceClient<nav_msgs::SetMap>("set_map");
 
@@ -148,7 +148,7 @@ class Tester {
     request.initial_pose.pose.pose.orientation.y = 0.;
     request.initial_pose.pose.pose.orientation.z = std::sin(yaw / 2.);
     request.initial_pose.pose.pose.orientation.w = std::cos(yaw / 2.);
-    return set_map_client_.call(request, response) && response.success;
+    return set_map_client_.call(request, response) && (response.success != 0U);
   }
 
   void publish_default_initial_pose() {
@@ -230,7 +230,7 @@ class Tester {
   }
 
  private:
-  bool static_map_callback(nav_msgs::GetMap::Request&, nav_msgs::GetMap::Response& response) {
+  static bool static_map_callback(nav_msgs::GetMap::Request&, nav_msgs::GetMap::Response& response) {
     response.map = make_dummy_map();
     return true;
   }
@@ -262,36 +262,36 @@ template <class T>
 class BaseTestFixture : public T {
  public:
   void SetUp() override {
-    amcl_nodelet = std::make_shared<AmclNodeletUnderTest>();
-    amcl_nodelet->init("amcl_nodelet", ros::names::getRemappings(), nodelet::V_string{}, nullptr, nullptr);
-    tester = std::make_shared<Tester>();
+    amcl_nodelet_ = std::make_shared<AmclNodeletUnderTest>();
+    amcl_nodelet_->init("amcl_nodelet", ros::names::getRemappings(), nodelet::V_string{}, nullptr, nullptr);
+    tester_ = std::make_shared<Tester>();
   }
 
   void TearDown() override {}
 
   bool wait_for_initialization() {
-    return spin_until([this] { return amcl_nodelet->is_initialized(); }, 1000ms);
+    return spin_until([this] { return amcl_nodelet_->is_initialized(); }, 1000ms);
   }
 
   bool wait_for_pose_estimate() {
-    return spin_until([this] { return tester->latest_pose().has_value(); }, 1000ms);
+    return spin_until([this] { return tester_->latest_pose().has_value(); }, 1000ms);
   }
 
   bool wait_for_particle_cloud() {
-    tester->create_particle_cloud_subscriber();
-    return spin_until([this] { return tester->latest_particle_cloud().has_value(); }, 1000ms);
+    tester_->create_particle_cloud_subscriber();
+    return spin_until([this] { return tester_->latest_particle_cloud().has_value(); }, 1000ms);
   }
 
   bool request_global_localization() {
-    if (!tester->wait_for_global_localization_service(500ms)) {
+    if (!tester_->wait_for_global_localization_service(500ms)) {
       return false;
     }
-    return tester->request_global_localization();
+    return tester_->request_global_localization();
   }
 
  protected:
-  std::shared_ptr<AmclNodeletUnderTest> amcl_nodelet;
-  std::shared_ptr<Tester> tester;
+  std::shared_ptr<AmclNodeletUnderTest> amcl_nodelet_;
+  std::shared_ptr<Tester> tester_;
 };
 
 class TestInitializationWithModel
@@ -309,27 +309,27 @@ TEST_P(TestInitializationWithModel, ParticleCount) {
   const auto& [motion_model, sensor_model] = GetParam();
 
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.odom_model_type = motion_model;
   config.laser_model_type = sensor_model;
   config.min_particles = 10;
   config.max_particles = 30;
-  ASSERT_TRUE(amcl_nodelet->set(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
 
-  tester->publish_map();
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 
-  ASSERT_GE(amcl_nodelet->particle_filter()->particle_count(), 10UL);
-  ASSERT_LE(amcl_nodelet->particle_filter()->particle_count(), 30UL);
+  ASSERT_GE(amcl_nodelet_->particle_filter()->particle_count(), 10UL);
+  ASSERT_LE(amcl_nodelet_->particle_filter()->particle_count(), 30UL);
 }
 
 class TestFixture : public BaseTestFixture<::testing::Test> {};
 
 TEST_F(TestFixture, MapWithWrongFrame) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map_with_wrong_frame();
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map_with_wrong_frame();
   ASSERT_TRUE(wait_for_initialization());
 }
 
@@ -352,7 +352,7 @@ TEST_F(MapFromServiceFixture, MapFromService) {
 
 TEST_F(TestFixture, SetInitialPose) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = true;
   config.initial_pose_x = 34.0;
   config.initial_pose_y = 2.0;
@@ -363,11 +363,11 @@ TEST_F(TestFixture, SetInitialPose) {
   config.initial_cov_xy = 0.0;
   config.initial_cov_xa = 0.0;
   config.initial_cov_ya = 0.0;
-  ASSERT_TRUE(amcl_nodelet->set(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
 
-  tester->publish_map();
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  const auto [pose, _] = amcl_nodelet->particle_filter()->estimate();
+  const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
   ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
   ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
   ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -375,7 +375,7 @@ TEST_F(TestFixture, SetInitialPose) {
 
 TEST_F(TestFixture, SetMapAndInitialPose) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = true;
   config.initial_pose_x = -1.0;
   config.initial_pose_y = 1.0;
@@ -383,18 +383,18 @@ TEST_F(TestFixture, SetMapAndInitialPose) {
   config.initial_cov_xx = 0.001;
   config.initial_cov_yy = 0.001;
   config.initial_cov_aa = 0.001;
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   {
-    const auto [pose, _] = amcl_nodelet->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), -1.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 1.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 1.0, 0.01);
   }
-  ASSERT_TRUE(tester->set_map_and_initial_pose(1.0, -1.0, -1.0));
+  ASSERT_TRUE(tester_->set_map_and_initial_pose(1.0, -1.0, -1.0));
   {
-    const auto [pose, _] = amcl_nodelet->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), -1.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), -1.0, 0.01);
@@ -403,79 +403,79 @@ TEST_F(TestFixture, SetMapAndInitialPose) {
 
 TEST_F(TestFixture, BroadcastWhenInitialPoseSet) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = true;
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  ASSERT_FALSE(tester->can_transform("map", "odom"));
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan();
+  ASSERT_FALSE(tester_->can_transform("map", "odom"));
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester->can_transform("map", "odom"));
+  ASSERT_TRUE(tester_->can_transform("map", "odom"));
 }
 
 TEST_F(TestFixture, NoBroadcastWhenNoInitialPose) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = false;
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  ASSERT_FALSE(tester->can_transform("map", "odom"));
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan();
+  ASSERT_FALSE(tester_->can_transform("map", "odom"));
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_FALSE(tester->can_transform("map", "odom"));
+  ASSERT_FALSE(tester_->can_transform("map", "odom"));
 }
 
 TEST_F(TestFixture, BroadcastWithGlobalLocalization) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = false;
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  ASSERT_FALSE(tester->can_transform("map", "odom"));
+  ASSERT_FALSE(tester_->can_transform("map", "odom"));
   ASSERT_TRUE(request_global_localization());
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan();
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester->can_transform("map", "odom"));
+  ASSERT_TRUE(tester_->can_transform("map", "odom"));
 }
 
 TEST_F(TestFixture, IgnoreGlobalLocalizationBeforeInitialize) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = false;
-  ASSERT_TRUE(amcl_nodelet->set(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
   ASSERT_FALSE(request_global_localization());
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan();
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
   ASSERT_FALSE(wait_for_pose_estimate());
 }
 
 TEST_F(TestFixture, NoBroadcastWhenInitialPoseInvalid) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = true;
   config.initial_cov_xx = 0.0;
   config.initial_cov_yy = 0.0;
   config.initial_cov_xy = -50.0;
-  ASSERT_TRUE(amcl_nodelet->set(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
 
-  tester->publish_map();
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  ASSERT_FALSE(tester->can_transform("map", "odom"));
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan();
+  ASSERT_FALSE(tester_->can_transform("map", "odom"));
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_FALSE(tester->can_transform("map", "odom"));
+  ASSERT_FALSE(tester_->can_transform("map", "odom"));
 }
 
 TEST_F(TestFixture, FirstMapOnly) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = true;
   config.always_reset_initial_pose = true;
 
@@ -493,14 +493,14 @@ TEST_F(TestFixture, FirstMapOnly) {
   }
 
   config.first_map_only = true;
-  ASSERT_TRUE(amcl_nodelet->set(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
 
-  tester->publish_map();
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 
   {
     // Initialized with the first map and initial pose values.
-    const auto [pose, _] = amcl_nodelet->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -511,28 +511,28 @@ TEST_F(TestFixture, FirstMapOnly) {
     config.initial_pose_x = 1.0;
     config.initial_pose_y = 29.0;
     config.initial_pose_a = -0.4;
-    ASSERT_TRUE(amcl_nodelet->set(config));
+    ASSERT_TRUE(amcl_nodelet_->set(config));
   }
 
-  tester->publish_map();
+  tester_->publish_map();
   spin_for(50ms);
 
   {
     // Ignored the new initial pose values (and map).
-    const auto [pose, _] = amcl_nodelet->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
   }
 
   config.first_map_only = false;
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   spin_for(50ms);
 
   {
     // Initialized with the new initial pose values (and map).
-    const auto [pose, _] = amcl_nodelet->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 29.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), -0.4, 0.01);
@@ -541,7 +541,7 @@ TEST_F(TestFixture, FirstMapOnly) {
 
 TEST_F(TestFixture, KeepCurrentEstimate) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = true;
   config.always_reset_initial_pose = false;
   config.first_map_only = false;
@@ -558,22 +558,22 @@ TEST_F(TestFixture, KeepCurrentEstimate) {
     config.initial_cov_xa = 0.0;
     config.initial_cov_ya = 0.0;
   }
-  ASSERT_TRUE(amcl_nodelet->set(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
 
   {
     // Initializing with the first map and initial pose values.
-    tester->publish_map();
+    tester_->publish_map();
     ASSERT_TRUE(wait_for_initialization());
-    const auto [pose, _] = amcl_nodelet->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
   }
 
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan();
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  const auto [estimate, _] = amcl_nodelet->particle_filter()->estimate();
+  const auto [estimate, _] = amcl_nodelet_->particle_filter()->estimate();
 
   {
     // Set new initial pose values that will be ignored.
@@ -581,15 +581,15 @@ TEST_F(TestFixture, KeepCurrentEstimate) {
     config.initial_pose_y = 29.0;
     config.initial_pose_a = -0.4;
   }
-  ASSERT_TRUE(amcl_nodelet->set(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
 
-  tester->publish_map();
+  tester_->publish_map();
   spin_for(50ms);
 
   {
     // Initializing with the second map but keeping the old estimate.
     // Ignoring the new initial pose values.
-    const auto [pose, _] = amcl_nodelet->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
     ASSERT_NEAR(pose.translation().x(), estimate.translation().x(), 0.01);
     ASSERT_NEAR(pose.translation().y(), estimate.translation().y(), 0.01);
     ASSERT_NEAR(pose.so2().log(), estimate.so2().log(), 0.01);
@@ -598,79 +598,79 @@ TEST_F(TestFixture, KeepCurrentEstimate) {
 
 TEST_F(TestFixture, InvalidMotionModel) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.odom_model_type = "non_existing_model";
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_FALSE(wait_for_initialization());
 }
 
 TEST_F(TestFixture, InvalidSensorModel) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.laser_model_type = "non_existing_model";
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_FALSE(wait_for_initialization());
 }
 
 TEST_F(TestFixture, InitialPoseBeforeInitialize) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
   config.set_initial_pose = false;
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_default_initial_pose();
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan();
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_default_initial_pose();
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
   ASSERT_FALSE(wait_for_pose_estimate());
 }
 
 TEST_F(TestFixture, InitialPoseAfterInitialize) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  ASSERT_FALSE(tester->can_transform("map", "odom"));
-  tester->publish_default_initial_pose();
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan();
+  ASSERT_FALSE(tester_->can_transform("map", "odom"));
+  tester_->publish_default_initial_pose();
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester->can_transform("map", "odom"));
+  ASSERT_TRUE(tester_->can_transform("map", "odom"));
 }
 
 TEST_F(TestFixture, InitialPoseWithWrongFrame) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  ASSERT_FALSE(tester->can_transform("map", "odom"));
-  tester->publish_initial_pose_with_wrong_frame();
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan();
+  ASSERT_FALSE(tester_->can_transform("map", "odom"));
+  tester_->publish_initial_pose_with_wrong_frame();
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_FALSE(tester->can_transform("map", "odom"));
+  ASSERT_FALSE(tester_->can_transform("map", "odom"));
 }
 
 TEST_F(TestFixture, IsPublishingParticleCloud) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  tester->create_particle_cloud_subscriber();
+  tester_->create_particle_cloud_subscriber();
   ASSERT_TRUE(wait_for_particle_cloud());
 }
 
 TEST_F(TestFixture, LaserScanWithNoOdomToBase) {
   beluga_amcl::AmclConfig config;
-  ASSERT_TRUE(amcl_nodelet->default_(config));
-  ASSERT_TRUE(amcl_nodelet->set(config));
-  tester->publish_map();
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  tester->create_pose_subscriber();
-  tester->publish_laser_scan_with_no_odom_to_base();
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan_with_no_odom_to_base();
   ASSERT_FALSE(wait_for_pose_estimate());
 }
 
