@@ -28,81 +28,45 @@
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
-class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid>
-{
-public:
-  struct ValueTraits
-  {
+class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
+ public:
+  struct ValueTraits {
     // https://wiki.ros.org/map_server#Value_Interpretation
     static constexpr std::int8_t free_value = 0;
     static constexpr std::int8_t unknown_value = -1;
     static constexpr std::int8_t occupied_value = 100;
 
-    bool is_free(std::int8_t value) const
-    {
-      return value == free_value;
-    }
+    bool is_free(std::int8_t value) const { return value == free_value; }
 
-    bool is_unknown(std::int8_t value) const
-    {
-      return value == unknown_value;
-    }
+    bool is_unknown(std::int8_t value) const { return value == unknown_value; }
 
-    bool is_occupied(std::int8_t value) const
-    {
-      return value == occupied_value;
-    }
+    bool is_occupied(std::int8_t value) const { return value == occupied_value; }
   };
 
   explicit OccupancyGrid(messages::OccupancyGridConstSharedPtr grid)
-  : grid_(std::move(grid)), origin_(make_origin_transform(grid_->info.origin))
-  {
-  }
+      : grid_(std::move(grid)), origin_(make_origin_transform(grid_->info.origin)) {}
 
-  [[nodiscard]] const Sophus::SE2d & origin() const
-  {
-    return origin_;
-  }
+  [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
 
-  std::size_t size() const
-  {
-    return grid_->data.size();
-  }
+  std::size_t size() const { return grid_->data.size(); }
 
-  [[nodiscard]] const auto & data() const
-  {
-    return grid_->data;
-  }
+  [[nodiscard]] const auto& data() const { return grid_->data; }
 
-  std::size_t width() const
-  {
-    return grid_->info.width;
-  }
+  std::size_t width() const { return grid_->info.width; }
 
-  std::size_t height() const
-  {
-    return grid_->info.height;
-  }
+  std::size_t height() const { return grid_->info.height; }
 
-  [[nodiscard]] double resolution() const
-  {
-    return grid_->info.resolution;
-  }
+  [[nodiscard]] double resolution() const { return grid_->info.resolution; }
 
-  [[nodiscard]] auto value_traits() const
-  {
-    return ValueTraits{};
-  }
+  [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
 
-private:
+ private:
   messages::OccupancyGridConstSharedPtr grid_;
   Sophus::SE2d origin_;
 
-  static Sophus::SE2d make_origin_transform(const messages::Pose & origin)
-  {
+  static Sophus::SE2d make_origin_transform(const messages::Pose& origin) {
     const auto rotation = Sophus::SO2d{tf2::getYaw(origin.orientation)};
     const auto translation = Eigen::Vector2d{origin.position.x, origin.position.y};
     return Sophus::SE2d{rotation, translation};

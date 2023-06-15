@@ -29,8 +29,7 @@
 #error BELUGA_AMCL_ROS_VERSION is not defined or invalid
 #endif
 
-namespace beluga_amcl::messages
-{
+namespace beluga_amcl::messages {
 #if BELUGA_AMCL_ROS_VERSION == 2
 using LaserScan = sensor_msgs::msg::LaserScan;
 using OccupancyGrid = nav_msgs::msg::OccupancyGrid;

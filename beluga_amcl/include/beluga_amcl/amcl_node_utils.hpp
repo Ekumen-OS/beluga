@@ -22,20 +22,17 @@
 
 #include <sophus/se3.hpp>
 
-namespace beluga_amcl::utils
-{
+namespace beluga_amcl::utils {
 
 /// Returns an Eigen format object with comma separators between coefficients.
 /**
  * Useful for printing matrices and vectors in a single line.
  */
-inline Eigen::IOFormat make_eigen_comma_format()
-{
+inline Eigen::IOFormat make_eigen_comma_format() {
   return Eigen::IOFormat{
-    Eigen::StreamPrecision,
-    Eigen::DontAlignCols,
-    ", ",  // coefficient separator
-    ", ",  // row separator
+      Eigen::StreamPrecision, Eigen::DontAlignCols,
+      ", ",  // coefficient separator
+      ", ",  // row separator
   };
 }
 
@@ -49,11 +46,11 @@ inline Eigen::IOFormat make_eigen_comma_format()
  * \return A vector of pairs of coordinates in the robot's reference frame.
  */
 std::vector<std::pair<double, double>> make_points_from_laser_scan(
-  const beluga_amcl::messages::LaserScan & laser_scan,
-  const Sophus::SE3d & laser_transform,
-  std::size_t max_beam_count,
-  float range_min,
-  float range_max);
+    const beluga_amcl::messages::LaserScan& laser_scan,
+    const Sophus::SE3d& laser_transform,
+    std::size_t max_beam_count,
+    float range_min,
+    float range_max);
 
 }  // namespace beluga_amcl::utils
 

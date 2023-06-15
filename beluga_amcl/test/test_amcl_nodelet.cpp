@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <dynamic_reconfigure/client.h>
 #include <gmock/gmock.h>
 #include <ros/ros.h>
-#include <dynamic_reconfigure/client.h>
 
 #include <geometry_msgs/PoseArray.h>
 
 #include <beluga_amcl/private/amcl_nodelet.hpp>
 
-namespace
-{
+namespace {
 
 using namespace std::chrono_literals;
 
@@ -31,16 +30,13 @@ using namespace std::chrono_literals;
  * \param timeout Maximum time to spin.
  * \return True if the condition was met. False if it timed out.
  */
-template<class Predicate, class Rep, class Period>
-bool spin_until(
-  Predicate && predicate,
-  const std::chrono::duration<Rep, Period> & timeout)
-{
-  const ros::Time deadline =
-    ros::Time::now() + ros::Duration(
-    std::chrono::duration<double>(timeout).count());
+template <class Predicate, class Rep, class Period>
+bool spin_until(Predicate&& predicate, const std::chrono::duration<Rep, Period>& timeout) {
+  const ros::Time deadline = ros::Time::now() + ros::Duration(std::chrono::duration<double>(timeout).count());
   ros::Rate r(100);
-  while (ros::ok() && !predicate() && ros::Time::now() < deadline) {r.sleep();}
+  while (ros::ok() && !predicate() && ros::Time::now() < deadline) {
+    r.sleep();
+  }
   return predicate();  // last minute check
 }
 
@@ -49,120 +45,81 @@ bool spin_until(
  * \param predicate The stop condition.
  * \param duration Time to spin.
  */
-template<class Rep, class Period>
-void spin_for(
-  const std::chrono::duration<Rep, Period> & duration)
-{
-  const auto duration_is_over = []() {return false;};
+template <class Rep, class Period>
+void spin_for(const std::chrono::duration<Rep, Period>& duration) {
+  const auto duration_is_over = []() { return false; };
   spin_until(duration_is_over, duration);
 }
 
 /// Test class that provides convenient public accessors.
-class AmclNodeletUnderTest : public beluga_amcl::AmclNodelet
-{
-public:
+class AmclNodeletUnderTest : public beluga_amcl::AmclNodelet {
+ public:
   /// Get particle filter pointer.
-  const auto & particle_filter()
-  {
-    return particle_filter_;
-  }
+  const auto& particle_filter() { return particle_filter_; }
 
   /// Return true if the particle filter has been initialized.
-  bool is_initialized() const
-  {
-    return particle_filter_.get();
-  }
+  bool is_initialized() const { return particle_filter_.get(); }
 
   /// Retrieve nodelet default configuration (may fail).
-  bool default_(beluga_amcl::AmclConfig & config)
-  {
+  bool default_(beluga_amcl::AmclConfig& config) {
     if (!config_client_) {
-      config_client_ = std::make_unique<AmclConfigClient>(
-        getName() + "/config_client", getPrivateNodeHandle());
+      config_client_ = std::make_unique<AmclConfigClient>(getName() + "/config_client", getPrivateNodeHandle());
     }
     return config_client_->getDefaultConfiguration(config);
   }
 
   /// Retrieve nodelet configuration (may fail).
-  bool get(beluga_amcl::AmclConfig & config)
-  {
+  bool get(beluga_amcl::AmclConfig& config) {
     if (!config_client_) {
-      config_client_ = std::make_unique<AmclConfigClient>(
-        getName() + "/config_client", getPrivateNodeHandle());
+      config_client_ = std::make_unique<AmclConfigClient>(getName() + "/config_client", getPrivateNodeHandle());
     }
     return config_client_->getCurrentConfiguration(config);
   }
 
   /// Set nodelet configuration (may fail).
-  bool set(beluga_amcl::AmclConfig & config)
-  {
-    return config_client_->setConfiguration(config);
-  }
+  bool set(beluga_amcl::AmclConfig& config) { return config_client_->setConfiguration(config); }
 
-private:
-  using AmclConfigClient =
-    dynamic_reconfigure::Client<beluga_amcl::AmclConfig>;
+ private:
+  using AmclConfigClient = dynamic_reconfigure::Client<beluga_amcl::AmclConfig>;
   std::unique_ptr<AmclConfigClient> config_client_;
 };
 
 // Tester node that can publish default messages and test ROS interactions.
-class Tester
-{
-public:
-  Tester()
-  : tf_listener_(tf_buffer_)
-  {
+class Tester {
+ public:
+  Tester() : tf_listener_(tf_buffer_) {
     map_publisher_ = nh_.advertise<nav_msgs::OccupancyGrid>("map", 1);
 
-    map_server_ = nh_.advertiseService(
-      "static_map", &Tester::static_map_callback, this);
+    map_server_ = nh_.advertiseService("static_map", &Tester::static_map_callback, this);
 
     set_map_client_ = nh_.serviceClient<nav_msgs::SetMap>("set_map");
 
-    initial_pose_publisher_ =
-      nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1);
+    initial_pose_publisher_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1);
 
-    laser_scan_publisher_ =
-      nh_.advertise<sensor_msgs::LaserScan>("scan", 1);
+    laser_scan_publisher_ = nh_.advertise<sensor_msgs::LaserScan>("scan", 1);
 
-    global_localization_client_ =
-      nh_.serviceClient<std_srvs::Empty>("global_localization");
+    global_localization_client_ = nh_.serviceClient<std_srvs::Empty>("global_localization");
   }
 
-  void create_pose_subscriber()
-  {
+  void create_pose_subscriber() {
     pose_subscriber_ = nh_.subscribe<geometry_msgs::PoseWithCovarianceStamped>(
-      "amcl_pose", 10, boost::bind(&Tester::pose_callback, this, _1));
+        "amcl_pose", 10, boost::bind(&Tester::pose_callback, this, _1));
   }
 
-  void pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr & message)
-  {
-    latest_pose_ = *message;
-  }
+  void pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& message) { latest_pose_ = *message; }
 
-  const auto & latest_pose() const
-  {
-    return latest_pose_;
-  }
+  const auto& latest_pose() const { return latest_pose_; }
 
-  void create_particle_cloud_subscriber()
-  {
+  void create_particle_cloud_subscriber() {
     particle_cloud_subscriber_ = nh_.subscribe<geometry_msgs::PoseArray>(
-      "particlecloud", 10, boost::bind(&Tester::particle_cloud_callback, this, _1));
+        "particlecloud", 10, boost::bind(&Tester::particle_cloud_callback, this, _1));
   }
 
-  void particle_cloud_callback(const geometry_msgs::PoseArray::ConstPtr & message)
-  {
-    latest_particle_cloud_ = *message;
-  }
+  void particle_cloud_callback(const geometry_msgs::PoseArray::ConstPtr& message) { latest_particle_cloud_ = *message; }
 
-  const auto & latest_particle_cloud() const
-  {
-    return latest_particle_cloud_;
-  }
+  const auto& latest_particle_cloud() const { return latest_particle_cloud_; }
 
-  static auto make_dummy_map()
-  {
+  static auto make_dummy_map() {
     auto map = nav_msgs::OccupancyGrid{};
     map.header.frame_id = "map";
     map.info.resolution = 1.0;
@@ -172,20 +129,15 @@ public:
     return map;
   }
 
-  void publish_map()
-  {
-    map_publisher_.publish(make_dummy_map());
-  }
+  void publish_map() { map_publisher_.publish(make_dummy_map()); }
 
-  void publish_map_with_wrong_frame()
-  {
+  void publish_map_with_wrong_frame() {
     auto map = make_dummy_map();
     map.header.frame_id = "non_existing_frame";
     map_publisher_.publish(map);
   }
 
-  bool set_map_and_initial_pose(double x, double y, double yaw)
-  {
+  bool set_map_and_initial_pose(double x, double y, double yaw) {
     nav_msgs::SetMap::Request request;
     nav_msgs::SetMap::Response response;
     request.map = make_dummy_map();
@@ -199,24 +151,21 @@ public:
     return set_map_client_.call(request, response) && response.success;
   }
 
-  void publish_default_initial_pose()
-  {
+  void publish_default_initial_pose() {
     auto pose = geometry_msgs::PoseWithCovarianceStamped{};
     pose.header.frame_id = "map";
     pose.pose.pose.orientation.w = 1.;
     initial_pose_publisher_.publish(pose);
   }
 
-  void publish_initial_pose_with_wrong_frame()
-  {
+  void publish_initial_pose_with_wrong_frame() {
     auto pose = geometry_msgs::PoseWithCovarianceStamped{};
     pose.header.frame_id = "non_existing_frame";
     pose.pose.pose.orientation.w = 1.;
     initial_pose_publisher_.publish(pose);
   }
 
-  void publish_laser_scan()
-  {
+  void publish_laser_scan() {
     const auto timestamp = ros::Time::now();
 
     auto scan = sensor_msgs::LaserScan{};
@@ -241,8 +190,7 @@ public:
     laser_scan_publisher_.publish(scan);
   }
 
-  void publish_laser_scan_with_no_odom_to_base()
-  {
+  void publish_laser_scan_with_no_odom_to_base() {
     const auto timestamp = ros::Time::now();
 
     auto scan = sensor_msgs::LaserScan{};
@@ -267,30 +215,22 @@ public:
     laser_scan_publisher_.publish(scan);
   }
 
-  bool can_transform(const std::string & source, const std::string & target) const
-  {
+  bool can_transform(const std::string& source, const std::string& target) const {
     return tf_buffer_.canTransform(source, target, ros::Time());
   }
 
-  template<class Rep, class Period>
-  bool wait_for_global_localization_service(
-    const std::chrono::duration<Rep, Period> & timeout)
-  {
-    return global_localization_client_.waitForExistence(
-      ros::Duration(std::chrono::duration<double>(timeout).count()));
+  template <class Rep, class Period>
+  bool wait_for_global_localization_service(const std::chrono::duration<Rep, Period>& timeout) {
+    return global_localization_client_.waitForExistence(ros::Duration(std::chrono::duration<double>(timeout).count()));
   }
 
-  bool request_global_localization()
-  {
+  bool request_global_localization() {
     std_srvs::Empty srv;
     return global_localization_client_.call(srv);
   }
 
-private:
-  bool static_map_callback(
-    nav_msgs::GetMap::Request &,
-    nav_msgs::GetMap::Response & response)
-  {
+ private:
+  bool static_map_callback(nav_msgs::GetMap::Request&, nav_msgs::GetMap::Response& response) {
     response.map = make_dummy_map();
     return true;
   }
@@ -318,68 +258,55 @@ private:
 };
 
 /// Base node fixture class with common utilities.
-template<class T>
-class BaseTestFixture : public T
-{
-public:
-  void SetUp() override
-  {
+template <class T>
+class BaseTestFixture : public T {
+ public:
+  void SetUp() override {
     amcl_nodelet = std::make_shared<AmclNodeletUnderTest>();
-    amcl_nodelet->init(
-      "amcl_nodelet", ros::names::getRemappings(),
-      nodelet::V_string{}, nullptr, nullptr);
+    amcl_nodelet->init("amcl_nodelet", ros::names::getRemappings(), nodelet::V_string{}, nullptr, nullptr);
     tester = std::make_shared<Tester>();
   }
 
-  void TearDown() override
-  {
+  void TearDown() override {}
+
+  bool wait_for_initialization() {
+    return spin_until([this] { return amcl_nodelet->is_initialized(); }, 1000ms);
   }
 
-  bool wait_for_initialization()
-  {
-    return spin_until([this] {return amcl_nodelet->is_initialized();}, 1000ms);
+  bool wait_for_pose_estimate() {
+    return spin_until([this] { return tester->latest_pose().has_value(); }, 1000ms);
   }
 
-  bool wait_for_pose_estimate()
-  {
-    return spin_until(
-      [this] {return tester->latest_pose().has_value();}, 1000ms);
-  }
-
-  bool wait_for_particle_cloud()
-  {
+  bool wait_for_particle_cloud() {
     tester->create_particle_cloud_subscriber();
-    return spin_until(
-      [this] {return tester->latest_particle_cloud().has_value();}, 1000ms);
+    return spin_until([this] { return tester->latest_particle_cloud().has_value(); }, 1000ms);
   }
 
-  bool request_global_localization()
-  {
+  bool request_global_localization() {
     if (!tester->wait_for_global_localization_service(500ms)) {
       return false;
     }
     return tester->request_global_localization();
   }
 
-protected:
+ protected:
   std::shared_ptr<AmclNodeletUnderTest> amcl_nodelet;
   std::shared_ptr<Tester> tester;
 };
 
-class TestInitializationWithModel : public BaseTestFixture<::testing::TestWithParam<
-      std::tuple<const char *, const char *>>> {};
+class TestInitializationWithModel
+    : public BaseTestFixture<::testing::TestWithParam<std::tuple<const char*, const char*>>> {};
 
 INSTANTIATE_TEST_SUITE_P(
-  Models,
-  TestInitializationWithModel,
-  testing::Values(
-    std::make_tuple("differential_drive", "likelihood_field"),
-    std::make_tuple("omnidirectional_drive", "beam"),
-    std::make_tuple("stationary", "likelihood_field")));
+    Models,
+    TestInitializationWithModel,
+    testing::Values(
+        std::make_tuple("differential_drive", "likelihood_field"),
+        std::make_tuple("omnidirectional_drive", "beam"),
+        std::make_tuple("stationary", "likelihood_field")));
 
-TEST_P(TestInitializationWithModel, ParticleCount)
-{
-  const auto & [motion_model, sensor_model] = GetParam();
+TEST_P(TestInitializationWithModel, ParticleCount) {
+  const auto& [motion_model, sensor_model] = GetParam();
 
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
@@ -398,8 +325,7 @@ TEST_P(TestInitializationWithModel, ParticleCount)
 
 class TestFixture : public BaseTestFixture<::testing::Test> {};
 
-TEST_F(TestFixture, MapWithWrongFrame)
-{
+TEST_F(TestFixture, MapWithWrongFrame) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   ASSERT_TRUE(amcl_nodelet->set(config));
@@ -407,31 +333,24 @@ TEST_F(TestFixture, MapWithWrongFrame)
   ASSERT_TRUE(wait_for_initialization());
 }
 
-class MapFromServiceFixture : public TestFixture
-{
-public:
-  void SetUp() override
-  {
+class MapFromServiceFixture : public TestFixture {
+ public:
+  void SetUp() override {
     nh_.setParam("use_map_topic", false);
     TestFixture::SetUp();
   }
 
-  void TearDown() override
-  {
-    nh_.deleteParam("use_map_topic");
-  }
+  void TearDown() override { nh_.deleteParam("use_map_topic"); }
 
-private:
+ private:
   ros::NodeHandle nh_{"/amcl_nodelet"};
 };
 
-TEST_F(MapFromServiceFixture, MapFromService)
-{
+TEST_F(MapFromServiceFixture, MapFromService) {
   ASSERT_TRUE(wait_for_initialization());
 }
 
-TEST_F(TestFixture, SetInitialPose)
-{
+TEST_F(TestFixture, SetInitialPose) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = true;
@@ -454,8 +373,7 @@ TEST_F(TestFixture, SetInitialPose)
   ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
 }
 
-TEST_F(TestFixture, SetMapAndInitialPose)
-{
+TEST_F(TestFixture, SetMapAndInitialPose) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = true;
@@ -483,8 +401,7 @@ TEST_F(TestFixture, SetMapAndInitialPose)
   }
 }
 
-TEST_F(TestFixture, BroadcastWhenInitialPoseSet)
-{
+TEST_F(TestFixture, BroadcastWhenInitialPoseSet) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = true;
@@ -498,8 +415,7 @@ TEST_F(TestFixture, BroadcastWhenInitialPoseSet)
   ASSERT_TRUE(tester->can_transform("map", "odom"));
 }
 
-TEST_F(TestFixture, NoBroadcastWhenNoInitialPose)
-{
+TEST_F(TestFixture, NoBroadcastWhenNoInitialPose) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = false;
@@ -513,8 +429,7 @@ TEST_F(TestFixture, NoBroadcastWhenNoInitialPose)
   ASSERT_FALSE(tester->can_transform("map", "odom"));
 }
 
-TEST_F(TestFixture, BroadcastWithGlobalLocalization)
-{
+TEST_F(TestFixture, BroadcastWithGlobalLocalization) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = false;
@@ -529,8 +444,7 @@ TEST_F(TestFixture, BroadcastWithGlobalLocalization)
   ASSERT_TRUE(tester->can_transform("map", "odom"));
 }
 
-TEST_F(TestFixture, IgnoreGlobalLocalizationBeforeInitialize)
-{
+TEST_F(TestFixture, IgnoreGlobalLocalizationBeforeInitialize) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = false;
@@ -541,8 +455,7 @@ TEST_F(TestFixture, IgnoreGlobalLocalizationBeforeInitialize)
   ASSERT_FALSE(wait_for_pose_estimate());
 }
 
-TEST_F(TestFixture, NoBroadcastWhenInitialPoseInvalid)
-{
+TEST_F(TestFixture, NoBroadcastWhenInitialPoseInvalid) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = true;
@@ -560,8 +473,7 @@ TEST_F(TestFixture, NoBroadcastWhenInitialPoseInvalid)
   ASSERT_FALSE(tester->can_transform("map", "odom"));
 }
 
-TEST_F(TestFixture, FirstMapOnly)
-{
+TEST_F(TestFixture, FirstMapOnly) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = true;
@@ -627,8 +539,7 @@ TEST_F(TestFixture, FirstMapOnly)
   }
 }
 
-TEST_F(TestFixture, KeepCurrentEstimate)
-{
+TEST_F(TestFixture, KeepCurrentEstimate) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = true;
@@ -685,8 +596,7 @@ TEST_F(TestFixture, KeepCurrentEstimate)
   }
 }
 
-TEST_F(TestFixture, InvalidMotionModel)
-{
+TEST_F(TestFixture, InvalidMotionModel) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.odom_model_type = "non_existing_model";
@@ -695,8 +605,7 @@ TEST_F(TestFixture, InvalidMotionModel)
   ASSERT_FALSE(wait_for_initialization());
 }
 
-TEST_F(TestFixture, InvalidSensorModel)
-{
+TEST_F(TestFixture, InvalidSensorModel) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.laser_model_type = "non_existing_model";
@@ -705,8 +614,7 @@ TEST_F(TestFixture, InvalidSensorModel)
   ASSERT_FALSE(wait_for_initialization());
 }
 
-TEST_F(TestFixture, InitialPoseBeforeInitialize)
-{
+TEST_F(TestFixture, InitialPoseBeforeInitialize) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   config.set_initial_pose = false;
@@ -717,8 +625,7 @@ TEST_F(TestFixture, InitialPoseBeforeInitialize)
   ASSERT_FALSE(wait_for_pose_estimate());
 }
 
-TEST_F(TestFixture, InitialPoseAfterInitialize)
-{
+TEST_F(TestFixture, InitialPoseAfterInitialize) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   ASSERT_TRUE(amcl_nodelet->set(config));
@@ -732,8 +639,7 @@ TEST_F(TestFixture, InitialPoseAfterInitialize)
   ASSERT_TRUE(tester->can_transform("map", "odom"));
 }
 
-TEST_F(TestFixture, InitialPoseWithWrongFrame)
-{
+TEST_F(TestFixture, InitialPoseWithWrongFrame) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   ASSERT_TRUE(amcl_nodelet->set(config));
@@ -747,8 +653,7 @@ TEST_F(TestFixture, InitialPoseWithWrongFrame)
   ASSERT_FALSE(tester->can_transform("map", "odom"));
 }
 
-TEST_F(TestFixture, IsPublishingParticleCloud)
-{
+TEST_F(TestFixture, IsPublishingParticleCloud) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   ASSERT_TRUE(amcl_nodelet->set(config));
@@ -758,8 +663,7 @@ TEST_F(TestFixture, IsPublishingParticleCloud)
   ASSERT_TRUE(wait_for_particle_cloud());
 }
 
-TEST_F(TestFixture, LaserScanWithNoOdomToBase)
-{
+TEST_F(TestFixture, LaserScanWithNoOdomToBase) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet->default_(config));
   ASSERT_TRUE(amcl_nodelet->set(config));
@@ -772,8 +676,7 @@ TEST_F(TestFixture, LaserScanWithNoOdomToBase)
 
 }  // namespace
 
-int main(int argc, char ** argv)
-{
+int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "test_amcl_nodelet");
   ros::AsyncSpinner spinner(2);

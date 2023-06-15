@@ -36,8 +36,8 @@
 #include <std_srvs/Empty.h>
 
 #include <memory>
-#include <utility>
 #include <mutex>
+#include <utility>
 
 #include <sophus/se2.hpp>
 
@@ -45,56 +45,42 @@
 #include "beluga_amcl/particle_filtering.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
-class AmclNodelet : public nodelet::Nodelet
-{
-public:
+class AmclNodelet : public nodelet::Nodelet {
+ public:
   AmclNodelet() = default;
   virtual ~AmclNodelet() = default;
 
-protected:
+ protected:
   void onInit() override;
 
-  void config_callback(beluga_amcl::AmclConfig & config, uint32_t level);
+  void config_callback(beluga_amcl::AmclConfig& config, uint32_t level);
 
-  void map_callback(const nav_msgs::OccupancyGrid::ConstPtr & message);
+  void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& message);
 
-  void map_timer_callback(const ros::TimerEvent & ev);
+  void map_timer_callback(const ros::TimerEvent& ev);
 
-  bool set_map_callback(
-    nav_msgs::SetMap::Request & request,
-    nav_msgs::SetMap::Response & response);
+  bool set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs::SetMap::Response& response);
 
-  void handle_map_with_default_initial_pose(
-    const nav_msgs::OccupancyGrid::ConstPtr & message);
+  void handle_map_with_default_initial_pose(const nav_msgs::OccupancyGrid::ConstPtr& message);
 
-  std::unique_ptr<LaserLocalizationInterface2d>
-  make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr & message);
+  std::unique_ptr<LaserLocalizationInterface2d> make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& message);
 
-  void particle_cloud_timer_callback(const ros::TimerEvent & ev);
+  void particle_cloud_timer_callback(const ros::TimerEvent& ev);
 
-  template<typename ExecutionPolicy>
-  void laser_callback(
-    ExecutionPolicy && exec_policy,
-    const sensor_msgs::LaserScan::ConstPtr & laser_scan);
+  template <typename ExecutionPolicy>
+  void laser_callback(ExecutionPolicy&& exec_policy, const sensor_msgs::LaserScan::ConstPtr& laser_scan);
 
-  void initial_pose_callback(
-    const geometry_msgs::PoseWithCovarianceStamped::ConstPtr & message);
+  void initial_pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& message);
 
-  bool global_localization_callback(
-    std_srvs::Empty::Request & request,
-    std_srvs::Empty::Response & response);
+  bool global_localization_callback(std_srvs::Empty::Request& request, std_srvs::Empty::Response& response);
 
-  void save_pose_timer_callback(const ros::TimerEvent & ev);
+  void save_pose_timer_callback(const ros::TimerEvent& ev);
 
-  void initialize_with_pose(
-    const Sophus::SE2d & pose,
-    const Eigen::Matrix3d & covariance);
+  void initialize_with_pose(const Sophus::SE2d& pose, const Eigen::Matrix3d& covariance);
 
-  void update_covariance_diagnostics(
-    diagnostic_updater::DiagnosticStatusWrapper & status);
+  void update_covariance_diagnostics(diagnostic_updater::DiagnosticStatusWrapper& status);
 
   std::unique_ptr<LaserLocalizationInterface2d> particle_filter_;
 
@@ -114,8 +100,7 @@ protected:
   bool configured_{false};
   beluga_amcl::AmclConfig config_;
   beluga_amcl::AmclConfig default_config_;
-  using AmclConfigServer =
-    dynamic_reconfigure::Server<beluga_amcl::AmclConfig>;
+  using AmclConfigServer = dynamic_reconfigure::Server<beluga_amcl::AmclConfig>;
   std::unique_ptr<AmclConfigServer> config_server_;
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
@@ -126,8 +111,7 @@ protected:
   diagnostic_updater::Updater diagnosic_updater_;
 
   message_filters::Subscriber<sensor_msgs::LaserScan> laser_scan_sub_;
-  std::unique_ptr<
-    tf2_ros::MessageFilter<sensor_msgs::LaserScan>> laser_scan_filter_;
+  std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::LaserScan>> laser_scan_filter_;
   message_filters::Connection laser_scan_connection_;
 
   nav_msgs::OccupancyGrid::ConstPtr last_known_map_;

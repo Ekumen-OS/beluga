@@ -20,27 +20,22 @@
 
 #include <range/v3/view/generate.hpp>
 
-#include <sophus/so2.hpp>
 #include <sophus/se2.hpp>
+#include <sophus/so2.hpp>
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
 void initialize_with_pose(
-  const Sophus::SE2d & pose,
-  const Eigen::Matrix3d & covariance,
-  LaserLocalizationInterface2d * particle_filter)
-{
-  const auto mean =
-    Eigen::Vector3d{pose.translation().x(), pose.translation().y(), pose.so2().log()};
+    const Sophus::SE2d& pose,
+    const Eigen::Matrix3d& covariance,
+    LaserLocalizationInterface2d* particle_filter) {
+  const auto mean = Eigen::Vector3d{pose.translation().x(), pose.translation().y(), pose.so2().log()};
   auto distribution = beluga::MultivariateNormalDistribution{mean, covariance};
-  particle_filter->initialize_states(
-    ranges::views::generate(
-      [&distribution]() mutable {
-        static auto generator = std::mt19937{std::random_device()()};
-        const auto sample = distribution(generator);
-        return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
-      }));
+  particle_filter->initialize_states(ranges::views::generate([&distribution]() mutable {
+    static auto generator = std::mt19937{std::random_device()()};
+    const auto sample = distribution(generator);
+    return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
+  }));
 }
 
 }  // namespace beluga_amcl
