@@ -18,7 +18,7 @@
 1. **Source the ROS installation**.
 
    ```bash
-   . /opt/ros/${ROS_DISTRO}/setup.sh
+   source /opt/ros/${ROS_DISTRO}/setup.bash
    ```
 
 1. **Install dependencies**.
@@ -29,7 +29,7 @@
 
 1. **Build and source the workspace**.
 
-   In ROS 2 and ROS 1 distributions (if colcon is installed), run:
+   In ROS 2 and ROS 1 distributions (if [`colcon`](https://colcon.readthedocs.io/en/released/user/installation.html) is installed), run:
    ```bash
    colcon build --packages-up-to beluga_example --cmake-args -DBUILD_TESTING=OFF -DBUILD_DOCUMENTATION=OFF
    source install/setup.bash
