@@ -80,6 +80,6 @@
 
 ## Next steps
 
-If you want to contribute to this project, please read the [contribuing guidelines](CONTRIBUTING.md).
-
-For more advanced tools useful for contributing, check out the [tools](./tools/) directory.
+- Check the [installation guide](INSTALLING.md) if you want to test Beluga AMCL on a robot.
+- If you want to contribute to this project, please read the [contribuing guidelines](CONTRIBUTING.md).
+- For more advanced tools useful for contributing, check out the [tools](./tools/) directory.
