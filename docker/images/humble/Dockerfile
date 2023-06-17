@@ -20,18 +20,15 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     ccache \
     curl \
-    doxygen \
     gdb \
     git \
     lcov \
     linux-cloud-tools-generic \
     linux-tools-common \
     linux-tools-generic \
-    perl \
     python3-colcon-coveragepy-result \
+    python3-colcon-lcov-result \
     python3-pip \
-    texlive-base \
-    texlive-binaries \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
@@ -48,7 +45,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
-  colcon-lcov-result==0.5.0 \
   evo==1.21.0 \
   pre-commit==2.20.0 \
   # Note: Installing timemory takes a long time.
@@ -92,7 +88,8 @@ COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
 RUN sudo apt-get update \
   && . /opt/ros/humble/setup.sh \
   && rosdep update \
-  && rosdep install -i --from-path src -y \
+  && rosdep install -i -y --from-path src \
+  && rosdep install -i -y --from-path src -t doc \
   && sudo rm -rf /var/lib/apt/lists/*
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/
