@@ -2,15 +2,19 @@ FROM ros:noetic-ros-base-focal AS cacher
 
 WORKDIR /ws/src
 
-COPY docker/files/noetic.repos .
 RUN apt-get update \
-  && apt-get install --no-install-recommends -y git python3-vcstool \
-  && vcs import < noetic.repos
+  && apt-get install --no-install-recommends -y \
+    git \
+    python3-vcstool \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY docker/files/noetic.repos .
+RUN vcs import < noetic.repos
 
 COPY . beluga/
 RUN touch \
-   beluga/beluga_benchmark/CATKIN_IGNORE \
-   beluga/beluga_system_tests/CATKIN_IGNORE
+  beluga/beluga_benchmark/CATKIN_IGNORE \
+  beluga/beluga_system_tests/CATKIN_IGNORE
 
 RUN mkdir -p /tmp/ws/src \
   && find ./ -name "package.xml" | xargs cp --parents -t /tmp/ws/src \
@@ -26,22 +30,17 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     ccache \
     curl \
-    doxygen \
     gdb \
     git \
-    graphviz \
     lcov \
     linux-cloud-tools-generic \
     linux-tools-common \
     linux-tools-generic \
-    perl \
     python3-colcon-common-extensions \
-    python3-colcon-mixin \
     python3-colcon-coveragepy-result \
     python3-colcon-lcov-result \
+    python3-colcon-mixin \
     python3-pip \
-    texlive-base \
-    texlive-binaries \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
@@ -56,21 +55,10 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     ros-rolling-ament-copyright ros-rolling-ament-uncrustify \
     ros-rolling-ament-cpplint ros-rolling-ament-flake8 \
-    ros-rolling-ament-pep257
+    ros-rolling-ament-pep257 \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN sed -i '/^source.*/ s%^%source "/opt/ros/rolling/setup.bash"\n%' /ros_entrypoint.sh
-
-# Fix for the RViz black screen issue.
-# TODO(nahuel): Remove this when the Mesa version available
-# in Ubuntu 22.04 is 22.3.5 or greater.
-# See https://github.com/Ekumen-OS/beluga/issues/123
-RUN apt-get update \
-  && apt-get install --no-install-recommends -y \
-    software-properties-common \
-  && add-apt-repository -y ppa:kisak/kisak-mesa \
-  && apt-get install --no-install-recommends -y \
-    libegl-mesa0 libglx-mesa0 \
-  && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
   evo==1.21.0 \
@@ -117,6 +105,7 @@ RUN sudo apt-get update \
   && . /opt/ros/noetic/setup.sh \
   && rosdep update \
   && rosdep install -i -y --from-path src \
+  && rosdep install -i -y --from-path src -t doc \
   && sudo rm -rf /var/lib/apt/lists/*
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/

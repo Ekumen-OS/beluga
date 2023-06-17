@@ -57,22 +57,14 @@ jobs:
       - name: Install debian packages
         run: >-
           sudo apt-get update && sudo apt-get install -y \
-            clang-tidy \
-            doxygen \
             git \
-            graphviz \
             lcov \
-            perl \
             python3-colcon-common-extensions \
             python3-colcon-coveragepy-result \
+            python3-colcon-lcov-result \
             python3-colcon-mixin \
             python3-pip \
-            python3-vcstool \
-            texlive-base \
-            texlive-binaries
-
-      - name: Install python packages
-        run: pip install colcon-lcov-result==0.5.0
+            python3-vcstool
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -89,7 +81,7 @@ jobs:
         run: |
           . /opt/ros/${{ matrix.ros_distro }}/setup.sh
           rosdep update
-          rosdep install -r --from-paths src/ --default-yes --ignore-src --dependency-types build --dependency-types test
+          rosdep install -r --from-paths src -y -i -t build -t test -t doc
           colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
           colcon mixin update default
 
