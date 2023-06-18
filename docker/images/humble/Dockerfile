@@ -12,6 +12,31 @@ RUN mkdir -p /tmp/ws/src \
   && find ./ -name "COLCON_IGNORE" | xargs cp --parents -t /tmp/ws/src \
   || true
 
+FROM ros:humble-ros-base-jammy AS timem-builder
+
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \
+    git \
+    python3-pip \
+    python3-venv \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt
+
+RUN git clone -b develop https://github.com/NERSC/timemory.git \
+  && cd timemory \
+  && git checkout 415650ee26f358218908983c87212b620c3a0328 \
+  && python3 -m venv env \
+  && . env/bin/activate \
+  && pip install -r requirements.txt \
+  && cmake -B ./build \
+    -DTIMEMORY_INSTALL_HEADERS=OFF \
+    -DTIMEMORY_INSTALL_CONFIG=OFF \
+    -DTIMEMORY_INSTALL_ALL=OFF \
+    -DTIMEMORY_BUILD_TIMEM=ON \
+    . \
+  && cmake --build ./build --target timem
+
 FROM ros:humble-ros-base-jammy AS builder
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -29,6 +54,7 @@ RUN apt-get update \
     python3-colcon-coveragepy-result \
     python3-colcon-lcov-result \
     python3-pip \
+    python3-venv \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
@@ -46,9 +72,10 @@ RUN apt-get update \
 
 RUN pip install \
   evo==1.21.0 \
-  pre-commit==2.20.0 \
-  # Note: Installing timemory takes a long time.
-  timemory==3.3.0rc4
+  pre-commit==2.20.0
+
+COPY --from=timem-builder --chown=$USER:$GROUP /opt/timemory/ /opt/timemory
+RUN . /opt/timemory/env/bin/activate && cmake --build /opt/timemory/build --target install
 
 # Check if perf is working, if not replace it with the perf version available
 RUN perf help || ( \

@@ -90,9 +90,9 @@ jobs:
         with:
           api_token: ${{ secrets.GITHUB_TOKEN }}
           update_packager_index: false
-          override_cache_key: ccache-${{ matrix.ros_distro }}-${{ github.head_ref || github.ref }}
+          override_cache_key: ccache-${{ matrix.ros_distro }}-${{ github.head_ref || github.ref_name }}
           override_cache_key_fallback: |
-            ccache-${{ matrix.ros_distro }}-${{ github.base_ref || github.ref }}
+            ccache-${{ matrix.ros_distro }}-${{ github.base_ref || github.ref_name }}
             ccache-${{ matrix.ros_distro }}-
 
       - name: Build and test
