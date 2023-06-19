@@ -131,7 +131,9 @@ protected:
   message_filters::Connection laser_scan_connection_;
 
   nav_msgs::OccupancyGrid::ConstPtr last_known_map_;
+
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_;
+  std::optional<Sophus::SE2d> latest_map_to_odom_transform_;
 };
 
 }  // namespace beluga_amcl

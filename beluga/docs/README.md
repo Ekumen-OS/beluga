@@ -10,4 +10,3 @@ The library is extensible, allowing to:
 - Provide a way of [generating the initial particles](@ref StateGeneratorPage).
 - Provide a way of [sampling](@ref SamplerPage) from the previous particle set.
 - Provide a way to [limiting](@ref LimiterPage) the amount of particles.
-- Provide a way to [choose when to resample](@ref ResamplingPolicyPage).

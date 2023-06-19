@@ -51,6 +51,7 @@ namespace
 constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::DifferentialMotionModel";
 constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
 
+
 }  // namespace
 
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
@@ -724,15 +725,15 @@ AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   limiter_params.kld_epsilon = get_parameter("pf_err").as_double();
   limiter_params.kld_z = get_parameter("pf_z").as_double();
 
-  auto resample_on_motion_params = beluga::ResampleOnMotionPolicyParam{};
+  auto resample_on_motion_params = UpdateFilterWhenMovingPolicyParam{};
   resample_on_motion_params.update_min_d = get_parameter("update_min_d").as_double();
   resample_on_motion_params.update_min_a = get_parameter("update_min_a").as_double();
 
-  auto resample_interval_params = beluga::ResampleIntervalPolicyParam{};
+  auto resample_interval_params = ResampleIntervalPolicyParam{};
   resample_interval_params.resample_interval_count =
     static_cast<std::size_t>(get_parameter("resample_interval").as_int());
 
-  auto selective_resampling_params = beluga::SelectiveResamplingPolicyParam{};
+  auto selective_resampling_params = SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = get_parameter("selective_resampling").as_bool();
 
   using Stationary = beluga::mixin::descriptor<beluga::StationaryModel>;
@@ -804,12 +805,12 @@ AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map)
     return make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
       sampler_params,
       limiter_params,
-      resample_on_motion_params,
-      resample_interval_params,
-      selective_resampling_params,
       get_motion_descriptor(get_parameter("robot_model_type").as_string()),
       get_sensor_descriptor(get_parameter("laser_model_type").as_string()),
-      OccupancyGrid{map}
+      OccupancyGrid{map},
+      resample_on_motion_params,
+      resample_interval_params,
+      selective_resampling_params
     );
   } catch (const std::invalid_argument & error) {
     RCLCPP_ERROR(get_logger(), "Coudn't instantiate the particle filter: %s", error.what());
@@ -939,53 +940,61 @@ void AmclNode::laser_callback(
     return;
   }
 
-  {
-    const auto time1 = std::chrono::high_resolution_clock::now();
-    particle_filter_->update_motion(odom_to_base_transform);
-    particle_filter_->sample(exec_policy);
-    const auto time2 = std::chrono::high_resolution_clock::now();
-    particle_filter_->update_sensor(
-      utils::make_points_from_laser_scan(
-        *laser_scan,
-        base_to_laser_transform,
-        static_cast<std::size_t>(get_parameter("max_beams").as_int()),
-        static_cast<float>(get_parameter("laser_min_range").as_double()),
-        static_cast<float>(get_parameter("laser_max_range").as_double())));
-    particle_filter_->reweight(exec_policy);
-    const auto time3 = std::chrono::high_resolution_clock::now();
-    particle_filter_->resample();
-    const auto time4 = std::chrono::high_resolution_clock::now();
+  const auto update_start_time = std::chrono::high_resolution_clock::now();
+  const auto filter_updated = particle_filter_->update_filter(
+    exec_policy,
+    odom_to_base_transform,
+    utils::make_points_from_laser_scan(
+      *laser_scan,
+      base_to_laser_transform,
+      static_cast<std::size_t>(get_parameter("max_beams").as_int()),
+      static_cast<float>(get_parameter("laser_min_range").as_double()),
+      static_cast<float>(get_parameter("laser_max_range").as_double())));
+  const auto update_stop_time = std::chrono::high_resolution_clock::now();
+  const auto update_duration = update_stop_time - update_start_time;
 
-    RCLCPP_INFO_THROTTLE(
-      get_logger(), *get_clock(), 2000,
-      "Particle filter update stats: %ld particles %ld points - %.3fms %.3fms %.3fms",
+  if (filter_updated) {
+    RCLCPP_INFO(
+      get_logger(),
+      "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
       particle_filter_->particle_count(),
       laser_scan->ranges.size(),
-      std::chrono::duration<double, std::milli>(time2 - time1).count(),
-      std::chrono::duration<double, std::milli>(time3 - time2).count(),
-      std::chrono::duration<double, std::milli>(time4 - time3).count());
+      std::chrono::duration<double, std::milli>(update_duration).count());
   }
 
-  last_known_estimate_ = particle_filter_->estimate();
+  // force publication of the first message and any subsequent updates to the filter
+  const auto publish_updated_estimations = !last_known_estimate_ || filter_updated;
+  if (publish_updated_estimations) {
+    last_known_estimate_ = particle_filter_->estimate();
+  }
+
   const auto & [pose, covariance] = last_known_estimate_.value();
 
-  {
+  // new pose messages are only published on updates to the filter
+  if (publish_updated_estimations) {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
     message.header.stamp = laser_scan->header.stamp;
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     tf2::toMsg(pose, message.pose.pose);
     tf2::covarianceEigenToRowMajor(covariance, message.pose.covariance);
     pose_pub_->publish(message);
+
+    // Update the estimation for the transform between the global frame and the odom frame
+    latest_map_to_odom_transform_ = pose * odom_to_base_transform.inverse();
   }
 
-  if (enable_tf_broadcast_ && get_parameter("tf_broadcast").as_bool()) {
+  // tranforms are always published to keep them current
+  if (latest_map_to_odom_transform_ && enable_tf_broadcast_ &&
+    get_parameter("tf_broadcast").as_bool())
+  {
     auto message = geometry_msgs::msg::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
-    message.header.stamp = now() +
+    const auto expiration_stamp = tf2_ros::fromMsg(laser_scan->header.stamp) +
       tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
+    message.header.stamp = tf2_ros::toMsg(expiration_stamp);
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     message.child_frame_id = get_parameter("odom_frame_id").as_string();
-    message.transform = tf2::toMsg(pose * odom_to_base_transform.inverse());
+    message.transform = tf2::toMsg(latest_map_to_odom_transform_.value());
     tf_broadcaster_->sendTransform(message);
   }
 }

@@ -202,15 +202,15 @@ AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr & map)
   limiter_params.kld_epsilon = config_.kld_err;
   limiter_params.kld_z = config_.kld_z;
 
-  auto resample_on_motion_params = beluga::ResampleOnMotionPolicyParam{};
+  auto resample_on_motion_params = beluga_amcl::UpdateFilterWhenMovingPolicyParam{};
   resample_on_motion_params.update_min_d = config_.update_min_d;
   resample_on_motion_params.update_min_a = config_.update_min_a;
 
-  auto resample_interval_params = beluga::ResampleIntervalPolicyParam{};
+  auto resample_interval_params = beluga_amcl::ResampleIntervalPolicyParam{};
   resample_interval_params.resample_interval_count =
     static_cast<std::size_t>(config_.resample_interval);
 
-  auto selective_resampling_params = beluga::SelectiveResamplingPolicyParam{};
+  auto selective_resampling_params = beluga_amcl::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = config_.selective_resampling;
 
   auto get_motion_descriptor = [this](std::string_view name) -> MotionDescriptor {
@@ -264,12 +264,12 @@ AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr & map)
     return make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
       sampler_params,
       limiter_params,
-      resample_on_motion_params,
-      resample_interval_params,
-      selective_resampling_params,
       get_motion_descriptor(config_.odom_model_type),
       get_sensor_descriptor(config_.laser_model_type),
-      OccupancyGrid{map}
+      OccupancyGrid{map},
+      resample_on_motion_params,
+      resample_interval_params,
+      selective_resampling_params
     );
   } catch (const std::invalid_argument & error) {
     NODELET_ERROR("Could not instantiate the particle filter: %s", error.what());
@@ -456,52 +456,57 @@ void AmclNodelet::laser_callback(
     return;
   }
 
-  {
-    const auto time1 = std::chrono::high_resolution_clock::now();
-    particle_filter_->update_motion(odom_to_base_transform);
-    particle_filter_->sample(exec_policy);
-    const auto time2 = std::chrono::high_resolution_clock::now();
-    particle_filter_->update_sensor(
-      utils::make_points_from_laser_scan(
-        *laser_scan,
-        base_to_laser_transform,
-        static_cast<std::size_t>(config_.laser_max_beams),
-        static_cast<float>(config_.laser_min_range),
-        static_cast<float>(config_.laser_max_range)));
-    particle_filter_->reweight(exec_policy);
-    const auto time3 = std::chrono::high_resolution_clock::now();
-    particle_filter_->resample();
-    const auto time4 = std::chrono::high_resolution_clock::now();
+  const auto update_start_time = std::chrono::high_resolution_clock::now();
+  const auto filter_updated = particle_filter_->update_filter(
+    exec_policy,
+    odom_to_base_transform,
+    utils::make_points_from_laser_scan(
+      *laser_scan,
+      base_to_laser_transform,
+      static_cast<std::size_t>(config_.laser_max_beams),
+      static_cast<float>(config_.laser_min_range),
+      static_cast<float>(config_.laser_max_range)));
+  const auto update_stop_time = std::chrono::high_resolution_clock::now();
+  const auto update_duration = update_stop_time - update_start_time;
 
+  if (filter_updated) {
     NODELET_INFO_THROTTLE(
       2,
-      "Particle filter update stats: %ld particles %ld points - %.3fms %.3fms %.3fms",
+      "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
       particle_filter_->particle_count(),
       laser_scan->ranges.size(),
-      std::chrono::duration<double, std::milli>(time2 - time1).count(),
-      std::chrono::duration<double, std::milli>(time3 - time2).count(),
-      std::chrono::duration<double, std::milli>(time4 - time3).count());
+      std::chrono::duration<double, std::milli>(update_duration).count());
   }
 
-  last_known_estimate_ = particle_filter_->estimate();
+  // force publication of the first message and any subsequent updates to the filter
+  const auto publish_updated_estimations = !last_known_estimate_ || filter_updated;
+  if (publish_updated_estimations) {
+    last_known_estimate_ = particle_filter_->estimate();
+  }
+
   const auto & [pose, covariance] = last_known_estimate_.value();
 
-  {
+  // new pose messages are only published on updates to the filter
+  if (publish_updated_estimations) {
     auto message = geometry_msgs::PoseWithCovarianceStamped{};
     message.header.stamp = laser_scan->header.stamp;
     message.header.frame_id = config_.global_frame_id;
     tf2::toMsg(pose, message.pose.pose);
     tf2::covarianceEigenToRowMajor(covariance, message.pose.covariance);
     pose_pub_.publish(message);
+
+    // Update the estimation fo the transform between the global frame and the odom frame
+    latest_map_to_odom_transform_ = pose * odom_to_base_transform.inverse();
   }
 
-  if (enable_tf_broadcast_ && config_.tf_broadcast) {
+  // tranforms are always published to keep them current
+  if (latest_map_to_odom_transform_ && enable_tf_broadcast_ && config_.tf_broadcast) {
     auto message = geometry_msgs::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
     message.header.stamp = ros::Time::now() + ros::Duration(config_.transform_tolerance);
     message.header.frame_id = config_.global_frame_id;
     message.child_frame_id = config_.odom_frame_id;
-    message.transform = tf2::toMsg(odom_to_base_transform * pose.inverse());
+    message.transform = tf2::toMsg(latest_map_to_odom_transform_.value());
     tf_broadcaster_->sendTransform(message);
   }
 
