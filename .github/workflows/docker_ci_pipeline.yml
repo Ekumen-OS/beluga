@@ -37,4 +37,4 @@ jobs:
           cache-from: |
             type=gha,scope=docker-${{ matrix.ros_distro }}-${{ github.head_ref || github.ref_name }}
             type=gha,scope=docker-${{ matrix.ros_distro }}-${{ github.base_ref || github.ref_name }}
-          cache-to: type=gha,mode=max,scope=docker-${{ matrix.ros_distro }}-${{ github.head_ref || github.ref_name }}
+          cache-to: type=gha,mode=min,scope=docker-${{ matrix.ros_distro }}-${{ github.head_ref || github.ref_name }}
