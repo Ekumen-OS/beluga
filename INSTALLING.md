@@ -45,10 +45,24 @@
 
    For ROS 2 distributions, run:
    ```bash
-   ros2 launch beluga_example localization_launch.py use_composition:=True
+   ros2 launch beluga_example localization_launch.py use_composition:=True localization_params_file:=<PATH>
    ```
 
    For ROS 1 distributions, run:
    ```bash
-   roslaunch beluga_example localization.launch
+   roslaunch beluga_example localization.launch localization_params_file:=<PATH>
    ```
+
+   The `localization_params_file` argument can be ommited if the [default AMCL parameters](beluga_example/params/default.ros2.yaml) are compatible with the robot.
+
+1. **Use RViz to visualize the localization output**.
+
+   Run `rviz` or `rviz2` depending on your distribution.
+
+   In ROS 2, when subscribing to the output topics from AMCL, we recommend the following [QoS](https://docs.ros.org/en/rolling/Concepts/Intermediate/About-Quality-of-Service-Settings.html) settings:
+
+   | Topic            | Depth | History      | Reliability  | Durability      |
+   |------------------|-------|--------------|--------------|-----------------|
+   | `particle_cloud` | 5     | Keep last    | Best effort  | Volatile        |
+   | `map`            | 5     | Keep last    | Reliable     | Transient local |
+   | `pose`           | 5     | Keep last    | Reliable     | Volatile        |
