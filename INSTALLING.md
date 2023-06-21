@@ -45,12 +45,12 @@
 
    For ROS 2 distributions, run:
    ```bash
-   ros2 launch beluga_example localization_launch.py use_composition:=True localization_params_file:=<PATH>
+   ros2 launch beluga_example localization_launch.py use_composition:=True localization_params_file:=<PARAMS_PATH> localization_map:=<MAP_YAML_PATH>
    ```
 
    For ROS 1 distributions, run:
    ```bash
-   roslaunch beluga_example localization.launch localization_params_file:=<PATH>
+   roslaunch beluga_example localization.launch localization_params_file:=<PARAMS_PATH> localization_map:=<MAP_YAML_PATH>
    ```
 
    The `localization_params_file` argument can be ommited if the [default AMCL parameters](beluga_example/params/default.ros2.yaml) are compatible with the robot.
