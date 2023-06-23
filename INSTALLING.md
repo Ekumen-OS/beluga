@@ -57,12 +57,22 @@
 
 1. **Use RViz to visualize the localization output**.
 
-   Run `rviz` or `rviz2` depending on your distribution.
+   For ROS 2 distributions, run:
+   ```bash
+   rviz2 -d $(ros2 pkg prefix --share beluga_example)/rviz/rviz.ros2.rviz
+   ```
 
-   In ROS 2, when subscribing to the output topics from AMCL, we recommend the following [QoS](https://docs.ros.org/en/rolling/Concepts/Intermediate/About-Quality-of-Service-Settings.html) settings:
+   For ROS 1 distributions, run:
+   ```bash
+   rviz -d $(rospack find beluga_example)/rviz/rviz.ros.rviz
+   ```
+
+   **Quality of Service**
+
+   In ROS 2, when subscribing to the output topics from localization, we recommend the following [QoS](https://docs.ros.org/en/rolling/Concepts/Intermediate/About-Quality-of-Service-Settings.html) settings:
 
    | Topic            | Depth | History      | Reliability  | Durability      |
    |------------------|-------|--------------|--------------|-----------------|
-   | `particle_cloud` | 5     | Keep last    | Best effort  | Volatile        |
    | `map`            | 5     | Keep last    | Reliable     | Transient local |
+   | `particle_cloud` | 5     | Keep last    | Best effort  | Volatile        |
    | `pose`           | 5     | Keep last    | Reliable     | Volatile        |
