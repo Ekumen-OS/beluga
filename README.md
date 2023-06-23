@@ -29,4 +29,5 @@ This repository contains the following packages:
 ## First Steps
 
 - Get hands-on experience with the [getting started](GETTING_STARTED.md) tutorial.
+- Check the [installation guide](INSTALLING.md) to test this on a robot.
 - Read the [contributing guidelines](CONTRIBUTING.md).
