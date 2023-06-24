@@ -31,13 +31,13 @@
 
    In ROS 2 and ROS 1 distributions (if [`colcon`](https://colcon.readthedocs.io/en/released/user/installation.html) is installed), run:
    ```bash
-   colcon build --packages-up-to beluga_example --cmake-args -DBUILD_TESTING=OFF -DBUILD_DOCUMENTATION=OFF
+   colcon build --packages-up-to beluga_example --cmake-args -DBUILD_TESTING=OFF -DBUILD_DOCS=OFF
    source install/setup.bash
    ```
 
    In ROS 1 distributions, you may run the following command instead:
    ```bash
-   catkin_make_isolated --only-pkg-with-deps beluga_example --install --cmake-args -DBUILD_TESTING=OFF -DBUILD_DOCUMENTATION=OFF
+   catkin_make_isolated --only-pkg-with-deps beluga_example --install --cmake-args -DBUILD_TESTING=OFF -DBUILD_DOCS=OFF
    source devel*/setup.bash
    ```
 

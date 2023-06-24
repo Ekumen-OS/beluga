@@ -34,7 +34,7 @@ echo "::group::Build"
 # Do a build without coverage flags first to avoid generating .gcno files
 # that prevent the html output from lcov from being generated correctly.
 colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
-colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest
+colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest --cmake-args -DBUILD_TESTING=ON -DBUILD_DOCS=ON
 echo "::endgroup::"
 
 echo "::group::Test"
