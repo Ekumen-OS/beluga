@@ -73,9 +73,7 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
-    ros-rolling-ament-copyright ros-rolling-ament-uncrustify \
-    ros-rolling-ament-cpplint ros-rolling-ament-flake8 \
-    ros-rolling-ament-pep257 \
+    ros-rolling-ament-copyright \
   && rm -rf /var/lib/apt/lists/*
 
 RUN sed -i '/^source.*/ s%^%source "/opt/ros/rolling/setup.bash"\n%' /ros_entrypoint.sh

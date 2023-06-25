@@ -22,19 +22,12 @@ repos:
         types_or: [c++, python]
         language: system
 
-      - id: ament_flake8
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
         name: "check python format (flake8)"
-        entry: ament_flake8
-        exclude: (beluga|beluga_system_tests)\/
-        types: [python]
-        language: system
-
-      - id: ament_pep257
-        name: "check python format (pep257)"
-        entry: ament_pep257
-        exclude: (beluga|beluga_system_tests)\/
-        types: [python]
-        language: system
+        additional_dependencies: [flake8-docstrings]
 
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v16.0.3
