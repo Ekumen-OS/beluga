@@ -85,7 +85,6 @@ def generate_launch_description(
         rosbag_path,
         '--rate',
         playback_rate,
-        '--clock',
     ]
 
     if start_paused:
