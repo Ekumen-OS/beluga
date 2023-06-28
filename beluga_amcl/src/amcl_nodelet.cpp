@@ -282,7 +282,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
     NODELET_WARN(
         "Ignoring set map request because the "
         "particle filter has not been initialized");
-    response.success = 0U;
+    response.success = static_cast<unsigned char>(false);
     return true;
   }
 
@@ -296,7 +296,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
     NODELET_WARN(
         "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\".",
         request.initial_pose.header.frame_id.c_str(), config_.global_frame_id.c_str());
-    response.success = 0U;
+    response.success = static_cast<unsigned char>(false);
     return true;
   }
 
@@ -316,7 +316,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
 
   initialize_with_pose(pose, covariance);
 
-  response.success = 1U;
+  response.success = static_cast<unsigned char>(true);
   return true;
 }
 
