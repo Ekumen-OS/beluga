@@ -31,7 +31,7 @@
 
 #include <ciabatta/ciabatta.hpp>
 
-using beluga::PlainGridStorage;
+using beluga::LinearGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
 namespace {

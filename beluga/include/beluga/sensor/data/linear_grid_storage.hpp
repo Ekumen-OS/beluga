@@ -24,13 +24,13 @@ namespace beluga {
 /// @brief A simple grid storage that stores the data in a vector.
 /// @tparam T Type of the data to be stored.
 template <typename T>
-class PlainGridStorage {
+class LinearGridStorage {
  public:
   /// @brief Constructs a map with the given initial values.
   /// @param width Width of the grid.
   /// @param height Height of the grid.
   /// @param init_values Initial contents of the map, in row-major order.
-  PlainGridStorage(std::size_t width, std::size_t height, std::initializer_list<T> init_values = {})
+  LinearGridStorage(std::size_t width, std::size_t height, std::initializer_list<T> init_values = {})
       : width_(width), height_(height), storage_(width * height, WrappedT{}) {
     const auto n = std::min(init_values.size(), storage_.size());
     for (std::size_t i = 0; i < n; ++i) {

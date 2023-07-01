@@ -31,7 +31,7 @@ TEST(Raycasting, Nominal) {
   // Positive Y -> Down
 
   // clang-format off
-  auto grid_storage = PlainGridStorage(5, 5 ,{
+  auto grid_storage = LinearGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
@@ -106,7 +106,7 @@ TEST(Raycasting, NonIdentityGridOrigin) {
   // Positive Y -> Diagonal downwards left
 
   // clang-format off
-  auto grid_storage = PlainGridStorage(5, 5 ,{
+  auto grid_storage = LinearGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
@@ -133,7 +133,7 @@ TEST(BaselineRaycasting, Nominal) {
   // Positive Y -> Down
 
   // clang-format off
-  auto grid_storage = PlainGridStorage(5, 5 ,{
+  auto grid_storage = LinearGridStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,

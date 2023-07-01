@@ -19,9 +19,9 @@
 #include <sophus/se2.hpp>
 
 #include <beluga/sensor/data/dense_grid.hpp>
+#include <beluga/sensor/data/linear_grid_storage.hpp>
 #include <beluga/sensor/data/occupancy_grid.hpp>
 #include <beluga/sensor/data/occupancy_grid_storage.hpp>
-#include <beluga/sensor/data/plain_grid_storage.hpp>
 #include <beluga/sensor/data/regular_grid.hpp>
 
 namespace beluga::testing {
