@@ -33,11 +33,6 @@ class PlainGridStorage {
   PlainGridStorage(std::size_t width, std::size_t height, std::initializer_list<T> init_values = {})
       : width_(width), height_(height), storage_(width * height, WrappedT{}) {
     const auto n = std::min(init_values.size(), storage_.size());
-    // auto it = storage_.begin();
-    // std::for_each_n(init_values.begin(), n, [&it](const auto value) {
-    //   return it->value = value;
-    //   ++it;
-    // });
     for (std::size_t i = 0; i < n; ++i) {
       storage_[i].value = *(init_values.begin() + i);
     }
