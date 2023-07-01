@@ -81,7 +81,9 @@ class BaselineGridMixin : public Mixin {
   [[nodiscard]] std::size_t size() const { return grid_.size(); }
 
   [[nodiscard]] std::size_t width() const { return grid_.width(); }
+
   [[nodiscard]] std::size_t height() const { return grid_.height(); }
+
   [[nodiscard]] double resolution() const { return resolution_; }
 
   [[nodiscard]] auto value_traits() const { return ValueTraits{}; }

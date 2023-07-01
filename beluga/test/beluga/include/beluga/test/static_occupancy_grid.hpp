@@ -67,6 +67,7 @@ class StaticOccupancyGridMixin : public Mixin {
   [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
 
   [[nodiscard]] const auto& cell(const int x, const int y) const { return grid_storage_.cell(x, y); }
+
   [[nodiscard]] auto& cell(const int x, const int y) { return grid_storage_.cell(x, y); }
 
  private:

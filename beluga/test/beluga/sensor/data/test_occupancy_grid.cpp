@@ -119,8 +119,14 @@ TEST(OccupancyGrid2, ObstacleData) {
 TEST(OccupancyGrid2, GlobalCoordinatesForCells) {
   constexpr double kResolution = 1.;
   const auto origin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, Eigen::Vector2d{1., 1.}};
-  const auto grid =
-      StaticOccupancyGrid(PlainGridStorage(2, 3, {false, true, false, true, false, true}), kResolution, origin);
+  const auto grid = StaticOccupancyGrid(
+      PlainGridStorage(
+          3, 2,
+          {
+              false, true, false,  //
+              true, false, true,   //
+          }),
+      kResolution, origin);
 
   constexpr auto kFrame = StaticOccupancyGrid::Frame::kGlobal;
   const auto coordinates = grid.coordinates_for(grid.free_cells(), kFrame) | ranges::to<std::vector>;
