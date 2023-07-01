@@ -61,7 +61,7 @@ BENCHMARK_CAPTURE(BM_Bresenham2i, Modified, beluga::Bresenham2i::kModified)
 template <typename Mixin>
 class BaselineGridMixin : public Mixin {
  public:
-  using PlainGridStorage = beluga::PlainGridStorage<bool>;
+  using MapStorage = beluga::PlainGridStorage<bool>;
   struct ValueTraits {
     [[nodiscard]] bool is_free(bool value) const { return !value; }
     [[nodiscard]] bool is_unknown(bool) const { return false; }
@@ -70,7 +70,7 @@ class BaselineGridMixin : public Mixin {
 
   template <typename... Args>
   explicit BaselineGridMixin(
-      PlainGridStorage&& grid,
+      MapStorage&& grid,
       double resolution,
       [[maybe_unused]] const Sophus::SE2d& origin,
       Args&&... args)
@@ -92,7 +92,7 @@ class BaselineGridMixin : public Mixin {
   [[nodiscard]] auto& cell(const int x, const int y) { return grid_.cell(x, y); }
 
  private:
-  PlainGridStorage grid_;
+  MapStorage grid_;
   double resolution_;
   Sophus::SE2d origin_;
 };
@@ -142,7 +142,7 @@ void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   const auto bearing_index = static_cast<RaycastBearing>(state.range(0));
   const auto n = static_cast<int>(state.range(1));
 
-  auto grid_storage = typename Grid::PlainGridStorage(kGridSize, kGridSize);
+  auto grid_storage = typename Grid::MapStorage(kGridSize, kGridSize);
   grid_storage.cell(n, n) = true;
   grid_storage.cell(0, n) = true;
   grid_storage.cell(n, 0) = true;
@@ -200,7 +200,7 @@ void BM_RayCasting2d(benchmark::State& state) {
   const auto bearing_index = static_cast<RaycastBearing>(state.range(0));
   const auto n = static_cast<int>(state.range(1));
 
-  auto grid_storage = typename Grid::PlainGridStorage(kGridSize, kGridSize);
+  auto grid_storage = typename Grid::MapStorage(kGridSize, kGridSize);
   grid_storage.cell(n, n) = true;
   grid_storage.cell(0, n) = true;
   grid_storage.cell(n, 0) = true;
@@ -262,7 +262,7 @@ void BM_RayCasting2d_GridCacheFriendlyness(benchmark::State& state) {
   const auto bearing_index = static_cast<RaycastBearing>(state.range(2));
 
   // draw an obstacle at the limits of the grid
-  auto grid_storage = typename Grid::PlainGridStorage(kGridSize, kGridSize);
+  auto grid_storage = typename Grid::MapStorage(kGridSize, kGridSize);
   for (int i = 0; i < kGridSize; ++i) {
     grid_storage.cell(kGridSize - 1, i) = true;
     grid_storage.cell(i, kGridSize - 1) = true;

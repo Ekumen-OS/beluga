@@ -15,69 +15,27 @@
 #ifndef BELUGA_TEST_STATIC_OCCUPANCY_GRID_HPP
 #define BELUGA_TEST_STATIC_OCCUPANCY_GRID_HPP
 
-#include <array>
-#include <cstdint>
-#include <initializer_list>
-#include <vector>
+#include <ciabatta/ciabatta.hpp>
+#include <sophus/se2.hpp>
 
 #include <beluga/sensor/data/dense_grid.hpp>
+#include <beluga/sensor/data/occupancy_grid.hpp>
+#include <beluga/sensor/data/occupancy_grid_storage.hpp>
 #include <beluga/sensor/data/plain_grid_storage.hpp>
 #include <beluga/sensor/data/regular_grid.hpp>
 
-#include <ciabatta/ciabatta.hpp>
-
-#include "beluga/sensor/data/occupancy_grid.hpp"
-
-#include <sophus/se2.hpp>
-
 namespace beluga::testing {
 
-template <class Mixin>
-class StaticOccupancyGridMixin : public Mixin {
- public:
-  using PlainGridStorage = beluga::PlainGridStorage<bool>;
+using TestMapValueType = bool;
 
-  struct ValueTraits {
-    [[nodiscard]] bool is_free(bool value) const { return !value; }
-    [[nodiscard]] bool is_unknown(bool) const { return false; }
-    [[nodiscard]] bool is_occupied(bool value) const { return value; }
-  };
-
-  template <typename... Args>
-  explicit StaticOccupancyGridMixin(
-      PlainGridStorage&& grid_storage,
-      double resolution,
-      const Sophus::SE2d& origin,
-      Args&&... args)
-      : Mixin(std::forward<Args>(args)...),
-        grid_storage_{std::move(grid_storage)},
-        origin_(origin),
-        resolution_{resolution} {}
-
-  [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
-
-  [[nodiscard]] std::size_t size() const { return grid_storage_.size(); }
-
-  [[nodiscard]] std::size_t width() const { return grid_storage_.width(); }
-
-  [[nodiscard]] std::size_t height() const { return grid_storage_.height(); }
-
-  [[nodiscard]] double resolution() const { return resolution_; }
-
-  [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
-
-  [[nodiscard]] const auto& cell(const int x, const int y) const { return grid_storage_.cell(x, y); }
-
-  [[nodiscard]] auto& cell(const int x, const int y) { return grid_storage_.cell(x, y); }
-
- private:
-  PlainGridStorage grid_storage_;
-  Sophus::SE2d origin_;
-  double resolution_;
+struct TestMapValueTraits {
+  [[nodiscard]] bool is_free(bool value) const { return !value; }
+  [[nodiscard]] bool is_unknown(bool) const { return false; }
+  [[nodiscard]] bool is_occupied(bool value) const { return value; }
 };
 
 using StaticOccupancyGrid = ciabatta::mixin<
-    ciabatta::curry<StaticOccupancyGridMixin>::template mixin,
+    ciabatta::curry<OccupancyStorageMixin, TestMapValueType, TestMapValueTraits>::template mixin,
     BaseOccupancyGrid2Mixin,
     BaseDenseGrid2Mixin,
     BaseRegularGrid2Mixin>;
