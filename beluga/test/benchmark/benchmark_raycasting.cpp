@@ -58,51 +58,6 @@ BENCHMARK_CAPTURE(BM_Bresenham2i, Modified, beluga::Bresenham2i::kModified)
     ->Range(128, 4096)
     ->Complexity();
 
-template <typename Mixin>
-class BaselineGridMixin : public Mixin {
- public:
-  using MapStorage = beluga::PlainGridStorage<bool>;
-  struct ValueTraits {
-    [[nodiscard]] bool is_free(bool value) const { return !value; }
-    [[nodiscard]] bool is_unknown(bool) const { return false; }
-    [[nodiscard]] bool is_occupied(bool value) const { return value; }
-  };
-
-  template <typename... Args>
-  explicit BaselineGridMixin(
-      MapStorage&& grid,
-      double resolution,
-      [[maybe_unused]] const Sophus::SE2d& origin,
-      Args&&... args)
-      : Mixin(std::forward<Args>(args)...), grid_{std::move(grid)}, resolution_{resolution} {}
-
-  [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
-
-  [[nodiscard]] std::size_t size() const { return grid_.size(); }
-
-  [[nodiscard]] std::size_t width() const { return grid_.width(); }
-
-  [[nodiscard]] std::size_t height() const { return grid_.height(); }
-
-  [[nodiscard]] double resolution() const { return resolution_; }
-
-  [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
-
-  [[nodiscard]] const auto& cell(const int x, const int y) const { return grid_.cell(x, y); }
-  [[nodiscard]] auto& cell(const int x, const int y) { return grid_.cell(x, y); }
-
- private:
-  MapStorage grid_;
-  double resolution_;
-  Sophus::SE2d origin_;
-};
-
-using BaselineGrid = ciabatta::mixin<
-    ciabatta::curry<BaselineGridMixin>::template mixin,
-    beluga::BaseOccupancyGrid2Mixin,
-    beluga::BaseDenseGrid2Mixin,
-    beluga::BaseRegularGrid2Mixin>;
-
 enum class RaycastBearing { kHorizontal, kVertical, kDiagonal };
 
 constexpr auto bearingOrdinal(RaycastBearing bearing) {
@@ -161,21 +116,6 @@ void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   state.SetLabel(bearingLabels(bearing_index));
 }
 
-BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, BaselineGrid)
-    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
-    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 256})
-    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 512})
-    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 1024})
-    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
-    ->Args({bearingOrdinal(RaycastBearing::kVertical), 256})
-    ->Args({bearingOrdinal(RaycastBearing::kVertical), 512})
-    ->Args({bearingOrdinal(RaycastBearing::kVertical), 1024})
-    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 128})
-    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 256})
-    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 512})
-    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 1024})
-    ->Complexity();
-
 BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, StaticOccupancyGrid)
     ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
     ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 256})
@@ -215,21 +155,6 @@ void BM_RayCasting2d(benchmark::State& state) {
   state.SetComplexityN(n);
   state.SetLabel(bearingLabels(bearing_index));
 }
-
-BENCHMARK_TEMPLATE(BM_RayCasting2d, BaselineGrid)
-    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
-    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 256})
-    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 512})
-    ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 1024})
-    ->Args({bearingOrdinal(RaycastBearing::kVertical), 128})
-    ->Args({bearingOrdinal(RaycastBearing::kVertical), 256})
-    ->Args({bearingOrdinal(RaycastBearing::kVertical), 512})
-    ->Args({bearingOrdinal(RaycastBearing::kVertical), 1024})
-    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 128})
-    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 256})
-    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 512})
-    ->Args({bearingOrdinal(RaycastBearing::kDiagonal), 1024})
-    ->Complexity();
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d, StaticOccupancyGrid)
     ->Args({bearingOrdinal(RaycastBearing::kHorizontal), 128})
@@ -297,14 +222,6 @@ void BM_RayCasting2d_GridCacheFriendlyness(benchmark::State& state) {
   state.SetComplexityN(n);
   state.SetLabel(std::string{} + bearingLabels(bearing_index) + "/" + (apply_randomness ? "random" : "deterministic"));
 }
-
-BENCHMARK_TEMPLATE(BM_RayCasting2d_GridCacheFriendlyness, BaselineGrid)
-    ->ArgsProduct({
-        {false, true},
-        {128, 256, 512, 1024, 2048, 4096},
-        {bearingOrdinal(RaycastBearing::kHorizontal), bearingOrdinal(RaycastBearing::kVertical)},
-    })
-    ->Complexity();
 
 BENCHMARK_TEMPLATE(BM_RayCasting2d_GridCacheFriendlyness, StaticOccupancyGrid)
     ->ArgsProduct({
