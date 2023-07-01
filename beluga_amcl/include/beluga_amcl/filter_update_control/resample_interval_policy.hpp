@@ -22,20 +22,17 @@
  * \brief Implementation of the resample interval resampling policy.
  */
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
 /// Parameters used to construct a ResampleIntervalPolicy instance.
-struct ResampleIntervalPolicyParam
-{
+struct ResampleIntervalPolicyParam {
   /// Activation period. Out of these, the filter will only resample once.
   std::size_t resample_interval_count{1};
 };
 
 /// Implementation of the Resample Interval algorithm for resampling.
-class ResampleIntervalPolicy
-{
-public:
+class ResampleIntervalPolicy {
+ public:
   /// Parameter type that the constructor uses to configure the policy.
   using param_type = ResampleIntervalPolicyParam;
 
@@ -43,17 +40,15 @@ public:
   /**
    * \param configuration Policy configuration data.
    */
-  explicit ResampleIntervalPolicy(const param_type & configuration)
-  : configuration_{configuration} {}
+  explicit ResampleIntervalPolicy(const param_type& configuration) : configuration_{configuration} {}
 
   /// \brief Determine whether resampling must be done according to this policy.
-  [[nodiscard]] bool do_resampling()
-  {
+  [[nodiscard]] bool do_resampling() {
     filter_update_counter_ = (filter_update_counter_ + 1) % configuration_.resample_interval_count;
     return filter_update_counter_ == 0;
   }
 
-private:
+ private:
   param_type configuration_;              //< Policy configuration
   std::size_t filter_update_counter_{0};  //< Current cycle phase
 };

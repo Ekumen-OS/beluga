@@ -26,12 +26,10 @@
  * \brief Implementation of the selective resampling algorithm for resampling.
  */
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
 /// Parameters used to construct a SelectiveResamplingPolicy instance.
-struct SelectiveResamplingPolicyParam
-{
+struct SelectiveResamplingPolicyParam {
   /// \brief Enable/disable the SelectiveResampling feature.
   bool enabled{false};
 };
@@ -41,9 +39,8 @@ struct SelectiveResamplingPolicyParam
  * The algorithm is based in \cite grisetti2007selectiveresampling, according to the description given in
  * \cite tiacheng2015resamplingmethods.
  * */
-class SelectiveResamplingPolicy
-{
-public:
+class SelectiveResamplingPolicy {
+ public:
   /// Parameter type that the constructor uses to configure the policy.
   using param_type = SelectiveResamplingPolicyParam;
 
@@ -51,27 +48,25 @@ public:
   /**
    * \param configuration Policy configuration data.
    */
-  explicit SelectiveResamplingPolicy(const param_type & configuration)
-  : configuration_{configuration} {}
+  explicit SelectiveResamplingPolicy(const param_type& configuration) : configuration_{configuration} {}
 
   /// \brief Determine whether resampling must be done according to this policy.
   /**
    * \tparam Concrete Type representing the actual implementation of the filter.
    * It must satisfy the \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
    */
-  template<typename Concrete>
-  [[nodiscard]] bool do_resampling(Concrete & filter)
-  {
+  template <typename Concrete>
+  [[nodiscard]] bool do_resampling(Concrete& filter) {
     if (!configuration_.enabled) {
       return true;
     }
-    const auto n_eff = 1. / ranges::accumulate(
-      filter.weights() | ranges::views::transform([](const auto w) {return w * w;}), 0.);
+    const auto n_eff =
+        1. / ranges::accumulate(filter.weights() | ranges::views::transform([](const auto w) { return w * w; }), 0.);
     const auto n = static_cast<double>(std::size(filter.weights()));
     return n_eff < n / 2.;
   }
 
-private:
+ private:
   param_type configuration_;
 };
 

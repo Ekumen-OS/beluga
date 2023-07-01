@@ -25,88 +25,70 @@
 using ::testing::_;
 using ::testing::StrictMock;
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
 using motion_event_type = Sophus::SE2d;
 using laser_scan_type = std::vector<std::pair<double, double>>;
 
-template<typename T>
-struct ProxyVoterPolicyParam
-{
+template <typename T>
+struct ProxyVoterPolicyParam {
   std::shared_ptr<T> proxy;
 };
 
-struct ResampleIntervalPolicyMock
-{
+struct ResampleIntervalPolicyMock {
   MOCK_METHOD(bool, do_resampling, (), ());
 };
 
-struct SelectiveResamplingPolicyMock
-{
+struct SelectiveResamplingPolicyMock {
   MOCK_METHOD(bool, do_resampling, (), ());
 };
 
-struct UpdateFilterWhenMovingPolicyMock
-{
-  MOCK_METHOD(bool, do_filter_update, (const motion_event_type & current_pose_in_odom), (const));
+struct UpdateFilterWhenMovingPolicyMock {
+  MOCK_METHOD(bool, do_filter_update, (const motion_event_type& current_pose_in_odom), (const));
 };
 
-struct ResampleIntervalPolicyProxyPolicy
-{
+struct ResampleIntervalPolicyProxyPolicy {
   using param_type = ProxyVoterPolicyParam<ResampleIntervalPolicyMock>;
 
-  explicit ResampleIntervalPolicyProxyPolicy(param_type config)
-  : config_{std::move(config)} {}
+  explicit ResampleIntervalPolicyProxyPolicy(param_type config) : config_{std::move(config)} {}
 
-  [[nodiscard]] bool do_resampling() {return config_.proxy->do_resampling();}
+  [[nodiscard]] bool do_resampling() { return config_.proxy->do_resampling(); }
 
-private:
+ private:
   param_type config_;
 };
 
-struct SelectiveResamplingProxyPolicy
-{
+struct SelectiveResamplingProxyPolicy {
   using param_type = ProxyVoterPolicyParam<SelectiveResamplingPolicyMock>;
 
-  explicit SelectiveResamplingProxyPolicy(param_type config)
-  : config_{std::move(config)} {}
+  explicit SelectiveResamplingProxyPolicy(param_type config) : config_{std::move(config)} {}
 
   // selective resampling interface
-  template<typename Concrete>
-  [[nodiscard]] bool do_resampling([[maybe_unused]] Concrete & filter)
-  {
+  template <typename Concrete>
+  [[nodiscard]] bool do_resampling([[maybe_unused]] Concrete& filter) {
     return config_.proxy->do_resampling();
   }
 
-private:
+ private:
   param_type config_;
 };
 
-
-struct UpdateFilterWhenMovingProxyPolicy
-{
+struct UpdateFilterWhenMovingProxyPolicy {
   using param_type = ProxyVoterPolicyParam<UpdateFilterWhenMovingPolicyMock>;
 
-  explicit UpdateFilterWhenMovingProxyPolicy(param_type config)
-  : config_{std::move(config)} {}
+  explicit UpdateFilterWhenMovingProxyPolicy(param_type config) : config_{std::move(config)} {}
 
-  [[nodiscard]] bool do_filter_update(const motion_event_type & pose)
-  {
-    return config_.proxy->do_filter_update(pose);
-  }
+  [[nodiscard]] bool do_filter_update(const motion_event_type& pose) { return config_.proxy->do_filter_update(pose); }
 
-private:
+ private:
   param_type config_;
 };
 
-template<typename Mixin>
-class MockMixin : public Mixin
-{
-public:
-  template<typename ... Args>
-  explicit MockMixin(Args &&... args)
-  : Mixin(std::forward<Args>(args)...) {}
+template <typename Mixin>
+class MockMixin : public Mixin {
+ public:
+  template <typename... Args>
+  explicit MockMixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
   MOCK_METHOD(void, update_motion, (motion_event_type));
   MOCK_METHOD(void, sample, ());
@@ -114,24 +96,25 @@ public:
   MOCK_METHOD(void, reweight, ());
   MOCK_METHOD(void, resample, ());
 
-  void sample(std::execution::sequenced_policy) {sample();}
-  void reweight(std::execution::sequenced_policy) {reweight();}
-  void sample(std::execution::parallel_policy) {sample();}
-  void reweight(std::execution::parallel_policy) {reweight();}
+  void sample(std::execution::sequenced_policy) { sample(); }
+  void reweight(std::execution::sequenced_policy) { reweight(); }
+  void sample(std::execution::parallel_policy) { sample(); }
+  void reweight(std::execution::parallel_policy) { reweight(); }
 };
 
-namespace
-{
+namespace {
 
 using UUT_WITH_POLICIES_INSTALLED = StrictMock<ciabatta::mixin<
-      MockMixin,
-      ciabatta::curry<FilterUpdateControlMixin,
-      UpdateFilterWhenMovingProxyPolicy, ResampleIntervalPolicyProxyPolicy,
-      SelectiveResamplingProxyPolicy>::mixin,
-      ciabatta::provides<FilterUpdateControlInterface>::template mixin>>;
+    MockMixin,
+    ciabatta::curry<
+        FilterUpdateControlMixin,
+        UpdateFilterWhenMovingProxyPolicy,
+        ResampleIntervalPolicyProxyPolicy,
+        SelectiveResamplingProxyPolicy>::mixin,
+    ciabatta::provides<FilterUpdateControlInterface>::template mixin>>;
 
-template<class EventType>
-using EventSubscriberCallback = std::function<void (const EventType &)>;
+template <class EventType>
+using EventSubscriberCallback = std::function<void(const EventType&)>;
 
 struct FilterUpdateControlTests : public ::testing::Test {};
 
@@ -186,9 +169,9 @@ TEST_F(FilterUpdateControlTests, ResamplingPollerWithNPoliciesUsesShortCircuitEv
   }
 
   [[maybe_unused]] UUT_WITH_POLICIES_INSTALLED uut{
-    UpdateFilterWhenMovingProxyPolicy::param_type{std::move(motion_policy_result)},
-    ResampleIntervalPolicyProxyPolicy::param_type{std::move(resample_rate_divider_result)},
-    SelectiveResamplingProxyPolicy::param_type{std::move(selective_resampler_policy_result)}};
+      UpdateFilterWhenMovingProxyPolicy::param_type{std::move(motion_policy_result)},
+      ResampleIntervalPolicyProxyPolicy::param_type{std::move(resample_rate_divider_result)},
+      SelectiveResamplingProxyPolicy::param_type{std::move(selective_resampler_policy_result)}};
 
   {
     InSequence sec;
@@ -224,7 +207,7 @@ TEST_F(FilterUpdateControlTests, ResamplingPollerWithNPoliciesUsesShortCircuitEv
     EXPECT_CALL(uut, reweight()).Times(1);
   }
 
-  for (const auto & iteration_result : expected_return_values) {
+  for (const auto& iteration_result : expected_return_values) {
     ASSERT_EQ(iteration_result, uut.update_filter(motion_event_type{}, laser_scan_type{}));
   }
 }

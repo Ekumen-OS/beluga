@@ -184,8 +184,7 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
   resample_on_motion_params.update_min_a = config_.update_min_a;
 
   auto resample_interval_params = beluga_amcl::ResampleIntervalPolicyParam{};
-  resample_interval_params.resample_interval_count =
-    static_cast<std::size_t>(config_.resample_interval);
+  resample_interval_params.resample_interval_count = static_cast<std::size_t>(config_.resample_interval);
 
   auto selective_resampling_params = beluga_amcl::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = config_.selective_resampling;
@@ -241,16 +240,10 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
   try {
     using beluga::mixin::make_mixin;
     return make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
-      sampler_params,
-      limiter_params,
-      get_motion_descriptor(config_.odom_model_type),
-      get_sensor_descriptor(config_.laser_model_type),
-      OccupancyGrid{map},
-      resample_on_motion_params,
-      resample_interval_params,
-      selective_resampling_params
-    );
-  } catch (const std::invalid_argument & error) {
+        sampler_params, limiter_params, get_motion_descriptor(config_.odom_model_type),
+        get_sensor_descriptor(config_.laser_model_type), OccupancyGrid{map}, resample_on_motion_params,
+        resample_interval_params, selective_resampling_params);
+  } catch (const std::invalid_argument& error) {
     NODELET_ERROR("Could not instantiate the particle filter: %s", error.what());
   }
   return nullptr;
@@ -419,24 +412,18 @@ void AmclNodelet::laser_callback(ExecutionPolicy&& exec_policy, const sensor_msg
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto filter_updated = particle_filter_->update_filter(
-    exec_policy,
-    odom_to_base_transform,
-    utils::make_points_from_laser_scan(
-      *laser_scan,
-      base_to_laser_transform,
-      static_cast<std::size_t>(config_.laser_max_beams),
-      static_cast<float>(config_.laser_min_range),
-      static_cast<float>(config_.laser_max_range)));
+      exec_policy, odom_to_base_transform,
+      utils::make_points_from_laser_scan(
+          *laser_scan, base_to_laser_transform, static_cast<std::size_t>(config_.laser_max_beams),
+          static_cast<float>(config_.laser_min_range), static_cast<float>(config_.laser_max_range)));
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 
   if (filter_updated) {
     NODELET_INFO_THROTTLE(
-      2,
-      "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
-      particle_filter_->particle_count(),
-      laser_scan->ranges.size(),
-      std::chrono::duration<double, std::milli>(update_duration).count());
+        2, "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
+        particle_filter_->particle_count(), laser_scan->ranges.size(),
+        std::chrono::duration<double, std::milli>(update_duration).count());
   }
 
   // force publication of the first message and any subsequent updates to the filter
@@ -445,7 +432,7 @@ void AmclNodelet::laser_callback(ExecutionPolicy&& exec_policy, const sensor_msg
     last_known_estimate_ = particle_filter_->estimate();
   }
 
-  const auto & [pose, covariance] = last_known_estimate_.value();
+  const auto& [pose, covariance] = last_known_estimate_.value();
 
   // new pose messages are only published on updates to the filter
   if (publish_updated_estimations) {

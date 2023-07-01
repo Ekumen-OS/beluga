@@ -16,26 +16,23 @@
 
 #include <ciabatta/ciabatta.hpp>
 
-#include <beluga_amcl/filter_update_control/resample_interval_policy.hpp>
 #include <beluga_amcl/filter_update_control/filter_update_control_mixin.hpp>
+#include <beluga_amcl/filter_update_control/resample_interval_policy.hpp>
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
-namespace
-{
+namespace {
 
-template<typename Mixin, typename Policy>
-class PolicyWrapperMixin : public Mixin
-{
-public:
-  template<typename ... Rest>
-  explicit PolicyWrapperMixin(const typename Policy::param_type & config, Rest &&... rest)
-  : Mixin(std::forward<Rest>(rest)...), policy_{config} {}
+template <typename Mixin, typename Policy>
+class PolicyWrapperMixin : public Mixin {
+ public:
+  template <typename... Rest>
+  explicit PolicyWrapperMixin(const typename Policy::param_type& config, Rest&&... rest)
+      : Mixin(std::forward<Rest>(rest)...), policy_{config} {}
 
-  [[nodiscard]] bool update_filter() {return policy_.do_resampling();}
+  [[nodiscard]] bool update_filter() { return policy_.do_resampling(); }
 
-private:
+ private:
   Policy policy_;
 };
 
@@ -71,9 +68,9 @@ TEST_P(ResampleIntervalPolicyTestsWithParam, ResampleEveryNthIteration) {
 }
 
 INSTANTIATE_TEST_SUITE_P(
-  ResampleEveryNthIterationInstance,
-  ResampleIntervalPolicyTestsWithParam,
-  testing::Values(1, 3, 5, 10, 21));
+    ResampleEveryNthIterationInstance,
+    ResampleIntervalPolicyTestsWithParam,
+    testing::Values(1, 3, 5, 10, 21));
 
 }  // namespace
 
