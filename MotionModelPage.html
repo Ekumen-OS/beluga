@@ -83,7 +83,6 @@ Requirements</h1>
 <p>Then:</p><ul>
 <li><code>p.update_motion(u)</code> will update the motion model with <code>u</code>. This will not actually update the particle states, but the update done here will be used in subsequent calls to the <code>apply_motion()</code> method.</li>
 <li><code>cp.apply_motion(s)</code> returns a <code>T::state_type</code>, that is the result of applying the motion model to <code>s</code> based on the updates.</li>
-<li><code>cp.latest_motion_update()</code> returns a <code>std::optional&lt;update_type&gt;</code> with the latest motion update received through <code>motion_update()</code>.</li>
 </ul>
 <h1><a class="anchor" id="MotionModelLinks"></a>
 See also</h1>

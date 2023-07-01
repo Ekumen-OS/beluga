@@ -8,9 +8,9 @@
 <area shape="rect" id="node7" href="$classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria." alt="" coords="157,332,299,373"/>
 <area shape="rect" id="node8" href="$classbeluga_1_1LikelihoodFieldModel.html" title="Likelihood field sensor model for range finders." alt="" coords="123,397,333,439"/>
 <area shape="rect" id="node9" href="$classbeluga_1_1NaiveSampler.html" title="Generation of samples from input particles." alt="" coords="145,463,311,504"/>
-<area shape="rect" id="node10" href="$classbeluga_1_1OmnidirectionalDriveModel.html" title="Sampled odometry model for an omnidirectional drive." alt="" coords="121,528,335,569"/>
-<area shape="rect" id="node11" href="$classbeluga_1_1RandomStateGenerator.html" title="A random state generator." alt="" coords="115,593,341,635"/>
-<area shape="rect" id="node12" href="$classbeluga_1_1ResamplingPoliciesPoller.html" title="Resampling policy poller." alt="" coords="127,659,329,700"/>
+<area shape="rect" id="node10" href="$classbeluga_1_1NullMixin.html" title="A null mixin that does nothing. Meant to be the default value for an optional customization point." alt="" coords="155,528,301,569"/>
+<area shape="rect" id="node11" href="$classbeluga_1_1OmnidirectionalDriveModel.html" title="Sampled odometry model for an omnidirectional drive." alt="" coords="121,593,335,635"/>
+<area shape="rect" id="node12" href="$classbeluga_1_1RandomStateGenerator.html" title="A random state generator." alt="" coords="115,659,341,700"/>
 <area shape="rect" id="node13" href="$classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html" title="Partial template specialization for simple state estimator in 2D." alt="" coords="120,724,336,765"/>
 <area shape="rect" id="node14" href="$classbeluga_1_1StationaryModel.html" title="A stationary motion model." alt="" coords="137,789,319,831"/>
 <area shape="rect" id="node15" href="$classbeluga_1_1StoragePolicy.html" title="Configurable storage policy." alt="" coords="126,855,330,911"/>

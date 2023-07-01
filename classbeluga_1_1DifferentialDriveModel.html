@@ -127,9 +127,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0c08a11d3be665c8f575a92826914160"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a0c08a11d3be665c8f575a92826914160">update_motion</a> (const <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a1f6244c5d854d9ae99719a4f5a0cede0">update_type</a> &amp;pose) final</td></tr>
 <tr class="memdesc:a0c08a11d3be665c8f575a92826914160"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the motion model with the latest odometry data.  <a href="classbeluga_1_1DifferentialDriveModel.html#a0c08a11d3be665c8f575a92826914160">More...</a><br /></td></tr>
 <tr class="separator:a0c08a11d3be665c8f575a92826914160"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46b0b434bb3bfc5271725d808c1303cc"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a1f6244c5d854d9ae99719a4f5a0cede0">update_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a46b0b434bb3bfc5271725d808c1303cc">latest_motion_update</a> () const</td></tr>
-<tr class="memdesc:a46b0b434bb3bfc5271725d808c1303cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recovers the latest motion update.  <a href="classbeluga_1_1DifferentialDriveModel.html#a46b0b434bb3bfc5271725d808c1303cc">More...</a><br /></td></tr>
-<tr class="separator:a46b0b434bb3bfc5271725d808c1303cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Mixin&gt;<br />
@@ -137,7 +134,7 @@ class beluga::DifferentialDriveModel&lt; Mixin &gt;</h3>
 
 <p>Sampled odometry model for a differential drive. </p>
 <p>This class implements <a class="el" href="structbeluga_1_1OdometryMotionModelInterface2d.html" title="Pure abstract class representing the odometry motion model interface.">OdometryMotionModelInterface2d</a> and satisfies <a class="el" href="MotionModelPage.html">Beluga named requirements: MotionModel</a>.</p>
-<p>See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[4]</a> Chapter 5.4.2.</p>
+<p>See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[2]</a> Chapter 5.4.2.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Mixin</td><td>The mixed-in type with no particular requirements. </td></tr>
@@ -253,36 +250,6 @@ template&lt;class Generator &gt; </div>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a46b0b434bb3bfc5271725d808c1303cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46b0b434bb3bfc5271725d808c1303cc">&#9670;&nbsp;</a></span>latest_motion_update()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Mixin &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt;<a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a1f6244c5d854d9ae99719a4f5a0cede0">update_type</a>&gt; <a class="el" href="classbeluga_1_1DifferentialDriveModel.html">beluga::DifferentialDriveModel</a>&lt; Mixin &gt;::latest_motion_update </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Recovers the latest motion update. </p>
-<dl class="section return"><dt>Returns</dt><dd>Last motion update received by the model or an empty optional if no update was received. </dd></dl>
 
 </div>
 </div>
