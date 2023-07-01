@@ -24,7 +24,6 @@
 
 namespace {
 
-using beluga::LinearGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
 using UUT = ciabatta::mixin<
@@ -34,7 +33,7 @@ using UUT = ciabatta::mixin<
 TEST(LikelihoodFieldModel, LikelihoodField) {
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = LinearGridStorage(5, 5 ,{
+  auto grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, true ,
     false, false, false, true , false,
     false, false, true , false, false,
@@ -65,7 +64,7 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
 TEST(LikelihoodFieldModel, ImportanceWeight) {
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = LinearGridStorage(5, 5 ,{
+  auto grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
@@ -98,7 +97,7 @@ TEST(LikelihoodFieldModel, GridWithOffset) {
   const auto origin = Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{-5, -5}};
 
   // clang-format off
-  auto grid_storage = LinearGridStorage(5, 5 ,{
+  auto grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
@@ -121,7 +120,7 @@ TEST(LikelihoodFieldModel, GridWithRotation) {
   constexpr double kResolution = 2.0;
   const auto origin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2}, Eigen::Vector2d{0.0, 0.0}};
   // clang-format off
-  auto grid_storage = LinearGridStorage(5, 5 ,{
+  auto grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
@@ -146,7 +145,7 @@ TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
   const auto origin = Sophus::SE2d{origin_rotation, origin_rotation * Eigen::Vector2d{-5, -5}};
 
   // clang-format off
-  auto grid_storage = LinearGridStorage(5, 5 ,{
+  auto grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,
@@ -170,7 +169,7 @@ TEST(LikelihoodFieldModel, GridUpdates) {
 
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = LinearGridStorage(5, 5 ,{
+  auto grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
@@ -186,7 +185,7 @@ TEST(LikelihoodFieldModel, GridUpdates) {
   EXPECT_NEAR(2.068577607986223, mixin.importance_weight(origin), 1e-6);
 
   // clang-format off
-  auto new_grid_storage = LinearGridStorage(5, 5 ,{
+  auto new_grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,

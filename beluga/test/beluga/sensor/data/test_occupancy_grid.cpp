@@ -28,15 +28,15 @@
 
 namespace {
 
-using beluga::LinearGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
 TEST(OccupancyGrid2, FreeAtCell) {
   constexpr double kResolution = 1.;
 
   const auto grid = StaticOccupancyGrid(
-      LinearGridStorage(5, 5, {false, false, false, false, true,  false, false, false, true,  false, false, false, true,
-                               false, false, false, true,  false, false, false, true,  false, false, false, false}),
+      StaticOccupancyGrid::MapStorage(
+          5, 5, {false, false, false, false, true,  false, false, false, true,  false, false, false, true,
+                 false, false, false, true,  false, false, false, true,  false, false, false, false}),
       kResolution, Sophus::SE2d{});
 
   EXPECT_FALSE(grid.free_at(2, 2));
@@ -49,8 +49,9 @@ TEST(OccupancyGrid2, FreeNearCell) {
   constexpr double kResolution = 1.;
 
   const auto grid = StaticOccupancyGrid(
-      LinearGridStorage(5, 5, {false, false, false, false, true,  false, false, false, true,  false, false, false, true,
-                               false, false, false, true,  false, false, false, true,  false, false, false, false}),
+      StaticOccupancyGrid::MapStorage(
+          5, 5, {false, false, false, false, true,  false, false, false, true,  false, false, false, true,
+                 false, false, false, true,  false, false, false, true,  false, false, false, false}),
       kResolution, Sophus::SE2d{});
 
   EXPECT_FALSE(grid.free_near(3.25, 1.75));
@@ -63,7 +64,7 @@ TEST(OccupancyGrid2, GlobalCoordinatesAtCell) {
   constexpr double kResolution = 1.;
   const auto origin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, Eigen::Vector2d{1., 1.}};
   const auto grid = StaticOccupancyGrid(
-      LinearGridStorage(
+      StaticOccupancyGrid::MapStorage(
           5, 5,
           {
               false, false, false, false, true,   //
@@ -80,7 +81,7 @@ TEST(OccupancyGrid2, GlobalCoordinatesAtCell) {
 
 TEST(OccupancyGrid2, AllFreeCells) {
   const auto grid = StaticOccupancyGrid(
-      LinearGridStorage(
+      StaticOccupancyGrid::MapStorage(
           5, 2,
           {
               false, false, false, false, true,  //
@@ -96,7 +97,7 @@ TEST(OccupancyGrid2, AllFreeCells) {
 
 TEST(OccupancyGrid2, ObstacleData) {
   const auto grid = StaticOccupancyGrid(
-      LinearGridStorage(
+      StaticOccupancyGrid::MapStorage(
           4, 5,
           {
               false, false, false, true,   //
@@ -120,7 +121,7 @@ TEST(OccupancyGrid2, GlobalCoordinatesForCells) {
   constexpr double kResolution = 1.;
   const auto origin = Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2.}, Eigen::Vector2d{1., 1.}};
   const auto grid = StaticOccupancyGrid(
-      LinearGridStorage(
+      StaticOccupancyGrid::MapStorage(
           3, 2,
           {
               false, true, false,  //

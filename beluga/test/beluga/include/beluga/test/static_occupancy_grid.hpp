@@ -35,7 +35,8 @@ struct TestMapValueTraits {
 };
 
 using StaticOccupancyGrid = ciabatta::mixin<
-    ciabatta::curry<OccupancyStorageMixin, TestMapValueType, TestMapValueTraits>::template mixin,
+    ciabatta::curry<OccupancyStorageMixin, TestMapValueType, TestMapValueTraits, LinearGridStorage<TestMapValueType>>::
+        template mixin,
     BaseOccupancyGrid2Mixin,
     BaseDenseGrid2Mixin,
     BaseRegularGrid2Mixin>;

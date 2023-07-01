@@ -24,7 +24,6 @@
 
 namespace beluga {
 
-using beluga::LinearGridStorage;
 using beluga::testing::StaticOccupancyGrid;
 
 using UUT = ciabatta::mixin<
@@ -45,7 +44,7 @@ BeamModelParam GetParams() {
 TEST(BeamSensorModel, ImportanceWeight) {
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = LinearGridStorage(5, 5 ,{
+  auto grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
@@ -81,7 +80,7 @@ TEST(BeamSensorModel, GridUpdates) {
 
   constexpr double kResolution = 0.5;
   // clang-format off
-  auto grid_storage = LinearGridStorage(5, 5 ,{
+  auto grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, true , false, false,
@@ -97,7 +96,7 @@ TEST(BeamSensorModel, GridUpdates) {
   EXPECT_NEAR(1.0171643824743635, mixin.importance_weight(origin), 1e-6);
 
   // clang-format off
-  auto new_grid_storage = LinearGridStorage(5, 5 ,{
+  auto new_grid_storage = StaticOccupancyGrid::MapStorage(5, 5 ,{
     false, false, false, false, false,
     false, false, false, false, false,
     false, false, false, false, false,

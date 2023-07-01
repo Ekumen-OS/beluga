@@ -20,14 +20,12 @@
 #include <ciabatta/ciabatta.hpp>
 #include <sophus/se2.hpp>
 
-#include "beluga/sensor/data/linear_grid_storage.hpp"
-
 namespace beluga {
 
-template <class Mixin, typename ValueType, typename ValueTraitsType>
+template <class Mixin, typename ValueType, typename ValueTraitsType, typename MapStorageType>
 class OccupancyStorageMixin : public Mixin {
  public:
-  using MapStorage = LinearGridStorage<ValueType>;
+  using MapStorage = MapStorageType;
   using ValueTraits = ValueTraitsType;
 
   template <typename... Args>
