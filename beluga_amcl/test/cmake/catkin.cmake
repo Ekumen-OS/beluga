@@ -26,4 +26,5 @@ catkin_add_gmock(test_amcl_node_resampling_policies
     filter_update_control/test_selective_resampling_policy.cpp
     filter_update_control/test_update_filter_when_moving_policy.cpp
 )
+target_compile_options(test_amcl_node_resampling_policies PRIVATE -Wno-gnu-zero-variadic-macro-arguments)
 target_link_libraries(test_amcl_node_resampling_policies ${PROJECT_NAME}_nodelet ${catkin_LIBRARIES} gmock_main)

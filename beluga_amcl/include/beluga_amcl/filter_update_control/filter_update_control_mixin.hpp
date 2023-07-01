@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__FILTER_UPDATE_CONTROL__FILTER_UPDATE_CONTROL_MIXIN_HPP_
-#define BELUGA_AMCL__FILTER_UPDATE_CONTROL__FILTER_UPDATE_CONTROL_MIXIN_HPP_
+#ifndef BELUGA_AMCL_FILTER_UPDATE_CONTROL_FILTER_UPDATE_CONTROL_MIXIN_HPP
+#define BELUGA_AMCL_FILTER_UPDATE_CONTROL_FILTER_UPDATE_CONTROL_MIXIN_HPP
 
 #include <execution>
 #include <utility>
@@ -176,4 +176,4 @@ class FilterUpdateControlMixin : public Mixin {
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL__FILTER_UPDATE_CONTROL__FILTER_UPDATE_CONTROL_MIXIN_HPP_
+#endif // BELUGA_AMCL_FILTER_UPDATE_CONTROL_FILTER_UPDATE_CONTROL_MIXIN_HPP

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__FILTER_UPDATE_CONTROL__SELECTIVE_RESAMPLING_POLICY_HPP_
-#define BELUGA_AMCL__FILTER_UPDATE_CONTROL__SELECTIVE_RESAMPLING_POLICY_HPP_
+#ifndef BELUGA_AMCL_FILTER_UPDATE_CONTROL_SELECTIVE_RESAMPLING_POLICY_HPP
+#define BELUGA_AMCL_FILTER_UPDATE_CONTROL_SELECTIVE_RESAMPLING_POLICY_HPP
 
 #include <algorithm>
 #include <utility>
@@ -72,4 +72,4 @@ class SelectiveResamplingPolicy {
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL__FILTER_UPDATE_CONTROL__SELECTIVE_RESAMPLING_POLICY_HPP_
+#endif // BELUGA_AMCL_FILTER_UPDATE_CONTROL_SELECTIVE_RESAMPLING_POLICY_HPP

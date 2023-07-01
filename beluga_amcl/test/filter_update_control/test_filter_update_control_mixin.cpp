@@ -22,10 +22,12 @@
 
 #include <beluga_amcl/filter_update_control/filter_update_control_mixin.hpp>
 
+namespace beluga_amcl {
+
+namespace {
+
 using ::testing::_;
 using ::testing::StrictMock;
-
-namespace beluga_amcl {
 
 using motion_event_type = Sophus::SE2d;
 using laser_scan_type = std::vector<std::pair<double, double>>;
@@ -101,8 +103,6 @@ class MockMixin : public Mixin {
   void sample(std::execution::parallel_policy) { sample(); }
   void reweight(std::execution::parallel_policy) { reweight(); }
 };
-
-namespace {
 
 using UUT_WITH_POLICIES_INSTALLED = StrictMock<ciabatta::mixin<
     MockMixin,
