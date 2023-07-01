@@ -14,6 +14,8 @@
 
 #include <gmock/gmock.h>
 
+#include <execution>
+
 #include <beluga/algorithm/particle_filter.hpp>
 #include <beluga/type_traits/particle_traits.hpp>
 #include <beluga/views.hpp>
@@ -98,7 +100,33 @@ TEST(BootstrapParticleFilter, InitializeParticles) {
   EXPECT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.));
 }
 
-TEST(BootstrapParticleFilter, UpdateWithoutResampling) {
+enum class InterfaceType { kNoParam, kSequential, kParallel };
+
+struct BootstrapParticleFilterOperationLoopTest : public testing::TestWithParam<InterfaceType> {
+  void SetUp() override {
+    switch (GetParam()) {
+      case InterfaceType::kNoParam:
+        sample = [](auto& filter) { filter.sample(); };
+        reweight = [](auto& filter) { filter.reweight(); };
+        break;
+      case InterfaceType::kSequential:
+        sample = [](auto& filter) { filter.sample(std::execution::seq); };
+        reweight = [](auto& filter) { filter.reweight(std::execution::seq); };
+        break;
+      case InterfaceType::kParallel:
+        sample = [](auto& filter) { filter.sample(std::execution::par); };
+        reweight = [](auto& filter) { filter.reweight(std::execution::par); };
+        break;
+    }
+    resample = [](auto& filter) { filter.resample(); };
+  }
+
+  std::function<void(ParticleFilter&)> sample;
+  std::function<void(ParticleFilter&)> reweight;
+  std::function<void(ParticleFilter&)> resample;
+};
+
+TEST_P(BootstrapParticleFilterOperationLoopTest, UpdateWithoutResampling) {
   auto filter = ParticleFilter{};
 
   const auto motion_increment = 2.0;
@@ -117,17 +145,17 @@ TEST(BootstrapParticleFilter, UpdateWithoutResampling) {
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     // apply motion on all particles; particles will have updated states, but unchanged weights
-    filter.sample();
+    sample(filter);
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
-    // updating particle weights, particles will have updated weights, but unchanged state
-    filter.reweight();
+    // updating and renormalizing particle weights, states remain unchanged
+    reweight(filter);
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
-    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(weight_reduction_factor));
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     // resample, but with sampling policy preventing decimation. Particle weights will be renormalized.
-    filter.resample();
+    resample(filter);
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     expected_initial_state = expected_final_state;
@@ -135,7 +163,7 @@ TEST(BootstrapParticleFilter, UpdateWithoutResampling) {
   }
 }
 
-TEST(BootstrapParticleFilter, UpdateWithResampling) {
+TEST_P(BootstrapParticleFilterOperationLoopTest, UpdateWithResampling) {
   auto filter = ParticleFilter{};
 
   const auto motion_increment = 2.0;
@@ -154,22 +182,27 @@ TEST(BootstrapParticleFilter, UpdateWithResampling) {
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     // apply motion on all particles, particles will have updated states, but unchanged weights
-    filter.sample();
+    sample(filter);
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
-    // updating particle weights, particles will have updated weights, but unchanged state
-    filter.reweight();
+    // updating and renormalizing particle weights, states remain unchanged
+    reweight(filter);
     ASSERT_THAT(filter.states() | ranges::to<std::vector>, Each(expected_final_state));
-    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(weight_reduction_factor));
+    ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     // resample, resampling will reset weights to 1.0 (therefore keeping them max normalized)
-    filter.resample();
+    resample(filter);
     ASSERT_THAT(filter.weights() | ranges::to<std::vector>, Each(1.0));
 
     expected_initial_state = expected_final_state;
     expected_final_state += motion_increment;
   }
 }
+
+INSTANTIATE_TEST_SUITE_P(
+    BootstrapParticleFilterOperationLoopTestSuite,
+    BootstrapParticleFilterOperationLoopTest,
+    testing::Values(InterfaceType::kNoParam, InterfaceType::kSequential, InterfaceType::kParallel));
 
 }  // namespace

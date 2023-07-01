@@ -12,54 +12,52 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_RESAMPLING_POLICIES_RESAMPLE_INTERVAL_POLICY_HPP
-#define BELUGA_RESAMPLING_POLICIES_RESAMPLE_INTERVAL_POLICY_HPP
+#ifndef BELUGA_AMCL__FILTER_UPDATE_CONTROL__RESAMPLE_INTERVAL_POLICY_HPP_
+#define BELUGA_AMCL__FILTER_UPDATE_CONTROL__RESAMPLE_INTERVAL_POLICY_HPP_
 
-#include <optional>
+#include <cstddef>
 
 /**
  * \file
- * \brief Implementation of the resample interval algorithm for resampling.
+ * \brief Implementation of the resample interval resampling policy.
  */
 
-namespace beluga {
+namespace beluga_amcl
+{
 
 /// Parameters used to construct a ResampleIntervalPolicy instance.
-struct ResampleIntervalPolicyParam {
-  /// Interval of calls to do_resampling() out of which only the last iteration will do resampling.
+struct ResampleIntervalPolicyParam
+{
+  /// Activation period. Out of these, the filter will only resample once.
   std::size_t resample_interval_count{1};
 };
 
 /// Implementation of the Resample Interval algorithm for resampling.
-/**
- * ResampleIntervalPolicy is an implementation of the \ref ResamplingPolicyPage "ResamplingPolicy" named requirements.
- * */
-class ResampleIntervalPolicy {
- public:
+class ResampleIntervalPolicy
+{
+public:
   /// Parameter type that the constructor uses to configure the policy.
   using param_type = ResampleIntervalPolicyParam;
 
-  /// Constructs a ResampleIntervalPolicy instance.
+  /// \brief Constructs a ResampleIntervalPolicy instance.
   /**
    * \param configuration Policy configuration data.
    */
-  explicit ResampleIntervalPolicy(const param_type& configuration) : configuration_{configuration} {}
+  explicit ResampleIntervalPolicy(const param_type & configuration)
+  : configuration_{configuration} {}
 
-  /// Vote whether resampling must be done according to this policy.
-  /**
-   * \tparam Concrete Type representing the concrete implementation of the filter.
-   */
-  template <typename Concrete>
-  [[nodiscard]] bool do_resampling([[maybe_unused]] Concrete& filter) {
+  /// \brief Determine whether resampling must be done according to this policy.
+  [[nodiscard]] bool do_resampling()
+  {
     filter_update_counter_ = (filter_update_counter_ + 1) % configuration_.resample_interval_count;
-    return (filter_update_counter_ == 0);
+    return filter_update_counter_ == 0;
   }
 
- private:
+private:
   param_type configuration_;              //< Policy configuration
   std::size_t filter_update_counter_{0};  //< Current cycle phase
 };
 
-}  // namespace beluga
+}  // namespace beluga_amcl
 
-#endif
+#endif  // BELUGA_AMCL__FILTER_UPDATE_CONTROL__RESAMPLE_INTERVAL_POLICY_HPP_

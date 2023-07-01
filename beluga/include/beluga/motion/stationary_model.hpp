@@ -76,14 +76,6 @@ class StationaryModel : public Mixin {
    * For this model, odometry updates are ignored.
    */
   void update_motion([[maybe_unused]] const update_type& pose) final {}
-
-  /// Recovers the latest motion update.
-  /**
-   * For the stationary model, we don't ever have motion updates.
-   *
-   * \return An empty optional.
-   */
-  [[nodiscard]] std::optional<update_type> latest_motion_update() const { return std::nullopt; }
 };
 
 }  // namespace beluga

@@ -191,18 +191,8 @@ class BootstrapParticleFilter : public Mixin {
    * and the active resampling policies.
    */
   void resample() final {
-    const auto resampling_vote_result = this->self().do_resampling_vote();
-    if (resampling_vote_result) {
-      this->self().initialize_particles(
-          this->self().generate_samples_from_particles(generator_) | this->self().take_samples());
-    } else {
-      // max normalize weights to avoid unbounded growth
-      auto weights_view = this->self().weights() | ranges::views::common;
-      const auto weight_maximum_norm = *ranges::max_element(weights_view);
-      std::transform(
-          std::begin(weights_view), std::end(weights_view), std::begin(weights_view),
-          [weight_maximum_norm](auto weight) { return weight / weight_maximum_norm; });
-    }
+    this->self().initialize_particles(
+        this->self().generate_samples_from_particles(generator_) | this->self().take_samples());
   }
 
  private:
@@ -224,6 +214,12 @@ class BootstrapParticleFilter : public Mixin {
         std::forward<ExecutionPolicy>(policy), std::begin(states), std::end(states), std::begin(weights),
         std::begin(weights),
         [this](const auto& state, auto weight) { return weight * this->self().importance_weight(state); });
+
+    // max normalize weights to avoid unbounded growth
+    const auto weight_maximum_norm = *ranges::max_element(weights);
+    std::transform(std::begin(weights), std::end(weights), std::begin(weights), [weight_maximum_norm](auto weight) {
+      return weight / weight_maximum_norm;
+    });
   }
 };
 

@@ -45,8 +45,6 @@
  *   will be used in subsequent calls to the `apply_motion()` method.
  * - `cp.apply_motion(s)` returns a `T::state_type`, that is the result of applying the motion model
  *   to `s` based on the updates.
- * - `cp.latest_motion_update()` returns a `std::optional<update_type>` with the latest motion update
- *   received through `motion_update()`.
  *
  * \section MotionModelLinks See also
  * - beluga::DifferentialDriveModel

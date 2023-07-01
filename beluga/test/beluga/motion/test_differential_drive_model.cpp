@@ -151,37 +151,4 @@ TEST(DifferentialDriveModelSamples, RotateThirdQuadrant) {
   ASSERT_NEAR(stddev, std::sqrt(alpha * flipped_angle * flipped_angle), 0.01);
 }
 
-TEST(DifferentialDriveModelSamples, LatestMotionUpdateWorks) {
-  // tests that the latest motion update can be recovered
-  auto uut = UUT{beluga::DifferentialDriveModelParam{1.0, 0.0, 0.0, 0.0}};
-
-  auto make_motion_update = [](double x, double y, double phi) {
-    using Eigen::Vector2d;
-    using Sophus::SE2d;
-    using Sophus::SO2d;
-    return Sophus::SE2d{SO2d{phi}, Vector2d{x, y}};
-  };
-
-  {
-    const auto lmu = uut.latest_motion_update();
-    ASSERT_FALSE(lmu);
-  }
-
-  {
-    const auto expected_motion_update = make_motion_update(0.1, 0.2, 0.3);
-    uut.update_motion(expected_motion_update);
-    const auto latest_motion_update = uut.latest_motion_update();
-    ASSERT_TRUE(latest_motion_update);
-    ASSERT_THAT(expected_motion_update, testing::SE2Eq(latest_motion_update.value()));
-  }
-
-  {
-    const auto expected_motion_update = make_motion_update(0.4, 0.5, 0.6);
-    uut.update_motion(expected_motion_update);
-    const auto latest_motion_update = uut.latest_motion_update();
-    ASSERT_TRUE(latest_motion_update);
-    ASSERT_THAT(expected_motion_update, testing::SE2Eq(latest_motion_update.value()));
-  }
-}
-
 }  // namespace

@@ -16,14 +16,30 @@
 
 #include <ciabatta/ciabatta.hpp>
 
-#include <beluga/resampling_policies/resample_interval_policy.hpp>
-#include <beluga/resampling_policies/resampling_policies_poller.hpp>
+#include <beluga_amcl/filter_update_control/resample_interval_policy.hpp>
+#include <beluga_amcl/filter_update_control/filter_update_control_mixin.hpp>
 
-namespace beluga {
+namespace beluga_amcl
+{
 
-namespace {
+namespace
+{
 
-using UUT = ciabatta::mixin<ciabatta::curry<ResamplingPoliciesPoller, ResampleIntervalPolicy>::mixin>;
+template<typename Mixin, typename Policy>
+class PolicyWrapperMixin : public Mixin
+{
+public:
+  template<typename ... Rest>
+  explicit PolicyWrapperMixin(const typename Policy::param_type & config, Rest &&... rest)
+  : Mixin(std::forward<Rest>(rest)...), policy_{config} {}
+
+  [[nodiscard]] bool update_filter() {return policy_.do_resampling();}
+
+private:
+  Policy policy_;
+};
+
+using UUT = ciabatta::mixin<ciabatta::curry<PolicyWrapperMixin, ResampleIntervalPolicy>::mixin>;
 
 struct ResampleIntervalPolicyTests : public ::testing::Test {};
 
@@ -47,18 +63,18 @@ TEST_P(ResampleIntervalPolicyTestsWithParam, ResampleEveryNthIteration) {
   for (size_t i = 0; i < periods; ++i) {
     // don't resample for the first N-1 iterations
     for (size_t iteration = 0; iteration < interval - 1; ++iteration) {
-      ASSERT_FALSE(uut.do_resampling_vote());
+      ASSERT_FALSE(uut.update_filter());
     }
     // then resample once
-    ASSERT_TRUE(uut.do_resampling_vote());
+    ASSERT_TRUE(uut.update_filter());
   }
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    ResampleEveryNthIterationInstance,
-    ResampleIntervalPolicyTestsWithParam,
-    testing::Values(3, 5, 10, 21));
+  ResampleEveryNthIterationInstance,
+  ResampleIntervalPolicyTestsWithParam,
+  testing::Values(1, 3, 5, 10, 21));
 
 }  // namespace
 
-}  // namespace beluga
+}  // namespace beluga_amcl

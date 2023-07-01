@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_RESAMPLING_POLICIES_SELECTIVE_RESAMPLING_POLICY_HPP
-#define BELUGA_RESAMPLING_POLICIES_SELECTIVE_RESAMPLING_POLICY_HPP
+#ifndef BELUGA_AMCL__FILTER_UPDATE_CONTROL__SELECTIVE_RESAMPLING_POLICY_HPP_
+#define BELUGA_AMCL__FILTER_UPDATE_CONTROL__SELECTIVE_RESAMPLING_POLICY_HPP_
+
+#include <algorithm>
+#include <utility>
 
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/view/transform.hpp>
@@ -23,53 +26,55 @@
  * \brief Implementation of the selective resampling algorithm for resampling.
  */
 
-namespace beluga {
+namespace beluga_amcl
+{
 
 /// Parameters used to construct a SelectiveResamplingPolicy instance.
-struct SelectiveResamplingPolicyParam {
-  /// Enable/disable the SelectiveResampling feature.
+struct SelectiveResamplingPolicyParam
+{
+  /// \brief Enable/disable the SelectiveResampling feature.
   bool enabled{false};
 };
 
-/// Implementation of the Selective Resampling algorithm for resampling.
+/// \brief Implementation of the Selective Resampling algorithm for resampling.
 /**
- * SelectiveResamplingPolicy is an implementation of the \ref ResamplingPolicyPage "ResamplingPolicy" named
- * requirements.
- *
  * The algorithm is based in \cite grisetti2007selectiveresampling, according to the description given in
  * \cite tiacheng2015resamplingmethods.
  * */
-class SelectiveResamplingPolicy {
- public:
+class SelectiveResamplingPolicy
+{
+public:
   /// Parameter type that the constructor uses to configure the policy.
   using param_type = SelectiveResamplingPolicyParam;
 
-  /// Constructs a SelectiveResamplingPolicy instance.
+  /// \brief Constructs a SelectiveResamplingPolicy instance.
   /**
    * \param configuration Policy configuration data.
    */
-  explicit SelectiveResamplingPolicy(const param_type& configuration) : configuration_{configuration} {}
+  explicit SelectiveResamplingPolicy(const param_type & configuration)
+  : configuration_{configuration} {}
 
-  /// Vote whether resampling must be done according to this policy.
+  /// \brief Determine whether resampling must be done according to this policy.
   /**
-   * \tparam Concrete Type representing the concrete implementation of the filter.
+   * \tparam Concrete Type representing the actual implementation of the filter.
    * It must satisfy the \ref BaseParticleFilterPage "BaseParticleFilter" named requirements.
    */
-  template <typename Concrete>
-  [[nodiscard]] bool do_resampling(Concrete& filter) {
+  template<typename Concrete>
+  [[nodiscard]] bool do_resampling(Concrete & filter)
+  {
     if (!configuration_.enabled) {
       return true;
     }
-    const auto n_eff =
-        1. / ranges::accumulate(filter.weights() | ranges::views::transform([](const auto w) { return w * w; }), 0.);
+    const auto n_eff = 1. / ranges::accumulate(
+      filter.weights() | ranges::views::transform([](const auto w) {return w * w;}), 0.);
     const auto n = static_cast<double>(std::size(filter.weights()));
     return n_eff < n / 2.;
   }
 
- private:
+private:
   param_type configuration_;
 };
 
-}  // namespace beluga
+}  // namespace beluga_amcl
 
-#endif
+#endif  // BELUGA_AMCL__FILTER_UPDATE_CONTROL__SELECTIVE_RESAMPLING_POLICY_HPP_

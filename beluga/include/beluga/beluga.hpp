@@ -25,7 +25,6 @@
 #include <beluga/mixin.hpp>
 #include <beluga/motion.hpp>
 #include <beluga/random.hpp>
-#include <beluga/resampling_policies.hpp>
 #include <beluga/sensor.hpp>
 #include <beluga/storage.hpp>
 #include <beluga/tuple_vector.hpp>

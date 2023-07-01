@@ -11,10 +11,6 @@ add_executable(test_beluga
   motion/test_differential_drive_model.cpp
   motion/test_omnidirectional_drive_model.cpp
   random/test_multivariate_normal_distribution.cpp
-  resampling_policies/test_resample_interval_policy.cpp
-  resampling_policies/test_resample_on_motion_policy.cpp
-  resampling_policies/test_resampling_policies_poller.cpp
-  resampling_policies/test_selective_resampling_policy.cpp
   sensor/data/test_dense_grid.cpp
   sensor/data/test_linear_grid.cpp
   sensor/data/test_occupancy_grid.cpp

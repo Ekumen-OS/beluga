@@ -143,12 +143,6 @@ class DifferentialDriveModel : public Mixin {
     last_pose_ = pose;
   }
 
-  /// Recovers the latest motion update.
-  /**
-   * \return Last motion update received by the model or an empty optional if no update was received.
-   */
-  [[nodiscard]] std::optional<update_type> latest_motion_update() const { return last_pose_; }
-
  private:
   using DistributionParam = typename std::normal_distribution<double>::param_type;
 
