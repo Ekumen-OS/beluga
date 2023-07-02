@@ -14,16 +14,14 @@
 
 #include <beluga_amcl/amcl_node_utils.hpp>
 
-namespace beluga_amcl::utils
-{
+namespace beluga_amcl::utils {
 
 std::vector<std::pair<double, double>> make_points_from_laser_scan(
-  const beluga_amcl::messages::LaserScan & laser_scan,
-  const Sophus::SE3d & laser_transform,
-  std::size_t max_beam_count,
-  float range_min,
-  float range_max)
-{
+    const beluga_amcl::messages::LaserScan& laser_scan,
+    const Sophus::SE3d& laser_transform,
+    std::size_t max_beam_count,
+    float range_min,
+    float range_max) {
   const std::size_t beam_count = laser_scan.ranges.size();
   range_min = std::max(laser_scan.range_min, range_min);
   range_max = std::min(laser_scan.range_max, range_max);
@@ -45,12 +43,8 @@ std::vector<std::pair<double, double>> make_points_from_laser_scan(
     // Store points in the robot's reference frame.
     // Assume that laser scanning is instantaneous and no compensation is
     // needed for robot speed vs. scan speed.
-    const float angle = laser_scan.angle_min +
-      static_cast<float>(index) * laser_scan.angle_increment;
-    const auto point = laser_transform * Eigen::Vector3d{
-      range * std::cos(angle),
-      range * std::sin(angle),
-      0.0};
+    const float angle = laser_scan.angle_min + static_cast<float>(index) * laser_scan.angle_increment;
+    const auto point = laser_transform * Eigen::Vector3d{range * std::cos(angle), range * std::sin(angle), 0.0};
     points.emplace_back(point.x(), point.y());
   }
   return points;

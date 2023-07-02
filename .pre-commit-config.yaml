@@ -16,35 +16,21 @@ repos:
   - repo: local
     hooks:
       - id: ament_copyright
-        name: Fix copyright
+        name: fix copyright
         description: Check if copyright notice is available in all files.
         entry: ament_copyright --add-missing "Ekumen, Inc." apache2
         types_or: [c++, python]
         language: system
 
-      - id: ament_uncrustify
-        name: "[others] Fix C++ format (uncrustify)"
-        entry: ament_uncrustify --reformat
-        files: beluga_amcl\/
-        types: [c++]
-        language: system
-
-      - id: ament_cpplint
-        name: "[others] Check C++ format (cpplint)"
-        entry: ament_cpplint
-        files: beluga_amcl\/
-        types: [c++]
-        language: system
-
       - id: ament_flake8
-        name: "[others] Check Python format (flake8)"
+        name: "check python format (flake8)"
         entry: ament_flake8
         exclude: (beluga|beluga_system_tests)\/
         types: [python]
         language: system
 
       - id: ament_pep257
-        name: "[others] Check Python format (pep257)"
+        name: "check python format (pep257)"
         entry: ament_pep257
         exclude: (beluga|beluga_system_tests)\/
         types: [python]
@@ -54,14 +40,13 @@ repos:
     rev: v16.0.3
     hooks:
       - id: clang-format
-        name: Fix C++ format (clang-format)
+        name: fix c++ format
         args: ["-style=file:.clang-format"]
-        exclude: beluga_amcl\/
         types: [c++]
 
   - repo: https://github.com/psf/black
     rev:  23.3.0
     hooks:
       - id: black
-        name: "[others] Fix Python format (black)"
+        name: "fix python format"
         entry: black --skip-string-normalization

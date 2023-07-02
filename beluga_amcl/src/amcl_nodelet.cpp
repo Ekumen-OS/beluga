@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <ros/ros.h>
 #include <nodelet/nodelet.h>
 #include <pluginlib/class_list_macros.h>
+#include <ros/ros.h>
 
 #include <geometry_msgs/PoseArray.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
@@ -30,37 +30,32 @@
 
 #include "beluga_amcl/amcl_node_utils.hpp"
 #include "beluga_amcl/occupancy_grid.hpp"
-#include "beluga_amcl/tf2_sophus.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
+#include "beluga_amcl/tf2_sophus.hpp"
 
 // LCOV_EXCL_BR_START: Disable branch coverage.
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
-namespace
-{
+namespace {
 
 constexpr std::string_view kAMCLDifferentialModelName = "diff";
 constexpr std::string_view kAMCLOmnidirectionalModelName = "omni";
 
 }  // namespace
 
-void AmclNodelet::onInit()
-{
+void AmclNodelet::onInit() {
   ros::NodeHandle nh = getNodeHandle();
 
   config_server_ = std::make_unique<AmclConfigServer>(getPrivateNodeHandle());
   config_server_->setCallback(boost::bind(&AmclNodelet::config_callback, this, _1, _2));
 
-  particle_cloud_timer_ = nh.createTimer(
-    ros::Duration(0.2), &AmclNodelet::particle_cloud_timer_callback, this);
+  particle_cloud_timer_ = nh.createTimer(ros::Duration(0.2), &AmclNodelet::particle_cloud_timer_callback, this);
   particle_cloud_pub_ = nh.advertise<geometry_msgs::PoseArray>("particlecloud", 2);
   pose_pub_ = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 2);
 
   if (config_.use_map_topic) {
-    map_sub_ = nh.subscribe<nav_msgs::OccupancyGrid>(
-      config_.map_topic, 1, &AmclNodelet::map_callback, this);
+    map_sub_ = nh.subscribe<nav_msgs::OccupancyGrid>(config_.map_topic, 1, &AmclNodelet::map_callback, this);
     NODELET_INFO("Subscribed to map_topic: %s", map_sub_.getTopic().c_str());
   } else {
     get_map_client_ = nh.serviceClient<nav_msgs::GetMap>(config_.map_service);
@@ -69,13 +64,12 @@ void AmclNodelet::onInit()
   }
 
   initial_pose_sub_ = nh.subscribe<geometry_msgs::PoseWithCovarianceStamped>(
-    config_.initial_pose_topic, 1, &AmclNodelet::initial_pose_callback, this);
+      config_.initial_pose_topic, 1, &AmclNodelet::initial_pose_callback, this);
   NODELET_INFO("Subscribed to initial_pose_topic: %s", initial_pose_sub_.getTopic().c_str());
 
   if (config_.save_pose_rate > 0.0) {
-    save_pose_timer_ = nh.createTimer(
-      ros::Duration(1.0 / config_.save_pose_rate),
-      &AmclNodelet::save_pose_timer_callback, this);
+    save_pose_timer_ =
+        nh.createTimer(ros::Duration(1.0 / config_.save_pose_rate), &AmclNodelet::save_pose_timer_callback, this);
   }
 
   tf_buffer_ = std::make_unique<tf2_ros::Buffer>();
@@ -85,55 +79,43 @@ void AmclNodelet::onInit()
   laser_scan_sub_.subscribe(nh, config_.scan_topic, 10);
   // Message filter that caches laser scan readings until it is possible to transform
   // from laser frame to odom frame and update the particle filter.
-  laser_scan_filter_ =
-    std::make_unique<tf2_ros::MessageFilter<sensor_msgs::LaserScan>>(
-    laser_scan_sub_, *tf_buffer_, config_.odom_frame_id, 50, nh);
+  laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::LaserScan>>(
+      laser_scan_sub_, *tf_buffer_, config_.odom_frame_id, 50, nh);
 
-  using LaserCallback = boost::function<void (sensor_msgs::LaserScan::ConstPtr)>;
+  using LaserCallback = boost::function<void(sensor_msgs::LaserScan::ConstPtr)>;
   execution::Policy execution_policy = std::execution::par;
   try {
     execution_policy = beluga_amcl::execution::policy_from_string(config_.execution_policy);
-  } catch (const std::invalid_argument &) {
+  } catch (const std::invalid_argument&) {
     NODELET_WARN_STREAM(
-      "execution_policy param should be [seq, par], got: " <<
-        config_.execution_policy << "\nUsing the default parallel policy.");
+        "execution_policy param should be [seq, par], got: " << config_.execution_policy
+                                                             << "\nUsing the default parallel policy.");
   }
-  laser_scan_connection_ = laser_scan_filter_->registerCallback(
-    std::visit(
-      [this](const auto & policy) -> LaserCallback
-      {
-        return [this, policy](const sensor_msgs::LaserScan::ConstPtr & laser_scan) {
+  laser_scan_connection_ = laser_scan_filter_->registerCallback(std::visit(
+      [this](const auto& policy) -> LaserCallback {
+        return [this, policy](const sensor_msgs::LaserScan::ConstPtr& laser_scan) {
           this->laser_callback(policy, laser_scan);
         };
-      }, execution_policy));
-  NODELET_INFO(
-    "Subscribed to scan_topic: %s",
-    laser_scan_sub_.getSubscriber().getTopic().c_str());
+      },
+      execution_policy));
+  NODELET_INFO("Subscribed to scan_topic: %s", laser_scan_sub_.getSubscriber().getTopic().c_str());
 
-  global_localization_server_ = nh.advertiseService(
-    "global_localization",
-    &AmclNodelet::global_localization_callback, this);
+  global_localization_server_ =
+      nh.advertiseService("global_localization", &AmclNodelet::global_localization_callback, this);
   NODELET_INFO("Created global_localization service");
 
-  set_map_server_ = nh.advertiseService(
-    "set_map", &AmclNodelet::set_map_callback, this);
+  set_map_server_ = nh.advertiseService("set_map", &AmclNodelet::set_map_callback, this);
   NODELET_INFO("Created set_map service");
 
   diagnosic_updater_.setHardwareID("None");
-  diagnosic_updater_.add(
-    "Standard deviation", this,
-    &AmclNodelet::update_covariance_diagnostics);
+  diagnosic_updater_.add("Standard deviation", this, &AmclNodelet::update_covariance_diagnostics);
 }
 
-namespace
-{
+namespace {
 
-std::pair<Sophus::SE2d, Eigen::Matrix3d>
-extract_initial_pose(const beluga_amcl::AmclConfig & config)
-{
-  const auto pose = Sophus::SE2d{
-    Sophus::SO2d{config.initial_pose_a},
-    Eigen::Vector2d{config.initial_pose_x, config.initial_pose_y}};
+std::pair<Sophus::SE2d, Eigen::Matrix3d> extract_initial_pose(const beluga_amcl::AmclConfig& config) {
+  const auto pose =
+      Sophus::SE2d{Sophus::SO2d{config.initial_pose_a}, Eigen::Vector2d{config.initial_pose_x, config.initial_pose_y}};
 
   Eigen::Matrix3d covariance;
   covariance.coeffRef(0, 0) = config.initial_cov_xx;
@@ -151,8 +133,7 @@ extract_initial_pose(const beluga_amcl::AmclConfig & config)
 
 }  // namespace
 
-void AmclNodelet::config_callback(beluga_amcl::AmclConfig & config, [[maybe_unused]] uint32_t)
-{
+void AmclNodelet::config_callback(beluga_amcl::AmclConfig& config, [[maybe_unused]] uint32_t) {
   std::lock_guard<std::mutex> lock(mutex_);
   if (!configured_) {
     /// Keep default configuration
@@ -178,15 +159,14 @@ void AmclNodelet::config_callback(beluga_amcl::AmclConfig & config, [[maybe_unus
   config_ = config;
 
   if (particle_filter_) {
-    const auto & [pose, covariance] = particle_filter_->estimate();
+    const auto& [pose, covariance] = particle_filter_->estimate();
     particle_filter_ = make_particle_filter(last_known_map_);
     initialize_with_pose(pose, covariance);
   }
 }
 
-std::unique_ptr<LaserLocalizationInterface2d>
-AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr & map)
-{
+std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
+    const nav_msgs::OccupancyGrid::ConstPtr& map) {
   auto sampler_params = beluga::AdaptiveSamplerParam{};
   sampler_params.alpha_slow = config_.recovery_alpha_slow;
   sampler_params.alpha_fast = config_.recovery_alpha_fast;
@@ -195,10 +175,7 @@ AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr & map)
   limiter_params.min_samples = static_cast<std::size_t>(config_.min_particles);
   limiter_params.max_samples = static_cast<std::size_t>(config_.max_particles);
   limiter_params.spatial_hasher = beluga::spatial_hash<Sophus::SE2d>{
-    config_.spatial_resolution_x,
-    config_.spatial_resolution_y,
-    config_.spatial_resolution_theta
-  };
+      config_.spatial_resolution_x, config_.spatial_resolution_y, config_.spatial_resolution_theta};
   limiter_params.kld_epsilon = config_.kld_err;
   limiter_params.kld_z = config_.kld_z;
 
@@ -207,78 +184,72 @@ AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr & map)
   resample_on_motion_params.update_min_a = config_.update_min_a;
 
   auto resample_interval_params = beluga_amcl::ResampleIntervalPolicyParam{};
-  resample_interval_params.resample_interval_count =
-    static_cast<std::size_t>(config_.resample_interval);
+  resample_interval_params.resample_interval_count = static_cast<std::size_t>(config_.resample_interval);
 
   auto selective_resampling_params = beluga_amcl::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = config_.selective_resampling;
 
   auto get_motion_descriptor = [this](std::string_view name) -> MotionDescriptor {
-      if (name == kDifferentialModelName || name == kAMCLDifferentialModelName) {
-        auto params = beluga::DifferentialDriveModelParam{};
-        params.rotation_noise_from_rotation = config_.odom_alpha1;
-        params.rotation_noise_from_translation = config_.odom_alpha2;
-        params.translation_noise_from_translation = config_.odom_alpha3;
-        params.translation_noise_from_rotation = config_.odom_alpha4;
-        return DifferentialDrive{params};
-      } else if (name == kOmnidirectionalModelName || name == kAMCLOmnidirectionalModelName) {
-        auto params = beluga::OmnidirectionalDriveModelParam{};
-        params.rotation_noise_from_rotation = config_.odom_alpha1;
-        params.rotation_noise_from_translation = config_.odom_alpha2;
-        params.translation_noise_from_translation = config_.odom_alpha3;
-        params.translation_noise_from_rotation = config_.odom_alpha4;
-        params.strafe_noise_from_translation = config_.odom_alpha5;
-        return OmnidirectionalDrive{params};
-      } else if (name == kStationaryModelName) {
-        return Stationary{};
-      }
-      throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
-    };
+    if (name == kDifferentialModelName || name == kAMCLDifferentialModelName) {
+      auto params = beluga::DifferentialDriveModelParam{};
+      params.rotation_noise_from_rotation = config_.odom_alpha1;
+      params.rotation_noise_from_translation = config_.odom_alpha2;
+      params.translation_noise_from_translation = config_.odom_alpha3;
+      params.translation_noise_from_rotation = config_.odom_alpha4;
+      return DifferentialDrive{params};
+    }
+    if (name == kOmnidirectionalModelName || name == kAMCLOmnidirectionalModelName) {
+      auto params = beluga::OmnidirectionalDriveModelParam{};
+      params.rotation_noise_from_rotation = config_.odom_alpha1;
+      params.rotation_noise_from_translation = config_.odom_alpha2;
+      params.translation_noise_from_translation = config_.odom_alpha3;
+      params.translation_noise_from_rotation = config_.odom_alpha4;
+      params.strafe_noise_from_translation = config_.odom_alpha5;
+      return OmnidirectionalDrive{params};
+    }
+    if (name == kStationaryModelName) {
+      return Stationary{};
+    }
+    throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
+  };
 
   auto get_sensor_descriptor = [this](std::string_view name) -> SensorDescriptor {
-      if (name == kLikelihoodFieldModelName) {
-        auto params = beluga::LikelihoodFieldModelParam{};
-        params.max_obstacle_distance = config_.laser_likelihood_max_dist;
-        params.max_laser_distance = config_.laser_max_range;
-        params.z_hit = config_.laser_z_hit;
-        params.z_random = config_.laser_z_rand;
-        params.sigma_hit = config_.laser_sigma_hit;
-        return LikelihoodField{params};
-      }
-      if (name == kBeamSensorModelName) {
-        auto params = beluga::BeamModelParam{};
-        params.z_hit = config_.laser_z_hit;
-        params.z_short = config_.laser_z_short;
-        params.z_max = config_.laser_z_max;
-        params.z_rand = config_.laser_z_rand;
-        params.sigma_hit = config_.laser_sigma_hit;
-        params.lambda_short = config_.laser_lambda_short;
-        params.beam_max_range = config_.laser_max_range;
-        return BeamSensorModel{params};
-      }
-      throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
-    };
+    if (name == kLikelihoodFieldModelName) {
+      auto params = beluga::LikelihoodFieldModelParam{};
+      params.max_obstacle_distance = config_.laser_likelihood_max_dist;
+      params.max_laser_distance = config_.laser_max_range;
+      params.z_hit = config_.laser_z_hit;
+      params.z_random = config_.laser_z_rand;
+      params.sigma_hit = config_.laser_sigma_hit;
+      return LikelihoodField{params};
+    }
+    if (name == kBeamSensorModelName) {
+      auto params = beluga::BeamModelParam{};
+      params.z_hit = config_.laser_z_hit;
+      params.z_short = config_.laser_z_short;
+      params.z_max = config_.laser_z_max;
+      params.z_rand = config_.laser_z_rand;
+      params.sigma_hit = config_.laser_sigma_hit;
+      params.lambda_short = config_.laser_lambda_short;
+      params.beam_max_range = config_.laser_max_range;
+      return BeamSensorModel{params};
+    }
+    throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
+  };
 
   try {
     using beluga::mixin::make_mixin;
     return make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
-      sampler_params,
-      limiter_params,
-      get_motion_descriptor(config_.odom_model_type),
-      get_sensor_descriptor(config_.laser_model_type),
-      OccupancyGrid{map},
-      resample_on_motion_params,
-      resample_interval_params,
-      selective_resampling_params
-    );
-  } catch (const std::invalid_argument & error) {
+        sampler_params, limiter_params, get_motion_descriptor(config_.odom_model_type),
+        get_sensor_descriptor(config_.laser_model_type), OccupancyGrid{map}, resample_on_motion_params,
+        resample_interval_params, selective_resampling_params);
+  } catch (const std::invalid_argument& error) {
     NODELET_ERROR("Could not instantiate the particle filter: %s", error.what());
   }
   return nullptr;
 }
 
-void AmclNodelet::map_timer_callback(const ros::TimerEvent &)
-{
+void AmclNodelet::map_timer_callback(const ros::TimerEvent&) {
   if (!get_map_client_.exists()) {
     NODELET_INFO_THROTTLE(10, "Waiting for map service to be available");
     return;
@@ -296,32 +267,29 @@ void AmclNodelet::map_timer_callback(const ros::TimerEvent &)
   map_timer_.stop();
 }
 
-bool AmclNodelet::set_map_callback(
-  nav_msgs::SetMap::Request & request,
-  nav_msgs::SetMap::Response & response)
-{
+bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs::SetMap::Response& response) {
   std::lock_guard<std::mutex> lock(mutex_);
   NODELET_INFO("A new map has been requested to be set");
 
   if (!particle_filter_) {
     NODELET_WARN(
-      "Ignoring set map request because the "
-      "particle filter has not been initialized");
-    response.success = false;
+        "Ignoring set map request because the "
+        "particle filter has not been initialized");
+    response.success = static_cast<unsigned char>(false);
     return true;
   }
 
   if (request.map.header.frame_id != config_.global_frame_id) {
     NODELET_WARN(
-      "Map frame \"%s\" doesn't match global frame \"%s\".",
-      request.map.header.frame_id.c_str(), config_.global_frame_id.c_str());
+        "Map frame \"%s\" doesn't match global frame \"%s\".", request.map.header.frame_id.c_str(),
+        config_.global_frame_id.c_str());
   }
 
   if (request.initial_pose.header.frame_id != config_.global_frame_id) {
     NODELET_WARN(
-      "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\".",
-      request.initial_pose.header.frame_id.c_str(), config_.global_frame_id.c_str());
-    response.success = false;
+        "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\".",
+        request.initial_pose.header.frame_id.c_str(), config_.global_frame_id.c_str());
+    response.success = static_cast<unsigned char>(false);
     return true;
   }
 
@@ -337,37 +305,33 @@ bool AmclNodelet::set_map_callback(
   tf2::convert(request.initial_pose.pose.pose, pose);
 
   auto covariance = Eigen::Matrix3d{};
-  tf2::covarianceRowMajorToEigen(
-    request.initial_pose.pose.covariance, covariance);
+  tf2::covarianceRowMajorToEigen(request.initial_pose.pose.covariance, covariance);
 
   initialize_with_pose(pose, covariance);
 
-  response.success = true;
+  response.success = static_cast<unsigned char>(true);
   return true;
 }
 
-void AmclNodelet::map_callback(const nav_msgs::OccupancyGrid::ConstPtr & message)
-{
+void AmclNodelet::map_callback(const nav_msgs::OccupancyGrid::ConstPtr& message) {
   std::lock_guard<std::mutex> lock(mutex_);
   NODELET_INFO("A new map was received");
 
   if (particle_filter_ && config_.first_map_only) {
     NODELET_INFO(
-      "Ignoring new map because the particle filter"
-      "has already been initialized.");
+        "Ignoring new map because the particle filter"
+        "has already been initialized.");
     return;
   }
 
   handle_map_with_default_initial_pose(message);
 }
 
-void AmclNodelet::handle_map_with_default_initial_pose(
-  const nav_msgs::OccupancyGrid::ConstPtr & map)
-{
+void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::OccupancyGrid::ConstPtr& map) {
   if (map->header.frame_id != config_.global_frame_id) {
     NODELET_WARN(
-      "Map frame \"%s\" doesn't match global frame \"%s\".",
-      map->header.frame_id.c_str(), config_.global_frame_id.c_str());
+        "Map frame \"%s\" doesn't match global frame \"%s\".", map->header.frame_id.c_str(),
+        config_.global_frame_id.c_str());
   }
 
   bool should_reset_initial_pose = config_.always_reset_initial_pose;
@@ -383,15 +347,14 @@ void AmclNodelet::handle_map_with_default_initial_pose(
     const auto [pose, covariance] = extract_initial_pose(config_);
     initialize_with_pose(pose, covariance);
   } else if (last_known_estimate_.has_value()) {
-    const auto & [pose, covariance] = last_known_estimate_.value();
+    const auto& [pose, covariance] = last_known_estimate_.value();
     initialize_with_pose(pose, covariance);
   }
 
   last_known_map_ = map;
 }
 
-void AmclNodelet::particle_cloud_timer_callback(const ros::TimerEvent & ev)
-{
+void AmclNodelet::particle_cloud_timer_callback(const ros::TimerEvent& ev) {
   std::lock_guard<std::mutex> lock(mutex_);
   if (!particle_filter_) {
     return;
@@ -406,25 +369,21 @@ void AmclNodelet::particle_cloud_timer_callback(const ros::TimerEvent & ev)
   message.header.frame_id = config_.global_frame_id;
   message.poses.resize(particle_filter_->particle_count());
   ranges::transform(
-    ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view()),
-    std::begin(message.poses), [](const auto & particle) {
-      const auto & [state, _] = particle;
-      auto message = geometry_msgs::Pose{};
-      tf2::toMsg(state, message);
-      return message;
-    });
+      ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view()), std::begin(message.poses),
+      [](const auto& particle) {
+        const auto& [state, _] = particle;
+        auto message = geometry_msgs::Pose{};
+        tf2::toMsg(state, message);
+        return message;
+      });
   particle_cloud_pub_.publish(message);
 }
 
-template<typename ExecutionPolicy>
-void AmclNodelet::laser_callback(
-  ExecutionPolicy && exec_policy,
-  const sensor_msgs::LaserScan::ConstPtr & laser_scan)
-{
+template <typename ExecutionPolicy>
+void AmclNodelet::laser_callback(ExecutionPolicy&& exec_policy, const sensor_msgs::LaserScan::ConstPtr& laser_scan) {
   std::lock_guard<std::mutex> lock(mutex_);
   if (!particle_filter_) {
-    NODELET_WARN_THROTTLE(
-      2, "Ignoring laser data because the particle filter has not been initialized");
+    NODELET_WARN_THROTTLE(2, "Ignoring laser data because the particle filter has not been initialized");
     return;
   }
 
@@ -433,12 +392,9 @@ void AmclNodelet::laser_callback(
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
     tf2::convert(
-      tf_buffer_->lookupTransform(
-        config_.odom_frame_id,
-        config_.base_frame_id,
-        laser_scan->header.stamp).transform,
-      odom_to_base_transform);
-  } catch (const tf2::TransformException & error) {
+        tf_buffer_->lookupTransform(config_.odom_frame_id, config_.base_frame_id, laser_scan->header.stamp).transform,
+        odom_to_base_transform);
+  } catch (const tf2::TransformException& error) {
     NODELET_ERROR("Could not transform from odom to base: %s", error.what());
     return;
   }
@@ -446,36 +402,28 @@ void AmclNodelet::laser_callback(
   auto base_to_laser_transform = Sophus::SE3d{};
   try {
     tf2::convert(
-      tf_buffer_->lookupTransform(
-        config_.base_frame_id,
-        laser_scan->header.frame_id,
-        laser_scan->header.stamp).transform,
-      base_to_laser_transform);
-  } catch (const tf2::TransformException & error) {
+        tf_buffer_->lookupTransform(config_.base_frame_id, laser_scan->header.frame_id, laser_scan->header.stamp)
+            .transform,
+        base_to_laser_transform);
+  } catch (const tf2::TransformException& error) {
     NODELET_ERROR("Could not transform from base to laser: %s", error.what());
     return;
   }
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto filter_updated = particle_filter_->update_filter(
-    exec_policy,
-    odom_to_base_transform,
-    utils::make_points_from_laser_scan(
-      *laser_scan,
-      base_to_laser_transform,
-      static_cast<std::size_t>(config_.laser_max_beams),
-      static_cast<float>(config_.laser_min_range),
-      static_cast<float>(config_.laser_max_range)));
+      exec_policy, odom_to_base_transform,
+      utils::make_points_from_laser_scan(
+          *laser_scan, base_to_laser_transform, static_cast<std::size_t>(config_.laser_max_beams),
+          static_cast<float>(config_.laser_min_range), static_cast<float>(config_.laser_max_range)));
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 
   if (filter_updated) {
     NODELET_INFO_THROTTLE(
-      2,
-      "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
-      particle_filter_->particle_count(),
-      laser_scan->ranges.size(),
-      std::chrono::duration<double, std::milli>(update_duration).count());
+        2, "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
+        particle_filter_->particle_count(), laser_scan->ranges.size(),
+        std::chrono::duration<double, std::milli>(update_duration).count());
   }
 
   // force publication of the first message and any subsequent updates to the filter
@@ -484,7 +432,7 @@ void AmclNodelet::laser_callback(
     last_known_estimate_ = particle_filter_->estimate();
   }
 
-  const auto & [pose, covariance] = last_known_estimate_.value();
+  const auto& [pose, covariance] = last_known_estimate_.value();
 
   // new pose messages are only published on updates to the filter
   if (publish_updated_estimations) {
@@ -513,21 +461,19 @@ void AmclNodelet::laser_callback(
   diagnosic_updater_.update();
 }
 
-void AmclNodelet::initial_pose_callback(
-  const geometry_msgs::PoseWithCovarianceStamped::ConstPtr & message)
-{
+void AmclNodelet::initial_pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& message) {
   std::lock_guard<std::mutex> lock(mutex_);
   if (!particle_filter_) {
     NODELET_WARN(
-      "Ignoring initial pose request because the "
-      "particle filter has not been initialized.");
+        "Ignoring initial pose request because the "
+        "particle filter has not been initialized.");
     return;
   }
 
   if (message->header.frame_id != config_.global_frame_id) {
     NODELET_WARN(
-      "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\".",
-      message->header.frame_id.c_str(), config_.global_frame_id.c_str());
+        "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\".",
+        message->header.frame_id.c_str(), config_.global_frame_id.c_str());
     return;
   }
 
@@ -540,11 +486,10 @@ void AmclNodelet::initial_pose_callback(
   initialize_with_pose(pose, covariance);
 }
 
-void AmclNodelet::save_pose_timer_callback(const ros::TimerEvent &)
-{
+void AmclNodelet::save_pose_timer_callback(const ros::TimerEvent&) {
   std::lock_guard<std::mutex> lock(mutex_);
   if (last_known_estimate_.has_value()) {
-    const auto & [pose, covariance] = last_known_estimate_.value();
+    const auto& [pose, covariance] = last_known_estimate_.value();
     config_.initial_pose_x = pose.translation().x();
     config_.initial_pose_y = pose.translation().y();
     config_.initial_pose_a = pose.so2().log();
@@ -558,31 +503,27 @@ void AmclNodelet::save_pose_timer_callback(const ros::TimerEvent &)
   }
 }
 
-void AmclNodelet::initialize_with_pose(
-  const Sophus::SE2d & pose,
-  const Eigen::Matrix3d & covariance)
-{
+void AmclNodelet::initialize_with_pose(const Sophus::SE2d& pose, const Eigen::Matrix3d& covariance) {
   try {
     beluga_amcl::initialize_with_pose(pose, covariance, particle_filter_.get());
     enable_tf_broadcast_ = true;
     NODELET_INFO(
-      "Particle filter initialized with %ld particles about "
-      "initial pose x=%g, y=%g, yaw=%g", particle_filter_->particle_count(),
-      pose.translation().x(), pose.translation().y(), pose.so2().log());
-  } catch (const std::runtime_error & error) {
+        "Particle filter initialized with %ld particles about "
+        "initial pose x=%g, y=%g, yaw=%g",
+        particle_filter_->particle_count(), pose.translation().x(), pose.translation().y(), pose.so2().log());
+  } catch (const std::runtime_error& error) {
     NODELET_ERROR("Could not generate particles: %s", error.what());
   }
 }
 
 bool AmclNodelet::global_localization_callback(
-  [[maybe_unused]] std_srvs::Empty::Request &,
-  [[maybe_unused]] std_srvs::Empty::Response &)
-{
+    [[maybe_unused]] std_srvs::Empty::Request&,
+    [[maybe_unused]] std_srvs::Empty::Response&) {
   std::lock_guard<std::mutex> lock(mutex_);
   if (!particle_filter_) {
     NODELET_WARN(
-      "Ignoring global localization request because "
-      "the particle filter has not been initialized.");
+        "Ignoring global localization request because "
+        "the particle filter has not been initialized.");
     return false;
   }
   particle_filter_->reinitialize();
@@ -591,11 +532,9 @@ bool AmclNodelet::global_localization_callback(
   return true;
 }
 
-void AmclNodelet::update_covariance_diagnostics(
-  diagnostic_updater::DiagnosticStatusWrapper & status)
-{
+void AmclNodelet::update_covariance_diagnostics(diagnostic_updater::DiagnosticStatusWrapper& status) {
   if (last_known_estimate_.has_value()) {
-    const auto & [_, covariance] = last_known_estimate_.value();
+    const auto& [_, covariance] = last_known_estimate_.value();
     const double std_x = std::sqrt(covariance(0, 0));
     const double std_y = std::sqrt(covariance(1, 1));
     const double std_yaw = std::sqrt(covariance(2, 2));
@@ -607,17 +546,13 @@ void AmclNodelet::update_covariance_diagnostics(
     status.add("std_warn_level_y", config_.std_warn_level_y);
     status.add("std_warn_level_yaw", config_.std_warn_level_yaw);
 
-    if (std_x > config_.std_warn_level_x ||
-      std_y > config_.std_warn_level_y ||
-      std_yaw > config_.std_warn_level_yaw)
-    {
+    if (std_x > config_.std_warn_level_x || std_y > config_.std_warn_level_y || std_yaw > config_.std_warn_level_yaw) {
       status.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Too large");
       return;
     }
   }
   status.summary(diagnostic_msgs::DiagnosticStatus::OK, "OK");
 }
-
 
 }  // namespace beluga_amcl
 

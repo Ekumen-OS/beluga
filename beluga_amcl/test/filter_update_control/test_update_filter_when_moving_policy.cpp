@@ -16,42 +16,32 @@
 
 #include <ciabatta/ciabatta.hpp>
 
-#include <beluga_amcl/filter_update_control/update_filter_when_moving_policy.hpp>
 #include <beluga_amcl/filter_update_control/filter_update_control_mixin.hpp>
+#include <beluga_amcl/filter_update_control/update_filter_when_moving_policy.hpp>
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
-namespace
-{
+namespace {
 
-template<typename Mixin, typename Policy>
-class PolicyWrapperMixin : public Mixin
-{
-public:
+template <typename Mixin, typename Policy>
+class PolicyWrapperMixin : public Mixin {
+ public:
   using motion_event = Sophus::SE2d;
 
-  template<typename ... Rest>
-  explicit PolicyWrapperMixin(const typename Policy::param_type & config, Rest &&... rest)
-  : Mixin(std::forward<Rest>(rest)...), policy_{config} {}
+  template <typename... Rest>
+  explicit PolicyWrapperMixin(const typename Policy::param_type& config, Rest&&... rest)
+      : Mixin(std::forward<Rest>(rest)...), policy_{config} {}
 
-  [[nodiscard]] bool update_filter(motion_event e)
-  {
-    return policy_.do_filter_update(e);
-  }
+  [[nodiscard]] bool update_filter(motion_event e) { return policy_.do_filter_update(e); }
 
-private:
+ private:
   Policy policy_;
 };
 
+using UUT = ciabatta::mixin<ciabatta::curry<PolicyWrapperMixin, UpdateFilterWhenMovingPolicy>::mixin>;
 
-using UUT = ciabatta::mixin<ciabatta::curry<PolicyWrapperMixin,
-    UpdateFilterWhenMovingPolicy>::mixin>;
-
-struct ResampleOnMotionPolicyTests : public ::testing::Test
-{
-  static auto make_motion_update_event(double x, double y, double phi)
-  {
+struct ResampleOnMotionPolicyTests : public ::testing::Test {
+  static auto make_motion_update_event(double x, double y, double phi) {
     using Eigen::Vector2d;
     using Sophus::SE2d;
     using Sophus::SO2d;
@@ -85,11 +75,7 @@ TEST_F(ResampleOnMotionPolicyTests, MotionUpdatesEnableResampling) {
   ASSERT_FALSE(uut.update_filter(make_motion_update_event(0, 0, 0)));
 
   // still no motion (thresholds are calculated independently for each axis)
-  ASSERT_FALSE(
-    uut.update_filter(
-      make_motion_update_event(
-        d_threshold * 0.99, d_threshold * 0.99,
-        a_threshold * 0.99)));
+  ASSERT_FALSE(uut.update_filter(make_motion_update_event(d_threshold * 0.99, d_threshold * 0.99, a_threshold * 0.99)));
 
   // back to origin
   ASSERT_FALSE(uut.update_filter(make_motion_update_event(0, 0, 0)));
@@ -98,25 +84,13 @@ TEST_F(ResampleOnMotionPolicyTests, MotionUpdatesEnableResampling) {
   ASSERT_TRUE(uut.update_filter(make_motion_update_event(d_threshold * 1.01, 0.0, 0.0)));
 
   // motion above threshold for axis y
-  ASSERT_TRUE(
-    uut.update_filter(
-      make_motion_update_event(
-        d_threshold * 1.01,
-        d_threshold * 1.01, 0.0)));
+  ASSERT_TRUE(uut.update_filter(make_motion_update_event(d_threshold * 1.01, d_threshold * 1.01, 0.0)));
 
   // motion above threshold for angular motion
-  ASSERT_TRUE(
-    uut.update_filter(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 1.01,
-        a_threshold * 1.01)));
+  ASSERT_TRUE(uut.update_filter(make_motion_update_event(d_threshold * 1.01, d_threshold * 1.01, a_threshold * 1.01)));
 
   // no relative motion again
-  ASSERT_FALSE(
-    uut.update_filter(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 1.01,
-        a_threshold * 1.01)));
+  ASSERT_FALSE(uut.update_filter(make_motion_update_event(d_threshold * 1.01, d_threshold * 1.01, a_threshold * 1.01)));
 }
 
 TEST_F(ResampleOnMotionPolicyTests, ThresholdsAreRelativeToLatestResamplingPose) {
@@ -153,11 +127,7 @@ TEST_F(ResampleOnMotionPolicyTests, ThresholdsAreRelativeToLatestResamplingPose)
   ASSERT_FALSE(uut.update_filter(make_motion_update_event(upper_bound, 0.0, 0.0)));
 
   // resample when we move a full threshold from the pivot
-  ASSERT_TRUE(
-    uut.update_filter(
-      make_motion_update_event(
-        pivot_distance + d_threshold * 1.01,
-        0.0, 0.0)));
+  ASSERT_TRUE(uut.update_filter(make_motion_update_event(pivot_distance + d_threshold * 1.01, 0.0, 0.0)));
 }
 
 TEST_F(ResampleOnMotionPolicyTests, RandomWalkingTest) {
@@ -173,124 +143,52 @@ TEST_F(ResampleOnMotionPolicyTests, RandomWalkingTest) {
   // list of pairs of relative motion from the previous pose, and the expected
   // "do_resampling" value for that step
   const auto relative_motions = {
-    std::make_tuple(make_motion_update_event(0, 0, 0), false),
-    // relative motions along x axis
-    std::make_tuple(make_motion_update_event(d_threshold * 0.99, 0.0, 0.0), false),
-    std::make_tuple(make_motion_update_event(d_threshold * 0.02, 0.0, 0.0), true),
-    std::make_tuple(make_motion_update_event(d_threshold * -0.99, 0.0, 0.0), false),
-    std::make_tuple(make_motion_update_event(d_threshold * -0.02, 0.0, 0.0), true),
-    // relative motions along y axis
-    std::make_tuple(make_motion_update_event(0.0, d_threshold * 0.99, 0.0), false),
-    std::make_tuple(make_motion_update_event(0.0, d_threshold * 0.02, 0.0), true),
-    std::make_tuple(make_motion_update_event(0.0, d_threshold * -0.99, 0.0), false),
-    std::make_tuple(make_motion_update_event(0.0, d_threshold * -0.02, 0.0), true),
-    // relative motions along theta axis
-    std::make_tuple(make_motion_update_event(0.0, 0.0, a_threshold * 0.99), false),
-    std::make_tuple(make_motion_update_event(0.0, 0.0, a_threshold * 0.02), true),
-    std::make_tuple(make_motion_update_event(0.0, 0.0, a_threshold * -0.99), false),
-    std::make_tuple(make_motion_update_event(0.0, 0.0, a_threshold * -0.02), true),
-    // random walk move and stop 1
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 0.99,
-        a_threshold * 0.99), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 1.01,
-        a_threshold * 0.40), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.20, d_threshold * 0.10,
-        a_threshold * 1.01), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.99, d_threshold * 0.99,
-        a_threshold * 0.99), false),
-    // random walk move and stop 2
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 0.30,
-        a_threshold * 0.10), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.50, d_threshold * 1.01,
-        a_threshold * 0.30), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.70, d_threshold * 0.40,
-        a_threshold * 1.01), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.99, d_threshold * 0.99,
-        a_threshold * 0.99), false),
-    // random walk move and stop 3
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 0.99,
-        a_threshold * 0.99), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 1.01,
-        a_threshold * 0.70), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.30, d_threshold * 0.40,
-        a_threshold * 1.01), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.01, d_threshold * 0.99,
-        a_threshold * 0.99), false),
-    // random walk move and stop 4
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 0.99,
-        a_threshold * 0.99), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 0.80,
-        a_threshold * 0.10), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.20, d_threshold * 0.50,
-        a_threshold * 1.01), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.99, d_threshold * 0.99,
-        a_threshold * 0.99), false),
-    // random walk move and stop 5
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 0.30,
-        a_threshold * 0.10), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.50, d_threshold * 1.01,
-        a_threshold * 0.80), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.20, d_threshold * 0.40,
-        a_threshold * 1.01), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.99, d_threshold * 0.99,
-        a_threshold * 0.99), false),
-    // random walk move and stop 6
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 0.99,
-        a_threshold * 0.99), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 1.01, d_threshold * 1.01,
-        a_threshold * 0.50), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.40, d_threshold * 0.70,
-        a_threshold * 1.01), true),
-    std::make_tuple(
-      make_motion_update_event(
-        d_threshold * 0.99, d_threshold * 0.99,
-        a_threshold * 0.99), false),
+      std::make_tuple(make_motion_update_event(0, 0, 0), false),
+      // relative motions along x axis
+      std::make_tuple(make_motion_update_event(d_threshold * 0.99, 0.0, 0.0), false),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.02, 0.0, 0.0), true),
+      std::make_tuple(make_motion_update_event(d_threshold * -0.99, 0.0, 0.0), false),
+      std::make_tuple(make_motion_update_event(d_threshold * -0.02, 0.0, 0.0), true),
+      // relative motions along y axis
+      std::make_tuple(make_motion_update_event(0.0, d_threshold * 0.99, 0.0), false),
+      std::make_tuple(make_motion_update_event(0.0, d_threshold * 0.02, 0.0), true),
+      std::make_tuple(make_motion_update_event(0.0, d_threshold * -0.99, 0.0), false),
+      std::make_tuple(make_motion_update_event(0.0, d_threshold * -0.02, 0.0), true),
+      // relative motions along theta axis
+      std::make_tuple(make_motion_update_event(0.0, 0.0, a_threshold * 0.99), false),
+      std::make_tuple(make_motion_update_event(0.0, 0.0, a_threshold * 0.02), true),
+      std::make_tuple(make_motion_update_event(0.0, 0.0, a_threshold * -0.99), false),
+      std::make_tuple(make_motion_update_event(0.0, 0.0, a_threshold * -0.02), true),
+      // random walk move and stop 1
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 0.99, a_threshold * 0.99), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 1.01, a_threshold * 0.40), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.20, d_threshold * 0.10, a_threshold * 1.01), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.99, d_threshold * 0.99, a_threshold * 0.99), false),
+      // random walk move and stop 2
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 0.30, a_threshold * 0.10), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.50, d_threshold * 1.01, a_threshold * 0.30), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.70, d_threshold * 0.40, a_threshold * 1.01), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.99, d_threshold * 0.99, a_threshold * 0.99), false),
+      // random walk move and stop 3
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 0.99, a_threshold * 0.99), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 1.01, a_threshold * 0.70), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.30, d_threshold * 0.40, a_threshold * 1.01), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.01, d_threshold * 0.99, a_threshold * 0.99), false),
+      // random walk move and stop 4
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 0.99, a_threshold * 0.99), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 0.80, a_threshold * 0.10), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.20, d_threshold * 0.50, a_threshold * 1.01), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.99, d_threshold * 0.99, a_threshold * 0.99), false),
+      // random walk move and stop 5
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 0.30, a_threshold * 0.10), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.50, d_threshold * 1.01, a_threshold * 0.80), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.20, d_threshold * 0.40, a_threshold * 1.01), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.99, d_threshold * 0.99, a_threshold * 0.99), false),
+      // random walk move and stop 6
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 0.99, a_threshold * 0.99), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 1.01, d_threshold * 1.01, a_threshold * 0.50), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.40, d_threshold * 0.70, a_threshold * 1.01), true),
+      std::make_tuple(make_motion_update_event(d_threshold * 0.99, d_threshold * 0.99, a_threshold * 0.99), false),
   };
 
   auto current_pose = make_motion_update_event(0, 0, 0);
@@ -299,9 +197,9 @@ TEST_F(ResampleOnMotionPolicyTests, RandomWalkingTest) {
   ASSERT_TRUE(uut.update_filter(current_pose));
   ASSERT_FALSE(uut.update_filter(current_pose));
 
-  for (const auto & test_tuple : relative_motions) {
-    const auto & relative_movement = std::get<0>(test_tuple);
-    const auto & expected_resampling_flag = std::get<1>(test_tuple);
+  for (const auto& test_tuple : relative_motions) {
+    const auto& relative_movement = std::get<0>(test_tuple);
+    const auto& expected_resampling_flag = std::get<1>(test_tuple);
     // apply the relative motion on top of the current pose and test the result
     current_pose = current_pose * relative_movement;
     ASSERT_EQ(expected_resampling_flag, uut.update_filter(current_pose));

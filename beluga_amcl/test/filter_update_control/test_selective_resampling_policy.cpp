@@ -23,31 +23,27 @@
 
 #include <beluga_amcl/filter_update_control/selective_resampling_policy.hpp>
 
-namespace beluga_amcl
-{
+namespace beluga_amcl {
 
-namespace
-{
+namespace {
 
-template<typename Mixin, typename Policy>
-class PolicyWrapperMixin : public Mixin
-{
-public:
-  template<typename ... Rest>
-  explicit PolicyWrapperMixin(const typename Policy::param_type & config, Rest &&... rest)
-  : Mixin(std::forward<Rest>(rest)...), policy_{config} {}
+template <typename Mixin, typename Policy>
+class PolicyWrapperMixin : public Mixin {
+ public:
+  template <typename... Rest>
+  explicit PolicyWrapperMixin(const typename Policy::param_type& config, Rest&&... rest)
+      : Mixin(std::forward<Rest>(rest)...), policy_{config} {}
 
-  void set_weights(std::vector<double> v) {weights_ = std::move(v);}
+  void set_weights(std::vector<double> v) { weights_ = std::move(v); }
 
-  [[nodiscard]] auto weights() const {return ranges::views::all(weights_) | ranges::views::const_;}
+  [[nodiscard]] auto weights() const { return ranges::views::all(weights_) | ranges::views::const_; }
 
-  [[nodiscard]] bool update_filter() {return policy_.do_resampling(this->self());}
+  [[nodiscard]] bool update_filter() { return policy_.do_resampling(this->self()); }
 
-private:
+ private:
   Policy policy_;
   std::vector<double> weights_;
 };
-
 
 using UUT = ciabatta::mixin<ciabatta::curry<PolicyWrapperMixin, SelectiveResamplingPolicy>::mixin>;
 

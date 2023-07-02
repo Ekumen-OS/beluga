@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__PRIVATE__EXECUTION_POLICY_HPP_
-#define BELUGA_AMCL__PRIVATE__EXECUTION_POLICY_HPP_
+#ifndef BELUGA_AMCL_PRIVATE_EXECUTION_POLICY_HPP
+#define BELUGA_AMCL_PRIVATE_EXECUTION_POLICY_HPP
 
 #include <execution>
 #include <stdexcept>
 #include <string_view>
 #include <utility>
 
-namespace beluga_amcl::execution
-{
+namespace beluga_amcl::execution {
 
 /**
  * \file
@@ -29,13 +28,10 @@ namespace beluga_amcl::execution
  */
 
 /// Allows dinamically specifying an execution policy.
-using Policy = std::variant<
-  std::execution::sequenced_policy,
-  std::execution::parallel_policy>;
+using Policy = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 
 /// Returns the execution policy from its name.
-inline Policy policy_from_string(std::string_view policy_name)
-{
+inline Policy policy_from_string(std::string_view policy_name) {
   if (policy_name == "seq") {
     return std::execution::seq;
   }
@@ -47,4 +43,4 @@ inline Policy policy_from_string(std::string_view policy_name)
 
 }  // namespace beluga_amcl::execution
 
-#endif  // BELUGA_AMCL__PRIVATE__EXECUTION_POLICY_HPP_
+#endif  // BELUGA_AMCL_PRIVATE_EXECUTION_POLICY_HPP

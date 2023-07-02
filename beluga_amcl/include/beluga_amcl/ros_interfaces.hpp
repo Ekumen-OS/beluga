@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__ROS_INTERFACES_HPP_
-#define BELUGA_AMCL__ROS_INTERFACES_HPP_
+#ifndef BELUGA_AMCL_ROS_INTERFACES_HPP
+#define BELUGA_AMCL_ROS_INTERFACES_HPP
 
 #if BELUGA_AMCL_ROS_VERSION == 2
 #include <geometry_msgs/msg/pose.hpp>
@@ -29,8 +29,7 @@
 #error BELUGA_AMCL_ROS_VERSION is not defined or invalid
 #endif
 
-namespace beluga_amcl::messages
-{
+namespace beluga_amcl::messages {
 #if BELUGA_AMCL_ROS_VERSION == 2
 using LaserScan = sensor_msgs::msg::LaserScan;
 using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
@@ -46,4 +45,4 @@ using Transform = geometry_msgs::Transform;
 #endif
 }  // namespace beluga_amcl::messages
 
-#endif  // BELUGA_AMCL__ROS_INTERFACES_HPP_
+#endif  // BELUGA_AMCL_ROS_INTERFACES_HPP

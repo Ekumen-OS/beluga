@@ -21,11 +21,11 @@
 set -o errexit -o xtrace
 
 if [ "${ROS_DISTRO}" != "noetic" ]; then
-    ROS_PACKAGES="beluga beluga_system_tests"
+    ROS_PACKAGES="beluga beluga_amcl beluga_system_tests"
 else
-    ROS_PACKAGES="beluga"
+    ROS_PACKAGES="beluga beluga_amcl"
 fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
-echo ${ROS_PACKAGES} | xargs -n1 echo | xargs -I{} run-clang-tidy -quiet -j 4 -p ./build/{}
+echo ${ROS_PACKAGES} | xargs -n1 echo | xargs -I{} run-clang-tidy -j 4 -fix -p ./build/{} ${PWD}/src/.*
