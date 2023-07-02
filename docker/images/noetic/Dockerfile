@@ -1,4 +1,4 @@
-FROM ros:noetic-ros-base-focal AS cacher
+FROM osrf/ros:noetic-desktop-full-focal AS cacher
 
 WORKDIR /ws/src
 
@@ -22,7 +22,7 @@ RUN mkdir -p /tmp/ws/src \
   && find ./ -name "COLCON_IGNORE" | xargs cp --parents -t /tmp/ws/src \
   || true
 
-FROM ros:noetic-ros-base-focal AS timem-builder
+FROM osrf/ros:noetic-desktop-full-focal AS timem-builder
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -42,7 +42,7 @@ RUN git clone -b develop https://github.com/NERSC/timemory.git \
     . \
   && cmake --build ./build --target timem
 
-FROM ros:noetic-ros-base-focal AS builder
+FROM osrf/ros:noetic-desktop-full-focal AS builder
 
 ENV DEBIAN_FRONTEND noninteractive
 

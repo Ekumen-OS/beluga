@@ -1,4 +1,4 @@
-FROM ros:jazzy-ros-base AS cacher
+FROM osrf/ros:jazzy-desktop-full-noble AS cacher
 
 WORKDIR /ws/src
 
@@ -12,7 +12,7 @@ RUN mkdir -p /tmp/ws/src \
   && find ./ -name "COLCON_IGNORE" | xargs cp --parents -t /tmp/ws/src \
   || true
 
-FROM ros:jazzy-ros-base AS timem-builder
+FROM osrf/ros:jazzy-desktop-full-noble AS timem-builder
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -32,7 +32,7 @@ RUN git clone -b develop https://github.com/NERSC/timemory.git \
     . \
   && cmake --build ./build --target timem
 
-FROM ros:jazzy-ros-base AS builder
+FROM osrf/ros:jazzy-desktop-full-noble AS builder
 
 ENV DEBIAN_FRONTEND noninteractive
 
