@@ -176,4 +176,4 @@ class FilterUpdateControlMixin : public Mixin {
 
 }  // namespace beluga_amcl
 
-#endif // BELUGA_AMCL_FILTER_UPDATE_CONTROL_FILTER_UPDATE_CONTROL_MIXIN_HPP
+#endif  // BELUGA_AMCL_FILTER_UPDATE_CONTROL_FILTER_UPDATE_CONTROL_MIXIN_HPP
