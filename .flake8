@@ -1,5 +1,9 @@
 [flake8]
-extend-ignore = B902,C816,D100,D101,D102,D103,D104,D105,D106,D107,D203,D212,D404,I202
+# D100: Missing docstring in public module.
+# D101: Missing docstring in public class.
+# D103: Missing docstring in public function.
+# D104: Missing docstring in public package.
+extend-ignore = D100,D101,D103,D104
 import-order-style = google
 max-line-length = 99
 show-source = true
