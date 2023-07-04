@@ -15,12 +15,13 @@ repos:
 
   - repo: local
     hooks:
-      - id: ament_copyright
+      - id: copyright
         name: fix copyright
-        description: Check if copyright notice is available in all files.
-        entry: ament_copyright --add-missing "Ekumen, Inc." apache2
+        description: Check that files have a copyright notice.
+        entry: tools/check_copyright.py --fix
         types_or: [c++, python]
-        language: system
+        language: python
+        language_version: python3
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
