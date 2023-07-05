@@ -54,7 +54,7 @@ class FileContentChecker:
 
     # Regex pattern that matches a year (YYYY) and a year range (YYYY-ZZZZ).
     # It has capturing groups for both years (the second one is optional).
-    _YEAR_PATTERN = r'([0-9]{4})(?:(?:-)([0-9]{4}))?'
+    _YEAR_PATTERN = r'([0-9]{4})(?:-([0-9]{4}))?'
 
     # Regex pattern that matches the name of a copyright holder.
     _NAME_PATTERN = r'.*'
