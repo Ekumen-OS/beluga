@@ -95,9 +95,11 @@ class FileContentChecker:
         """
         pattern = (
             # Comment lines and escape special characters in the template...
-            re.escape(self._comment_lines(template.format(year='YYYY', name='NAME')))
+            re.escape(self._comment_lines(template))
+            # Un-escape the format fields...
+            .replace(r'\{', '{').replace(r'\}', '}')
             # Then insert year and name patterns.
-            .replace('YYYY', self._YEAR_PATTERN).replace('NAME', self._NAME_PATTERN)
+            .format(year=self._YEAR_PATTERN, name=self._NAME_PATTERN)
         )
         return bool(re.search(pattern, self._content))
 
