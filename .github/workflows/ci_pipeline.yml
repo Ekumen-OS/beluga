@@ -65,7 +65,7 @@ jobs:
         working-directory: ${{ github.workspace }}/src
         run: |
           vcs import < ./beluga/docker/files/${{ matrix.ros_distro }}.repos
-          find ./flatland -type d | xargs -I{} touch {}/{COLCON_IGNORE,CATKIN_IGNORE}
+          rm -rf ./flatland
 
       - name: Install dependencies
         run: |
