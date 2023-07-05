@@ -62,7 +62,7 @@ class FileContentChecker:
     # Regex pattern that matches anything that looks like a copyright block.
     # Specifically, a comment beginning with the word `copyright` (case insensitive)
     # followed by single line comments that form a block.
-    _COPYRIGHT_PATTERN = r'(?:[;#%|*]|//)\s*[C|c]opyright.*(?:\n(?:[;#%|*]|//).*)*'
+    _COPYRIGHT_PATTERN = r'(?:[;#%|*]|//)\s*[Cc]opyright.*(?:\n(?:[;#%|*]|//).*)*'
 
     def __init__(self, path: Path):
         """Initialize a file content checker."""
