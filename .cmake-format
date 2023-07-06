@@ -1,0 +1,15 @@
+# -----------------------------
+# Options affecting formatting.
+# -----------------------------
+with section("format"):
+    # Force vertical layout if an argument group contains more than this many sub-groups.
+    max_subgroups_hwrap = 2
+    # Force vertical layout if a positional argument group contains more than this many arguments.
+    max_pargs_hwrap = 3
+
+# ------------------------------------------------
+# Options affecting comment reflow and formatting.
+# ------------------------------------------------
+with section("markup"):
+    # Disable comment markup parsing and reflow.
+    enable_markup = False
