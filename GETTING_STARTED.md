@@ -71,10 +71,9 @@
     rosrun teleop_twist_keyboard teleop_twist_keyboard
     ```
 
-1. **Lint your code**. You will need [`pre-commit`](https://pre-commit.com/) and ROS dependencies (already installed in the development container).
+1. **Lint your code**. You will need [`pre-commit`](https://pre-commit.com/).
 
     ```bash
-    cd /ws/src/beluga
     pre-commit run --all-files
     ```
 
