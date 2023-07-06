@@ -57,7 +57,7 @@ class FileContentChecker:
     _YEAR_PATTERN = r'([0-9]{4})(?:-([0-9]{4}))?'
 
     # Regex pattern that matches the name of a copyright holder.
-    _NAME_PATTERN = r'.*'
+    _NAME_PATTERN = r'(.*)'
 
     # Regex pattern that matches anything that looks like a copyright block.
     # Specifically, a comment beginning with the word `copyright` (case insensitive)
@@ -87,11 +87,11 @@ class FileContentChecker:
             base, comment_prefix.get(self._path.suffix, '#'), lambda line: True
         )
 
-    def has_copyright(self, template: str = DEFAULT_COPYRIGHT_TEMPLATE) -> bool:
-        """Verify that the file has a valid copyright notice.
+    def search_copyright(self, template: str = DEFAULT_COPYRIGHT_TEMPLATE) -> re.Match:
+        """Search for a valid copyright notice using the given the template.
 
-        :param template: Template copyright notice.
-        :return: True if a copyright notice was found. False otherwise.
+        :param template: Template copyright notice to match with.
+        :return: The corresponding match object.
         """
         pattern = (
             # Comment lines and escape special characters in the template...
@@ -101,7 +101,7 @@ class FileContentChecker:
             # Then insert year and name patterns.
             .format(year=self._YEAR_PATTERN, name=self._NAME_PATTERN)
         )
-        return bool(re.search(pattern, self._content))
+        return re.search(pattern, self._content)
 
     def fix_copyright(
         self,
@@ -118,7 +118,7 @@ class FileContentChecker:
         The new copyright notice will be preceded by an empty line if not at
         the beginning of the file, and will always be followed by an empty line.
 
-        :param template: Template copyright notice.
+        :param template: Template copyright notice to use when adding/fixing.
         :param name: Name of the copyright holder.
         :param year: Copyright year.
         """
@@ -165,10 +165,10 @@ def main(argv=None) -> int:
     )
     parser.add_argument(
         '-n',
-        '--copyright-holder-name',
+        '--copyright-owner-name',
         type=str,
         default=DEFAULT_COPYRIGHT_HOLDER,
-        help='copyright holder name',
+        help='copyright owner name',
         metavar='NAME',
     )
 
@@ -179,11 +179,12 @@ def main(argv=None) -> int:
 
     for path in args.paths:
         checker = FileContentChecker(path)
-        if not checker.has_copyright():
+        match = checker.search_copyright()
+        if not match:
+            print(f'{path}: does not have a valid copyright notice')
             need_fix = True
-            print(f'File at `{path}` does not have a valid copyright notice')
             if args.fix:
-                checker.fix_copyright(name=args.copyright_holder_name)
+                checker.fix_copyright(name=args.copyright_owner_name)
 
     return 0 if not need_fix else 1
 
