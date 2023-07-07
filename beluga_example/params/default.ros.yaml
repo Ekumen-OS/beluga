@@ -1,5 +1,5 @@
 # Odometry motion model type.
-odom_model_type: diff
+odom_model_type: diff-corrected
 # Expected process noise in odometry’s rotation estimate from rotation.
 odom_alpha1: 0.1
 # Expected process noise in odometry’s rotation estimate from translation.

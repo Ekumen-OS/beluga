@@ -39,8 +39,8 @@ namespace beluga_amcl {
 
 namespace {
 
-constexpr std::string_view kAMCLDifferentialModelName = "diff";
-constexpr std::string_view kAMCLOmnidirectionalModelName = "omni";
+constexpr std::string_view kAMCLDifferentialModelName = "diff-corrected";
+constexpr std::string_view kAMCLOmnidirectionalModelName = "omni-corrected";
 
 }  // namespace
 

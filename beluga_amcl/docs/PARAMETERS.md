@@ -98,7 +98,6 @@ This page describes the parameters supported by Beluga AMCL including comparison
 
 ### Compatibility Notes
 
-- When applying any of the resampling policies (see `resample_interval`, `selective_resampling`, `update_min_a`, `update_min_d`), Nav2 AMCL skips the filter update entirely until the conditions are met, while Beluga AMCL skips only the resampling step (sensor and motion updates are not skipped).
 - Beluga AMCL supports Nav2 AMCL plugin names (`nav2_amcl::DifferentialMotionModel`, `nav2_amcl::OmniMotionModel`) as a value in the `robot_model_type` parameter, but will load the equivalent Beluga model.
 
 ## ROS 1 Reference
@@ -149,7 +148,7 @@ This page describes the parameters supported by Beluga AMCL including comparison
 
 | Parameter | Description | Navigation AMCL   | Beluga AMCL |
 |-----------|-------------|:-----------------:|:-----------:|
-| `odom_model_type` | Which odometry motion model to use. Supported models are `diff` for differential drive [[3]](#3), `omni` for omnidirectional drive, and `stationary`. See [compatibility notes](#compatibility-notes-1). | ✅ | ✅ |
+| `odom_model_type` | Which odometry motion model to use. Supported models are `diff-corrected` for differential drive [[3]](#3), `omni-corrected` for omnidirectional drive, and `stationary`. See [compatibility notes](#compatibility-notes-1). | ✅ | ✅ |
 | `odom_alpha1` | Expected process noise in odometry’s rotation estimate from rotation for the differential and omnidirectional drive models. | ✅ | ✅ |
 | `odom_alpha2` | Expected process noise in odometry’s rotation estimate from translation for the differential and omnidirectional drive models. | ✅ | ✅ |
 | `odom_alpha3` | Expected process noise in odometry’s translation estimate from translation for the differential and omnidirectional drive models. | ✅ | ✅ |
@@ -186,9 +185,8 @@ This page describes the parameters supported by Beluga AMCL including comparison
 
 ### Compatibility Notes
 
-- Both `diff` and `omni` motion models in Beluga AMCL correspond to `diff-corrected` and `omni-corrected` motion models in Naviation AMCL.
+- Beluga AMCL supports `diff-corrected` and `omni-corrected` motion models, older `diff` and `omni` models from Navigation AMCL were not implemented.
 - Unlike Navigation AMCL, Beluga AMCL needs both `laser_max_range` and `laser_min_range` to be specified (ie. -1.0 is not a valid value).
-- When applying any of the motion checks (see `update_min_a`, `update_min_d`), Navigation AMCL skips the filter update entirely until the conditions are met, while Beluga AMCL skips only the resampling step (sensor and motion updates are not skipped).
 
 ## Additional Notes
 
