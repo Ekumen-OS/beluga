@@ -41,6 +41,13 @@ using StaticOccupancyGrid = ciabatta::mixin<
     BaseDenseGrid2Mixin,
     BaseRegularGrid2Mixin>;
 
+template <typename StorageType>
+using GridWithConfigurableStorage = ciabatta::mixin<
+    ciabatta::curry<OccupancyStorageMixin, TestMapValueType, TestMapValueTraits, StorageType>::template mixin,
+    BaseOccupancyGrid2Mixin,
+    BaseDenseGrid2Mixin,
+    BaseRegularGrid2Mixin>;
+
 }  // namespace beluga::testing
 
 #endif

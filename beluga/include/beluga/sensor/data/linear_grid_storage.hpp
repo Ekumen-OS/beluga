@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_TEST_PLAIN_GRID_STORAGE_HPP
-#define BELUGA_TEST_PLAIN_GRID_STORAGE_HPP
+#ifndef BELUGA_LINEAR_GRID_STORAGE_HPP
+#define BELUGA_LINEAR_GRID_STORAGE_HPP
 
 #include <cstdint>
 #include <initializer_list>
@@ -26,6 +26,8 @@ namespace beluga {
 template <typename T>
 class LinearGridStorage {
  public:
+  using cell_type = T;
+
   /// @brief Constructs a map with the given initial values.
   /// @param width Width of the grid.
   /// @param height Height of the grid.

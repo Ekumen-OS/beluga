@@ -26,7 +26,9 @@ add_executable(
   motion/test_differential_drive_model.cpp
   motion/test_omnidirectional_drive_model.cpp
   random/test_multivariate_normal_distribution.cpp
+  sensor/data/test_cache_friendly_grid_storage.cpp
   sensor/data/test_dense_grid.cpp
+  sensor/data/test_grid_storage_types.cpp
   sensor/data/test_occupancy_grid.cpp
   sensor/data/test_regular_grid.cpp
   sensor/test_beam_model.cpp
