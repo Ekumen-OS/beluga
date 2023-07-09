@@ -38,9 +38,9 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include "beluga_amcl/amcl_node_utils.hpp"
+#include "beluga_amcl/private/execution_policy.hpp"
 #include "beluga_amcl/ros_occupancy_grid.hpp"
 #include "beluga_amcl/tf2_sophus.hpp"
-#include "beluga_amcl/private/execution_policy.hpp"
 
 namespace beluga_amcl {
 
@@ -716,8 +716,8 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
   using LikelihoodField = beluga::mixin::descriptor<
       ciabatta::curry<beluga::LikelihoodFieldModel, ROSOccupancyGrid>::mixin, beluga::LikelihoodFieldModelParam>;
 
-  using BeamSensorModel =
-      beluga::mixin::descriptor<ciabatta::curry<beluga::BeamSensorModel, ROSOccupancyGrid>::mixin, beluga::BeamModelParam>;
+  using BeamSensorModel = beluga::mixin::descriptor<
+      ciabatta::curry<beluga::BeamSensorModel, ROSOccupancyGrid>::mixin, beluga::BeamModelParam>;
 
   using SensorDescriptor = std::variant<LikelihoodField, BeamSensorModel>;
   auto get_sensor_descriptor = [this](std::string_view name) -> SensorDescriptor {

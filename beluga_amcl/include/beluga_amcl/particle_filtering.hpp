@@ -45,7 +45,8 @@ static constexpr std::string_view kBeamSensorModelName = "beam";
 
 }  // namespace
 
-using LaserLocalizationInterface2d = beluga::LaserLocalizationInterface2d<OccupancyGrid, FilterUpdateControlInterface>;
+using LaserLocalizationInterface2d =
+    beluga::LaserLocalizationInterface2d<ROSOccupancyGrid, FilterUpdateControlInterface>;
 
 using Stationary = beluga::mixin::descriptor<beluga::StationaryModel>;
 using DifferentialDrive =
@@ -55,11 +56,12 @@ using OmnidirectionalDrive =
 
 using MotionDescriptor = std::variant<Stationary, DifferentialDrive, OmnidirectionalDrive>;
 
-using LikelihoodField = beluga::mixin::
-    descriptor<ciabatta::curry<beluga::LikelihoodFieldModel, ROSOccupancyGrid>::mixin, beluga::LikelihoodFieldModelParam>;
+using LikelihoodField = beluga::mixin::descriptor<
+    ciabatta::curry<beluga::LikelihoodFieldModel, ROSOccupancyGrid>::mixin,
+    beluga::LikelihoodFieldModelParam>;
 
-using BeamSensorModel =
-    beluga::mixin::descriptor<ciabatta::curry<beluga::BeamSensorModel, ROSOccupancyGrid>::mixin, beluga::BeamModelParam>;
+using BeamSensorModel = beluga::mixin::
+    descriptor<ciabatta::curry<beluga::BeamSensorModel, ROSOccupancyGrid>::mixin, beluga::BeamModelParam>;
 
 using SensorDescriptor = std::variant<LikelihoodField, BeamSensorModel>;
 

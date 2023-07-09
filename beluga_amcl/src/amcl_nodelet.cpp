@@ -29,9 +29,9 @@
 #include "beluga_amcl/private/amcl_nodelet.hpp"
 
 #include "beluga_amcl/amcl_node_utils.hpp"
+#include "beluga_amcl/private/execution_policy.hpp"
 #include "beluga_amcl/ros_occupancy_grid.hpp"
 #include "beluga_amcl/tf2_sophus.hpp"
-#include "beluga_amcl/private/execution_policy.hpp"
 
 // LCOV_EXCL_BR_START: Disable branch coverage.
 

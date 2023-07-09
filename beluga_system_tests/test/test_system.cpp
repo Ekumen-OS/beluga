@@ -32,8 +32,8 @@
 #include <beluga_amcl/filter_update_control/resample_interval_policy.hpp>
 #include <beluga_amcl/filter_update_control/selective_resampling_policy.hpp>
 #include <beluga_amcl/filter_update_control/update_filter_when_moving_policy.hpp>
-#include <beluga_amcl/ros_occupancy_grid.hpp>
 #include <beluga_amcl/particle_filtering.hpp>
+#include <beluga_amcl/ros_occupancy_grid.hpp>
 #include <beluga_amcl/tf2_sophus.hpp>
 
 #include <nav_msgs/msg/odometry.hpp>
