@@ -38,9 +38,9 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include "beluga_amcl/amcl_node_utils.hpp"
-#include "beluga_amcl/occupancy_grid.hpp"
-#include "beluga_amcl/private/execution_policy.hpp"
+#include "beluga_amcl/ros_occupancy_grid.hpp"
 #include "beluga_amcl/tf2_sophus.hpp"
+#include "beluga_amcl/private/execution_policy.hpp"
 
 namespace beluga_amcl {
 
@@ -714,10 +714,10 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
   };
 
   using LikelihoodField = beluga::mixin::descriptor<
-      ciabatta::curry<beluga::LikelihoodFieldModel, OccupancyGrid>::mixin, beluga::LikelihoodFieldModelParam>;
+      ciabatta::curry<beluga::LikelihoodFieldModel, ROSOccupancyGrid>::mixin, beluga::LikelihoodFieldModelParam>;
 
   using BeamSensorModel =
-      beluga::mixin::descriptor<ciabatta::curry<beluga::BeamSensorModel, OccupancyGrid>::mixin, beluga::BeamModelParam>;
+      beluga::mixin::descriptor<ciabatta::curry<beluga::BeamSensorModel, ROSOccupancyGrid>::mixin, beluga::BeamModelParam>;
 
   using SensorDescriptor = std::variant<LikelihoodField, BeamSensorModel>;
   auto get_sensor_descriptor = [this](std::string_view name) -> SensorDescriptor {
@@ -748,7 +748,7 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
     using beluga::mixin::make_mixin;
     return make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
         sampler_params, limiter_params, get_motion_descriptor(get_parameter("robot_model_type").as_string()),
-        get_sensor_descriptor(get_parameter("laser_model_type").as_string()), OccupancyGrid{map},
+        get_sensor_descriptor(get_parameter("laser_model_type").as_string()), utils::make_occupancy_grid(map),
         resample_on_motion_params, resample_interval_params, selective_resampling_params);
   } catch (const std::invalid_argument& error) {
     RCLCPP_ERROR(get_logger(), "Coudn't instantiate the particle filter: %s", error.what());
@@ -780,7 +780,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
       should_reset_initial_pose = false;
     }
   } else {
-    particle_filter_->update_map(OccupancyGrid{std::move(map)});
+    particle_filter_->update_map(utils::make_occupancy_grid(map));
     should_reset_initial_pose = get_parameter("always_reset_initial_pose").as_bool();
   }
 

@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <tf2/utils.h>
+
+#include <sophus/se2.hpp>
+#include <sophus/so2.hpp>
+
+#include <beluga_amcl/tf2_sophus.hpp>
 #include <beluga_amcl/amcl_node_utils.hpp>
 
 namespace beluga_amcl::utils {
@@ -49,5 +55,30 @@ std::vector<std::pair<double, double>> make_points_from_laser_scan(
   }
   return points;
 }
+
+ROSOccupancyGrid make_occupancy_grid(
+  beluga_amcl::messages::OccupancyGridConstSharedPtr ros_msg_ptr)
+{
+  auto make_origin_transform = [](const messages::Pose & origin) {
+      const auto rotation = Sophus::SO2d{tf2::getYaw(origin.orientation)};
+      const auto translation = Eigen::Vector2d{origin.position.x, origin.position.y};
+      return Sophus::SE2d{rotation, translation};
+    };
+
+  ROSOccupancyGrid::MapStorage grid_storage(ros_msg_ptr->info.width,
+    ros_msg_ptr->info.height);
+  for (std::size_t x = 0; x < ros_msg_ptr->info.width; ++x) {
+    for (std::size_t y = 0; y < ros_msg_ptr->info.height; ++y) {
+      const auto index = x + y * ros_msg_ptr->info.width;
+      grid_storage.cell(static_cast<int>(x), static_cast<int>(y)) = ros_msg_ptr->data[index];
+    }
+  }
+
+  return ROSOccupancyGrid(
+    std::move(grid_storage),
+    ros_msg_ptr->info.resolution,
+    make_origin_transform(ros_msg_ptr->info.origin));
+}
+
 
 }  // namespace beluga_amcl::utils

@@ -19,6 +19,7 @@
 #include <vector>
 
 #include <beluga_amcl/ros_interfaces.hpp>
+#include <beluga_amcl/ros_occupancy_grid.hpp>
 
 #include <sophus/se3.hpp>
 
@@ -51,6 +52,14 @@ std::vector<std::pair<double, double>> make_points_from_laser_scan(
     std::size_t max_beam_count,
     float range_min,
     float range_max);
+
+/// Creates an internal representation of the Map from the ROS message.
+/**
+ * \param ros_occupancy_grid Original ROS occupancy grid message.
+ */
+ROSOccupancyGrid make_occupancy_grid(
+  beluga_amcl::messages::OccupancyGridConstSharedPtr ros_occupancy_grid);
+
 
 }  // namespace beluga_amcl::utils
 
