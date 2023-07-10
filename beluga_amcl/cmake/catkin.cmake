@@ -15,22 +15,21 @@
 include(cmake/lib/nodelets.cmake)
 
 find_package(beluga REQUIRED)
-find_package(catkin REQUIRED
-  COMPONENTS
-    bondcpp
-    diagnostic_updater
-    dynamic_reconfigure
-    message_filters
-    nav_msgs
-    nodelet
-    roscpp
-    sensor_msgs
-    std_srvs
-    tf2
-    tf2_geometry_msgs
-    tf2_msgs
-    tf2_ros
-)
+find_package(
+  catkin REQUIRED
+  COMPONENTS bondcpp
+             diagnostic_updater
+             dynamic_reconfigure
+             message_filters
+             nav_msgs
+             nodelet
+             roscpp
+             sensor_msgs
+             std_srvs
+             tf2
+             tf2_geometry_msgs
+             tf2_msgs
+             tf2_ros)
 
 generate_dynamic_reconfigure_options(config/Amcl.cfg)
 
@@ -46,19 +45,17 @@ catkin_package(
   DEPENDS beluga
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CFG_EXTRAS ${PROJECT_NAME}-extras.cmake
-)
+  CFG_EXTRAS ${PROJECT_NAME}-extras.cmake)
 
 add_compile_definitions(BELUGA_AMCL_ROS_VERSION=1)
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME} SHARED)
-target_sources(${PROJECT_NAME} PRIVATE
-  src/amcl_node_utils.cpp
-  src/particle_filtering.cpp)
-target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+target_sources(${PROJECT_NAME} PRIVATE src/amcl_node_utils.cpp
+                                       src/particle_filtering.cpp)
+target_include_directories(
+  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_link_libraries(${PROJECT_NAME} beluga::beluga ${catkin_LIBRARIES})
 
 add_library(${PROJECT_NAME}_nodelet SHARED)
@@ -70,21 +67,21 @@ add_dependencies(${PROJECT_NAME}_nodelet ${PROJECT_NAME}_gencfg)
 add_nodelet_executable(amcl_node "beluga_amcl/AmclNodelet")
 target_compile_features(amcl_node PUBLIC cxx_std_17)
 
-install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_nodelet
+install(
+  TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_nodelet
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-install(TARGETS amcl_node
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(TARGETS amcl_node RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-install(DIRECTORY include/${PROJECT_NAME}/
+install(
+  DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
   PATTERN "beluga_amcl/private" EXCLUDE)
 
-install(
-  FILES nodelet_plugins.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/)
+install(FILES nodelet_plugins.xml
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/)
 
 if(CATKIN_ENABLE_TESTING OR BUILD_TESTING)
   enable_testing()

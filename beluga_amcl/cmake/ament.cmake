@@ -27,40 +27,42 @@ find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
 add_library(amcl_node_utils SHARED)
-target_sources(amcl_node_utils PRIVATE
-  src/amcl_node_utils.cpp
-  src/particle_filtering.cpp)
-target_include_directories(amcl_node_utils PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+target_sources(amcl_node_utils PRIVATE src/amcl_node_utils.cpp
+                                       src/particle_filtering.cpp)
+target_include_directories(
+  amcl_node_utils PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_link_libraries(amcl_node_utils PUBLIC beluga::beluga)
-ament_target_dependencies(amcl_node_utils PUBLIC
-  geometry_msgs
-  nav_msgs
-  sensor_msgs
-  tf2
-  tf2_eigen
-  tf2_geometry_msgs)
+ament_target_dependencies(
+  amcl_node_utils
+  PUBLIC geometry_msgs
+         nav_msgs
+         sensor_msgs
+         tf2
+         tf2_eigen
+         tf2_geometry_msgs)
 target_compile_definitions(amcl_node_utils PUBLIC BELUGA_AMCL_ROS_VERSION=2)
 target_compile_features(amcl_node_utils PUBLIC cxx_std_17)
 
 add_library(amcl_node_component SHARED)
-target_sources(amcl_node_component PRIVATE
-  src/amcl_node.cpp
-  src/amcl_node_utils.cpp)
+target_sources(amcl_node_component PRIVATE src/amcl_node.cpp
+                                           src/amcl_node_utils.cpp)
 target_compile_features(amcl_node_component PUBLIC cxx_std_17)
 target_link_libraries(amcl_node_component PUBLIC beluga::beluga amcl_node_utils)
-ament_target_dependencies(amcl_node_component PUBLIC
-  bondcpp
-  nav_msgs
-  nav2_msgs
-  rclcpp
-  rclcpp_components
-  rclcpp_lifecycle
-  sensor_msgs
-  std_srvs)
-rclcpp_components_register_node(amcl_node_component
-  PLUGIN "beluga_amcl::AmclNode" EXECUTABLE amcl_node)
+ament_target_dependencies(
+  amcl_node_component
+  PUBLIC bondcpp
+         nav_msgs
+         nav2_msgs
+         rclcpp
+         rclcpp_components
+         rclcpp_lifecycle
+         sensor_msgs
+         std_srvs)
+rclcpp_components_register_node(
+  amcl_node_component
+  PLUGIN "beluga_amcl::AmclNode"
+  EXECUTABLE amcl_node)
 
 ament_export_dependencies(
   beluga
@@ -72,14 +74,13 @@ ament_export_dependencies(
   sensor_msgs
   tf2
   tf2_eigen
-  tf2_geometry_msgs
-)
+  tf2_geometry_msgs)
 ament_export_include_directories("include/${PROJECT_NAME}")
 ament_export_definitions(BELUGA_AMCL_ROS_VERSION=2)
 ament_export_targets(amcl_node_utils HAS_LIBRARY_TARGET)
 
-install(TARGETS
-  amcl_node_component
+install(
+  TARGETS amcl_node_component
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
@@ -91,17 +92,14 @@ install(
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 
-install(TARGETS amcl_node
-  DESTINATION lib/${PROJECT_NAME})
+install(TARGETS amcl_node DESTINATION lib/${PROJECT_NAME})
 
-install(DIRECTORY include/
+install(
+  DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
   PATTERN "beluga_amcl/private" EXCLUDE)
 
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
-
   enable_testing()
   add_subdirectory(test)
 endif()

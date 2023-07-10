@@ -16,21 +16,24 @@ find_package(catkin REQUIRED)
 
 catkin_package()
 
-install(DIRECTORY bags
+install(
+  DIRECTORY bags
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "*.bag")
 
-install(DIRECTORY launch
+install(
+  DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "*.launch")
 
-install(DIRECTORY rviz
+install(
+  DIRECTORY rviz
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "*.ros.rviz")
 
-install(DIRECTORY params
+install(
+  DIRECTORY params
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "*.ros.yaml")
 
-install(DIRECTORY maps models worlds
-  DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY maps models worlds DESTINATION share/${PROJECT_NAME})

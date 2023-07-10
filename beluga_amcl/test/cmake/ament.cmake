@@ -22,11 +22,13 @@ ament_add_gmock(test_amcl_node_utils test_amcl_node_utils.cpp)
 target_compile_options(test_amcl_node_utils PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_amcl_node_utils amcl_node_component)
 
-ament_add_gmock(test_amcl_node_resampling_policies
-    filter_update_control/test_filter_update_control_mixin.cpp
-    filter_update_control/test_resample_interval_policy.cpp
-    filter_update_control/test_selective_resampling_policy.cpp
-    filter_update_control/test_update_filter_when_moving_policy.cpp
-)
-target_compile_options(test_amcl_node_resampling_policies PRIVATE -Wno-deprecated-copy -Wno-gnu-zero-variadic-macro-arguments)
+ament_add_gmock(
+  test_amcl_node_resampling_policies
+  filter_update_control/test_filter_update_control_mixin.cpp
+  filter_update_control/test_resample_interval_policy.cpp
+  filter_update_control/test_selective_resampling_policy.cpp
+  filter_update_control/test_update_filter_when_moving_policy.cpp)
+target_compile_options(
+  test_amcl_node_resampling_policies
+  PRIVATE -Wno-deprecated-copy -Wno-gnu-zero-variadic-macro-arguments)
 target_link_libraries(test_amcl_node_resampling_policies amcl_node_component)
