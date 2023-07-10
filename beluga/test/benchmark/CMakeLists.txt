@@ -18,11 +18,11 @@ option(BELUGA_RUN_PERFORMANCE_TESTS
 add_executable(
   benchmark_beluga
   benchmark_likelihood_field_model.cpp
+  benchmark_main.cpp
   benchmark_raycasting.cpp
   benchmark_sampling.cpp
   benchmark_spatial_hash.cpp
-  benchmark_tuple_vector.cpp
-  benchmark_main.cpp)
+  benchmark_tuple_vector.cpp)
 target_include_directories(benchmark_beluga PRIVATE ../beluga/include)
 target_link_libraries(
   benchmark_beluga

@@ -1,3 +1,29 @@
+# ----------------------------------
+# Options affecting listfile parsing
+# ----------------------------------
+with section("parse"):
+    # Specify structure for custom cmake functions
+    additional_commands = {
+        'ament_target_dependencies': {
+            'kwargs': {
+                'PUBLIC': '*',
+                'INTERFACE': '*',
+                'SYSTEM': '*',
+            },
+        },
+        'rclcpp_components_register_node': {
+            'pargs': {
+                'nargs': 1,
+            },
+            'kwargs': {
+                'PLUGIN': 1,
+                'EXECUTABLE': 1,
+                'EXECUTOR': 1,
+                'RESOURCE_INDEX': 1,
+            }
+        },
+    }
+
 # -----------------------------
 # Options affecting formatting.
 # -----------------------------
@@ -6,6 +32,8 @@ with section("format"):
     max_subgroups_hwrap = 2
     # Force vertical layout if a positional argument group contains more than this many arguments.
     max_pargs_hwrap = 3
+    # If true, the parsers may infer whether or not an argument list is sortable (without annotation).
+    autosort = True
 
 # ------------------------------------------------
 # Options affecting comment reflow and formatting.

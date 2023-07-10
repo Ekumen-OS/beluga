@@ -33,9 +33,9 @@ add_executable(
   sensor/test_beam_model.cpp
   sensor/test_likelihood_field_model.cpp
   test_mixin.cpp
-  test_tuple_vector.cpp
   test_spatial_hash.cpp
   test_storage.cpp
+  test_tuple_vector.cpp
   type_traits/test_strongly_typed_numeric.cpp)
 
 target_link_libraries(

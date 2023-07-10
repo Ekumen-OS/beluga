@@ -35,13 +35,12 @@ target_include_directories(
 target_link_libraries(amcl_node_utils PUBLIC beluga::beluga)
 ament_target_dependencies(
   amcl_node_utils
-  PUBLIC
-  geometry_msgs
-  nav_msgs
-  sensor_msgs
-  tf2
-  tf2_eigen
-  tf2_geometry_msgs)
+  PUBLIC geometry_msgs
+         nav_msgs
+         sensor_msgs
+         tf2
+         tf2_eigen
+         tf2_geometry_msgs)
 target_compile_definitions(amcl_node_utils PUBLIC BELUGA_AMCL_ROS_VERSION=2)
 target_compile_features(amcl_node_utils PUBLIC cxx_std_17)
 
@@ -52,21 +51,18 @@ target_compile_features(amcl_node_component PUBLIC cxx_std_17)
 target_link_libraries(amcl_node_component PUBLIC beluga::beluga amcl_node_utils)
 ament_target_dependencies(
   amcl_node_component
-  PUBLIC
-  bondcpp
-  nav_msgs
-  nav2_msgs
-  rclcpp
-  rclcpp_components
-  rclcpp_lifecycle
-  sensor_msgs
-  std_srvs)
+  PUBLIC bondcpp
+         nav_msgs
+         nav2_msgs
+         rclcpp
+         rclcpp_components
+         rclcpp_lifecycle
+         sensor_msgs
+         std_srvs)
 rclcpp_components_register_node(
   amcl_node_component
-  PLUGIN
-  "beluga_amcl::AmclNode"
-  EXECUTABLE
-  amcl_node)
+  PLUGIN "beluga_amcl::AmclNode"
+  EXECUTABLE amcl_node)
 
 ament_export_dependencies(
   beluga
