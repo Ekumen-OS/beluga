@@ -13,7 +13,9 @@ Beluga is an extensible C++17 library with a ground-up implementation of the Mon
 - Emphasis on the prevention of regressions and facilitation of code improvements through test coverage.
 - Semi-automated benchmarks that can be used to validate different configurations.
 
-https://github.com/Ekumen-OS/beluga/assets/33042669/4481cc43-f0cd-40df-a5b4-7e0a8ccb87c6
+https://github.com/Ekumen-OS/beluga/assets/33042669/98bda0ee-a633-4e35-8743-72a9ab30b494
+
+<p align="center"><i><b>Beluga AMCL</b> running on an <b>Andino</b> robot (Raspberry Pi 4B), go to <a href="https://github.com/Ekumen-OS/andino">Ekumen-OS/andino</a> for more details!</i></p>
 
 ## Packages
 
