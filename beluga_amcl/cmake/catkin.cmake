@@ -35,21 +35,17 @@ generate_dynamic_reconfigure_options(config/Amcl.cfg)
 
 catkin_package(
   CATKIN_DEPENDS
-  bondcpp
-  nav_msgs
-  roscpp
-  sensor_msgs
-  tf2
-  tf2_eigen
-  tf2_geometry_msgs
-  DEPENDS
-  beluga
-  INCLUDE_DIRS
-  include
-  LIBRARIES
-  ${PROJECT_NAME}
-  CFG_EXTRAS
-  ${PROJECT_NAME}-extras.cmake)
+    bondcpp
+    nav_msgs
+    roscpp
+    sensor_msgs
+    tf2
+    tf2_eigen
+    tf2_geometry_msgs
+  DEPENDS beluga
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CFG_EXTRAS ${PROJECT_NAME}-extras.cmake)
 
 add_compile_definitions(BELUGA_AMCL_ROS_VERSION=1)
 include_directories(include ${catkin_INCLUDE_DIRS})

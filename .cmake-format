@@ -22,6 +22,20 @@ with section("parse"):
                 'RESOURCE_INDEX': 1,
             }
         },
+        'catkin_package': {
+            'flags': [
+                'SKIP_CMAKE_CONFIG_GENERATION',
+                'SKIP_PKG_CONFIG_GENERATION',
+            ],
+            'kwargs': {
+                'INCLUDE_DIRS': '*',
+                'LIBRARIES': '*',
+                'CATKIN_DEPENDS': '*',
+                'DEPENDS': '*',
+                'CFG_EXTRAS': 1,
+                'EXPORTED_TARGETS': '*',
+            }
+        },
     }
 
 # -----------------------------
