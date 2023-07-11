@@ -175,12 +175,12 @@ class Tester {
     auto transform_base = geometry_msgs::TransformStamped{};
     transform_base.header.stamp = timestamp;
     transform_base.header.frame_id = "odom";
-    transform_base.child_frame_id = "base_footprint";
+    transform_base.child_frame_id = "base_link";
     transform_base.transform.rotation.w = 1.;
 
     auto transform_laser = geometry_msgs::TransformStamped{};
     transform_laser.header.stamp = timestamp;
-    transform_laser.header.frame_id = "base_footprint";
+    transform_laser.header.frame_id = "base_link";
     transform_laser.child_frame_id = "laser";
     transform_laser.transform.rotation.w = 1.;
 
@@ -328,6 +328,7 @@ class TestFixture : public BaseTestFixture<::testing::Test> {};
 TEST_F(TestFixture, MapWithWrongFrame) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.use_map_topic = true;
   ASSERT_TRUE(amcl_nodelet_->set(config));
   tester_->publish_map_with_wrong_frame();
   ASSERT_TRUE(wait_for_initialization());
@@ -353,6 +354,7 @@ TEST_F(MapFromServiceFixture, MapFromService) {
 TEST_F(TestFixture, SetInitialPose) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.use_map_topic = true;
   config.set_initial_pose = true;
   config.initial_pose_x = 34.0;
   config.initial_pose_y = 2.0;
@@ -376,6 +378,7 @@ TEST_F(TestFixture, SetInitialPose) {
 TEST_F(TestFixture, SetMapAndInitialPose) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.use_map_topic = true;
   config.set_initial_pose = true;
   config.initial_pose_x = -1.0;
   config.initial_pose_y = 1.0;
@@ -476,6 +479,7 @@ TEST_F(TestFixture, NoBroadcastWhenInitialPoseInvalid) {
 TEST_F(TestFixture, FirstMapOnly) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.use_map_topic = true;
   config.set_initial_pose = true;
   config.always_reset_initial_pose = true;
 
@@ -542,6 +546,7 @@ TEST_F(TestFixture, FirstMapOnly) {
 TEST_F(TestFixture, KeepCurrentEstimate) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.use_map_topic = true;
   config.set_initial_pose = true;
   config.always_reset_initial_pose = false;
   config.first_map_only = false;
@@ -628,6 +633,7 @@ TEST_F(TestFixture, InitialPoseBeforeInitialize) {
 TEST_F(TestFixture, InitialPoseAfterInitialize) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.set_initial_pose = false;
   ASSERT_TRUE(amcl_nodelet_->set(config));
   tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
