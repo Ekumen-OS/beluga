@@ -2,51 +2,48 @@
 # Install the git hook scripts: pre-commit install
 
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
-    hooks:
-      - id: check-ast
-      - id: check-yaml
-      - id: check-xml
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-      - id: check-docstring-first
-      - id: check-executables-have-shebangs
-
   - repo: local
     hooks:
       - id: copyright
         name: fix copyright
         description: Check that files have a copyright notice.
-        entry: tools/check_copyright.py --fix
+        entry: tools/check_copyright.py
+        args: [--fix]
         types_or: [c++, python, cmake]
         language: python
         language_version: python3
 
-  - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
     hooks:
-      - id: flake8
-        name: "check python format (flake8)"
-        additional_dependencies: [flake8-docstrings]
+      - id: check-ast
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-yaml
+      - id: check-xml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
 
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v16.0.3
     hooks:
       - id: clang-format
-        name: fix c++ format
-        args: ["-style=file:.clang-format"]
-        types: [c++]
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        additional_dependencies: [flake8-docstrings]
 
   - repo: https://github.com/psf/black
     rev:  23.3.0
     hooks:
       - id: black
-        name: "fix python format"
-        entry: black --skip-string-normalization
+        args: [--skip-string-normalization]
 
   - repo: https://github.com/cheshirekow/cmake-format-precommit
     rev: v0.6.13
     hooks:
-    - id: cmake-lint
-    - id: cmake-format
+      - id: cmake-format
+      - id: cmake-lint
