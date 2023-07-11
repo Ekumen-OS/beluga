@@ -328,7 +328,6 @@ class TestFixture : public BaseTestFixture<::testing::Test> {};
 TEST_F(TestFixture, MapWithWrongFrame) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
-  config.use_map_topic = true;
   ASSERT_TRUE(amcl_nodelet_->set(config));
   tester_->publish_map_with_wrong_frame();
   ASSERT_TRUE(wait_for_initialization());
@@ -354,7 +353,6 @@ TEST_F(MapFromServiceFixture, MapFromService) {
 TEST_F(TestFixture, SetInitialPose) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
-  config.use_map_topic = true;
   config.set_initial_pose = true;
   config.initial_pose_x = 34.0;
   config.initial_pose_y = 2.0;
@@ -378,7 +376,6 @@ TEST_F(TestFixture, SetInitialPose) {
 TEST_F(TestFixture, SetMapAndInitialPose) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
-  config.use_map_topic = true;
   config.set_initial_pose = true;
   config.initial_pose_x = -1.0;
   config.initial_pose_y = 1.0;
@@ -479,7 +476,6 @@ TEST_F(TestFixture, NoBroadcastWhenInitialPoseInvalid) {
 TEST_F(TestFixture, FirstMapOnly) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
-  config.use_map_topic = true;
   config.set_initial_pose = true;
   config.always_reset_initial_pose = true;
 
@@ -546,7 +542,6 @@ TEST_F(TestFixture, FirstMapOnly) {
 TEST_F(TestFixture, KeepCurrentEstimate) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
-  config.use_map_topic = true;
   config.set_initial_pose = true;
   config.always_reset_initial_pose = false;
   config.first_map_only = false;
@@ -648,6 +643,7 @@ TEST_F(TestFixture, InitialPoseAfterInitialize) {
 TEST_F(TestFixture, InitialPoseWithWrongFrame) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.set_initial_pose = false;
   ASSERT_TRUE(amcl_nodelet_->set(config));
   tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
@@ -672,6 +668,7 @@ TEST_F(TestFixture, IsPublishingParticleCloud) {
 TEST_F(TestFixture, LaserScanWithNoOdomToBase) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.set_initial_pose = true;
   ASSERT_TRUE(amcl_nodelet_->set(config));
   tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());

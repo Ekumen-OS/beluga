@@ -707,6 +707,7 @@ TEST_F(TestNode, InitialPoseAfterInitialize) {
 }
 
 TEST_F(TestNode, InitialPoseWithWrongFrame) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
@@ -728,6 +729,7 @@ TEST_F(TestNode, IsPublishingParticleCloud) {
 }
 
 TEST_F(TestNode, LaserScanWithNoOdomToBase) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
