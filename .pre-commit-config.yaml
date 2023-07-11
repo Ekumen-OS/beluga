@@ -29,7 +29,6 @@ repos:
     rev: v16.0.3
     hooks:
       - id: clang-format
-        args: ["-style=file:.clang-format"]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
