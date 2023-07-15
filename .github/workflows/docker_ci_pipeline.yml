@@ -19,6 +19,7 @@ jobs:
         ros_distro:
           - noetic
           - humble
+          - iron
           - rolling
     steps:
       - name: Checkout repository
