@@ -19,6 +19,7 @@
 #include <vector>
 
 #include <ciabatta/ciabatta.hpp>
+#include <range/v3/view/zip.hpp>
 
 #include <beluga_amcl/filter_update_control/filter_update_control_mixin.hpp>
 
@@ -116,9 +117,38 @@ using UUT_WITH_POLICIES_INSTALLED = StrictMock<ciabatta::mixin<
 template <class EventType>
 using EventSubscriberCallback = std::function<void(const EventType&)>;
 
-struct FilterUpdateControlTests : public ::testing::Test {};
+struct NoPolicyDefaultFilterUpdate {
+  template <typename... Args>
+  static auto eval(UUT_WITH_POLICIES_INSTALLED& uut, Args&&... args) {
+    return uut.update_filter(std::forward<Args>(args)...);
+  }
+};
 
-TEST_F(FilterUpdateControlTests, ResamplingPollerWithNPoliciesUsesShortCircuitEvaluation) {
+struct SequentialPolicyFilterUpdate {
+  template <typename... Args>
+  static auto eval(UUT_WITH_POLICIES_INSTALLED& uut, Args&&... args) {
+    return uut.update_filter(std::execution::seq, std::forward<Args>(args)...);
+  }
+};
+
+struct ParallelPolicyFilterUpdate {
+  template <typename... Args>
+  static auto eval(UUT_WITH_POLICIES_INSTALLED& uut, Args&&... args) {
+    return uut.update_filter(std::execution::par, std::forward<Args>(args)...);
+  }
+};
+
+template <typename T>
+struct FilterUpdateControlTests : public ::testing::Test {
+  using filter_update_policy_decorator_type = T;
+};
+
+using FilterUpdateControlTestTypes =
+    ::testing::Types<NoPolicyDefaultFilterUpdate, SequentialPolicyFilterUpdate, ParallelPolicyFilterUpdate>;
+
+TYPED_TEST_SUITE(FilterUpdateControlTests, FilterUpdateControlTestTypes);
+
+TYPED_TEST(FilterUpdateControlTests, ResamplingPollerWithNPoliciesUsesShortCircuitEvaluation) {
   using testing::InSequence;
   using testing::Return;
 
@@ -127,23 +157,27 @@ TEST_F(FilterUpdateControlTests, ResamplingPollerWithNPoliciesUsesShortCircuitEv
   auto selective_resampler_policy_result = std::make_unique<SelectiveResamplingPolicyMock>();
 
   std::vector<bool> expected_return_values;
+  std::vector<bool> force_update_values;
 
   {
     InSequence sec;
 
     // iteration 1
     // no estimation update
+    force_update_values.push_back(false);
     EXPECT_CALL(*motion_policy_result, do_filter_update(_)).WillOnce(Return(false));
     expected_return_values.push_back(false);
 
     // iteration 2
     // no estimation update
+    force_update_values.push_back(false);
     EXPECT_CALL(*motion_policy_result, do_filter_update(_)).WillOnce(Return(true));
     EXPECT_CALL(*resample_rate_divider_result, do_resampling()).WillOnce(Return(false));
     expected_return_values.push_back(false);
 
     // iteration 3
     // estimation update (without resampling)
+    force_update_values.push_back(false);
     EXPECT_CALL(*motion_policy_result, do_filter_update(_)).WillOnce(Return(true));
     EXPECT_CALL(*resample_rate_divider_result, do_resampling()).WillOnce(Return(true));
     EXPECT_CALL(*selective_resampler_policy_result, do_resampling()).WillOnce(Return(false));
@@ -151,6 +185,7 @@ TEST_F(FilterUpdateControlTests, ResamplingPollerWithNPoliciesUsesShortCircuitEv
 
     // iteration 4
     // estimation update (with resampling)
+    force_update_values.push_back(false);
     EXPECT_CALL(*motion_policy_result, do_filter_update(_)).WillOnce(Return(true));
     EXPECT_CALL(*resample_rate_divider_result, do_resampling()).WillOnce(Return(true));
     EXPECT_CALL(*selective_resampler_policy_result, do_resampling()).WillOnce(Return(true));
@@ -158,14 +193,37 @@ TEST_F(FilterUpdateControlTests, ResamplingPollerWithNPoliciesUsesShortCircuitEv
 
     // iteration 5
     // no estimation update
+    force_update_values.push_back(false);
     EXPECT_CALL(*motion_policy_result, do_filter_update(_)).WillOnce(Return(false));
     expected_return_values.push_back(false);
 
     // iteration 6
     // no estimation update
+    force_update_values.push_back(false);
     EXPECT_CALL(*motion_policy_result, do_filter_update(_)).WillOnce(Return(true));
     EXPECT_CALL(*resample_rate_divider_result, do_resampling()).WillOnce(Return(false));
     expected_return_values.push_back(false);
+
+    // iteration 7
+    // forced estimation update with no resampling
+    force_update_values.push_back(true);
+    EXPECT_CALL(*motion_policy_result, do_filter_update(_)).WillOnce(Return(false));
+    EXPECT_CALL(*resample_rate_divider_result, do_resampling()).WillOnce(Return(false));
+    expected_return_values.push_back(true);
+
+    // iteration 8
+    // no estimation update
+    force_update_values.push_back(false);
+    EXPECT_CALL(*motion_policy_result, do_filter_update(_)).WillOnce(Return(false));
+    expected_return_values.push_back(false);
+
+    // iteration 9
+    // force estimation update with resampling
+    force_update_values.push_back(true);
+    EXPECT_CALL(*motion_policy_result, do_filter_update(_)).WillOnce(Return(true));
+    EXPECT_CALL(*resample_rate_divider_result, do_resampling()).WillOnce(Return(true));
+    EXPECT_CALL(*selective_resampler_policy_result, do_resampling()).WillOnce(Return(true));
+    expected_return_values.push_back(true);
   }
 
   [[maybe_unused]] UUT_WITH_POLICIES_INSTALLED uut{
@@ -175,6 +233,7 @@ TEST_F(FilterUpdateControlTests, ResamplingPollerWithNPoliciesUsesShortCircuitEv
 
   {
     InSequence sec;
+
     // iteration 1
     // no calls on the filter
 
@@ -205,10 +264,29 @@ TEST_F(FilterUpdateControlTests, ResamplingPollerWithNPoliciesUsesShortCircuitEv
     EXPECT_CALL(uut, sample()).Times(1);
     EXPECT_CALL(uut, update_sensor(_)).Times(1);
     EXPECT_CALL(uut, reweight()).Times(1);
+
+    // iteration 7
+    EXPECT_CALL(uut, update_motion(_)).Times(1);
+    EXPECT_CALL(uut, sample()).Times(1);
+    EXPECT_CALL(uut, update_sensor(_)).Times(1);
+    EXPECT_CALL(uut, reweight()).Times(1);
+
+    // iteration 8
+    // no calls on the filter
+
+    // iteration 9
+    EXPECT_CALL(uut, update_motion(_)).Times(1);
+    EXPECT_CALL(uut, sample()).Times(1);
+    EXPECT_CALL(uut, update_sensor(_)).Times(1);
+    EXPECT_CALL(uut, reweight()).Times(1);
+    EXPECT_CALL(uut, resample()).Times(1);
   }
 
-  for (const auto& iteration_result : expected_return_values) {
-    ASSERT_EQ(iteration_result, uut.update_filter(motion_event_type{}, laser_scan_type{}));
+  for (const auto& [iteration_result, force_update] : ranges::views::zip(expected_return_values, force_update_values)) {
+    using filter_update_decorator_type = typename TestFixture::filter_update_policy_decorator_type;
+    ASSERT_EQ(
+        iteration_result,
+        filter_update_decorator_type::eval(uut, motion_event_type{}, laser_scan_type{}, force_update));
   }
 }
 

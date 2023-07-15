@@ -91,6 +91,8 @@ class TesterNode : public rclcpp::Node {
     laser_scan_publisher_ = create_publisher<sensor_msgs::msg::LaserScan>("scan", rclcpp::SystemDefaultsQoS());
 
     global_localization_client_ = create_client<std_srvs::srv::Empty>("reinitialize_global_localization");
+
+    nomotion_update_client_ = create_client<std_srvs::srv::Empty>("request_nomotion_update");
   }
 
   void create_transform_buffer() {
@@ -112,7 +114,7 @@ class TesterNode : public rclcpp::Node {
 
   void pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) { latest_pose_ = *message; }
 
-  const auto& latest_pose() const { return latest_pose_; }
+  auto& latest_pose() { return latest_pose_; }
 
   void create_particle_cloud_subscriber() {
     particle_cloud_subscriber_ = create_subscription<nav2_msgs::msg::ParticleCloud>(
@@ -145,6 +147,14 @@ class TesterNode : public rclcpp::Node {
   void publish_default_initial_pose() {
     auto pose = geometry_msgs::msg::PoseWithCovarianceStamped{};
     pose.header.frame_id = "map";
+    initial_pose_publisher_->publish(pose);
+  }
+
+  void publish_initial_pose(double x, double y) {
+    auto pose = geometry_msgs::msg::PoseWithCovarianceStamped{};
+    pose.header.frame_id = "map";
+    pose.pose.pose.position.x = x;
+    pose.pose.pose.position.y = y;
     initial_pose_publisher_->publish(pose);
   }
 
@@ -245,6 +255,13 @@ class TesterNode : public rclcpp::Node {
 
   auto prune_pending_global_localization_requests() { global_localization_client_->prune_pending_requests(); }
 
+  auto async_nomotion_update_request() {
+    auto request = std::make_shared<std_srvs::srv::Empty::Request>();
+    return nomotion_update_client_->async_send_request(request);
+  }
+
+  auto prune_pending_nomotion_update_request() { nomotion_update_client_->prune_pending_requests(); }
+
  private:
   template <class Message>
   using PublisherPtr = std::shared_ptr<rclcpp::Publisher<Message>>;
@@ -267,6 +284,7 @@ class TesterNode : public rclcpp::Node {
   std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
 
   std::shared_ptr<rclcpp::Client<std_srvs::srv::Empty>> global_localization_client_;
+  std::shared_ptr<rclcpp::Client<std_srvs::srv::Empty>> nomotion_update_client_;
 };
 
 /// Base node fixture class with common utilities.
@@ -287,6 +305,7 @@ class BaseNodeFixture : public T {
   }
 
   bool wait_for_pose_estimate() {
+    tester_node_->latest_pose().reset();
     tester_node_->create_pose_subscriber();
     return spin_until([this] { return tester_node_->latest_pose().has_value(); }, 100ms, amcl_node_, tester_node_);
   }
@@ -308,6 +327,20 @@ class BaseNodeFixture : public T {
       return true;
     }
     tester_node_->prune_pending_global_localization_requests();
+    return false;
+  }
+
+  bool request_nomotion_update() {
+    if (!tester_node_->wait_for_global_localization_service(500ms)) {
+      return false;
+    }
+    auto future = tester_node_->async_nomotion_update_request();
+    bool done =
+        spin_until([&] { return future.wait_for(0s) == std::future_status::ready; }, 500ms, amcl_node_, tester_node_);
+    if (done) {
+      return true;
+    }
+    tester_node_->prune_pending_nomotion_update_request();
     return false;
   }
 
@@ -717,6 +750,79 @@ TEST_F(TestNode, InitialPoseWithWrongFrame) {
   tester_node_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
+}
+
+TEST_F(TestNode, CanUpdatePoseEstimate) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
+  tester_node_->publish_default_initial_pose();
+  tester_node_->publish_laser_scan();
+  ASSERT_TRUE(wait_for_pose_estimate());
+  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+
+  {
+    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    ASSERT_NEAR(pose.translation().x(), 0.0, 0.01);
+    ASSERT_NEAR(pose.translation().y(), 0.0, 0.01);
+    ASSERT_NEAR(pose.so2().log(), 0., 0.01);
+  }
+
+  tester_node_->publish_initial_pose(1., 1.);
+  tester_node_->publish_laser_scan();
+  ASSERT_TRUE(wait_for_pose_estimate());
+  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+
+  {
+    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
+    ASSERT_NEAR(pose.translation().y(), 1.0, 0.01);
+    ASSERT_NEAR(pose.so2().log(), 0., 0.01);
+  }
+}
+
+TEST_F(TestNode, CanForcePoseEstimate) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
+  tester_node_->publish_default_initial_pose();
+  tester_node_->publish_laser_scan();
+  ASSERT_TRUE(wait_for_pose_estimate());
+  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+
+  {
+    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    ASSERT_NEAR(pose.translation().x(), 0.0, 0.01);
+    ASSERT_NEAR(pose.translation().y(), 0.0, 0.01);
+    ASSERT_NEAR(pose.so2().log(), 0., 0.01);
+  }
+
+  ASSERT_TRUE(request_nomotion_update());
+  tester_node_->publish_laser_scan();
+  ASSERT_TRUE(wait_for_pose_estimate());
+  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+
+  {
+    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    ASSERT_NEAR(pose.translation().x(), 0.0, 0.01);
+    ASSERT_NEAR(pose.translation().y(), 0.0, 0.01);
+    ASSERT_NEAR(pose.so2().log(), 0., 0.01);
+  }
+}
+
+TEST_F(TestNode, IgnoreNoMotionUpdateBeforeInitializeAkaTheCodeCoverageTest) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  ASSERT_TRUE(request_nomotion_update());
+  tester_node_->publish_laser_scan();
+  ASSERT_FALSE(wait_for_pose_estimate());
 }
 
 TEST_F(TestNode, IsPublishingParticleCloud) {

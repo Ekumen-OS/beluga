@@ -115,6 +115,8 @@ RUN sudo apt-get update \
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/
 
+RUN /bin/sh -c 'echo "export PATH=/usr/lib/ccache:\$PATH" >> ~/.bashrc'
+
 ENV WITHIN_DEV 1
 
 ENV SHELL /bin/bash

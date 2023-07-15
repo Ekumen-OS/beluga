@@ -120,7 +120,8 @@ TEST_P(BelugaSystemTest, testEstimatedPath) {
       }));
   for (const auto [iteration, data_point] : ranges::views::enumerate(test_data.data_points)) {
     auto scan_copy = data_point.scan;
-    const auto updated_pose = pf.update_filter(data_point.odom, std::move(scan_copy));
+    constexpr bool kForceUpdate = true;
+    const auto updated_pose = pf.update_filter(data_point.odom, std::move(scan_copy), !kForceUpdate);
     if (updated_pose) {
       auto estimation = pf.estimate();
       auto error = data_point.ground_truth.inverse() * estimation.first;

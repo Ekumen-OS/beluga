@@ -61,6 +61,7 @@ Defaults are `map`, `odom` and `base`.
 | Topic                              | Type             | Description                                                                   |
 |------------------------------------|------------------|-------------------------------------------------------------------------------|
 | `reinitialize_global_localization` | `std_srvs/Empty` | Request to reinitialize global localization without an initial pose estimate. |
+| `request_nomotion_update`          | `std_srvs/Empty` | Trigger a forced update of the filter estimates.                              |
 
 ## ROS 1 Interface
 
@@ -103,9 +104,8 @@ Defaults are `map`, `odom` and `base`.
 | Topic                              | Type              | Description                                                                   |
 |------------------------------------|-------------------|-------------------------------------------------------------------------------|
 | `global_localization`              | `std_srvs/Empty`  | Request to reinitialize global localization without an initial pose estimate. |
+| `request_nomotion_update`          | `std_srvs/Empty`  | Trigger a forced update of the filter estimates.                              |
 | `set_map`                          | `nav_msgs/SetMap` | Set a new map and initial pose estimate.                                      |
-
-Note no `request_nomotion_update` service is available, as Beluga AMCL continually updates its estimate.
 
 ### Called Services
 
