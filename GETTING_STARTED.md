@@ -21,7 +21,7 @@
    ```bash
    (cd beluga && ROSDISTRO=humble docker/run.sh)
    ```
-   Supported distributions include `noetic`, `humble`, and `rolling`.
+   Supported distributions include `noetic`, `humble`, `iron`, and `rolling`.
 
 1. **Build and test the project** (inside development container).
 
