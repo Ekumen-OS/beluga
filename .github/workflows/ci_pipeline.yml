@@ -38,7 +38,6 @@ jobs:
           - noetic
           - humble
           - iron
-          - rolling
         include:
           - ros_distro: humble
             upload_artifacts: true

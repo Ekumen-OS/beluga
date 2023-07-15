@@ -1,0 +1,71 @@
+name: Weekly pipeline
+
+on:
+  push:
+    branches: [ main ]
+    paths: '.github/workflows/**'
+  pull_request:
+    branches: [ main ]
+    paths: '.github/workflows/**'
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distro:
+          - rolling
+    container:
+      image: ros:${{ matrix.ros_distro }}-ros-base
+    steps:
+      - name: Install debian packages
+        run: >-
+          sudo apt-get update && sudo apt-get install -y \
+            git \
+            lcov \
+            python3-colcon-common-extensions \
+            python3-colcon-coveragepy-result \
+            python3-colcon-lcov-result \
+            python3-colcon-mixin \
+            python3-pip \
+            python3-vcstool
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: ${{ github.workspace }}/src/beluga
+
+      - name: Import external repositories
+        working-directory: ${{ github.workspace }}/src
+        run: |
+          vcs import < ./beluga/docker/files/${{ matrix.ros_distro }}.repos
+          rm -rf ./flatland
+
+      - name: Install dependencies
+        run: |
+          . /opt/ros/${{ matrix.ros_distro }}/setup.sh
+          rosdep update
+          rosdep install -r --from-paths src -y -i -t build -t test -t doc
+          colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
+          colcon mixin update default
+
+      - name: Setup compiler cache
+        uses: Chocobo1/setup-ccache-action@v1
+        with:
+          api_token: ${{ secrets.GITHUB_TOKEN }}
+          update_packager_index: false
+          override_cache_key: ccache-${{ matrix.ros_distro }}-${{ github.head_ref || github.ref_name }}
+          override_cache_key_fallback: |
+            ccache-${{ matrix.ros_distro }}-${{ github.base_ref || github.ref_name }}
+            ccache-${{ matrix.ros_distro }}-
+
+      - name: Build and test
+        working-directory: ${{ github.workspace }}
+        run: ./src/beluga/tools/build-and-test.sh
