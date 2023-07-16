@@ -81,7 +81,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Topic to subscribe to in order to receive the initial pose of the robot.";
-    declare_parameter("initial_pose_topic", rclcpp::ParameterValue("initial_pose"), descriptor);
+    declare_parameter("initial_pose_topic", rclcpp::ParameterValue("initialpose"), descriptor);
   }
 
   {
@@ -119,7 +119,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("recovery_alpha_slow", rclcpp::ParameterValue(0.001), descriptor);
+    declare_parameter("recovery_alpha_slow", rclcpp::ParameterValue(0.0), descriptor);
   }
 
   {
@@ -131,7 +131,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("recovery_alpha_fast", rclcpp::ParameterValue(0.1), descriptor);
+    declare_parameter("recovery_alpha_fast", rclcpp::ParameterValue(0.0), descriptor);
   }
 
   {
@@ -153,7 +153,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
         "Upper standard normal quantile for P, where P is the probability "
         "that the error in the estimated distribution will be less than pf_err "
         "in KLD resampling.";
-    declare_parameter("pf_z", rclcpp::ParameterValue(3.0), descriptor);
+    declare_parameter("pf_z", rclcpp::ParameterValue(0.99), descriptor);
   }
 
   {
@@ -164,7 +164,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("spatial_resolution_x", rclcpp::ParameterValue(0.1), descriptor);
+    declare_parameter("spatial_resolution_x", rclcpp::ParameterValue(0.5), descriptor);
   }
 
   {
@@ -175,7 +175,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("spatial_resolution_y", rclcpp::ParameterValue(0.1), descriptor);
+    declare_parameter("spatial_resolution_y", rclcpp::ParameterValue(0.5), descriptor);
   }
 
   {
@@ -187,7 +187,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
     descriptor.floating_point_range[0].to_value = 2 * Sophus::Constants<double>::pi();
     descriptor.floating_point_range[0].step = 0;
     declare_parameter(
-        "spatial_resolution_theta", rclcpp::ParameterValue(Sophus::Constants<double>::pi() / 4), descriptor);
+        "spatial_resolution_theta", rclcpp::ParameterValue(10 * Sophus::Constants<double>::pi() / 180), descriptor);
   }
 
   {
@@ -380,7 +380,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("z_max", rclcpp::ParameterValue(0.5), descriptor);
+    declare_parameter("z_max", rclcpp::ParameterValue(0.05), descriptor);
   }
 
   {
@@ -390,7 +390,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("z_short", rclcpp::ParameterValue(0.5), descriptor);
+    declare_parameter("z_short", rclcpp::ParameterValue(0.05), descriptor);
   }
 
   {
@@ -454,21 +454,19 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose x axis covariance.";
-    declare_parameter("initial_pose.covariance_x", 0.5 * 0.5, descriptor);
+    declare_parameter("initial_pose.covariance_x", 0.0, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose y axis covariance.";
-    declare_parameter("initial_pose.covariance_y", 0.5 * 0.5, descriptor);
+    declare_parameter("initial_pose.covariance_y", 0.0, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose yaw covariance.";
-    declare_parameter(
-        "initial_pose.covariance_yaw", Sophus::Constants<double>::pi() / 12. * Sophus::Constants<double>::pi() / 12.,
-        descriptor);
+    declare_parameter("initial_pose.covariance_yaw", 0.0, descriptor);
   }
 
   {

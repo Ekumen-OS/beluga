@@ -175,12 +175,12 @@ class Tester {
     auto transform_base = geometry_msgs::TransformStamped{};
     transform_base.header.stamp = timestamp;
     transform_base.header.frame_id = "odom";
-    transform_base.child_frame_id = "base_footprint";
+    transform_base.child_frame_id = "base_link";
     transform_base.transform.rotation.w = 1.;
 
     auto transform_laser = geometry_msgs::TransformStamped{};
     transform_laser.header.stamp = timestamp;
-    transform_laser.header.frame_id = "base_footprint";
+    transform_laser.header.frame_id = "base_link";
     transform_laser.child_frame_id = "laser";
     transform_laser.transform.rotation.w = 1.;
 
@@ -628,6 +628,7 @@ TEST_F(TestFixture, InitialPoseBeforeInitialize) {
 TEST_F(TestFixture, InitialPoseAfterInitialize) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.set_initial_pose = false;
   ASSERT_TRUE(amcl_nodelet_->set(config));
   tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
@@ -642,6 +643,7 @@ TEST_F(TestFixture, InitialPoseAfterInitialize) {
 TEST_F(TestFixture, InitialPoseWithWrongFrame) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.set_initial_pose = false;
   ASSERT_TRUE(amcl_nodelet_->set(config));
   tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
@@ -666,6 +668,7 @@ TEST_F(TestFixture, IsPublishingParticleCloud) {
 TEST_F(TestFixture, LaserScanWithNoOdomToBase) {
   beluga_amcl::AmclConfig config;
   ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.set_initial_pose = true;
   ASSERT_TRUE(amcl_nodelet_->set(config));
   tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());

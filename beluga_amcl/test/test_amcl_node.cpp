@@ -86,7 +86,7 @@ class TesterNode : public rclcpp::Node {
     map_publisher_ = create_publisher<nav_msgs::msg::OccupancyGrid>("map", rclcpp::SystemDefaultsQoS());
 
     initial_pose_publisher_ =
-        create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("initial_pose", rclcpp::SystemDefaultsQoS());
+        create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("initialpose", rclcpp::SystemDefaultsQoS());
 
     laser_scan_publisher_ = create_publisher<sensor_msgs::msg::LaserScan>("scan", rclcpp::SystemDefaultsQoS());
 
@@ -694,6 +694,7 @@ TEST_F(TestNode, InitialPoseBeforeInitialize) {
 }
 
 TEST_F(TestNode, InitialPoseAfterInitialize) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
@@ -706,6 +707,7 @@ TEST_F(TestNode, InitialPoseAfterInitialize) {
 }
 
 TEST_F(TestNode, InitialPoseWithWrongFrame) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
@@ -727,6 +729,7 @@ TEST_F(TestNode, IsPublishingParticleCloud) {
 }
 
 TEST_F(TestNode, LaserScanWithNoOdomToBase) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
