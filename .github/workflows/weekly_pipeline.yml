@@ -21,6 +21,9 @@ jobs:
       fail-fast: false
       matrix:
         ros_distro:
+          - noetic
+          - humble
+          - iron
           - rolling
     container:
       image: ros:${{ matrix.ros_distro }}-ros-base
