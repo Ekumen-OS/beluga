@@ -104,6 +104,10 @@ void AmclNodelet::onInit() {
       nh.advertiseService("global_localization", &AmclNodelet::global_localization_callback, this);
   NODELET_INFO("Created global_localization service");
 
+  nomotion_update_server_ =
+      nh.advertiseService("request_nomotion_update", &AmclNodelet::nomotion_update_callback, this);
+  NODELET_INFO("Created request_nomotion_update service");
+
   set_map_server_ = nh.advertiseService("set_map", &AmclNodelet::set_map_callback, this);
   NODELET_INFO("Created set_map service");
 
@@ -161,7 +165,7 @@ void AmclNodelet::config_callback(beluga_amcl::AmclConfig& config, [[maybe_unuse
   if (particle_filter_) {
     const auto& [pose, covariance] = particle_filter_->estimate();
     particle_filter_ = make_particle_filter(last_known_map_);
-    initialize_with_pose(pose, covariance);
+    reinitialize_with_pose(pose, covariance);
   }
 }
 
@@ -307,7 +311,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
   auto covariance = Eigen::Matrix3d{};
   tf2::covarianceRowMajorToEigen(request.initial_pose.pose.covariance, covariance);
 
-  initialize_with_pose(pose, covariance);
+  reinitialize_with_pose(pose, covariance);
 
   response.success = static_cast<unsigned char>(true);
   return true;
@@ -345,10 +349,10 @@ void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::Occupancy
 
   if (should_reset_initial_pose && config_.set_initial_pose) {
     const auto [pose, covariance] = extract_initial_pose(config_);
-    initialize_with_pose(pose, covariance);
+    reinitialize_with_pose(pose, covariance);
   } else if (last_known_estimate_.has_value()) {
     const auto& [pose, covariance] = last_known_estimate_.value();
-    initialize_with_pose(pose, covariance);
+    reinitialize_with_pose(pose, covariance);
   }
 
   last_known_map_ = map;
@@ -415,7 +419,9 @@ void AmclNodelet::laser_callback(ExecutionPolicy&& exec_policy, const sensor_msg
       exec_policy, odom_to_base_transform,
       utils::make_points_from_laser_scan(
           *laser_scan, base_to_laser_transform, static_cast<std::size_t>(config_.laser_max_beams),
-          static_cast<float>(config_.laser_min_range), static_cast<float>(config_.laser_max_range)));
+          static_cast<float>(config_.laser_min_range), static_cast<float>(config_.laser_max_range)),
+      force_filter_update_);
+  force_filter_update_ = false;
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 
@@ -483,7 +489,7 @@ void AmclNodelet::initial_pose_callback(const geometry_msgs::PoseWithCovarianceS
   auto covariance = Eigen::Matrix3d{};
   tf2::covarianceRowMajorToEigen(message->pose.covariance, covariance);
 
-  initialize_with_pose(pose, covariance);
+  reinitialize_with_pose(pose, covariance);
 }
 
 void AmclNodelet::save_pose_timer_callback(const ros::TimerEvent&) {
@@ -503,10 +509,11 @@ void AmclNodelet::save_pose_timer_callback(const ros::TimerEvent&) {
   }
 }
 
-void AmclNodelet::initialize_with_pose(const Sophus::SE2d& pose, const Eigen::Matrix3d& covariance) {
+void AmclNodelet::reinitialize_with_pose(const Sophus::SE2d& pose, const Eigen::Matrix3d& covariance) {
   try {
-    beluga_amcl::initialize_with_pose(pose, covariance, particle_filter_.get());
+    initialize_with_pose(pose, covariance, particle_filter_.get());
     enable_tf_broadcast_ = true;
+    force_filter_update_ = true;
     NODELET_INFO(
         "Particle filter initialized with %ld particles about "
         "initial pose x=%g, y=%g, yaw=%g",
@@ -529,6 +536,21 @@ bool AmclNodelet::global_localization_callback(
   particle_filter_->reinitialize();
   NODELET_INFO("Global initialization done!");
   enable_tf_broadcast_ = true;
+  force_filter_update_ = true;
+  return true;
+}
+
+bool AmclNodelet::nomotion_update_callback(
+    [[maybe_unused]] std_srvs::Empty::Request&,
+    [[maybe_unused]] std_srvs::Empty::Response&) {
+  std::lock_guard<std::mutex> lock(mutex_);
+  if (!particle_filter_) {
+    NODELET_WARN(
+        "Ignoring no-motion request because "
+        "the particle filter has not been initialized.");
+    return false;
+  }
+  force_filter_update_ = true;
   return true;
 }
 

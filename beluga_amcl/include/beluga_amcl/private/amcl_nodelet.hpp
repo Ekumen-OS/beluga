@@ -76,9 +76,11 @@ class AmclNodelet : public nodelet::Nodelet {
 
   bool global_localization_callback(std_srvs::Empty::Request& request, std_srvs::Empty::Response& response);
 
+  bool nomotion_update_callback(std_srvs::Empty::Request& request, std_srvs::Empty::Response& response);
+
   void save_pose_timer_callback(const ros::TimerEvent& ev);
 
-  void initialize_with_pose(const Sophus::SE2d& pose, const Eigen::Matrix3d& covariance);
+  void reinitialize_with_pose(const Sophus::SE2d& pose, const Eigen::Matrix3d& covariance);
 
   void update_covariance_diagnostics(diagnostic_updater::DiagnosticStatusWrapper& status);
 
@@ -96,6 +98,7 @@ class AmclNodelet : public nodelet::Nodelet {
   ros::ServiceServer set_map_server_;
   ros::ServiceClient get_map_client_;
   ros::ServiceServer global_localization_server_;
+  ros::ServiceServer nomotion_update_server_;
 
   bool configured_{false};
   beluga_amcl::AmclConfig config_;
@@ -118,6 +121,8 @@ class AmclNodelet : public nodelet::Nodelet {
 
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_;
   std::optional<Sophus::SE2d> latest_map_to_odom_transform_;
+
+  bool force_filter_update_{false};
 };
 
 }  // namespace beluga_amcl

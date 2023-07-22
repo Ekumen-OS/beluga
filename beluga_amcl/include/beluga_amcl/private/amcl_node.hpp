@@ -62,6 +62,11 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
       std::shared_ptr<rmw_request_id_t> request_header,
       std::shared_ptr<std_srvs::srv::Empty::Request> request,
       std::shared_ptr<std_srvs::srv::Empty::Response> response);
+  void nomotion_update_callback(
+      std::shared_ptr<rmw_request_id_t> request_header,
+      std::shared_ptr<std_srvs::srv::Empty::Request> req,
+      std::shared_ptr<std_srvs::srv::Empty::Response> res);
+
   void reinitialize_with_pose(const Sophus::SE2d& pose, const Eigen::Matrix3d& covariance);
 
   std::unique_ptr<LaserLocalizationInterface2d> particle_filter_;
@@ -75,6 +80,7 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
   rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr global_localization_server_;
+  rclcpp::Service<std_srvs::srv::Empty>::SharedPtr nomotion_update_server_;
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
@@ -88,6 +94,7 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
   std::optional<Sophus::SE2d> latest_map_to_odom_transform_;
 
   bool enable_tf_broadcast_{false};
+  bool force_filter_update_{false};
 };
 
 }  // namespace beluga_amcl

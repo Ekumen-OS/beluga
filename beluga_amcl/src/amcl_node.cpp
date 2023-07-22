@@ -600,8 +600,17 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
             &AmclNode::global_localization_callback, this, std::placeholders::_1, std::placeholders::_2,
             std::placeholders::_3),
         rmw_qos_profile_services_default, common_callback_group);
-#pragma GCC diagnostic pop
     RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
+
+    nomotion_update_server_ = create_service<std_srvs::srv::Empty>(
+        "request_nomotion_update",
+        std::bind(
+            &AmclNode::nomotion_update_callback, this, std::placeholders::_1, std::placeholders::_2,
+            std::placeholders::_3),
+        rmw_qos_profile_services_default, common_callback_group);
+    RCLCPP_INFO(get_logger(), "Created request_nomotion_update service");
+
+#pragma GCC diagnostic pop
   }
 
   return CallbackReturn::SUCCESS;
@@ -867,7 +876,9 @@ void AmclNode::laser_callback(ExecutionPolicy&& exec_policy, sensor_msgs::msg::L
       utils::make_points_from_laser_scan(
           *laser_scan, base_to_laser_transform, static_cast<std::size_t>(get_parameter("max_beams").as_int()),
           static_cast<float>(get_parameter("laser_min_range").as_double()),
-          static_cast<float>(get_parameter("laser_max_range").as_double())));
+          static_cast<float>(get_parameter("laser_max_range").as_double())),
+      force_filter_update_);
+  force_filter_update_ = false;
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 
@@ -899,7 +910,7 @@ void AmclNode::laser_callback(ExecutionPolicy&& exec_policy, sensor_msgs::msg::L
     latest_map_to_odom_transform_ = pose * odom_to_base_transform.inverse();
   }
 
-  // tranforms are always published to keep them current
+  // transforms are always published to keep them current
   if (latest_map_to_odom_transform_ && enable_tf_broadcast_ && get_parameter("tf_broadcast").as_bool()) {
     auto message = geometry_msgs::msg::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
@@ -940,6 +951,7 @@ void AmclNode::reinitialize_with_pose(const Sophus::SE2d& pose, const Eigen::Mat
   try {
     initialize_with_pose(pose, covariance, particle_filter_.get());
     enable_tf_broadcast_ = true;
+    force_filter_update_ = true;
     RCLCPP_INFO(
         get_logger(),
         "Particle filter initialized with %ld particles about "
@@ -962,6 +974,19 @@ void AmclNode::global_localization_callback(
   particle_filter_->reinitialize();
   RCLCPP_INFO(get_logger(), "Global initialization done!");
   enable_tf_broadcast_ = true;
+  force_filter_update_ = true;
+}
+
+void AmclNode::nomotion_update_callback(
+    [[maybe_unused]] std::shared_ptr<rmw_request_id_t> request_header,
+    [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Request> req,
+    [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res) {
+  if (!particle_filter_) {
+    RCLCPP_WARN(get_logger(), "Ignoring no-motion update request because the particle filter has not been initialized");
+    return;
+  }
+  RCLCPP_INFO(get_logger(), "Requesting no-motion update");
+  force_filter_update_ = true;
 }
 
 }  // namespace beluga_amcl

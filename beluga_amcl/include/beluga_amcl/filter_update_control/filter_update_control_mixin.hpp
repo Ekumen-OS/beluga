@@ -45,7 +45,10 @@ class FilterUpdateControlInterface {
    * @param laser_scan Laser-scan information, for the sensor update.
    * @return true if the pose estimate can be expected to be different after this update.
    */
-  virtual bool update_filter(const motion_update_type& odom_to_base_transform, sensor_update_type&& laser_scan) = 0;
+  virtual bool update_filter(
+      const motion_update_type& odom_to_base_transform,
+      sensor_update_type&& laser_scan,
+      bool force_update) = 0;
 
   /** \overload
    * It allows specifying a sequenced execution policy.
@@ -53,7 +56,8 @@ class FilterUpdateControlInterface {
   virtual bool update_filter(
       std::execution::sequenced_policy exec_policy,
       const motion_update_type& odom_to_base_transform,
-      sensor_update_type&& laser_scan) = 0;
+      sensor_update_type&& laser_scan,
+      bool force_update) = 0;
 
   /** \overload
    * It allows specifying a parallel execution policy.
@@ -61,7 +65,8 @@ class FilterUpdateControlInterface {
   virtual bool update_filter(
       std::execution::parallel_policy exec_policy,
       const motion_update_type& odom_to_base_transform,
-      sensor_update_type&& laser_scan) = 0;
+      sensor_update_type&& laser_scan,
+      bool force_update) = 0;
 };
 
 /// Resampling policy poller.
@@ -102,11 +107,14 @@ class FilterUpdateControlMixin : public Mixin {
   /**
    * @param odom_to_base_transform Odom-to-base transform, for the motion update.
    * @param laser_scan Laser-scan information, for the sensor update.
+   * @param force_update If true, the filter will be updated regardless of the resampling policies.
    * @return true if the pose estimate can be expected to be different after this update.
    */
-  [[nodiscard]] bool update_filter(const motion_update_type& odom_to_base_transform, sensor_update_type&& laser_scan)
-      final {
-    return this->update_filter_impl(std::execution::sequenced_policy{}, odom_to_base_transform, std::move(laser_scan));
+  [[nodiscard]] bool update_filter(
+      const motion_update_type& odom_to_base_transform,
+      sensor_update_type&& laser_scan,
+      bool force_update) final {
+    return this->update_filter_impl(std::execution::seq, odom_to_base_transform, std::move(laser_scan), force_update);
   }
 
   /**
@@ -116,8 +124,9 @@ class FilterUpdateControlMixin : public Mixin {
   [[nodiscard]] bool update_filter(
       std::execution::sequenced_policy exec_policy,
       const motion_update_type& odom_to_base_transform,
-      sensor_update_type&& laser_scan) final {
-    return this->update_filter_impl(exec_policy, odom_to_base_transform, std::move(laser_scan));
+      sensor_update_type&& laser_scan,
+      bool force_update) final {
+    return this->update_filter_impl(exec_policy, odom_to_base_transform, std::move(laser_scan), force_update);
   }
 
   /**
@@ -127,8 +136,9 @@ class FilterUpdateControlMixin : public Mixin {
   [[nodiscard]] bool update_filter(
       std::execution::parallel_policy exec_policy,
       const motion_update_type& odom_to_base_transform,
-      sensor_update_type&& laser_scan) final {
-    return this->update_filter_impl(exec_policy, odom_to_base_transform, std::move(laser_scan));
+      sensor_update_type&& laser_scan,
+      bool force_update) final {
+    return this->update_filter_impl(exec_policy, odom_to_base_transform, std::move(laser_scan), force_update);
   }
 
  private:
@@ -140,7 +150,8 @@ class FilterUpdateControlMixin : public Mixin {
   [[nodiscard]] bool update_filter_impl(
       ExecutionPolicy exec_policy,
       const motion_update_type& odom_to_base_transform,
-      sensor_update_type&& laser_scan) {
+      sensor_update_type&& laser_scan,
+      bool force_update) {
     bool update_filter_estimate = false;
 
     // based on NAV2 AMCL's decision tree to determine when to update, resample and
@@ -148,7 +159,7 @@ class FilterUpdateControlMixin : public Mixin {
 
     const auto far_enough_to_update = update_when_moving_policy_.do_filter_update(odom_to_base_transform);
 
-    if (far_enough_to_update) {
+    if (force_update || far_enough_to_update) {
       this->self().update_motion(odom_to_base_transform);
       this->self().sample(exec_policy);
 
@@ -170,7 +181,7 @@ class FilterUpdateControlMixin : public Mixin {
       }
     }
 
-    return update_filter_estimate;
+    return update_filter_estimate || force_update;
   }
 };
 
