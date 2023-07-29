@@ -34,7 +34,7 @@ auto make_neighbors_function(std::size_t size) {
     if (cell.x() > 0) {
       result.emplace_back(cell.x() - 1, cell.y());
     }
-    if (cell.x() < size - 1) {
+    if (static_cast<std::size_t>(cell.x()) < size - 1) {
       result.emplace_back(cell.x() + 1, cell.y());
     }
     return result;

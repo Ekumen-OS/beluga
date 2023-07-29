@@ -33,15 +33,15 @@ namespace {
 
 template <std::size_t W, std::size_t H>
 struct ImageSize {
-  static constexpr std::size_t Width = W;
-  static constexpr std::size_t Height = H;
+  static constexpr std::size_t kWidth = W;
+  static constexpr std::size_t kHeight = H;
 };
 
 template <typename Mixin, typename ImageSize>
 class ImageMixin : public Mixin {
  public:
   using value_type = uint8_t;
-  using data_storage = std::array<std::array<value_type, ImageSize::Width>, ImageSize::Height>;
+  using data_storage = std::array<std::array<value_type, ImageSize::kWidth>, ImageSize::kHeight>;
 
   template <typename... Args>
   explicit ImageMixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
@@ -51,15 +51,17 @@ class ImageMixin : public Mixin {
 
   using Mixin::data_at;
   [[nodiscard]] std::optional<value_type> data_at(int xi, int yi) const {
-    return xi < ImageSize::Width && yi < ImageSize::Height ? std::make_optional(data_[xi][yi]) : std::nullopt;
+    return (static_cast<std::size_t>(xi) < ImageSize::kWidth && static_cast<std::size_t>(yi) < ImageSize::kHeight)
+               ? std::make_optional(data_[static_cast<std::size_t>(xi)][static_cast<std::size_t>(yi)])
+               : std::nullopt;
   }
 
-  [[nodiscard]] std::size_t width() const { return ImageSize::Width; }
-  [[nodiscard]] std::size_t height() const { return ImageSize::Height; }
+  [[nodiscard]] std::size_t width() const { return ImageSize::kWidth; }
+  [[nodiscard]] std::size_t height() const { return ImageSize::kHeight; }
   [[nodiscard]] double resolution() const { return 1.; }
 
  private:
-  std::array<std::array<value_type, ImageSize::Width>, ImageSize::Height> data_;
+  std::array<std::array<value_type, ImageSize::kWidth>, ImageSize::kHeight> data_;
 };
 
 template <std::size_t W, std::size_t H>

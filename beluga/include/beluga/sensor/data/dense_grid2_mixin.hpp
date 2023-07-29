@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_DATA_DENSE_GRID_HPP
-#define BELUGA_SENSOR_DATA_DENSE_GRID_HPP
+#ifndef BELUGA_SENSOR_DATA_DENSE_GRID2_MIXIN_HPP
+#define BELUGA_SENSOR_DATA_DENSE_GRID2_MIXIN_HPP
 
 #include <optional>
 #include <vector>

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_DATA_OCCUPANCY_GRID_HPP
-#define BELUGA_SENSOR_DATA_OCCUPANCY_GRID_HPP
+#ifndef BELUGA_SENSOR_DATA_OCCUPANCY_GRID2_MIXIN_HPP
+#define BELUGA_SENSOR_DATA_OCCUPANCY_GRID2_MIXIN_HPP
 
 #include <cstdint>
 #include <tuple>
@@ -176,7 +176,7 @@ class OccupancyGrid2Mixin : public Mixin {
     const auto width = this->self().width();
     const auto height = this->self().height();
     const auto cell_count = width * height;
-    const auto to_raster_data = [this, width, height](std::size_t raster_index) {
+    const auto to_raster_data = [this, width](std::size_t raster_index) {
       const auto xi = static_cast<int>(raster_index % width);
       const auto yi = static_cast<int>(raster_index / width);
       const auto cell = Eigen::Vector2i(xi, yi);

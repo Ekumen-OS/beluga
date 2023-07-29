@@ -20,7 +20,7 @@
 #include <beluga/sensor/data/cache_friendly_grid_storage_2.hpp>
 #include <beluga/sensor/data/cache_friendly_grid_storage_3.hpp>
 #include <beluga/sensor/data/cache_friendly_grid_storage_4.hpp>
-#include "beluga/sensor/data/linear_grid_storage.hpp"
+#include <beluga/sensor/data/linear_grid_storage.hpp>
 
 namespace beluga {
 
@@ -51,8 +51,8 @@ TYPED_TEST(GridStorageTests, ConstructionWithoutDataInitialization) {
   ASSERT_EQ(uut.width(), 5);
   ASSERT_EQ(uut.height(), 5);
 
-  for (int i = 0; i < uut.width(); ++i) {
-    for (int j = 0; j < uut.height(); ++j) {
+  for (int i = 0; i < static_cast<int>(uut.width()); ++i) {
+    for (int j = 0; j < static_cast<int>(uut.height()); ++j) {
       ASSERT_EQ(uut.cell(i, j), 0);
       ASSERT_EQ(const_uut.cell(i, j), 0);
     }
@@ -76,10 +76,10 @@ TYPED_TEST(GridStorageTests, ConstructionWithDataInitialization) {
   ASSERT_EQ(uut.width(), 5);
   ASSERT_EQ(uut.height(), 5);
 
-  for (int y = 0; y < uut.height(); ++y) {
-    for (int x = 0; x < uut.width(); ++x) {
-      ASSERT_EQ(uut.cell(x, y), x + y * uut.width());
-      ASSERT_EQ(const_uut.cell(x, y), x + y * uut.width());
+  for (int y = 0; y < static_cast<int>(uut.height()); ++y) {
+    for (int x = 0; x < static_cast<int>(uut.width()); ++x) {
+      ASSERT_EQ(uut.cell(x, y), x + y * static_cast<int32_t>(uut.width()));
+      ASSERT_EQ(const_uut.cell(x, y), x + y * static_cast<int32_t>(const_uut.width()));
     }
   }
 }
@@ -92,8 +92,8 @@ TYPED_TEST(GridStorageTests, SetCellData) {
   ASSERT_EQ(uut.width(), 5);
   ASSERT_EQ(uut.height(), 5);
 
-  for (int i = 0; i < uut.width(); ++i) {
-    for (int j = 0; j < uut.height(); ++j) {
+  for (int i = 0; i < static_cast<int>(uut.width()); ++i) {
+    for (int j = 0; j < static_cast<int>(uut.height()); ++j) {
       ASSERT_EQ(uut.cell(i, j), 0);
       ASSERT_EQ(const_uut.cell(i, j), 0);
       uut.cell(i, j) = 99;

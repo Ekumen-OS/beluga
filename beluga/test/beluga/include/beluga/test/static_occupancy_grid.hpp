@@ -29,9 +29,9 @@ namespace beluga::testing {
 using TestMapValueType = bool;
 
 struct TestMapValueTraits {
-  [[nodiscard]] bool is_free(bool value) const { return !value; }
-  [[nodiscard]] bool is_unknown(bool) const { return false; }
-  [[nodiscard]] bool is_occupied(bool value) const { return value; }
+  [[nodiscard]] static constexpr bool is_free(bool value) { return !value; }
+  [[nodiscard]] static constexpr bool is_unknown(bool) { return false; }
+  [[nodiscard]] static constexpr bool is_occupied(bool value) { return value; }
 };
 
 using StaticOccupancyGrid = ciabatta::mixin<

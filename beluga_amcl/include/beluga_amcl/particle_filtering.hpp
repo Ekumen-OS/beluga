@@ -34,16 +34,12 @@
 
 namespace beluga_amcl {
 
-namespace {
+constexpr std::string_view kDifferentialModelName = "differential_drive";
+constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
+constexpr std::string_view kStationaryModelName = "stationary";
 
-static constexpr std::string_view kDifferentialModelName = "differential_drive";
-static constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
-static constexpr std::string_view kStationaryModelName = "stationary";
-
-static constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
-static constexpr std::string_view kBeamSensorModelName = "beam";
-
-}  // namespace
+constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
+constexpr std::string_view kBeamSensorModelName = "beam";
 
 using LaserLocalizationInterface2d =
     beluga::LaserLocalizationInterface2d<ROSOccupancyGrid, FilterUpdateControlInterface>;

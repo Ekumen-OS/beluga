@@ -193,11 +193,13 @@ void BM_GridStorage_StraightMotion(benchmark::State& state) {
   constexpr auto kShortSideLenght = 2048;  // this needs to be larger than a cache line
 
   const auto walk_direction = static_cast<WalkDirection>(state.range(0));
-  const std::size_t bytes_to_cover = state.range(1) * 1024;  // the value is assumed in kilobytes
-  const auto cells_to_cover = bytes_to_cover / sizeof(CellType);
+  const std::size_t bytes_to_cover =
+      static_cast<std::size_t>(state.range(1)) * 1024;  // the value is assumed in kilobytes
+  const std::size_t cells_to_cover = bytes_to_cover / sizeof(CellType);
 
   std::string direction_label;
-  std::size_t grid_width{1}, grid_height{1};
+  std::size_t grid_width{1};
+  std::size_t grid_height{1};
   int init_x = 0;
   int init_y = 0;
   int increment_x = 0;
@@ -350,15 +352,15 @@ void BM_GridStorage_RadialMotion(benchmark::State& state) {
 
   constexpr auto kRadialRays = 24;
 
-  const auto active_set_size = state.range(0) * 1024;  // the value is assumed in kilobytes
+  const auto active_set_size = static_cast<std::size_t>(state.range(0)) * 1024;  // the value is assumed in kilobytes
   const auto bytes_to_cover_per_ray = active_set_size / kRadialRays;
   const auto radius = bytes_to_cover_per_ray / sizeof(CellType);
-  const auto kGridSide = 2 * radius + 1;  // intentionally odd to have a defined center
+  const auto k_grid_side = 2 * radius + 1;  // intentionally odd to have a defined center
 
   const int xc = static_cast<int>(radius);
   const int yc = static_cast<int>(radius);
 
-  auto storage = Storage(kGridSide, kGridSide);
+  auto storage = Storage(k_grid_side, k_grid_side);
 
   std::vector<std::pair<double, double>> directions;
 
@@ -446,16 +448,16 @@ void BM_RayCasting2d_StorageImpact_RadialMotion(benchmark::State& state) {
   const auto radius_meters = static_cast<double>(state.range(0));
   const auto radius_pixels = static_cast<std::size_t>(radius_meters / kResolution);
 
-  const auto kGridSide = 2 * radius_pixels + 1;  // intentionally odd to have a well-defined center
+  const auto k_grid_side = 2 * radius_pixels + 1;  // intentionally odd to have a well-defined center
 
   const auto metric_center_x = radius_meters;
   const auto metric_center_y = radius_meters;
 
-  auto grid_storage = typename Grid::MapStorage(kGridSide, kGridSide);
+  auto grid_storage = typename Grid::MapStorage(k_grid_side, k_grid_side);
   // everything beyond a radius from the center is an obstacle
   [[maybe_unused]] auto squared = [](std::size_t x) { return x * x; };
-  for (std::size_t pixel_x_coord = 0; pixel_x_coord < kGridSide; ++pixel_x_coord) {
-    for (std::size_t pixel_y_coord = 0; pixel_y_coord < kGridSide; ++pixel_y_coord) {
+  for (std::size_t pixel_x_coord = 0; pixel_x_coord < k_grid_side; ++pixel_x_coord) {
+    for (std::size_t pixel_y_coord = 0; pixel_y_coord < k_grid_side; ++pixel_y_coord) {
       if (squared(pixel_x_coord - radius_pixels) + squared(pixel_y_coord - radius_pixels) > squared(radius_pixels)) {
         grid_storage.cell(static_cast<int>(pixel_x_coord), static_cast<int>(pixel_y_coord)) = true;
       } else {

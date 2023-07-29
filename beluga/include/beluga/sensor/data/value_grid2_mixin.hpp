@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_DATA_VALUE_GRID_HPP
-#define BELUGA_SENSOR_DATA_VALUE_GRID_HPP
+#ifndef BELUGA_SENSOR_DATA_VALUE_GRID2_MIXIN_HPP
+#define BELUGA_SENSOR_DATA_VALUE_GRID2_MIXIN_HPP
 
 #include <cstdint>
 #include <utility>
@@ -72,7 +72,7 @@ class ValueGrid2Mixin : public Mixin {
   [[nodiscard]] std::size_t size() const { return data_.size(); }
 
   /// Return a range containing the grid data in row-major order.
-  [[nodiscard]] const auto row_major_scan() const { return data_ | ranges::views::common; }
+  [[nodiscard]] auto row_major_scan() const { return data_ | ranges::views::common; }
 
   using Mixin::data_at;
 

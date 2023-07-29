@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_DATA_BELUGA_CACHE_FRIENDLY_GRID_STORAGE_3_HPP
-#define BELUGA_SENSOR_DATA_BELUGA_CACHE_FRIENDLY_GRID_STORAGE_3_HPP
+#ifndef BELUGA_SENSOR_DATA_CACHE_FRIENDLY_GRID_STORAGE_3_HPP
+#define BELUGA_SENSOR_DATA_CACHE_FRIENDLY_GRID_STORAGE_3_HPP
 
 #include <cstdint>
 #include <iostream>
@@ -42,8 +42,8 @@ class CacheFriendlyGridStorage3 {
         grid_height_(height) {
     std::size_t index = 0;
     for (const auto& cell_value : init_values) {
-      const auto x = static_cast<int>(index % grid_width_);
-      const auto y = static_cast<int>(index / grid_width_);
+      const auto x = index % grid_width_;
+      const auto y = index / grid_width_;
       cell_impl(x, y) = cell_value;
       ++index;
     }
@@ -53,13 +53,15 @@ class CacheFriendlyGridStorage3 {
   /// @param x X coordinate.
   /// @param y Y coordinate.
   /// @return Reference to the cell at the given coordinates.
-  [[nodiscard]] auto& cell(int x, int y) { return cell_impl(x, y); }
+  [[nodiscard]] auto& cell(int x, int y) { return cell_impl(static_cast<std::size_t>(x), static_cast<std::size_t>(y)); }
 
   /// @brief Reading access to the cell at the given coordinates.
   /// @param x X coordinate.
   /// @param y Y coordinate.
   /// @return Const reference to the cell at the given coordinates.
-  [[nodiscard]] const auto& cell(int x, int y) const { return cell_impl(x, y); }
+  [[nodiscard]] const auto& cell(int x, int y) const {
+    return cell_impl(static_cast<std::size_t>(x), static_cast<std::size_t>(y));
+  }
 
   /// @brief Returns the width of the map (number of cells).
   [[nodiscard]] auto width() const { return grid_width_; }
@@ -80,28 +82,26 @@ class CacheFriendlyGridStorage3 {
   const std::size_t grid_width_;
   const std::size_t grid_height_;
 
-  static constexpr std::size_t next_even(std::size_t n) { return (n % 2 == 0) ? n : n + 1; }
+  [[nodiscard]] static constexpr std::size_t next_even(std::size_t n) { return (n % 2 == 0) ? n : n + 1; }
 
-  auto& cell_impl(std::size_t x, std::size_t y) {
+  [[nodiscard]] auto& cell_impl(std::size_t x, std::size_t y) {
     const auto transpose = (x + y) & 0x01;
     if (!transpose) {
       // straight
       return storage_[y * storage_width_ + x].value;
-    } else {
-      // transposed
-      return storage_[x * storage_width_ + y].value;
     }
+    // transposed
+    return storage_[x * storage_width_ + y].value;
   }
 
-  const auto& cell_impl(std::size_t x, std::size_t y) const {
+  [[nodiscard]] const auto& cell_impl(std::size_t x, std::size_t y) const {
     const auto transpose = (x + y) & 0x01;
     if (!transpose) {
       // straight
       return storage_[y * storage_width_ + x].value;
-    } else {
-      // transposed
-      return storage_[x * storage_width_ + y].value;
     }
+    // transposed
+    return storage_[x * storage_width_ + y].value;
   }
 };
 

@@ -71,7 +71,9 @@ auto nearest_obstacle_distance_map(
   auto distance_map = std::vector<DistanceType>(distance_map_size);
   auto visited = std::vector<bool>(distance_map_size, false);
 
-  const auto linear_index = [width](const auto& cell) { return cell.y() * width + cell.x(); };
+  const auto linear_index = [width](const auto& cell) {
+    return static_cast<std::size_t>(cell.y()) * width + static_cast<std::size_t>(cell.x());
+  };
 
   auto compare = [&distance_map, linear_index](const IndexPair& first, const IndexPair& second) {
     return distance_map[linear_index(first.cell)] > distance_map[linear_index(second.cell)];

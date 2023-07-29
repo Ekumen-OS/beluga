@@ -57,7 +57,7 @@ std::vector<std::pair<double, double>> make_points_from_laser_scan(
 /**
  * \param ros_occupancy_grid Original ROS occupancy grid message.
  */
-ROSOccupancyGrid make_occupancy_grid(beluga_amcl::messages::OccupancyGridConstSharedPtr ros_occupancy_grid);
+ROSOccupancyGrid make_occupancy_grid(beluga_amcl::messages::OccupancyGridConstSharedPtr ros_msg_ptr);
 
 }  // namespace beluga_amcl::utils
 

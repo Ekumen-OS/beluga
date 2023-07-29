@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_LINEAR_GRID_STORAGE_HPP
-#define BELUGA_LINEAR_GRID_STORAGE_HPP
+#ifndef BELUGA_SENSOR_DATA_LINEAR_GRID_STORAGE_HPP
+#define BELUGA_SENSOR_DATA_LINEAR_GRID_STORAGE_HPP
 
 #include <cstdint>
 #include <initializer_list>
@@ -45,13 +45,17 @@ class LinearGridStorage {
   /// @param x X coordinate.
   /// @param y Y coordinate.
   /// @return Reference to the cell at the given coordinates.
-  [[nodiscard]] auto& cell(int x, int y) { return storage_[y * width_ + x].value; }
+  [[nodiscard]] auto& cell(int x, int y) {
+    return storage_[static_cast<std::size_t>(y) * width_ + static_cast<std::size_t>(x)].value;
+  }
 
   /// @brief Reading access to the cell at the given coordinates.
   /// @param x X coordinate.
   /// @param y Y coordinate.
   /// @return Const reference to the cell at the given coordinates.
-  [[nodiscard]] const auto& cell(int x, int y) const { return storage_[y * width_ + x].value; }
+  [[nodiscard]] auto& cell(int x, int y) const {
+    return storage_[static_cast<std::size_t>(y) * width_ + static_cast<std::size_t>(x)].value;
+  }
 
   /// @brief Returns the width of the map (number of cells).
   [[nodiscard]] auto width() const { return width_; }

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL__ROS_OCCUPANCY_GRID_HPP_
-#define BELUGA_AMCL__ROS_OCCUPANCY_GRID_HPP_
+#ifndef BELUGA_AMCL_ROS_OCCUPANCY_GRID_HPP
+#define BELUGA_AMCL_ROS_OCCUPANCY_GRID_HPP
 
 #include <beluga/sensor/data/dense_grid2_mixin.hpp>
 #include <beluga/sensor/data/linear_grid_storage.hpp>
@@ -28,15 +28,15 @@ namespace beluga_amcl {
 namespace ros_occupancy_grid_types {
 struct ROSMapValueTraits {
   // https://wiki.ros.org/map_server#Value_Interpretation
-  static constexpr std::int8_t free_value = 0;
-  static constexpr std::int8_t unknown_value = -1;
-  static constexpr std::int8_t occupied_value = 100;
+  static constexpr std::int8_t kFreeValue = 0;
+  static constexpr std::int8_t kUnknownValue = -1;
+  static constexpr std::int8_t kOccupiedValue = 100;
 
-  bool is_free(std::int8_t value) const { return value == free_value; }
+  [[nodiscard]] static constexpr bool is_free(std::int8_t value) { return value == kFreeValue; }
 
-  bool is_unknown(std::int8_t value) const { return value == unknown_value; }
+  [[nodiscard]] static constexpr bool is_unknown(std::int8_t value) { return value == kUnknownValue; }
 
-  bool is_occupied(std::int8_t value) const { return value == occupied_value; }
+  [[nodiscard]] static constexpr bool is_occupied(std::int8_t value) { return value == kOccupiedValue; }
 };
 
 using ROSMapCellType = std::int8_t;
@@ -55,4 +55,4 @@ using ROSOccupancyGrid = ciabatta::mixin<
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL__ROS_OCCUPANCY_GRID_HPP_
+#endif  // BELUGA_AMCL_ROS_OCCUPANCY_GRID_HPP
