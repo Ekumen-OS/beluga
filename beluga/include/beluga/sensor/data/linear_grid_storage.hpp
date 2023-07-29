@@ -26,6 +26,7 @@ namespace beluga {
 template <typename T>
 class LinearGridStorage {
  public:
+  /// @brief Type of the data stored in the grid.
   using cell_type = T;
 
   /// @brief Constructs a map with the given initial values.
@@ -51,9 +52,6 @@ class LinearGridStorage {
   /// @param y Y coordinate.
   /// @return Const reference to the cell at the given coordinates.
   [[nodiscard]] const auto& cell(int x, int y) const { return storage_[y * width_ + x].value; }
-
-  /// @brief Returns the virtual size of the map (number of cells).
-  [[nodiscard]] auto size() const { return storage_.size(); }
 
   /// @brief Returns the width of the map (number of cells).
   [[nodiscard]] auto width() const { return width_; }

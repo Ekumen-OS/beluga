@@ -15,12 +15,12 @@
 #ifndef BELUGA_AMCL__ROS_OCCUPANCY_GRID_HPP_
 #define BELUGA_AMCL__ROS_OCCUPANCY_GRID_HPP_
 
-#include <beluga/sensor/data/dense_grid.hpp>
+#include <beluga/sensor/data/dense_grid2_mixin.hpp>
 #include <beluga/sensor/data/linear_grid_storage.hpp>
-#include <beluga/sensor/data/occupancy_grid.hpp>
-#include <beluga/sensor/data/occupancy_grid_storage.hpp>
-#include <beluga/sensor/data/regular_grid.hpp>
-#include <beluga/sensor/data/value_grid.hpp>
+#include <beluga/sensor/data/occupancy_grid2_mixin.hpp>
+#include <beluga/sensor/data/occupancy_storage_mixin.hpp>
+#include <beluga/sensor/data/regular_grid2_mixin.hpp>
+#include <beluga/sensor/data/value_grid2_mixin.hpp>
 #include <beluga_amcl/ros_interfaces.hpp>
 
 namespace beluga_amcl {
@@ -49,9 +49,9 @@ using ROSOccupancyGrid = ciabatta::mixin<
         ros_occupancy_grid_types::ROSMapCellType,
         ros_occupancy_grid_types::ROSMapValueTraits,
         beluga::LinearGridStorage<ros_occupancy_grid_types::ROSMapCellType>>::template mixin,
-    beluga::BaseOccupancyGrid2Mixin,
-    beluga::BaseDenseGrid2Mixin,
-    beluga::BaseRegularGrid2Mixin>;
+    beluga::OccupancyGrid2Mixin,
+    beluga::DenseGrid2Mixin,
+    beluga::RegularGrid2Mixin>;
 
 }  // namespace beluga_amcl
 

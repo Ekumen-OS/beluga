@@ -37,11 +37,6 @@ namespace beluga {
  *
  * A type `G` satisfies `RegularGrid2` requirements if given `g` a possibly
  * const instance of `G`:
- * - `g.resolution()` returns the side length of all grid cells as a `double`;
- * - given possibly const embedding space coordinates `x` and `y` of type `double`,
- *   `g.cell_at(x, y)` returns grid cell coordinates as an `Eigen::Vector2d` value;
- * - given possibly const embedding space coordinates `p` of `Eigen::Vector2d` type,
- *   `g.cell_at(p)` returns grid cell coordinates as an `Eigen::Vector2d` value;
  * - given possibly const grid cell coordinates `xi` and `yi` of type `int`,
  *   `g.coordinates_at(xi, yi)` returns embedding space coordinates as an
  *   `Eigen::Vector2d` value;
@@ -53,20 +48,17 @@ namespace beluga {
  *   `Eigen::Vector2d` values.
  */
 
-/// Regularly spaced 2D grid base type.
+/// Regularly spaced 2D grid mixin.
 /**
- * When instantiated, it satisfies \ref RegularGrid2Page.
- *
- * \tparam Derived Concrete regular grid type. It must define
- * `Derived::resolution()`, as described in \ref RegularGrid2Page.
+ * \tparam Mixin Mixin base class.
  */
 template <typename Mixin>
-class BaseRegularGrid2Mixin : public Mixin {
+class RegularGrid2Mixin : public Mixin {
  public:
   /// @brief Mixin constructor
   /// @param ...args arguments to be forwarded to other mixins in the chain
   template <typename... Args>
-  explicit BaseRegularGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+  explicit RegularGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
   /// Compute nearest grid cell coordinates given plane coordinates.
   /**

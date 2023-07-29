@@ -23,9 +23,9 @@
 #include <beluga/sensor/data/cache_friendly_grid_storage_2.hpp>
 #include <beluga/sensor/data/cache_friendly_grid_storage_3.hpp>
 #include <beluga/sensor/data/cache_friendly_grid_storage_4.hpp>
-#include <beluga/sensor/data/dense_grid.hpp>
+#include <beluga/sensor/data/dense_grid2_mixin.hpp>
 #include <beluga/sensor/data/linear_grid_storage.hpp>
-#include <beluga/sensor/data/regular_grid.hpp>
+#include <beluga/sensor/data/regular_grid2_mixin.hpp>
 
 #include <beluga/test/raycasting.hpp>
 #include <beluga/test/static_occupancy_grid.hpp>
@@ -440,7 +440,7 @@ void BM_RayCasting2d_StorageImpact_RadialMotion(benchmark::State& state) {
   // this benchmark is intended to compare the behavior of the grid storage alternatives when
   // performing raytracing radially from a central point for a finite number of rays in clowise order.
   // This measures the impact of the storage on the tracking algorithm.
-  constexpr auto kRadialRays = 96;
+  constexpr auto kRadialRays = 192;
   constexpr auto kResolution = 0.05;
 
   const auto radius_meters = static_cast<double>(state.range(0));

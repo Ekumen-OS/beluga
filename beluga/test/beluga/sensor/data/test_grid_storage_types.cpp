@@ -50,7 +50,6 @@ TYPED_TEST(GridStorageTests, ConstructionWithoutDataInitialization) {
   const auto& const_uut = uut;
   ASSERT_EQ(uut.width(), 5);
   ASSERT_EQ(uut.height(), 5);
-  ASSERT_EQ(uut.size(), 25);
 
   for (int i = 0; i < uut.width(); ++i) {
     for (int j = 0; j < uut.height(); ++j) {
@@ -76,7 +75,6 @@ TYPED_TEST(GridStorageTests, ConstructionWithDataInitialization) {
 
   ASSERT_EQ(uut.width(), 5);
   ASSERT_EQ(uut.height(), 5);
-  ASSERT_EQ(uut.size(), 25);
 
   for (int y = 0; y < uut.height(); ++y) {
     for (int x = 0; x < uut.width(); ++x) {
@@ -93,7 +91,6 @@ TYPED_TEST(GridStorageTests, SetCellData) {
 
   ASSERT_EQ(uut.width(), 5);
   ASSERT_EQ(uut.height(), 5);
-  ASSERT_EQ(uut.size(), 25);
 
   for (int i = 0; i < uut.width(); ++i) {
     for (int j = 0; j < uut.height(); ++j) {

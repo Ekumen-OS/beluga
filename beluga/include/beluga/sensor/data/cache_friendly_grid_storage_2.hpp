@@ -21,12 +21,15 @@
 
 namespace beluga {
 
-/// @brief A cache friendly grid storage that efficiently packs grid patches in cache lines.
+/// @brief A cache friendly grid storage that efficiently packs grid patches in cache lines. This algorithm maps divides
+/// the grid into linesizexlinesize tiles tiles and alternates the orientation of half of the tiles in a checkerboard
+/// fashion.
 /// @tparam T Type of the data to be stored.
 /// @tparam LineLenght Length of the minimum cache line to optimize for, in bytes.
 template <typename T, std::size_t LineLenght>
 class CacheFriendlyGridStorage2 {
  public:
+  /// @brief Type of the data stored in the grid.
   using cell_type = T;
 
   /// @brief Constructs a map with the given initial values.
@@ -63,17 +66,11 @@ class CacheFriendlyGridStorage2 {
   /// @return Const reference to the cell at the given coordinates.
   [[nodiscard]] const auto& cell(int x, int y) const { return storage_[map_coordinates_to_index(x, y)]; }
 
-  /// @brief Returns the virtual size of the map (number of cells).
-  [[nodiscard]] auto size() const { return grid_width_ * grid_height_; }
-
   /// @brief Returns the width of the map (number of cells).
   [[nodiscard]] auto width() const { return grid_width_; }
 
   /// @brief Returns the height of the map (number of cells).
   [[nodiscard]] auto height() const { return grid_height_; }
-
-  /// @brief Returns the raw contents of the internal buffer. For testing only.
-  [[nodiscard]] auto& raw_data() { return storage_; }
 
  private:
   static constexpr bool is_power_of_base(std::size_t n, std::size_t base) {

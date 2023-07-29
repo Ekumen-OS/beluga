@@ -18,11 +18,11 @@
 #include <ciabatta/ciabatta.hpp>
 #include <sophus/se2.hpp>
 
-#include <beluga/sensor/data/dense_grid.hpp>
+#include <beluga/sensor/data/dense_grid2_mixin.hpp>
 #include <beluga/sensor/data/linear_grid_storage.hpp>
-#include <beluga/sensor/data/occupancy_grid.hpp>
-#include <beluga/sensor/data/occupancy_grid_storage.hpp>
-#include <beluga/sensor/data/regular_grid.hpp>
+#include <beluga/sensor/data/occupancy_grid2_mixin.hpp>
+#include <beluga/sensor/data/occupancy_storage_mixin.hpp>
+#include <beluga/sensor/data/regular_grid2_mixin.hpp>
 
 namespace beluga::testing {
 
@@ -37,16 +37,16 @@ struct TestMapValueTraits {
 using StaticOccupancyGrid = ciabatta::mixin<
     ciabatta::curry<OccupancyStorageMixin, TestMapValueType, TestMapValueTraits, LinearGridStorage<TestMapValueType>>::
         template mixin,
-    BaseOccupancyGrid2Mixin,
-    BaseDenseGrid2Mixin,
-    BaseRegularGrid2Mixin>;
+    OccupancyGrid2Mixin,
+    DenseGrid2Mixin,
+    RegularGrid2Mixin>;
 
 template <typename StorageType>
 using GridWithConfigurableStorage = ciabatta::mixin<
     ciabatta::curry<OccupancyStorageMixin, TestMapValueType, TestMapValueTraits, StorageType>::template mixin,
-    BaseOccupancyGrid2Mixin,
-    BaseDenseGrid2Mixin,
-    BaseRegularGrid2Mixin>;
+    OccupancyGrid2Mixin,
+    DenseGrid2Mixin,
+    RegularGrid2Mixin>;
 
 }  // namespace beluga::testing
 

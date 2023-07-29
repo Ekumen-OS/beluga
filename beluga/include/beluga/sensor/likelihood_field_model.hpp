@@ -21,8 +21,8 @@
 #include <vector>
 
 #include <beluga/algorithm/distance_map.hpp>
-#include <beluga/sensor/data/occupancy_grid.hpp>
-#include <beluga/sensor/data/value_grid.hpp>
+#include <beluga/sensor/data/occupancy_grid2_mixin.hpp>
+#include <beluga/sensor/data/value_grid2_mixin.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>

@@ -37,20 +37,12 @@ namespace beluga {
  *
  * A type `G` satisfies `DenseGrid2` requirements if it satisfies
  * \ref RegularGrid2Page and given `g` a possibly const instance of `G`:
- * - `g.width()` returns the grid width, in grid cells along the grid
- *   x-axis, as an `std::size_t` value.
- * - `g.height()` returns the grid height, in grid cells along the grid
- *   y-axis, as an `std::size_t` value.
  * - given possibly const grid cell coordinates `xi` and `yi` of type `int`,
  *   `g.contains(xi, yi)` checks whether such cell is included in the grid;
  * - given possibly const grid cell coordinates `pi` of `Eigen::Vector2i` type,
  *   `g.contains(p)` checks whether such cell is included in the grid;
- * - given possibly const grid cell coordinates `xi` and `yi` of type `int`,
- *   `g.data_at(xi, yi)` optionally returns cell data, if cell is included;
  * - given possibly const grid cell coordinates `pi` of `Eigen::Vector2i` type,
  *   `g.data_at(p)` optionally returns cell data, if cell is included;
- * - given possibly const grid cell index `i` of some type, `g.data_at(i)`
- *   optionally returns cell data, if cell is included;
  * - given possibly const embedding space coordinates `x` and `y` of type `double`,
  *   `g.data_near(x, y)` optionally returns cell data, if cell is included;
  * - given possibly const embedding space coordinates `p` of `Eigen::Vector2d` type,
@@ -65,19 +57,15 @@ namespace beluga {
 
 /// Dense 2D grid base type.
 /**
- * When instantiated, it satisfies \ref DenseGrid2Page.
- *
- * \tparam Derived Concrete dense grid type. It must define
- * `Derived::width()`, `Derived::height()`, `Derived::resolution()`,
- * and `Derived::data_at(index)`, as described in \ref DenseGrid2Page.
+ * \tparam Mixin Mixin type
  */
 template <typename Mixin>
-class BaseDenseGrid2Mixin : public Mixin {
+class DenseGrid2Mixin : public Mixin {
  public:
   /// @brief Mixin constructor
   /// @param ...args arguments to be forwarded to other mixins in the chain
   template <typename... Args>
-  explicit BaseDenseGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+  explicit DenseGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
   /// Checks if a cell is included in the grid.
   /**

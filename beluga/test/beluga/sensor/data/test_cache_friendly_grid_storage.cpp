@@ -30,7 +30,6 @@ TEST(CacheFriendlyGridStorageTest, SetCellData) {
 
   ASSERT_EQ(uut.width(), 50);
   ASSERT_EQ(uut.height(), 50);
-  ASSERT_EQ(uut.size(), 50 * 50);
 
   for (int i = 0; i < uut.width(); ++i) {
     for (int j = 0; j < uut.height(); ++j) {
@@ -55,7 +54,6 @@ TEST(CacheFriendlyGridStorageTest, ColoredCacheLinesForSquareArrangement) {
 
   ASSERT_EQ(uut.width(), kWidth);
   ASSERT_EQ(uut.height(), kHeight);
-  ASSERT_EQ(uut.size(), kHeight * kWidth);
 
   [[maybe_unused]] const auto tile_index = [&](int x, int y) {
     return static_cast<ValueType>((x / kTileSide) + (y / kTileSide) * ((kWidth + kTileSide - 1) / kTileSide));
@@ -98,7 +96,6 @@ TEST(CacheFriendlyGridStorageTest, ColoredCacheLinesForRectangularArrangement) {
 
   ASSERT_EQ(uut.width(), kWidth);
   ASSERT_EQ(uut.height(), kHeight);
-  ASSERT_EQ(uut.size(), kHeight * kWidth);
 
   [[maybe_unused]] const auto tile_index = [&](int x, int y) {
     return static_cast<ValueType>((x / kTileSide) + (y / kTileSide) * ((kWidth + kTileSide - 1) / kTileSide));

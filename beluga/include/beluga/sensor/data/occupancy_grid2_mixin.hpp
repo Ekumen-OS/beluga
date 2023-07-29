@@ -42,14 +42,6 @@ namespace beluga {
  *
  * A type `G` satisfies `OccupancyGrid2d` requirements if it satisfies
  * that given `g` a possible const instance of `G`:
- * - `g.value_traits()` returns a value `t` of type `T` such that given a grid cell
- *    data value `v`:
- *    - `t.is_free(v)` returns true if the value is consistent with a free grid cell;
- *    - `t.is_occupied(v)` returns true if the value is consistent with an occupied grid cell;
- * - `g.origin()` returns the transform, of `Sophus::SE2d` type, from the global to local
- *   frame in the grid embedding space;
- * - given possibly const grid cell index `i` of `std::size_t` type,
- *   `g.free_at(i)` returns true if such cell is free;
  * - given possibly const grid cell coordinates `xi` and `yi` of type `int`,
  *   `g.free_at(xi, yi)` returns true if such cell is free;
  * - given possibly const grid cell coordinates `pi` of `Eigen::Vector2i` type,
@@ -58,9 +50,6 @@ namespace beluga {
  *   `g.free_near(x, y)` returns true if the nearest cell is free;
  * - given possibly const embedding space coordinates `p` of `Eigen::Vector2d` type,
  *   `g.free_near(p)` returns true if the nearest cell is free;
- * - given possibly const grid cell index `i` of `std::size_t` type and frame `f`,
- *   `g.coordinates_at(i, f)` returns embedding space coordinates in the corresponding
- *   frame as an `Eigen::Vector2d` value;
  * - given a possibly const range `r` of grid cell coordinates or indices and frame `f`,
  *   `g.coordinates_for(r, f)` returns a range of embedding space coordinates in the
  *   corresponding frame as `Eigen::Vector2d` values;
@@ -70,15 +59,10 @@ namespace beluga {
 
 /// Occupancy 2D grid base type.
 /**
- * When instantiated, it satisfies \ref OccupancyGrid2Page.
- *
- * \tparam Derived Concrete occupancy grid type. It must define
- * `Derived::origin()`, `Derived::width()`, `Derived::height()`,
- * `Derived::resolution()`, `Derived::data_at(std::size_t)`,
- * and `Derived::value_traits()` as described in \ref OccupancyGrid2Page.
+ * \tparam Mixin Mixin type
  */
 template <typename Mixin>
-class BaseOccupancyGrid2Mixin : public Mixin {
+class OccupancyGrid2Mixin : public Mixin {
  public:
   /// Coordinate frames.
   enum class Frame { kLocal, kGlobal };
@@ -86,7 +70,7 @@ class BaseOccupancyGrid2Mixin : public Mixin {
   /// @brief Mixin constructor
   /// @param ...args arguments to be forwarded to other mixins in the chain
   template <typename... Args>
-  explicit BaseOccupancyGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+  explicit OccupancyGrid2Mixin(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
   /// Checks if cell is free.
   /**

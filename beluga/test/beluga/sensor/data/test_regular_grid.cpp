@@ -14,7 +14,7 @@
 
 #include <gmock/gmock.h>
 
-#include "beluga/sensor/data/regular_grid.hpp"
+#include "beluga/sensor/data/regular_grid2_mixin.hpp"
 
 #include <ciabatta/ciabatta.hpp>
 #include <range/v3/range/conversion.hpp>
@@ -26,7 +26,7 @@ class TestRegularGrid2Mixin : public Mixin {
   [[nodiscard]] static double resolution() { return 1.; }
 };
 
-using TestRegularGrid2 = ciabatta::mixin<TestRegularGrid2Mixin, beluga::BaseRegularGrid2Mixin>;
+using TestRegularGrid2 = ciabatta::mixin<TestRegularGrid2Mixin, beluga::RegularGrid2Mixin>;
 
 TEST(RegularGrid2, NearestCells) {
   const auto grid = TestRegularGrid2{};

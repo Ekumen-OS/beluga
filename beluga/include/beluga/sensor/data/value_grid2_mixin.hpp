@@ -19,9 +19,9 @@
 #include <utility>
 #include <vector>
 
-#include <beluga/sensor/data/dense_grid.hpp>
-#include <beluga/sensor/data/regular_grid.hpp>
-#include <beluga/sensor/data/value_grid.hpp>
+#include <beluga/sensor/data/dense_grid2_mixin.hpp>
+#include <beluga/sensor/data/regular_grid2_mixin.hpp>
+#include <beluga/sensor/data/value_grid2_mixin.hpp>
 
 #include <range/v3/view/common.hpp>
 
@@ -101,8 +101,8 @@ class ValueGrid2Mixin : public Mixin {
  * \tparam ValueType Type used for grid cell value representation.
  */
 template <class ValueType>
-using ValueGrid2 = ciabatta::
-    mixin<ciabatta::curry<ValueGrid2Mixin, ValueType>::template mixin, BaseDenseGrid2Mixin, BaseRegularGrid2Mixin>;
+using ValueGrid2 =
+    ciabatta::mixin<ciabatta::curry<ValueGrid2Mixin, ValueType>::template mixin, DenseGrid2Mixin, RegularGrid2Mixin>;
 
 }  // namespace beluga
 

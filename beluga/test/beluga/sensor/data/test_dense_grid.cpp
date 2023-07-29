@@ -20,8 +20,8 @@
 #include <utility>
 #include <vector>
 
-#include "beluga/sensor/data/dense_grid.hpp"
-#include "beluga/sensor/data/regular_grid.hpp"
+#include "beluga/sensor/data/dense_grid2_mixin.hpp"
+#include "beluga/sensor/data/regular_grid2_mixin.hpp"
 
 #include <range/v3/range/conversion.hpp>
 
@@ -65,8 +65,8 @@ class ImageMixin : public Mixin {
 template <std::size_t W, std::size_t H>
 using ImageCombined = ciabatta::mixin<
     ciabatta::curry<ImageMixin, ImageSize<W, H>>::template mixin,
-    beluga::BaseDenseGrid2Mixin,
-    beluga::BaseRegularGrid2Mixin>;
+    beluga::DenseGrid2Mixin,
+    beluga::RegularGrid2Mixin>;
 
 template <std::size_t W, std::size_t H>
 struct Image : public ImageCombined<W, H> {
