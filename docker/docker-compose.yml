@@ -18,5 +18,7 @@ services:
       - /tmp/.docker.xauth:/tmp/.docker.xauth
       - ..:/ws/src/beluga
       - beluga_ccache:/home/developer/.ccache
+    devices:
+      - /dev/dri:/dev/dri
 volumes:
   beluga_ccache:
