@@ -52,18 +52,6 @@ RUN apt-get update \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
-# Fix for the RViz black screen issue.
-# TODO(nahuel): Remove this when the Mesa version available
-# in Ubuntu 22.04 is 22.3.5 or greater.
-# See https://github.com/Ekumen-OS/beluga/issues/123
-RUN apt-get update \
-  && apt-get install --no-install-recommends -y \
-    software-properties-common \
-  && add-apt-repository -y ppa:kisak/kisak-mesa \
-  && apt-get install --no-install-recommends -y \
-    libegl-mesa0 libglx-mesa0 \
-  && rm -rf /var/lib/apt/lists/*
-
 RUN pip install \
   evo==1.21.0 \
   pre-commit==2.20.0
