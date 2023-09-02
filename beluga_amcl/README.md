@@ -5,21 +5,23 @@ The compatibility between `beluga_amcl` and its longstanding counterparts in the
 
 ## Table of Contents
 
-- [ROS 2 Interface](#ros-2-interface)
-  - [Parameters](#parameters)
-  - [Subscribed Topics](#subscribed-topics)
-  - [Published Topics](#published-topics)
-  - [Published Transforms](#published-transforms)
-  - [Advertised Services](#advertised-services)
-- [ROS 1 Interface](#ros-1-interface)
-  - [Parameters](#parameters-1)
-  - [Subscribed Topics](#subscribed-topics-1)
-  - [Published Topics](#published-topics-1)
-  - [Published Transforms](#published-transforms-1)
-  - [Advertised Services](#advertised-services-1)
-  - [Called Services](#called-services)
-- [Performance](#performance)
-- [Next Steps](#next-steps)
+- [Beluga AMCL](#beluga-amcl)
+  - [Table of Contents](#table-of-contents)
+  - [ROS 2 Interface](#ros-2-interface)
+    - [Parameters](#parameters)
+    - [Subscribed Topics](#subscribed-topics)
+    - [Published Topics](#published-topics)
+    - [Published Transforms](#published-transforms)
+    - [Advertised Services](#advertised-services)
+  - [ROS 1 Interface](#ros-1-interface)
+    - [Parameters](#parameters-1)
+    - [Subscribed Topics](#subscribed-topics-1)
+    - [Published Topics](#published-topics-1)
+    - [Published Transforms](#published-transforms-1)
+    - [Advertised Services](#advertised-services-1)
+    - [Called Services](#called-services)
+  - [Performance](#performance)
+  - [Next Steps](#next-steps)
 
 ## ROS 2 Interface
 
@@ -117,13 +119,13 @@ Defaults are `map`, `odom` and `base`.
 
 Performance reports are periodically generated and uploaded to track performance improvements and regressions. These reports are generated using a set of scripts in the [beluga_benchmark](../beluga_benchmark) package which can be used to compare the performance of `beluga_amcl` against that of `nav2_amcl` using a synthetic dataset.
 
-The following plot displays the RSS (Resident Set Size), CPU usage and APE (Absolute Pose Error) statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `likelihood field`.
+The following plot displays the RSS (Resident Set Size), CPU usage, APE (Absolute Pose Error) and processing latency statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `likelihood field`.
 
-![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-06-03/likelihood_beluga_seq_vs_amcl_log.png)
+![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-09-02/likelihood_beluga_vs_beluga_vs_amcl.png)
 
-The following plot displays the RSS (Resident Set Size), CPU usage and APE (Absolute Pose Error) statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `beam`.
+The following plot displays the RSS (Resident Set Size), CPU usage, APE (Absolute Pose Error) and processing latency statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `beam`.
 
-![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-06-03/beam_beluga_seq_vs_amcl_log.png)
+![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-09-02/beam_beluga_vs_beluga_vs_amcl.png)
 
 Further details can be found in [the reports folder here](../beluga_benchmark/docs/reports/).
 
