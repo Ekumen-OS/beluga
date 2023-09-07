@@ -29,6 +29,7 @@ from .exceptions import ScriptError
 DIR_NAME_PATTERN = 'benchmark_([0-9]+)_particles_output'
 SUPPORTED_TOPIC_NAMES = ('/pose', '/amcl_pose')
 EVO_RESULTS_FILE_NAME = 'evo_results.zip'
+TERMINAL_OUTPUT_LOG_FILE_NAME = 'output.log'
 
 
 def get_bag_est_topic(bag_path: Path):
@@ -69,6 +70,39 @@ def read_evo_stats(zip_file_path):
     return file_interface.load_res_file(zip_file_path).stats
 
 
+def parse_latency_data(output_file_path):
+    import re
+
+    # Example line:
+    pattern = re.compile(
+        r'\[.*\] \[INFO\] \[([0-9]*\.[0-9]*)\] \[amcl\]: Particle filter update iteration stats: '
+        + r'[0-9]* particles [0-9]* points - ([0-9]*\.[0-9]*)ms'
+    )
+    latencies_seq = []
+    with open(output_file_path, 'r') as f:
+        for line in f:
+            if not pattern.match(line):
+                continue
+            # first match is the whole line, second match the timestamp, and third the latency
+            latency = pattern.match(line).group(2)
+            latencies_seq.append(float(latency) * 1e-3)  # convert to seconds
+    return (
+        {
+            'latency_min': min(latencies_seq),
+            'latency_max': max(latencies_seq),
+            'latency_mean': sum(latencies_seq) / len(latencies_seq),
+            'latency_median': sorted(latencies_seq)[len(latencies_seq) // 2],
+        }
+        if latencies_seq
+        else {
+            'latency_min': 0.0,
+            'latency_max': 0.0,
+            'latency_mean': 0.0,
+            'latency_median': 0.0,
+        }
+    )
+
+
 def create_parameterized_series(results_path: Path):
     particles = []
     peak_rss = []
@@ -77,6 +111,10 @@ def create_parameterized_series(results_path: Path):
     ape_mean = []
     ape_median = []
     ape_max = []
+    latency_min = []
+    latency_max = []
+    latency_mean = []
+    latency_median = []
 
     for dir in results_path.iterdir():
         if not dir.is_dir():
@@ -100,6 +138,13 @@ def create_parameterized_series(results_path: Path):
         ape_max.append(stats["max"])
         ape_mean.append(stats["mean"])
         ape_median.append(stats["median"])
+        terminal_output_path = dir / TERMINAL_OUTPUT_LOG_FILE_NAME
+        latency_stats = parse_latency_data(terminal_output_path)
+        latency_min.append(latency_stats['latency_min'])
+        latency_max.append(latency_stats['latency_max'])
+        latency_mean.append(latency_stats['latency_mean'])
+        latency_median.append(latency_stats['latency_median'])
+
     return (
         pd.DataFrame(
             {
@@ -110,6 +155,10 @@ def create_parameterized_series(results_path: Path):
                 'ape_mean': ape_mean,
                 'ape_median': ape_median,
                 'ape_max': ape_max,
+                'latency_min': latency_min,
+                'latency_max': latency_max,
+                'latency_mean': latency_mean,
+                'latency_median': latency_median,
             }
         )
         .set_index('particles_n')
@@ -145,12 +194,23 @@ def main():
         help='Use log scale on y axis',
     )
 
+    default_plots = ['cpu_usage', 'peak_rss', 'ape_rmse', 'latency_median']
+    arg_parser.add_argument(
+        '--plot-names',
+        type=str,
+        nargs='*',  # 0 or more values expected => creates a list
+        default=default_plots,
+        help='List of plots to generate. Default: ' + ', '.join(default_plots),
+    )
+
     args = arg_parser.parse_args()
 
     assert len(args.series) == len(args.label), 'Number of series and labels must match'
 
     series = [
-        create_parameterized_series(series).add_prefix(label + '_')
+        create_parameterized_series(series)
+        .filter(items=args.plot_names)
+        .add_prefix(label + '_')
         for label, series in zip(args.label, args.series)
     ]
 

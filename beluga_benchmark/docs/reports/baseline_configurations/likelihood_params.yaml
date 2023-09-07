@@ -1,0 +1,93 @@
+amcl:
+  ros__parameters:
+    # Odometry motion model type.
+    robot_model_type: nav2_amcl::DifferentialMotionModel
+    # Expected process noise in odometry’s rotation estimate from rotation.
+    alpha1: 0.1
+    # Expected process noise in odometry’s rotation estimate from translation.
+    alpha2: 0.05
+    # Expected process noise in odometry’s translation estimate from translation.
+    alpha3: 0.1
+    # Expected process noise in odometry’s translation estimate from rotation.
+    alpha4: 0.05
+    # Expected process noise in odometry's strafe estimate from translation.
+    alpha5: 0.1
+    # The name of the coordinate frame published by the localization system.
+    global_frame_id: map
+    # The name of the coordinate frame published by the odometry system.
+    odom_frame_id: odom
+    # The name of the coordinate frame of the robot base.
+    base_frame_id: base
+    # The name of the topic where the map is published by the map server.
+    map_topic: map
+    # The name of the topic where scans are being published.
+    scan_topic: scan
+    # The name of the topic where an initial pose can be published.
+    # The particle filter will be reset using the provided pose with covariance.
+    initial_pose_topic: initialpose
+    # Maximum number of particles that will be used.
+    max_particles: 2000
+    # Minimum number of particles that will be used.
+    min_particles: 500
+    # Error allowed by KLD criteria.
+    pf_err: 0.05
+    # KLD criteria parameter.
+    # Upper standard normal quantile for the probability that the error in the
+    # estimated distribution is less than pf_err.
+    pf_z: 3.0
+    # Fast exponential filter constant, used to filter the average particles weights.
+    # Random particles are added if the fast filter result is larger than the slow filter result
+    # allowing the particle filter to recover from a bad approximation.
+    recovery_alpha_fast: 0.
+    # Slow exponential filter constant, used to filter the average particles weights.
+    # Random particles are added if the fast filter result is larger than the slow filter result
+    # allowing the particle filter to recover from a bad approximation.
+    recovery_alpha_slow: 0.
+    # Resample will happen after the amount of updates specified here happen.
+    resample_interval: 1
+    # Minimum angle difference from last resample for resampling to happen again.
+    update_min_a: 0.2
+    # Maximum angle difference from last resample for resampling to happen again.
+    update_min_d: 0.25
+    # Laser sensor model type.
+    laser_model_type: likelihood_field
+    # Maximum distance of an obstacle (if the distance is higher, this one will be used in the likelihood map).
+    laser_likelihood_max_dist: 2.0
+    # Maximum range of the laser.
+    laser_max_range: 100.0
+    # Maximum number of beams to use in the likelihood field sensor model.
+    max_beams: 100
+    # Weight used to combine the probability of hitting an obstacle.
+    z_hit: 0.5
+    # Weight used to combine the probability of random noise in perception.
+    z_rand: 0.5
+    # Standard deviation of a gaussian centered arounds obstacles.
+    sigma_hit: 0.2
+    # Whether to broadcast map to odom transform or not.
+    tf_broadcast: true
+    # Transform tolerance allowed.
+    transform_tolerance: 1.0
+    # Execution policy used to apply the motion update and importance weight steps.
+    # Valid options: "seq", "par".
+    execution_policy: seq
+    # Whether to set initial pose based on parameters.
+    # When enabled, particles will be initialized with the specified pose coordinates and covariance.
+    set_initial_pose: false
+    # Initial pose x coordinate.
+    initial_pose.x: 0.0
+    # Initial pose y coordinate.
+    initial_pose.y: 0.0
+    # Initial pose yaw coordinate.
+    initial_pose.yaw: 0.0
+    # Initial pose xx covariance.
+    initial_pose.covariance_x: 0.25
+    # Initial pose yy covariance.
+    initial_pose.covariance_y: 0.25
+    # Initial pose yawyaw covariance.
+    initial_pose.covariance_yaw: 0.0685
+    # Initial pose xy covariance.
+    initial_pose.covariance_xy: 0.0
+    # Initial pose xyaw covariance.
+    initial_pose.covariance_xyaw: 0.0
+    # Initial pose yyaw covariance.
+    initial_pose.covariance_yyaw: 0.0
