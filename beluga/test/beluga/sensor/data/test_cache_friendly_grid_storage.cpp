@@ -44,21 +44,23 @@ TEST(CacheFriendlyGridStorageTest, SetCellData) {
 
 TEST(CacheFriendlyGridStorageTest, ColoredCacheLinesForSquareArrangement) {
   using ValueType = int32_t;
-  const std::size_t k_width = 22;
-  const std::size_t k_height = 14;
-  const std::size_t k_line_len = 64;
-  const std::size_t k_tile_size = k_line_len / sizeof(ValueType);
-  const auto k_tile_side = static_cast<std::size_t>(std::sqrt(static_cast<double>(k_tile_size)));
 
-  auto uut = CacheFriendlyGridStorage<ValueType, k_line_len>(k_width, k_height);
+  using ValueType = int32_t;
+  constexpr std::size_t kWidth = 22;
+  constexpr std::size_t kHeight = 14;
+  constexpr std::size_t kLineLen = 64;
+  constexpr std::size_t kTileSize = kLineLen / sizeof(ValueType);
+  const auto k_tile_side = static_cast<std::size_t>(std::sqrt(static_cast<double>(kTileSize)));
 
-  ASSERT_EQ(uut.width(), k_width);
-  ASSERT_EQ(uut.height(), k_height);
+  auto uut = CacheFriendlyGridStorage<ValueType, kLineLen>(kWidth, kHeight);
 
-  const auto buffer_width = ((k_width + k_tile_side - 1) / k_tile_side) * k_tile_side;
-  const auto buffer_height = ((k_height + k_tile_side - 1) / k_tile_side) * k_tile_side;
+  ASSERT_EQ(uut.width(), kWidth);
+  ASSERT_EQ(uut.height(), kHeight);
+
+  const auto buffer_width = ((kWidth + k_tile_side - 1) / k_tile_side) * k_tile_side;
+  const auto buffer_height = ((kHeight + k_tile_side - 1) / k_tile_side) * k_tile_side;
   for (std::size_t i = 0; i < buffer_height * buffer_width; ++i) {
-    uut.raw_data()[i] = static_cast<ValueType>(i / k_tile_size);
+    uut.raw_data()[i] = static_cast<ValueType>(i / kTileSize);
   }
 
   auto expected_grid_contents = std::vector<ValueType>({
@@ -77,6 +79,12 @@ TEST(CacheFriendlyGridStorageTest, ColoredCacheLinesForSquareArrangement) {
       18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21, 22, 22, 22, 22, 23, 23,  //
       18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21, 22, 22, 22, 22, 23, 23,  //
   });
+
+  for (std::size_t y = 0; y < uut.height(); ++y) {
+    for (std::size_t x = 0; x < uut.width(); ++x) {
+      ASSERT_EQ(uut.cell(static_cast<int>(x), static_cast<int>(y)), expected_grid_contents[x + y * kWidth]);
+    }
+  }
 }
 
 TEST(CacheFriendlyGridStorageTest, ColoredCacheLinesForRectangularArrangement) {

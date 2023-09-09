@@ -24,7 +24,7 @@ namespace {
 
 using CellType = Eigen::Vector2i;
 
-auto array_distance(const CellType& first, const CellType& second) {
+auto euclidean_distance(const CellType& first, const CellType& second) {
   return (first - second).norm();
 }
 
@@ -43,31 +43,31 @@ auto make_neighbors_function(std::size_t size) {
 
 TEST(DistanceMap, Empty) {
   auto map = std::vector<CellType>{};
-  auto distance_map = nearest_obstacle_distance_map(6, 1, map, array_distance, make_neighbors_function(6));
+  auto distance_map = nearest_obstacle_distance_map(6, 1, map, euclidean_distance, make_neighbors_function(6));
   ASSERT_THAT(distance_map, testing::ElementsAre(0, 0, 0, 0, 0, 0));
 }
 
 TEST(DistanceMap, Full) {
   auto map = std::vector<CellType>{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}};
-  auto distance_map = nearest_obstacle_distance_map(6, 1, map, array_distance, make_neighbors_function(6));
+  auto distance_map = nearest_obstacle_distance_map(6, 1, map, euclidean_distance, make_neighbors_function(6));
   ASSERT_THAT(distance_map, testing::ElementsAre(0, 0, 0, 0, 0, 0));
 }
 
 TEST(DistanceMap, Case1) {
   auto map = std::vector<CellType>{{1, 0}, {5, 0}};
-  auto distance_map = nearest_obstacle_distance_map(6, 1, map, array_distance, make_neighbors_function(6));
+  auto distance_map = nearest_obstacle_distance_map(6, 1, map, euclidean_distance, make_neighbors_function(6));
   ASSERT_THAT(distance_map, testing::ElementsAre(1, 0, 1, 2, 1, 0));
 }
 
 TEST(DistanceMap, Case2) {
   auto map = std::vector<CellType>{{0, 0}, {1, 0}};
-  auto distance_map = nearest_obstacle_distance_map(6, 1, map, array_distance, make_neighbors_function(6));
+  auto distance_map = nearest_obstacle_distance_map(6, 1, map, euclidean_distance, make_neighbors_function(6));
   ASSERT_THAT(distance_map, testing::ElementsAre(0, 0, 1, 2, 3, 4));
 }
 
 TEST(DistanceMap, Case3) {
   auto map = std::vector<CellType>{{5, 0}};
-  auto distance_map = nearest_obstacle_distance_map(6, 1, map, array_distance, make_neighbors_function(6));
+  auto distance_map = nearest_obstacle_distance_map(6, 1, map, euclidean_distance, make_neighbors_function(6));
   ASSERT_THAT(distance_map, testing::ElementsAre(5, 4, 3, 2, 1, 0));
 }
 

@@ -64,7 +64,7 @@ class LinearGridStorage {
   [[nodiscard]] auto height() const { return height_; }
 
  private:
-  // Crappy workaround to avoid special cases for bool
+  // Wrap the type in a struct to avoid dealing with special cases for std::vector<bool>
   struct WrappedT {
     T value{};
   };

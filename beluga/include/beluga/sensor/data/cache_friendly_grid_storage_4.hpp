@@ -23,10 +23,10 @@ namespace beluga {
 
 /// @brief A cache friendly grid storage that efficiently packs grid patches in cache lines. This algorithm maps cache
 /// lines to square tiles, and also groups tiles in 2x2 groups. The tiles are transposed in a checkerboard fashion to
-/// try to exploit cache prefecth algorithms in the cpu.
+/// try to exploit cache prefetch algorithms in the CPU.
 /// @tparam T Type of the data to be stored.
-/// @tparam LineLenght Length of the minimum cache line to optimize for, in bytes.
-template <typename T, std::size_t LineLenght>
+/// @tparam LineLength Length of the minimum cache line to optimize for, in bytes.
+template <typename T, std::size_t LineLength>
 class CacheFriendlyGridStorage4 {
  public:
   /// @brief Type of the data stored in the grid.
@@ -37,14 +37,22 @@ class CacheFriendlyGridStorage4 {
   /// @param height Height of the grid.
   /// @param init_values Initial contents of the map, in row-major order.
   CacheFriendlyGridStorage4(std::size_t width, std::size_t height, std::initializer_list<T> init_values = {})
-      : kL2Tilecols_(ceil_div(width, kL2TileSide)),
-        kL2TileRows_(ceil_div(height, kL2TileSide)),
-        storage_(new(std::align_val_t{LineLenght}) T[kL2Tilecols_ * kL2TileRows_ * kL2TileSize]),
+      : l2_tile_cols_(ceil_div(width, kL2TileSide)),
+        l2_tile_rows_(ceil_div(height, kL2TileSide)),
+        buffer_size_(l2_tile_cols_ * l2_tile_rows_ * kL2TileSize),
+        storage_(new(std::align_val_t{LineLength}) T[buffer_size_]),
         grid_width_(width),
         grid_height_(height) {
-    static_assert(LineLenght % sizeof(T) == 0, "Line length must be a multiple of the data type size");
-    static_assert(LineLenght >= sizeof(T), "Line length must be greater than the data type size");
-    static_assert(is_power_of_two(LineLenght), "Line length must be a power of two");
+    static_assert(LineLength % sizeof(T) == 0, "Line length must be a multiple of the data type size");
+    static_assert(LineLength >= sizeof(T), "Line length must be greater than the data type size");
+    static_assert(is_power_of_two(LineLength), "Line length must be a power of two");
+
+    // pre-initialize the grid with default values
+    for (std::size_t index = 0; index < buffer_size_; ++index) {
+      storage_[index] = T{};
+    }
+
+    // if initial values are provided, copy them to the grid
     std::size_t index = 0;
     for (const auto& cell_value : init_values) {
       const auto x = static_cast<int>(index % grid_width_);
@@ -119,6 +127,16 @@ class CacheFriendlyGridStorage4 {
   }
 
   [[nodiscard]] std::size_t mapping_function(std::size_t x, std::size_t y) const {
+    // This mapping is similar to the basic CacheFriendlyGridStorage class,
+    // but adds one more structural level on top by grouping tiles in 2x2
+    // macro-tiles that map to four consecutive cache lines, and
+    //
+    // This comes from an informal empirical observation, and some bibliographical
+    // references that seemed to confirm it, that the CPU seemed to be prefetching
+    // consecutive lines (either the one after or the one before) by trying to estimate
+    // what direction the memory accesses are moving. By adding another level of structure
+    // can cheat the prefetching algorithm into prefetching tiles horizontally or vertically.
+
     const auto l2_tile_x = x / kL2TileSide;
     const auto l2_tile_y = y / kL2TileSide;
     auto l2_cell_x = x % kL2TileSide;
@@ -133,7 +151,7 @@ class CacheFriendlyGridStorage4 {
     const auto l1_cell_x = l2_cell_x % kL1TileSide;
     const auto l1_cell_y = l2_cell_y % kL1TileSide;
 
-    const auto l2_tile_offset = (l2_tile_y * kL2Tilecols_ + l2_tile_x) * kL2TileSize;
+    const auto l2_tile_offset = (l2_tile_y * l2_tile_cols_ + l2_tile_x) * kL2TileSize;
     const auto l1_tile_offset = (l1_tile_y * kL1TileCols + l1_tile_x) * kL1TileSize;
     const auto l1_cell_offset = l1_cell_y * kL1TileSide + l1_cell_x;
     return l2_tile_offset + l1_tile_offset + l1_cell_offset;
@@ -146,13 +164,17 @@ class CacheFriendlyGridStorage4 {
   static constexpr std::size_t kL1TileCols{2};
   static constexpr std::size_t kL1TileRows{2};
 
-  static constexpr std::size_t kL2TileSize{kL1TileRows * kL1TileCols * calculate_tile_area(LineLenght / sizeof(T))};
-  static constexpr std::size_t kL2TileSide{kL1TileCols * calculate_tile_side(LineLenght / sizeof(T))};
-  static constexpr std::size_t kL1TileSize{calculate_tile_area(LineLenght / sizeof(T))};
-  static constexpr std::size_t kL1TileSide{calculate_tile_side(LineLenght / sizeof(T))};
+  static constexpr std::size_t kL1TileSize{calculate_tile_area(LineLength / sizeof(T))};
+  static constexpr std::size_t kL1TileSide{calculate_tile_side(LineLength / sizeof(T))};
 
-  const std::size_t kL2Tilecols_;
-  const std::size_t kL2TileRows_;
+  static constexpr std::size_t kL2TileSize{kL1TileRows * kL1TileCols * kL1TileSize};
+  static constexpr std::size_t kL2TileSide{kL1TileCols * kL1TileSide};
+
+  const std::size_t l2_tile_cols_;
+  const std::size_t l2_tile_rows_;
+
+  const std::size_t buffer_size_;
+
   std::unique_ptr<T[]> storage_;  // NOLINT
 
   const std::size_t grid_width_;

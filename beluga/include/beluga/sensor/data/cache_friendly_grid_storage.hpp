@@ -21,11 +21,11 @@
 
 namespace beluga {
 
-/// @brief A cache friendly grid storage that efficiently packs grid patches in cache lines. This algorithm maps cache
-/// lines to square tiles on the grid.
+/// @brief A cache friendly grid storage that efficiently packs grid patches in cache lines. This
+/// algorithm maps cache lines to square tiles in the grid.
 /// @tparam T Type of the data to be stored.
-/// @tparam LineLenght Length of the minimum cache line to optimize for, in bytes.
-template <typename T, std::size_t LineLenght>
+/// @tparam LineLength Length of the minimum cache line to optimize for, in bytes.
+template <typename T, std::size_t LineLength>
 class CacheFriendlyGridStorage {
  public:
   /// @brief Type of the data stored in the grid.
@@ -38,12 +38,20 @@ class CacheFriendlyGridStorage {
   CacheFriendlyGridStorage(std::size_t width, std::size_t height, std::initializer_list<T> init_values = {})
       : tile_cols_(ceil_div(width, kTileSide)),
         tile_rows_(ceil_div(height, kTileSide)),
-        storage_(new(std::align_val_t{LineLenght}) T[tile_cols_ * tile_rows_ * kTileSize]),
+        buffer_size_(tile_cols_ * tile_rows_ * kTileSize),
+        storage_(new(std::align_val_t{LineLength}) T[buffer_size_]),
         grid_width_(width),
         grid_height_(height) {
-    static_assert(LineLenght % sizeof(T) == 0, "Line length must be a multiple of the data type size");
-    static_assert(LineLenght >= sizeof(T), "Line length must be greater than the data type size");
-    static_assert(is_power_of_two(LineLenght), "Line length must be a power of two");
+    static_assert(LineLength % sizeof(T) == 0, "Line length must be a multiple of the data type size");
+    static_assert(LineLength >= sizeof(T), "Line length must be greater than the data type size");
+    static_assert(is_power_of_two(LineLength), "Line length must be a power of two");
+
+    // pre-initialize the grid with default values
+    for (std::size_t index = 0; index < buffer_size_; ++index) {
+      storage_[index] = T{};
+    }
+
+    // if initial values are provided, copy them to the grid
     std::size_t index = 0;
     for (const auto& cell_value : init_values) {
       const auto x = static_cast<int>(index % grid_width_);
@@ -106,7 +114,7 @@ class CacheFriendlyGridStorage {
 
   [[nodiscard]] static constexpr std::size_t calculate_tile_side(std::size_t elements_per_line) {
     auto tile_area = calculate_tile_area(elements_per_line);
-    // we calculate the side length by calculating the square root base four,
+    // we calculate the side length by calculating the log base four
     // and elevating two to that power
     std::size_t tile_side = 1;
     while (tile_area > 1) {
@@ -121,7 +129,21 @@ class CacheFriendlyGridStorage {
   }
 
   [[nodiscard]] std::size_t mapping_function(std::size_t x, std::size_t y) const {
-    if constexpr (!is_a_square_power_of_two(LineLenght / sizeof(T))) {
+    // this mapping will memory arrange so that cache lines map to the grid like this:
+    //
+    // A A B B C C D D E E ...
+    // A A B B C C D D E E ...
+    // F F G G H H I I J J ...
+    // F F G G H H I I J J ...
+    //
+    // instead of like this (nominal row-major order):
+    //
+    // A A A A B B B B C C ...
+    // D D D D E E E E F F ...
+    // G G G G H H H H I I ...
+    // J J J J K K K K L L ...
+
+    if constexpr (true || !is_a_square_power_of_two(LineLength / sizeof(T))) {
       // full formula for rectangular tiles
       const auto tile_x = x / kTileSide;
       const auto tile_y = y / kTileSide;
@@ -129,7 +151,21 @@ class CacheFriendlyGridStorage {
       auto cell_y = y % kTileSide;
 
       // if we are using two lines per tile, we need to swap the coordinates
-      // in alternating tiles, to avoid large scale anisotropy
+      // in alternating tiles, to avoid having twice the amount of lines when
+      // moving vertically compared to the same distance horizontally. This
+      // effectively transposes half of the tiles, to make the cache lines
+      // be arranged like this:
+      //
+      //    == || == ||
+      //    || == || ==
+      //    == || == ||
+      //
+      // instead of like this:
+      //
+      //    == == == ==
+      //    == == == ==
+      //    == == == ==
+      //
       if (tile_x % 2 == tile_y % 2) {
         std::swap(cell_x, cell_y);
       }
@@ -139,8 +175,9 @@ class CacheFriendlyGridStorage {
       return tile_index + cell_index;
 
     } else {
-      // fast-track formula for square tiles (the performance difference with the one above is
-      // about 10% when used for square tiles)
+      // by working the general formula above when the tile is square, we get
+      // this slightly faster formula for square tiles. The performance difference
+      // between this and the general formula above for square tiles is about 10%.
       auto cell_x = x % kTileSide;
       auto cell_y = y % kTileSide;
       return ((y - cell_y) * tile_cols_ + cell_y + x - cell_x) * kTileSide + cell_x;
@@ -151,11 +188,13 @@ class CacheFriendlyGridStorage {
     return mapping_function(static_cast<std::size_t>(x), static_cast<std::size_t>(y));
   }
 
-  static constexpr std::size_t kTileSize{calculate_tile_area(LineLenght / sizeof(T))};
-  static constexpr std::size_t kTileSide{calculate_tile_side(LineLenght / sizeof(T))};
+  static constexpr std::size_t kTileSize{calculate_tile_area(LineLength / sizeof(T))};
+  static constexpr std::size_t kTileSide{calculate_tile_side(LineLength / sizeof(T))};
 
   const std::size_t tile_cols_;
   const std::size_t tile_rows_;
+  const std::size_t buffer_size_;
+
   std::unique_ptr<T[]> storage_;  // NOLINT
 
   const std::size_t grid_width_;

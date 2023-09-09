@@ -22,7 +22,8 @@
 namespace beluga {
 
 /// @brief A cache friendly grid storage that efficiently packs grid patches in cache lines. This algorithm transposes
-/// the cells odd-numbered diagonals to equalize the effect of cache on both horizontal and vertical directions.
+/// the cells odd-numbered diagonals to equalize the effect of cache on both horizontal and vertical directions. For
+/// highly rectangular grids, this algorithm is inefficient in terms of memory usage.
 /// @tparam T Type of the data to be stored.
 template <typename T>
 class CacheFriendlyGridStorage3 {
@@ -37,7 +38,7 @@ class CacheFriendlyGridStorage3 {
   CacheFriendlyGridStorage3(std::size_t width, std::size_t height, std::initializer_list<T> init_values = {})
       : storage_width_(next_even(std::max(width, height))),
         storage_height_(std::max(width, height)),
-        storage_(next_even(std::max(width, height)) * std::max(width, height), WrappedT{}),
+        storage_(storage_width_ * storage_height_, WrappedT{}),
         grid_width_(width),
         grid_height_(height) {
     std::size_t index = 0;
@@ -70,6 +71,7 @@ class CacheFriendlyGridStorage3 {
   [[nodiscard]] auto height() const { return grid_height_; }
 
  private:
+  // Wrap the type in a struct to avoid dealing with special cases for std::vector<bool>
   struct WrappedT {
     T value{};
   };
@@ -85,21 +87,43 @@ class CacheFriendlyGridStorage3 {
   [[nodiscard]] static constexpr std::size_t next_even(std::size_t n) { return (n % 2 == 0) ? n : n + 1; }
 
   [[nodiscard]] auto& cell_impl(std::size_t x, std::size_t y) {
+    // transpose odd-numbered diagonals. This mapping causes cache lines to map to the grid
+    // like this:
+    //
+    // A C A G
+    // A C E C
+    // E C E G
+    // A G E G
+    //
+    // instead of the nominal row-major order:
+    //
+    // A A A A
+    // C C C C
+    // E E E E
+    // G G G G
+    //
+    // The aim is to tend to equalize the effect of cache on
+    // both the horizontal and vertical directions.
     const auto transpose = (x + y) & 0x01;
+
     if (!transpose) {
       // straight
       return storage_[y * storage_width_ + x].value;
     }
+
     // transposed
     return storage_[x * storage_width_ + y].value;
   }
 
   [[nodiscard]] const auto& cell_impl(std::size_t x, std::size_t y) const {
+    // transpose odd-numbered diagonals. See comment in non-const version.
     const auto transpose = (x + y) & 0x01;
+
     if (!transpose) {
       // straight
       return storage_[y * storage_width_ + x].value;
     }
+
     // transposed
     return storage_[x * storage_width_ + y].value;
   }
