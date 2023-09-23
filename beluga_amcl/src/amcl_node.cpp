@@ -24,6 +24,8 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <tuple>
+#include <unordered_map>
 #include <utility>
 
 #include <beluga/mixin.hpp>
@@ -816,19 +818,67 @@ void AmclNode::timer_callback() {
     return;
   }
 
+  // Particle weights from the filter may or may not be representative of the
+  // true distribution. If we resampled, they are not, and there will be multiple copies
+  // of the most likely candidates, all with unit weight. In this case the number of copies
+  // is a proxy for the prob density at each candidate. If we did not resample before updating
+  // the estimation and publishing this message (which can happen if the resample interval
+  // is set to something other than 1), then all particles are expected to be different
+  // and their weights are proportional to the prob density at each candidate.
+  //
+  // Only the combination of both the state distribution and the candidate weights together
+  // provide information about the probability density at each candidate.
+  // To handle both cases, we group repeated candidates and compute the accumulated weight
+
+  struct RepresentativeData {
+    Sophus::SE2d state;
+    double weight{0.};
+  };
+
+  struct RepresentativeBinHash {
+    std::size_t operator()(const Sophus::SE2d& s) const noexcept {
+      std::size_t h1 = std::hash<double>{}(s.translation().x());
+      std::size_t h2 = std::hash<double>{}(s.translation().y());
+      std::size_t h3 = std::hash<double>{}(s.so2().log());
+      return h1 ^ (h2 << 1) ^ (h3 << 2);
+    }
+  };
+
+  struct RepresentativeBinEqual {
+    bool operator()(const Sophus::SE2d& lhs, const Sophus::SE2d& rhs) const noexcept {
+      // good enough, since copies of the same candidate are expected to be identical copies
+      return lhs.translation().x() == rhs.translation().x() &&  //
+             lhs.translation().y() == rhs.translation().y() &&  //
+             lhs.so2().log() == rhs.so2().log();
+    }
+  };
+
+  std::unordered_map<Sophus::SE2d, RepresentativeData, RepresentativeBinHash, RepresentativeBinEqual>
+      representatives_map;
+  representatives_map.reserve(particle_filter_->particle_count());
+  double max_weight = 1e-5;  // never risk dividing by zero
+
+  for (const auto& [state, weight] :
+       ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view())) {
+    auto& representative = representatives_map[state];  // if the element does not exist, create it
+    representative.state = state;
+    representative.weight += weight;
+    if (representative.weight > max_weight) {
+      max_weight = representative.weight;
+    }
+  }
+
   auto message = nav2_msgs::msg::ParticleCloud{};
   message.header.stamp = now();
   message.header.frame_id = get_parameter("global_frame_id").as_string();
-  message.particles.resize(particle_filter_->particle_count());
-  ranges::transform(
-      ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view()),
-      std::begin(message.particles), [](const auto& particle) {
-        const auto& [state, weight] = particle;
-        auto message = nav2_msgs::msg::Particle{};
-        tf2::toMsg(state, message.pose);
-        message.weight = weight;
-        return message;
-      });
+  message.particles.reserve(particle_filter_->particle_count());
+
+  for (const auto& [key, representative] : representatives_map) {
+    auto& particle = message.particles.emplace_back();
+    tf2::toMsg(representative.state, particle.pose);
+    particle.weight = representative.weight / max_weight;
+  }
+
   particle_cloud_pub_->publish(message);
 }
 
