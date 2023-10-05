@@ -372,14 +372,11 @@ void AmclNodelet::particle_cloud_timer_callback(const ros::TimerEvent& ev) {
   message.header.stamp = ev.current_real;
   message.header.frame_id = config_.global_frame_id;
   message.poses.resize(particle_filter_->particle_count());
-  ranges::transform(
-      ranges::views::zip(particle_filter_->states_view(), particle_filter_->weights_view()), std::begin(message.poses),
-      [](const auto& particle) {
-        const auto& [state, _] = particle;
-        auto message = geometry_msgs::Pose{};
-        tf2::toMsg(state, message);
-        return message;
-      });
+  ranges::transform(particle_filter_->states_view(), std::begin(message.poses), [](const auto& state) {
+    auto message = geometry_msgs::Pose{};
+    tf2::toMsg(state, message);
+    return message;
+  });
   particle_cloud_pub_.publish(message);
 }
 
