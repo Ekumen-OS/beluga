@@ -123,7 +123,6 @@ class DifferentialDriveModel : public Mixin {
               ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()
               : Sophus::SO2d{0.0};
       const auto second_rotation = current_orientation * previous_orientation.inverse() * first_rotation.inverse();
-      const auto combined_rotation = first_rotation * second_rotation;
 
       {
         first_rotation_params_ = DistributionParam{
@@ -133,7 +132,8 @@ class DifferentialDriveModel : public Mixin {
         translation_params_ = DistributionParam{
             distance, std::sqrt(
                           params_.translation_noise_from_translation * distance_variance +
-                          params_.translation_noise_from_rotation * rotation_variance(combined_rotation))};
+                          params_.translation_noise_from_rotation *
+                              (rotation_variance(first_rotation) + rotation_variance(second_rotation)))};
         second_rotation_params_ = DistributionParam{
             second_rotation.log(), std::sqrt(
                                        params_.rotation_noise_from_rotation * rotation_variance(second_rotation) +
