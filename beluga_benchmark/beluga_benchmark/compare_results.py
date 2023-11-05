@@ -287,5 +287,4 @@ def main():
         )
         ax.set_ylim(new_limits)
 
-
     plt.show()
