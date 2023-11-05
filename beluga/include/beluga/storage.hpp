@@ -177,7 +177,7 @@ class StoragePolicy : public Mixin {
    */
   template <class Range>
   void initialize_particles(Range&& input) {
-    static_assert(std::is_same_v<particle_type, ranges::range_value_t<Range>>, "Invalid value type");
+    static_assert(std::is_convertible_v<ranges::range_value_t<Range>, particle_type>, "Invalid value type");
     const std::size_t size = this->self().max_samples();
     particles_[1].resize(size);
     const auto first = std::begin(views::all(particles_[1]));
@@ -216,7 +216,7 @@ class StoragePolicy : public Mixin {
   [[nodiscard]] auto weights() const { return views::weights(particles_[0]) | ranges::views::const_; }
 
  private:
-  Container particles_[2];
+  std::array<Container, 2> particles_;
 };
 
 /// A storage policy that implements a structure of arrays layout.
