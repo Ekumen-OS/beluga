@@ -109,6 +109,7 @@ def create_parameterized_series(results_path: Path):
     cpu_usage = []
     ape_rmse = []
     ape_mean = []
+    ape_std = []
     ape_median = []
     ape_max = []
     latency_min = []
@@ -137,6 +138,7 @@ def create_parameterized_series(results_path: Path):
         ape_rmse.append(stats["rmse"])
         ape_max.append(stats["max"])
         ape_mean.append(stats["mean"])
+        ape_std.append(stats["std"])
         ape_median.append(stats["median"])
         terminal_output_path = dir / TERMINAL_OUTPUT_LOG_FILE_NAME
         latency_stats = parse_latency_data(terminal_output_path)
@@ -153,6 +155,7 @@ def create_parameterized_series(results_path: Path):
                 'cpu_usage': cpu_usage,
                 'ape_rmse': ape_rmse,
                 'ape_mean': ape_mean,
+                'ape_std': ape_std,
                 'ape_median': ape_median,
                 'ape_max': ape_max,
                 'latency_min': latency_min,
@@ -203,16 +206,16 @@ def main():
         help='List of plots to generate. Default: ' + ', '.join(default_plots),
     )
 
+    arg_parser.add_argument(
+        '--save-csv',
+        type=str,
+        action='store',
+        help='Instead of plotting, save all the results to a csv file',
+    )
+
     args = arg_parser.parse_args()
 
     assert len(args.series) == len(args.label), 'Number of series and labels must match'
-
-    series = [
-        create_parameterized_series(series)
-        .filter(items=args.plot_names)
-        .add_prefix(label + '_')
-        for label, series in zip(args.label, args.series)
-    ]
 
     color_gen = cycle(
         [
@@ -225,6 +228,31 @@ def main():
             'orange',
         ]
     )
+
+    if args.save_csv:
+        # create list of dataframes with no filtered columns
+        series = [
+            create_parameterized_series(series).add_prefix(label + '_')
+            for label, series in zip(args.label, args.series)
+        ]
+        # leave only the index
+        full_table = series[0].filter(items=[])
+        # concatenate data in a single table
+        for s in series:
+            full_table = pd.concat([full_table, s], axis=1)
+        print('Saving to CSV file: ', args.save_csv)
+        full_table.to_csv(args.save_csv)
+        return 0
+
+    series = [
+        create_parameterized_series(series)
+        .filter(items=args.plot_names)
+        .add_prefix(label + '_')
+        for label, series in zip(args.label, args.series)
+    ]
+
+    print('Plotting data...')
+
     marker_gen = cycle('o^sDvP*')
 
     ax = series[0].plot(
@@ -258,4 +286,5 @@ def main():
             max(0.0, current_ylimits[1]),  # include zero above
         )
         ax.set_ylim(new_limits)
+
     plt.show()
