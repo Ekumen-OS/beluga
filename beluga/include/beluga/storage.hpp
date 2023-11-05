@@ -179,10 +179,11 @@ class StoragePolicy : public Mixin {
   void initialize_particles(Range&& input) {
     static_assert(std::is_same_v<particle_type, ranges::range_value_t<Range>>, "Invalid value type");
     const std::size_t size = this->self().max_samples();
-    particles_.resize(size);
-    const auto first = std::begin(views::all(particles_));
+    particles_[1].resize(size);
+    const auto first = std::begin(views::all(particles_[1]));
     const auto last = ranges::copy(input | ranges::views::take(size), first).out;
-    particles_.resize(static_cast<std::size_t>(std::distance(first, last)));
+    particles_[1].resize(static_cast<std::size_t>(std::distance(first, last)));
+    std::swap(particles_[0], particles_[1]);
   }
 
   /// \copydoc StorageInterface::initialize_states()
@@ -191,7 +192,7 @@ class StoragePolicy : public Mixin {
   }
 
   /// \copydoc StorageInterface::particle_count()
-  [[nodiscard]] std::size_t particle_count() const final { return particles_.size(); }
+  [[nodiscard]] std::size_t particle_count() const final { return particles_[0].size(); }
 
   /// \copydoc StorageInterface::states_view()
   [[nodiscard]] output_view_type states_view() const final { return this->states(); }
@@ -200,22 +201,22 @@ class StoragePolicy : public Mixin {
   [[nodiscard]] weights_view_type weights_view() const final { return this->weights(); }
 
   /// Returns a view of the particles container.
-  [[nodiscard]] auto particles() { return views::all(particles_); }
+  [[nodiscard]] auto particles() { return views::all(particles_[0]); }
   /// Returns a const view of the particles container.
-  [[nodiscard]] auto particles() const { return views::all(particles_) | ranges::views::const_; }
+  [[nodiscard]] auto particles() const { return views::all(particles_[0]) | ranges::views::const_; }
 
   /// Returns a view of the particles states.
-  [[nodiscard]] auto states() { return views::states(particles_); }
+  [[nodiscard]] auto states() { return views::states(particles_[0]); }
   /// Returns a const view of the particles states.
-  [[nodiscard]] auto states() const { return views::states(particles_) | ranges::views::const_; }
+  [[nodiscard]] auto states() const { return views::states(particles_[0]) | ranges::views::const_; }
 
   /// Returns a view of the particles weight.
-  [[nodiscard]] auto weights() { return views::weights(particles_); }
+  [[nodiscard]] auto weights() { return views::weights(particles_[0]); }
   /// Returns a const view of the particles weight.
-  [[nodiscard]] auto weights() const { return views::weights(particles_) | ranges::views::const_; }
+  [[nodiscard]] auto weights() const { return views::weights(particles_[0]) | ranges::views::const_; }
 
  private:
-  Container particles_;
+  Container particles_[2];
 };
 
 /// A storage policy that implements a structure of arrays layout.
