@@ -151,4 +151,48 @@ TEST(DifferentialDriveModelSamples, RotateThirdQuadrant) {
   ASSERT_NEAR(stddev, std::sqrt(alpha * flipped_angle * flipped_angle), 0.01);
 }
 
+TEST(DifferentialDriveModelSamples, RotateTranslateRotateFirstQuadrant) {
+  const double alpha = 0.2;
+  auto mixin = UUT{beluga::DifferentialDriveModelParam{0.0, 0.0, 0.0, alpha}};  // Translation variance from rotation
+  auto generator = std::mt19937{std::random_device()()};
+  mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{1.0, 1.0}});
+  auto view = ranges::views::generate([&]() {
+                return mixin.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}, generator).translation().norm();
+              }) |
+              ranges::views::take_exactly(1'000'000) | ranges::views::common;
+  const auto [mean, stddev] = get_statistics(view);
+  ASSERT_NEAR(mean, 1.41, 0.01);
+
+  // Net rotation is zero comparing final and initial poses, but
+  // the model requires a 45 degree counter-clockwise rotation,
+  // a forward translation, and a 45 degree clockwise rotation.
+  const double first_rotation = Constants::pi() / 4;
+  const double second_rotation = first_rotation;
+  const double rotation_variance = (first_rotation * first_rotation) + (second_rotation * second_rotation);
+  ASSERT_NEAR(stddev, std::sqrt(alpha * rotation_variance), 0.01);
+}
+
+TEST(DifferentialDriveModelSamples, RotateTranslateRotateThirdQuadrant) {
+  const double alpha = 0.2;
+  auto mixin = UUT{beluga::DifferentialDriveModelParam{0.0, 0.0, 0.0, alpha}};  // Translation variance from rotation
+  auto generator = std::mt19937{std::random_device()()};
+  mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  mixin.update_motion(SE2d{SO2d{0.0}, Vector2d{-1.0, -1.0}});
+  auto view = ranges::views::generate([&]() {
+                return mixin.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}, generator).translation().norm();
+              }) |
+              ranges::views::take_exactly(1'000'000) | ranges::views::common;
+  const auto [mean, stddev] = get_statistics(view);
+  ASSERT_NEAR(mean, 1.41, 0.01);
+
+  // Net rotation is zero comparing final and initial poses, but
+  // the model requires a 45 degree counter-clockwise rotation,
+  // a backward translation and a 45 degree clockwise rotation.
+  const double first_rotation = Constants::pi() / 4;
+  const double second_rotation = first_rotation;
+  const double rotation_variance = (first_rotation * first_rotation) + (second_rotation * second_rotation);
+  ASSERT_NEAR(stddev, std::sqrt(alpha * rotation_variance), 0.01);
+}
+
 }  // namespace
