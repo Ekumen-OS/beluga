@@ -155,8 +155,8 @@ class DifferentialDriveModel : public Mixin {
 
   static double rotation_variance(const Sophus::SO2d& rotation) {
     // Treat backward and forward motion symmetrically for the noise models.
-    static const auto flipping_rotation = Sophus::SO2d{Sophus::Constants<double>::pi()};
-    const auto flipped_rotation = rotation * flipping_rotation;
+    static const auto kFlippingRotation = Sophus::SO2d{Sophus::Constants<double>::pi()};
+    const auto flipped_rotation = rotation * kFlippingRotation;
     const auto delta = std::min(std::abs(rotation.log()), std::abs(flipped_rotation.log()));
     return delta * delta;
   }
