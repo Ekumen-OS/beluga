@@ -17,6 +17,9 @@
 #include <beluga/storage.hpp>
 #include <ciabatta/ciabatta.hpp>
 
+#include <range/v3/algorithm/equal.hpp>
+#include <range/v3/view/reverse.hpp>
+
 namespace {
 
 using testing::Return;
@@ -67,6 +70,16 @@ TYPED_TEST(StoragePolicyTest, InitializeWithMoreParticlesThanExpected) {
   EXPECT_CALL(mixin, max_samples()).WillOnce(Return(2));
   mixin.initialize_states(states | ranges::views::all);
   ASSERT_EQ(mixin.particle_count(), 2);
+}
+
+TYPED_TEST(StoragePolicyTest, ResampleParticles) {
+  auto states = std::vector<int>{1, 2, 3, 4, 5};
+  auto mixin = TypeParam{};
+  EXPECT_CALL(mixin, max_samples()).WillOnce(Return(5)).WillOnce(Return(5));
+  mixin.initialize_states(states | ranges::views::all);
+  ASSERT_EQ(mixin.particle_count(), 5);
+  mixin.initialize_particles(mixin.particles() | ranges::views::reverse);
+  ASSERT_TRUE(ranges::equal(mixin.states(), states | ranges::views::reverse));
 }
 
 }  // namespace

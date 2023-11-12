@@ -77,6 +77,28 @@ The script will plot the following metrics vs the number of particles:
 - APE max
 - APE rmse
 
+## Saving benchmarking results to a CSV file
+
+The following command allows to save the results of different benchmarking runs to a CSV file, assuming that
+beam data has been stored in the `beam_beluga_seq` and `beam_nav2_amcl` directories, and
+likelihood data has been stored in the `likelihood_beluga_seq` and `likelihood_nav2_amcl` directories.
+
+```bash
+ros2 run beluga_benchmark compare_results \
+    -s beam_beluga_seq -l beluga          \
+    -s beam_nav2_amcl  -l nav2            \
+    --save-csv beam_model_data.csv
+
+ros2 run beluga_benchmark compare_results \
+    -s likelihood_beluga_seq -l beluga    \
+    -s likelihood_nav2_amcl  -l nav2      \
+    --save-csv likelihood_model_data.csv
+```
+
+The files `beam_model_data.csv` and `likelihood_model_data.csv` will be created in the current directory,
+containing all of the data captured in the benchmark runs, where columns will have been prefixed with the
+corresponding label passed to `compare_results` (e.g. `beluga_rss`, `nav2_rss`, etc).
+
 ## References
 
 - https://github.com/NERSC/timemory
