@@ -121,9 +121,8 @@ class DifferentialDriveModel : public Mixin {
       const auto first_rotation =
           distance > params_.distance_threshold
               ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()
-              : Sophus::SO2d{0.0};
+              : Sophus::SO2d{};
       const auto second_rotation = current_orientation * previous_orientation.inverse() * first_rotation.inverse();
-      const auto combined_rotation = first_rotation * second_rotation;
 
       {
         first_rotation_params_ = DistributionParam{
@@ -133,7 +132,8 @@ class DifferentialDriveModel : public Mixin {
         translation_params_ = DistributionParam{
             distance, std::sqrt(
                           params_.translation_noise_from_translation * distance_variance +
-                          params_.translation_noise_from_rotation * rotation_variance(combined_rotation))};
+                          params_.translation_noise_from_rotation *
+                              (rotation_variance(first_rotation) + rotation_variance(second_rotation)))};
         second_rotation_params_ = DistributionParam{
             second_rotation.log(), std::sqrt(
                                        params_.rotation_noise_from_rotation * rotation_variance(second_rotation) +
@@ -155,7 +155,8 @@ class DifferentialDriveModel : public Mixin {
 
   static double rotation_variance(const Sophus::SO2d& rotation) {
     // Treat backward and forward motion symmetrically for the noise models.
-    const auto flipped_rotation = rotation * Sophus::SO2d{Sophus::Constants<double>::pi()};
+    static const auto kFlippingRotation = Sophus::SO2d{Sophus::Constants<double>::pi()};
+    const auto flipped_rotation = rotation * kFlippingRotation;
     const auto delta = std::min(std::abs(rotation.log()), std::abs(flipped_rotation.log()));
     return delta * delta;
   }
