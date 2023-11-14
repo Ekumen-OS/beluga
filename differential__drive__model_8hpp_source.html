@@ -145,19 +145,19 @@ $(function() {
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> first_rotation =</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;          distance &gt; params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#aa12b1f7cfcdd06234b0992c43976377e">distance_threshold</a></div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;              ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;              : Sophus::SO2d{0.0};</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;              : Sophus::SO2d{};</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> second_rotation = current_orientation * previous_orientation.inverse() * first_rotation.inverse();</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> combined_rotation = first_rotation * second_rotation;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;      {</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        first_rotation_params_ = DistributionParam{</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            first_rotation.log(), std::sqrt(</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                                      params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#a01eab931f32b7ae92f2d4f0b1175e30c">rotation_noise_from_rotation</a> * rotation_variance(first_rotation) +</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                                      params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#a14d0476d23005e9c2bfbc7d8f3de4b55">rotation_noise_from_translation</a> * distance_variance)};</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        translation_params_ = DistributionParam{</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            distance, std::sqrt(</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                          params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#acd54f76dfe05df2525d386c7c6640e27">translation_noise_from_translation</a> * distance_variance +</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                          params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#a1aa831f00bffc8392783a680aea17d69">translation_noise_from_rotation</a> * rotation_variance(combined_rotation))};</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;      {</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        first_rotation_params_ = DistributionParam{</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            first_rotation.log(), std::sqrt(</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                                      params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#a01eab931f32b7ae92f2d4f0b1175e30c">rotation_noise_from_rotation</a> * rotation_variance(first_rotation) +</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                                      params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#a14d0476d23005e9c2bfbc7d8f3de4b55">rotation_noise_from_translation</a> * distance_variance)};</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        translation_params_ = DistributionParam{</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            distance, std::sqrt(</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                          params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#acd54f76dfe05df2525d386c7c6640e27">translation_noise_from_translation</a> * distance_variance +</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                          params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#a1aa831f00bffc8392783a680aea17d69">translation_noise_from_rotation</a> *</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                              (rotation_variance(first_rotation) + rotation_variance(second_rotation)))};</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        second_rotation_params_ = DistributionParam{</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            second_rotation.log(), std::sqrt(</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                                       params_.<a class="code" href="structbeluga_1_1DifferentialDriveModelParam.html#a01eab931f32b7ae92f2d4f0b1175e30c">rotation_noise_from_rotation</a> * rotation_variance(second_rotation) +</div>
@@ -179,15 +179,16 @@ $(function() {
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">double</span> rotation_variance(<span class="keyword">const</span> Sophus::SO2d&amp; rotation) {</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="comment">// Treat backward and forward motion symmetrically for the noise models.</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> flipped_rotation = rotation * Sophus::SO2d{Sophus::Constants&lt;double&gt;::pi()};</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> delta = std::min(std::abs(rotation.log()), std::abs(flipped_rotation.log()));</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordflow">return</span> delta * delta;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;  }</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;};</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> kFlippingRotation = Sophus::SO2d{Sophus::Constants&lt;double&gt;::pi()};</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> flipped_rotation = rotation * kFlippingRotation;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> delta = std::min(std::abs(rotation.log()), std::abs(flipped_rotation.log()));</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordflow">return</span> delta * delta;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  }</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;};</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassbeluga_1_1DifferentialDriveModel_html"><div class="ttname"><a href="classbeluga_1_1DifferentialDriveModel.html">beluga::DifferentialDriveModel</a></div><div class="ttdoc">Sampled odometry model for a differential drive.</div><div class="ttdef"><b>Definition:</b> differential_drive_model.hpp:74</div></div>
 <div class="ttc" id="aclassbeluga_1_1DifferentialDriveModel_html_a0c08a11d3be665c8f575a92826914160"><div class="ttname"><a href="classbeluga_1_1DifferentialDriveModel.html#a0c08a11d3be665c8f575a92826914160">beluga::DifferentialDriveModel::update_motion</a></div><div class="ttdeci">void update_motion(const update_type &amp;pose) final</div><div class="ttdoc">Updates the motion model with the latest odometry data.</div><div class="ttdef"><b>Definition:</b> differential_drive_model.hpp:113</div></div>
 <div class="ttc" id="aclassbeluga_1_1DifferentialDriveModel_html_a1f6244c5d854d9ae99719a4f5a0cede0"><div class="ttname"><a href="classbeluga_1_1DifferentialDriveModel.html#a1f6244c5d854d9ae99719a4f5a0cede0">beluga::DifferentialDriveModel::update_type</a></div><div class="ttdeci">Sophus::SE2d update_type</div><div class="ttdoc">Update type of the motion model, same as the state_type in the odometry model.</div><div class="ttdef"><b>Definition:</b> differential_drive_model.hpp:77</div></div>
