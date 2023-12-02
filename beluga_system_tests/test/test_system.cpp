@@ -26,7 +26,6 @@
 #include <beluga/localization.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga/sensor/likelihood_field_model.hpp>
 #include <beluga_amcl/amcl_node_utils.hpp>
 #include <beluga_amcl/filter_update_control/filter_update_control_mixin.hpp>
 #include <beluga_amcl/filter_update_control/resample_interval_policy.hpp>

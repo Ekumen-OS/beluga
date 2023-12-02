@@ -16,7 +16,6 @@
 
 #include "beluga/algorithm/raycasting.hpp"
 #include "beluga/sensor.hpp"
-#include "beluga/sensor/beam_model.hpp"
 
 #include "beluga/test/static_occupancy_grid.hpp"
 
