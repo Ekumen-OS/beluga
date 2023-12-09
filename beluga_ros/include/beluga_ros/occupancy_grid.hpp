@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL_OCCUPANCY_GRID_HPP
-#define BELUGA_AMCL_OCCUPANCY_GRID_HPP
+#ifndef BELUGA_ROS_OCCUPANCY_GRID_HPP
+#define BELUGA_ROS_OCCUPANCY_GRID_HPP
 
 #include <tf2/utils.h>
 
@@ -23,17 +23,26 @@
 #include <vector>
 
 #include <beluga/sensor/data/occupancy_grid.hpp>
-#include <beluga_amcl/ros_interfaces.hpp>
+#include <beluga_ros/messages.hpp>
 
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
-namespace beluga_amcl {
+#if BELUGA_ROS_VERSION == 2
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#elif BELUGA_ROS_VERSION == 1
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#else
+#error BELUGA_ROS_VERSION is not defined or invalid
+#endif
+
+namespace beluga_ros {
 
 class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
  public:
   struct ValueTraits {
     // https://wiki.ros.org/map_server#Value_Interpretation
+    // Supporting standard trinary interpretation.
     static constexpr std::int8_t kFreeValue = 0;
     static constexpr std::int8_t kUnknownValue = -1;
     static constexpr std::int8_t kOccupiedValue = 100;
@@ -45,7 +54,7 @@ class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
     [[nodiscard]] static bool is_occupied(std::int8_t value) { return value == kOccupiedValue; }
   };
 
-  explicit OccupancyGrid(messages::OccupancyGridConstSharedPtr grid)
+  explicit OccupancyGrid(beluga_ros::msg::OccupancyGridConstSharedPtr grid)
       : grid_(std::move(grid)), origin_(make_origin_transform(grid_->info.origin)) {}
 
   [[nodiscard]] const Sophus::SE2d& origin() const { return origin_; }
@@ -63,16 +72,16 @@ class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
   [[nodiscard]] static auto value_traits() { return ValueTraits{}; }
 
  private:
-  messages::OccupancyGridConstSharedPtr grid_;
+  beluga_ros::msg::OccupancyGridConstSharedPtr grid_;
   Sophus::SE2d origin_;
 
-  static Sophus::SE2d make_origin_transform(const messages::Pose& origin) {
+  static Sophus::SE2d make_origin_transform(const beluga_ros::msg::Pose& origin) {
     const auto rotation = Sophus::SO2d{tf2::getYaw(origin.orientation)};
     const auto translation = Eigen::Vector2d{origin.position.x, origin.position.y};
     return Sophus::SE2d{rotation, translation};
   }
 };
 
-}  // namespace beluga_amcl
+}  // namespace beluga_ros
 
-#endif  // BELUGA_AMCL_OCCUPANCY_GRID_HPP
+#endif  // BELUGA_ROS_OCCUPANCY_GRID_HPP

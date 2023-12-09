@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_compile_definitions(-DBELUGA_AMCL_ROS_VERSION=1)
+add_compile_definitions(-DBELUGA_ROS_VERSION=1)

@@ -19,7 +19,7 @@
 #include <utility>
 #include <vector>
 
-#include <beluga_amcl/tf2_sophus.hpp>
+#include <beluga_ros/tf2_sophus.hpp>
 
 #include <ciabatta/ciabatta.hpp>
 

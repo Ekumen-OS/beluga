@@ -14,17 +14,13 @@
 
 find_package(ament_cmake REQUIRED)
 find_package(beluga REQUIRED)
+find_package(beluga_ros REQUIRED)
 find_package(bondcpp REQUIRED)
-find_package(geometry_msgs REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
-find_package(sensor_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
-find_package(tf2 REQUIRED)
-find_package(tf2_eigen REQUIRED)
-find_package(tf2_geometry_msgs REQUIRED)
 
 add_library(amcl_node_utils SHARED)
 target_sources(amcl_node_utils PRIVATE src/amcl_node_utils.cpp
@@ -33,15 +29,8 @@ target_include_directories(
   amcl_node_utils PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                          $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_link_libraries(amcl_node_utils PUBLIC beluga::beluga)
-ament_target_dependencies(
-  amcl_node_utils
-  PUBLIC geometry_msgs
-         nav_msgs
-         sensor_msgs
-         tf2
-         tf2_eigen
-         tf2_geometry_msgs)
-target_compile_definitions(amcl_node_utils PUBLIC BELUGA_AMCL_ROS_VERSION=2)
+ament_target_dependencies(amcl_node_utils PUBLIC beluga_ros nav2_msgs)
+target_compile_definitions(amcl_node_utils PUBLIC BELUGA_ROS_VERSION=2)
 target_compile_features(amcl_node_utils PUBLIC cxx_std_17)
 
 add_library(amcl_node_component SHARED)
@@ -51,13 +40,12 @@ target_compile_features(amcl_node_component PUBLIC cxx_std_17)
 target_link_libraries(amcl_node_component PUBLIC beluga::beluga amcl_node_utils)
 ament_target_dependencies(
   amcl_node_component
-  PUBLIC bondcpp
-         nav_msgs
-         nav2_msgs
+  PUBLIC beluga
+         beluga_ros
+         bondcpp
          rclcpp
          rclcpp_components
          rclcpp_lifecycle
-         sensor_msgs
          std_srvs)
 rclcpp_components_register_node(
   amcl_node_component
@@ -66,17 +54,15 @@ rclcpp_components_register_node(
 
 ament_export_dependencies(
   beluga
+  beluga_ros
   bondcpp
   nav2_msgs
   rclcpp
   rclcpp_components
   rclcpp_lifecycle
-  sensor_msgs
-  tf2
-  tf2_eigen
-  tf2_geometry_msgs)
+  std_srvs)
 ament_export_include_directories("include/${PROJECT_NAME}")
-ament_export_definitions(BELUGA_AMCL_ROS_VERSION=2)
+ament_export_definitions(BELUGA_ROS_VERSION=2)
 ament_export_targets(amcl_node_utils HAS_LIBRARY_TARGET)
 
 install(

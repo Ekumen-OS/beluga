@@ -16,7 +16,7 @@
 #include <tf2_ros/create_timer_ros.h>
 
 #include <beluga_amcl/private/amcl_node.hpp>
-#include <beluga_amcl/tf2_sophus.hpp>
+#include <beluga_ros/tf2_sophus.hpp>
 
 #include <lifecycle_msgs/msg/state.hpp>
 

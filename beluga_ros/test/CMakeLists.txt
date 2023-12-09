@@ -12,19 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-find_package(rosbag2_cpp REQUIRED)
-find_package(beluga REQUIRED)
-find_package(beluga_amcl REQUIRED)
-find_package(GTest REQUIRED)
-
-add_executable(test_system test_system.cpp)
-
-target_link_libraries(
-  test_system
-  PUBLIC beluga::beluga
-         beluga_amcl::amcl_node_utils
-         GTest::gtest_main
-         rosbag2_cpp::rosbag2_cpp)
-
-include(GoogleTest)
-gtest_discover_tests(test_system WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+if(ROS_VERSION EQUAL 1)
+  include(cmake/catkin.cmake)
+elseif(ROS_VERSION EQUAL 2)
+  include(cmake/ament.cmake)
+endif()

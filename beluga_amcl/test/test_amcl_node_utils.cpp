@@ -42,13 +42,13 @@ TEST(MakeEigenCommaFormat, Matrix) {
 }
 
 TEST(MakePointsFromLaserScan, NoBeams) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   const auto output = beluga_amcl::utils::make_points_from_laser_scan(laser_scan, Sophus::SE3d{}, 10, 0.0, 20.0);
   ASSERT_EQ(output.size(), 0UL);
 }
 
 TEST(MakePointsFromLaserScan, MinRangeInternal) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   laser_scan.range_min = 0.0;
   laser_scan.range_max = 20.0;
   laser_scan.ranges = std::vector<float>{5, 6, 7, 8, 9};
@@ -58,7 +58,7 @@ TEST(MakePointsFromLaserScan, MinRangeInternal) {
 }
 
 TEST(MakePointsFromLaserScan, MinRangeExternal) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   laser_scan.range_min = 7.5;
   laser_scan.range_max = 20.0;
   laser_scan.ranges = std::vector<float>{5, 6, 7, 8, 9};
@@ -68,7 +68,7 @@ TEST(MakePointsFromLaserScan, MinRangeExternal) {
 }
 
 TEST(MakePointsFromLaserScan, MaxRangeInternal) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   laser_scan.range_min = 0.0;
   laser_scan.range_max = 7.5;
   laser_scan.ranges = std::vector<float>{5, 6, 7, 8, 9};
@@ -78,7 +78,7 @@ TEST(MakePointsFromLaserScan, MaxRangeInternal) {
 }
 
 TEST(MakePointsFromLaserScan, MaxRangeExternal) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   laser_scan.range_min = 0.0;
   laser_scan.range_max = 20.0;
   laser_scan.ranges = std::vector<float>{5, 6, 7, 8, 9};
@@ -88,7 +88,7 @@ TEST(MakePointsFromLaserScan, MaxRangeExternal) {
 }
 
 TEST(MakePointsFromLaserScan, MaxBeamsZero) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   laser_scan.range_min = 0.0;
   laser_scan.range_max = 20.0;
   laser_scan.ranges = std::vector<float>{5, 6, 7, 8, 9, 10};
@@ -98,7 +98,7 @@ TEST(MakePointsFromLaserScan, MaxBeamsZero) {
 }
 
 TEST(MakePointsFromLaserScan, TakeThreeBeamsFromSix) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   laser_scan.range_min = 0.0;
   laser_scan.range_max = 20.0;
   laser_scan.ranges = std::vector<float>{5, 6, 7, 8, 9, 10};
@@ -111,7 +111,7 @@ TEST(MakePointsFromLaserScan, TakeThreeBeamsFromSix) {
 }
 
 TEST(MakePointsFromLaserScan, TakeThreeBeamsFromNine) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   laser_scan.range_min = 0.0;
   laser_scan.range_max = 20.0;
   laser_scan.ranges = std::vector<float>{5, 6, 7, 8, 9, 10, 11, 12, 13};
@@ -124,7 +124,7 @@ TEST(MakePointsFromLaserScan, TakeThreeBeamsFromNine) {
 }
 
 TEST(MakePointsFromLaserScan, TransformIdentity) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   laser_scan.range_min = 0.0;
   laser_scan.range_max = 20.0;
   laser_scan.angle_min = Sophus::Constants<float>::pi() / 4;
@@ -144,7 +144,7 @@ TEST(MakePointsFromLaserScan, TransformIdentity) {
 }
 
 TEST(MakePointsFromLaserScan, Transform) {
-  auto laser_scan = beluga_amcl::messages::LaserScan{};
+  auto laser_scan = beluga_ros::msg::LaserScan{};
   laser_scan.range_min = 0.0;
   laser_scan.range_max = 20.0;
   laser_scan.angle_min = Sophus::Constants<float>::pi() / 4;

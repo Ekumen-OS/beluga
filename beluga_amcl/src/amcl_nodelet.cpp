@@ -26,12 +26,12 @@
 
 #include <range/v3/algorithm/transform.hpp>
 
-#include "beluga_amcl/private/amcl_nodelet.hpp"
-
 #include "beluga_amcl/amcl_node_utils.hpp"
-#include "beluga_amcl/occupancy_grid.hpp"
+#include "beluga_amcl/private/amcl_nodelet.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
-#include "beluga_amcl/tf2_sophus.hpp"
+
+#include "beluga_ros/occupancy_grid.hpp"
+#include "beluga_ros/tf2_sophus.hpp"
 
 // LCOV_EXCL_BR_START: Disable branch coverage.
 
@@ -245,7 +245,7 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
     using beluga::mixin::make_mixin;
     return make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
         sampler_params, limiter_params, get_motion_descriptor(config_.odom_model_type),
-        get_sensor_descriptor(config_.laser_model_type), OccupancyGrid{map}, resample_on_motion_params,
+        get_sensor_descriptor(config_.laser_model_type), beluga_ros::OccupancyGrid{map}, resample_on_motion_params,
         resample_interval_params, selective_resampling_params);
   } catch (const std::invalid_argument& error) {
     NODELET_ERROR("Could not instantiate the particle filter: %s", error.what());
@@ -301,7 +301,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
   if (!particle_filter_) {
     particle_filter_ = make_particle_filter(map);
   } else {
-    particle_filter_->update_map(OccupancyGrid{map});
+    particle_filter_->update_map(beluga_ros::OccupancyGrid{map});
   }
   last_known_map_ = map;
 
@@ -343,7 +343,7 @@ void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::Occupancy
     particle_filter_ = make_particle_filter(map);
     should_reset_initial_pose |= !last_known_estimate_.has_value();
   } else {
-    particle_filter_->update_map(OccupancyGrid{map});
+    particle_filter_->update_map(beluga_ros::OccupancyGrid{map});
     should_reset_initial_pose = config_.always_reset_initial_pose;
   }
 
