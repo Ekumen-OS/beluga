@@ -29,7 +29,8 @@ catkin_package(
     tf2_eigen
     tf2_geometry_msgs
   DEPENDS beluga
-  INCLUDE_DIRS include)
+  INCLUDE_DIRS include
+  CFG_EXTRAS ${PROJECT_NAME}-extras.cmake.in)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 add_definitions(${catkin_DEFINITIONS})

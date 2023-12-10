@@ -39,6 +39,7 @@ catkin_package(
   LIBRARIES ${PROJECT_NAME})
 
 include_directories(include ${catkin_INCLUDE_DIRS})
+add_definitions(${catkin_DEFINITIONS})
 
 add_library(${PROJECT_NAME} SHARED)
 target_sources(${PROJECT_NAME} PRIVATE src/amcl_node_utils.cpp
