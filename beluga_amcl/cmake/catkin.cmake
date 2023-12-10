@@ -36,10 +36,8 @@ catkin_package(
     std_srvs
   DEPENDS beluga
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-  CFG_EXTRAS ${PROJECT_NAME}-extras.cmake)
+  LIBRARIES ${PROJECT_NAME})
 
-add_compile_definitions(BELUGA_ROS_VERSION=1)
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME} SHARED)

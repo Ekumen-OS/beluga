@@ -30,7 +30,6 @@ target_include_directories(
                          $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_link_libraries(amcl_node_utils PUBLIC beluga::beluga)
 ament_target_dependencies(amcl_node_utils PUBLIC beluga_ros nav2_msgs)
-target_compile_definitions(amcl_node_utils PUBLIC BELUGA_ROS_VERSION=2)
 target_compile_features(amcl_node_utils PUBLIC cxx_std_17)
 
 add_library(amcl_node_component SHARED)
@@ -62,7 +61,6 @@ ament_export_dependencies(
   rclcpp_lifecycle
   std_srvs)
 ament_export_include_directories("include/${PROJECT_NAME}")
-ament_export_definitions(BELUGA_ROS_VERSION=2)
 ament_export_targets(amcl_node_utils HAS_LIBRARY_TARGET)
 
 install(
