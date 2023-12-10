@@ -34,6 +34,7 @@ namespace beluga_ros::msg {
 #if BELUGA_ROS_VERSION == 2
 
 using LaserScan = sensor_msgs::msg::LaserScan;
+using LaserScanConstSharedPtr = LaserScan::ConstSharedPtr;
 using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
 using OccupancyGridConstSharedPtr = OccupancyGrid::ConstSharedPtr;
 using Pose = geometry_msgs::msg::Pose;
@@ -42,6 +43,7 @@ using Transform = geometry_msgs::msg::Transform;
 #elif BELUGA_ROS_VERSION == 1
 
 using LaserScan = sensor_msgs::LaserScan;
+using LaserScanConstSharedPtr = LaserScan::ConstPtr;
 using OccupancyGrid = nav_msgs::OccupancyGrid;
 using OccupancyGridConstSharedPtr = OccupancyGrid::ConstPtr;
 using Pose = geometry_msgs::Pose;

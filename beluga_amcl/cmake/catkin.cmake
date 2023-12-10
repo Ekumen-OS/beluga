@@ -42,8 +42,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_definitions(${catkin_DEFINITIONS})
 
 add_library(${PROJECT_NAME} SHARED)
-target_sources(${PROJECT_NAME} PRIVATE src/amcl_node_utils.cpp
-                                       src/particle_filtering.cpp)
+target_sources(${PROJECT_NAME} PRIVATE src/particle_filtering.cpp)
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                          $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
