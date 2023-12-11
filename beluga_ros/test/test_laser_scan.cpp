@@ -15,6 +15,8 @@
 #include <gmock/gmock.h>
 #include <beluga_ros/laser_scan.hpp>
 
+#include <range/v3/range/conversion.hpp>
+
 #if BELUGA_ROS_VERSION == 1
 #include <boost/smart_ptr.hpp>
 #endif

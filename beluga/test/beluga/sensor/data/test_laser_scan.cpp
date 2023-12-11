@@ -16,6 +16,8 @@
 
 #include <sophus/se3.hpp>
 
+#include <range/v3/range/conversion.hpp>
+
 #include "beluga/sensor/data/laser_scan.hpp"
 #include "beluga/test/utils/sophus_matchers.hpp"
 
