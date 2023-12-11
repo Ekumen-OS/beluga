@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL_TF2_SOPHUS_HPP
-#define BELUGA_AMCL_TF2_SOPHUS_HPP
+#ifndef BELUGA_ROS_TF2_SOPHUS_HPP
+#define BELUGA_ROS_TF2_SOPHUS_HPP
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
 
-#if BELUGA_AMCL_ROS_VERSION == 2
+#if BELUGA_ROS_VERSION == 2
 #include <tf2_eigen/tf2_eigen.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
-#elif BELUGA_AMCL_ROS_VERSION == 1
+#elif BELUGA_ROS_VERSION == 1
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #else
-#error BELUGA_AMCL_ROS_VERSION is not defined or invalid
+#error BELUGA_ROS_VERSION is not defined or invalid
 #endif
 
-#include <beluga_amcl/ros_interfaces.hpp>
+#include <beluga_ros/messages.hpp>
 
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
@@ -38,14 +38,16 @@ namespace tf2 {
 
 /// Converts a Sophus SE2 type to a Pose message.
 /**
- * This function is a specialization of the toMsg template defined in tf2/convert.h.
+ * The canonical message for an SE2 instance is Transform. If a Pose message is needed, this
+ * function must be called directly using `tf2::toMsg`, not through the `tf2::convert`
+ * customization function.
  *
  * \param in The Sophus SE2 element to convert.
  * \param out The pose converted to a Pose message.
  * \return The pose converted to a Pose message.
  */
 template <class Scalar>
-inline beluga_amcl::messages::Pose& toMsg(const Sophus::SE2<Scalar>& in, beluga_amcl::messages::Pose& out) {
+inline beluga_ros::msg::Pose& toMsg(const Sophus::SE2<Scalar>& in, beluga_ros::msg::Pose& out) {
   const double theta = in.so2().log();
   out.position.x = in.translation().x();
   out.position.y = in.translation().y();
@@ -59,14 +61,16 @@ inline beluga_amcl::messages::Pose& toMsg(const Sophus::SE2<Scalar>& in, beluga_
 
 /// Converts a Sophus SE3 type to a Pose message.
 /**
- * This function is a specialization of the toMsg template defined in tf2/convert.h.
+ * The canonical message for an SE3 instance is Transform. If a Pose message is needed, this
+ * function must be called directly using `tf2::toMsg`, not through the `tf2::convert`
+ * customization function.
  *
  * \param in The Sophus SE3 element to convert.
  * \param out The pose converted to a Pose message.
  * \return The pose converted to a Pose message.
  */
 template <class Scalar>
-inline beluga_amcl::messages::Pose& toMsg(const Sophus::SE3<Scalar>& in, beluga_amcl::messages::Pose& out) {
+inline beluga_ros::msg::Pose& toMsg(const Sophus::SE3<Scalar>& in, beluga_ros::msg::Pose& out) {
   out.position.x = in.translation().x();
   out.position.y = in.translation().y();
   out.position.z = in.translation().z();
@@ -85,8 +89,8 @@ inline beluga_amcl::messages::Pose& toMsg(const Sophus::SE3<Scalar>& in, beluga_
  * \return The transform converted to a Transform message.
  */
 template <class Scalar>
-inline beluga_amcl::messages::Transform toMsg(const Sophus::SE2<Scalar>& in) {
-  auto msg = beluga_amcl::messages::Transform{};
+inline beluga_ros::msg::Transform toMsg(const Sophus::SE2<Scalar>& in) {
+  auto msg = beluga_ros::msg::Transform{};
   const double theta = in.so2().log();
   msg.translation.x = in.translation().x();
   msg.translation.y = in.translation().y();
@@ -106,8 +110,8 @@ inline beluga_amcl::messages::Transform toMsg(const Sophus::SE2<Scalar>& in) {
  * \return The transform converted to a Transform message.
  */
 template <class Scalar>
-inline beluga_amcl::messages::Transform toMsg(const Sophus::SE3<Scalar>& in) {
-  auto msg = beluga_amcl::messages::Transform{};
+inline beluga_ros::msg::Transform toMsg(const Sophus::SE3<Scalar>& in) {
+  auto msg = beluga_ros::msg::Transform{};
   msg.translation.x = in.translation().x();
   msg.translation.y = in.translation().y();
   msg.translation.z = in.translation().z();
@@ -126,12 +130,12 @@ inline beluga_amcl::messages::Transform toMsg(const Sophus::SE3<Scalar>& in) {
  * \param out The transform converted to a Sophus SE2 element.
  */
 template <class Scalar>
-inline void fromMsg(const beluga_amcl::messages::Transform& msg, Sophus::SE2<Scalar>& out) {
+inline void fromMsg(const beluga_ros::msg::Transform& msg, Sophus::SE2<Scalar>& out) {
   out.translation() = Sophus::Vector2<Scalar>{
       msg.translation.x,
       msg.translation.y,
   };
-  out.so2() = Sophus::SO2<Scalar>{tf2::getYaw(msg.rotation)};
+  out.so2() = Sophus::SO2<Scalar>{static_cast<Scalar>(tf2::getYaw(msg.rotation))};
 }
 
 /// Converts a Transform message type to a Sophus SE3 type.
@@ -142,17 +146,17 @@ inline void fromMsg(const beluga_amcl::messages::Transform& msg, Sophus::SE2<Sca
  * \param out The transform converted to a Sophus SE3 element.
  */
 template <class Scalar>
-inline void fromMsg(const beluga_amcl::messages::Transform& msg, Sophus::SE3<Scalar>& out) {
+inline void fromMsg(const beluga_ros::msg::Transform& msg, Sophus::SE3<Scalar>& out) {
   out.translation() = Sophus::Vector3<Scalar>{
-      msg.translation.x,
-      msg.translation.y,
-      msg.translation.z,
+      static_cast<Scalar>(msg.translation.x),
+      static_cast<Scalar>(msg.translation.y),
+      static_cast<Scalar>(msg.translation.z),
   };
   out.so3() = Sophus::SO3<Scalar>{Eigen::Quaternion<Scalar>{
-      msg.rotation.w,
-      msg.rotation.x,
-      msg.rotation.y,
-      msg.rotation.z,
+      static_cast<Scalar>(msg.rotation.w),
+      static_cast<Scalar>(msg.rotation.x),
+      static_cast<Scalar>(msg.rotation.y),
+      static_cast<Scalar>(msg.rotation.z),
   }};
 }
 
@@ -164,12 +168,12 @@ inline void fromMsg(const beluga_amcl::messages::Transform& msg, Sophus::SE3<Sca
  * \param out The pose converted to a Sophus SE2 element.
  */
 template <class Scalar>
-inline void fromMsg(const beluga_amcl::messages::Pose& msg, Sophus::SE2<Scalar>& out) {
+inline void fromMsg(const beluga_ros::msg::Pose& msg, Sophus::SE2<Scalar>& out) {
   out.translation() = Sophus::Vector2<Scalar>{
-      msg.position.x,
-      msg.position.y,
+      static_cast<Scalar>(msg.position.x),
+      static_cast<Scalar>(msg.position.y),
   };
-  out.so2() = Sophus::SO2<Scalar>{tf2::getYaw(msg.orientation)};
+  out.so2() = Sophus::SO2<Scalar>{static_cast<Scalar>(tf2::getYaw(msg.orientation))};
 }
 
 /// Converts a Pose message type to a Sophus SE3 type.
@@ -180,17 +184,17 @@ inline void fromMsg(const beluga_amcl::messages::Pose& msg, Sophus::SE2<Scalar>&
  * \param out The pose converted to a Sophus SE3 element.
  */
 template <class Scalar>
-inline void fromMsg(const beluga_amcl::messages::Pose& msg, Sophus::SE3<Scalar>& out) {
+inline void fromMsg(const beluga_ros::msg::Pose& msg, Sophus::SE3<Scalar>& out) {
   out.translation() = Sophus::Vector3<Scalar>{
-      msg.position.x,
-      msg.position.y,
-      msg.position.z,
+      static_cast<Scalar>(msg.position.x),
+      static_cast<Scalar>(msg.position.y),
+      static_cast<Scalar>(msg.position.z),
   };
   out.so3() = Sophus::SO3<Scalar>{Eigen::Quaternion<Scalar>{
-      msg.orientation.w,
-      msg.orientation.x,
-      msg.orientation.y,
-      msg.orientation.z,
+      static_cast<Scalar>(msg.orientation.w),
+      static_cast<Scalar>(msg.orientation.x),
+      static_cast<Scalar>(msg.orientation.y),
+      static_cast<Scalar>(msg.orientation.z),
   }};
 }
 
@@ -242,35 +246,35 @@ namespace Sophus {  // NOLINT(readability-identifier-naming)
 // them findable by ADL when calling tf2::convert().
 
 template <class Scalar>
-inline beluga_amcl::messages::Transform toMsg(const Sophus::SE2<Scalar>& in) {
+inline beluga_ros::msg::Transform toMsg(const Sophus::SE2<Scalar>& in) {
   return tf2::toMsg(in);
 }
 
 template <class Scalar>
-inline beluga_amcl::messages::Transform toMsg(const Sophus::SE3<Scalar>& in) {
+inline beluga_ros::msg::Transform toMsg(const Sophus::SE3<Scalar>& in) {
   return tf2::toMsg(in);
 }
 
 template <class Scalar>
-inline void fromMsg(const beluga_amcl::messages::Transform& msg, Sophus::SE2<Scalar>& out) {
+inline void fromMsg(const beluga_ros::msg::Transform& msg, Sophus::SE2<Scalar>& out) {
   tf2::fromMsg(msg, out);
 }
 
 template <class Scalar>
-inline void fromMsg(const beluga_amcl::messages::Transform& msg, Sophus::SE3<Scalar>& out) {
+inline void fromMsg(const beluga_ros::msg::Transform& msg, Sophus::SE3<Scalar>& out) {
   tf2::fromMsg(msg, out);
 }
 
 template <class Scalar>
-inline void fromMsg(const beluga_amcl::messages::Pose& msg, Sophus::SE2<Scalar>& out) {
+inline void fromMsg(const beluga_ros::msg::Pose& msg, Sophus::SE2<Scalar>& out) {
   tf2::fromMsg(msg, out);
 }
 
 template <class Scalar>
-inline void fromMsg(const beluga_amcl::messages::Pose& msg, Sophus::SE3<Scalar>& out) {
+inline void fromMsg(const beluga_ros::msg::Pose& msg, Sophus::SE3<Scalar>& out) {
   tf2::fromMsg(msg, out);
 }
 
 }  // namespace Sophus
 
-#endif  // BELUGA_AMCL_TF2_SOPHUS_HPP
+#endif  // BELUGA_ROS_TF2_SOPHUS_HPP

@@ -29,6 +29,11 @@ component_management:
       paths:
         - beluga_amcl/**
 
+    - component_id: package_beluga_ros
+      name: beluga_ros
+      paths:
+        - beluga_ros/**
+
 coverage:
   # Disable project and patch level coverage status check in favor of
   # individual component status checks.
@@ -49,4 +54,5 @@ github_checks:
 ignore:
   - "beluga/test"
   - "beluga_amcl/test"
+  - "beluga_ros/test"
   - "beluga_system_tests/test"

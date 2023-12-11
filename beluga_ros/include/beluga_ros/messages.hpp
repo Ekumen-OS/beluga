@@ -12,37 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL_ROS_INTERFACES_HPP
-#define BELUGA_AMCL_ROS_INTERFACES_HPP
+#ifndef BELUGA_ROS_MESSAGES_HPP
+#define BELUGA_ROS_MESSAGES_HPP
 
-#if BELUGA_AMCL_ROS_VERSION == 2
+#if BELUGA_ROS_VERSION == 2
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/transform.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
-#elif BELUGA_AMCL_ROS_VERSION == 1
+#elif BELUGA_ROS_VERSION == 1
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Transform.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <sensor_msgs/LaserScan.h>
 #else
-#error BELUGA_AMCL_ROS_VERSION is not defined or invalid
+#error BELUGA_ROS_VERSION is not defined or invalid
 #endif
 
-namespace beluga_amcl::messages {
-#if BELUGA_AMCL_ROS_VERSION == 2
+namespace beluga_ros::msg {
+
+#if BELUGA_ROS_VERSION == 2
+
 using LaserScan = sensor_msgs::msg::LaserScan;
 using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
 using OccupancyGridConstSharedPtr = OccupancyGrid::ConstSharedPtr;
 using Pose = geometry_msgs::msg::Pose;
 using Transform = geometry_msgs::msg::Transform;
-#elif BELUGA_AMCL_ROS_VERSION == 1
+
+#elif BELUGA_ROS_VERSION == 1
+
 using LaserScan = sensor_msgs::LaserScan;
 using OccupancyGrid = nav_msgs::OccupancyGrid;
 using OccupancyGridConstSharedPtr = OccupancyGrid::ConstPtr;
 using Pose = geometry_msgs::Pose;
 using Transform = geometry_msgs::Transform;
-#endif
-}  // namespace beluga_amcl::messages
 
-#endif  // BELUGA_AMCL_ROS_INTERFACES_HPP
+#else
+#error BELUGA_ROS_VERSION is not defined or invalid
+#endif
+
+}  // namespace beluga_ros::msg
+
+#endif  // BELUGA_ROS_MESSAGES_HPP

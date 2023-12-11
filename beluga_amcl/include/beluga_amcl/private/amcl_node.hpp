@@ -32,7 +32,6 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 
-#include "beluga_amcl/occupancy_grid.hpp"
 #include "beluga_amcl/particle_filtering.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
 

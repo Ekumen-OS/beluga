@@ -12,19 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-find_package(rosbag2_cpp REQUIRED)
-find_package(beluga REQUIRED)
-find_package(beluga_amcl REQUIRED)
-find_package(GTest REQUIRED)
+find_package(rostest REQUIRED)
 
-add_executable(test_system test_system.cpp)
-
+catkin_add_gmock(test_messages test_messages.cpp)
 target_link_libraries(
-  test_system
-  PUBLIC beluga::beluga
-         beluga_amcl::amcl_node_utils
-         GTest::gtest_main
-         rosbag2_cpp::rosbag2_cpp)
+  test_messages
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  gmock_main)
 
-include(GoogleTest)
-gtest_discover_tests(test_system WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+catkin_add_gmock(test_occupancy_grid test_occupancy_grid.cpp)
+target_link_libraries(
+  test_occupancy_grid
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  gmock_main)
+
+catkin_add_gmock(test_tf2_sophus test_tf2_sophus.cpp)
+target_link_libraries(
+  test_tf2_sophus
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  gmock_main)

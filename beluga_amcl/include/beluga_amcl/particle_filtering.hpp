@@ -28,7 +28,7 @@
 #include <beluga_amcl/filter_update_control/selective_resampling_policy.hpp>
 #include <beluga_amcl/filter_update_control/update_filter_when_moving_policy.hpp>
 
-#include <beluga_amcl/occupancy_grid.hpp>
+#include <beluga_ros/occupancy_grid.hpp>
 
 #include <sophus/se2.hpp>
 
@@ -41,7 +41,8 @@ static constexpr std::string_view kStationaryModelName = "stationary";
 static constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
 static constexpr std::string_view kBeamSensorModelName = "beam";
 
-using LaserLocalizationInterface2d = beluga::LaserLocalizationInterface2d<OccupancyGrid, FilterUpdateControlInterface>;
+using LaserLocalizationInterface2d =
+    beluga::LaserLocalizationInterface2d<beluga_ros::OccupancyGrid, FilterUpdateControlInterface>;
 
 using Stationary = beluga::mixin::descriptor<beluga::StationaryModel>;
 using DifferentialDrive =
@@ -51,11 +52,12 @@ using OmnidirectionalDrive =
 
 using MotionDescriptor = std::variant<Stationary, DifferentialDrive, OmnidirectionalDrive>;
 
-using LikelihoodField = beluga::mixin::
-    descriptor<ciabatta::curry<beluga::LikelihoodFieldModel, OccupancyGrid>::mixin, beluga::LikelihoodFieldModelParam>;
+using LikelihoodField = beluga::mixin::descriptor<
+    ciabatta::curry<beluga::LikelihoodFieldModel, beluga_ros::OccupancyGrid>::mixin,
+    beluga::LikelihoodFieldModelParam>;
 
-using BeamSensorModel =
-    beluga::mixin::descriptor<ciabatta::curry<beluga::BeamSensorModel, OccupancyGrid>::mixin, beluga::BeamModelParam>;
+using BeamSensorModel = beluga::mixin::
+    descriptor<ciabatta::curry<beluga::BeamSensorModel, beluga_ros::OccupancyGrid>::mixin, beluga::BeamModelParam>;
 
 using SensorDescriptor = std::variant<LikelihoodField, BeamSensorModel>;
 
@@ -67,7 +69,7 @@ template <class MotionDescriptor, class SensorDescriptor>
 using MonteCarloLocalization2d = beluga::MonteCarloLocalization2d<
     MotionDescriptor,
     SensorDescriptor,
-    beluga_amcl::OccupancyGrid,
+    beluga_ros::OccupancyGrid,
     FilterUpdateControlInterface,
     ConcreteResamplingPoliciesPoller>;
 
@@ -75,7 +77,7 @@ template <class MotionDescriptor, class SensorDescriptor>
 using AdaptiveMonteCarloLocalization2d = beluga::AdaptiveMonteCarloLocalization2d<
     MotionDescriptor,
     SensorDescriptor,
-    OccupancyGrid,
+    beluga_ros::OccupancyGrid,
     FilterUpdateControlInterface,
     ConcreteResamplingPoliciesPoller>;
 

@@ -21,7 +21,7 @@
 set -o errexit -o xtrace
 
 if [ "${ROS_DISTRO}" != "noetic" ]; then
-    ROS_PACKAGES="beluga beluga_amcl beluga_system_tests"
+    ROS_PACKAGES="beluga beluga_amcl beluga_ros beluga_system_tests"
 else
     ROS_PACKAGES="beluga beluga_amcl"
 fi

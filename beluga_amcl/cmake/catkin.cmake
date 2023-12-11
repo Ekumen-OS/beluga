@@ -18,37 +18,28 @@ find_package(beluga REQUIRED)
 find_package(
   catkin REQUIRED
   COMPONENTS bondcpp
+             beluga_ros
              diagnostic_updater
              dynamic_reconfigure
              message_filters
-             nav_msgs
              nodelet
              roscpp
-             sensor_msgs
-             std_srvs
-             tf2
-             tf2_geometry_msgs
-             tf2_msgs
-             tf2_ros)
+             std_srvs)
 
 generate_dynamic_reconfigure_options(config/Amcl.cfg)
 
 catkin_package(
   CATKIN_DEPENDS
     bondcpp
-    nav_msgs
+    beluga_ros
     roscpp
-    sensor_msgs
-    tf2
-    tf2_eigen
-    tf2_geometry_msgs
+    std_srvs
   DEPENDS beluga
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-  CFG_EXTRAS ${PROJECT_NAME}-extras.cmake)
+  LIBRARIES ${PROJECT_NAME})
 
-add_compile_definitions(BELUGA_AMCL_ROS_VERSION=1)
 include_directories(include ${catkin_INCLUDE_DIRS})
+add_definitions(${catkin_DEFINITIONS})
 
 add_library(${PROJECT_NAME} SHARED)
 target_sources(${PROJECT_NAME} PRIVATE src/amcl_node_utils.cpp

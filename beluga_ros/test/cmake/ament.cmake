@@ -12,4 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_compile_definitions(-DBELUGA_AMCL_ROS_VERSION=1)
+find_package(ament_cmake_gmock REQUIRED)
+
+ament_add_gmock(test_messages test_messages.cpp)
+target_compile_options(test_messages PRIVATE -Wno-deprecated-copy)
+target_link_libraries(test_messages beluga_ros)
+
+ament_add_gmock(test_occupancy_grid test_occupancy_grid.cpp)
+target_compile_options(test_occupancy_grid PRIVATE -Wno-deprecated-copy)
+target_link_libraries(test_occupancy_grid beluga_ros)
+
+ament_add_gmock(test_tf2_sophus test_tf2_sophus.cpp)
+target_compile_options(test_tf2_sophus PRIVATE -Wno-deprecated-copy)
+target_link_libraries(test_tf2_sophus beluga_ros)
