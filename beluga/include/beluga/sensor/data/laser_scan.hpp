@@ -56,7 +56,7 @@ class BaseLaserScan : public ciabatta::ciabatta_top<Derived> {
            ranges::views::filter([this](const auto& tuple) {
              const auto [range, theta] = tuple;
              using std::isnan;
-             return !isnan(range) && range > this->self().min_range() && range < this->self().max_range();
+             return !isnan(range) && range >= this->self().min_range() && range <= this->self().max_range();
            }) |
            ranges::views::transform([](const auto& tuple) {
              const auto [range, theta] = tuple;
