@@ -33,6 +33,7 @@
 #include <beluga_amcl/filter_update_control/selective_resampling_policy.hpp>
 #include <beluga_amcl/filter_update_control/update_filter_when_moving_policy.hpp>
 #include <beluga_amcl/particle_filtering.hpp>
+#include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
 
@@ -192,8 +193,16 @@ struct PointsFromScanReader {
 
   auto next() {
     auto scan_msg = reader_.next();
-    return beluga_amcl::utils::make_points_from_laser_scan(
-        scan_msg, info_.laser_transform, info_.max_beam_count, info_.range_min, info_.range_max);
+    return beluga_ros::LaserScan{
+               std::make_shared<sensor_msgs::msg::LaserScan>(scan_msg),
+               info_.laser_transform,
+               info_.max_beam_count,
+               info_.range_min,
+               info_.range_max,
+           }
+               .points_in_cartesian_coordinates() |
+           ranges::views::transform([](const auto& value) { return std::make_pair(value.x(), value.y()); }) |
+           ranges::to<std::vector>;
   }
 
   std::size_t size() { return reader_.size(); }
