@@ -45,7 +45,11 @@ TEST(TestLaserScan, MinMaxRangeFromConstructor) {
   auto message = make_message();
   message->range_min = 10.f;
   message->range_max = 100.f;
-  auto scan = beluga_ros::LaserScan(message, Sophus::SE3d{}, 100UL, 15., 95.);
+  const auto origin = Sophus::SE3d{};
+  constexpr auto kMaxBeams = 100UL;
+  constexpr auto kMinRange = 15.;
+  constexpr auto kMaxRange = 95.;
+  auto scan = beluga_ros::LaserScan(message, origin, kMaxBeams, kMinRange, kMaxRange);
   ASSERT_EQ(scan.min_range(), 15.);
   ASSERT_EQ(scan.max_range(), 95.);
 }
@@ -53,7 +57,9 @@ TEST(TestLaserScan, MinMaxRangeFromConstructor) {
 TEST(TestLaserScan, LimitMaxBeams) {
   auto message = make_message();
   message->ranges = std::vector<float>{1., 2., 3.};
-  auto scan = beluga_ros::LaserScan(message, Sophus::SE3d{}, 2UL);
+  const auto origin = Sophus::SE3d{};
+  constexpr auto kMaxBeams = 2UL;
+  auto scan = beluga_ros::LaserScan(message, origin, kMaxBeams);
   auto ranges = scan.ranges() | ranges::to<std::vector>;
   ASSERT_EQ(ranges.size(), 2UL);
 }
@@ -66,7 +72,9 @@ TEST(TestLaserScan, AngleIncrements) {
   message->angle_min = 0.f;
   message->angle_max = 3.14f;
   message->angle_increment = 0.1f;
-  auto scan = beluga_ros::LaserScan(message, Sophus::SE3d{}, 100UL);
+  const auto origin = Sophus::SE3d{};
+  constexpr auto kMaxBeams = 100UL;
+  auto scan = beluga_ros::LaserScan(message, origin, kMaxBeams);
   auto angles = scan.angles() | ranges::to<std::vector>;
   ASSERT_NEAR(angles[0], 0.0, 0.001);
   ASSERT_NEAR(angles[1], 0.1, 0.001);
