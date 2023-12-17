@@ -32,14 +32,33 @@
 
 namespace beluga {
 
-/// Base laser scan implementation.
 /**
- * TODO(nahuel): Complete documentation.
+ * \page LaserScanPage Beluga named requirements: LaserScan
+ *
+ * A type `L` satisfies `LaserScan` requirements if given `l` a possibly
+ * const instance of `L`:
+ * - `L::Scalar` is defined and is a scalar type to be used for range and angle values,
+ * - `l.ranges()` returns a view to the beam ranges,
+ * - `l.angles()` returns a view to the corresponding beam angles in sensor frame,
+ * - `l.min_range()` returns the minimum allowed range value,
+ * - `l.max_range()` returns the maximum allowed range value,
+ * - `l.origin()` returns the transform, of `Sophus::SE3d` type, from the global to local
+ *   frame in the sensor space;
+ */
+
+/// Laser scan 2D base type.
+/**
+ * When instantiated, it satisfies \ref LaserScanPage.
+ *
+ * \tparam Derived Concrete laser scan type. It must define
+ * `Derived::ranges()`, `Derived::angles()`,
+ * `Derived::min_range()`, `Derived::max_range()`,
+ * as described in \ref LaserScanPage.
  */
 template <typename Derived>
 class BaseLaserScan : public ciabatta::ciabatta_top<Derived> {
  public:
-  /// View points in cartesian coordinates.
+  /// View points in cartesian coordinates in sensor frame.
   [[nodiscard]] auto points_in_cartesian_coordinates() const {
     return this->self().points_in_polar_coordinates() | ranges::views::transform([](const auto& vector) {
              using std::cos, std::sin;
@@ -48,7 +67,11 @@ class BaseLaserScan : public ciabatta::ciabatta_top<Derived> {
            });
   }
 
-  /// View points in polar coordinates.
+  /// View points in polar coordinates in sensor frame.
+  /**
+   * Range values lower than min_range or greater than max_range will be discarded.
+   * Same for NaN values.
+   */
   [[nodiscard]] auto points_in_polar_coordinates() const {
     static_assert(std::is_floating_point_v<ranges::range_value_t<decltype(this->self().ranges())>>);
     static_assert(std::is_floating_point_v<ranges::range_value_t<decltype(this->self().angles())>>);
