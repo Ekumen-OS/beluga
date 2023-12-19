@@ -27,11 +27,14 @@ add_executable(
   motion/test_omnidirectional_drive_model.cpp
   random/test_multivariate_normal_distribution.cpp
   sensor/data/test_dense_grid.cpp
+  sensor/data/test_landmark_map.cpp
   sensor/data/test_laser_scan.cpp
   sensor/data/test_linear_grid.cpp
   sensor/data/test_occupancy_grid.cpp
   sensor/data/test_regular_grid.cpp
   sensor/test_beam_model.cpp
+  sensor/test_bearing_sensor_model.cpp
+  sensor/test_landmark_sensor_model.cpp
   sensor/test_likelihood_field_model.cpp
   test_mixin.cpp
   test_spatial_hash.cpp

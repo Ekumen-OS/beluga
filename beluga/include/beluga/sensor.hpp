@@ -15,12 +15,9 @@
 #ifndef BELUGA_SENSOR_HPP
 #define BELUGA_SENSOR_HPP
 
-#include <beluga/sensor/beam_model.hpp>
-#include <beluga/sensor/likelihood_field_model.hpp>
-
 /**
  * \file
- * \brief Includes all Beluga sensor models.
+ * \brief Includes all Beluga sensor models and their interfaces.
  */
 
 /**
@@ -49,45 +46,19 @@
  * \section SensorModelLinks See also
  * - beluga::LikelihoodFieldModel
  * - beluga::BeamSensorModel
+ * - beluga::LandmarkSensorModel2d
+ * - beluga::BearingSensorModel2d
  */
 
-namespace beluga {
+// interfaces
+#include <beluga/interfaces/bearing_sensor_model_interface.hpp>
+#include <beluga/interfaces/landmark_sensor_model_interface.hpp>
+#include <beluga/interfaces/laser_sensor_model_interface_2d.hpp>
 
-/// Pure abstract class representing the laser sensor model interface.
-/**
- * \tparam Map Environment representation type.
- */
-template <class Map>
-struct LaserSensorModelInterface2d {
-  /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<std::pair<double, double>>;
-
-  /// Virtual destructor.
-  virtual ~LaserSensorModelInterface2d() = default;
-
-  /// Update the sensor model with the measured points.
-  /**
-   * This method updates the sensor model with the information
-   * it needs to compute the weight of each particle.
-   * The weight of each particle is calculated by subsequent calls to
-   * the `importance_weight()` method provided by the same mixin
-   * component.
-   *
-   * \param points The range finder points in the reference frame of the particle.
-   */
-  virtual void update_sensor(measurement_type&& points) = 0;
-
-  /// Update the sensor model with a new map.
-  /**
-   * This method updates the sensor model with a new map,
-   * i.e. a representation of the environment, that it needs
-   * to compute the weight of each particle.
-   *
-   * \param map The range finder map.
-   */
-  virtual void update_map(Map&& map) = 0;
-};
-
-}  // namespace beluga
+// implementations
+#include <beluga/sensor/beam_model.hpp>
+#include <beluga/sensor/bearing_sensor_model.hpp>
+#include <beluga/sensor/landmark_sensor_model.hpp>
+#include <beluga/sensor/likelihood_field_model.hpp>
 
 #endif
