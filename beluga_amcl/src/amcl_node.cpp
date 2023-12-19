@@ -31,7 +31,6 @@
 #include <beluga/mixin.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga/sensor/likelihood_field_model.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
 #include <range/v3/algorithm/transform.hpp>

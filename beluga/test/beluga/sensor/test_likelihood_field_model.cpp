@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "beluga/sensor.hpp"
-#include "beluga/sensor/likelihood_field_model.hpp"
 #include "beluga/test/static_occupancy_grid.hpp"
 
 #include "ciabatta/ciabatta.hpp"
