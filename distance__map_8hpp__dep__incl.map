@@ -3,6 +3,6 @@
 <area shape="rect" id="node2" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,243,197,299"/>
 <area shape="rect" id="node4" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="200,124,392,195"/>
 <area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="88,451,280,507"/>
-<area shape="rect" id="node5" href="$sensor_8hpp.html" title="Includes all Beluga sensor models." alt="" coords="221,243,413,299"/>
+<area shape="rect" id="node5" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="221,243,413,299"/>
 <area shape="rect" id="node6" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,347,413,403"/>
 </map>

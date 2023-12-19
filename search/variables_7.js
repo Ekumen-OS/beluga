@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['lambda_5fshort_530',['lambda_short',['../structbeluga_1_1BeamModelParam.html#a4205d6ea258ef77f3e5f31094bdac5f0',1,'beluga::BeamModelParam']]]
+  ['kld_5fepsilon_597',['kld_epsilon',['../structbeluga_1_1KldLimiterParam.html#a451efaa8e29f12d43862eb5f183a506e',1,'beluga::KldLimiterParam']]],
+  ['kld_5fz_598',['kld_z',['../structbeluga_1_1KldLimiterParam.html#a917255482e04f9c06ea9fabb0b76882b',1,'beluga::KldLimiterParam']]]
 ];

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['input_5fview_5ftype_556',['input_view_type',['../structbeluga_1_1StorageInterface.html#a00e61ffcc51e487cab72622bab3e528b',1,'beluga::StorageInterface::input_view_type()'],['../classbeluga_1_1StoragePolicy.html#aeeae05d8a0b4af495030a1ec3448dbbc',1,'beluga::StoragePolicy::input_view_type()']]],
-  ['is_5fnot_5fdescriptor_557',['is_not_descriptor',['../descriptor_8hpp.html#a6e276222cc74b1bb2555c328b7f3352b',1,'beluga::mixin']]],
-  ['iterator_5fcategory_558',['iterator_category',['../classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#aa96e49057e25f4d99b9bb5c783684185',1,'beluga::Bresenham2i::Line::iterator']]]
+  ['decay_5ftuple_5ft_631',['decay_tuple_t',['../particle__traits_8hpp.html#a4eff40e4be438e1d3e3fe5c13f6a168d',1,'beluga']]],
+  ['decay_5ftuple_5ftypes_5ft_632',['decay_tuple_types_t',['../particle__traits_8hpp.html#a70fbeebef818d279fae72150cb2635dd',1,'beluga']]],
+  ['difference_5ftype_633',['difference_type',['../classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a16fea874ae17dc122f0e8abd5f780578',1,'beluga::Bresenham2i::Line::iterator']]],
+  ['distribution_5ftype_634',['distribution_type',['../classbeluga_1_1MultivariateNormalDistribution_1_1Param.html#a9978e145e026637e87026fc8014a9fd2',1,'beluga::MultivariateNormalDistribution::Param']]]
 ];

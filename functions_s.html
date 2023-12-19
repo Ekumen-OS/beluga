@@ -73,9 +73,19 @@ $(function() {
 <li>Scalar
 : <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a38c68b2332e80fb872607f067119d8d9">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
 </li>
+<li>sensor_pose_in_robot
+: <a class="el" href="structbeluga_1_1BearingModelParam.html#a59196fdcd9e7640e82676b4bab1ce3ec">beluga::BearingModelParam</a>
+</li>
+<li>sigma_bearing
+: <a class="el" href="structbeluga_1_1BearingModelParam.html#a3e120c045a7e81160ffdd28b53649463">beluga::BearingModelParam</a>
+, <a class="el" href="structbeluga_1_1LandmarkModelParam.html#a7dbd040343677b0066c2f75a99f5bf0c">beluga::LandmarkModelParam</a>
+</li>
 <li>sigma_hit
 : <a class="el" href="structbeluga_1_1BeamModelParam.html#a8965d830f6b3fe181e91c2006a49cf69">beluga::BeamModelParam</a>
 , <a class="el" href="structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db">beluga::LikelihoodFieldModelParam</a>
+</li>
+<li>sigma_range
+: <a class="el" href="structbeluga_1_1LandmarkModelParam.html#ad58911af6e8f3f58e6a668efa5a766e5">beluga::LandmarkModelParam</a>
 </li>
 <li>SimpleStateEstimator()
 : <a class="el" href="classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html#ade76738ed7aa8c9125d46ecf8935ce2e">beluga::SimpleStateEstimator&lt; Mixin, Sophus::SE2d &gt;</a>
@@ -103,7 +113,9 @@ $(function() {
 </li>
 <li>state_type
 : <a class="el" href="classbeluga_1_1BeamSensorModel.html#aed17d785c2af5480dffcc1e2a452115e">beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;</a>
+, <a class="el" href="classbeluga_1_1BearingSensorModel.html#a6a84c9357bc06279abb30773e41178ed">beluga::BearingSensorModel&lt; Mixin, LandmarkMap, StateType &gt;</a>
 , <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a3da7c73b8ecd087785acf7ccd077dd50">beluga::DifferentialDriveModel&lt; Mixin &gt;</a>
+, <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a7361c0e2e281ce4fbc36a019f70d30e4">beluga::LandmarkSensorModel&lt; Mixin, LandmarkMap, StateType &gt;</a>
 , <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#ac088f5c1a0bf60d5eca535e1979b5564">beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</a>
 , <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#aaf41a8e7b9fd863a5197b6d11f6f165e">beluga::OmnidirectionalDriveModel&lt; Mixin &gt;</a>
 , <a class="el" href="structbeluga_1_1particle__traits_3_01Pair_3_01State_00_01Weight_00_01Extra_8_8_8_01_4_01_4.html#aad145317b91a8ac35666aafab6c717dd">beluga::particle_traits&lt; Pair&lt; State, Weight, Extra... &gt; &gt;</a>

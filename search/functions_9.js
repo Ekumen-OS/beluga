@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['kld_5fcondition_442',['kld_condition',['../sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99',1,'beluga']]],
-  ['kldlimiter_443',['KldLimiter',['../classbeluga_1_1KldLimiter.html#a0bfb135d82b872706d6c989e397ab49e',1,'beluga::KldLimiter']]]
+  ['kld_5fcondition_503',['kld_condition',['../sampling_8hpp.html#a4ef2ecb4492a73ec5d8c0c1c10b7ea99',1,'beluga']]],
+  ['kldlimiter_504',['KldLimiter',['../classbeluga_1_1KldLimiter.html#a0bfb135d82b872706d6c989e397ab49e',1,'beluga::KldLimiter']]]
 ];

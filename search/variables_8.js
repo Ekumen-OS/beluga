@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['max_5flaser_5fdistance_531',['max_laser_distance',['../structbeluga_1_1LikelihoodFieldModelParam.html#a7d71848306f0d0e2a6601b240ff847b1',1,'beluga::LikelihoodFieldModelParam']]],
-  ['max_5fobstacle_5fdistance_532',['max_obstacle_distance',['../structbeluga_1_1LikelihoodFieldModelParam.html#a3e34aea5149234747783753e5f905c70',1,'beluga::LikelihoodFieldModelParam']]],
-  ['max_5fsamples_533',['max_samples',['../structbeluga_1_1FixedLimiterParam.html#a9d55d6e549b8c3641d0182107e37c716',1,'beluga::FixedLimiterParam::max_samples()'],['../structbeluga_1_1KldLimiterParam.html#a663c86603c35ee10e75ef9f1cba414e5',1,'beluga::KldLimiterParam::max_samples()']]],
-  ['min_5fsamples_534',['min_samples',['../structbeluga_1_1KldLimiterParam.html#a5508d8a71932cd46fe23b966edeebc51',1,'beluga::KldLimiterParam']]]
+  ['lambda_5fshort_599',['lambda_short',['../structbeluga_1_1BeamModelParam.html#a4205d6ea258ef77f3e5f31094bdac5f0',1,'beluga::BeamModelParam']]]
 ];
