@@ -33,7 +33,7 @@ namespace beluga::views {
  * \param tuple Tuple or array instance, with at least `N + 1` elements.
  */
 template <std::size_t N>
-inline auto elements = ranges::views::transform(
+inline constexpr auto elements = ranges::views::transform(
     [](auto&& tuple) -> decltype(auto) { return std::get<N>(std::forward<decltype(tuple)>(tuple)); });
 
 }  // namespace beluga::views

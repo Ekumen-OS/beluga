@@ -15,8 +15,8 @@
 #ifndef BELUGA_TYPE_TRAITS_HPP
 #define BELUGA_TYPE_TRAITS_HPP
 
-#include <beluga/type_traits/container_traits.hpp>
 #include <beluga/type_traits/particle_traits.hpp>
+#include <beluga/type_traits/tuple_traits.hpp>
 
 /**
  * \file

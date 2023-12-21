@@ -37,6 +37,7 @@ add_executable(
   sensor/test_landmark_sensor_model.cpp
   sensor/test_likelihood_field_model.cpp
   test_mixin.cpp
+  test_primitives.cpp
   test_spatial_hash.cpp
   test_storage.cpp
   test_tuple_vector.cpp

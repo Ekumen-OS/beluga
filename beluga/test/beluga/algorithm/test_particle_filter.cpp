@@ -17,7 +17,6 @@
 #include <execution>
 
 #include <beluga/algorithm/particle_filter.hpp>
-#include <beluga/type_traits/particle_traits.hpp>
 #include <beluga/views.hpp>
 
 #include <ciabatta/ciabatta.hpp>
@@ -25,21 +24,6 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
-
-namespace beluga {
-template <>
-struct particle_traits<std::pair<double, double>> {
-  template <typename T>
-  static constexpr auto state(T&& particle) {
-    return particle.first;
-  }
-
-  template <typename T>
-  static constexpr auto weight(T&& particle) {
-    return particle.second;
-  }
-};
-}  // namespace beluga
 
 namespace {
 
