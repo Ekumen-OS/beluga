@@ -40,7 +40,7 @@ struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
    */
   template <class Range>
   constexpr auto operator()(Range&& range, std::size_t count) const {
-    // Note: `stride` doesn't support count == 0.
+    // Note: `stride` doesn't support step == 0.
     const std::size_t size = ranges::size(range);
     if (count == 0 || size == 0) {
       return range | ranges::views::take(0) | ranges::views::stride(1);
