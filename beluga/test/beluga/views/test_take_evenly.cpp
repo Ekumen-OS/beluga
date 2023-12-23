@@ -20,16 +20,22 @@
 
 namespace {
 
-TEST(TakeEvenlyView, NoElements) {
+TEST(TakeEvenlyView, NoElementsTakeZero) {
   const auto input = std::vector<int>{};
   const auto output = input | beluga::views::take_evenly(0) | ranges::to<std::vector>;
+  ASSERT_EQ(output.size(), 0);
+}
+
+TEST(TakeEvenlyView, NoElements) {
+  const auto input = std::vector<int>{};
+  const auto output = input | beluga::views::take_evenly(1) | ranges::to<std::vector>;
   ASSERT_EQ(output.size(), 0);
 }
 
 TEST(TakeEvenlyView, TakeZero) {
   const auto input = std::vector<int>{1, 2, 3, 4};
   const auto output = input | beluga::views::take_evenly(0) | ranges::to<std::vector>;
-  ASSERT_THAT(output, testing::ElementsAre(1, 2, 3, 4));
+  ASSERT_EQ(output.size(), 0);
 }
 
 TEST(TakeEvenlyView, TakeOne) {
