@@ -31,12 +31,13 @@ namespace detail {
 struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
   /// Overload that implements the take_evenly algorithm.
   /**
-   * If `count` or the range size are zero, it returns an empty range.
-   * The step size is computed to always include the last element of the range.
-   *
    * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range).
    * \param range Source range from where to take elements.
    * \param count Number of elements to take.
+   *
+   * If `count` or the range size are zero, it returns an empty range.
+   * If `count` is greater than the range size, it returns all the elements.
+   * The step size is computed to always include the last element of the range.
    */
   template <class Range>
   constexpr auto operator()(Range&& range, std::size_t count) const {
@@ -54,6 +55,13 @@ struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
   }
 
   /// Overload that returns a view closure to compose with other views.
+  /**
+   * \param count Number of elements to take.
+   *
+   * If `count` or the range size are zero, it returns an empty range.
+   * If `count` is greater than the range size, it returns all the elements.
+   * The step size is computed to always include the last element of the range.
+   */
   constexpr auto operator()(std::size_t count) const {
     return ranges::make_view_closure(ranges::bind_back(take_evenly_fn{}, count));
   }
@@ -67,6 +75,7 @@ struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
  * Given a source range and an integral count, returns a range consisting of `count`
  * elements evenly spaced over the source range.
  * If `count` or the range size are zero, it returns an empty range.
+ * If `count` is greater than the range size, it returns all the elements.
  * The step size is computed to always include the last element of the range.
  */
 inline constexpr detail::take_evenly_fn take_evenly;  // NOLINT(readability-identifier-naming)

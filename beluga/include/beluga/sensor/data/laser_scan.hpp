@@ -40,8 +40,8 @@ namespace beluga {
  * - `L::Scalar` is defined and is a scalar type to be used for range and angle values,
  * - `l.ranges()` returns a view to the beam ranges (in meters),
  * - `l.angles()` returns a view to the corresponding beam angles in sensor frame (in radians),
- * - `l.min_range()` returns the minimum allowed range value (in radians),
- * - `l.max_range()` returns the maximum allowed range value (in radians),
+ * - `l.min_range()` returns the minimum allowed range value (in meters),
+ * - `l.max_range()` returns the maximum allowed range value (in meters),
  * - `l.origin()` returns the transform, of `Sophus::SE3d` type, from the global to local
  *   frame in the sensor space;
  */
