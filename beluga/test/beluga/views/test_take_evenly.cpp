@@ -65,13 +65,25 @@ TEST(TakeEvenlyView, TakeThreeFromFive) {
 TEST(TakeEvenlyView, TakeThreeFromSix) {
   const auto input = std::vector<int>{1, 2, 3, 4, 5, 6};
   const auto output = input | beluga::views::take_evenly(3) | ranges::to<std::vector>;
-  ASSERT_THAT(output, testing::ElementsAre(1, 3, 5));
+  ASSERT_THAT(output, testing::ElementsAre(1, 4, 6));
 }
 
 TEST(TakeEvenlyView, TakeThreeFromNine) {
   const auto input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9};
   const auto output = input | beluga::views::take_evenly(3) | ranges::to<std::vector>;
   ASSERT_THAT(output, testing::ElementsAre(1, 5, 9));
+}
+
+TEST(TakeEvenlyView, TakeThreeFromFour) {
+  const auto input = std::vector<int>{1, 2, 3, 4};
+  const auto output = input | beluga::views::take_evenly(3) | ranges::to<std::vector>;
+  ASSERT_THAT(output, testing::ElementsAre(1, 3, 4));
+}
+
+TEST(TakeEvenlyView, TakeFiveFromNine) {
+  const auto input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  const auto output = input | beluga::views::take_evenly(6) | ranges::to<std::vector>;
+  ASSERT_THAT(output, testing::ElementsAre(1, 3, 5, 7, 9, 10));
 }
 
 }  // namespace

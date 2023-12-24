@@ -15,8 +15,10 @@
 #ifndef BELUGA_VIEWS_TAKE_EVENLY_HPP
 #define BELUGA_VIEWS_TAKE_EVENLY_HPP
 
-#include <range/v3/view/stride.hpp>
-#include <range/v3/view/take.hpp>
+#include <beluga/views/elements.hpp>
+
+#include <range/v3/view/enumerate.hpp>
+#include <range/v3/view/filter.hpp>
 
 /**
  * \file
@@ -37,19 +39,36 @@ struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
    *
    * If `count` or the range size are zero, it returns an empty range.
    * If `count` is greater than the range size, it returns all the elements.
-   * The step size is computed to always include the first and last elements of the range.
+   * The first and last elements of the range are always included.
    */
   template <class Range>
   constexpr auto operator()(Range&& range, std::size_t count) const {
     const std::size_t size = ranges::size(range);
-    if (count <= 1UL || size == 0UL) {
-      // Note: We still apply `stride` for return type consistency.
-      return range | ranges::views::take(count) | ranges::views::stride(1);
-    }
 
-    // Make sure that the last element of the range is included and the minimum step size is 1.
-    const std::size_t step = std::max(1UL, (size - 1UL) / (count - 1UL));
-    return range | ranges::views::take(size) | ranges::views::stride(step);
+    const auto filter_function = [size, count](const auto& pair) {
+      if ((size == 0UL) || (count == 0UL)) {
+        return false;
+      }
+
+      if (count > size) {
+        return true;
+      }
+
+      const auto [index, _] = pair;
+      if (count == 1UL) {
+        return index == 0UL;
+      }
+
+      if ((index == 0UL) || (index == size - 1UL)) {
+        return true;
+      }
+
+      const std::size_t m0 = (index - 1UL) * (count - 1UL) / (size - 1UL);
+      const std::size_t m1 = index * (count - 1UL) / (size - 1UL);
+      return m0 != m1;
+    };
+
+    return ranges::views::enumerate(range) | ranges::views::filter(filter_function) | beluga::views::elements<1>;
   }
 
   /// Overload that returns a view closure to compose with other views.
@@ -58,7 +77,7 @@ struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
    *
    * If `count` or the range size are zero, it returns an empty range.
    * If `count` is greater than the range size, it returns all the elements.
-   * The step size is computed to always include the first and last elements of the range.
+   * The first and last elements of the range are always included.
    */
   constexpr auto operator()(std::size_t count) const {
     return ranges::make_view_closure(ranges::bind_back(take_evenly_fn{}, count));
@@ -74,7 +93,7 @@ struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
  * elements evenly spaced over the source range.
  * If `count` or the range size are zero, it returns an empty range.
  * If `count` is greater than the range size, it returns all the elements.
- * The step size is computed to always include the first and last elements of the range.
+ * The first and last elements of the range are always included.
  */
 inline constexpr detail::take_evenly_fn take_evenly;  // NOLINT(readability-identifier-naming)
 
