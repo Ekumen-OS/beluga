@@ -34,3 +34,10 @@ target_link_libraries(
   ${PROJECT_NAME}
   ${catkin_LIBRARIES}
   gmock_main)
+
+catkin_add_gmock(test_laser_scan test_laser_scan.cpp)
+target_link_libraries(
+  test_laser_scan
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  gmock_main)

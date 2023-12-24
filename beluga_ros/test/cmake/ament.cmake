@@ -25,3 +25,7 @@ target_link_libraries(test_occupancy_grid beluga_ros)
 ament_add_gmock(test_tf2_sophus test_tf2_sophus.cpp)
 target_compile_options(test_tf2_sophus PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_tf2_sophus beluga_ros)
+
+ament_add_gmock(test_laser_scan test_laser_scan.cpp)
+target_compile_options(test_laser_scan PRIVATE -Wno-deprecated-copy)
+target_link_libraries(test_laser_scan beluga_ros)

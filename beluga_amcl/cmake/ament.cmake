@@ -23,8 +23,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_srvs REQUIRED)
 
 add_library(amcl_node_utils SHARED)
-target_sources(amcl_node_utils PRIVATE src/amcl_node_utils.cpp
-                                       src/particle_filtering.cpp)
+target_sources(amcl_node_utils PRIVATE src/particle_filtering.cpp)
 target_include_directories(
   amcl_node_utils PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                          $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
@@ -33,8 +32,7 @@ ament_target_dependencies(amcl_node_utils PUBLIC beluga_ros nav2_msgs)
 target_compile_features(amcl_node_utils PUBLIC cxx_std_17)
 
 add_library(amcl_node_component SHARED)
-target_sources(amcl_node_component PRIVATE src/amcl_node.cpp
-                                           src/amcl_node_utils.cpp)
+target_sources(amcl_node_component PRIVATE src/amcl_node.cpp)
 target_compile_features(amcl_node_component PUBLIC cxx_std_17)
 target_link_libraries(amcl_node_component PUBLIC beluga::beluga amcl_node_utils)
 ament_target_dependencies(

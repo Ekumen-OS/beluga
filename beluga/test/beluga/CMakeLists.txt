@@ -28,6 +28,7 @@ add_executable(
   random/test_multivariate_normal_distribution.cpp
   sensor/data/test_dense_grid.cpp
   sensor/data/test_landmark_map.cpp
+  sensor/data/test_laser_scan.cpp
   sensor/data/test_linear_grid.cpp
   sensor/data/test_occupancy_grid.cpp
   sensor/data/test_regular_grid.cpp
@@ -39,7 +40,8 @@ add_executable(
   test_spatial_hash.cpp
   test_storage.cpp
   test_tuple_vector.cpp
-  type_traits/test_strongly_typed_numeric.cpp)
+  type_traits/test_strongly_typed_numeric.cpp
+  views/test_take_evenly.cpp)
 
 target_link_libraries(
   test_beluga PRIVATE ${PROJECT_NAME} beluga_compile_options GTest::gmock_main)

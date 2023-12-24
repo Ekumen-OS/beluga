@@ -30,6 +30,7 @@
 #include "beluga_amcl/private/amcl_nodelet.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
 
+#include "beluga_ros/laser_scan.hpp"
 #include "beluga_ros/occupancy_grid.hpp"
 #include "beluga_ros/tf2_sophus.hpp"
 
@@ -414,9 +415,16 @@ void AmclNodelet::laser_callback(ExecutionPolicy&& exec_policy, const sensor_msg
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto filter_updated = particle_filter_->update_filter(
       exec_policy, odom_to_base_transform,
-      utils::make_points_from_laser_scan(
-          *laser_scan, base_to_laser_transform, static_cast<std::size_t>(config_.laser_max_beams),
-          static_cast<float>(config_.laser_min_range), static_cast<float>(config_.laser_max_range)),
+      beluga_ros::LaserScan{
+          laser_scan,
+          base_to_laser_transform,
+          static_cast<std::size_t>(config_.laser_max_beams),
+          config_.laser_min_range,
+          config_.laser_max_range,
+      }
+              .points_in_cartesian_coordinates() |
+          ranges::views::transform([](const auto& value) { return std::make_pair(value.x(), value.y()); }) |
+          ranges::to<std::vector>,
       force_filter_update_);
   force_filter_update_ = false;
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
