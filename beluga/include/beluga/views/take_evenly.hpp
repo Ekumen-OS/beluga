@@ -17,6 +17,7 @@
 
 #include <beluga/views/elements.hpp>
 
+#include <range/v3/view/cache1.hpp>
 #include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/filter.hpp>
 
@@ -68,7 +69,10 @@ struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
       return m0 != m1;
     };
 
-    return ranges::views::enumerate(range) | ranges::views::filter(filter_function) | beluga::views::elements<1>;
+    // `cache1` ensures that views prior to `filter` in the pipeline are iterated exactly once.
+    // This is needed because filter needs to dereference the input iterator twice.
+    return ranges::views::enumerate(range) | ranges::views::cache1 | ranges::views::filter(filter_function) |
+           beluga::views::elements<1>;
   }
 
   /// Overload that returns a view closure to compose with other views.
