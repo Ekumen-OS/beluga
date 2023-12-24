@@ -80,7 +80,7 @@ TEST(TakeEvenlyView, TakeThreeFromFour) {
   ASSERT_THAT(output, testing::ElementsAre(1, 3, 4));
 }
 
-TEST(TakeEvenlyView, TakeFiveFromNine) {
+TEST(TakeEvenlyView, TakeSixFromTen) {
   const auto input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   const auto output = input | beluga::views::take_evenly(6) | ranges::to<std::vector>;
   ASSERT_THAT(output, testing::ElementsAre(1, 3, 5, 7, 9, 10));
