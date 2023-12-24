@@ -17,6 +17,7 @@
 #include "beluga/views/take_evenly.hpp"
 
 #include <range/v3/range/conversion.hpp>
+#include <range/v3/view/iota.hpp>
 
 namespace {
 
@@ -84,6 +85,11 @@ TEST(TakeEvenlyView, TakeSixFromTen) {
   const auto input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   const auto output = input | beluga::views::take_evenly(6) | ranges::to<std::vector>;
   ASSERT_THAT(output, testing::ElementsAre(1, 3, 5, 7, 9, 10));
+}
+
+TEST(TakeEvenlyView, TakeFromGenerator) {
+  const auto output = ranges::views::iota(1, 6) | beluga::views::take_evenly(3) | ranges::to<std::vector>;
+  ASSERT_THAT(output, testing::ElementsAre(1, 3, 5));
 }
 
 }  // namespace
