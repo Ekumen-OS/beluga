@@ -98,4 +98,51 @@ TEST(SpatialHash, Array) {
   EXPECT_EQ(hash1, hash2);
 }
 
+TEST(SpatialHash, NonPeriodicityCheck1) {
+  using Array = std::array<double, 8>;
+  constexpr std::array kClusteringResolution{1., 1., 1., 1., 1., 1., 1., 1.};
+
+  auto uut = beluga::spatial_hash<Array>{kClusteringResolution};
+
+  auto hash0 = uut({0., 0., 0., 0., 0., 0., 0., 0.});
+  auto hash1 = uut({64., 0., 0., 0., 0., 0., 0., 0.});
+  auto hash2 = uut({128., 0., 0., 0., 0., 0., 0., 0.});
+  auto hash3 = uut({192., 0., 0., 0., 0., 0., 0., 0.});
+  auto hash4 = uut({256., 0., 0., 0., 0., 0., 0., 0.});
+
+  EXPECT_NE(hash0, hash1);
+  EXPECT_NE(hash0, hash2);
+  EXPECT_NE(hash0, hash3);
+  EXPECT_NE(hash0, hash4);
+}
+
+TEST(SpatialHash, NonPeriodicityCheck2) {
+  using Array = std::array<double, 8>;
+  constexpr std::array kClusteringResolution{1., 1., 1., 1., 1., 1., 1., 1.};
+  constexpr double kStep = 2.0;
+
+  auto uut = beluga::spatial_hash<Array>{kClusteringResolution};
+
+  auto ref_hash = uut({0., 0., 0., 0., 0., 0., 0., 0.});
+
+  for (double n = kStep; n < 1024.; n += kStep) {
+    auto hash0 = uut({n, 0., 0., 0., 0., 0., 0., 0.});
+    auto hash1 = uut({0., n, 0., 0., 0., 0., 0., 0.});
+    auto hash2 = uut({0., 0., n, 0., 0., 0., 0., 0.});
+    auto hash3 = uut({0., 0., 0., n, 0., 0., 0., 0.});
+    auto hash4 = uut({0., 0., 0., 0., n, 0., 0., 0.});
+    auto hash5 = uut({0., 0., 0., 0., 0., n, 0., 0.});
+    auto hash6 = uut({0., 0., 0., 0., 0., 0., n, 0.});
+    auto hash7 = uut({0., 0., 0., 0., 0., 0., 0., n});
+    EXPECT_NE(ref_hash, hash0);
+    EXPECT_NE(ref_hash, hash1);
+    EXPECT_NE(ref_hash, hash2);
+    EXPECT_NE(ref_hash, hash3);
+    EXPECT_NE(ref_hash, hash4);
+    EXPECT_NE(ref_hash, hash5);
+    EXPECT_NE(ref_hash, hash6);
+    EXPECT_NE(ref_hash, hash7);
+  }
+}
+
 }  // namespace
