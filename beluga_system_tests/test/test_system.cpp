@@ -200,7 +200,10 @@ struct PointsFromScanReader {
                info_.range_max,
            }
                .points_in_cartesian_coordinates() |
-           ranges::views::transform([](const auto& value) { return std::make_pair(value.x(), value.y()); }) |
+           ranges::views::transform([this](const auto& p) {
+             const auto result = info_.laser_transform * Sophus::Vector3d{p.x(), p.y(), 0};
+             return std::make_pair(result.x(), result.y());
+           }) |
            ranges::to<std::vector>;
   }
 

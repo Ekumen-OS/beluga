@@ -931,7 +931,10 @@ void AmclNode::laser_callback(ExecutionPolicy&& exec_policy, sensor_msgs::msg::L
           get_parameter("laser_max_range").as_double(),
       }
               .points_in_cartesian_coordinates() |
-          ranges::views::transform([](const auto& value) { return std::make_pair(value.x(), value.y()); }) |
+          ranges::views::transform([&](const auto& p) {
+            const auto result = base_to_laser_transform * Sophus::Vector3d{p.x(), p.y(), 0};
+            return std::make_pair(result.x(), result.y());
+          }) |
           ranges::to<std::vector>,
       force_filter_update_);
   force_filter_update_ = false;
