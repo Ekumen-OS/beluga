@@ -20,7 +20,6 @@
 
 #include <beluga/type_traits/strongly_typed_numeric.hpp>
 #include <beluga/type_traits/tuple_traits.hpp>
-#include <concepts/concepts.hpp>
 
 /**
  * \file
@@ -60,21 +59,27 @@ using Cluster = Numeric<std::size_t, struct ClusterTag>;
 
 namespace state_detail {
 
-/// Definition for the `has_member_state` requirement.
-template <typename T>
-CPP_requires(has_member_state_, requires(T&& t)(((T&&)t).state()));
+/// \cond state_detail
 
-/// Definition for the `has_member_state` concept.
-template <typename T>
-CPP_concept has_member_state = CPP_requires_ref(state_detail::has_member_state_, T);
+template <class T, class = void>
+struct has_member_state : std::false_type {};
 
-/// Definition for the `has_non_member_state` requirement.
-template <typename T>
-CPP_requires(has_non_member_state_, requires(T&& t)(state((T&&)t)));
+template <class T>
+struct has_member_state<T, std::void_t<decltype(std::declval<T>().state())>> : std::true_type {};
 
-/// Definition for the `has_non_member_state` concept.
 template <typename T>
-CPP_concept has_non_member_state = CPP_requires_ref(state_detail::has_non_member_state_, T);
+inline constexpr bool has_member_state_v = has_member_state<T>::value;
+
+/// \endcond
+
+/// Default state implementation.
+/**
+ * Assumes that the particle is a tuple and the first element is the state.
+ */
+template <typename T>
+constexpr decltype(auto) state(T&& t) noexcept(noexcept(std::get<0>(std::forward<T>(t)))) {
+  return std::get<0>(std::forward<T>(t));
+}
 
 /// Customization point object type for accessing the `state` of a particle.
 /**
@@ -82,27 +87,18 @@ CPP_concept has_non_member_state = CPP_requires_ref(state_detail::has_non_member
  */
 struct state_fn {
   /// Overload for when the particle type defines a member method.
-  CPP_template(typename T)(requires(has_member_state<T>))  //
-      constexpr decltype(auto)
-      operator()(T&& t) const noexcept(noexcept(std::forward<T>(t).state())) {
+  template <typename T, std::enable_if_t<has_member_state_v<T>, int> = 0>
+  constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(std::forward<T>(t).state())) {
     return std::forward<T>(t).state();
   }
 
   /// Overload for when there is an external function that takes this particle type.
   /**
-   * The non-member function must be in T's namespace to be found by ADL.
+   * The non-member function must be in T's namespace so it can be found by ADL.
    */
-  CPP_template(typename T)(requires(!has_member_state<T> && has_non_member_state<T>))  //
-      constexpr decltype(auto)
-      operator()(T&& t) const noexcept(noexcept(state(std::forward<T>(t)))) {
+  template <typename T, std::enable_if_t<!has_member_state_v<T>, int> = 0>
+  constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(state(std::forward<T>(t)))) {
     return state(std::forward<T>(t));
-  }
-
-  /// Default overload assuming the particle is a tuple.
-  CPP_template(typename T)(requires(!has_member_state<T> && !has_non_member_state<T>))  //
-      constexpr decltype(auto)
-      operator()(T&& t) const noexcept(noexcept(std::get<0>(std::forward<T>(t)))) {
-    return std::get<0>(std::forward<T>(t));
   }
 };
 
@@ -113,21 +109,27 @@ inline constexpr state_detail::state_fn state;
 
 namespace weight_detail {
 
-/// Definition for the `has_member_weight` requirement.
-template <typename T>
-CPP_requires(has_member_weight_, requires(T&& t)(((T&&)t).weight()));
+/// \cond weight_detail
 
-/// Definition for the `has_member_weight` concept.
-template <typename T>
-CPP_concept has_member_weight = CPP_requires_ref(weight_detail::has_member_weight_, T);
+template <class T, class = void>
+struct has_member_weight : std::false_type {};
 
-/// Definition for the `has_non_member_weight` requirement.
-template <typename T>
-CPP_requires(has_non_member_weight_, requires(T&& t)(weight((T&&)t)));
+template <class T>
+struct has_member_weight<T, std::void_t<decltype(std::declval<T>().weight())>> : std::true_type {};
 
-/// Definition for the `has_non_member_weight` concept.
 template <typename T>
-CPP_concept has_non_member_weight = CPP_requires_ref(weight_detail::has_non_member_weight_, T);
+inline constexpr bool has_member_weight_v = has_member_weight<T>::value;
+
+/// \endcond
+
+/// Default weight implementation.
+/**
+ * Assumes that the particle is a tuple that has exactly one element of type `beluga::Weight`.
+ */
+template <typename T>
+constexpr decltype(auto) weight(T&& t) noexcept(noexcept(element_of_type<beluga::Weight>(std::forward<T>(t)))) {
+  return element_of_type<beluga::Weight>(std::forward<T>(t));
+}
 
 /// Customization point object type for accessing the `weight` of a particle.
 /**
@@ -135,27 +137,18 @@ CPP_concept has_non_member_weight = CPP_requires_ref(weight_detail::has_non_memb
  */
 struct weight_fn {
   /// Overload for when the particle type defines a member method.
-  CPP_template(typename T)(requires(has_member_weight<T>))  //
-      constexpr decltype(auto)
-      operator()(T&& t) const noexcept(noexcept(std::forward<T>(t).weight())) {
+  template <typename T, std::enable_if_t<has_member_weight_v<T>, int> = 0>
+  constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(std::forward<T>(t).weight())) {
     return std::forward<T>(t).weight();
   }
 
   /// Overload for when there is an external function that takes this particle type.
   /**
-   * The non-member function must be in T's namespace to be found by ADL.
+   * The non-member function must be in T's namespace so it can be found by ADL.
    */
-  CPP_template(typename T)(requires(!has_member_weight<T> && has_non_member_weight<T>))  //
-      constexpr decltype(auto)
-      operator()(T&& t) const noexcept(noexcept(weight(std::forward<T>(t)))) {
+  template <typename T, std::enable_if_t<!has_member_weight_v<T>, int> = 0>
+  constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(weight(std::forward<T>(t)))) {
     return weight(std::forward<T>(t));
-  }
-
-  /// Default overload assuming the particle is a tuple.
-  CPP_template(typename T)(requires(!has_member_weight<T> && !has_non_member_weight<T>))  //
-      constexpr decltype(auto)
-      operator()(T&& t) const noexcept(noexcept(element_of_type<beluga::Weight>(std::forward<T>(t)))) {
-    return element_of_type<beluga::Weight>(std::forward<T>(t));
   }
 };
 
@@ -166,21 +159,27 @@ inline constexpr weight_detail::weight_fn weight;
 
 namespace cluster_detail {
 
-/// Definition for the `has_member_cluster` requirement.
-template <typename T>
-CPP_requires(has_member_cluster_, requires(T&& t)(((T&&)t).cluster()));
+/// \cond cluster_detail
 
-/// Definition for the `has_member_cluster` concept.
-template <typename T>
-CPP_concept has_member_cluster = CPP_requires_ref(cluster_detail::has_member_cluster_, T);
+template <class T, class = void>
+struct has_member_cluster : std::false_type {};
 
-/// Definition for the `has_non_member_cluster` requirement.
-template <typename T>
-CPP_requires(has_non_member_cluster_, requires(T&& t)(cluster(std::forward<T>(t))));
+template <class T>
+struct has_member_cluster<T, std::void_t<decltype(std::declval<T>().cluster())>> : std::true_type {};
 
-/// Definition for the `has_non_member_cluster` concept.
 template <typename T>
-CPP_concept has_non_member_cluster = CPP_requires_ref(cluster_detail::has_non_member_cluster_, T);
+inline constexpr bool has_member_cluster_v = has_member_cluster<T>::value;
+
+/// \endcond
+
+/// Default cluster implementation.
+/**
+ * Assumes that the particle is a tuple that has exactly one element of type `beluga::Cluster`.
+ */
+template <typename T>
+constexpr decltype(auto) cluster(T&& t) noexcept(noexcept(element_of_type<beluga::Cluster>(std::forward<T>(t)))) {
+  return element_of_type<beluga::Cluster>(std::forward<T>(t));
+}
 
 /// Customization point object type for accessing the `cluster` of a particle.
 /**
@@ -188,27 +187,18 @@ CPP_concept has_non_member_cluster = CPP_requires_ref(cluster_detail::has_non_me
  */
 struct cluster_fn {
   /// Overload for when the particle type defines a member method.
-  CPP_template(typename T)(requires(has_member_cluster<T>))  //
-      constexpr decltype(auto)
-      operator()(T&& t) const noexcept(noexcept(std::forward<T>(t).cluster())) {
+  template <typename T, std::enable_if_t<has_member_cluster_v<T>, int> = 0>
+  constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(std::forward<T>(t).cluster())) {
     return std::forward<T>(t).cluster();
   }
 
   /// Overload for when there is an external function that takes this particle type.
   /**
-   * The non-member function must be in T's namespace to be found by ADL.
+   * The non-member function must be in T's namespace so it can be found by ADL.
    */
-  CPP_template(typename T)(requires(!has_member_cluster<T> && has_non_member_cluster<T>))  //
-      constexpr decltype(auto)
-      operator()(T&& t) const noexcept(noexcept(cluster(std::forward<T>(t)))) {
+  template <typename T, std::enable_if_t<!has_member_cluster_v<T>, int> = 0>
+  constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(cluster(std::forward<T>(t)))) {
     return cluster(std::forward<T>(t));
-  }
-
-  /// Default overload assuming the particle is a tuple.
-  CPP_template(typename T)(requires(!has_member_cluster<T> && !has_non_member_cluster<T>))  //
-      constexpr decltype(auto)
-      operator()(T&& t) const noexcept(noexcept(element_of_type<beluga::Cluster>(std::forward<T>(t)))) {
-    return element_of_type<beluga::Cluster>(std::forward<T>(t));
   }
 };
 
