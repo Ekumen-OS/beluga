@@ -4,7 +4,7 @@ var searchData=
   ['find_5fnearest_5flandmark_91',['find_nearest_landmark',['../classbeluga_1_1LandmarkMap.html#a526d158ba5f10253167b649463a36e4d',1,'beluga::LandmarkMap']]],
   ['fixedlimiter_92',['FixedLimiter',['../classbeluga_1_1FixedLimiter.html',1,'beluga::FixedLimiter&lt; Mixin &gt;'],['../classbeluga_1_1FixedLimiter.html#a4e7291bac191912f8767bd432fc84241',1,'beluga::FixedLimiter::FixedLimiter()']]],
   ['fixedlimiterparam_93',['FixedLimiterParam',['../structbeluga_1_1FixedLimiterParam.html',1,'beluga']]],
-  ['floor_5fand_5fshift_94',['floor_and_shift',['../spatial__hash_8hpp.html#a65f08b6a6a0d1263bd7cce2ada16195d',1,'beluga::detail']]],
+  ['floor_5fand_5ffibo_5fhash_94',['floor_and_fibo_hash',['../spatial__hash_8hpp.html#a7ebab8784b644ef92d7fc78baf3ca55b',1,'beluga::detail']]],
   ['forward_5flike_95',['forward_like',['../utility_8hpp.html#acf35004c232253601cb8af2b1a46f044',1,'beluga::mixin']]],
   ['frame_96',['Frame',['../classbeluga_1_1BaseOccupancyGrid2.html#a9e94d3fcf24855146a145d9ad654759a',1,'beluga::BaseOccupancyGrid2']]],
   ['free_5fat_97',['free_at',['../classbeluga_1_1BaseOccupancyGrid2.html#a66731faf084e077ba735b8ea85b80796',1,'beluga::BaseOccupancyGrid2::free_at(std::size_t index) const'],['../classbeluga_1_1BaseOccupancyGrid2.html#a31cebbd0192720798299d1a944be5f25',1,'beluga::BaseOccupancyGrid2::free_at(int xi, int yi) const'],['../classbeluga_1_1BaseOccupancyGrid2.html#a013b74a65e00d2c87771ee365d8d5ae6',1,'beluga::BaseOccupancyGrid2::free_at(const Eigen::Vector2i &amp;pi) const']]],

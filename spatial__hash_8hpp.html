@@ -132,10 +132,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a65f08b6a6a0d1263bd7cce2ada16195d"><td class="memTemplParams" colspan="2">template&lt;std::size_t N, std::size_t I&gt; </td></tr>
-<tr class="memitem:a65f08b6a6a0d1263bd7cce2ada16195d"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="spatial__hash_8hpp.html#a65f08b6a6a0d1263bd7cce2ada16195d">beluga::detail::floor_and_shift</a> (double value)</td></tr>
-<tr class="memdesc:a65f08b6a6a0d1263bd7cce2ada16195d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the floor of a value shifted.  <a href="spatial__hash_8hpp.html#a65f08b6a6a0d1263bd7cce2ada16195d">More...</a><br /></td></tr>
-<tr class="separator:a65f08b6a6a0d1263bd7cce2ada16195d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ebab8784b644ef92d7fc78baf3ca55b"><td class="memTemplParams" colspan="2">template&lt;std::size_t N, std::size_t I&gt; </td></tr>
+<tr class="memitem:a7ebab8784b644ef92d7fc78baf3ca55b"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="spatial__hash_8hpp.html#a7ebab8784b644ef92d7fc78baf3ca55b">beluga::detail::floor_and_fibo_hash</a> (double value)</td></tr>
+<tr class="memdesc:a7ebab8784b644ef92d7fc78baf3ca55b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the hashed and rotated floor of a value.  <a href="spatial__hash_8hpp.html#a7ebab8784b644ef92d7fc78baf3ca55b">More...</a><br /></td></tr>
+<tr class="separator:a7ebab8784b644ef92d7fc78baf3ca55b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bdcaf797012a4bbeee297728f447421"><td class="memTemplParams" colspan="2">template&lt;class T , std::size_t... Ids&gt; </td></tr>
 <tr class="memitem:a0bdcaf797012a4bbeee297728f447421"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="spatial__hash_8hpp.html#a0bdcaf797012a4bbeee297728f447421">beluga::detail::hash_impl</a> (const T &amp;value, const std::array&lt; double, sizeof...(Ids)&gt; &amp;resolution, [[maybe_unused]] std::index_sequence&lt; Ids... &gt; index_sequence)</td></tr>
 <tr class="separator:a0bdcaf797012a4bbeee297728f447421"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -143,8 +143,8 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of a spatial hash for N dimensional states. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a65f08b6a6a0d1263bd7cce2ada16195d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65f08b6a6a0d1263bd7cce2ada16195d">&#9670;&nbsp;</a></span>floor_and_shift()</h2>
+<a id="a7ebab8784b644ef92d7fc78baf3ca55b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ebab8784b644ef92d7fc78baf3ca55b">&#9670;&nbsp;</a></span>floor_and_fibo_hash()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -155,7 +155,7 @@ template&lt;std::size_t N, std::size_t I&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr std::size_t beluga::detail::floor_and_shift </td>
+          <td class="memname">constexpr std::size_t beluga::detail::floor_and_fibo_hash </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
@@ -169,7 +169,7 @@ template&lt;std::size_t N, std::size_t I&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the floor of a value shifted. </p>
+<p>Returns the hashed and rotated floor of a value. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">N</td><td>Number of bits to be used from the integer result, the least significant will be used. </td></tr>
@@ -179,7 +179,7 @@ template&lt;std::size_t N, std::size_t I&gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">value</td><td>Input value to be floored and shifted. </td></tr>
+    <tr><td class="paramname">value</td><td>Input value to be hashed. </td></tr>
   </table>
   </dd>
 </dl>
