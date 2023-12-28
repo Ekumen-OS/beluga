@@ -132,16 +132,17 @@ class TupleContainer {
     push_back_impl(value, std::make_index_sequence<sizeof...(Types)>());
   }
 
-  /// Returns a view of all elements of the container.
-  [[nodiscard]] constexpr auto view_all() {
-    return std::apply([](auto&&... containers) { return ranges::views::zip(containers...); }, sequences_);
-  }
+  /// Returns an iterator to the first element of the container.
+  [[nodiscard]] constexpr auto begin() const { return all().begin(); }
+
+  /// Returns an iterator to the last element of the container.
+  [[nodiscard]] constexpr auto end() const { return all().end(); }
 
   /// \overload
-  [[nodiscard]] constexpr auto view_all() const {
-    return std::apply([](auto&&... containers) { return ranges::views::zip(containers...); }, sequences_) |
-           ranges::views::const_;
-  }
+  [[nodiscard]] constexpr auto begin() { return all().begin(); }
+
+  /// \overload
+  [[nodiscard]] constexpr auto end() { return all().end(); }
 
  private:
   std::tuple<InternalContainer<Types>...> sequences_;
@@ -150,22 +151,13 @@ class TupleContainer {
   constexpr void push_back_impl(T&& value, std::index_sequence<Ids...>) {
     (std::get<Ids>(sequences_).push_back(std::get<Ids>(std::forward<T>(value))), ...);
   }
-};
 
-/// Specialization for a TupleContainer<InternalContainer, Types...>, see also \ref container_traits.hpp.
-template <template <class> class InternalContainer, class... Types>
-struct container_traits<TupleContainer<InternalContainer, Types...>> {
-  /// The container type.
-  using type = TupleContainer<InternalContainer, Types...>;
-  /// The container value type.
-  using value_type = typename type::value_type;
-  /// The container size type.
-  using size_type = typename type::size_type;
+  [[nodiscard]] constexpr auto all() const {
+    return std::apply([](auto&&... containers) { return ranges::views::zip(containers...); }, sequences_);
+  }
 
-  /// Returns a view of all the elements in the container.
-  template <class U>
-  static constexpr auto view_all(U&& container) {
-    return container.view_all();
+  [[nodiscard]] constexpr auto all() {
+    return std::apply([](auto&&... containers) { return ranges::views::zip(containers...); }, sequences_);
   }
 };
 

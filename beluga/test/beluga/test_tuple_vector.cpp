@@ -16,6 +16,7 @@
 
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
+#include <beluga/views/particles.hpp>
 
 namespace {
 
@@ -60,7 +61,7 @@ TYPED_TEST(ContainerTest, Resize) {
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   int reps = 0;
-  for (auto&& [state, weight, cluster] : beluga::views::all(container)) {
+  for (auto&& [state, weight, cluster] : container) {
     ASSERT_THAT(state, StateEq(State{}));
     ASSERT_EQ(weight, double{});
     ASSERT_EQ(cluster, beluga::Cluster{});
@@ -82,7 +83,7 @@ TYPED_TEST(ContainerTest, PushBack) {
   EXPECT_EQ(container.size(), 0);
   container.push_back({{1, 2}, 3, 4});
   EXPECT_EQ(container.size(), 1);
-  auto&& [state, weight, cluster] = beluga::views::all(container).front();
+  auto&& [state, weight, cluster] = ranges::views::all(container).front();
   EXPECT_THAT(state, StateEq({1, 2}));
   EXPECT_EQ(weight, 3);
   EXPECT_EQ(cluster, 4);
@@ -90,7 +91,7 @@ TYPED_TEST(ContainerTest, PushBack) {
 
 TYPED_TEST(ContainerTest, GetterSetter) {
   auto container = typename TestFixture::template TemplateParam<State, beluga::Weight, beluga::Cluster>{};
-  auto&& view = beluga::views::all(container);
+  auto&& view = container | ranges::views::all;
   container.push_back({{1, 2}, 3, 4});
   beluga::weight(view.front()) = 5;
   ASSERT_EQ(beluga::weight(view.front()), 5);
@@ -114,10 +115,10 @@ TYPED_TEST(ContainerTest, StructuredBinding) {
   container.resize(3);
   EXPECT_EQ(container.size(), 3);
   constexpr std::size_t kTestCluster = 75;
-  for (auto&& [state, weight, cluster] : beluga::views::all(container)) {
+  for (auto&& [state, weight, cluster] : container) {
     cluster = kTestCluster;
   }
-  for (auto&& [state, weight, cluster] : beluga::views::all(container)) {
+  for (auto&& [state, weight, cluster] : container) {
     ASSERT_EQ(cluster, kTestCluster);
   }
 }
@@ -128,7 +129,7 @@ TYPED_TEST(ContainerTest, SingleElementTuple) {
   container.push_back({4});
   container.push_back({4});
   EXPECT_EQ(container.size(), 3);
-  for (auto&& [value] : beluga::views::all(container)) {
+  for (auto&& [value] : container) {
     ASSERT_EQ(value, 4);
   }
 }
@@ -139,7 +140,7 @@ TYPED_TEST(ContainerTest, DoubleElementTuple) {
   container.push_back({2, 0.5});
   container.push_back({2, 0.5});
   EXPECT_EQ(container.size(), 3);
-  for (auto&& [integer, real] : beluga::views::all(container)) {
+  for (auto&& [integer, real] : container) {
     ASSERT_EQ(integer, 2);
     ASSERT_EQ(real, 0.5);
   }

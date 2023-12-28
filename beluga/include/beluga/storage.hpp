@@ -20,6 +20,7 @@
 
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
+#include <beluga/views/particles.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/view/any_view.hpp>
 #include <range/v3/view/const.hpp>
@@ -31,30 +32,6 @@
  */
 
 namespace beluga {
-
-/**
- * \page ParticlePage Beluga named requirements: Particle
- * What an implementation of a particle in Beluga should provide.
- *
- * \section ParticleRequirements Requirements
- * `T` is a `Particle` if given:
- * - An instance `p` of `T`.
- * - A possibly const instance `cp` of `T`.
- *
- * The following is satisfied:
- * - \c particle_traits<T>::state_type is a valid type.
- * - \c particle_traits<T>::state(cp) returns an instance of \c particle_traits<T>::state_type.
- * - Given `s` an instance of \c particle_traits<T>::state_type, \c particle_traits<T>::state(p) = `s`
- *   is a valid expression and assigns the state `s` to the particle `p`. \n
- *   i.e. after the assignment `s` == \c particle_traits<T>::state(p) is `true`.
- * - \c particle_traits<T>::weight_type is a valid arithmetic type (that is, an integral
- *   type or a floating-point type).
- * - \c particle_traits<T>::weight(cp) is a valid expression and the return type is
- *   \c particle_traits<T>::weight_type.
- * - Given `w` an instance of \c particle_traits<T>::weight_type, \c particle_traits<T>::weight(p) = `w`
- *   is a valid expression and assigns the weight `w` to the particle `p`. \n
- *   i.e. after the assignment `w` == \c particle_traits<T>::weight(p) is `true`.
- */
 
 /**
  * \page ParticleContainerPage Beluga named requirements: ParticleContainer
@@ -180,7 +157,7 @@ class StoragePolicy : public Mixin {
     static_assert(std::is_convertible_v<ranges::range_value_t<Range>, particle_type>, "Invalid value type");
     const std::size_t size = this->self().max_samples();
     particles_[1].resize(size);
-    const auto first = std::begin(views::all(particles_[1]));
+    const auto first = std::begin(particles_[1]);
     const auto last = ranges::copy(input | ranges::views::take(size), first).out;
     particles_[1].resize(static_cast<std::size_t>(std::distance(first, last)));
     std::swap(particles_[0], particles_[1]);
@@ -201,19 +178,19 @@ class StoragePolicy : public Mixin {
   [[nodiscard]] weights_view_type weights_view() const final { return this->weights(); }
 
   /// Returns a view of the particles container.
-  [[nodiscard]] auto particles() { return views::all(particles_[0]); }
+  [[nodiscard]] auto particles() { return particles_[0] | ranges::views::all; }
   /// Returns a const view of the particles container.
-  [[nodiscard]] auto particles() const { return views::all(particles_[0]) | ranges::views::const_; }
+  [[nodiscard]] auto particles() const { return particles_[0] | ranges::views::all | ranges::views::const_; }
 
   /// Returns a view of the particles states.
-  [[nodiscard]] auto states() { return views::states(particles_[0]); }
+  [[nodiscard]] auto states() { return particles_[0] | beluga::views::states; }
   /// Returns a const view of the particles states.
-  [[nodiscard]] auto states() const { return views::states(particles_[0]) | ranges::views::const_; }
+  [[nodiscard]] auto states() const { return particles_[0] | beluga::views::states | ranges::views::const_; }
 
   /// Returns a view of the particles weight.
-  [[nodiscard]] auto weights() { return views::weights(particles_[0]); }
+  [[nodiscard]] auto weights() { return particles_[0] | beluga::views::weights; }
   /// Returns a const view of the particles weight.
-  [[nodiscard]] auto weights() const { return views::weights(particles_[0]) | ranges::views::const_; }
+  [[nodiscard]] auto weights() const { return particles_[0] | beluga::views::weights | ranges::views::const_; }
 
  private:
   std::array<Container, 2> particles_;

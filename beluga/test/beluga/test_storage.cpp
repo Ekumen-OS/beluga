@@ -60,7 +60,7 @@ TYPED_TEST(StoragePolicyTest, InitializeWithLessParticlesThanExpected) {
   auto states = std::vector<int>{1, 2, 3};
   auto mixin = TypeParam{};
   EXPECT_CALL(mixin, max_samples()).WillOnce(Return(5));
-  mixin.initialize_states(states | ranges::views::all);
+  mixin.initialize_states(states);
   ASSERT_EQ(mixin.particle_count(), 3);
 }
 
@@ -68,7 +68,7 @@ TYPED_TEST(StoragePolicyTest, InitializeWithMoreParticlesThanExpected) {
   auto states = std::vector<int>{1, 2, 3, 4};
   auto mixin = TypeParam{};
   EXPECT_CALL(mixin, max_samples()).WillOnce(Return(2));
-  mixin.initialize_states(states | ranges::views::all);
+  mixin.initialize_states(states);
   ASSERT_EQ(mixin.particle_count(), 2);
 }
 
@@ -76,7 +76,7 @@ TYPED_TEST(StoragePolicyTest, ResampleParticles) {
   auto states = std::vector<int>{1, 2, 3, 4, 5};
   auto mixin = TypeParam{};
   EXPECT_CALL(mixin, max_samples()).WillOnce(Return(5)).WillOnce(Return(5));
-  mixin.initialize_states(states | ranges::views::all);
+  mixin.initialize_states(states);
   ASSERT_EQ(mixin.particle_count(), 5);
   mixin.initialize_particles(mixin.particles() | ranges::views::reverse);
   ASSERT_TRUE(ranges::equal(mixin.states(), states | ranges::views::reverse));

@@ -23,6 +23,7 @@
 #include <beluga/algorithm/exponential_filter.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
 #include <beluga/type_traits.hpp>
+#include <beluga/views/particles.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take.hpp>
@@ -167,17 +168,14 @@ auto make_multinomial_sampler(const Range& samples, const Weights& weights, Rand
 /**
  * \param hasher A copyable callable object with signature (const decltype(state(particle)) &) -> std::size_t, that
  * returns a spatial cluster for a given particle state.
- * \return A callable object with prototype `(ParticleT && p) ->ParticleT`. \n
- *  `ParticleT` must satisfy \ref ParticlePage. \ n
- *  The expression \c particle_traits<ParticleT>::cluster(p) must also be valid and return a `std::size_t &`. \n
- *  After the returned object is applied to a particle `p`, \c cluster(p) will be updated with the calculated spatial
- * hash according to the specified resolutions in each axis.
+ * \return A callable object with prototype `(ParticleT && p) -> ParticleT`. \n
+ *  `ParticleT` must satisfy \ref ParticlePage.
  */
 template <class Hasher>
 inline auto make_clusterization_function(Hasher&& hasher) {
   return [hasher](auto&& particle) {
     auto new_particle = particle;
-    cluster(new_particle) = hasher(state(particle));
+    beluga::cluster(new_particle) = hasher(beluga::state(particle));
     return new_particle;
   };
 }
@@ -483,20 +481,13 @@ struct KldLimiterParam {
  * \tparam Mixin The mixed-in type. `Mixin::self_type::particle_type` must exist and
  * satisfy \ref ParticlePage.
  * \tparam State Type that represents the state of a particle. It should match with
- * particle_traits<Mixin::self_type::particle_type::state>::state_type.
+ * particle_traits<Mixin::self_type::particle_type>::state_type.
  *
  * Additionally, given:
  * - `P`, the type `Mixin::self_type::particle_type`
  * - `p` an instance of `P`
  * - `cp` a possibly const instance of `P`
  * - `h` an instance of `std::size_t`
- *
- * The following conditions must be satisfied:
- * - The expression \c particle_traits<P>::cluster(cp) returns a `std::size_t` that represents the spatial
- *   hash of the particle `cp`.
- * - The expression \c particle_traits<P>::cluster(p) = `h` is valid and
- *   assigns the cluster hash to the particle `p`. \n
- *   i.e. after the assignment `h` == \c particle_traits<P>::cluster(p) is true.
  */
 template <class Mixin, class State>
 class KldLimiter : public Mixin {
@@ -546,7 +537,7 @@ class KldLimiter : public Mixin {
            ranges::views::transform(beluga::make_clusterization_function(parameters_.spatial_hasher)) |
            ranges::views::take_while(
                beluga::kld_condition(parameters_.min_samples, parameters_.kld_epsilon, parameters_.kld_z),
-               [](auto&& particle) { return cluster(particle); }) |
+               beluga::cluster) |
            ranges::views::take(parameters_.max_samples);
   }
 

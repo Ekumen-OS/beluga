@@ -17,6 +17,8 @@
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
 
+#include <beluga/views/particles.hpp>
+
 namespace {
 
 constexpr std::size_t kParticleCount = 1'000'000;
@@ -181,8 +183,7 @@ void BM_Assign(benchmark::State& state) {
   new_container.resize(kParticleCount);
   for (auto _ : state) {
     auto&& states = beluga::views::states(container);
-    auto&& new_particles = beluga::views::all(new_container);
-    std::transform(std::begin(states), std::end(states), std::begin(new_particles), [](const State& state) {
+    std::transform(std::begin(states), std::end(states), std::begin(new_container), [](const State& state) {
       return std::make_tuple(state, 0, 0);
     });
   }
