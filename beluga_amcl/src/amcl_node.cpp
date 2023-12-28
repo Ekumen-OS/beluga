@@ -890,7 +890,7 @@ void AmclNode::laser_callback(ExecutionPolicy&& exec_policy, sensor_msgs::msg::L
     return;
   }
 
-  auto odom_to_base_transform = Sophus::SE2d{};
+  auto base_pose_in_odom = Sophus::SE2d{};
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
@@ -900,13 +900,13 @@ void AmclNode::laser_callback(ExecutionPolicy&& exec_policy, sensor_msgs::msg::L
                 get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
                 tf2_ros::fromMsg(laser_scan->header.stamp))
             .transform,
-        odom_to_base_transform);
+        base_pose_in_odom);
   } catch (const tf2::TransformException& error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
     return;
   }
 
-  auto base_to_laser_transform = Sophus::SE3d{};
+  auto laser_pose_in_base = Sophus::SE3d{};
   try {
     tf2::convert(
         tf_buffer_
@@ -914,7 +914,7 @@ void AmclNode::laser_callback(ExecutionPolicy&& exec_policy, sensor_msgs::msg::L
                 get_parameter("base_frame_id").as_string(), laser_scan->header.frame_id,
                 tf2_ros::fromMsg(laser_scan->header.stamp))
             .transform,
-        base_to_laser_transform);
+        laser_pose_in_base);
   } catch (const tf2::TransformException& error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from base to laser: %s", error.what());
     return;
@@ -922,16 +922,19 @@ void AmclNode::laser_callback(ExecutionPolicy&& exec_policy, sensor_msgs::msg::L
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto filter_updated = particle_filter_->update_filter(
-      exec_policy, odom_to_base_transform,
+      exec_policy, base_pose_in_odom,
       beluga_ros::LaserScan{
           laser_scan,
-          base_to_laser_transform,
+          laser_pose_in_base,
           static_cast<std::size_t>(get_parameter("max_beams").as_int()),
           get_parameter("laser_min_range").as_double(),
           get_parameter("laser_max_range").as_double(),
       }
               .points_in_cartesian_coordinates() |
-          ranges::views::transform([](const auto& value) { return std::make_pair(value.x(), value.y()); }) |
+          ranges::views::transform([&](const auto& p) {
+            const auto result = laser_pose_in_base * Sophus::Vector3d{p.x(), p.y(), 0};
+            return std::make_pair(result.x(), result.y());
+          }) |
           ranges::to<std::vector>,
       force_filter_update_);
   force_filter_update_ = false;
@@ -963,7 +966,7 @@ void AmclNode::laser_callback(ExecutionPolicy&& exec_policy, sensor_msgs::msg::L
     pose_pub_->publish(message);
 
     // Update the estimation for the transform between the global frame and the odom frame
-    latest_map_to_odom_transform_ = pose * odom_to_base_transform.inverse();
+    latest_map_to_odom_transform_ = pose * base_pose_in_odom.inverse();
   }
 
   // transforms are always published to keep them current
