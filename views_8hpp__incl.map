@@ -1,10 +1,17 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views.hpp">
-<area shape="rect" id="node1" title="Implementation of useful container views." alt="" coords="125,5,317,61"/>
-<area shape="rect" id="node2" href="$elements_8hpp.html" title="Implementation of the C++20&#39;s std::views::elements view." alt="" coords="9,184,211,211"/>
-<area shape="rect" id="node5" href="$take__evenly_8hpp.html" title="Implementation of a take_evenly range adaptor object." alt="" coords="223,109,440,136"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,259,60,285"/>
-<area shape="rect" id="node4" title=" " alt="" coords="83,259,294,285"/>
-<area shape="rect" id="node6" title=" " alt="" coords="235,184,427,211"/>
-<area shape="rect" id="node7" title=" " alt="" coords="452,184,669,211"/>
-<area shape="rect" id="node8" title=" " alt="" coords="693,184,868,211"/>
+<area shape="rect" id="node1" title="Implementation of useful container views." alt="" coords="211,5,403,61"/>
+<area shape="rect" id="node2" href="$elements_8hpp.html" title="Implementation of the C++20&#39;s std::views::elements view." alt="" coords="22,184,223,211"/>
+<area shape="rect" id="node5" href="$particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="209,109,405,136"/>
+<area shape="rect" id="node12" href="$take__evenly_8hpp.html" title="Implementation of a take_evenly range adaptor object." alt="" coords="475,109,693,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="246,348,301,375"/>
+<area shape="rect" id="node4" title=" " alt="" coords="25,266,236,293"/>
+<area shape="rect" id="node6" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="299,184,463,211"/>
+<area shape="rect" id="node7" title=" " alt="" coords="443,348,535,375"/>
+<area shape="rect" id="node8" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="527,259,737,300"/>
+<area shape="rect" id="node11" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="311,259,451,300"/>
+<area shape="rect" id="node9" title=" " alt="" coords="574,348,661,375"/>
+<area shape="rect" id="node10" title=" " alt="" coords="685,348,744,375"/>
+<area shape="rect" id="node13" title=" " alt="" coords="488,184,680,211"/>
+<area shape="rect" id="node14" title=" " alt="" coords="705,184,922,211"/>
+<area shape="rect" id="node15" title=" " alt="" coords="946,184,1121,211"/>
 </map>

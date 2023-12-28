@@ -1,11 +1,14 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits/strongly_typed_numeric.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits/strongly_typed_numeric.hpp">
-<area shape="rect" id="node1" title="Implementation of a strongly typed numeric helper." alt="" coords="101,5,303,76"/>
-<area shape="rect" id="node2" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="103,124,301,195"/>
-<area shape="rect" id="node3" href="$type__traits_8hpp.html" title="Includes all Beluga type traits." alt="" coords="106,243,298,299"/>
-<area shape="rect" id="node4" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="49,451,278,507"/>
-<area shape="rect" id="node6" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="258,659,450,715"/>
-<area shape="rect" id="node8" href="$storage_8hpp.html" title="Implementation of storage policies." alt="" coords="302,451,494,507"/>
-<area shape="rect" id="node9" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="302,347,494,403"/>
-<area shape="rect" id="node5" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="42,555,234,611"/>
-<area shape="rect" id="node7" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="258,555,450,611"/>
+<area shape="rect" id="node1" title="Implementation of a strongly typed numeric helper." alt="" coords="263,5,464,76"/>
+<area shape="rect" id="node2" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="268,124,460,180"/>
+<area shape="rect" id="node3" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="197,228,394,299"/>
+<area shape="rect" id="node11" href="$particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="358,451,558,507"/>
+<area shape="rect" id="node4" href="$type__traits_8hpp.html" title="Includes all Beluga type traits." alt="" coords="174,347,366,403"/>
+<area shape="rect" id="node5" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="341,555,570,611"/>
+<area shape="rect" id="node7" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="77,763,269,819"/>
+<area shape="rect" id="node9" href="$storage_8hpp.html" title="Implementation of storage policies." alt="" coords="125,555,317,611"/>
+<area shape="rect" id="node10" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="41,451,233,507"/>
+<area shape="rect" id="node6" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="360,659,552,715"/>
+<area shape="rect" id="node8" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="144,659,336,715"/>
+<area shape="rect" id="node12" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="576,659,768,715"/>
 </map>

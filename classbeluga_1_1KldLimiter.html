@@ -132,7 +132,7 @@ class beluga::KldLimiter&lt; Mixin, State &gt;</h3>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Mixin</td><td>The mixed-in type. <code>Mixin::self_type::particle_type</code> must exist and satisfy <a class="el" href="ParticlePage.html">Beluga named requirements: Particle</a>. </td></tr>
-    <tr><td class="paramname">State</td><td>Type that represents the state of a particle. It should match with particle_traits&lt;Mixin::self_type::particle_type::state&gt;::state_type.</td></tr>
+    <tr><td class="paramname">State</td><td>Type that represents the state of a particle. It should match with <a class="el" href="structbeluga_1_1particle__traits.html#a77b6eadd9f7ef6fffe4c3cd3caaaac78" title="The particle state type.">particle_traits&lt;Mixin::self_type::particle_type&gt;::state_type</a>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -140,12 +140,7 @@ class beluga::KldLimiter&lt; Mixin, State &gt;</h3>
 <li><code>P</code>, the type <code>Mixin::self_type::particle_type</code></li>
 <li><code>p</code> an instance of <code>P</code></li>
 <li><code>cp</code> a possibly const instance of <code>P</code></li>
-<li><code>h</code> an instance of <code>std::size_t</code></li>
-</ul>
-<p>The following conditions must be satisfied:</p><ul>
-<li>The expression <code>particle_traits&lt;P&gt;::cluster(cp)</code> returns a <code>std::size_t</code> that represents the spatial hash of the particle <code>cp</code>.</li>
-<li>The expression <code>particle_traits&lt;P&gt;::cluster(p)</code> = <code>h</code> is valid and assigns the cluster hash to the particle <code>p</code>. <br  />
- i.e. after the assignment <code>h</code> == <code>particle_traits&lt;P&gt;::cluster(p)</code> is true. </li>
+<li><code>h</code> an instance of <code>std::size_t</code> </li>
 </ul>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0bfb135d82b872706d6c989e397ab49e"></a>

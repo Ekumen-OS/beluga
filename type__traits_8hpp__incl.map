@@ -1,18 +1,11 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits.hpp">
-<area shape="rect" id="node1" title="Includes all Beluga type traits." alt="" coords="172,5,364,61"/>
-<area shape="rect" id="node2" href="$container__traits_8hpp.html" title="Useful traits for containers." alt="" coords="61,199,217,240"/>
-<area shape="rect" id="node5" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="253,109,397,151"/>
-<area shape="rect" id="node3" title=" " alt="" coords="193,288,285,315"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,288,168,315"/>
-<area shape="rect" id="node6" title=" " alt="" coords="935,437,990,464"/>
-<area shape="rect" id="node7" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="292,199,503,240"/>
-<area shape="rect" id="node10" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="544,206,680,233"/>
-<area shape="rect" id="node8" title=" " alt="" coords="309,288,395,315"/>
-<area shape="rect" id="node9" title=" " alt="" coords="420,288,479,315"/>
-<area shape="rect" id="node11" href="$elements_8hpp.html" title="Implementation of the C++20&#39;s std::views::elements view." alt="" coords="723,363,925,389"/>
-<area shape="rect" id="node13" href="$take__evenly_8hpp.html" title="Implementation of a take_evenly range adaptor object." alt="" coords="503,288,721,315"/>
-<area shape="rect" id="node12" title=" " alt="" coords="701,437,912,464"/>
-<area shape="rect" id="node14" title=" " alt="" coords="265,363,457,389"/>
-<area shape="rect" id="node15" title=" " alt="" coords="482,363,699,389"/>
-<area shape="rect" id="node16" title=" " alt="" coords="66,363,241,389"/>
+<area shape="rect" id="node1" title="Includes all Beluga type traits." alt="" coords="34,5,226,61"/>
+<area shape="rect" id="node2" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="118,109,262,151"/>
+<area shape="rect" id="node9" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="5,273,145,315"/>
+<area shape="rect" id="node3" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="113,199,277,225"/>
+<area shape="rect" id="node4" title=" " alt="" coords="79,363,133,389"/>
+<area shape="rect" id="node5" title=" " alt="" coords="188,363,280,389"/>
+<area shape="rect" id="node6" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="271,273,482,315"/>
+<area shape="rect" id="node7" title=" " alt="" coords="319,363,405,389"/>
+<area shape="rect" id="node8" title=" " alt="" coords="430,363,489,389"/>
 </map>

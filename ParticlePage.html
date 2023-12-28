@@ -70,19 +70,21 @@ $(function() {
 <div class="textblock"><p>What an implementation of a particle in Beluga should provide.</p>
 <h1><a class="anchor" id="ParticleRequirements"></a>
 Requirements</h1>
-<p><code>T</code> is a <code>Particle</code> if given:</p><ul>
-<li>An instance <code>p</code> of <code>T</code>.</li>
-<li>A possibly const instance <code>cp</code> of <code>T</code>.</li>
+<p><code>P</code> is a <code>Particle</code> type if given:</p><ul>
+<li>An instance <code>p</code> of <code>P</code>.</li>
+<li>A possibly const instance <code>cp</code> of <code>P</code>.</li>
 </ul>
 <p>The following is satisfied:</p><ul>
-<li><code>particle_traits&lt;T&gt;::state_type</code> is a valid type.</li>
-<li><code>particle_traits&lt;T&gt;::state(cp)</code> returns an instance of <code>particle_traits&lt;T&gt;::state_type</code>.</li>
-<li>Given <code>s</code> an instance of <code>particle_traits&lt;T&gt;::state_type</code>, <code>particle_traits&lt;T&gt;::state(p)</code> = <code>s</code> is a valid expression and assigns the state <code>s</code> to the particle <code>p</code>. <br  />
- i.e. after the assignment <code>s</code> == <code>particle_traits&lt;T&gt;::state(p)</code> is <code>true</code>.</li>
-<li><code>particle_traits&lt;T&gt;::weight_type</code> is a valid arithmetic type (that is, an integral type or a floating-point type).</li>
-<li><code>particle_traits&lt;T&gt;::weight(cp)</code> is a valid expression and the return type is <code>particle_traits&lt;T&gt;::weight_type</code>.</li>
-<li>Given <code>w</code> an instance of <code>particle_traits&lt;T&gt;::weight_type</code>, <code>particle_traits&lt;T&gt;::weight(p)</code> = <code>w</code> is a valid expression and assigns the weight <code>w</code> to the particle <code>p</code>. <br  />
- i.e. after the assignment <code>w</code> == <code>particle_traits&lt;T&gt;::weight(p)</code> is <code>true</code>. </li>
+<li><code>beluga::state(cp)</code> is a valid expression and returns the particle state.</li>
+<li><code>beluga::weight(cp)</code> is a valid expression and returns the particle weight.</li>
+<li><code>beluga::state(p)</code> is a valid expression and returns a mutable reference to the particle state.</li>
+<li><code>beluga::weight(p)</code> is a valid expression and returns a mutable reference to the particle weight.</li>
+</ul>
+<h1><a class="anchor" id="ParticleNotes"></a>
+Notes</h1>
+<p>Both <code>beluga::state</code> and <code>beluga::weight</code> are customization point objects. Users have two customization alternatives:</p><ul>
+<li>Specifying <code><a class="el" href="primitives_8hpp.html#af50ee08bf7344a7c4eb850d879782c3d" title="Default state implementation.">state()</a></code> and <code><a class="el" href="primitives_8hpp.html#ad62c935c0ea61bf765e96fe588cba38f" title="Default weight implementation.">weight()</a></code> as instance members of their custom type.</li>
+<li>Creating free functions <code>state(p)</code> and <code>weight(p)</code> overloaded for their custom type in the same namespace where that type is defined (so it can be found by ADL). </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
