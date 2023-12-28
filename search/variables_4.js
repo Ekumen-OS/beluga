@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['elements_592',['elements',['../views_8hpp.html#a7d1f7ebcb951cae428545b13119990ee',1,'beluga::views']]]
+  ['elements_607',['elements',['../elements_8hpp.html#a7d1f7ebcb951cae428545b13119990ee',1,'beluga::views']]]
 ];

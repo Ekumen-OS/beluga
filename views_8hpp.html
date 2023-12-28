@@ -67,8 +67,6 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">views.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -76,16 +74,21 @@ $(function() {
 
 <p>Implementation of useful container views.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;tuple&gt;</code><br />
-<code>#include &lt;range/v3/view/transform.hpp&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="elements_8hpp_source.html">beluga/views/elements.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="take__evenly_8hpp_source.html">beluga/views/take_evenly.hpp</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for views.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="views_8hpp__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2views_8hpp" alt=""/></div>
 <map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2views_8hpp" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2views_8hpp">
-<area shape="rect" title="Implementation of useful container views." alt="" coords="14,5,206,61"/>
-<area shape="rect" title=" " alt="" coords="5,109,60,136"/>
-<area shape="rect" title=" " alt="" coords="83,109,294,136"/>
+<area shape="rect" title="Implementation of useful container views." alt="" coords="125,5,317,61"/>
+<area shape="rect" href="elements_8hpp.html" title="Implementation of the C++20&#39;s std::views::elements view." alt="" coords="9,184,211,211"/>
+<area shape="rect" href="take__evenly_8hpp.html" title="Implementation of a take_evenly range adaptor object." alt="" coords="223,109,440,136"/>
+<area shape="rect" title=" " alt="" coords="5,259,60,285"/>
+<area shape="rect" title=" " alt="" coords="83,259,294,285"/>
+<area shape="rect" title=" " alt="" coords="235,184,427,211"/>
+<area shape="rect" title=" " alt="" coords="452,184,669,211"/>
+<area shape="rect" title=" " alt="" coords="693,184,868,211"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -106,55 +109,9 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 </div>
 <p><a href="views_8hpp_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a7d1f7ebcb951cae428545b13119990ee"><td class="memTemplParams" colspan="2">template&lt;std::size_t N&gt; </td></tr>
-<tr class="memitem:a7d1f7ebcb951cae428545b13119990ee"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="views_8hpp.html#a7d1f7ebcb951cae428545b13119990ee">beluga::views::elements</a></td></tr>
-<tr class="separator:a7d1f7ebcb951cae428545b13119990ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of useful container views. </p>
-</div><h2 class="groupheader">Variable Documentation</h2>
-<a id="a7d1f7ebcb951cae428545b13119990ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d1f7ebcb951cae428545b13119990ee">&#9670;&nbsp;</a></span>elements</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;std::size_t N&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto beluga::views::elements</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= ranges::views::transform(</div>
-<div class="line">    [](<span class="keyword">auto</span>&amp;&amp; particle) -&gt; decltype(<span class="keyword">auto</span>) { <span class="keywordflow">return</span> std::get&lt;N&gt;(std::forward&lt;decltype(particle)&gt;(particle)); })</div>
-</div><!-- fragment --><p>Returns <a href="https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject">range adaptor object</a> that will apply <code>std::get&lt;N&gt;</code> to each value in the range lazily. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">N</td><td>Element to get from the array or tuple. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">particle</td><td>Tuple or array instance, with at least <code>N + 1</code> elements. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1

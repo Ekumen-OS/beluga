@@ -1,5 +1,10 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views.hpp">
-<area shape="rect" id="node1" title="Implementation of useful container views." alt="" coords="14,5,206,61"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,109,60,136"/>
-<area shape="rect" id="node3" title=" " alt="" coords="83,109,294,136"/>
+<area shape="rect" id="node1" title="Implementation of useful container views." alt="" coords="125,5,317,61"/>
+<area shape="rect" id="node2" href="$elements_8hpp.html" title="Implementation of the C++20&#39;s std::views::elements view." alt="" coords="9,184,211,211"/>
+<area shape="rect" id="node5" href="$take__evenly_8hpp.html" title="Implementation of a take_evenly range adaptor object." alt="" coords="223,109,440,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,259,60,285"/>
+<area shape="rect" id="node4" title=" " alt="" coords="83,259,294,285"/>
+<area shape="rect" id="node6" title=" " alt="" coords="235,184,427,211"/>
+<area shape="rect" id="node7" title=" " alt="" coords="452,184,669,211"/>
+<area shape="rect" id="node8" title=" " alt="" coords="693,184,868,211"/>
 </map>
