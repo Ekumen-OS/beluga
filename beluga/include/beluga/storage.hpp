@@ -154,19 +154,20 @@ class StoragePolicy : public Mixin {
    */
   template <class Range>
   void initialize_particles(Range&& input) {
-    static_assert(std::is_convertible_v<ranges::range_value_t<Range>, particle_type>, "Invalid value type");
+    static_assert(std::is_convertible_v<ranges::range_value_t<Range>, state_type>, "Invalid value type");
     const std::size_t size = this->self().max_samples();
+    auto particles = input |                                                             //
+                     ranges::views::transform(beluga::make_from_state<particle_type>) |  //
+                     ranges::views::take(size);
     particles_[1].resize(size);
     const auto first = std::begin(particles_[1]);
-    const auto last = ranges::copy(input | ranges::views::take(size), first).out;
+    const auto last = ranges::copy(particles, first).out;
     particles_[1].resize(static_cast<std::size_t>(std::distance(first, last)));
     std::swap(particles_[0], particles_[1]);
   }
 
   /// \copydoc StorageInterface::initialize_states()
-  void initialize_states(input_view_type input) final {
-    initialize_particles(input | ranges::views::transform(beluga::make_from_state<particle_type>));
-  }
+  void initialize_states(input_view_type input) final { initialize_particles(input); }
 
   /// \copydoc StorageInterface::particle_count()
   [[nodiscard]] std::size_t particle_count() const final { return particles_[0].size(); }

@@ -18,6 +18,7 @@
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
 #include <beluga/views/particles.hpp>
+#include <beluga/views/take_while_kld.hpp>
 #include <range/v3/view.hpp>
 
 namespace {
@@ -40,8 +41,8 @@ struct beluga::spatial_hash<State> {
 
 namespace {
 
-using Particle = std::tuple<State, beluga::Weight, beluga::Cluster>;
-using Container = beluga::TupleOfVectors<State, beluga::Weight, beluga::Cluster>;
+using Container = beluga::TupleOfVectors<State, beluga::Weight>;
+using Particle = typename Container::value_type;
 
 void BM_FixedResample(benchmark::State& state) {
   const auto particle_count = state.range(0);
@@ -52,15 +53,18 @@ void BM_FixedResample(benchmark::State& state) {
   auto new_container = Container{container_size};
   auto generator = std::mt19937{std::random_device()()};
 
-  for (auto&& [state, weight, cluster] : container) {
+  for (auto&& [state, weight] : container) {
     weight = 1.;
   }
 
   for (auto _ : state) {
     auto&& samples = ranges::views::generate(beluga::make_multinomial_sampler(
-                         ranges::views::all(container), beluga::views::weights(container), generator)) |
-                     ranges::views::take_exactly(container_size) | ranges::views::common;
-    auto first = std::begin(container);
+                         beluga::views::states(container), beluga::views::weights(container), generator)) |
+                     ranges::views::take_exactly(container_size) | ranges::views::transform([](const auto& state) {
+                       return Particle{state, 1.0};
+                     }) |
+                     ranges::views::common;
+    auto first = std::begin(new_container);
     auto last = std::copy(std::begin(samples), std::end(samples), first);
     state.counters["SampleSize"] = static_cast<double>(std::distance(first, last));
   }
@@ -79,7 +83,7 @@ void BM_AdaptiveResample(benchmark::State& state) {
 
   double step = 0;
   int i = 0;
-  for (auto&& [state, weight, cluster] : container) {
+  for (auto&& [state, weight] : container) {
     weight = 1.;
     state.x = step;
     if (i++ % 2 == 0) {
@@ -94,13 +98,14 @@ void BM_AdaptiveResample(benchmark::State& state) {
   double kld_z = 3.;
 
   for (auto _ : state) {
-    auto&& samples =
-        ranges::views::generate(beluga::make_multinomial_sampler(
-            ranges::views::all(container), beluga::views::weights(container), generator)) |
-        ranges::views::transform(beluga::make_clusterization_function(hasher)) |
-        ranges::views::take_while(beluga::kld_condition(min_samples, kld_epsilon, kld_z), beluga::cluster) |
-        ranges::views::take(container_size) | ranges::views::common;
-    auto first = std::begin(container);
+    auto&& samples = ranges::views::generate(beluga::make_multinomial_sampler(
+                         beluga::views::states(container), beluga::views::weights(container), generator)) |
+                     beluga::views::take_while_kld(hasher, min_samples, max_samples, kld_epsilon, kld_z) |
+                     ranges::views::take(container_size) | ranges::views::transform([](const auto& state) {
+                       return Particle{state, 1.0};
+                     }) |
+                     ranges::views::common;
+    auto first = std::begin(new_container);
     auto last = std::copy(std::begin(samples), std::end(samples), first);
     state.counters["SampleSize"] = static_cast<double>(std::distance(first, last));
     state.counters["Percentage"] = static_cast<double>(std::distance(first, last)) / static_cast<double>(max_samples);

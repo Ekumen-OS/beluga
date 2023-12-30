@@ -18,12 +18,12 @@
 #include <functional>
 #include <limits>
 #include <random>
-#include <unordered_set>
 
 #include <beluga/algorithm/exponential_filter.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
 #include <beluga/type_traits.hpp>
 #include <beluga/views/particles.hpp>
+#include <beluga/views/take_while_kld.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take.hpp>
@@ -161,72 +161,6 @@ auto make_multinomial_sampler(const Range& samples, const Weights& weights, Rand
   return [&generator, first = std::begin(samples),
           distribution = std::discrete_distribution<difference_type>{weights_begin, weights_end}]() mutable {
     return *(first + distribution(generator));
-  };
-}
-
-/// Returns a callable object that allows setting the cluster of a particle.
-/**
- * \param hasher A copyable callable object with signature (const decltype(state(particle)) &) -> std::size_t, that
- * returns a spatial cluster for a given particle state.
- * \return A callable object with prototype `(ParticleT && p) -> ParticleT`. \n
- *  `ParticleT` must satisfy \ref ParticlePage.
- */
-template <class Hasher>
-inline auto make_clusterization_function(Hasher&& hasher) {
-  return [hasher](auto&& particle) {
-    auto new_particle = particle;
-    beluga::cluster(new_particle) = hasher(beluga::state(particle));
-    return new_particle;
-  };
-}
-
-/// Returns a callable object that verifies if the KLD condition is being satisfied.
-/**
- * The callable object will compute the minimum number of samples based on a Kullback-Leibler
- * distance epsilon between the maximum likelihood estimate and the true distribution. \n
- * Z is the upper standard normal quantile for P, where P is the probability
- * that the error in the estimated distribution will be less than epsilon.
- *
- * Here are some examples:
- * | P     | Z                |
- * |-------|------------------|
- * | 0.900 | 1.28155156327703 |
- * | 0.950 | 1.64485362793663 |
- * | 0.990 | 2.32634787735669 |
- * | 0.999 | 3.09023224677087 |
- *
- * If the computed value is less than what the min argument specifies, then min will be returned.
- *
- * See KLD-Sampling: Adaptive Particle Filters \cite fox2001adaptivekldsampling.
- *
- * \param min Minimum number of particles that the callable object will return.
- * \param epsilon Maximum distance epsilon between the maximum likelihood estimate and the true
- *  distrubution.
- * \param z Upper standard normal quantile for the probability that the error in the
- *  estimated distribution is less than epsilon.
- * \return A callable object with prototype `(std::size_t hash) -> bool`.
- *  `hash` is the spatial hash of the particle being added. \n
- *  The returned callable object is stateful, tracking the total number of particles and
- *  the particle clusters based on the spatial hash. \n
- *  The return value of the callable will be false when the number of particles is more than the minimum
- *  and the KLD condition is satisfied, if not it will be true. \n
- *  i.e. A return value of true means that you need to keep sampling to satisfy the condition.
- */
-inline auto kld_condition(std::size_t min, double epsilon, double z = 3.) {
-  auto target_size = [two_epsilon = 2 * epsilon, z](std::size_t k) {
-    if (k <= 2U) {
-      return std::numeric_limits<std::size_t>::max();
-    }
-    double common = 2. / static_cast<double>(9 * (k - 1));
-    double base = 1. - common + std::sqrt(common) * z;
-    double result = (static_cast<double>(k - 1) / two_epsilon) * base * base * base;
-    return static_cast<std::size_t>(std::ceil(result));
-  };
-
-  return [=, count = 0ULL, buckets = std::unordered_set<std::size_t>{}](std::size_t hash) mutable {
-    count++;
-    buckets.insert(hash);
-    return count <= min || count <= target_size(buckets.size());
   };
 }
 
@@ -443,11 +377,7 @@ class FixedLimiter : public Mixin {
    * \return A [RangeAdaptorObject](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject)
    * that will sample until the required number of particles is reached.
    */
-  [[nodiscard]] auto take_samples() const {
-    using particle_type = typename Mixin::self_type::particle_type;
-    return ranges::views::transform(beluga::make_from_state<particle_type>) |
-           ranges::views::take_exactly(parameters_.max_samples);
-  }
+  [[nodiscard]] auto take_samples() const { return ranges::views::take_exactly(parameters_.max_samples); }
 
  private:
   param_type parameters_;
@@ -532,13 +462,12 @@ class KldLimiter : public Mixin {
    * that will sample until the KLD criteria is satisfied.
    */
   [[nodiscard]] auto take_samples() const {
-    using particle_type = typename Mixin::self_type::particle_type;
-    return ranges::views::transform(beluga::make_from_state<particle_type>) |
-           ranges::views::transform(beluga::make_clusterization_function(parameters_.spatial_hasher)) |
-           ranges::views::take_while(
-               beluga::kld_condition(parameters_.min_samples, parameters_.kld_epsilon, parameters_.kld_z),
-               beluga::cluster) |
-           ranges::views::take(parameters_.max_samples);
+    return beluga::views::take_while_kld(
+        parameters_.spatial_hasher,  //
+        parameters_.min_samples,     //
+        parameters_.max_samples,     //
+        parameters_.kld_epsilon,     //
+        parameters_.kld_z);
   }
 
  private:

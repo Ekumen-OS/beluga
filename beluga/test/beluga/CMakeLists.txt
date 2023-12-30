@@ -42,7 +42,8 @@ add_executable(
   test_storage.cpp
   test_tuple_vector.cpp
   type_traits/test_strongly_typed_numeric.cpp
-  views/test_take_evenly.cpp)
+  views/test_take_evenly.cpp
+  views/test_take_while_kld.cpp)
 
 target_link_libraries(
   test_beluga PRIVATE ${PROJECT_NAME} beluga_compile_options GTest::gmock_main)

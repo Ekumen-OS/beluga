@@ -78,7 +78,7 @@ TYPED_TEST(StoragePolicyTest, ResampleParticles) {
   EXPECT_CALL(mixin, max_samples()).WillOnce(Return(5)).WillOnce(Return(5));
   mixin.initialize_states(states);
   ASSERT_EQ(mixin.particle_count(), 5);
-  mixin.initialize_particles(mixin.particles() | ranges::views::reverse);
+  mixin.initialize_particles(states | ranges::views::reverse);
   ASSERT_TRUE(ranges::equal(mixin.states(), states | ranges::views::reverse));
 }
 
