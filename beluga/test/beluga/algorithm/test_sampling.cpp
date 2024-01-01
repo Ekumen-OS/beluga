@@ -20,6 +20,7 @@
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/generate.hpp>
+#include <range/v3/view/intersperse.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
 namespace {
@@ -166,6 +167,49 @@ TEST(FixedLimiter, TakeMaximum) {
   auto instance = ciabatta::mixin<MockStorage, beluga::FixedLimiter>{beluga::FixedLimiterParam{1'200}};
   auto output = ranges::views::generate([]() { return 1; }) | instance.take_samples() | ranges::to<std::vector>;
   ASSERT_EQ(output.size(), 1'200);
+}
+
+template <class Mixin>
+struct MockStorageWithCluster : public Mixin {
+  using state_type = std::pair<double, double>;
+  using particle_type = std::tuple<state_type, beluga::Weight, beluga::Cluster>;
+
+  template <class... Args>
+  explicit MockStorageWithCluster(Args&&... rest) : Mixin(std::forward<Args>(rest)...) {}
+};
+
+using state = std::pair<double, double>;
+
+TEST(KldLimiter, TakeMaximum) {
+  constexpr std::array kClusteringResolution{1., 1.};
+  auto hasher = beluga::spatial_hash<state>{kClusteringResolution};
+  auto instance = ciabatta::mixin<MockStorageWithCluster, ciabatta::curry<beluga::KldLimiter, state>::mixin>{
+      beluga::KldLimiterParam<state>{200, 1'200, hasher, 0.05, 3.}};
+  auto output = ranges::views::generate([]() { return std::make_pair(1., 1.); }) | instance.take_samples() |
+                ranges::to<std::vector>;
+  ASSERT_EQ(output.size(), 1'200);
+}
+
+TEST(KldLimiter, TakeLimit) {
+  constexpr std::array kClusteringResolution{0.05, 0.05};
+  auto hasher = beluga::spatial_hash<state>{kClusteringResolution};
+  auto instance = ciabatta::mixin<MockStorageWithCluster, ciabatta::curry<beluga::KldLimiter, state>::mixin>{
+      beluga::KldLimiterParam<state>{0, 1'200, hasher, 0.05, 3.}};
+  auto output = ranges::views::generate([]() { return std::make_pair(1., 1.); }) |
+                ranges::views::intersperse(std::make_pair(2., 2.)) |
+                ranges::views::intersperse(std::make_pair(3., 3.)) | instance.take_samples() | ranges::to<std::vector>;
+  ASSERT_EQ(output.size(), 135);
+}
+
+TEST(KldLimiter, TakeMinimum) {
+  constexpr std::array kClusteringResolution{1., 1.};
+  auto hasher = beluga::spatial_hash<state>{kClusteringResolution};
+  auto instance = ciabatta::mixin<MockStorageWithCluster, ciabatta::curry<beluga::KldLimiter, state>::mixin>{
+      beluga::KldLimiterParam<state>{200, 1'200, hasher, 0.05, 3.}};
+  auto output = ranges::views::generate([]() { return std::make_pair(1., 1.); }) |
+                ranges::views::intersperse(std::make_pair(2., 2.)) |
+                ranges::views::intersperse(std::make_pair(3., 3.)) | instance.take_samples() | ranges::to<std::vector>;
+  ASSERT_EQ(output.size(), 200);
 }
 
 }  // namespace
