@@ -42,6 +42,7 @@ add_executable(
   test_storage.cpp
   test_tuple_vector.cpp
   type_traits/test_strongly_typed_numeric.cpp
+  views/test_random_intersperse.cpp
   views/test_take_evenly.cpp
   views/test_take_while_kld.cpp)
 
