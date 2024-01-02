@@ -77,15 +77,17 @@ TEST(RandomIntersperseView, ConceptChecksFromInfiniteRange) {
 }
 
 TEST(RandomIntersperseView, GuaranteedIntersperseFirstElement) {
+  const double probability = 1.0;
   auto input = std::array{10, 20, 30};
-  auto output = input | beluga::views::random_intersperse([i = 0]() mutable { return i++; }, 1.0);
+  auto output = input | beluga::views::random_intersperse([i = 0]() mutable { return i++; }, probability);
   auto it = ranges::begin(output);
   ASSERT_EQ(*it, 10);  // The first element is always from the input range
 }
 
 TEST(RandomIntersperseView, GuaranteedIntersperseDoubleDereference) {
+  const double probability = 1.0;
   auto input = std::array{10, 20, 30};
-  auto output = input | beluga::views::random_intersperse([i = 0]() mutable { return i++; }, 1.0);
+  auto output = input | beluga::views::random_intersperse([i = 0]() mutable { return i++; }, probability);
   auto it = ranges::begin(output);
   ++it;
   ASSERT_EQ(*it, 0);
@@ -95,29 +97,32 @@ TEST(RandomIntersperseView, GuaranteedIntersperseDoubleDereference) {
 }
 
 TEST(RandomIntersperseView, GuaranteedIntersperseTakeFive) {
+  const double probability = 1.0;
   auto input = std::array{10, 20, 30};
-  auto output = input |                                                       //
-                beluga::views::random_intersperse([]() { return 4; }, 1.0) |  //
-                ranges::views::take(5) |                                      //
+  auto output = input |                                                               //
+                beluga::views::random_intersperse([]() { return 4; }, probability) |  //
+                ranges::views::take(5) |                                              //
                 ranges::to<std::vector>;
   ASSERT_EQ(ranges::size(output), 5);
   ASSERT_THAT(output, testing::ElementsAre(10, 4, 4, 4, 4));
 }
 
 TEST(RandomIntersperseView, ZeroProbabilityIntersperseTakeFive) {
+  const double probability = 0.0;
   auto input = std::array{10, 20, 30};
-  auto output = input |                                                       //
-                beluga::views::random_intersperse([]() { return 4; }, 0.0) |  //
-                ranges::views::take(5) |                                      //
+  auto output = input |                                                               //
+                beluga::views::random_intersperse([]() { return 4; }, probability) |  //
+                ranges::views::take(5) |                                              //
                 ranges::to<std::vector>;
   ASSERT_EQ(ranges::size(output), 3);
   ASSERT_THAT(output, testing::ElementsAre(10, 20, 30));
 }
 
 TEST(RandomIntersperseView, ZeroProbabilityMultipass) {
+  const double probability = 0.0;
   auto input = std::array{10, 20, 30};
-  auto output = input |                                                       //
-                beluga::views::random_intersperse([]() { return 4; }, 0.0) |  //
+  auto output = input |                                                               //
+                beluga::views::random_intersperse([]() { return 4; }, probability) |  //
                 ranges::views::take(3);
   ASSERT_THAT(output | ranges::to<std::vector>, testing::ElementsAre(10, 20, 30));
   ASSERT_THAT(output | ranges::to<std::vector>, testing::ElementsAre(10, 20, 30));
@@ -126,12 +131,12 @@ TEST(RandomIntersperseView, ZeroProbabilityMultipass) {
 class RandomIntersperseViewWithParam : public ::testing::TestWithParam<double> {};
 
 TEST_P(RandomIntersperseViewWithParam, TestPercentage) {
-  const double expected_p = GetParam();
+  const double probability = GetParam();
   const int size = 10'000;
-  auto output = ranges::views::iota(1, size + 1) | beluga::views::random_intersperse([]() { return 0; }, expected_p);
+  auto output = ranges::views::iota(1, size + 1) | beluga::views::random_intersperse([]() { return 0; }, probability);
   const double count = static_cast<double>(ranges::count(output, 0));
-  const double actual_p = count / (size + count);
-  ASSERT_NEAR(expected_p, actual_p, 0.01);
+  const double actual_probability = count / (size + count);
+  ASSERT_NEAR(probability, actual_probability, 0.01);
 }
 
 INSTANTIATE_TEST_SUITE_P(
