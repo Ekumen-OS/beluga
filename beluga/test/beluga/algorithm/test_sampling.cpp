@@ -22,12 +22,10 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/intersperse.hpp>
 #include <range/v3/view/take_exactly.hpp>
-#include <range/v3/view/take_while.hpp>
 
 namespace {
 
 using testing::_;
-using testing::DoubleEq;
 using testing::Each;
 using testing::Return;
 using testing::ReturnRef;
@@ -70,53 +68,6 @@ TEST(RandomSample, Functional) {
                 ranges::views::take_exactly(samples);
   AssertWeights(output, values, weights);
 }
-
-class KldConditionWithParam : public ::testing::TestWithParam<std::tuple<double, std::size_t, std::size_t>> {};
-
-auto GenerateDistinctHashes(std::size_t count) {
-  return ranges::views::generate([count, hash = 0UL]() mutable {
-    if (hash < count) {
-      ++hash;
-    }
-    return hash;
-  });
-}
-
-TEST_P(KldConditionWithParam, Minimum) {
-  const std::size_t cluster_count = std::get<1>(GetParam());
-  auto output = GenerateDistinctHashes(cluster_count) |
-                ranges::views::take_while(beluga::kld_condition(1'000, 0.01, 0.95)) | ranges::to<std::vector>;
-  ASSERT_GE(output.size(), 1'000);
-}
-
-TEST_P(KldConditionWithParam, Limit) {
-  const double kld_k = std::get<0>(GetParam());
-  const std::size_t cluster_count = std::get<1>(GetParam());
-  const std::size_t min_samples = std::get<2>(GetParam());
-  auto output = GenerateDistinctHashes(cluster_count) |
-                ranges::views::take_while(beluga::kld_condition(0, 0.01, kld_k)) | ranges::to<std::vector>;
-  ASSERT_EQ(output.size(), min_samples);
-}
-
-constexpr double kPercentile90th = 1.28155156327703;
-constexpr double kPercentile99th = 2.32634787735669;
-
-INSTANTIATE_TEST_SUITE_P(
-    KldPairs,
-    KldConditionWithParam,
-    testing::Values(
-        std::make_tuple(kPercentile90th, 3, 228),
-        std::make_tuple(kPercentile90th, 4, 311),
-        std::make_tuple(kPercentile90th, 5, 388),
-        std::make_tuple(kPercentile90th, 6, 461),
-        std::make_tuple(kPercentile90th, 7, 531),
-        std::make_tuple(kPercentile90th, 100, 5871),
-        std::make_tuple(kPercentile99th, 3, 462),
-        std::make_tuple(kPercentile99th, 4, 569),
-        std::make_tuple(kPercentile99th, 5, 666),
-        std::make_tuple(kPercentile99th, 6, 756),
-        std::make_tuple(kPercentile99th, 7, 843),
-        std::make_tuple(kPercentile99th, 100, 6733)));
 
 template <class Mixin>
 class MockStorage : public Mixin {
@@ -212,14 +163,6 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple(0.5, 0.1, 0.08),
         std::make_tuple(0.5, 0.0, 0.10)));
 
-TEST(FixedLimiter, TakeSamplesLeavesUnitWeight) {
-  auto instance = ciabatta::mixin<MockStorage, beluga::FixedLimiter>{beluga::FixedLimiterParam{1'200}};
-  auto output = ranges::views::generate([]() { return 1; }) | instance.take_samples() |
-                ranges::views::transform([](const auto& p) -> double { return std::get<1>(p); }) |
-                ranges::to<std::vector>;
-  ASSERT_THAT(output, Each(DoubleEq(1.0)));
-}
-
 TEST(FixedLimiter, TakeMaximum) {
   auto instance = ciabatta::mixin<MockStorage, beluga::FixedLimiter>{beluga::FixedLimiterParam{1'200}};
   auto output = ranges::views::generate([]() { return 1; }) | instance.take_samples() | ranges::to<std::vector>;
@@ -234,14 +177,6 @@ struct MockStorageWithCluster : public Mixin {
   template <class... Args>
   explicit MockStorageWithCluster(Args&&... rest) : Mixin(std::forward<Args>(rest)...) {}
 };
-
-TEST(KldLimiter, TakeSamplesLeavesUnitWeight) {
-  auto instance = ciabatta::mixin<MockStorage, beluga::FixedLimiter>{beluga::FixedLimiterParam{1'200}};
-  auto output = ranges::views::generate([]() { return 1; }) | instance.take_samples() |
-                ranges::views::transform([](const auto& p) -> double { return std::get<1>(p); }) |
-                ranges::to<std::vector>;
-  ASSERT_THAT(output, Each(DoubleEq(1.0)));
-}
 
 using state = std::pair<double, double>;
 

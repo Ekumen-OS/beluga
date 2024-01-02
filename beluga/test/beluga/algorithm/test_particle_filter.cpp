@@ -46,7 +46,9 @@ class MockMixin : public Mixin {
 
   template <class Range>
   void initialize_particles(Range&& input) {
-    particles_ = input | ranges::to<std::vector>;
+    particles_ = input |                                                                              //
+                 ranges::views::transform([](double state) { return std::make_pair(state, 1.0); }) |  //
+                 ranges::to<std::vector>;
   }
 
   template <class Generator>
@@ -60,10 +62,7 @@ class MockMixin : public Mixin {
     return particles_ | beluga::views::elements<0> | ranges::views::common;
   }
 
-  auto take_samples() const {
-    return ranges::views::transform([](double state) { return std::make_pair(state, 1.0); }) |
-           ranges::views::take_exactly(10);
-  }
+  auto take_samples() const { return ranges::views::take_exactly(10); }
 
   template <class Generator>
   double apply_motion(double state, Generator&) const {

@@ -50,9 +50,9 @@ using weight_t = typename particle_traits<T>::weigth_type;
  * \return The new particle, created from the given state.
  */
 template <class Particle, class T = state_t<Particle>>
-constexpr auto make_from_state(T&& value) {
+constexpr auto make_from_state(T value) {
   auto particle = Particle{};
-  beluga::state(particle) = std::forward<T>(value);
+  beluga::state(particle) = std::move(value);
   beluga::weight(particle) = 1.0;
   return particle;
 }
