@@ -132,7 +132,7 @@ class RandomIntersperseViewWithParam : public ::testing::TestWithParam<double> {
 
 TEST_P(RandomIntersperseViewWithParam, TestPercentage) {
   const double probability = GetParam();
-  const int size = 10'000;
+  const int size = 100'000;
   auto output = ranges::views::iota(1, size + 1) | beluga::views::random_intersperse([]() { return 0; }, probability);
   const double count = static_cast<double>(ranges::count(output, 0));
   const double actual_probability = count / (size + count);
