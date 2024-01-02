@@ -45,12 +45,10 @@ struct random_intersperse_view
     : public ranges::view_adaptor<
           random_intersperse_view<Range, Fn, URNG>,
           Range,
-          // The cardinality value can be infinite, unknown, finite or a specific number if known.
-          // If the adapted range cardinality is finite (or a specific number) then we know the
-          // resulting view is finite. Else, we propagate the infinite or unknown specification.
-          // Care must be taken when the adapted range is finite but the intersperse probability
-          // is 1.0, leading to an infinite range in practice.
-          ranges::is_finite<Range>::value ? ranges::finite : ranges::range_cardinality<Range>::value> {
+          // The cardinality value is unknown at compile time.
+          // If the adapted range cardinality is finite then we know the resulting view is finite.
+          // But the intersperse probability could be 1.0, leading to an infinite range in practice.
+          ranges::unknown> {
  public:
   /// Default constructor.
   random_intersperse_view() = default;
