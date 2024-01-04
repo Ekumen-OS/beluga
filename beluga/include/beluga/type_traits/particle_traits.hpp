@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Ekumen, Inc.
+// Copyright 2022-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 #define BELUGA_TYPE_TRAITS_PARTICLE_TRAITS_HPP
 
 #include <beluga/primitives.hpp>
+#include <range/v3/range/traits.hpp>
 
 /**
  * \file
@@ -28,9 +29,9 @@ namespace beluga {
 template <class T>
 struct particle_traits {
   /// The particle state type.
-  using state_type = std::decay_t<decltype(state(T{}))>;
+  using state_type = std::decay_t<decltype(beluga::state(std::declval<T>()))>;
   /// The particle weight type.
-  using weight_type = std::decay_t<decltype(weight(T{}))>;
+  using weight_type = std::decay_t<decltype(beluga::weight(std::declval<T>()))>;
 };
 
 /// Type trait that returns the state type given a particle type.
@@ -39,7 +40,41 @@ using state_t = typename particle_traits<T>::state_type;
 
 /// Type trait that returns the weight type given a particle type.
 template <class T>
-using weight_t = typename particle_traits<T>::weigth_type;
+using weight_t = typename particle_traits<T>::weight_type;
+
+/// \cond
+
+template <class T, class = void>
+struct has_state : public std::false_type {};
+
+template <class T>
+struct has_state<T, std::void_t<decltype(beluga::state(std::declval<T>()))>> : std::true_type {};
+
+template <class T>
+inline constexpr bool has_state_v = has_state<T>::value;
+
+template <class T, class = void>
+struct has_weight : public std::false_type {};
+
+template <class T>
+struct has_weight<T, std::void_t<decltype(beluga::weight(std::declval<T>()))>> : std::true_type {};
+
+template <class T>
+inline constexpr bool has_weight_v = has_weight<T>::value;
+
+template <class T, class = void>
+struct is_particle : public std::false_type {};
+
+template <class T>
+struct is_particle<T, std::enable_if_t<std::conjunction_v<has_state<T>, has_weight<T>>>> : std::true_type {};
+
+template <class T>
+inline constexpr bool is_particle_v = is_particle<T>::value;
+
+template <class R>
+inline constexpr bool is_particle_range_v = is_particle_v<ranges::range_value_t<R>>;
+
+/// \endcond
 
 /// Returns a new particle from the given state.
 /**
@@ -51,6 +86,7 @@ using weight_t = typename particle_traits<T>::weigth_type;
  */
 template <class Particle, class T = state_t<Particle>>
 constexpr auto make_from_state(T value) {
+  static_assert(is_particle_v<Particle>);
   auto particle = Particle{};
   beluga::state(particle) = std::move(value);
   beluga::weight(particle) = 1.0;

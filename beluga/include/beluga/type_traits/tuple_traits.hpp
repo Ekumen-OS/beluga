@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2023-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,32 @@
  */
 
 namespace beluga {
+
+namespace detail {
+
+/// \cond
+
+template <typename, typename = void>
+struct is_complete : std::false_type {};
+
+template <typename T>
+struct is_complete<T, std::void_t<decltype(sizeof(T))>> : std::true_type {};
+
+/// \endcond
+
+}  // namespace detail
+
+/// Meta-function that returns true if T is a tuple-like type.
+/**
+ * tuple-like types implement the tuple protocol.
+ * See https://en.cppreference.com/w/cpp/utility/tuple/tuple-like
+ */
+template <typename T>
+struct is_tuple_like : detail::is_complete<std::tuple_size<std::decay_t<T>>> {};
+
+/// Convenience template variable for `is_tuple_like`.
+template <class T>
+inline constexpr bool is_tuple_like_v = is_tuple_like<T>::value;
 
 namespace detail {
 
@@ -55,31 +81,54 @@ constexpr std::size_t tuple_index_helper() noexcept {
   return selected;
 }
 
+/// Help method that returns true if a tuple element index that matches an input type is found.
+template <class T, class... Args>
+constexpr bool tuple_index_found() noexcept {
+  constexpr std::size_t kIndex = tuple_index_helper<T, Args...>();
+  return kIndex != kTupleIndexNotFound && kIndex != kTupleIndexAmbiguous;
+}
+
 }  // namespace detail
 
 /// Meta-function that returns the tuple index of the element whose type is T.
-template <class T, class TupleLike>
-struct tuple_index {};
+template <class T, class TupleLike, class = void>
+struct tuple_index;
 
 /// `tuple_index` specialization for tuples.
-/**
- * Fails to compile unless the tuple has exactly one element of that type.
- */
 template <class T, template <class...> class TupleLike, class... Args>
-struct tuple_index<T, TupleLike<Args...>> {
-  /// `tuple_index` return value.
-  static constexpr std::size_t value = detail::tuple_index_helper<T, Args...>();
-  static_assert(value != detail::kTupleIndexNotFound);
-  static_assert(value != detail::kTupleIndexAmbiguous);
-};
+struct tuple_index<
+    T,
+    TupleLike<Args...>,
+    std::enable_if_t<is_tuple_like_v<std::decay_t<TupleLike<Args...>>> && detail::tuple_index_found<T, Args...>()>>
+    : std::integral_constant<std::size_t, detail::tuple_index_helper<T, Args...>()> {};
 
 /// Convenience template variable for `tuple_index`.
 template <class T, class TupleLike>
 inline constexpr std::size_t tuple_index_v = tuple_index<T, TupleLike>::value;
 
+/// Convenience template type alias for `tuple_index`.
+template <class T, class TupleLike>
+using tuple_index_t = typename tuple_index<T, TupleLike>::type;
+
+/// Meta-function that returns true if there is a single element of type T in the tuple-like type.
+template <class T, class TupleLike, class = void>
+struct has_single_element : std::false_type {};
+
+/// `has_single_element` specialization for tuples.
+template <class T, template <class...> class TupleLike, class... Args>
+struct has_single_element<
+    T,
+    TupleLike<Args...>,
+    std::enable_if_t<is_tuple_like_v<std::decay_t<TupleLike<Args...>>> && detail::tuple_index_found<T, Args...>()>>
+    : std::true_type {};
+
+/// Convenience template variable for `has_single_element`.
+template <class T, class TupleLike>
+inline constexpr bool has_single_element_v = has_single_element<T, TupleLike>::value;
+
 /// Returns element of a tuple like object whose type is T (or a possibly const reference to T).
 template <class T, class TupleLike>
-constexpr decltype(auto) element_of_type(TupleLike&& tuple) noexcept {
+constexpr decltype(auto) element(TupleLike&& tuple) noexcept {
   constexpr std::size_t kIndex = tuple_index_v<T, std::decay_t<TupleLike>>;
   return std::get<kIndex>(std::forward<TupleLike>(tuple));
 }
