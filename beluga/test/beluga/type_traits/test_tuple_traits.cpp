@@ -24,7 +24,9 @@ static_assert(beluga::is_tuple_like_v<std::tuple<int, double>>);
 static_assert(beluga::is_tuple_like_v<std::pair<int, float>>);
 static_assert(beluga::is_tuple_like_v<std::array<int, 5>>);
 static_assert(beluga::is_tuple_like_v<ranges::common_tuple<int, double>>);
-static_assert(beluga::is_tuple_like_v<ranges::subrange<ranges::iterator_t<int[3]>, ranges::sentinel_t<int[3]>>>);
+static_assert(
+    beluga::is_tuple_like_v<
+        ranges::subrange<ranges::iterator_t<int[3]>, ranges::sentinel_t<int[3]>>>);  // NOLINT(modernize-avoid-c-arrays)
 
 static_assert(!beluga::is_tuple_like_v<int>);
 static_assert(!beluga::is_tuple_like_v<struct Object>);
