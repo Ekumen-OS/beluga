@@ -20,6 +20,7 @@
 
 #include <beluga/type_traits/strongly_typed_numeric.hpp>
 #include <beluga/type_traits/tuple_traits.hpp>
+#include <beluga/utility/forward_like.hpp>
 
 /**
  * \file
@@ -62,6 +63,15 @@ namespace state_detail {
 /// \cond state_detail
 
 template <class T, class = void>
+struct has_member_variable_state : std::false_type {};
+
+template <class T>
+struct has_member_variable_state<T, std::void_t<decltype(std::declval<T>().state)>> : std::true_type {};
+
+template <class T>
+inline constexpr bool has_member_variable_state_v = has_member_variable_state<T>::value;
+
+template <class T, class = void>
 struct has_member_state : std::false_type {};
 
 template <class T>
@@ -86,8 +96,20 @@ inline constexpr bool has_non_member_state_v = has_non_member_state<T>::value;
  * See https://en.cppreference.com/w/cpp/ranges/cpo.
  */
 struct state_fn {
+  /// Overload for when the particle type defines a member variable.
+  template <class T, std::enable_if_t<has_member_variable_state_v<T>, int> = 0>
+  constexpr decltype(auto) operator()(T&& t) const noexcept {
+    return beluga::forward_like<T>(t.state);
+  }
+
   /// Overload for when the particle type defines a member method.
-  template <class T, std::enable_if_t<has_member_state_v<T>, int> = 0>
+  template <
+      class T,
+      std::enable_if_t<
+          std::conjunction_v<
+              std::negation<has_member_variable_state<T>>,  //
+              has_member_state<T>>,
+          int> = 0>
   constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(std::forward<T>(t).state())) {
     return std::forward<T>(t).state();
   }
@@ -100,7 +122,8 @@ struct state_fn {
       class T,
       std::enable_if_t<
           std::conjunction_v<
-              std::negation<has_member_state<T>>,  //
+              std::negation<has_member_variable_state<T>>,  //
+              std::negation<has_member_state<T>>,           //
               has_non_member_state<T>>,
           int> = 0>
   constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(state(std::forward<T>(t)))) {
@@ -115,8 +138,9 @@ struct state_fn {
       class T,
       std::enable_if_t<
           std::conjunction_v<
-              std::negation<has_member_state<T>>,      //
-              std::negation<has_non_member_state<T>>,  //
+              std::negation<has_member_variable_state<T>>,  //
+              std::negation<has_member_state<T>>,           //
+              std::negation<has_non_member_state<T>>,       //
               is_tuple_like<T>>,
           int> = 0,
       std::enable_if_t<(std::tuple_size_v<std::decay_t<T>> > 1), int> = 0>
@@ -133,6 +157,15 @@ inline constexpr state_detail::state_fn state;
 namespace weight_detail {
 
 /// \cond weight_detail
+
+template <class T, class = void>
+struct has_member_variable_weight : std::false_type {};
+
+template <class T>
+struct has_member_variable_weight<T, std::void_t<decltype(std::declval<T>().weight)>> : std::true_type {};
+
+template <class T>
+inline constexpr bool has_member_variable_weight_v = has_member_variable_weight<T>::value;
 
 template <class T, class = void>
 struct has_member_weight : std::false_type {};
@@ -159,8 +192,20 @@ inline constexpr bool has_non_member_weight_v = has_non_member_weight<T>::value;
  * See https://en.cppreference.com/w/cpp/ranges/cpo.
  */
 struct weight_fn {
+  /// Overload for when the particle type defines a member variable.
+  template <class T, std::enable_if_t<has_member_variable_weight_v<T>, int> = 0>
+  constexpr decltype(auto) operator()(T&& t) const noexcept {
+    return beluga::forward_like<T>(t.weight);
+  }
+
   /// Overload for when the particle type defines a member method.
-  template <class T, std::enable_if_t<has_member_weight_v<T>, int> = 0>
+  template <
+      class T,
+      std::enable_if_t<
+          std::conjunction_v<
+              std::negation<has_member_variable_weight<T>>,  //
+              has_member_weight<T>>,
+          int> = 0>
   constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(std::forward<T>(t).weight())) {
     return std::forward<T>(t).weight();
   }
@@ -173,7 +218,8 @@ struct weight_fn {
       class T,
       std::enable_if_t<
           std::conjunction_v<
-              std::negation<has_member_weight<T>>,  //
+              std::negation<has_member_variable_weight<T>>,  //
+              std::negation<has_member_weight<T>>,           //
               has_non_member_weight<T>>,
           int> = 0>
   constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(weight(std::forward<T>(t)))) {
@@ -185,9 +231,10 @@ struct weight_fn {
       class T,
       std::enable_if_t<
           std::conjunction_v<
-              std::negation<has_member_weight<T>>,      //
-              std::negation<has_non_member_weight<T>>,  //
-              is_tuple_like<T>,                         //
+              std::negation<has_member_variable_weight<T>>,  //
+              std::negation<has_member_weight<T>>,           //
+              std::negation<has_non_member_weight<T>>,       //
+              is_tuple_like<T>,                              //
               has_single_element<beluga::Weight, std::decay_t<T>>>,
           int> = 0>
   constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(element<beluga::Weight>(std::forward<T>(t)))) {
@@ -203,6 +250,15 @@ inline constexpr weight_detail::weight_fn weight;
 namespace cluster_detail {
 
 /// \cond cluster_detail
+
+template <class T, class = void>
+struct has_member_variable_cluster : std::false_type {};
+
+template <class T>
+struct has_member_variable_cluster<T, std::void_t<decltype(std::declval<T>().cluster)>> : std::true_type {};
+
+template <class T>
+inline constexpr bool has_member_variable_cluster_v = has_member_variable_cluster<T>::value;
 
 template <class T, class = void>
 struct has_member_cluster : std::false_type {};
@@ -229,8 +285,20 @@ inline constexpr bool has_non_member_cluster_v = has_non_member_cluster<T>::valu
  * See https://en.cppreference.com/w/cpp/ranges/cpo.
  */
 struct cluster_fn {
+  /// Overload for when the particle type defines a member variable.
+  template <class T, std::enable_if_t<has_member_variable_cluster_v<T>, int> = 0>
+  constexpr decltype(auto) operator()(T&& t) const noexcept {
+    return beluga::forward_like<T>(t.cluster);
+  }
+
   /// Overload for when the particle type defines a member method.
-  template <class T, std::enable_if_t<has_member_cluster_v<T>, int> = 0>
+  template <
+      class T,
+      std::enable_if_t<
+          std::conjunction_v<
+              std::negation<has_member_variable_cluster<T>>,  //
+              has_member_cluster<T>>,
+          int> = 0>
   constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(std::forward<T>(t).cluster())) {
     return std::forward<T>(t).cluster();
   }
@@ -243,7 +311,8 @@ struct cluster_fn {
       class T,
       std::enable_if_t<
           std::conjunction_v<
-              std::negation<has_member_cluster<T>>,  //
+              std::negation<has_member_variable_cluster<T>>,  //
+              std::negation<has_member_cluster<T>>,           //
               has_non_member_cluster<T>>,
           int> = 0>
   constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(cluster(std::forward<T>(t)))) {
@@ -255,9 +324,10 @@ struct cluster_fn {
       class T,
       std::enable_if_t<
           std::conjunction_v<
-              std::negation<has_member_cluster<T>>,      //
-              std::negation<has_non_member_cluster<T>>,  //
-              is_tuple_like<T>,                          //
+              std::negation<has_member_variable_cluster<T>>,  //
+              std::negation<has_member_cluster<T>>,           //
+              std::negation<has_non_member_cluster<T>>,       //
+              is_tuple_like<T>,                               //
               has_single_element<beluga::Cluster, std::decay_t<T>>>,
           int> = 0>
   constexpr decltype(auto) operator()(T&& t) const noexcept(noexcept(element<beluga::Cluster>(std::forward<T>(t)))) {

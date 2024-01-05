@@ -29,6 +29,11 @@ static_assert(!beluga::is_particle_v<std::tuple<beluga::Weight, beluga::Weight>>
 
 namespace user {
 
+struct SimplestPossibleParticle {
+  int state;
+  double weight;
+};
+
 struct ParticleWithMemberExtensions {
   int state_;
   double weight_;
@@ -40,8 +45,8 @@ struct ParticleWithMemberExtensions {
 };
 
 struct ParticleWithNonMemberExtensions {
-  int state;
-  double weight;
+  int s;
+  double w;
 };
 
 /*
@@ -50,16 +55,16 @@ struct ParticleWithNonMemberExtensions {
  */
 
 [[maybe_unused]] int& state(ParticleWithNonMemberExtensions& p) {
-  return p.state;
+  return p.s;
 }
 [[maybe_unused]] int state(const ParticleWithNonMemberExtensions& p) {
-  return p.state;
+  return p.s;
 }
 [[maybe_unused]] double& weight(ParticleWithNonMemberExtensions& p) {
-  return p.weight;
+  return p.w;
 }
 [[maybe_unused]] double weight(const ParticleWithNonMemberExtensions& p) {
-  return p.weight;
+  return p.w;
 }
 
 }  // namespace user
@@ -72,6 +77,7 @@ using ParticleTraitsTestCases = testing::Types<
     std::pair<int, beluga::Weight>,
     ranges::common_tuple<int, beluga::Weight>,
     ranges::common_pair<int, beluga::Weight>,
+    user::SimplestPossibleParticle,
     user::ParticleWithMemberExtensions,
     user::ParticleWithNonMemberExtensions>;
 

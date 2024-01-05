@@ -21,6 +21,12 @@ namespace {
 
 namespace user {
 
+struct SimplestPossibleParticle {
+  float state;
+  double weight;
+  int cluster;
+};
+
 struct ParticleWithMemberExtensions {
   float state_;
   double weight_;
@@ -35,9 +41,9 @@ struct ParticleWithMemberExtensions {
 };
 
 struct ParticleWithNonMemberExtensions {
-  float state;
-  double weight;
-  int cluster;
+  float s;
+  double w;
+  int c;
 };
 
 /*
@@ -46,22 +52,22 @@ struct ParticleWithNonMemberExtensions {
  */
 
 [[maybe_unused]] float& state(ParticleWithNonMemberExtensions& p) {
-  return p.state;
+  return p.s;
 }
 [[maybe_unused]] float state(const ParticleWithNonMemberExtensions& p) {
-  return p.state;
+  return p.s;
 }
 [[maybe_unused]] double& weight(ParticleWithNonMemberExtensions& p) {
-  return p.weight;
+  return p.w;
 }
 [[maybe_unused]] double weight(const ParticleWithNonMemberExtensions& p) {
-  return p.weight;
+  return p.w;
 }
 [[maybe_unused]] int& cluster(ParticleWithNonMemberExtensions& p) {
-  return p.cluster;
+  return p.c;
 }
 [[maybe_unused]] int cluster(const ParticleWithNonMemberExtensions& p) {
-  return p.cluster;
+  return p.c;
 }
 
 }  // namespace user
@@ -72,6 +78,7 @@ class PrimitivesTest : public testing::Test {};
 using PrimitivesTestCases = testing::Types<
     std::tuple<int, beluga::Weight, beluga::Cluster>,
     ranges::common_tuple<int, beluga::Weight, beluga::Cluster>,
+    user::SimplestPossibleParticle,
     user::ParticleWithMemberExtensions,
     user::ParticleWithNonMemberExtensions>;
 
