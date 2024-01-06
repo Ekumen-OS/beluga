@@ -1,7 +1,8 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/mixin/descriptor.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/mixin/descriptor.hpp">
-<area shape="rect" id="node1" title="Implementation of descriptors and their traits." alt="" coords="5,5,212,61"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,184,97,211"/>
-<area shape="rect" id="node3" href="$utility_8hpp.html" title="Implementation of extensions to the standard utility library." alt="" coords="84,109,259,136"/>
-<area shape="rect" id="node4" title=" " alt="" coords="124,184,211,211"/>
-<area shape="rect" id="node5" title=" " alt="" coords="235,184,303,211"/>
+<area shape="rect" id="node1" title="Implementation of descriptors and their traits." alt="" coords="11,5,217,61"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,191,97,218"/>
+<area shape="rect" id="node3" href="$utility_8hpp.html" title="Implementation of extensions to the standard utility library." alt="" coords="89,109,264,136"/>
+<area shape="rect" id="node4" title=" " alt="" coords="121,191,208,218"/>
+<area shape="rect" id="node5" title=" " alt="" coords="232,191,300,218"/>
+<area shape="rect" id="node6" href="$forward__like_8hpp_source.html" title=" " alt="" coords="325,184,487,225"/>
 </map>

@@ -2,9 +2,10 @@
 <area shape="rect" id="node1" title="Implementation of mixin utilities and extensions." alt="" coords="181,5,373,61"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,109,83,136"/>
 <area shape="rect" id="node3" href="$descriptor_8hpp.html" title="Implementation of descriptors and their traits." alt="" coords="107,109,309,136"/>
-<area shape="rect" id="node5" href="$utility_8hpp.html" title="Implementation of extensions to the standard utility library." alt="" coords="246,184,421,211"/>
-<area shape="rect" id="node8" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="384,109,544,136"/>
-<area shape="rect" id="node4" title=" " alt="" coords="167,259,259,285"/>
-<area shape="rect" id="node6" title=" " alt="" coords="286,259,373,285"/>
-<area shape="rect" id="node7" title=" " alt="" coords="397,259,465,285"/>
+<area shape="rect" id="node5" href="$utility_8hpp.html" title="Implementation of extensions to the standard utility library." alt="" coords="253,184,427,211"/>
+<area shape="rect" id="node9" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="384,109,544,136"/>
+<area shape="rect" id="node4" title=" " alt="" coords="162,266,254,293"/>
+<area shape="rect" id="node6" title=" " alt="" coords="278,266,365,293"/>
+<area shape="rect" id="node7" title=" " alt="" coords="389,266,457,293"/>
+<area shape="rect" id="node8" href="$forward__like_8hpp_source.html" title=" " alt="" coords="481,259,644,300"/>
 </map>

@@ -82,15 +82,25 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a859e871684c153eba5e32ba4e48601c7"><td class="memTemplParams" colspan="2"><a id="a859e871684c153eba5e32ba4e48601c7"></a>
+template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; has_member_variable_weight&lt; T &gt;, std::negation&lt; has_member_weight&lt; T &gt;&gt;, std::negation&lt; has_non_member_weight&lt; T &gt;&gt;&gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a859e871684c153eba5e32ba4e48601c7"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1weight__detail_1_1weight__fn.html#a859e871684c153eba5e32ba4e48601c7">operator()</a> (T &amp;&amp;t) const noexcept</td></tr>
+<tr class="memdesc:a859e871684c153eba5e32ba4e48601c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload for when the particle type defines a member variable. <br /></td></tr>
+<tr class="separator:a859e871684c153eba5e32ba4e48601c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6ed7828fb0eeaa546562e40b4a0d3bd"><td class="memTemplParams" colspan="2"><a id="af6ed7828fb0eeaa546562e40b4a0d3bd"></a>
-template&lt;typename T , std::enable_if_t&lt; has_member_weight_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; std::negation&lt; has_member_variable_weight&lt; T &gt;&gt;, has_member_weight&lt; T &gt;, std::negation&lt; has_non_member_weight&lt; T &gt;&gt;&gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:af6ed7828fb0eeaa546562e40b4a0d3bd"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1weight__detail_1_1weight__fn.html#af6ed7828fb0eeaa546562e40b4a0d3bd">operator()</a> (T &amp;&amp;t) const noexcept(noexcept(std::forward&lt; T &gt;(t).weight()))</td></tr>
 <tr class="memdesc:af6ed7828fb0eeaa546562e40b4a0d3bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload for when the particle type defines a member method. <br /></td></tr>
 <tr class="separator:af6ed7828fb0eeaa546562e40b4a0d3bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab36a798e367dd234eb4511c2a57e8257"><td class="memTemplParams" colspan="2">template&lt;typename T , std::enable_if_t&lt;!has_member_weight_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:ab36a798e367dd234eb4511c2a57e8257"><td class="memTemplParams" colspan="2">template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; std::negation&lt; has_member_variable_weight&lt; T &gt;&gt;, std::negation&lt; has_member_weight&lt; T &gt;&gt;, has_non_member_weight&lt; T &gt;&gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:ab36a798e367dd234eb4511c2a57e8257"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1weight__detail_1_1weight__fn.html#ab36a798e367dd234eb4511c2a57e8257">operator()</a> (T &amp;&amp;t) const noexcept(noexcept(weight(std::forward&lt; T &gt;(t))))</td></tr>
 <tr class="memdesc:ab36a798e367dd234eb4511c2a57e8257"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload for when there is an external function that takes this particle type.  <a href="structbeluga_1_1weight__detail_1_1weight__fn.html#ab36a798e367dd234eb4511c2a57e8257">More...</a><br /></td></tr>
 <tr class="separator:ab36a798e367dd234eb4511c2a57e8257"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cb94b785aef1fdd9badf0105889b8a9"><td class="memTemplParams" colspan="2"><a id="a9cb94b785aef1fdd9badf0105889b8a9"></a>
+template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; std::negation&lt; has_member_variable_weight&lt; T &gt;&gt;, std::negation&lt; has_member_weight&lt; T &gt;&gt;, std::negation&lt; has_non_member_weight&lt; T &gt;&gt;, is_tuple_like&lt; T &gt;, has_single_element&lt; beluga::Weight, std::decay_t&lt; T &gt;&gt;&gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a9cb94b785aef1fdd9badf0105889b8a9"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1weight__detail_1_1weight__fn.html#a9cb94b785aef1fdd9badf0105889b8a9">operator()</a> (T &amp;&amp;t) const noexcept(noexcept(element&lt; <a class="el" href="primitives_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt;(std::forward&lt; T &gt;(t))))</td></tr>
+<tr class="memdesc:a9cb94b785aef1fdd9badf0105889b8a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload for tuple-like types. <br /></td></tr>
+<tr class="separator:a9cb94b785aef1fdd9badf0105889b8a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Customization point object type for accessing the <code>weight</code> of a particle. </p>
@@ -102,7 +112,7 @@ template&lt;typename T , std::enable_if_t&lt; has_member_weight_v&lt; T &gt;, in
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T , std::enable_if_t&lt;!has_member_weight_v&lt; T &gt;, int &gt;  = 0&gt; </div>
+template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; std::negation&lt; has_member_variable_weight&lt; T &gt;&gt;, std::negation&lt; has_member_weight&lt; T &gt;&gt;, has_non_member_weight&lt; T &gt;&gt;, int &gt;  = 0&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">

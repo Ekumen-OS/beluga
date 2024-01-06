@@ -83,7 +83,7 @@ Requirements</h1>
 <h1><a class="anchor" id="ParticleNotes"></a>
 Notes</h1>
 <p>Both <code>beluga::state</code> and <code>beluga::weight</code> are customization point objects. Users have two customization alternatives:</p><ul>
-<li>Specifying <code><a class="el" href="primitives_8hpp.html#af50ee08bf7344a7c4eb850d879782c3d" title="Default state implementation.">state()</a></code> and <code><a class="el" href="primitives_8hpp.html#ad62c935c0ea61bf765e96fe588cba38f" title="Default weight implementation.">weight()</a></code> as instance members of their custom type.</li>
+<li>Specifying <code><a class="el" href="primitives_8hpp.html#a706431bba3d6cfb1ee0690221f3a9af9" title="Customization point object for accessing the state of a particle.">state()</a></code> and <code><a class="el" href="primitives_8hpp.html#a80abdff6d85df8ef392ca252ed8588c1" title="Customization point object for accessing the weight of a particle.">weight()</a></code> as instance members of their custom type.</li>
 <li>Creating free functions <code>state(p)</code> and <code>weight(p)</code> overloaded for their custom type in the same namespace where that type is defined (so it can be found by ADL). </li>
 </ul>
 </div></div><!-- contents -->

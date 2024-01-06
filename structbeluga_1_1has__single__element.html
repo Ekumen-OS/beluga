@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::tuple_index&lt; T, TupleLike&lt; Args... &gt; &gt; Struct Template Reference</title>
+<title>Beluga: beluga::has_single_element&lt; T, TupleLike, class &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,36 +63,42 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>beluga</b></li><li class="navelem"><a class="el" href="structbeluga_1_1tuple__index_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_01_4.html">tuple_index&lt; T, TupleLike&lt; Args... &gt; &gt;</a></li>  </ul>
+<li class="navelem"><b>beluga</b></li><li class="navelem"><a class="el" href="structbeluga_1_1has__single__element.html">has_single_element</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
-<a href="structbeluga_1_1tuple__index_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_01_4-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::tuple_index&lt; T, TupleLike&lt; Args... &gt; &gt; Struct Template Reference</div>  </div>
+<div class="title">beluga::has_single_element&lt; T, TupleLike, class &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><code><a class="el" href="structbeluga_1_1tuple__index.html" title="Meta-function that returns the tuple index of the element whose type is T.">tuple_index</a></code> specialization for tuples.  
- <a href="structbeluga_1_1tuple__index_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_01_4.html#details">More...</a></p>
+<p>Meta-function that returns true if there is a single element of type T in the tuple-like type.  
+ <a href="structbeluga_1_1has__single__element.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="tuple__traits_8hpp_source.html">tuple_traits.hpp</a>&gt;</code></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a5eeaf0eed6d4e59b2d8abb31178a6003"><td class="memItemLeft" align="right" valign="top"><a id="a5eeaf0eed6d4e59b2d8abb31178a6003"></a>
-static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1tuple__index_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_01_4.html#a5eeaf0eed6d4e59b2d8abb31178a6003">value</a> = detail::tuple_index_helper&lt;T, Args...&gt;()</td></tr>
-<tr class="memdesc:a5eeaf0eed6d4e59b2d8abb31178a6003"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="structbeluga_1_1tuple__index.html" title="Meta-function that returns the tuple index of the element whose type is T.">tuple_index</a></code> return value. <br /></td></tr>
-<tr class="separator:a5eeaf0eed6d4e59b2d8abb31178a6003"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
+<div class="dynheader">
+Inheritance diagram for beluga::has_single_element&lt; T, TupleLike, class &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structbeluga_1_1has__single__element__inherit__graph.png" border="0" usemap="#abeluga_1_1has__single__element_3_01T_00_01TupleLike_00_01class_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="abeluga_1_1has__single__element_3_01T_00_01TupleLike_00_01class_01_4_inherit__map" id="abeluga_1_1has__single__element_3_01T_00_01TupleLike_00_01class_01_4_inherit__map">
+<area shape="rect" title="Meta&#45;function that returns true if there is a single element of type T in the tuple&#45;like type." alt="" coords="5,80,184,136"/>
+<area shape="rect" title=" " alt="" coords="35,5,154,32"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for beluga::has_single_element&lt; T, TupleLike, class &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structbeluga_1_1has__single__element__coll__graph.png" border="0" usemap="#abeluga_1_1has__single__element_3_01T_00_01TupleLike_00_01class_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="abeluga_1_1has__single__element_3_01T_00_01TupleLike_00_01class_01_4_coll__map" id="abeluga_1_1has__single__element_3_01T_00_01TupleLike_00_01class_01_4_coll__map">
+<area shape="rect" title="Meta&#45;function that returns true if there is a single element of type T in the tuple&#45;like type." alt="" coords="5,80,184,136"/>
+<area shape="rect" title=" " alt="" coords="35,5,154,32"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class T, template&lt; class... &gt; class TupleLike, class... Args&gt;<br />
-struct beluga::tuple_index&lt; T, TupleLike&lt; Args... &gt; &gt;</h3>
+<div class="textblock"><h3>template&lt;class T, class TupleLike, class = void&gt;<br />
+struct beluga::has_single_element&lt; T, TupleLike, class &gt;</h3>
 
-<p><code><a class="el" href="structbeluga_1_1tuple__index.html" title="Meta-function that returns the tuple index of the element whose type is T.">tuple_index</a></code> specialization for tuples. </p>
-<p>Fails to compile unless the tuple has exactly one element of that type. </p>
+<p>Meta-function that returns true if there is a single element of type T in the tuple-like type. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits/<a class="el" href="tuple__traits_8hpp_source.html">tuple_traits.hpp</a></li>
 </ul>

@@ -70,7 +70,6 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">primitives.hpp File Reference</div>  </div>
@@ -83,18 +82,20 @@ $(function() {
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;<a class="el" href="strongly__typed__numeric_8hpp_source.html">beluga/type_traits/strongly_typed_numeric.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="tuple__traits_8hpp_source.html">beluga/type_traits/tuple_traits.hpp</a>&gt;</code><br />
+<code>#include &lt;beluga/utility/forward_like.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for primitives.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="primitives_8hpp__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2primitives_8hpp" alt=""/></div>
 <map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2primitives_8hpp" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2primitives_8hpp">
-<area shape="rect" title="Implementation of library primitives to abstract member access." alt="" coords="52,5,244,61"/>
-<area shape="rect" title=" " alt="" coords="14,199,69,225"/>
-<area shape="rect" title=" " alt="" coords="157,199,249,225"/>
-<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="240,109,451,151"/>
-<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="25,109,165,151"/>
-<area shape="rect" title=" " alt="" coords="287,199,374,225"/>
-<area shape="rect" title=" " alt="" coords="399,199,457,225"/>
+<area shape="rect" title="Implementation of library primitives to abstract member access." alt="" coords="108,5,300,61"/>
+<area shape="rect" title=" " alt="" coords="15,199,70,225"/>
+<area shape="rect" title=" " alt="" coords="158,199,250,225"/>
+<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="241,109,452,151"/>
+<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="26,109,166,151"/>
+<area shape="rect" href="forward__like_8hpp_source.html" title=" " alt="" coords="476,109,638,151"/>
+<area shape="rect" title=" " alt="" coords="288,199,375,225"/>
+<area shape="rect" title=" " alt="" coords="400,199,458,225"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -141,21 +142,6 @@ using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pri
 <tr class="memdesc:a5f17811828f632529bca9b868d8c4d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cluster type, as a strongly typed <code>std::size_t</code>. <br /></td></tr>
 <tr class="separator:a5f17811828f632529bca9b868d8c4d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:af50ee08bf7344a7c4eb850d879782c3d"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:af50ee08bf7344a7c4eb850d879782c3d"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="primitives_8hpp.html#af50ee08bf7344a7c4eb850d879782c3d">beluga::state_detail::state</a> (T &amp;&amp;t) noexcept(noexcept(std::get&lt; 0 &gt;(std::forward&lt; T &gt;(t))))</td></tr>
-<tr class="memdesc:af50ee08bf7344a7c4eb850d879782c3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default state implementation.  <a href="primitives_8hpp.html#af50ee08bf7344a7c4eb850d879782c3d">More...</a><br /></td></tr>
-<tr class="separator:af50ee08bf7344a7c4eb850d879782c3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad62c935c0ea61bf765e96fe588cba38f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ad62c935c0ea61bf765e96fe588cba38f"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="primitives_8hpp.html#ad62c935c0ea61bf765e96fe588cba38f">beluga::weight_detail::weight</a> (T &amp;&amp;t) noexcept(noexcept(element_of_type&lt; <a class="el" href="primitives_8hpp.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt;(std::forward&lt; T &gt;(t))))</td></tr>
-<tr class="memdesc:ad62c935c0ea61bf765e96fe588cba38f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default weight implementation.  <a href="primitives_8hpp.html#ad62c935c0ea61bf765e96fe588cba38f">More...</a><br /></td></tr>
-<tr class="separator:ad62c935c0ea61bf765e96fe588cba38f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60ae120f0bd55f6a3a9de1335a7e9273"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a60ae120f0bd55f6a3a9de1335a7e9273"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="primitives_8hpp.html#a60ae120f0bd55f6a3a9de1335a7e9273">beluga::cluster_detail::cluster</a> (T &amp;&amp;t) noexcept(noexcept(element_of_type&lt; <a class="el" href="primitives_8hpp.html#a5f17811828f632529bca9b868d8c4d12">beluga::Cluster</a> &gt;(std::forward&lt; T &gt;(t))))</td></tr>
-<tr class="memdesc:a60ae120f0bd55f6a3a9de1335a7e9273"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default cluster implementation.  <a href="primitives_8hpp.html#a60ae120f0bd55f6a3a9de1335a7e9273">More...</a><br /></td></tr>
-<tr class="separator:a60ae120f0bd55f6a3a9de1335a7e9273"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a706431bba3d6cfb1ee0690221f3a9af9"><td class="memItemLeft" align="right" valign="top"><a id="a706431bba3d6cfb1ee0690221f3a9af9"></a>
@@ -173,101 +159,7 @@ constexpr cluster_detail::cluster_fn&#160;</td><td class="memItemRight" valign="
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of library primitives to abstract member access. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a60ae120f0bd55f6a3a9de1335a7e9273"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60ae120f0bd55f6a3a9de1335a7e9273">&#9670;&nbsp;</a></span>cluster()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr decltype(auto) beluga::cluster_detail::cluster </td>
-          <td>(</td>
-          <td class="paramtype">T &amp;&amp;&#160;</td>
-          <td class="paramname"><em>t</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Default cluster implementation. </p>
-<p>Assumes that the particle is a tuple that has exactly one element of type <code>beluga::Cluster</code>. </p>
-
-</div>
-</div>
-<a id="af50ee08bf7344a7c4eb850d879782c3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af50ee08bf7344a7c4eb850d879782c3d">&#9670;&nbsp;</a></span>state()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr decltype(auto) beluga::state_detail::state </td>
-          <td>(</td>
-          <td class="paramtype">T &amp;&amp;&#160;</td>
-          <td class="paramname"><em>t</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Default state implementation. </p>
-<p>Assumes that the particle is a tuple and the first element is the state. </p>
-
-</div>
-</div>
-<a id="ad62c935c0ea61bf765e96fe588cba38f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad62c935c0ea61bf765e96fe588cba38f">&#9670;&nbsp;</a></span>weight()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr decltype(auto) beluga::weight_detail::weight </td>
-          <td>(</td>
-          <td class="paramtype">T &amp;&amp;&#160;</td>
-          <td class="paramname"><em>t</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Default weight implementation. </p>
-<p>Assumes that the particle is a tuple that has exactly one element of type <code>beluga::Weight</code>. </p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1

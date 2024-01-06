@@ -69,6 +69,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -114,12 +115,20 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1tuple__index.html">beluga::tuple_index&lt; T, TupleLike &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Meta-function that returns the tuple index of the element whose type is T.  <a href="structbeluga_1_1tuple__index.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1is__tuple__like.html">beluga::is_tuple_like&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Meta-function that returns true if T is a tuple-like type.  <a href="structbeluga_1_1is__tuple__like.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1tuple__index_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_01_4.html">beluga::tuple_index&lt; T, TupleLike&lt; Args... &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="structbeluga_1_1tuple__index.html" title="Meta-function that returns the tuple index of the element whose type is T.">tuple_index</a></code> specialization for tuples.  <a href="structbeluga_1_1tuple__index_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1has__single__element.html">beluga::has_single_element&lt; T, TupleLike, class &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Meta-function that returns true if there is a single element of type T in the tuple-like type.  <a href="structbeluga_1_1has__single__element.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a7fe08608971c8c79a6f92a3b5b7ef089"><td class="memTemplParams" colspan="2"><a id="a7fe08608971c8c79a6f92a3b5b7ef089"></a>
+template&lt;class T , class TupleLike &gt; </td></tr>
+<tr class="memitem:a7fe08608971c8c79a6f92a3b5b7ef089"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#a7fe08608971c8c79a6f92a3b5b7ef089">beluga::tuple_index_t</a> = typename tuple_index&lt; T, TupleLike &gt;::type</td></tr>
+<tr class="memdesc:a7fe08608971c8c79a6f92a3b5b7ef089"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience template type alias for <code><a class="el" href="structbeluga_1_1tuple__index.html" title="Meta-function that returns the tuple index of the element whose type is T.">tuple_index</a></code>. <br /></td></tr>
+<tr class="separator:a7fe08608971c8c79a6f92a3b5b7ef089"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -127,19 +136,34 @@ Functions</h2></td></tr>
 <tr class="memitem:ad6f44de7c762670dd07066c46c19dedc"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">beluga::detail::tuple_index_helper</a> () noexcept</td></tr>
 <tr class="memdesc:ad6f44de7c762670dd07066c46c19dedc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Help method that finds a tuple element index that matches an input type.  <a href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">More...</a><br /></td></tr>
 <tr class="separator:ad6f44de7c762670dd07066c46c19dedc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5864ba6cba882b3fba057d0e4a8c329a"><td class="memTemplParams" colspan="2"><a id="a5864ba6cba882b3fba057d0e4a8c329a"></a>
+<tr class="memitem:a58669a6d0d2ebb8264b3799cfb4cb957"><td class="memTemplParams" colspan="2"><a id="a58669a6d0d2ebb8264b3799cfb4cb957"></a>
+template&lt;class T , class... Args&gt; </td></tr>
+<tr class="memitem:a58669a6d0d2ebb8264b3799cfb4cb957"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#a58669a6d0d2ebb8264b3799cfb4cb957">beluga::detail::tuple_index_found</a> () noexcept</td></tr>
+<tr class="memdesc:a58669a6d0d2ebb8264b3799cfb4cb957"><td class="mdescLeft">&#160;</td><td class="mdescRight">Help method that returns true if a tuple element index that matches an input type is found. <br /></td></tr>
+<tr class="separator:a58669a6d0d2ebb8264b3799cfb4cb957"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afecd4522d48bf1f7b59320b62b024102"><td class="memTemplParams" colspan="2"><a id="afecd4522d48bf1f7b59320b62b024102"></a>
 template&lt;class T , class TupleLike &gt; </td></tr>
-<tr class="memitem:a5864ba6cba882b3fba057d0e4a8c329a"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#a5864ba6cba882b3fba057d0e4a8c329a">beluga::element_of_type</a> (TupleLike &amp;&amp;tuple) noexcept</td></tr>
-<tr class="memdesc:a5864ba6cba882b3fba057d0e4a8c329a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns element of a tuple like object whose type is T (or a possibly const reference to T). <br /></td></tr>
-<tr class="separator:a5864ba6cba882b3fba057d0e4a8c329a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afecd4522d48bf1f7b59320b62b024102"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#afecd4522d48bf1f7b59320b62b024102">beluga::element</a> (TupleLike &amp;&amp;tuple) noexcept</td></tr>
+<tr class="memdesc:afecd4522d48bf1f7b59320b62b024102"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns element of a tuple like object whose type is T (or a possibly const reference to T). <br /></td></tr>
+<tr class="separator:afecd4522d48bf1f7b59320b62b024102"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a57df71946142fa16a5d42d198c2ca3ec"><td class="memTemplParams" colspan="2"><a id="a57df71946142fa16a5d42d198c2ca3ec"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a57df71946142fa16a5d42d198c2ca3ec"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#a57df71946142fa16a5d42d198c2ca3ec">beluga::is_tuple_like_v</a> = is_tuple_like&lt;T&gt;::value</td></tr>
+<tr class="memdesc:a57df71946142fa16a5d42d198c2ca3ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience template variable for <code><a class="el" href="structbeluga_1_1is__tuple__like.html" title="Meta-function that returns true if T is a tuple-like type.">is_tuple_like</a></code>. <br /></td></tr>
+<tr class="separator:a57df71946142fa16a5d42d198c2ca3ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a528b7d8d6f614c786f40275567ff5127"><td class="memTemplParams" colspan="2"><a id="a528b7d8d6f614c786f40275567ff5127"></a>
 template&lt;class T , class TupleLike &gt; </td></tr>
 <tr class="memitem:a528b7d8d6f614c786f40275567ff5127"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#a528b7d8d6f614c786f40275567ff5127">beluga::tuple_index_v</a> = tuple_index&lt;T, TupleLike&gt;::value</td></tr>
 <tr class="memdesc:a528b7d8d6f614c786f40275567ff5127"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience template variable for <code><a class="el" href="structbeluga_1_1tuple__index.html" title="Meta-function that returns the tuple index of the element whose type is T.">tuple_index</a></code>. <br /></td></tr>
 <tr class="separator:a528b7d8d6f614c786f40275567ff5127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff6cba96ed18281cbfbb37187289f58b"><td class="memTemplParams" colspan="2"><a id="aff6cba96ed18281cbfbb37187289f58b"></a>
+template&lt;class T , class TupleLike &gt; </td></tr>
+<tr class="memitem:aff6cba96ed18281cbfbb37187289f58b"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#aff6cba96ed18281cbfbb37187289f58b">beluga::has_single_element_v</a> = has_single_element&lt;T, TupleLike&gt;::value</td></tr>
+<tr class="memdesc:aff6cba96ed18281cbfbb37187289f58b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience template variable for <code><a class="el" href="structbeluga_1_1has__single__element.html" title="Meta-function that returns true if there is a single element of type T in the tuple-like type.">has_single_element</a></code>. <br /></td></tr>
+<tr class="separator:aff6cba96ed18281cbfbb37187289f58b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of traits for tuple-like types. </p>

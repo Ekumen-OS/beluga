@@ -71,7 +71,7 @@ $(function() {
 <div class="title">tuple_traits.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="tuple__traits_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2023 Ekumen, Inc.</span></div>
+<a href="tuple__traits_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2023-2024 Ekumen, Inc.</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">// you may not use this file except in compliance with the License.</span></div>
@@ -95,56 +95,102 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>detail {</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">static</span> constexpr std::size_t kTupleIndexNotFound = <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(-1);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">static</span> constexpr std::size_t kTupleIndexAmbiguous = <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(-2);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>, <span class="keyword">typename</span> = <span class="keywordtype">void</span>&gt;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">struct </span>is_complete : std::false_type {};</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">struct </span>is_complete&lt;T, std::void_t&lt;decltype(sizeof(T))&gt;&gt; : std::true_type {};</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">   42</a></span>&#160;constexpr std::size_t <a class="code" href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">tuple_index_helper</a>() noexcept {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  constexpr <span class="keywordtype">bool</span> kMatches[<span class="keyword">sizeof</span>...(Args)] =  <span class="comment">// NOLINT(modernize-avoid-c-arrays)</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      {std::is_same&lt;T, std::decay_t&lt;Args&gt;&gt;::value...};</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  std::size_t selected = kTupleIndexNotFound;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; <span class="keyword">sizeof</span>...(Args); ++i) {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">if</span> (kMatches[i]) {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keywordflow">if</span> (selected == kTupleIndexNotFound) {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        selected = i;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">return</span> kTupleIndexAmbiguous;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keywordflow">return</span> selected;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}  <span class="comment">// namespace detail</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TupleLike&gt;</div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="structbeluga_1_1tuple__index.html">   62</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1tuple__index.html">tuple_index</a> {};</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="structbeluga_1_1is__tuple__like.html">   48</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1is__tuple__like.html">is_tuple_like</a> : detail::is_complete&lt;std::tuple_size&lt;std::decay_t&lt;T&gt;&gt;&gt; {};</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#a57df71946142fa16a5d42d198c2ca3ec">   52</a></span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> <a class="code" href="tuple__traits_8hpp.html#a57df71946142fa16a5d42d198c2ca3ec">is_tuple_like_v</a> = <a class="code" href="structbeluga_1_1is__tuple__like.html">is_tuple_like&lt;T&gt;::value</a>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">static</span> constexpr std::size_t kTupleIndexNotFound = <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(-1);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">static</span> constexpr std::size_t kTupleIndexAmbiguous = <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(-2);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>T, <span class="keyword">template</span> &lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>TupleLike, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="structbeluga_1_1tuple__index_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_01_4.html">   69</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1tuple__index.html">tuple_index</a>&lt;T, TupleLike&lt;Args...&gt;&gt; {</div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="structbeluga_1_1tuple__index_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_01_4.html#a5eeaf0eed6d4e59b2d8abb31178a6003">   71</a></span>&#160;  <span class="keyword">static</span> constexpr std::size_t value = detail::tuple_index_helper&lt;T, Args...&gt;();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  static_assert(value != detail::kTupleIndexNotFound);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  static_assert(value != detail::kTupleIndexAmbiguous);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;};</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TupleLike&gt;</div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#a528b7d8d6f614c786f40275567ff5127">   78</a></span>&#160;<span class="keyword">inline</span> constexpr std::size_t <a class="code" href="tuple__traits_8hpp.html#a528b7d8d6f614c786f40275567ff5127">tuple_index_v</a> = <a class="code" href="structbeluga_1_1tuple__index.html">tuple_index&lt;T, TupleLike&gt;::value</a>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TupleLike&gt;</div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#a5864ba6cba882b3fba057d0e4a8c329a">   82</a></span>&#160;constexpr decltype(<span class="keyword">auto</span>) element_of_type(TupleLike&amp;&amp; tuple) noexcept {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  constexpr std::size_t kIndex = tuple_index_v&lt;T, std::decay_t&lt;TupleLike&gt;&gt;;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="keywordflow">return</span> std::get&lt;kIndex&gt;(std::forward&lt;TupleLike&gt;(tuple));</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="astructbeluga_1_1tuple__index_html"><div class="ttname"><a href="structbeluga_1_1tuple__index.html">beluga::tuple_index</a></div><div class="ttdoc">Meta-function that returns the tuple index of the element whose type is T.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:62</div></div>
-<div class="ttc" id="atuple__traits_8hpp_html_a528b7d8d6f614c786f40275567ff5127"><div class="ttname"><a href="tuple__traits_8hpp.html#a528b7d8d6f614c786f40275567ff5127">beluga::tuple_index_v</a></div><div class="ttdeci">constexpr std::size_t tuple_index_v</div><div class="ttdoc">Convenience template variable for tuple_index.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:78</div></div>
-<div class="ttc" id="atuple__traits_8hpp_html_ad6f44de7c762670dd07066c46c19dedc"><div class="ttname"><a href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">beluga::detail::tuple_index_helper</a></div><div class="ttdeci">constexpr std::size_t tuple_index_helper() noexcept</div><div class="ttdoc">Help method that finds a tuple element index that matches an input type.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:42</div></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">   68</a></span>&#160;constexpr std::size_t <a class="code" href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">tuple_index_helper</a>() noexcept {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  constexpr <span class="keywordtype">bool</span> kMatches[<span class="keyword">sizeof</span>...(Args)] =  <span class="comment">// NOLINT(modernize-avoid-c-arrays)</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      {std::is_same&lt;T, std::decay_t&lt;Args&gt;&gt;::value...};</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  std::size_t selected = kTupleIndexNotFound;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; <span class="keyword">sizeof</span>...(Args); ++i) {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">if</span> (kMatches[i]) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="keywordflow">if</span> (selected == kTupleIndexNotFound) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        selected = i;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> kTupleIndexAmbiguous;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  }</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keywordflow">return</span> selected;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#a58669a6d0d2ebb8264b3799cfb4cb957">   86</a></span>&#160;constexpr <span class="keywordtype">bool</span> <a class="code" href="tuple__traits_8hpp.html#a58669a6d0d2ebb8264b3799cfb4cb957">tuple_index_found</a>() noexcept {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  constexpr std::size_t kIndex = <a class="code" href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">tuple_index_helper</a>&lt;T, Args...&gt;();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keywordflow">return</span> kIndex != kTupleIndexNotFound &amp;&amp; kIndex != kTupleIndexAmbiguous;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TupleLike, <span class="keyword">class</span> = <span class="keywordtype">void</span>&gt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="structbeluga_1_1tuple__index.html">   95</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1tuple__index.html">tuple_index</a>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>T, <span class="keyword">template</span> &lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>TupleLike, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="structbeluga_1_1tuple__index_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_00_01std_1_1enable__if__t_8b6a44f3e1dec7206a1db1c3f8ee23de.html">   99</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1tuple__index.html">tuple_index</a>&lt;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    T,</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    TupleLike&lt;Args...&gt;,</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    std::enable_if_t&lt;is_tuple_like_v&lt;std::decay_t&lt;TupleLike&lt;Args...&gt;&gt;&gt; &amp;&amp; detail::tuple_index_found&lt;T, Args...&gt;()&gt;&gt;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    : std::integral_constant&lt;std::size_t, detail::tuple_index_helper&lt;T, Args...&gt;()&gt; {};</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TupleLike&gt;</div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#a528b7d8d6f614c786f40275567ff5127">  107</a></span>&#160;<span class="keyword">inline</span> constexpr std::size_t <a class="code" href="tuple__traits_8hpp.html#a528b7d8d6f614c786f40275567ff5127">tuple_index_v</a> = <a class="code" href="structbeluga_1_1tuple__index.html">tuple_index&lt;T, TupleLike&gt;::value</a>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TupleLike&gt;</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#a7fe08608971c8c79a6f92a3b5b7ef089">  111</a></span>&#160;<span class="keyword">using</span> <a class="code" href="tuple__traits_8hpp.html#a7fe08608971c8c79a6f92a3b5b7ef089">tuple_index_t</a> = <span class="keyword">typename</span> <a class="code" href="structbeluga_1_1tuple__index.html">tuple_index&lt;T, TupleLike&gt;::type</a>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TupleLike, <span class="keyword">class</span> = <span class="keywordtype">void</span>&gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="structbeluga_1_1has__single__element.html">  115</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1has__single__element.html">has_single_element</a> : std::false_type {};</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>T, <span class="keyword">template</span> &lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>TupleLike, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="structbeluga_1_1has__single__element_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_00_01std_1_1enable74bb370853b4969c8155f7c3b3c0dd64.html">  119</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1has__single__element.html">has_single_element</a>&lt;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    T,</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    TupleLike&lt;Args...&gt;,</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    std::enable_if_t&lt;is_tuple_like_v&lt;std::decay_t&lt;TupleLike&lt;Args...&gt;&gt;&gt; &amp;&amp; detail::tuple_index_found&lt;T, Args...&gt;()&gt;&gt;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    : std::true_type {};</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TupleLike&gt;</div>
+<div class="line"><a name="l00127"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#aff6cba96ed18281cbfbb37187289f58b">  127</a></span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> <a class="code" href="tuple__traits_8hpp.html#aff6cba96ed18281cbfbb37187289f58b">has_single_element_v</a> = <a class="code" href="structbeluga_1_1has__single__element.html">has_single_element&lt;T, TupleLike&gt;::value</a>;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TupleLike&gt;</div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#afecd4522d48bf1f7b59320b62b024102">  131</a></span>&#160;constexpr decltype(<span class="keyword">auto</span>) element(TupleLike&amp;&amp; tuple) noexcept {</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  constexpr std::size_t kIndex = tuple_index_v&lt;T, std::decay_t&lt;TupleLike&gt;&gt;;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  <span class="keywordflow">return</span> std::get&lt;kIndex&gt;(std::forward&lt;TupleLike&gt;(tuple));</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="astructbeluga_1_1has__single__element_html"><div class="ttname"><a href="structbeluga_1_1has__single__element.html">beluga::has_single_element</a></div><div class="ttdoc">Meta-function that returns true if there is a single element of type T in the tuple-like type.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:115</div></div>
+<div class="ttc" id="astructbeluga_1_1is__tuple__like_html"><div class="ttname"><a href="structbeluga_1_1is__tuple__like.html">beluga::is_tuple_like</a></div><div class="ttdoc">Meta-function that returns true if T is a tuple-like type.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:48</div></div>
+<div class="ttc" id="astructbeluga_1_1tuple__index_html"><div class="ttname"><a href="structbeluga_1_1tuple__index.html">beluga::tuple_index</a></div><div class="ttdoc">Meta-function that returns the tuple index of the element whose type is T.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:95</div></div>
+<div class="ttc" id="atuple__traits_8hpp_html_a528b7d8d6f614c786f40275567ff5127"><div class="ttname"><a href="tuple__traits_8hpp.html#a528b7d8d6f614c786f40275567ff5127">beluga::tuple_index_v</a></div><div class="ttdeci">constexpr std::size_t tuple_index_v</div><div class="ttdoc">Convenience template variable for tuple_index.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:107</div></div>
+<div class="ttc" id="atuple__traits_8hpp_html_a57df71946142fa16a5d42d198c2ca3ec"><div class="ttname"><a href="tuple__traits_8hpp.html#a57df71946142fa16a5d42d198c2ca3ec">beluga::is_tuple_like_v</a></div><div class="ttdeci">constexpr bool is_tuple_like_v</div><div class="ttdoc">Convenience template variable for is_tuple_like.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:52</div></div>
+<div class="ttc" id="atuple__traits_8hpp_html_a58669a6d0d2ebb8264b3799cfb4cb957"><div class="ttname"><a href="tuple__traits_8hpp.html#a58669a6d0d2ebb8264b3799cfb4cb957">beluga::detail::tuple_index_found</a></div><div class="ttdeci">constexpr bool tuple_index_found() noexcept</div><div class="ttdoc">Help method that returns true if a tuple element index that matches an input type is found.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:86</div></div>
+<div class="ttc" id="atuple__traits_8hpp_html_a7fe08608971c8c79a6f92a3b5b7ef089"><div class="ttname"><a href="tuple__traits_8hpp.html#a7fe08608971c8c79a6f92a3b5b7ef089">beluga::tuple_index_t</a></div><div class="ttdeci">typename tuple_index&lt; T, TupleLike &gt;::type tuple_index_t</div><div class="ttdoc">Convenience template type alias for tuple_index.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:111</div></div>
+<div class="ttc" id="atuple__traits_8hpp_html_ad6f44de7c762670dd07066c46c19dedc"><div class="ttname"><a href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">beluga::detail::tuple_index_helper</a></div><div class="ttdeci">constexpr std::size_t tuple_index_helper() noexcept</div><div class="ttdoc">Help method that finds a tuple element index that matches an input type.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:68</div></div>
+<div class="ttc" id="atuple__traits_8hpp_html_aff6cba96ed18281cbfbb37187289f58b"><div class="ttname"><a href="tuple__traits_8hpp.html#aff6cba96ed18281cbfbb37187289f58b">beluga::has_single_element_v</a></div><div class="ttdeci">constexpr bool has_single_element_v</div><div class="ttdoc">Convenience template variable for has_single_element.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:127</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

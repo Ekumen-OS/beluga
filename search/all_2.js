@@ -7,7 +7,7 @@ var searchData=
   ['cell_5fnear_53',['cell_near',['../classbeluga_1_1BaseRegularGrid2.html#a602cce4a18dfd0b84aae4c0a920d1b72',1,'beluga::BaseRegularGrid2::cell_near(double x, double y) const'],['../classbeluga_1_1BaseRegularGrid2.html#a7396cb465856c940e470342fd83be11c',1,'beluga::BaseRegularGrid2::cell_near(const Eigen::Vector2d &amp;p) const']]],
   ['clear_54',['clear',['../classbeluga_1_1TupleContainer.html#a26a9ecf80e50daf6895e3bc28888b669',1,'beluga::TupleContainer']]],
   ['cluster_55',['Cluster',['../primitives_8hpp.html#a5f17811828f632529bca9b868d8c4d12',1,'beluga']]],
-  ['cluster_56',['cluster',['../primitives_8hpp.html#a60ae120f0bd55f6a3a9de1335a7e9273',1,'beluga::cluster_detail::cluster()'],['../primitives_8hpp.html#af92b21fca67804a8e05cdb4acc55edef',1,'beluga::cluster()']]],
+  ['cluster_56',['cluster',['../primitives_8hpp.html#af92b21fca67804a8e05cdb4acc55edef',1,'beluga']]],
   ['cluster_5ffn_57',['cluster_fn',['../structbeluga_1_1cluster__detail_1_1cluster__fn.html',1,'beluga::cluster_detail']]],
   ['clusters_58',['clusters',['../particles_8hpp.html#ab21b5fa224e3941c1f13daa2d4ff8a47',1,'beluga::views']]],
   ['compose_5finterfaces_59',['compose_interfaces',['../structbeluga_1_1mixin_1_1compose__interfaces.html',1,'beluga::mixin']]],

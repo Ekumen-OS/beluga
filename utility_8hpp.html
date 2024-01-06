@@ -81,15 +81,17 @@ $(function() {
 <div class="textblock"><code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;variant&gt;</code><br />
+<code>#include &lt;beluga/utility/forward_like.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for utility.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="utility_8hpp__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2mixin_2utility_8hpp" alt=""/></div>
 <map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2mixin_2utility_8hpp" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2mixin_2utility_8hpp">
-<area shape="rect" title="Implementation of extensions to the standard utility library." alt="" coords="66,5,258,61"/>
-<area shape="rect" title=" " alt="" coords="5,109,92,136"/>
-<area shape="rect" title=" " alt="" coords="116,109,208,136"/>
-<area shape="rect" title=" " alt="" coords="232,109,300,136"/>
+<area shape="rect" title="Implementation of extensions to the standard utility library." alt="" coords="118,5,310,61"/>
+<area shape="rect" title=" " alt="" coords="5,117,92,143"/>
+<area shape="rect" title=" " alt="" coords="116,117,208,143"/>
+<area shape="rect" title=" " alt="" coords="232,117,300,143"/>
+<area shape="rect" href="forward__like_8hpp_source.html" title=" " alt="" coords="325,109,487,151"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -118,10 +120,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acf35004c232253601cb8af2b1a46f044"><td class="memTemplParams" colspan="2">template&lt;class T , class U &gt; </td></tr>
-<tr class="memitem:acf35004c232253601cb8af2b1a46f044"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="utility_8hpp.html#acf35004c232253601cb8af2b1a46f044">beluga::mixin::forward_like</a> (U &amp;&amp;value) noexcept</td></tr>
-<tr class="memdesc:acf35004c232253601cb8af2b1a46f044"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to a value which has similar properties to <code>T&amp;&amp;</code>.  <a href="utility_8hpp.html#acf35004c232253601cb8af2b1a46f044">More...</a><br /></td></tr>
-<tr class="separator:acf35004c232253601cb8af2b1a46f044"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add7ef29be9c9bdc96b59fbad0e9715ce"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:add7ef29be9c9bdc96b59fbad0e9715ce"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="utility_8hpp.html#add7ef29be9c9bdc96b59fbad0e9715ce">beluga::mixin::maybe_unwrap</a> (T &amp;&amp;value) noexcept</td></tr>
 <tr class="memdesc:add7ef29be9c9bdc96b59fbad0e9715ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to unwrap a reference_wrapper or forward the given value.  <a href="utility_8hpp.html#add7ef29be9c9bdc96b59fbad0e9715ce">More...</a><br /></td></tr>
@@ -155,52 +153,6 @@ template&lt;typename T &gt; </td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of extensions to the standard utility library. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="acf35004c232253601cb8af2b1a46f044"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf35004c232253601cb8af2b1a46f044">&#9670;&nbsp;</a></span>forward_like()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T , class U &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr auto&amp;&amp; beluga::mixin::forward_like </td>
-          <td>(</td>
-          <td class="paramtype">U &amp;&amp;&#160;</td>
-          <td class="paramname"><em>value</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns a reference to a value which has similar properties to <code>T&amp;&amp;</code>. </p>
-<p>Implementation taken from <a href="https://en.cppreference.com/w/cpp/utility/forward_like">https://en.cppreference.com/w/cpp/utility/forward_like</a> since this feature is only available starting with C++23.</p>
-<p>The program is ill-formed if <code>T&amp;&amp;</code> is not a valid type.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>The type from which to take the properties. </td></tr>
-    <tr><td class="paramname">U</td><td>The type of the input value. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">value</td><td>A value that needs to be forwarded like type <code>T</code>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to value of the determined type. </dd></dl>
-
-</div>
-</div>
 <a id="a7b3df3785f48a7af53ad5289e5577d56"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7b3df3785f48a7af53ad5289e5577d56">&#9670;&nbsp;</a></span>make_tuple_with()</h2>
 

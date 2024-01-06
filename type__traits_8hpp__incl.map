@@ -1,11 +1,13 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits.hpp">
-<area shape="rect" id="node1" title="Includes all Beluga type traits." alt="" coords="34,5,226,61"/>
-<area shape="rect" id="node2" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="118,109,262,151"/>
-<area shape="rect" id="node9" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="5,273,145,315"/>
-<area shape="rect" id="node3" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="113,199,277,225"/>
-<area shape="rect" id="node4" title=" " alt="" coords="79,363,133,389"/>
-<area shape="rect" id="node5" title=" " alt="" coords="188,363,280,389"/>
-<area shape="rect" id="node6" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="271,273,482,315"/>
-<area shape="rect" id="node7" title=" " alt="" coords="319,363,405,389"/>
-<area shape="rect" id="node8" title=" " alt="" coords="430,363,489,389"/>
+<area shape="rect" id="node1" title="Includes all Beluga type traits." alt="" coords="537,5,729,61"/>
+<area shape="rect" id="node2" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="496,109,640,151"/>
+<area shape="rect" id="node9" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="529,273,669,315"/>
+<area shape="rect" id="node3" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="286,199,450,225"/>
+<area shape="rect" id="node11" title=" " alt="" coords="475,199,661,225"/>
+<area shape="rect" id="node4" title=" " alt="" coords="541,363,595,389"/>
+<area shape="rect" id="node5" title=" " alt="" coords="394,363,486,389"/>
+<area shape="rect" id="node6" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="192,273,403,315"/>
+<area shape="rect" id="node10" href="$forward__like_8hpp_source.html" title=" " alt="" coords="5,273,168,315"/>
+<area shape="rect" id="node7" title=" " alt="" coords="178,363,265,389"/>
+<area shape="rect" id="node8" title=" " alt="" coords="289,363,348,389"/>
 </map>

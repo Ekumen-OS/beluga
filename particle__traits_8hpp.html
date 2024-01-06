@@ -79,19 +79,22 @@ $(function() {
 <p>Implementation of traits for particle types, see the <a class="el" href="ParticlePage.html">Particle</a> named requirements.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="primitives_8hpp_source.html">beluga/primitives.hpp</a>&gt;</code><br />
+<code>#include &lt;range/v3/range/traits.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for particle_traits.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="particle__traits_8hpp__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2type__traits_2particle__traits_8hpp" alt=""/></div>
 <map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2type__traits_2particle__traits_8hpp" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2type__traits_2particle__traits_8hpp">
-<area shape="rect" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="50,5,247,76"/>
-<area shape="rect" href="primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="67,124,231,151"/>
-<area shape="rect" title=" " alt="" coords="15,288,69,315"/>
-<area shape="rect" title=" " alt="" coords="157,288,249,315"/>
-<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="241,199,451,240"/>
-<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="25,199,165,240"/>
-<area shape="rect" title=" " alt="" coords="288,288,375,315"/>
-<area shape="rect" title=" " alt="" coords="399,288,458,315"/>
+<area shape="rect" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="205,5,403,76"/>
+<area shape="rect" href="primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="122,124,286,151"/>
+<area shape="rect" title=" " alt="" coords="311,124,497,151"/>
+<area shape="rect" title=" " alt="" coords="15,288,70,315"/>
+<area shape="rect" title=" " alt="" coords="158,288,250,315"/>
+<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="241,199,452,240"/>
+<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="26,199,166,240"/>
+<area shape="rect" href="forward__like_8hpp_source.html" title=" " alt="" coords="476,199,639,240"/>
+<area shape="rect" title=" " alt="" coords="289,288,375,315"/>
+<area shape="rect" title=" " alt="" coords="400,288,459,315"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -125,11 +128,11 @@ template&lt;class T &gt; </td></tr>
 <tr class="memitem:aac55da7142ee7f5d5daec24943726cee"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="particle__traits_8hpp.html#aac55da7142ee7f5d5daec24943726cee">beluga::state_t</a> = typename particle_traits&lt; T &gt;::state_type</td></tr>
 <tr class="memdesc:aac55da7142ee7f5d5daec24943726cee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait that returns the state type given a particle type. <br /></td></tr>
 <tr class="separator:aac55da7142ee7f5d5daec24943726cee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b96b0536a14f9cad314c1c9dccba71e"><td class="memTemplParams" colspan="2"><a id="a3b96b0536a14f9cad314c1c9dccba71e"></a>
+<tr class="memitem:a507b3341999e969684415b2bff7fad52"><td class="memTemplParams" colspan="2"><a id="a507b3341999e969684415b2bff7fad52"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:a3b96b0536a14f9cad314c1c9dccba71e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="particle__traits_8hpp.html#a3b96b0536a14f9cad314c1c9dccba71e">beluga::weight_t</a> = typename particle_traits&lt; T &gt;::weigth_type</td></tr>
-<tr class="memdesc:a3b96b0536a14f9cad314c1c9dccba71e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait that returns the weight type given a particle type. <br /></td></tr>
-<tr class="separator:a3b96b0536a14f9cad314c1c9dccba71e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a507b3341999e969684415b2bff7fad52"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="particle__traits_8hpp.html#a507b3341999e969684415b2bff7fad52">beluga::weight_t</a> = typename particle_traits&lt; T &gt;::weight_type</td></tr>
+<tr class="memdesc:a507b3341999e969684415b2bff7fad52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait that returns the weight type given a particle type. <br /></td></tr>
+<tr class="separator:a507b3341999e969684415b2bff7fad52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>

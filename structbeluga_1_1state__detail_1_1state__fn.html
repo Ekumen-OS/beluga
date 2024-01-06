@@ -82,27 +82,36 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a833590e44462c282dabf2c44b0e139c0"><td class="memTemplParams" colspan="2"><a id="a833590e44462c282dabf2c44b0e139c0"></a>
+template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; has_member_variable_state&lt; T &gt;, std::negation&lt; has_member_state&lt; T &gt;&gt;, std::negation&lt; has_non_member_state&lt; T &gt;&gt;&gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a833590e44462c282dabf2c44b0e139c0"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1state__detail_1_1state__fn.html#a833590e44462c282dabf2c44b0e139c0">operator()</a> (T &amp;&amp;t) const noexcept</td></tr>
+<tr class="memdesc:a833590e44462c282dabf2c44b0e139c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload for when the particle type defines a member variable. <br /></td></tr>
+<tr class="separator:a833590e44462c282dabf2c44b0e139c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd8f2e60b354ab751ec023b7617072e6"><td class="memTemplParams" colspan="2"><a id="abd8f2e60b354ab751ec023b7617072e6"></a>
-template&lt;typename T , std::enable_if_t&lt; has_member_state_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; std::negation&lt; has_member_variable_state&lt; T &gt;&gt;, has_member_state&lt; T &gt;, std::negation&lt; has_non_member_state&lt; T &gt;&gt;&gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:abd8f2e60b354ab751ec023b7617072e6"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1state__detail_1_1state__fn.html#abd8f2e60b354ab751ec023b7617072e6">operator()</a> (T &amp;&amp;t) const noexcept(noexcept(std::forward&lt; T &gt;(t).state()))</td></tr>
 <tr class="memdesc:abd8f2e60b354ab751ec023b7617072e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload for when the particle type defines a member method. <br /></td></tr>
 <tr class="separator:abd8f2e60b354ab751ec023b7617072e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae312bee7ee4458a9a69801fc9bad4b2f"><td class="memTemplParams" colspan="2">template&lt;typename T , std::enable_if_t&lt;!has_member_state_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:ae312bee7ee4458a9a69801fc9bad4b2f"><td class="memTemplParams" colspan="2">template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; std::negation&lt; has_member_variable_state&lt; T &gt;&gt;, std::negation&lt; has_member_state&lt; T &gt;&gt;, has_non_member_state&lt; T &gt;&gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:ae312bee7ee4458a9a69801fc9bad4b2f"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1state__detail_1_1state__fn.html#ae312bee7ee4458a9a69801fc9bad4b2f">operator()</a> (T &amp;&amp;t) const noexcept(noexcept(state(std::forward&lt; T &gt;(t))))</td></tr>
 <tr class="memdesc:ae312bee7ee4458a9a69801fc9bad4b2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload for when there is an external function that takes this particle type.  <a href="structbeluga_1_1state__detail_1_1state__fn.html#ae312bee7ee4458a9a69801fc9bad4b2f">More...</a><br /></td></tr>
 <tr class="separator:ae312bee7ee4458a9a69801fc9bad4b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae25209b9a2fe11f915ff15ffef58b294"><td class="memTemplParams" colspan="2">template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; std::negation&lt; has_member_variable_state&lt; T &gt;&gt;, std::negation&lt; has_member_state&lt; T &gt;&gt;, std::negation&lt; has_non_member_state&lt; T &gt;&gt;, is_tuple_like&lt; T &gt;&gt;, int &gt;  = 0, std::enable_if_t&lt;(std::tuple_size_v&lt; std::decay_t&lt; T &gt;&gt; &gt; 1), int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:ae25209b9a2fe11f915ff15ffef58b294"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1state__detail_1_1state__fn.html#ae25209b9a2fe11f915ff15ffef58b294">operator()</a> (T &amp;&amp;t) const noexcept(noexcept(std::get&lt; 0 &gt;(std::forward&lt; T &gt;(t))))</td></tr>
+<tr class="memdesc:ae25209b9a2fe11f915ff15ffef58b294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload for tuple-like types.  <a href="structbeluga_1_1state__detail_1_1state__fn.html#ae25209b9a2fe11f915ff15ffef58b294">More...</a><br /></td></tr>
+<tr class="separator:ae25209b9a2fe11f915ff15ffef58b294"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Customization point object type for accessing the <code>state</code> of a particle. </p>
 <p>See <a href="https://en.cppreference.com/w/cpp/ranges/cpo">https://en.cppreference.com/w/cpp/ranges/cpo</a>. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ae312bee7ee4458a9a69801fc9bad4b2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae312bee7ee4458a9a69801fc9bad4b2f">&#9670;&nbsp;</a></span>operator()()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae312bee7ee4458a9a69801fc9bad4b2f">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T , std::enable_if_t&lt;!has_member_state_v&lt; T &gt;, int &gt;  = 0&gt; </div>
+template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; std::negation&lt; has_member_variable_state&lt; T &gt;&gt;, std::negation&lt; has_member_state&lt; T &gt;&gt;, has_non_member_state&lt; T &gt;&gt;, int &gt;  = 0&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -124,6 +133,37 @@ template&lt;typename T , std::enable_if_t&lt;!has_member_state_v&lt; T &gt;, int
 
 <p>Overload for when there is an external function that takes this particle type. </p>
 <p>The non-member function must be in T's namespace so it can be found by ADL. </p>
+
+</div>
+</div>
+<a id="ae25209b9a2fe11f915ff15ffef58b294"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae25209b9a2fe11f915ff15ffef58b294">&#9670;&nbsp;</a></span>operator()() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T , std::enable_if_t&lt; std::conjunction_v&lt; std::negation&lt; has_member_variable_state&lt; T &gt;&gt;, std::negation&lt; has_member_state&lt; T &gt;&gt;, std::negation&lt; has_non_member_state&lt; T &gt;&gt;, is_tuple_like&lt; T &gt;&gt;, int &gt;  = 0, std::enable_if_t&lt;(std::tuple_size_v&lt; std::decay_t&lt; T &gt;&gt; &gt; 1), int &gt;  = 0&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr decltype(auto) beluga::state_detail::state_fn::operator() </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;&amp;&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Overload for tuple-like types. </p>
+<p>Assumes that the first element is the state. </p>
 
 </div>
 </div>
