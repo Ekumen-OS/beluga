@@ -19,6 +19,8 @@
 #include <type_traits>
 #include <variant>
 
+#include <beluga/utility/forward_like.hpp>
+
 /**
  * \file
  * \brief Implementation of extensions to the standard utility library.
@@ -129,36 +131,6 @@ struct is_reference_wrapper {
 /// Helper variable template to detect that a given type is a reference wrapper.
 template <typename T>
 inline constexpr bool is_reference_wrapper_v = is_reference_wrapper<T>::value;  // NOLINT
-
-/// Returns a reference to a value which has similar properties to `T&&`.
-/**
- * Implementation taken from https://en.cppreference.com/w/cpp/utility/forward_like
- * since this feature is only available starting with C++23.
- *
- * The program is ill-formed if `T&&` is not a valid type.
- *
- * \tparam T The type from which to take the properties.
- * \tparam U The type of the input value.
- * \param value A value that needs to be forwarded like type `T`.
- * \return A reference to value of the determined type.
- */
-template <class T, class U>
-[[nodiscard]] constexpr auto&& forward_like(U&& value) noexcept {
-  constexpr bool is_adding_const = std::is_const_v<std::remove_reference_t<T>>;  // NOLINT
-  if constexpr (std::is_lvalue_reference_v<T&&>) {
-    if constexpr (is_adding_const) {
-      return std::as_const(value);
-    } else {
-      return static_cast<U&>(value);
-    }
-  } else {
-    if constexpr (is_adding_const) {
-      return std::move(std::as_const(value));
-    } else {
-      return std::forward<U>(value);
-    }
-  }
-}
 
 /// Helper function to unwrap a reference_wrapper or forward the given value.
 /**

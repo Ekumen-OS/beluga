@@ -41,7 +41,9 @@ add_executable(
   test_spatial_hash.cpp
   test_storage.cpp
   test_tuple_vector.cpp
+  type_traits/test_particle_traits.cpp
   type_traits/test_strongly_typed_numeric.cpp
+  type_traits/test_tuple_traits.cpp
   views/test_random_intersperse.cpp
   views/test_take_evenly.cpp
   views/test_take_while_kld.cpp)

@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,38 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-#include <beluga/primitives.hpp>
+#include "beluga/type_traits/particle_traits.hpp"
+#include "beluga/type_traits/tuple_traits.hpp"
+
 #include <range/v3/utility/common_tuple.hpp>
 
 namespace {
 
+static_assert(!beluga::is_particle_v<int>);
+static_assert(!beluga::is_particle_v<struct Object>);
+static_assert(!beluga::is_particle_v<std::tuple<int, int>>);
+static_assert(!beluga::is_particle_v<std::tuple<beluga::Weight>>);
+static_assert(!beluga::is_particle_v<std::tuple<beluga::Weight, beluga::Weight>>);
+
 namespace user {
 
 struct SimplestPossibleParticle {
-  float state;
+  int state;
   double weight;
-  int cluster;
 };
 
 struct ParticleWithMemberExtensions {
-  float state_;
+  int state_;
   double weight_;
-  int cluster_;
 
-  float& state() { return state_; }
-  [[nodiscard]] float state() const { return state_; }
+  int& state() { return state_; }
+  [[nodiscard]] int state() const { return state_; }
   double& weight() { return weight_; }
   [[nodiscard]] double weight() const { return weight_; }
-  int& cluster() { return cluster_; }
-  [[nodiscard]] int cluster() const { return cluster_; }
 };
 
 struct ParticleWithNonMemberExtensions {
-  float s;
+  int s;
   double w;
-  int c;
 };
 
 /*
@@ -51,10 +54,10 @@ struct ParticleWithNonMemberExtensions {
  * seem to detect that ADL is discovering them. But they are actually used.
  */
 
-[[maybe_unused]] float& state(ParticleWithNonMemberExtensions& p) {
+[[maybe_unused]] int& state(ParticleWithNonMemberExtensions& p) {
   return p.s;
 }
-[[maybe_unused]] float state(const ParticleWithNonMemberExtensions& p) {
+[[maybe_unused]] int state(const ParticleWithNonMemberExtensions& p) {
   return p.s;
 }
 [[maybe_unused]] double& weight(ParticleWithNonMemberExtensions& p) {
@@ -63,42 +66,29 @@ struct ParticleWithNonMemberExtensions {
 [[maybe_unused]] double weight(const ParticleWithNonMemberExtensions& p) {
   return p.w;
 }
-[[maybe_unused]] int& cluster(ParticleWithNonMemberExtensions& p) {
-  return p.c;
-}
-[[maybe_unused]] int cluster(const ParticleWithNonMemberExtensions& p) {
-  return p.c;
-}
 
 }  // namespace user
 
 template <class T>
-class PrimitivesTest : public testing::Test {};
+class ParticleTraitsTest : public testing::Test {};
 
-using PrimitivesTestCases = testing::Types<
-    std::tuple<int, beluga::Weight, beluga::Cluster>,
-    ranges::common_tuple<int, beluga::Weight, beluga::Cluster>,
+using ParticleTraitsTestCases = testing::Types<
+    std::tuple<int, beluga::Weight>,
+    std::pair<int, beluga::Weight>,
+    ranges::common_tuple<int, beluga::Weight>,
+    ranges::common_pair<int, beluga::Weight>,
     user::SimplestPossibleParticle,
     user::ParticleWithMemberExtensions,
     user::ParticleWithNonMemberExtensions>;
 
-TYPED_TEST_SUITE(PrimitivesTest, PrimitivesTestCases, );
+TYPED_TEST_SUITE(ParticleTraitsTest, ParticleTraitsTestCases, );
 
-TYPED_TEST(PrimitivesTest, Assignment) {
-  auto particle = TypeParam{};
-  beluga::state(particle) = 1;
-  beluga::weight(particle) = 2;
-  beluga::cluster(particle) = 3;
-  ASSERT_EQ(beluga::state(particle), 1);
-  ASSERT_EQ(beluga::weight(particle), 2);
-  ASSERT_EQ(beluga::cluster(particle), 3);
-}
-
-TYPED_TEST(PrimitivesTest, Const) {
-  const auto particle = TypeParam{4, 5, 6};
-  ASSERT_EQ(beluga::state(particle), 4);
-  ASSERT_EQ(beluga::weight(particle), 5);
-  ASSERT_EQ(beluga::cluster(particle), 6);
+TYPED_TEST(ParticleTraitsTest, MakeFromState) {
+  // Also check that each parameter type is a valid particle.
+  static_assert(beluga::is_particle_v<TypeParam>);
+  auto particle = beluga::make_from_state<TypeParam>(5);
+  ASSERT_EQ(beluga::state(particle), 5);
+  ASSERT_EQ(beluga::weight(particle), 1.0);
 }
 
 }  // namespace
