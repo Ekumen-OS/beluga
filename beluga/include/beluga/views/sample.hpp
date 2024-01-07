@@ -20,9 +20,10 @@
 #include <range/v3/utility/random.hpp>
 #include <range/v3/view/common.hpp>
 
-#include <beluga/definitions.hpp>
 #include <beluga/type_traits/particle_traits.hpp>
 #include <beluga/views/particles.hpp>
+
+#include <beluga/detail/prologue.hpp>
 
 /**
  * \file
@@ -203,5 +204,7 @@ inline constexpr bool enable_borrowed_range<beluga::views::detail::sample_view<R
 /// \endcond
 
 }  // namespace ranges
+
+#include <beluga/detail/epilogue.hpp>
 
 #endif

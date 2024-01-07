@@ -1,3 +1,5 @@
+// NOLINT(llvm-header-guard)
+
 // Copyright 2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +14,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_DEFINITIONS_HPP
-#define BELUGA_DEFINITIONS_HPP
-
-/**
- * \file
- * \brief Convenient library definitions.
- */
-
-/// \cond
+#ifdef BELUGA_PROLOGUE_INCLUDED
+#error "Prologue already included!"
+#endif
+#define BELUGA_PROLOGUE_INCLUDED
 
 #if RANGE_V3_MAJOR == 0 && RANGE_V3_MINOR < 11
 
-// `enable_safe_range` was renamed in range-v3 v0.11.0
-// See https://github.com/ericniebler/range-v3/blob/0.12.0/doc/release_notes.md?plain=1#L93
+/// `enable_borrowed_range` redefinition
+/**
+ * `enable_safe_range` was renamed in range-v3 v0.11.0
+ * See https://github.com/ericniebler/range-v3/blob/0.12.0/doc/release_notes.md?plain=1#L93
+ */
 #define enable_borrowed_range enable_safe_range
-
-#endif
-
-/// \endcond
 
 #endif
