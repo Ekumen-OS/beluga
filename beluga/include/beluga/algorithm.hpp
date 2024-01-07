@@ -20,6 +20,7 @@
  * \brief Includes all beluga algorithms.
  */
 
+#include <beluga/algorithm/adaptive_probability_estimator.hpp>
 #include <beluga/algorithm/distance_map.hpp>
 #include <beluga/algorithm/effective_sample_size.hpp>
 #include <beluga/algorithm/estimation.hpp>

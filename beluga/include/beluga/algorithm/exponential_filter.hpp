@@ -29,16 +29,16 @@ class ExponentialFilter {
   /**
    * \param alpha The exponential filter smoothing factor.
    */
-  explicit ExponentialFilter(double alpha) : alpha_{alpha} {}
+  constexpr explicit ExponentialFilter(double alpha) noexcept : alpha_{alpha} {}
 
   /// Resets the output of the exponential filter to zero.
-  void reset() { output_ = 0.; }
+  constexpr void reset() noexcept { output_ = 0.; }
 
   /// Updates the exponential filter output given an input.
   /**
    * \param input Next value to be exponentially filtered.
    */
-  [[nodiscard]] double operator()(double input) {
+  [[nodiscard]] constexpr double operator()(double input) noexcept {
     output_ += (output_ == 0.) ? input : alpha_ * (input - output_);
     return output_;
   }
