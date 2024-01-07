@@ -44,6 +44,7 @@ add_executable(
   type_traits/test_particle_traits.cpp
   type_traits/test_strongly_typed_numeric.cpp
   type_traits/test_tuple_traits.cpp
+  utility/test_forward_like.cpp
   views/test_random_intersperse.cpp
   views/test_take_evenly.cpp
   views/test_take_while_kld.cpp)

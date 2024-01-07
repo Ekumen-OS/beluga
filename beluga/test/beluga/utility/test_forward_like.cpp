@@ -21,32 +21,32 @@ namespace {
 struct Object {};
 
 TEST(ForwardLike, Rvalue) {
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<float&>(Object{})), Object&>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<const float&>(Object{})), const Object&>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<float&&>(Object{})), Object&&>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<const float&&>(Object{})), const Object&&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<float&>(Object{})), Object&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<const float&>(Object{})), const Object&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<float&&>(Object{})), Object&&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<const float&&>(Object{})), const Object&&>);
 }
 
 TEST(ForwardLike, MutableLvalue) {
   auto object = Object{};
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<float&>(object)), Object&>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<const float&>(object)), const Object&>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<float&&>(object)), Object&>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<const float&&>(object)), const Object&&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<float&>(object)), Object&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<const float&>(object)), const Object&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<float&&>(object)), Object&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<const float&&>(object)), const Object&&>);
 }
 
 TEST(ForwardLike, ConstLvalue) {
   const auto object = Object{};
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<float&>(object)), const Object&>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<const float&>(object)), const Object&>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<float&&>(object)), const Object&>);
-  static_assert(std::is_same_v<decltype(beluga::mixin::forward_like<const float&&>(object)), const Object&&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<float&>(object)), const Object&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<const float&>(object)), const Object&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<float&&>(object)), const Object&>);
+  static_assert(std::is_same_v<decltype(beluga::forward_like<const float&&>(object)), const Object&&>);
 }
 
 TEST(ForwardLike, Value) {
   const int value = 200;
-  ASSERT_EQ(beluga::mixin::forward_like<Object&>(50), 50);
-  ASSERT_EQ(beluga::mixin::forward_like<Object&>(value), 200);
+  ASSERT_EQ(beluga::forward_like<Object&>(50), 50);
+  ASSERT_EQ(beluga::forward_like<Object&>(value), 200);
 }
 
 }  // namespace
