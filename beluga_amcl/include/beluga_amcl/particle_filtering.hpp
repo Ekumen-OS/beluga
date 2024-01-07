@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2023-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 #include <variant>
 
 #include <beluga/localization.hpp>
-
 #include <beluga/mixin.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/sensor.hpp>

@@ -74,8 +74,7 @@ struct random_intersperse_view
   // `ranges::range_access` needs access to the adaptor members.
   friend ranges::range_access;
 
-  using fn_return_type = decltype(std::declval<Fn>()());
-  static_assert(std::is_convertible_v<fn_return_type, ranges::range_value_t<Range>>);
+  using result_type = ranges::common_type_t<decltype(std::declval<Fn>()()), ranges::range_value_t<Range>>;
 
   /// Adaptor subclass that implements the random_intersperse logic.
   struct adaptor : public ranges::adaptor_base {
@@ -105,7 +104,7 @@ struct random_intersperse_view
 
    private:
     random_intersperse_view* view_;
-    std::optional<fn_return_type> fn_return_;
+    std::optional<result_type> fn_return_;
   };
 
   /// Return the adaptor for the begin iterator.

@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Ekumen, Inc.
+// Copyright 2022-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,10 +14,11 @@
 
 #include <benchmark/benchmark.h>
 
-#include <beluga/algorithm/sampling.hpp>
+#include <beluga/algorithm/spatial_hash.hpp>
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
 #include <beluga/views/particles.hpp>
+#include <beluga/views/sample.hpp>
 #include <beluga/views/take_while_kld.hpp>
 #include <range/v3/view.hpp>
 
@@ -51,22 +52,19 @@ void BM_FixedResample(benchmark::State& state) {
 
   auto container = Container{container_size};
   auto new_container = Container{container_size};
-  auto generator = std::mt19937{std::random_device()()};
 
   for (auto&& [state, weight] : container) {
     weight = 1.;
   }
 
   for (auto _ : state) {
-    auto&& samples = ranges::views::generate(beluga::make_multinomial_sampler(
-                         beluga::views::states(container), beluga::views::weights(container), generator)) |
-                     ranges::views::take_exactly(container_size) | ranges::views::transform([](const auto& state) {
-                       return Particle{state, 1.0};
-                     }) |
-                     ranges::views::common;
-    auto first = std::begin(new_container);
-    auto last = std::copy(std::begin(samples), std::end(samples), first);
-    state.counters["SampleSize"] = static_cast<double>(std::distance(first, last));
+    auto samples = container |              //
+                   beluga::views::sample |  //
+                   ranges::views::take_exactly(container_size);
+    auto first = ranges::begin(new_container);
+    auto last = ranges::copy(samples, first).out;
+    auto result = ranges::make_subrange(first, last);
+    state.counters["SampleSize"] = static_cast<double>(ranges::size(result));
   }
 }
 
@@ -79,7 +77,6 @@ void BM_AdaptiveResample(benchmark::State& state) {
 
   auto container = Container{container_size};
   auto new_container = Container{container_size};
-  auto generator = std::mt19937{std::random_device()()};
 
   double step = 0;
   int i = 0;
@@ -93,22 +90,19 @@ void BM_AdaptiveResample(benchmark::State& state) {
 
   std::size_t min_samples = 0;
   std::size_t max_samples = container_size;
-  auto hasher = beluga::spatial_hash<State>{};
   double kld_epsilon = 0.05;
   double kld_z = 3.;
 
   for (auto _ : state) {
-    auto&& samples = ranges::views::generate(beluga::make_multinomial_sampler(
-                         beluga::views::states(container), beluga::views::weights(container), generator)) |
-                     beluga::views::take_while_kld(hasher, min_samples, max_samples, kld_epsilon, kld_z) |
-                     ranges::views::take(container_size) | ranges::views::transform([](const auto& state) {
-                       return Particle{state, 1.0};
-                     }) |
-                     ranges::views::common;
-    auto first = std::begin(new_container);
-    auto last = std::copy(std::begin(samples), std::end(samples), first);
-    state.counters["SampleSize"] = static_cast<double>(std::distance(first, last));
-    state.counters["Percentage"] = static_cast<double>(std::distance(first, last)) / static_cast<double>(max_samples);
+    auto samples =
+        container |              //
+        beluga::views::sample |  //
+        beluga::views::take_while_kld(beluga::spatial_hash<State>{}, min_samples, max_samples, kld_epsilon, kld_z);
+    auto first = ranges::begin(new_container);
+    auto last = ranges::copy(samples, first).out;
+    auto result = ranges::make_subrange(first, last);
+    state.counters["SampleSize"] = static_cast<double>(ranges::size(result));
+    state.counters["Percentage"] = static_cast<double>(ranges::size(result)) / static_cast<double>(max_samples);
   }
 }
 

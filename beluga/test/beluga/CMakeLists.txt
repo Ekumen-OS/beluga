@@ -18,10 +18,11 @@ add_executable(
   algorithm/test_distance_map.cpp
   algorithm/test_estimation.cpp
   algorithm/test_exponential_filter.cpp
-  algorithm/test_particle_filter.cpp
   algorithm/test_raycasting.cpp
-  algorithm/test_sampling.cpp
   mixin/test_descriptor.cpp
+  mixin/test_particle_filter.cpp
+  mixin/test_sampling.cpp
+  mixin/test_storage.cpp
   mixin/test_utility.cpp
   motion/test_differential_drive_model.cpp
   motion/test_omnidirectional_drive_model.cpp
@@ -39,7 +40,6 @@ add_executable(
   test_mixin.cpp
   test_primitives.cpp
   test_spatial_hash.cpp
-  test_storage.cpp
   test_tuple_vector.cpp
   type_traits/test_particle_traits.cpp
   type_traits/test_strongly_typed_numeric.cpp

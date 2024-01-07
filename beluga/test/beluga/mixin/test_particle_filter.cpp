@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Ekumen, Inc.
+// Copyright 2022-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 #include <execution>
 
-#include <beluga/algorithm/particle_filter.hpp>
+#include <beluga/mixin/particle_filter.hpp>
 #include <beluga/views.hpp>
 
 #include <ciabatta/ciabatta.hpp>
@@ -34,6 +34,8 @@ using testing::ReturnPointee;
 template <class Mixin>
 class MockMixin : public Mixin {
  public:
+  using particle_type = std::pair<double, beluga::Weight>;
+
   MOCK_METHOD(double, apply_motion, (double state), (const));
   MOCK_METHOD(double, importance_weight, (double state), (const));
   MOCK_METHOD(bool, do_resampling_vote, ());
@@ -46,9 +48,7 @@ class MockMixin : public Mixin {
 
   template <class Range>
   void initialize_particles(Range&& input) {
-    particles_ = input |                                                                              //
-                 ranges::views::transform([](double state) { return std::make_pair(state, 1.0); }) |  //
-                 ranges::to<std::vector>;
+    particles_ = input | ranges::to<std::vector>;
   }
 
   template <class Generator>
@@ -59,7 +59,7 @@ class MockMixin : public Mixin {
   template <class Generator>
   auto generate_samples_from_particles(Generator&&) const {
     // for the purpose of the test, return the existing states unchanged
-    return particles_ | beluga::views::elements<0> | ranges::views::common;
+    return particles_ | ranges::views::all;
   }
 
   auto take_samples() const { return ranges::views::take_exactly(10); }
@@ -70,7 +70,7 @@ class MockMixin : public Mixin {
   }
 
  private:
-  std::vector<std::pair<double, double>> particles_;
+  std::vector<particle_type> particles_;
 };
 
 using ParticleFilter = ciabatta::

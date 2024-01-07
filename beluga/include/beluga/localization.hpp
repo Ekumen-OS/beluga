@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2023-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_LOCALIZATION_HPP
-#define BELUGA_LOCALIZATION_HPP
+#ifndef BELUGA_MIXIN_LOCALIZATION_HPP
+#define BELUGA_MIXIN_LOCALIZATION_HPP
 
 #include <beluga/algorithm/estimation.hpp>
-#include <beluga/algorithm/particle_filter.hpp>
-#include <beluga/algorithm/sampling.hpp>
 #include <beluga/mixin.hpp>
 #include <beluga/motion.hpp>
 #include <beluga/sensor.hpp>
-#include <beluga/storage.hpp>
 #include <ciabatta/ciabatta.hpp>
 
 /**

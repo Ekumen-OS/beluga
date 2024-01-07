@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Ekumen, Inc.
+// Copyright 2022-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,8 +23,7 @@
 #include <beluga/algorithm/distance_map.hpp>
 #include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/exponential_filter.hpp>
-#include <beluga/algorithm/particle_filter.hpp>
-#include <beluga/algorithm/sampling.hpp>
+#include <beluga/algorithm/raycasting.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
 
 #endif
