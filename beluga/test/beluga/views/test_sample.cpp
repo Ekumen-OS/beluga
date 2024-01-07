@@ -54,7 +54,7 @@ TEST(SampleView, ConceptChecksFromContiguousRange) {
 
 TEST(SampleView, UniformDistributionSingleElement) {
   auto input = std::array{5};
-  auto output = input | beluga::views::sample() | ranges::views::take_exactly(20);
+  auto output = input | beluga::views::sample | ranges::views::take_exactly(20);
   ASSERT_EQ(ranges::count(output, 5), 20);
 }
 
@@ -67,7 +67,7 @@ TEST(SampleView, DiscreteDistributionSingleElement) {
 
 TEST(SampleView, DiscreteDistributionSingleElementFromParticleRange) {
   auto input = std::array{std::make_tuple(5, beluga::Weight(1.0))};
-  auto output = input | beluga::views::sample() | ranges::views::take_exactly(20) | beluga::views::states;
+  auto output = input | beluga::views::sample | ranges::views::take_exactly(20) | beluga::views::states;
   ASSERT_EQ(ranges::count(output, 5), 20);
 }
 
@@ -91,7 +91,7 @@ TEST(SampleView, DoubleDereference) {
 
 TEST(SampleView, BorrowedRange) {
   auto input = std::array{42};
-  const auto create_view = [&]() { return input | beluga::views::sample(); };
+  const auto create_view = [&]() { return input | beluga::views::sample; };
   auto it = ranges::find(create_view(), 42);
   ASSERT_EQ(*it, 42);  // the iterator is not dangling after the view is destroyed
 }
@@ -100,7 +100,7 @@ inline constexpr auto identity = [](auto&& t) noexcept { return std::forward<dec
 
 TEST(SampleView, NonBorrowedRange) {
   auto input = std::array{42};
-  const auto create_view = [&]() { return input | ranges::views::transform(identity) | beluga::views::sample(); };
+  const auto create_view = [&]() { return input | ranges::views::transform(identity) | beluga::views::sample; };
   auto it = ranges::find(create_view(), 42);
   static_assert(std::is_same_v<decltype(it), ranges::dangling>);  // the iterator is dangling since transform is not a
                                                                   // borrowed range

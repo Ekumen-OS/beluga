@@ -166,10 +166,8 @@ struct sample_fn {
   }
 
   /// Overload that returns a view closure to compose with other views.
-  template <
-      class URNG = typename ranges::detail::default_random_engine,
-      std::enable_if_t<!ranges::range<URNG>, int> = 0>
-  constexpr auto operator()(URNG& engine = ranges::detail::get_random_engine()) const {
+  template <class URNG, std::enable_if_t<!ranges::range<URNG>, int> = 0>
+  constexpr auto operator()(URNG& engine) const {
     return ranges::make_view_closure(ranges::bind_back(sample_fn{}, std::ref(engine)));
   }
 };
@@ -185,7 +183,7 @@ struct sample_fn {
  * [random_access_range](https://en.cppreference.com/w/cpp/ranges/random_access_range)
  * and [sized_range](https://en.cppreference.com/w/cpp/ranges/sized_range) concepts.
  */
-inline constexpr detail::sample_fn sample;
+inline constexpr ranges::views::view_closure<detail::sample_fn> sample;
 
 }  // namespace beluga::views
 
