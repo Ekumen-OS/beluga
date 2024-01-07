@@ -17,6 +17,7 @@
 
 #include <unordered_set>
 
+#include <beluga/type_traits/particle_traits.hpp>
 #include <beluga/views/elements.hpp>
 
 #include <range/v3/view/take.hpp>
@@ -91,62 +92,157 @@ namespace views {
 
 namespace detail {
 
+/// Implementation of a forward view adaptor.
+/**
+ * Restricts a range to model the forward range concept or lower.
+ */
+template <class Range>
+struct forward_view : public ranges::view_adaptor<forward_view<Range>, Range, ranges::range_cardinality<Range>::value> {
+ public:
+  /// Default constructor.
+  forward_view() = default;
+
+  /// Construct the view from an existing range.
+  constexpr explicit forward_view(Range range) : forward_view::view_adaptor{std::move(range)} {}
+
+ private:
+  // `ranges::range_access` needs access to the cursor members.
+  friend ranges::range_access;
+
+  /// Adaptor subclass that just deletes operations.
+  struct adaptor : public ranges::adaptor_base {
+    adaptor() = default;
+
+    void prev(ranges::iterator_t<Range>& it) = delete;
+    void advance() = delete;
+    void distance_to() = delete;
+  };
+
+  /// Return the adaptor for the begin iterator.
+  auto begin_adaptor() const { return adaptor{}; }
+
+  /// Return the adaptor for the end iterator.
+  auto end_adaptor() const { return adaptor{}; }
+};
+
+/// Implementation detail for a forward range adaptor object.
+struct forward_fn {
+  /// Overload that adapts an existing range.
+  template <class Range>
+  constexpr auto operator()(Range&& range) const {
+    return forward_view{ranges::views::all(std::forward<Range>(range))};
+  }
+};
+
+}  // namespace detail
+
+/// [Range adaptor object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject) that
+/// restricts an existing range to model the forward range concept or lower.
+inline constexpr ranges::views::view_closure<detail::forward_fn> forward;
+
+namespace detail {
+
 /// Implementation detail for a take_while_kld range adaptor object.
 struct take_while_kld_fn {
   /// Overload that implements the take_while_kld algorithm.
   /**
-   * \tparam States An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particle states.
+   * \tparam Range An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particle states.
    * \tparam Hashes An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particle hashes.
-   * \param states Source range from where to take elements.
+   * \param range Source range from where to take elements.
    * \param hashes Source range containing hashes (or bucket ids) to compute the KLD condition.
    * \param min Minimum samples to take.
    * \param max Maximum samples to take.
    * \param epsilon See beluga::kld_condition() for details.
    * \param z See beluga::kld_condition() for details.
    */
-  template <class States, class Hashes, std::enable_if_t<ranges::input_range<Hashes>, int> = 0>
+  template <
+      class Range,
+      class Hashes,
+      std::enable_if_t<ranges::range<Range>, int> = 0,
+      std::enable_if_t<ranges::range<Hashes>, int> = 0>
   constexpr auto operator()(
-      States&& states,
+      Range&& range,
       Hashes&& hashes,
       std::size_t min,
       std::size_t max,
       double epsilon,
       double z = beluga::detail::kDefaultKldZ) const {
-    static_assert(ranges::input_range<States>);
+    static_assert(ranges::input_range<Range>);
     static_assert(ranges::input_range<Hashes>);
     static_assert(std::is_convertible_v<ranges::range_value_t<Hashes>, std::size_t>);
     const auto hash = [](const auto& p) { return std::get<1>(p); };
-    return ranges::views::zip(ranges::views::all(states), ranges::views::all(hashes)) |  //
-           ranges::views::take_while(beluga::kld_condition(min, epsilon, z), hash) |     //
-           ranges::views::take(max) |                                                    //
+    return ranges::views::zip(ranges::views::all(range), ranges::views::all(hashes)) |  //
+           beluga::views::forward |                                                     //
+           ranges::views::take_while(beluga::kld_condition(min, epsilon, z), hash) |    //
+           ranges::views::take(max) |                                                   //
            beluga::views::elements<0>;
   }
 
   /// Overload that implements the take_while_kld algorithm with an external hasher.
   /**
-   * \tparam States An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particle states.
+   * \tparam Range An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particle states.
    * \tparam Hasher A callable object that can compute the spatial hash for a given state.
-   * \param states Source range from where to take elements.
+   * \param range Source range from where to take elements.
    * \param hasher Hasher instance used to compute the spatial hash for a given state.
    * \param min Minimum samples to take.
    * \param max Maximum samples to take.
    * \param epsilon See beluga::kld_condition() for details.
    * \param z See beluga::kld_condition() for details.
    */
-  template <class States, class Hasher, std::enable_if_t<ranges::views::transformable_range<States, Hasher>, int> = 0>
+  template <
+      class Range,
+      class Hasher,
+      std::enable_if_t<ranges::range<Range>, int> = 0,
+      std::enable_if_t<!ranges::range<Hasher>, int> = 0,
+      std::enable_if_t<!is_particle_range_v<Range>, int> = 0,
+      std::enable_if_t<std::is_invocable_v<Hasher, ranges::range_value_t<Range>>, int> = 0>
   constexpr auto operator()(
-      States&& states,
+      Range&& range,
       Hasher hasher,
       std::size_t min,
       std::size_t max,
       double epsilon,
       double z = beluga::detail::kDefaultKldZ) const {
     return this->operator()(
-        ranges::views::all(states),                           //
-        ranges::views::transform(states, std::move(hasher)),  //
-        min,                                                  //
-        max,                                                  //
-        epsilon,                                              //
+        ranges::views::all(range),                           //
+        ranges::views::transform(range, std::move(hasher)),  //
+        min,                                                 //
+        max,                                                 //
+        epsilon,                                             //
+        z);
+  }
+
+  /// Overload that implements the take_while_kld algorithm with an external hasher.
+  /**
+   * \tparam Range An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particles.
+   * \tparam Hasher A callable object that can compute the spatial hash for a given state.
+   * \param range Source range from where to take elements.
+   * \param hasher Hasher instance used to compute the spatial hash for a given state.
+   * \param min Minimum samples to take.
+   * \param max Maximum samples to take.
+   * \param epsilon See beluga::kld_condition() for details.
+   * \param z See beluga::kld_condition() for details.
+   */
+  template <
+      class Range,
+      class Hasher,
+      std::enable_if_t<ranges::range<Range>, int> = 0,
+      std::enable_if_t<!ranges::range<Hasher>, int> = 0,
+      std::enable_if_t<is_particle_range_v<Range>, int> = 0,
+      std::enable_if_t<std::is_invocable_v<Hasher, state_t<ranges::range_reference_t<Range>>>, int> = 0>
+  constexpr auto operator()(
+      Range&& range,
+      Hasher hasher,
+      std::size_t min,
+      std::size_t max,
+      double epsilon,
+      double z = beluga::detail::kDefaultKldZ) const {
+    return this->operator()(
+        ranges::views::all(range),                                                           //
+        ranges::views::transform(range, ranges::compose(std::move(hasher), beluga::state)),  //
+        min,                                                                                 //
+        max,                                                                                 //
+        epsilon,                                                                             //
         z);
   }
 
