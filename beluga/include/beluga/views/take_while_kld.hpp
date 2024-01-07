@@ -119,10 +119,10 @@ struct forward_view : public ranges::view_adaptor<forward_view<Range>, Range, ra
   };
 
   /// Return the adaptor for the begin iterator.
-  auto begin_adaptor() const { return adaptor{}; }
+  [[nodiscard]] constexpr auto begin_adaptor() const { return adaptor{}; }
 
   /// Return the adaptor for the end iterator.
-  auto end_adaptor() const { return adaptor{}; }
+  [[nodiscard]] constexpr auto end_adaptor() const { return adaptor{}; }
 };
 
 /// Implementation detail for a forward range adaptor object.
