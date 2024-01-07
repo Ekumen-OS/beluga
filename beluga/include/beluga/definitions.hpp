@@ -1,4 +1,4 @@
-// Copyright 2022-2024 Ekumen, Inc.
+// Copyright 2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,20 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_VIEWS_HPP
-#define BELUGA_VIEWS_HPP
-
-#include <beluga/views/elements.hpp>
-#include <beluga/views/forward.hpp>
-#include <beluga/views/particles.hpp>
-#include <beluga/views/random_intersperse.hpp>
-#include <beluga/views/sample.hpp>
-#include <beluga/views/take_evenly.hpp>
-#include <beluga/views/take_while_kld.hpp>
+#ifndef BELUGA_DEFINITIONS_HPP
+#define BELUGA_DEFINITIONS_HPP
 
 /**
  * \file
- * \brief Implementation of useful container views.
+ * \brief Convenient library definitions.
  */
+
+/// \cond
+
+#if RANGE_V3_MAJOR == 0 && RANGE_V3_MINOR < 11
+
+// `enable_safe_range` was renamed in range-v3 v0.11.0
+// See https://github.com/ericniebler/range-v3/blob/0.12.0/doc/release_notes.md?plain=1#L93
+#define enable_borrowed_range enable_safe_range
+
+#endif
+
+/// \endcond
 
 #endif

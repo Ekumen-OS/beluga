@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Ekumen, Inc.
+// Copyright 2022-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,9 +21,11 @@
  */
 
 #include <beluga/algorithm.hpp>
+#include <beluga/definitions.hpp>
 #include <beluga/localization.hpp>
 #include <beluga/mixin.hpp>
 #include <beluga/motion.hpp>
+#include <beluga/primitives.hpp>
 #include <beluga/random.hpp>
 #include <beluga/sensor.hpp>
 #include <beluga/storage.hpp>

@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2023-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 
 #include <beluga/type_traits/particle_traits.hpp>
 #include <beluga/views/elements.hpp>
+#include <beluga/views/forward.hpp>
 
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_while.hpp>
@@ -89,56 +90,6 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = beluga::de
 }
 
 namespace views {
-
-namespace detail {
-
-/// Implementation of a forward view adaptor.
-/**
- * Restricts a range to model the forward range concept or lower.
- */
-template <class Range>
-struct forward_view : public ranges::view_adaptor<forward_view<Range>, Range, ranges::range_cardinality<Range>::value> {
- public:
-  /// Default constructor.
-  forward_view() = default;
-
-  /// Construct the view from an existing range.
-  constexpr explicit forward_view(Range range) : forward_view::view_adaptor{std::move(range)} {}
-
- private:
-  // `ranges::range_access` needs access to the cursor members.
-  friend ranges::range_access;
-
-  /// Adaptor subclass that just deletes operations.
-  struct adaptor : public ranges::adaptor_base {
-    adaptor() = default;
-
-    void prev(ranges::iterator_t<Range>& it) = delete;
-    void advance() = delete;
-    void distance_to() = delete;
-  };
-
-  /// Return the adaptor for the begin iterator.
-  [[nodiscard]] constexpr auto begin_adaptor() const { return adaptor{}; }
-
-  /// Return the adaptor for the end iterator.
-  [[nodiscard]] constexpr auto end_adaptor() const { return adaptor{}; }
-};
-
-/// Implementation detail for a forward range adaptor object.
-struct forward_fn {
-  /// Overload that adapts an existing range.
-  template <class Range>
-  constexpr auto operator()(Range&& range) const {
-    return forward_view{ranges::views::all(std::forward<Range>(range))};
-  }
-};
-
-}  // namespace detail
-
-/// [Range adaptor object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject) that
-/// restricts an existing range to model the forward range concept or lower.
-inline constexpr ranges::views::view_closure<detail::forward_fn> forward;
 
 namespace detail {
 

@@ -1,4 +1,4 @@
-# Copyright 2023 Ekumen, Inc.
+# Copyright 2023-2024 Ekumen, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ add_executable(
   type_traits/test_strongly_typed_numeric.cpp
   type_traits/test_tuple_traits.cpp
   utility/test_forward_like.cpp
+  views/test_forward.cpp
   views/test_random_intersperse.cpp
   views/test_sample.cpp
   views/test_take_evenly.cpp
