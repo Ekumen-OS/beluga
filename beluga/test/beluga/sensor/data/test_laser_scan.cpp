@@ -34,9 +34,7 @@ class SimpleLaserScan : public beluga::BaseLaserScan<SimpleLaserScan> {
   using Scalar = double;
 
   SimpleLaserScan(std::vector<double> ranges, std::vector<double> angles, Sophus::SE3d origin = Sophus::SE3d{})
-      : ranges_{std::move(ranges)}, angles_{std::move(angles)}, origin_{std::move(origin)} {
-    assert(scan_ != nullptr);
-  }
+      : ranges_{std::move(ranges)}, angles_{std::move(angles)}, origin_{std::move(origin)} {}
 
   [[nodiscard]] const auto& origin() const { return origin_; }
 
