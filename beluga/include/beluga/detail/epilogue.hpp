@@ -1,4 +1,6 @@
-// Copyright 2022-2023 Ekumen, Inc.
+// NOLINT(llvm-header-guard)
+
+// Copyright 2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,19 +14,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_VIEWS_HPP
-#define BELUGA_VIEWS_HPP
-
-#include <beluga/views/elements.hpp>
-#include <beluga/views/particles.hpp>
-#include <beluga/views/random_intersperse.hpp>
-#include <beluga/views/sample.hpp>
-#include <beluga/views/take_evenly.hpp>
-#include <beluga/views/take_while_kld.hpp>
-
-/**
- * \file
- * \brief Implementation of useful container views.
- */
-
+#ifndef BELUGA_PROLOGUE_INCLUDED
+#error "Including epilogue, but prologue not included!"
 #endif
+#undef BELUGA_PROLOGUE_INCLUDED
+
+/// \cond
+
+#if RANGE_V3_MAJOR == 0 && RANGE_V3_MINOR < 11
+#undef enable_borrowed_range
+#endif
+
+/// \endcond
