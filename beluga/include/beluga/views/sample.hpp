@@ -176,7 +176,7 @@ struct sample_fn {
 }  // namespace detail
 
 /// [Range adaptor object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject) that
-/// will ramdomly sample with replacement from an input range.
+/// will randomly sample with replacement from an input range.
 /**
  * Unlike `std::views::sample`, this does not require a size parameter and the samples will be taken
  * from the population **with replacement**, making the sample values independent.
