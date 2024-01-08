@@ -16,12 +16,74 @@
 
 #include "beluga/views/take_while_kld.hpp"
 
+#include <range/v3/algorithm/equal.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/intersperse.hpp>
+#include <range/v3/view/sample.hpp>
 
 namespace {
+
+inline constexpr auto identity = [](auto&& t) noexcept { return std::forward<decltype(t)>(t); };
+
+TEST(TakeWhileKld, ConceptChecksFromContiguousRange) {
+  const std::size_t min = 0;
+  const std::size_t max = 1200;
+  const double epsilon = 0.05;
+  auto input = std::array{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  auto output = beluga::views::take_while_kld(input, identity, min, max, epsilon);
+
+  static_assert(ranges::common_range<decltype(input)>);
+  static_assert(!ranges::common_range<decltype(output)>);
+
+  static_assert(!ranges::viewable_range<decltype(input)>);
+  static_assert(ranges::viewable_range<decltype(output)>);
+
+  static_assert(ranges::forward_range<decltype(input)>);
+  static_assert(ranges::forward_range<decltype(output)>);
+
+  static_assert(ranges::sized_range<decltype(input)>);
+  static_assert(!ranges::sized_range<decltype(output)>);
+
+  static_assert(ranges::bidirectional_range<decltype(input)>);
+  static_assert(ranges::bidirectional_range<decltype(output)>);
+
+  static_assert(ranges::random_access_range<decltype(input)>);
+  static_assert(ranges::random_access_range<decltype(output)>);
+
+  static_assert(ranges::contiguous_range<decltype(input)>);
+  static_assert(!ranges::contiguous_range<decltype(output)>);
+}
+
+TEST(TakeWhileKld, ConceptChecksFromInfiniteRange) {
+  const std::size_t min = 0;
+  const std::size_t max = 1200;
+  const double epsilon = 0.05;
+  auto input = ranges::views::generate([]() { return 1; });
+  auto output = beluga::views::take_while_kld(input, identity, min, max, epsilon);
+
+  static_assert(!ranges::common_range<decltype(input)>);
+  static_assert(!ranges::common_range<decltype(output)>);
+
+  static_assert(ranges::viewable_range<decltype(input)>);
+  static_assert(ranges::viewable_range<decltype(output)>);
+
+  static_assert(!ranges::forward_range<decltype(input)>);
+  static_assert(!ranges::forward_range<decltype(output)>);
+
+  static_assert(!ranges::sized_range<decltype(input)>);
+  static_assert(!ranges::sized_range<decltype(output)>);
+
+  static_assert(!ranges::bidirectional_range<decltype(input)>);
+  static_assert(!ranges::bidirectional_range<decltype(output)>);
+
+  static_assert(!ranges::random_access_range<decltype(input)>);
+  static_assert(!ranges::random_access_range<decltype(output)>);
+
+  static_assert(!ranges::contiguous_range<decltype(input)>);
+  static_assert(!ranges::contiguous_range<decltype(output)>);
+}
 
 class KldConditionWithParam : public ::testing::TestWithParam<std::tuple<double, std::size_t, std::size_t>> {};
 
@@ -39,10 +101,9 @@ TEST_P(KldConditionWithParam, Minimum) {
   const std::size_t min = 1'000;
   const double epsilon = 0.01;
   const double kld_k = 0.95;
-  auto output = GenerateDistinctHashes(cluster_count) |                                  //
-                ranges::views::take_while(beluga::kld_condition(min, epsilon, kld_k)) |  //
-                ranges::to<std::vector>;
-  ASSERT_GE(output.size(), 1'000);
+  auto output = GenerateDistinctHashes(cluster_count) |  //
+                ranges::views::take_while(beluga::kld_condition(min, epsilon, kld_k));
+  ASSERT_GE(ranges::distance(output), min);
 }
 
 TEST_P(KldConditionWithParam, Limit) {
@@ -51,10 +112,9 @@ TEST_P(KldConditionWithParam, Limit) {
   const std::size_t expected_count = std::get<2>(GetParam());
   const std::size_t min = 0;
   const double epsilon = 0.01;
-  auto output = GenerateDistinctHashes(cluster_count) |
-                ranges::views::take_while(beluga::kld_condition(min, epsilon, kld_k)) |  //
-                ranges::to<std::vector>;
-  ASSERT_EQ(output.size(), expected_count);
+  auto output = GenerateDistinctHashes(cluster_count) |  //
+                ranges::views::take_while(beluga::kld_condition(min, epsilon, kld_k));
+  ASSERT_EQ(ranges::distance(output), expected_count);
 }
 
 constexpr double kPercentile90th = 1.28155156327703;
@@ -77,50 +137,91 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple(kPercentile99th, 7, 843),
         std::make_tuple(kPercentile99th, 100, 6733)));
 
-inline constexpr auto identity = [](auto&& t) noexcept { return std::forward<decltype(t)>(t); };
-
 TEST(TakeWhileKld, TakeZero) {
   const std::size_t min = 2;
   const std::size_t max = 3;
   const double epsilon = 0.1;
-  const auto output = ranges::views::empty<std::size_t> |                           //
-                      beluga::views::take_while_kld(identity, min, max, epsilon) |  //
-                      ranges::to<std::vector>;
-  ASSERT_EQ(output.size(), 0);
+  auto output = ranges::views::empty<std::size_t> |  //
+                beluga::views::take_while_kld(identity, min, max, epsilon);
+  ASSERT_EQ(ranges::distance(output), 0);
 }
 
 TEST(TakeWhileKld, TakeMaximum) {
   const std::size_t min = 200;
   const std::size_t max = 1200;
   const double epsilon = 0.05;
-  const auto output = ranges::views::generate([]() { return 1UL; }) |               //
-                      beluga::views::take_while_kld(identity, min, max, epsilon) |  //
-                      ranges::to<std::vector>;
-  ASSERT_EQ(output.size(), max);
+  auto output = ranges::views::generate([]() { return 1UL; }) |  //
+                beluga::views::take_while_kld(identity, min, max, epsilon);
+  ASSERT_EQ(ranges::distance(output), max);
 }
 
 TEST(TakeWhileKld, TakeLimit) {
   const std::size_t min = 0;
   const std::size_t max = 1200;
   const double epsilon = 0.05;
-  const auto output = ranges::views::generate([]() { return 1UL; }) |               //
-                      ranges::views::intersperse(2UL) |                             //
-                      ranges::views::intersperse(3UL) |                             //
-                      beluga::views::take_while_kld(identity, min, max, epsilon) |  //
-                      ranges::to<std::vector>;
-  ASSERT_EQ(output.size(), 135);
+  auto output = ranges::views::generate([]() { return 1UL; }) |  //
+                ranges::views::intersperse(2UL) |                //
+                ranges::views::intersperse(3UL) |                //
+                beluga::views::take_while_kld(identity, min, max, epsilon);
+  ASSERT_EQ(ranges::distance(output), 135);
 }
 
 TEST(TakeWhileKld, TakeMinimum) {
   const std::size_t min = 200;
   const std::size_t max = 1200;
   const double epsilon = 0.05;
-  const auto output = ranges::views::generate([]() { return 1UL; }) |               //
-                      ranges::views::intersperse(2UL) |                             //
-                      ranges::views::intersperse(3UL) |                             //
-                      beluga::views::take_while_kld(identity, min, max, epsilon) |  //
-                      ranges::to<std::vector>;
-  ASSERT_EQ(output.size(), min);
+  auto output = ranges::views::generate([]() { return 1UL; }) |  //
+                ranges::views::intersperse(2UL) |                //
+                ranges::views::intersperse(3UL) |                //
+                beluga::views::take_while_kld(identity, min, max, epsilon);
+  ASSERT_EQ(ranges::distance(output), min);
+}
+
+TEST(TakeWhileKld, FromParticleRange) {
+  struct State {};
+  auto input = std::array{std::make_tuple(State{}, beluga::Weight(2.0))};
+  const std::size_t min = 2;
+  const std::size_t max = 3;
+  const double epsilon = 0.1;
+  const auto hasher = [](auto) { return 42; };
+  auto output = input | beluga::views::take_while_kld(hasher, min, max, epsilon);
+  ASSERT_EQ(ranges::distance(output), 1);
+  auto [state, weight] = *ranges::begin(output);
+  ASSERT_EQ(weight, 2.0);
+}
+
+TEST(TakeWhileKld, ValueHashCorrespondence) {
+  // Make sure that the hasher is called on each particle in order.
+  // Even when the sample is random, the correspondence should be kept
+  auto input = std::array{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  const std::size_t min = 2;
+  const std::size_t max = 5;
+  const double epsilon = 0.1;
+  auto hashes = std::vector<std::size_t>{};
+  const auto hasher = [&hashes](auto value) {
+    hashes.push_back(static_cast<std::size_t>(value));
+    return value;
+  };
+  auto output = input |                                                     //
+                ranges::views::sample(5) |                                  //
+                beluga::views::take_while_kld(hasher, min, max, epsilon) |  //
+                ranges::to<std::vector>;
+  ASSERT_TRUE(ranges::equal(hashes, output));
+}
+
+TEST(TakeWhileKld, HashStoredInParticle) {
+  struct Particle {
+    int state;
+    double weight;
+    std::size_t hash;
+  };
+  auto input = std::array{Particle{1, 1.0, 42}, Particle{2, 1.0, 43}, Particle{3, 1.0, 44}};
+  const std::size_t min = 2;
+  const std::size_t max = 5;
+  const double epsilon = 0.1;
+  const auto hasher = [](const auto& particle) { return particle.hash; };
+  auto output = input | beluga::views::take_while_kld(hasher, min, max, epsilon);
+  ASSERT_EQ(ranges::distance(output), 3);
 }
 
 }  // namespace
