@@ -21,7 +21,6 @@
  */
 
 #include <beluga/algorithm.hpp>
-#include <beluga/definitions.hpp>
 #include <beluga/localization.hpp>
 #include <beluga/mixin.hpp>
 #include <beluga/motion.hpp>

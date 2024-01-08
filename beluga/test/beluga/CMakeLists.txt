@@ -45,7 +45,6 @@ add_executable(
   type_traits/test_strongly_typed_numeric.cpp
   type_traits/test_tuple_traits.cpp
   utility/test_forward_like.cpp
-  views/test_forward.cpp
   views/test_random_intersperse.cpp
   views/test_sample.cpp
   views/test_take_evenly.cpp

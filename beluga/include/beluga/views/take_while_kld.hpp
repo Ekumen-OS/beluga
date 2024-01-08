@@ -19,7 +19,6 @@
 
 #include <beluga/type_traits/particle_traits.hpp>
 #include <beluga/views/elements.hpp>
-#include <beluga/views/forward.hpp>
 
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_while.hpp>
@@ -123,7 +122,6 @@ struct take_while_kld_fn {
     static_assert(std::is_convertible_v<ranges::range_value_t<Hashes>, std::size_t>);
     const auto hash = [](const auto& p) { return std::get<1>(p); };
     return ranges::views::zip(ranges::views::all(range), ranges::views::all(hashes)) |  //
-           beluga::views::forward |                                                     //
            ranges::views::take_while(beluga::kld_condition(min, epsilon, z), hash) |    //
            ranges::views::take(max) |                                                   //
            beluga::views::elements<0>;

@@ -44,10 +44,10 @@ TEST(TakeWhileKld, ConceptChecksFromContiguousRange) {
   static_assert(!ranges::sized_range<decltype(output)>);
 
   static_assert(ranges::bidirectional_range<decltype(input)>);
-  static_assert(!ranges::bidirectional_range<decltype(output)>);
+  static_assert(ranges::bidirectional_range<decltype(output)>);
 
   static_assert(ranges::random_access_range<decltype(input)>);
-  static_assert(!ranges::random_access_range<decltype(output)>);
+  static_assert(ranges::random_access_range<decltype(output)>);
 
   static_assert(ranges::contiguous_range<decltype(input)>);
   static_assert(!ranges::contiguous_range<decltype(output)>);
