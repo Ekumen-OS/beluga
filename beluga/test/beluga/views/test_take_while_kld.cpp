@@ -16,9 +16,12 @@
 
 #include "beluga/views/take_while_kld.hpp"
 
+#include <range/v3/algorithm/equal.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/intersperse.hpp>
+#include <range/v3/view/sample.hpp>
 
 namespace {
 
@@ -180,11 +183,45 @@ TEST(TakeWhileKld, FromParticleRange) {
   const std::size_t min = 2;
   const std::size_t max = 3;
   const double epsilon = 0.1;
-  const auto hasher = [](State) { return 42; };
+  const auto hasher = [](auto) { return 42; };
   auto output = input | beluga::views::take_while_kld(hasher, min, max, epsilon);
   ASSERT_EQ(ranges::distance(output), 1);
   auto [state, weight] = *ranges::begin(output);
   ASSERT_EQ(weight, 2.0);
+}
+
+TEST(TakeWhileKld, ValueHashCorrespondence) {
+  // Make sure that the hasher is called on each particle in order.
+  // Even when the sample is random, the correspondence should be kept
+  auto input = std::array{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  const std::size_t min = 2;
+  const std::size_t max = 5;
+  const double epsilon = 0.1;
+  auto hashes = std::vector<std::size_t>{};
+  const auto hasher = [&hashes](auto value) {
+    hashes.push_back(static_cast<std::size_t>(value));
+    return value;
+  };
+  auto output = input |                                                     //
+                ranges::views::sample(5) |                                  //
+                beluga::views::take_while_kld(hasher, min, max, epsilon) |  //
+                ranges::to<std::vector>;
+  ASSERT_TRUE(ranges::equal(hashes, output));
+}
+
+TEST(TakeWhileKld, HashStoredInParticle) {
+  struct Particle {
+    int state;
+    double weight;
+    std::size_t hash;
+  };
+  auto input = std::array{Particle{1, 1.0, 42}, Particle{2, 1.0, 43}, Particle{3, 1.0, 44}};
+  const std::size_t min = 2;
+  const std::size_t max = 5;
+  const double epsilon = 0.1;
+  const auto hasher = [](const auto& particle) { return particle.hash; };
+  auto output = input | beluga::views::take_while_kld(hasher, min, max, epsilon);
+  ASSERT_EQ(ranges::distance(output), 3);
 }
 
 }  // namespace

@@ -18,11 +18,9 @@
 #include <unordered_set>
 
 #include <beluga/type_traits/particle_traits.hpp>
-#include <beluga/views/elements.hpp>
 
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_while.hpp>
-#include <range/v3/view/zip.hpp>
 
 /**
  * \file
@@ -97,102 +95,44 @@ struct take_while_kld_fn {
   /// Overload that implements the take_while_kld algorithm.
   /**
    * \tparam Range An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particle states.
-   * \tparam Hashes An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particle hashes.
+   * \tparam Hasher A callable object that can compute the spatial hash for a given state.
    * \param range Source range from where to take elements.
-   * \param hashes Source range containing hashes (or bucket ids) to compute the KLD condition.
+   * \param hasher Hasher instance used to compute the spatial hash for a given state.
    * \param min Minimum samples to take.
    * \param max Maximum samples to take.
    * \param epsilon See beluga::kld_condition() for details.
    * \param z See beluga::kld_condition() for details.
+   *
+   * The hasher will be called with range elements by default. If that is not possible,
+   * it will assume that the range contains particles and invoke the hasher with the
+   * state element of each particle.
    */
-  template <
-      class Range,
-      class Hashes,
-      std::enable_if_t<ranges::range<Range>, int> = 0,
-      std::enable_if_t<ranges::range<Hashes>, int> = 0>
+  template <class Range, class Hasher, std::enable_if_t<ranges::range<Range>, int> = 0>
   constexpr auto operator()(
       Range&& range,
-      Hashes&& hashes,
+      Hasher hasher,
       std::size_t min,
       std::size_t max,
       double epsilon,
       double z = beluga::detail::kDefaultKldZ) const {
     static_assert(ranges::input_range<Range>);
-    static_assert(ranges::input_range<Hashes>);
-    static_assert(std::is_convertible_v<ranges::range_value_t<Hashes>, std::size_t>);
-    const auto hash = [](const auto& p) { return std::get<1>(p); };
-    return ranges::views::zip(ranges::views::all(range), ranges::views::all(hashes)) |  //
-           ranges::views::take_while(beluga::kld_condition(min, epsilon, z), hash) |    //
-           ranges::views::take(max) |                                                   //
-           beluga::views::elements<0>;
-  }
 
-  /// Overload that implements the take_while_kld algorithm with an external hasher.
-  /**
-   * \tparam Range An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particle states.
-   * \tparam Hasher A callable object that can compute the spatial hash for a given state.
-   * \param range Source range from where to take elements.
-   * \param hasher Hasher instance used to compute the spatial hash for a given state.
-   * \param min Minimum samples to take.
-   * \param max Maximum samples to take.
-   * \param epsilon See beluga::kld_condition() for details.
-   * \param z See beluga::kld_condition() for details.
-   */
-  template <
-      class Range,
-      class Hasher,
-      std::enable_if_t<ranges::range<Range>, int> = 0,
-      std::enable_if_t<!ranges::range<Hasher>, int> = 0,
-      std::enable_if_t<!is_particle_range_v<Range>, int> = 0,
-      std::enable_if_t<std::is_invocable_v<Hasher, ranges::range_value_t<Range>>, int> = 0>
-  constexpr auto operator()(
-      Range&& range,
-      Hasher hasher,
-      std::size_t min,
-      std::size_t max,
-      double epsilon,
-      double z = beluga::detail::kDefaultKldZ) const {
-    return this->operator()(
-        ranges::views::all(range),                           //
-        ranges::views::transform(range, std::move(hasher)),  //
-        min,                                                 //
-        max,                                                 //
-        epsilon,                                             //
-        z);
-  }
+    auto proj = [&hasher]() {
+      if constexpr (std::is_invocable_r_v<std::size_t, Hasher, ranges::range_value_t<Range>>) {
+        // Try to invoke the hasher with the range values by default.
+        return std::move(hasher);
+      } else {
+        // If the above is not possible, assume this is a particle range and invoke
+        // the hasher with the state element of each particle.
+        static_assert(is_particle_range_v<Range>);
+        static_assert(std::is_invocable_r_v<std::size_t, Hasher, beluga::state_t<ranges::range_value_t<Range>>>);
+        return ranges::compose(std::move(hasher), beluga::state);
+      }
+    }();
 
-  /// Overload that implements the take_while_kld algorithm with an external hasher.
-  /**
-   * \tparam Range An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) with particles.
-   * \tparam Hasher A callable object that can compute the spatial hash for a given state.
-   * \param range Source range from where to take elements.
-   * \param hasher Hasher instance used to compute the spatial hash for a given state.
-   * \param min Minimum samples to take.
-   * \param max Maximum samples to take.
-   * \param epsilon See beluga::kld_condition() for details.
-   * \param z See beluga::kld_condition() for details.
-   */
-  template <
-      class Range,
-      class Hasher,
-      std::enable_if_t<ranges::range<Range>, int> = 0,
-      std::enable_if_t<!ranges::range<Hasher>, int> = 0,
-      std::enable_if_t<is_particle_range_v<Range>, int> = 0,
-      std::enable_if_t<std::is_invocable_v<Hasher, state_t<ranges::range_reference_t<Range>>>, int> = 0>
-  constexpr auto operator()(
-      Range&& range,
-      Hasher hasher,
-      std::size_t min,
-      std::size_t max,
-      double epsilon,
-      double z = beluga::detail::kDefaultKldZ) const {
-    return this->operator()(
-        ranges::views::all(range),                                                           //
-        ranges::views::transform(range, ranges::compose(std::move(hasher), beluga::state)),  //
-        min,                                                                                 //
-        max,                                                                                 //
-        epsilon,                                                                             //
-        z);
+    return ranges::views::all(std::forward<Range>(range)) |                                      //
+           ranges::views::take_while(beluga::kld_condition(min, epsilon, z), std::move(proj)) |  //
+           ranges::views::take(max);
   }
 
   /// Overload that returns a view closure to compose with other views.
