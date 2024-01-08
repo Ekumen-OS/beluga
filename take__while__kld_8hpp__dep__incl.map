@@ -1,7 +1,8 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/take_while_kld.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/take_while_kld.hpp">
-<area shape="rect" id="node1" title="Implementation of a take_while_kld range adaptor object." alt="" coords="113,5,305,76"/>
-<area shape="rect" id="node2" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="95,124,324,180"/>
+<area shape="rect" id="node1" title="Implementation of a take_while_kld range adaptor object." alt="" coords="237,5,429,76"/>
+<area shape="rect" id="node2" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="101,124,331,180"/>
+<area shape="rect" id="node6" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="355,124,547,180"/>
 <area shape="rect" id="node3" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,228,197,284"/>
 <area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,228,413,284"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="113,332,305,388"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="221,332,413,388"/>
 </map>

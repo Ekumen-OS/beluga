@@ -1,10 +1,10 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/elements.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/elements.hpp">
 <area shape="rect" id="node1" title="Implementation of the C++20&#39;s std::views::elements view." alt="" coords="161,5,367,61"/>
 <area shape="rect" id="node2" href="$take__evenly_8hpp.html" title="Implementation of a take_evenly range adaptor object." alt="" coords="5,117,227,173"/>
-<area shape="rect" id="node3" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="44,228,236,284"/>
+<area shape="rect" id="node3" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="117,228,309,284"/>
 <area shape="rect" id="node5" href="$take__while__kld_8hpp.html" title="Implementation of a take_while_kld range adaptor object." alt="" coords="301,109,493,180"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="177,436,369,492"/>
-<area shape="rect" id="node6" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="283,228,512,284"/>
-<area shape="rect" id="node7" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="177,332,369,388"/>
-<area shape="rect" id="node8" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="393,332,585,388"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="251,436,443,492"/>
+<area shape="rect" id="node6" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="333,228,563,284"/>
+<area shape="rect" id="node7" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="251,332,443,388"/>
+<area shape="rect" id="node8" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="467,332,659,388"/>
 </map>
