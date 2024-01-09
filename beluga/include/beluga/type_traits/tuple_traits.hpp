@@ -133,6 +133,21 @@ constexpr decltype(auto) element(TupleLike&& tuple) noexcept {
   return std::get<kIndex>(std::forward<TupleLike>(tuple));
 }
 
+/// Meta-function that returns a std::tuple with decayed types given a tuple-like type.
+template <class T, class = void>
+struct std_tuple_decay;
+
+/// `std_tuple_decay` specialization for tuples.
+template <template <class...> class TupleLike, class... Args>
+struct std_tuple_decay<TupleLike<Args...>, std::enable_if_t<is_tuple_like_v<std::decay_t<TupleLike<Args...>>>>> {
+  /// Return type.
+  using type = std::tuple<std::decay_t<Args>...>;
+};
+
+/// Convenience template type alias for `std_tuple_decay`.
+template <class T>
+using std_tuple_decay_t = typename std_tuple_decay<T>::type;
+
 }  // namespace beluga
 
 #endif

@@ -23,6 +23,7 @@
 #include <beluga/views/particles.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/view/any_view.hpp>
+#include <range/v3/view/common.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/take.hpp>
 
@@ -156,10 +157,9 @@ class StoragePolicy : public Mixin {
   void initialize_particles(Range&& input) {
     static_assert(std::is_convertible_v<ranges::range_value_t<Range>, particle_type>, "Invalid value type");
     const std::size_t size = this->self().max_samples();
-    particles_[1].resize(size);
-    const auto first = std::begin(particles_[1]);
-    const auto last = ranges::copy(input | ranges::views::take(size), first).out;
-    particles_[1].resize(static_cast<std::size_t>(std::distance(first, last)));
+    auto particles = input | ranges::views::take(size) | ranges::views::common;
+    particles_[1].reserve(size);
+    particles_[1].assign(ranges::begin(particles), ranges::end(particles));
     std::swap(particles_[0], particles_[1]);
   }
 
@@ -198,11 +198,11 @@ class StoragePolicy : public Mixin {
 
 /// A storage policy that implements a structure of arrays layout.
 template <class Mixin, class... Types>
-using StructureOfArrays = StoragePolicy<Mixin, TupleOfVectors<Types...>>;
+using StructureOfArrays = StoragePolicy<Mixin, TupleVector<std::tuple<Types...>>>;
 
 /// A storage policy that implements an array of structures layout.
 template <class Mixin, class... Types>
-using ArrayOfStructures = StoragePolicy<Mixin, VectorOfTuples<Types...>>;
+using ArrayOfStructures = StoragePolicy<Mixin, Vector<std::tuple<Types...>>>;
 
 }  // namespace beluga
 

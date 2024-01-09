@@ -42,7 +42,7 @@ struct beluga::spatial_hash<State> {
 
 namespace {
 
-using Container = beluga::TupleOfVectors<State, beluga::Weight>;
+using Container = beluga::TupleVector<std::tuple<State, beluga::Weight>>;
 using Particle = typename Container::value_type;
 
 void BM_FixedResample(benchmark::State& state) {

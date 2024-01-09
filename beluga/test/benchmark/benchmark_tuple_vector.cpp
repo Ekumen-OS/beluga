@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Ekumen, Inc.
+// Copyright 2022-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,8 +16,12 @@
 
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
-
 #include <beluga/views/particles.hpp>
+
+#include <range/v3/algorithm/transform.hpp>
+#include <range/v3/view/filter.hpp>
+#include <range/v3/view/take_exactly.hpp>
+#include <range/v3/view/transform.hpp>
 
 namespace {
 
@@ -30,8 +34,8 @@ struct State {
 };
 
 using Particle = std::tuple<State, beluga::Weight, beluga::Cluster>;
-using StructureOfArrays = beluga::TupleOfVectors<State, beluga::Weight, beluga::Cluster>;
-using ArrayOfStructures = beluga::VectorOfTuples<State, beluga::Weight, beluga::Cluster>;
+using StructureOfArrays = beluga::TupleVector<std::tuple<State, beluga::Weight, beluga::Cluster>>;
+using ArrayOfStructures = beluga::Vector<std::tuple<State, beluga::Weight, beluga::Cluster>>;
 
 struct Arrays {
   std::vector<State> states;
@@ -89,9 +93,8 @@ void BM_Update(benchmark::State& state) {
   auto container = Container{};
   container.resize(kParticleCount);
   for (auto _ : state) {
-    auto&& states = beluga::views::states(container);
-    auto&& weights = beluga::views::weights(container);
-    std::transform(std::begin(states), std::end(states), std::begin(weights), update_weight);
+    auto weights = beluga::views::weights(container);
+    ranges::transform(beluga::views::states(container), ranges::begin(weights), update_weight);
   }
 }
 
@@ -136,8 +139,7 @@ void BM_PushBack(benchmark::State& state) {
   new_container.reserve(kParticleCount);
   for (auto _ : state) {
     new_container.clear();
-    auto&& states = beluga::views::states(container);
-    std::transform(std::begin(states), std::end(states), std::back_inserter(new_container), [](const State& state) {
+    ranges::transform(beluga::views::states(container), ranges::back_inserter(new_container), [](const State& state) {
       return std::make_tuple(state, 0, 0);
     });
   }
@@ -154,7 +156,6 @@ void BM_Assign_Baseline_ArrayOfStructures(benchmark::State& state) {
   std::vector<Particle> new_particles;
   new_particles.resize(kParticleCount);
   for (auto _ : state) {
-    new_particles.clear();
     for (std::size_t i = 0; i < kParticleCount; ++i) {
       new_particles[i] = Particle{std::get<0>(particles[i]), 0, 0};
     }
@@ -176,22 +177,63 @@ void BM_Assign_Baseline_StructureOfArrays(benchmark::State& state) {
 }
 
 template <class Container>
-void BM_Assign(benchmark::State& state) {
+void BM_Transform(benchmark::State& state) {
   auto container = Container{};
   container.resize(kParticleCount);
   auto new_container = Container{};
   new_container.resize(kParticleCount);
   for (auto _ : state) {
-    auto&& states = beluga::views::states(container);
-    std::transform(std::begin(states), std::end(states), std::begin(new_container), [](const State& state) {
+    ranges::transform(beluga::views::states(container), ranges::begin(new_container), [](const State& state) {
       return std::make_tuple(state, 0, 0);
     });
   }
 }
 
+template <class Container>
+void BM_AssignFromSized(benchmark::State& state) {
+  auto container = Container{};
+  container.resize(kParticleCount);
+  auto new_container = Container{};
+  for (auto _ : state) {
+    new_container.assign_range(
+        beluga::views::states(container) |  //
+        ranges::views::transform([](const State& state) { return std::make_tuple(state, 0, 0); }));
+  }
+}
+
+template <class Container>
+void BM_AssignFromNonSized(benchmark::State& state) {
+  auto container = Container{};
+  container.resize(kParticleCount);
+  auto new_container = Container{};
+  for (auto _ : state) {
+    new_container.assign_range(
+        beluga::views::states(container) |                  //
+        ranges::views::filter([](auto) { return true; }) |  //
+        ranges::views::transform([](const State& state) { return std::make_tuple(state, 0, 0); }));
+  }
+}
+
+template <class Container>
+void BM_AssignFromNonSizedReserved(benchmark::State& state) {
+  auto container = Container{};
+  container.resize(kParticleCount);
+  auto new_container = Container{};
+  new_container.reserve(kParticleCount);
+  for (auto _ : state) {
+    new_container.assign_range(
+        beluga::views::states(container) |                  //
+        ranges::views::filter([](auto) { return true; }) |  //
+        ranges::views::transform([](const State& state) { return std::make_tuple(state, 0, 0); }));
+  }
+}
+
 BENCHMARK(BM_Assign_Baseline_StructureOfArrays);
-BENCHMARK_TEMPLATE(BM_Assign, StructureOfArrays);
+BENCHMARK_TEMPLATE(BM_AssignFromSized, StructureOfArrays);
+BENCHMARK_TEMPLATE(BM_AssignFromNonSized, StructureOfArrays);
+BENCHMARK_TEMPLATE(BM_AssignFromNonSizedReserved, StructureOfArrays);
+BENCHMARK_TEMPLATE(BM_Transform, StructureOfArrays);
 BENCHMARK(BM_Assign_Baseline_ArrayOfStructures);
-BENCHMARK_TEMPLATE(BM_Assign, ArrayOfStructures);
+BENCHMARK_TEMPLATE(BM_Transform, ArrayOfStructures);
 
 }  // namespace
