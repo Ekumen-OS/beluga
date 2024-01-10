@@ -1,7 +1,8 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm/raycasting.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm/raycasting.hpp">
-<area shape="rect" id="node1" title="Implementation of raycasting algorithms." alt="" coords="5,5,243,61"/>
-<area shape="rect" id="node2" href="$beam__model_8hpp.html" title="Implementation of a beam sensor model for range finders." alt="" coords="7,109,241,165"/>
-<area shape="rect" id="node3" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="28,213,220,269"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="28,421,220,477"/>
-<area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="95,317,287,373"/>
+<area shape="rect" id="node1" title="Implementation of raycasting algorithms." alt="" coords="91,5,328,61"/>
+<area shape="rect" id="node2" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,213,197,269"/>
+<area shape="rect" id="node4" href="$beam__model_8hpp.html" title="Implementation of a beam sensor model for range finders." alt="" coords="184,109,419,165"/>
+<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,317,197,373"/>
+<area shape="rect" id="node5" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="221,213,413,269"/>
+<area shape="rect" id="node6" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,317,413,373"/>
 </map>

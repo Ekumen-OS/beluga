@@ -1,6 +1,7 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/tuple_vector.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/tuple_vector.hpp">
-<area shape="rect" id="node1" title="Implementation of a tuple of containers." alt="" coords="21,5,213,61"/>
+<area shape="rect" id="node1" title="Implementation of a tuple of containers." alt="" coords="72,5,264,61"/>
 <area shape="rect" id="node2" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,317,197,373"/>
-<area shape="rect" id="node3" href="$storage_8hpp.html" title="Implementation of storage policies." alt="" coords="88,109,280,165"/>
-<area shape="rect" id="node4" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="139,213,331,269"/>
+<area shape="rect" id="node3" href="$storage_8hpp.html" title="Implementation of storage policies." alt="" coords="139,109,331,165"/>
+<area shape="rect" id="node4" href="$mixin_8hpp.html" title="Implementation of mixin utilities and extensions." alt="" coords="139,213,331,269"/>
+<area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,317,413,373"/>
 </map>

@@ -1,6 +1,6 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/sensor/bearing_sensor_model.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/sensor/bearing_sensor_model.hpp">
-<area shape="rect" id="node1" title="Implementation of a discrete landmark bearing sensor model." alt="" coords="5,5,225,76"/>
-<area shape="rect" id="node2" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="19,124,211,180"/>
-<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="19,332,211,388"/>
-<area shape="rect" id="node4" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="86,228,278,284"/>
+<area shape="rect" id="node1" title="Implementation of a discrete landmark bearing sensor model." alt="" coords="99,5,319,76"/>
+<area shape="rect" id="node2" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="113,124,305,180"/>
+<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,228,197,284"/>
+<area shape="rect" id="node4" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,228,413,284"/>
 </map>

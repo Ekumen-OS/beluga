@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: /__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm/sampling.hpp File Reference</title>
+<title>Beluga: /__w/beluga/beluga/src/beluga/beluga/include/beluga/mixin/sampling.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,13 +63,12 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1ad523cfdb7a3d7d09cddf672d6cd478.html">beluga</a></li><li class="navelem"><a class="el" href="dir_634c6b228f937c8a89fa81bc2f240134.html">algorithm</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1ad523cfdb7a3d7d09cddf672d6cd478.html">beluga</a></li><li class="navelem"><a class="el" href="dir_b127764096519c9b7578e91bdfa7d218.html">mixin</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
 <div class="title">sampling.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -84,58 +83,66 @@ $(function() {
 <code>#include &lt;<a class="el" href="spatial__hash_8hpp_source.html">beluga/algorithm/spatial_hash.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="type__traits_8hpp_source.html">beluga/type_traits.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="particles_8hpp_source.html">beluga/views/particles.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="random__intersperse_8hpp_source.html">beluga/views/random_intersperse.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="sample_8hpp_source.html">beluga/views/sample.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="take__while__kld_8hpp_source.html">beluga/views/take_while_kld.hpp</a>&gt;</code><br />
-<code>#include &lt;range/v3/view/common.hpp&gt;</code><br />
+<code>#include &lt;range/v3/numeric/accumulate.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/generate.hpp&gt;</code><br />
-<code>#include &lt;range/v3/view/take.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/take_exactly.hpp&gt;</code><br />
-<code>#include &lt;range/v3/view/take_while.hpp&gt;</code><br />
-<code>#include &lt;range/v3/view/transform.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for sampling.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="sampling_8hpp__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2algorithm_2sampling_8hpp" alt=""/></div>
-<map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2algorithm_2sampling_8hpp" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2algorithm_2sampling_8hpp">
-<area shape="rect" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="929,5,1159,61"/>
-<area shape="rect" title=" " alt="" coords="226,452,313,479"/>
-<area shape="rect" title=" " alt="" coords="993,452,1052,479"/>
-<area shape="rect" title=" " alt="" coords="1157,117,1229,143"/>
-<area shape="rect" href="exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="1254,109,1469,151"/>
-<area shape="rect" href="spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="1107,363,1288,404"/>
-<area shape="rect" href="type__traits_8hpp.html" title="Includes all Beluga type traits." alt="" coords="81,117,249,143"/>
-<area shape="rect" href="particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="785,117,981,143"/>
-<area shape="rect" title=" " alt="" coords="821,206,1032,233"/>
-<area shape="rect" href="take__while__kld_8hpp.html" title="Implementation of a take_while_kld range adaptor object." alt="" coords="397,109,579,151"/>
-<area shape="rect" title=" " alt="" coords="401,206,575,233"/>
-<area shape="rect" title=" " alt="" coords="600,199,747,240"/>
-<area shape="rect" title=" " alt="" coords="1493,117,1696,143"/>
-<area shape="rect" title=" " alt="" coords="1721,117,1925,143"/>
-<area shape="rect" title=" " alt="" coords="1949,109,2096,151"/>
-<area shape="rect" title=" " alt="" coords="1399,452,1457,479"/>
-<area shape="rect" title=" " alt="" coords="1482,452,1545,479"/>
-<area shape="rect" title=" " alt="" coords="1076,452,1143,479"/>
-<area shape="rect" title=" " alt="" coords="914,452,969,479"/>
-<area shape="rect" title=" " alt="" coords="539,452,631,479"/>
-<area shape="rect" title=" " alt="" coords="1167,452,1227,479"/>
-<area shape="rect" title=" " alt="" coords="1252,452,1375,479"/>
-<area shape="rect" href="particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="93,199,237,240"/>
-<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="615,363,755,404"/>
-<area shape="rect" href="primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="603,288,767,315"/>
-<area shape="rect" title=" " alt="" coords="93,288,280,315"/>
-<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="380,363,591,404"/>
-<area shape="rect" href="forward__like_8hpp_source.html" title=" " alt="" coords="780,363,943,404"/>
-<area shape="rect" title=" " alt="" coords="261,206,376,233"/>
+<div class="center"><img src="sampling_8hpp__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2mixin_2sampling_8hpp" alt=""/></div>
+<map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2mixin_2sampling_8hpp" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2mixin_2sampling_8hpp">
+<area shape="rect" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="1464,5,1667,61"/>
+<area shape="rect" title=" " alt="" coords="842,452,929,479"/>
+<area shape="rect" title=" " alt="" coords="499,452,557,479"/>
+<area shape="rect" title=" " alt="" coords="923,206,995,233"/>
+<area shape="rect" href="exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="601,109,815,151"/>
+<area shape="rect" href="spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="152,363,333,404"/>
+<area shape="rect" href="type__traits_8hpp.html" title="Includes all Beluga type traits." alt="" coords="2324,117,2492,143"/>
+<area shape="rect" href="particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="1911,206,2107,233"/>
+<area shape="rect" href="random__intersperse_8hpp.html" title="Implementation of a random_intersperse range adaptor object." alt="" coords="840,109,1003,151"/>
+<area shape="rect" href="sample_8hpp.html" title="Implementation of a sample (with replacement) range adaptor object." alt="" coords="1471,117,1659,143"/>
+<area shape="rect" href="take__while__kld_8hpp.html" title="Implementation of a take_while_kld range adaptor object." alt="" coords="2117,109,2299,151"/>
+<area shape="rect" title=" " alt="" coords="2517,117,2761,143"/>
+<area shape="rect" title=" " alt="" coords="2785,117,2989,143"/>
+<area shape="rect" title=" " alt="" coords="3013,109,3160,151"/>
+<area shape="rect" title=" " alt="" coords="328,452,387,479"/>
+<area shape="rect" title=" " alt="" coords="411,452,474,479"/>
+<area shape="rect" title=" " alt="" coords="5,452,72,479"/>
+<area shape="rect" title=" " alt="" coords="1831,452,1886,479"/>
+<area shape="rect" title=" " alt="" coords="1574,452,1666,479"/>
+<area shape="rect" title=" " alt="" coords="97,452,157,479"/>
+<area shape="rect" title=" " alt="" coords="181,452,304,479"/>
+<area shape="rect" href="particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="2692,199,2836,240"/>
+<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="1897,363,2037,404"/>
+<area shape="rect" href="primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="1830,288,1994,315"/>
+<area shape="rect" title=" " alt="" coords="2649,288,2836,315"/>
+<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="1223,363,1433,404"/>
+<area shape="rect" href="forward__like_8hpp_source.html" title=" " alt="" coords="1608,363,1771,404"/>
+<area shape="rect" title=" " alt="" coords="1544,288,1755,315"/>
+<area shape="rect" title=" " alt="" coords="600,206,675,233"/>
+<area shape="rect" title=" " alt="" coords="699,199,847,240"/>
+<area shape="rect" title=" " alt="" coords="1019,206,1221,233"/>
+<area shape="rect" title=" " alt="" coords="381,206,576,233"/>
+<area shape="rect" title=" " alt="" coords="1464,206,1667,233"/>
+<area shape="rect" href="prologue_8hpp_source.html" title=" " alt="" coords="1691,206,1887,233"/>
+<area shape="rect" href="epilogue_8hpp_source.html" title=" " alt="" coords="1245,206,1440,233"/>
+<area shape="rect" title=" " alt="" coords="2553,206,2668,233"/>
+<area shape="rect" title=" " alt="" coords="2183,206,2358,233"/>
+<area shape="rect" title=" " alt="" coords="2383,199,2529,240"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="sampling_8hpp__dep__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2algorithm_2sampling_8hppdep" alt=""/></div>
-<map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2algorithm_2sampling_8hppdep" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2algorithm_2sampling_8hppdep">
-<area shape="rect" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="95,5,324,61"/>
-<area shape="rect" href="algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,109,197,165"/>
-<area shape="rect" href="localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,109,413,165"/>
-<area shape="rect" href="beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="113,213,305,269"/>
+<div class="center"><img src="sampling_8hpp__dep__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2mixin_2sampling_8hppdep" alt=""/></div>
+<map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2mixin_2sampling_8hppdep" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2mixin_2sampling_8hppdep">
+<area shape="rect" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="108,5,311,61"/>
+<area shape="rect" href="mixin_8hpp.html" title="Implementation of mixin utilities and extensions." alt="" coords="113,109,305,165"/>
+<area shape="rect" href="beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,213,197,269"/>
+<area shape="rect" href="localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,213,413,269"/>
 </map>
 </div>
 </div>
@@ -167,139 +174,10 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1KldLimiter.html">beluga::KldLimiter&lt; Mixin, State &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Limiter policy that takes a number of particles defined by the KLD criteria.  <a href="classbeluga_1_1KldLimiter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a01472d3e768837b5586985ef49337d27"><td class="memTemplParams" colspan="2">template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt; </td></tr>
-<tr class="memitem:a01472d3e768837b5586985ef49337d27"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a01472d3e768837b5586985ef49337d27">beluga::make_random_selector</a> (Function1 &amp;&amp;first, Function2 &amp;&amp;second, RandomNumberGenerator &amp;generator, double probability)</td></tr>
-<tr class="memdesc:a01472d3e768837b5586985ef49337d27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects between executing one function or another randomly.  <a href="sampling_8hpp.html#a01472d3e768837b5586985ef49337d27">More...</a><br /></td></tr>
-<tr class="separator:a01472d3e768837b5586985ef49337d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20eae38886cb586def210def2b98ca57"><td class="memTemplParams" colspan="2">template&lt;class Range , class Weights , class RandomNumberGenerator &gt; </td></tr>
-<tr class="memitem:a20eae38886cb586def210def2b98ca57"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="sampling_8hpp.html#a20eae38886cb586def210def2b98ca57">beluga::make_multinomial_sampler</a> (const Range &amp;samples, const Weights &amp;weights, RandomNumberGenerator &amp;generator)</td></tr>
-<tr class="memdesc:a20eae38886cb586def210def2b98ca57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns multinomial resampler function.  <a href="sampling_8hpp.html#a20eae38886cb586def210def2b98ca57">More...</a><br /></td></tr>
-<tr class="separator:a20eae38886cb586def210def2b98ca57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of algorithms related to generation, sampling and resampling of particles. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a20eae38886cb586def210def2b98ca57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20eae38886cb586def210def2b98ca57">&#9670;&nbsp;</a></span>make_multinomial_sampler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Range , class Weights , class RandomNumberGenerator &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto beluga::make_multinomial_sampler </td>
-          <td>(</td>
-          <td class="paramtype">const Range &amp;&#160;</td>
-          <td class="paramname"><em>samples</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Weights &amp;&#160;</td>
-          <td class="paramname"><em>weights</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">RandomNumberGenerator &amp;&#160;</td>
-          <td class="paramname"><em>generator</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns multinomial resampler function. </p>
-<p>Returns a function that when called picks randomly a sample from the input range, with individual probabilities given by the weights of each. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/range">Range</a> type, its iterator must be <a href="https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator">random access</a>. </td></tr>
-    <tr><td class="paramname">Weights</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/range">Range</a> type, its values must be convertible to double. </td></tr>
-    <tr><td class="paramname">RandomNumberGenerator</td><td>Must meet the requirements of <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">samples</td><td>The container of samples to be picked. </td></tr>
-    <tr><td class="paramname">weights</td><td>The weights of the samples to be picked. The size of the container must be the same as the size of samples. For a sample <code>samples[i]</code>, its weight is <code>weights[i]</code>. </td></tr>
-    <tr><td class="paramname">generator</td><td>The random number generator used. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The sampler function. Its type is the same as the <code>Range</code> value type. </dd></dl>
-
-</div>
-</div>
-<a id="a01472d3e768837b5586985ef49337d27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01472d3e768837b5586985ef49337d27">&#9670;&nbsp;</a></span>make_random_selector()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Function1 , class Function2 , class RandomNumberGenerator &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto beluga::make_random_selector </td>
-          <td>(</td>
-          <td class="paramtype">Function1 &amp;&amp;&#160;</td>
-          <td class="paramname"><em>first</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Function2 &amp;&amp;&#160;</td>
-          <td class="paramname"><em>second</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">RandomNumberGenerator &amp;&#160;</td>
-          <td class="paramname"><em>generator</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>probability</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Selects between executing one function or another randomly. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Function1</td><td>Callable type, with prototype <code>() -&gt; Ret</code>. </td></tr>
-    <tr><td class="paramname">Function2</td><td>Callable type, with prototype <code>() -&gt; Ret</code>. The return type of both Function1 and Function2 must be the same. </td></tr>
-    <tr><td class="paramname">RandomNumberGenerator</td><td>Must meet the requirements of <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">first</td><td>The first function to be called. </td></tr>
-    <tr><td class="paramname">second</td><td>The second function to be called. </td></tr>
-    <tr><td class="paramname">generator</td><td>The random number generator used. </td></tr>
-    <tr><td class="paramname">probability</td><td>The first function will be called with the probability specified here. In the rest of the cases, second is called. A Bernoully distribution is used. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The result of the called function. The return type is <code>decltype(first())</code>. </dd></dl>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1

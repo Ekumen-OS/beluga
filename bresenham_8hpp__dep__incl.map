@@ -1,8 +1,9 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm/raycasting/bresenham.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm/raycasting/bresenham.hpp">
-<area shape="rect" id="node1" title="Implementation of Bresenham&#45;like raytracing algorithms." alt="" coords="19,5,229,76"/>
-<area shape="rect" id="node2" href="$raycasting_8hpp.html" title="Implementation of raycasting algorithms." alt="" coords="5,124,243,180"/>
-<area shape="rect" id="node3" href="$beam__model_8hpp.html" title="Implementation of a beam sensor model for range finders." alt="" coords="7,228,241,284"/>
-<area shape="rect" id="node4" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="28,332,220,388"/>
-<area shape="rect" id="node5" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="28,540,220,596"/>
-<area shape="rect" id="node6" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="95,436,287,492"/>
+<area shape="rect" id="node1" title="Implementation of Bresenham&#45;like raytracing algorithms." alt="" coords="105,5,314,76"/>
+<area shape="rect" id="node2" href="$raycasting_8hpp.html" title="Implementation of raycasting algorithms." alt="" coords="91,124,328,180"/>
+<area shape="rect" id="node3" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,332,197,388"/>
+<area shape="rect" id="node5" href="$beam__model_8hpp.html" title="Implementation of a beam sensor model for range finders." alt="" coords="184,228,419,284"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,436,197,492"/>
+<area shape="rect" id="node6" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="221,332,413,388"/>
+<area shape="rect" id="node7" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,436,413,492"/>
 </map>

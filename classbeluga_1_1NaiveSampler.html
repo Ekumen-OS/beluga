@@ -104,10 +104,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afaadbeb8bbaee3a9bcb200c8ad5debf2"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NaiveSampler.html#afaadbeb8bbaee3a9bcb200c8ad5debf2">NaiveSampler</a> (Args &amp;&amp;... args)</td></tr>
 <tr class="memdesc:afaadbeb8bbaee3a9bcb200c8ad5debf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1NaiveSampler.html" title="Generation of samples from input particles.">NaiveSampler</a> instance.  <a href="classbeluga_1_1NaiveSampler.html#afaadbeb8bbaee3a9bcb200c8ad5debf2">More...</a><br /></td></tr>
 <tr class="separator:afaadbeb8bbaee3a9bcb200c8ad5debf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31bed5cb5375d427cb1ca484e81925f9"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
-<tr class="memitem:a31bed5cb5375d427cb1ca484e81925f9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NaiveSampler.html#a31bed5cb5375d427cb1ca484e81925f9">generate_samples_from_particles</a> (Generator &amp;gen) const</td></tr>
-<tr class="memdesc:a31bed5cb5375d427cb1ca484e81925f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a view that sources a sequence of with-replacement samples from the existing set.  <a href="classbeluga_1_1NaiveSampler.html#a31bed5cb5375d427cb1ca484e81925f9">More...</a><br /></td></tr>
-<tr class="separator:a31bed5cb5375d427cb1ca484e81925f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa655e3391ca5399febe571ba07619de8"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
+<tr class="memitem:aa655e3391ca5399febe571ba07619de8"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NaiveSampler.html#aa655e3391ca5399febe571ba07619de8">generate_samples_from_particles</a> (Generator &amp;engine) const</td></tr>
+<tr class="memdesc:aa655e3391ca5399febe571ba07619de8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a view that sources a sequence of with-replacement samples from the existing set.  <a href="classbeluga_1_1NaiveSampler.html#aa655e3391ca5399febe571ba07619de8">More...</a><br /></td></tr>
+<tr class="separator:aa655e3391ca5399febe571ba07619de8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Mixin&gt;<br />
@@ -171,8 +171,8 @@ template&lt;class... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a31bed5cb5375d427cb1ca484e81925f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31bed5cb5375d427cb1ca484e81925f9">&#9670;&nbsp;</a></span>generate_samples_from_particles()</h2>
+<a id="aa655e3391ca5399febe571ba07619de8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa655e3391ca5399febe571ba07619de8">&#9670;&nbsp;</a></span>generate_samples_from_particles()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,7 +188,7 @@ template&lt;class Generator &gt; </div>
           <td class="memname">auto <a class="el" href="classbeluga_1_1NaiveSampler.html">beluga::NaiveSampler</a>&lt; Mixin &gt;::generate_samples_from_particles </td>
           <td>(</td>
           <td class="paramtype">Generator &amp;&#160;</td>
-          <td class="paramname"><em>gen</em></td><td>)</td>
+          <td class="paramname"><em>engine</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -209,7 +209,7 @@ template&lt;class Generator &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">gen</td><td>An uniform random bit generator object. </td></tr>
+    <tr><td class="paramname">engine</td><td>An uniform random bit generator object. </td></tr>
   </table>
   </dd>
 </dl>
@@ -218,7 +218,7 @@ template&lt;class Generator &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm/<a class="el" href="sampling_8hpp_source.html">sampling.hpp</a></li>
+<li>/__w/beluga/beluga/src/beluga/beluga/include/beluga/mixin/<a class="el" href="sampling_8hpp_source.html">sampling.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

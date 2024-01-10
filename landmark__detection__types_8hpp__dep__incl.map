@@ -6,6 +6,6 @@
 <area shape="rect" id="node8" href="$landmark__map_8hpp.html" title="Landmark map datatype." alt="" coords="725,124,941,195"/>
 <area shape="rect" id="node9" href="$landmark__sensor__model_8hpp.html" title="Implementation of a discrete landmark sensor model." alt="" coords="965,124,1157,195"/>
 <area shape="rect" id="node3" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="373,243,565,299"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="373,451,565,507"/>
-<area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="440,347,632,403"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="265,347,457,403"/>
+<area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="481,347,673,403"/>
 </map>

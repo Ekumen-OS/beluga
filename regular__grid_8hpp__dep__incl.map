@@ -6,6 +6,6 @@
 <area shape="rect" id="node9" href="$value__grid_8hpp.html" title="Implementation of generic value grid." alt="" coords="253,361,445,432"/>
 <area shape="rect" id="node5" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="137,480,329,551"/>
 <area shape="rect" id="node6" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="137,599,329,655"/>
-<area shape="rect" id="node7" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="137,807,329,863"/>
-<area shape="rect" id="node8" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="203,703,395,759"/>
+<area shape="rect" id="node7" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="29,703,221,759"/>
+<area shape="rect" id="node8" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="245,703,437,759"/>
 </map>
