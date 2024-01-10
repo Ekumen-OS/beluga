@@ -258,7 +258,7 @@ class AdaptiveSampler : public Mixin {
     }
 
     auto make_random_particle = [this, &engine] {
-      using particle_type = ranges::range_value_t<decltype(particles)>;
+      using particle_type = typename Mixin::self_type::particle_type;
       return beluga::make_from_state<particle_type>(this->self().make_random_state(engine));
     };
     return particles |                      //
