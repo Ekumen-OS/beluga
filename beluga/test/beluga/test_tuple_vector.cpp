@@ -163,6 +163,30 @@ TEST(TupleVectorTest, ConceptChecks) {
   static_assert(!ranges::contiguous_range<decltype(container)>);
 }
 
+TEST(TupleVectorTest, TraitConsistency) {
+  using Container = beluga::TupleVector<std::tuple<float, int>>;
+  using Iterator = decltype(ranges::begin(std::declval<Container&>()));
+
+  // Expected types
+  static_assert(std::is_same_v<
+                ranges::range_value_t<Container>,  //
+                std::tuple<float, int>>);
+  static_assert(std::is_same_v<
+                ranges::range_reference_t<Container>,  //
+                ranges::common_tuple<float&, int&>>);
+  static_assert(std::is_same_v<
+                ranges::range_rvalue_reference_t<Container>,  //
+                ranges::common_tuple<float&&, int&&>>);
+
+  // Consistency
+  static_assert(std::is_same_v<
+                ranges::iter_value_t<Iterator>,  //
+                typename Container::value_type>);
+  static_assert(std::is_same_v<
+                ranges::iter_reference_t<Iterator>,  //
+                typename Container::reference_type>);
+}
+
 TEST(TupleVectorTest, ConstCorrectness) {
   auto container = beluga::TupleVector<std::tuple<float>>{std::make_tuple(1)};
   static_assert(std::is_same_v<decltype(*ranges::begin(container)), ranges::common_tuple<float&>>);

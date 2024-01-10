@@ -19,12 +19,11 @@
 #include <vector>
 
 #include <beluga/type_traits.hpp>
+#include <beluga/views/zip.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/iterator/insert_iterators.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/take.hpp>
-#include <range/v3/view/transform.hpp>
-#include <range/v3/view/zip.hpp>
 
 /**
  * \file
@@ -32,32 +31,6 @@
  */
 
 namespace beluga {
-
-namespace detail {
-
-/// Utility type to standardize the zip output to always dereference in tuples and not in pairs.
-struct as_common_tuple_fn {
-  /// Overload that takes a common_tuple.
-  template <typename... Types>
-  constexpr auto operator()(ranges::common_tuple<Types...> tuple) const {
-    return tuple;
-  }
-
-  /// Overload that takes a common_pair and forwards the values as a common_tuple.
-  template <typename... Types>
-  constexpr auto operator()(ranges::common_pair<Types...> pair) const {
-    return std::apply(
-        [](auto&&... values) {
-          return ranges::common_tuple<Types...>{std::forward<Types>(values)...};  //
-        },
-        pair);
-  }
-};
-
-}  // namespace detail
-
-/// Utility to standardize the zip output to always dereference in tuples and not in pairs.
-inline constexpr detail::as_common_tuple_fn as_common_tuple;
 
 /// Primary template for a tuple of containers.
 template <template <class> class InternalContainer, class T>
@@ -231,19 +204,16 @@ class TupleContainer<InternalContainer, std::tuple<Types...>> {
 
   [[nodiscard]] constexpr auto all() const {
     return std::apply(
-        [](auto&&... containers) {
-          return ranges::views::zip(containers...) |          //
-                 ranges::views::transform(as_common_tuple) |  //
-                 ranges::views::const_;
+        [](auto&... containers) {  //
+          return beluga::views::zip(containers...) | ranges::views::const_;
         },
         sequences_);
   }
 
   [[nodiscard]] constexpr auto all() {
     return std::apply(
-        [](auto&&... containers) {
-          return ranges::views::zip(containers...) |  //
-                 ranges::views::transform(as_common_tuple);
+        [](auto&... containers) {  //
+          return beluga::views::zip(containers...);
         },
         sequences_);
   }
