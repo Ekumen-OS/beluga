@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2023-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@
 #include <sophus/se3.hpp>
 
 #include <beluga/algorithm/estimation.hpp>
-#include <beluga/algorithm/particle_filter.hpp>
 #include <beluga/localization.hpp>
+#include <beluga/mixin/particle_filter.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/random/multivariate_normal_distribution.hpp>
 #include <beluga_amcl/amcl_node_utils.hpp>

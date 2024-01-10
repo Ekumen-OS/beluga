@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Ekumen, Inc.
+// Copyright 2022-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_ALGORITHM_SAMPLING_HPP
-#define BELUGA_ALGORITHM_SAMPLING_HPP
+#ifndef BELUGA_MIXIN_SAMPLING_HPP
+#define BELUGA_MIXIN_SAMPLING_HPP
 
 #include <functional>
 #include <limits>
@@ -23,13 +23,12 @@
 #include <beluga/algorithm/spatial_hash.hpp>
 #include <beluga/type_traits.hpp>
 #include <beluga/views/particles.hpp>
+#include <beluga/views/random_intersperse.hpp>
+#include <beluga/views/sample.hpp>
 #include <beluga/views/take_while_kld.hpp>
-#include <range/v3/view/common.hpp>
+#include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/view/generate.hpp>
-#include <range/v3/view/take.hpp>
 #include <range/v3/view/take_exactly.hpp>
-#include <range/v3/view/take_while.hpp>
-#include <range/v3/view/transform.hpp>
 
 /**
  * \file
@@ -69,7 +68,7 @@ namespace beluga {
  * A type `T` satisfies the `Sampler` requirements if `T` is a mixin type, and given:
  * - A type `G` that satisfies the requirements of
  *   [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator).
- * - A type `S` that represents the state of a particle.
+ * - A type `S` that represents particle type.
  * - An instance `p` of `T`.
  * - An instance `g` of `G`.
  *
@@ -111,59 +110,6 @@ namespace beluga {
  * - beluga::KldLimiter
  */
 
-/// Selects between executing one function or another randomly.
-/**
- * \tparam Function1 Callable type, with prototype `() -> Ret`.
- * \tparam Function2 Callable type, with prototype `() -> Ret`.
- *   The return type of both Function1 and Function2 must be the same.
- * \tparam RandomNumberGenerator Must meet the requirements of
- *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator).
- * \param first The first function to be called.
- * \param second The second function to be called.
- * \param generator The random number generator used.
- * \param probability The first function will be called with the probability specified here.
- *  In the rest of the cases, second is called.
- *  A Bernoully distribution is used.
- * \return The result of the called function.
- *  The return type is `decltype(first())`.
- */
-template <class Function1, class Function2, class RandomNumberGenerator>
-auto make_random_selector(Function1&& first, Function2&& second, RandomNumberGenerator& generator, double probability) {
-  return [first = std::forward<Function1>(first), second = std::forward<Function2>(second), &generator,
-          distribution = std::bernoulli_distribution{probability}]() mutable {
-    return distribution(generator) ? first() : second();
-  };
-}
-
-/// Returns multinomial resampler function.
-/**
- * Returns a function that when called picks randomly a sample from the input range, with individual
- * probabilities given by the weights of each.
- * \tparam Range A [Range](https://en.cppreference.com/w/cpp/ranges/range) type, its iterator
- *  must be [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator).
- * \tparam Weights A [Range](https://en.cppreference.com/w/cpp/ranges/range) type,
- *  its values must be convertible to double.
- * \tparam RandomNumberGenerator Must meet the requirements of
- *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator).
- * \param samples The container of samples to be picked.
- * \param weights The weights of the samples to be picked.
- *  The size of the container must be the same as the size of samples.
- *  For a sample `samples[i]`, its weight is `weights[i]`.
- * \param generator The random number generator used.
- * \return The sampler function.
- *  Its type is the same as the `Range` value type.
- */
-template <class Range, class Weights, class RandomNumberGenerator>
-auto make_multinomial_sampler(const Range& samples, const Weights& weights, RandomNumberGenerator& generator) {
-  auto weights_begin = std::begin(weights);
-  auto weights_end = std::end(weights);
-  using difference_type = decltype(weights_end - weights_begin);
-  return [&generator, first = std::begin(samples),
-          distribution = std::discrete_distribution<difference_type>{weights_begin, weights_end}]() mutable {
-    return *(first + distribution(generator));
-  };
-}
-
 /// A random state generator.
 /**
  * An implementation of \ref StateGeneratorPage.
@@ -191,12 +137,12 @@ class RandomStateGenerator : public Mixin {
    * \tparam Generator  A random number generator that must satisfy the
    *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
    *  requirements.
-   * \param gen An uniform random bit generator object.
+   * \param engine An uniform random bit generator object.
    * \return A range view that sources a sequence of random states.
    */
   template <class Generator>
-  [[nodiscard]] auto generate_samples(Generator& gen) {
-    return ranges::views::generate([this, &gen]() { return this->self().make_random_state(gen); });
+  [[nodiscard]] auto generate_samples(Generator& engine) {
+    return ranges::views::generate([this, &engine]() { return this->self().make_random_state(engine); });
   }
 };
 
@@ -230,13 +176,12 @@ class NaiveSampler : public Mixin {
    * \tparam Generator  A random number generator that must satisfy the
    *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
    *  requirements.
-   * \param gen An uniform random bit generator object.
+   * \param engine An uniform random bit generator object.
    * \return A range view that consists of with-replacement samples from the existing set.
    */
   template <class Generator>
-  [[nodiscard]] auto generate_samples_from_particles(Generator& gen) const {
-    return ranges::views::generate(
-        beluga::make_multinomial_sampler(this->self().states(), this->self().weights(), gen));
+  [[nodiscard]] auto generate_samples_from_particles(Generator& engine) const {
+    return this->self().particles() | beluga::views::sample(engine);
   }
 };
 
@@ -293,26 +238,32 @@ class AdaptiveSampler : public Mixin {
    * \tparam Generator  A random number generator that must satisfy the
    *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
    *  requirements.
-   * \param gen An uniform random bit generator object.
+   * \param engine An uniform random bit generator object.
    * \return A range view that consists of a mixture of with-replacement samples from the existing set and brand new
    * random samples.
    */
   template <class Generator>
-  [[nodiscard]] auto generate_samples_from_particles(Generator& gen) {
-    auto weights = this->self().weights() | ranges::views::common;
-    double total_weight = std::reduce(std::begin(weights), std::end(weights), 0.);
-    double average_weight = total_weight / static_cast<double>(weights.size());
-    double random_state_probability = std::max(0., 1. - fast_filter_(average_weight) / slow_filter_(average_weight));
+  [[nodiscard]] auto generate_samples_from_particles(Generator& engine) {
+    auto&& particles = this->self().particles();
+    static_assert(is_particle_range_v<decltype(particles)>);
 
-    if (random_state_probability > 0.) {
+    const double total_weight = ranges::accumulate(beluga::views::weights(particles), 0.0);
+    const double average_weight = total_weight / static_cast<double>(particles.size());
+    const double random_state_probability =
+        std::clamp(1.0 - fast_filter_(average_weight) / slow_filter_(average_weight), 0.0, 1.0);
+
+    if (random_state_probability > 0.0) {
       fast_filter_.reset();
       slow_filter_.reset();
     }
 
-    auto create_random_state = [this, &gen] { return this->self().make_random_state(gen); };
-    auto sample_existing_state = make_multinomial_sampler(this->self().states(), weights, gen);
-    return ranges::views::generate(make_random_selector(
-        std::move(create_random_state), std::move(sample_existing_state), gen, random_state_probability));
+    auto make_random_particle = [this, &engine] {
+      using particle_type = ranges::range_value_t<decltype(particles)>;
+      return beluga::make_from_state<particle_type>(this->self().make_random_state(engine));
+    };
+    return particles |                      //
+           beluga::views::sample(engine) |  //
+           beluga::views::random_intersperse(std::move(make_random_particle), random_state_probability, engine);
   }
 
  private:

@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Ekumen, Inc.
+// Copyright 2022-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
-#define BELUGA_ALGORITHM_PARTICLE_FILTER_HPP
+#ifndef BELUGA_MIXIN_PARTICLE_FILTER_HPP
+#define BELUGA_MIXIN_PARTICLE_FILTER_HPP
 
 #include <algorithm>
 #include <execution>
@@ -22,6 +22,9 @@
 
 #include <range/v3/algorithm/max_element.hpp>
 #include <range/v3/view/common.hpp>
+#include <range/v3/view/transform.hpp>
+
+#include <beluga/type_traits/particle_traits.hpp>
 
 /**
  * \file
@@ -152,7 +155,11 @@ class BootstrapParticleFilter : public Mixin {
    * Distribute the particles using the \ref StateGeneratorPage "StateGenerator"
    */
   void reinitialize() final {
-    this->self().initialize_particles(this->self().generate_samples(generator_) | this->self().take_samples());
+    using particle_type = typename Mixin::self_type::particle_type;
+    this->self().initialize_particles(
+        this->self().generate_samples(generator_) |                         //
+        ranges::views::transform(beluga::make_from_state<particle_type>) |  //
+        this->self().take_samples());
   }
 
   /**

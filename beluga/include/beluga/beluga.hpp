@@ -21,13 +21,11 @@
  */
 
 #include <beluga/algorithm.hpp>
-#include <beluga/localization.hpp>
 #include <beluga/mixin.hpp>
 #include <beluga/motion.hpp>
 #include <beluga/primitives.hpp>
 #include <beluga/random.hpp>
 #include <beluga/sensor.hpp>
-#include <beluga/storage.hpp>
 #include <beluga/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
 #include <beluga/views.hpp>

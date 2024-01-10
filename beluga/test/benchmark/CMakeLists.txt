@@ -1,4 +1,4 @@
-# Copyright 2023 Ekumen, Inc.
+# Copyright 2023-2024 Ekumen, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ add_executable(
   benchmark_likelihood_field_model.cpp
   benchmark_main.cpp
   benchmark_raycasting.cpp
-  benchmark_sampling.cpp
   benchmark_spatial_hash.cpp
+  benchmark_take_while_kld.cpp
   benchmark_tuple_vector.cpp)
 target_include_directories(benchmark_beluga PRIVATE ../beluga/include)
 target_link_libraries(

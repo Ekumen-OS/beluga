@@ -15,6 +15,7 @@
 #ifndef BELUGA_VIEWS_TAKE_WHILE_KLD_HPP
 #define BELUGA_VIEWS_TAKE_WHILE_KLD_HPP
 
+#include <cmath>
 #include <unordered_set>
 
 #include <beluga/type_traits/particle_traits.hpp>
