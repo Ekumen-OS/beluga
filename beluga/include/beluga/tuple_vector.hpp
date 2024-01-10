@@ -200,12 +200,12 @@ class TupleContainer<InternalContainer, std::tuple<Types...>> {
   /**
    * \param value The element to be appended.
    */
-  constexpr void push_back(value_type value) {
-    push_back_impl(std::move(value), std::make_index_sequence<sizeof...(Types)>());
+  constexpr void push_back(const value_type& value) {
+    push_back_impl(value, std::make_index_sequence<sizeof...(Types)>());
   }
 
   /// \overload
-  constexpr void push_back(reference_type value) {
+  constexpr void push_back(value_type&& value) {
     push_back_impl(std::move(value), std::make_index_sequence<sizeof...(Types)>());
   }
 
