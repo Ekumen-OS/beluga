@@ -124,6 +124,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1has__single__element.html">beluga::has_single_element&lt; T, TupleLike, class &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Meta-function that returns true if there is a single element of type T in the tuple-like type.  <a href="structbeluga_1_1has__single__element.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1std__tuple__decay_3_01TupleLike_3_01Args_8_8_8_01_4_00_01std_1_1enable__if__t_3_3328432e4045266018fea12ec70b7228.html">beluga::std_tuple_decay&lt; TupleLike&lt; Args... &gt;, std::enable_if_t&lt; is_tuple_like_v&lt; std::decay_t&lt; TupleLike&lt; Args... &gt; &gt; &gt; &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="structbeluga_1_1std__tuple__decay.html" title="Meta-function that returns a std::tuple with decayed types given a tuple-like type.">std_tuple_decay</a></code> specialization for tuples.  <a href="structbeluga_1_1std__tuple__decay_3_01TupleLike_3_01Args_8_8_8_01_4_00_01std_1_1enable__if__t_3_3328432e4045266018fea12ec70b7228.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -132,6 +135,11 @@ template&lt;class T , class TupleLike &gt; </td></tr>
 <tr class="memitem:a7fe08608971c8c79a6f92a3b5b7ef089"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#a7fe08608971c8c79a6f92a3b5b7ef089">beluga::tuple_index_t</a> = typename tuple_index&lt; T, TupleLike &gt;::type</td></tr>
 <tr class="memdesc:a7fe08608971c8c79a6f92a3b5b7ef089"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience template type alias for <code><a class="el" href="structbeluga_1_1tuple__index.html" title="Meta-function that returns the tuple index of the element whose type is T.">tuple_index</a></code>. <br /></td></tr>
 <tr class="separator:a7fe08608971c8c79a6f92a3b5b7ef089"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5f01b4c2fe157c8f72a9f12555b08eb"><td class="memTemplParams" colspan="2"><a id="ad5f01b4c2fe157c8f72a9f12555b08eb"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ad5f01b4c2fe157c8f72a9f12555b08eb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tuple__traits_8hpp.html#ad5f01b4c2fe157c8f72a9f12555b08eb">beluga::std_tuple_decay_t</a> = typename std_tuple_decay&lt; T &gt;::type</td></tr>
+<tr class="memdesc:ad5f01b4c2fe157c8f72a9f12555b08eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience template type alias for <code><a class="el" href="structbeluga_1_1std__tuple__decay.html" title="Meta-function that returns a std::tuple with decayed types given a tuple-like type.">std_tuple_decay</a></code>. <br /></td></tr>
+<tr class="separator:ad5f01b4c2fe157c8f72a9f12555b08eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>

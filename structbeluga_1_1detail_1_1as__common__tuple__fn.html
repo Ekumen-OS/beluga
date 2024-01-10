@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::tuple_or_pair&lt; First, Second &gt; Struct Template Reference</title>
+<title>Beluga: beluga::detail::as_common_tuple_fn Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,35 +63,38 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>beluga</b></li><li class="navelem"><a class="el" href="structbeluga_1_1tuple__or__pair_3_01First_00_01Second_01_4.html">tuple_or_pair&lt; First, Second &gt;</a></li>  </ul>
+<li class="navelem"><b>beluga</b></li><li class="navelem"><b>detail</b></li><li class="navelem"><a class="el" href="structbeluga_1_1detail_1_1as__common__tuple__fn.html">as_common_tuple_fn</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="structbeluga_1_1tuple__or__pair_3_01First_00_01Second_01_4-members.html">List of all members</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="structbeluga_1_1detail_1_1as__common__tuple__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::tuple_or_pair&lt; First, Second &gt; Struct Template Reference</div>  </div>
+<div class="title">beluga::detail::as_common_tuple_fn Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Specialization that returns a pair.  
- <a href="structbeluga_1_1tuple__or__pair_3_01First_00_01Second_01_4.html#details">More...</a></p>
+<p>Utility type to standardize the zip output to always dereference in tuples and not in pairs.  
+ <a href="structbeluga_1_1detail_1_1as__common__tuple__fn.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="tuple__vector_8hpp_source.html">tuple_vector.hpp</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a8e9c3f2b575dad2e8e6d864a09d905b9"><td class="memItemLeft" align="right" valign="top"><a id="a8e9c3f2b575dad2e8e6d864a09d905b9"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1tuple__or__pair_3_01First_00_01Second_01_4.html#a8e9c3f2b575dad2e8e6d864a09d905b9">type</a> = std::pair&lt; First, Second &gt;</td></tr>
-<tr class="memdesc:a8e9c3f2b575dad2e8e6d864a09d905b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The resulting type, an <code>std::pair</code>. <br /></td></tr>
-<tr class="separator:a8e9c3f2b575dad2e8e6d864a09d905b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a50bcde39649994eb0c710d98a8bca71e"><td class="memTemplParams" colspan="2"><a id="a50bcde39649994eb0c710d98a8bca71e"></a>
+template&lt;typename... Types&gt; </td></tr>
+<tr class="memitem:a50bcde39649994eb0c710d98a8bca71e"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1detail_1_1as__common__tuple__fn.html#a50bcde39649994eb0c710d98a8bca71e">operator()</a> (ranges::common_tuple&lt; Types... &gt; tuple) const</td></tr>
+<tr class="memdesc:a50bcde39649994eb0c710d98a8bca71e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that takes a common_tuple. <br /></td></tr>
+<tr class="separator:a50bcde39649994eb0c710d98a8bca71e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7279ef5777bf0807248d4f2fe1686b3b"><td class="memTemplParams" colspan="2"><a id="a7279ef5777bf0807248d4f2fe1686b3b"></a>
+template&lt;typename... Types&gt; </td></tr>
+<tr class="memitem:a7279ef5777bf0807248d4f2fe1686b3b"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1detail_1_1as__common__tuple__fn.html#a7279ef5777bf0807248d4f2fe1686b3b">operator()</a> (ranges::common_pair&lt; Types... &gt; pair) const</td></tr>
+<tr class="memdesc:a7279ef5777bf0807248d4f2fe1686b3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that takes a common_pair and forwards the values as a common_tuple. <br /></td></tr>
+<tr class="separator:a7279ef5777bf0807248d4f2fe1686b3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class First, class Second&gt;<br />
-struct beluga::tuple_or_pair&lt; First, Second &gt;</h3>
-
-<p>Specialization that returns a pair. </p>
+<div class="textblock"><p>Utility type to standardize the zip output to always dereference in tuples and not in pairs. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/__w/beluga/beluga/src/beluga/beluga/include/beluga/<a class="el" href="tuple__vector_8hpp_source.html">tuple_vector.hpp</a></li>
 </ul>

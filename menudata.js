@@ -96,6 +96,7 @@ var menudata={children:[
 {text:"y",url:"functions_vars.html#index_y"},
 {text:"z",url:"functions_vars.html#index_z"}]},
 {text:"Typedefs",url:"functions_type.html",children:[
+{text:"a",url:"functions_type.html#index_a"},
 {text:"d",url:"functions_type.html#index_d"},
 {text:"i",url:"functions_type.html#index_i"},
 {text:"l",url:"functions_type.html#index_l"},

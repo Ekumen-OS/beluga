@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::tuple_or_pair&lt; Types &gt; Struct Template Reference</title>
+<title>Beluga: beluga::TupleVector&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,36 +63,44 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>beluga</b></li><li class="navelem"><a class="el" href="structbeluga_1_1tuple__or__pair.html">tuple_or_pair</a></li>  </ul>
+<li class="navelem"><b>beluga</b></li><li class="navelem"><a class="el" href="classbeluga_1_1TupleVector.html">TupleVector</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="structbeluga_1_1tuple__or__pair-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::tuple_or_pair&lt; Types &gt; Struct Template Reference</div>  </div>
+<div class="title">beluga::TupleVector&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>A metafunction that returns a tuple or a pair depending on the number of types.  
- <a href="structbeluga_1_1tuple__or__pair.html#details">More...</a></p>
+<p>Shorthand for a tuple of vectors with the default allocator.  
+ <a href="classbeluga_1_1TupleVector.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="tuple__vector_8hpp_source.html">tuple_vector.hpp</a>&gt;</code></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:ae17a281938504e48bf0a2cb375e441cd"><td class="memItemLeft" align="right" valign="top"><a id="ae17a281938504e48bf0a2cb375e441cd"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1tuple__or__pair.html#ae17a281938504e48bf0a2cb375e441cd">type</a> = std::tuple&lt; Types... &gt;</td></tr>
-<tr class="memdesc:ae17a281938504e48bf0a2cb375e441cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The resulting type, an <code>std::tuple</code> by default. <br /></td></tr>
-<tr class="separator:ae17a281938504e48bf0a2cb375e441cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
+<div class="dynheader">
+Inheritance diagram for beluga::TupleVector&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classbeluga_1_1TupleVector__inherit__graph.png" border="0" usemap="#abeluga_1_1TupleVector_3_01T_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="abeluga_1_1TupleVector_3_01T_01_4_inherit__map" id="abeluga_1_1TupleVector_3_01T_01_4_inherit__map">
+<area shape="rect" title="Shorthand for a tuple of vectors with the default allocator." alt="" coords="5,95,192,121"/>
+<area shape="rect" href="classbeluga_1_1TupleContainer.html" title=" " alt="" coords="13,5,184,47"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for beluga::TupleVector&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classbeluga_1_1TupleVector__coll__graph.png" border="0" usemap="#abeluga_1_1TupleVector_3_01T_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="abeluga_1_1TupleVector_3_01T_01_4_coll__map" id="abeluga_1_1TupleVector_3_01T_01_4_coll__map">
+<area shape="rect" title="Shorthand for a tuple of vectors with the default allocator." alt="" coords="5,95,192,121"/>
+<area shape="rect" href="classbeluga_1_1TupleContainer.html" title=" " alt="" coords="13,5,184,47"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class... Types&gt;<br />
-struct beluga::tuple_or_pair&lt; Types &gt;</h3>
+<div class="textblock"><h3>template&lt;class T&gt;<br />
+class beluga::TupleVector&lt; T &gt;</h3>
 
-<p>A metafunction that returns a tuple or a pair depending on the number of types. </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<p>Shorthand for a tuple of vectors with the default allocator. </p>
+<p>This is needed so we can define deduction guides for this type. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>/__w/beluga/beluga/src/beluga/beluga/include/beluga/<a class="el" href="tuple__vector_8hpp_source.html">tuple_vector.hpp</a></li>
 </ul>
 </div><!-- contents -->

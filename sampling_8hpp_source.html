@@ -168,7 +168,7 @@ $(function() {
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    }</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <span class="keyword">auto</span> make_random_particle = [<span class="keyword">this</span>, &amp;engine] {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      <span class="keyword">using</span> particle_type = ranges::range_value_t&lt;decltype(particles)&gt;;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      <span class="keyword">using</span> particle_type = <span class="keyword">typename</span> Mixin::self_type::particle_type;</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      <span class="keywordflow">return</span> beluga::make_from_state&lt;particle_type&gt;(this-&gt;<span class="keyword">self</span>().make_random_state(engine));</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    };</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keywordflow">return</span> particles |                      <span class="comment">//</span></div>
