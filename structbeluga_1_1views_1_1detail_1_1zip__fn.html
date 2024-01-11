@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::detail::as_common_tuple_fn Struct Reference</title>
+<title>Beluga: beluga::views::detail::zip_fn Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,40 +63,35 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>beluga</b></li><li class="navelem"><b>detail</b></li><li class="navelem"><a class="el" href="structbeluga_1_1detail_1_1as__common__tuple__fn.html">as_common_tuple_fn</a></li>  </ul>
+<li class="navelem"><b>beluga</b></li><li class="navelem"><b>views</b></li><li class="navelem"><b>detail</b></li><li class="navelem"><a class="el" href="structbeluga_1_1views_1_1detail_1_1zip__fn.html">zip_fn</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="structbeluga_1_1detail_1_1as__common__tuple__fn-members.html">List of all members</a>  </div>
+<a href="structbeluga_1_1views_1_1detail_1_1zip__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::detail::as_common_tuple_fn Struct Reference</div>  </div>
+<div class="title">beluga::views::detail::zip_fn Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Utility type to standardize the zip output to always dereference in tuples and not in pairs.  
- <a href="structbeluga_1_1detail_1_1as__common__tuple__fn.html#details">More...</a></p>
+<p>Implementation detail for a zip range adaptor object.  
+ <a href="structbeluga_1_1views_1_1detail_1_1zip__fn.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="tuple__vector_8hpp_source.html">tuple_vector.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="zip_8hpp_source.html">zip.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a50bcde39649994eb0c710d98a8bca71e"><td class="memTemplParams" colspan="2"><a id="a50bcde39649994eb0c710d98a8bca71e"></a>
-template&lt;typename... Types&gt; </td></tr>
-<tr class="memitem:a50bcde39649994eb0c710d98a8bca71e"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1detail_1_1as__common__tuple__fn.html#a50bcde39649994eb0c710d98a8bca71e">operator()</a> (ranges::common_tuple&lt; Types... &gt; tuple) const</td></tr>
-<tr class="memdesc:a50bcde39649994eb0c710d98a8bca71e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that takes a common_tuple. <br /></td></tr>
-<tr class="separator:a50bcde39649994eb0c710d98a8bca71e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7279ef5777bf0807248d4f2fe1686b3b"><td class="memTemplParams" colspan="2"><a id="a7279ef5777bf0807248d4f2fe1686b3b"></a>
-template&lt;typename... Types&gt; </td></tr>
-<tr class="memitem:a7279ef5777bf0807248d4f2fe1686b3b"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1detail_1_1as__common__tuple__fn.html#a7279ef5777bf0807248d4f2fe1686b3b">operator()</a> (ranges::common_pair&lt; Types... &gt; pair) const</td></tr>
-<tr class="memdesc:a7279ef5777bf0807248d4f2fe1686b3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that takes a common_pair and forwards the values as a common_tuple. <br /></td></tr>
-<tr class="separator:a7279ef5777bf0807248d4f2fe1686b3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73e4852c75adfd157d9b5e8f0087b5f6"><td class="memTemplParams" colspan="2"><a id="a73e4852c75adfd157d9b5e8f0087b5f6"></a>
+template&lt;class... Ranges&gt; </td></tr>
+<tr class="memitem:a73e4852c75adfd157d9b5e8f0087b5f6"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1views_1_1detail_1_1zip__fn.html#a73e4852c75adfd157d9b5e8f0087b5f6">operator()</a> (Ranges &amp;&amp;... ranges) const</td></tr>
+<tr class="memdesc:a73e4852c75adfd157d9b5e8f0087b5f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that implements the zip_view algorithm. <br /></td></tr>
+<tr class="separator:a73e4852c75adfd157d9b5e8f0087b5f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Utility type to standardize the zip output to always dereference in tuples and not in pairs. </p>
+<div class="textblock"><p>Implementation detail for a zip range adaptor object. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/__w/beluga/beluga/src/beluga/beluga/include/beluga/<a class="el" href="tuple__vector_8hpp_source.html">tuple_vector.hpp</a></li>
+<li>/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/<a class="el" href="zip_8hpp_source.html">zip.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
