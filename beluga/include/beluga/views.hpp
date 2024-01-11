@@ -21,6 +21,7 @@
 #include <beluga/views/sample.hpp>
 #include <beluga/views/take_evenly.hpp>
 #include <beluga/views/take_while_kld.hpp>
+#include <beluga/views/zip.hpp>
 
 /**
  * \file
