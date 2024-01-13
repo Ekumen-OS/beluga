@@ -40,7 +40,7 @@ TEST(AssignAction, MoveOnlyRange) {
   input.emplace_back(std::make_unique<int>(1));
   input.emplace_back(std::make_unique<int>(2));
   input.emplace_back(std::make_unique<int>(3));
-  input |= ranges::views::move | ranges::views::reverse | beluga::actions::assign;
+  input |= ranges::views::reverse | ranges::views::move | beluga::actions::assign;
   ASSERT_EQ(*input.front(), 3);
   ASSERT_EQ(*input.back(), 1);
 }
