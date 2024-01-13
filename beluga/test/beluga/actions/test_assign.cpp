@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <list>
+#include <memory>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -25,8 +26,6 @@
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/transform.hpp>
-
-#include <memory>
 
 namespace {
 
