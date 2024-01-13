@@ -84,6 +84,12 @@ struct assign_fn {
 /**
  * This can be appended to any view closure to evaluate it eagerly and assign the result
  * to a given range, effectively converting any view into an action.
+ *
+ * The assignment of elements into the container may involve copy which can be less efficient than
+ * move because lvalue references are produced during the indirection call. Users can opt-in to use
+ * `ranges::views::move` to adapt the range in order for their elements to always produce an rvalue
+ * reference during the indirection call which implies move. In this case, make sure that the input
+ * views don't require accessing the elements in the adapted range more than once.
  */
 inline constexpr detail::assign_fn assign;
 
