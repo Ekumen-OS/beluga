@@ -59,12 +59,6 @@ TEST(AssignAction, ViewToActionCall) {
   ASSERT_TRUE(ranges::equal(input, std::vector{3, 2, 1}));
 }
 
-TEST(AssignAction, ViewToActionOperator) {
-  auto input = std::vector{1, 2, 3};
-  input <<= ranges::views::reverse;
-  ASSERT_TRUE(ranges::equal(input, std::vector{3, 2, 1}));
-}
-
 TEST(AssignAction, ActionComposition) {
   auto input = std::vector{1, 2, 3};
   input |= ranges::actions::drop(1) | beluga::actions::assign;
@@ -90,7 +84,7 @@ TEST(AssignAction, ActionViewActionComposition) {
 
 TEST(AssignAction, List) {
   auto input = std::list{1, 2, 3};
-  input <<= ranges::actions::remove(2) | ranges::views::reverse;
+  input |= ranges::actions::remove(2) | ranges::views::reverse | beluga::actions::assign;
   ASSERT_TRUE(ranges::equal(input, std::list{3, 1}));
 }
 

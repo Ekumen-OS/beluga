@@ -93,30 +93,6 @@ struct assign_fn {
  */
 inline constexpr detail::assign_fn assign;
 
-/// Operator overload that appends assign to any range closure.
-template <
-    class Range,
-    class Fn,
-    std::enable_if_t<ranges::range<Range>, int> = 0,
-    std::enable_if_t<is_range_closure_v<Fn>, int> = 0>
-constexpr auto operator<<=(Range& range, Fn fn) -> Range& {
-  return range |= std::move(fn) | beluga::actions::assign;
-}
-
 }  // namespace beluga::actions
-
-// Make the assign operator overload findable by ADL for existing range adaptor objects:
-
-namespace beluga::views {
-using beluga::actions::operator<<=;
-}
-
-namespace ranges::views {
-using beluga::actions::operator<<=;
-}
-
-namespace ranges::actions {
-using beluga::actions::operator<<=;
-}
 
 #endif
