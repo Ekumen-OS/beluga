@@ -72,13 +72,13 @@ TEST(AssignAction, ActionViewComposition) {
 
 TEST(AssignAction, ActionViewActionComposition) {
   auto input = std::vector{1, 2, 3};
-  input |= ranges::actions::drop(1) |                                      //
-           ranges::views::reverse |                                        //
-           beluga::actions::assign |                                       //
-           ranges::actions::drop(1) |                                      //
-           ranges::views::transform([](auto value) { return ++value; }) |  //
+  input |= ranges::actions::drop(1) |                                         //
+           ranges::views::reverse |                                           //
+           beluga::actions::assign |                                          //
+           ranges::actions::drop(1) |                                         //
+           ranges::views::transform([](auto value) { return value + 10; }) |  //
            beluga::actions::assign;
-  ASSERT_TRUE(ranges::equal(input, std::vector{3}));
+  ASSERT_TRUE(ranges::equal(input, std::vector{12}));
 }
 
 TEST(AssignAction, List) {
