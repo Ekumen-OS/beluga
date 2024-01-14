@@ -26,26 +26,19 @@ namespace {
 TEST(ReweightAction, DefaultExecutionPolicy) {
   auto input = std::vector{std::make_tuple(5, beluga::Weight(2.0))};
   input |= beluga::actions::reweight([](int value) { return value; });
-  ASSERT_EQ(input.front(), std::make_tuple(5, 1.0));
+  ASSERT_EQ(input.front(), std::make_tuple(5, 10.0));
 }
 
 TEST(ReweightAction, SequencedExecutionPolicy) {
   auto input = std::vector{std::make_tuple(5, beluga::Weight(2.0))};
   input |= beluga::actions::reweight(std::execution::seq, [](int value) { return value; });
-  ASSERT_EQ(input.front(), std::make_tuple(5, 1.0));
+  ASSERT_EQ(input.front(), std::make_tuple(5, 10.0));
 }
 
 TEST(ReweightAction, ParallelExecutionPolicy) {
   auto input = std::vector{std::make_tuple(5, beluga::Weight(2.0))};
   input |= beluga::actions::reweight(std::execution::par, [](int value) { return value; });
-  ASSERT_EQ(input.front(), std::make_tuple(5, 1.0));
-}
-
-TEST(ReweightAction, MaxNormalize) {
-  auto input = std::vector{std::make_tuple(5, beluga::Weight(25.0)), std::make_tuple(3, beluga::Weight(100.0))};
-  input |= beluga::actions::reweight([](auto) { return 1.0; });
-  ASSERT_EQ(beluga::weight(input.front()), 0.25);
-  ASSERT_EQ(beluga::weight(input.back()), 1.0);
+  ASSERT_EQ(input.front(), std::make_tuple(5, 10.0));
 }
 
 TEST(ReweightAction, Composition) {
@@ -54,7 +47,7 @@ TEST(ReweightAction, Composition) {
            beluga::views::sample |                                       //
            ranges::views::take_exactly(5) |                              //
            beluga::actions::assign;
-  ASSERT_TRUE(ranges::equal(beluga::views::weights(input), std::vector<beluga::Weight>{1, 1, 1, 1, 1}));
+  ASSERT_TRUE(ranges::equal(beluga::views::weights(input), std::vector<beluga::Weight>{2, 2, 2, 2, 2}));
 }
 
 }  // namespace

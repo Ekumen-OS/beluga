@@ -41,7 +41,7 @@ struct reweight_base_fn {
    * \param model A callable instance to compute the weights given the particle states.
    *
    * For each particle, we multiply the current weight by the new importance weight to accumulate information from
-   * sensor updates. The weight of the particles will be max-normalized to avoid unbounded growth.
+   * sensor updates.
    */
   template <
       class ExecutionPolicy,
@@ -60,16 +60,6 @@ struct reweight_base_fn {
         std::begin(weights),  //
         std::begin(weights),  //
         [model = std::move(model)](const auto& s, auto w) { return w * model(s); });
-
-    // Max normalize weights to avoid unbounded growth.
-    const auto max = *ranges::max_element(weights);
-    std::transform(
-        policy,               //
-        std::begin(weights),  //
-        std::end(weights),    //
-        std::begin(weights),  //
-        [max](auto w) { return w / max; });
-
     return range;
   }
 
