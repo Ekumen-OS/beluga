@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['fixedlimiter_390',['FixedLimiter',['../classbeluga_1_1FixedLimiter.html',1,'beluga']]],
-  ['fixedlimiterparam_391',['FixedLimiterParam',['../structbeluga_1_1FixedLimiterParam.html',1,'beluga']]]
+  ['fixedlimiter_394',['FixedLimiter',['../classbeluga_1_1FixedLimiter.html',1,'beluga']]],
+  ['fixedlimiterparam_395',['FixedLimiterParam',['../structbeluga_1_1FixedLimiterParam.html',1,'beluga']]]
 ];
