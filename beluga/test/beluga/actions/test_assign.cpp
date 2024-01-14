@@ -23,6 +23,7 @@
 #include <range/v3/action/drop.hpp>
 #include <range/v3/action/remove.hpp>
 #include <range/v3/algorithm/equal.hpp>
+#include <range/v3/view/indirect.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/transform.hpp>
@@ -41,8 +42,7 @@ TEST(AssignAction, MoveOnlyRange) {
   input.emplace_back(std::make_unique<int>(2));
   input.emplace_back(std::make_unique<int>(3));
   input |= ranges::views::reverse | ranges::views::move | beluga::actions::assign;
-  ASSERT_EQ(*input.front(), 3);
-  ASSERT_EQ(*input.back(), 1);
+  ASSERT_TRUE(ranges::equal(input | ranges::views::indirect, std::vector{3, 2, 1}));
 }
 
 TEST(AssignAction, ViewToActionComposition) {
