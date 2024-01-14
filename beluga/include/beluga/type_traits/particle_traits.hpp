@@ -16,6 +16,7 @@
 #define BELUGA_TYPE_TRAITS_PARTICLE_TRAITS_HPP
 
 #include <beluga/primitives.hpp>
+#include <beluga/type_traits/tuple_traits.hpp>
 #include <range/v3/range/traits.hpp>
 
 /**
@@ -79,15 +80,25 @@ inline constexpr bool is_particle_range_v = is_particle_v<ranges::range_value_t<
 /// Returns a new particle from the given state.
 /**
  * \tparam Particle The particle type to be used.
- * \tparam T The particle state type.
- *  T must be convertible to `state_t<Particle>`.
+ * \tparam T The particle state type. T must be convertible to `state_t<Particle>`.
  * \param value The state to make the particle from.
  * \return The new particle, created from the given state.
+ *
+ * The new particle will have a weight equal to 1.
  */
 template <class Particle, class T = state_t<Particle>>
 constexpr auto make_from_state(T value) {
   static_assert(is_particle_v<Particle>);
-  auto particle = Particle{};
+  auto particle = []() {
+    if constexpr (is_tuple_like_v<Particle>) {
+      // Support for zipped ranges composed with views that don't
+      // propagate the tuple value type of the original range
+      // (ranges::views::const_).
+      return decay_tuple_like_t<Particle>{};
+    } else {
+      return Particle{};
+    }
+  }();
   beluga::state(particle) = std::move(value);
   beluga::weight(particle) = 1.0;
   return particle;

@@ -16,8 +16,11 @@
 
 #include "beluga/views/sample.hpp"
 
+#include <beluga/tuple_vector.hpp>
+
 #include <range/v3/algorithm/count.hpp>
 #include <range/v3/algorithm/find.hpp>
+#include <range/v3/view/const.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
 namespace {
@@ -66,9 +69,10 @@ TEST(SampleView, DiscreteDistributionSingleElement) {
 }
 
 TEST(SampleView, DiscreteDistributionSingleElementFromParticleRange) {
-  auto input = std::array{std::make_tuple(5, beluga::Weight(1.0))};
-  auto output = input | beluga::views::sample | ranges::views::take_exactly(20) | beluga::views::states;
-  ASSERT_EQ(ranges::count(output, 5), 20);
+  auto input = std::array{std::make_tuple(5, beluga::Weight(5.0))};
+  auto output = input | beluga::views::sample | ranges::views::take_exactly(20);
+  ASSERT_EQ(ranges::count(output | beluga::views::states, 5), 20);
+  ASSERT_EQ(ranges::count(output | beluga::views::weights, beluga::Weight(1.0)), 20);
 }
 
 TEST(SampleView, DiscreteDistributionWeightZero) {
@@ -122,14 +126,21 @@ TEST(SampleView, EngineArgument) {
 TEST(SampleView, DiscreteDistributionProbability) {
   const auto size = 100'000;
 
-  auto input = std::array{1, 2, 3, 4};
-  auto weights = std::array{0.3, 0.1, 0.4, 0.2};
+  const auto input = beluga::TupleVector<std::tuple<int, beluga::Weight>>{
+      std::make_tuple(1, beluga::Weight(0.3)),  //
+      std::make_tuple(2, beluga::Weight(0.1)),  //
+      std::make_tuple(3, beluga::Weight(0.4)),  //
+      std::make_tuple(4, beluga::Weight(0.2))};
 
-  auto output = beluga::views::sample(input, weights) | ranges::views::take_exactly(size);
+  auto output = input |                  //
+                ranges::views::const_ |  //
+                beluga::views::sample |  //
+                ranges::views::take_exactly(size);
 
   std::unordered_map<int, std::size_t> buckets;
-  for (auto value : output) {
+  for (auto [value, weight] : output) {
     ++buckets[value];
+    ASSERT_EQ(weight, 1.0);
   }
 
   ASSERT_EQ(ranges::size(buckets), 4);
