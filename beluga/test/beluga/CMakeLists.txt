@@ -14,6 +14,7 @@
 
 add_executable(
   test_beluga
+  actions/test_assign.cpp
   algorithm/raycasting/test_bresenham.cpp
   algorithm/test_distance_map.cpp
   algorithm/test_estimation.cpp
