@@ -189,9 +189,10 @@ struct sample_fn {
  * [random_access_range](https://en.cppreference.com/w/cpp/ranges/random_access_range)
  * and [sized_range](https://en.cppreference.com/w/cpp/ranges/sized_range) concepts.
  *
- * This view implements multinomial resampling for a given range of particles. The core idea
- * is to generate independently N random numbers and use them to select particles from the
- * input range.
+ * This view implements multinomial resampling for a given range of particles.
+ * The core idea is to draw random indices / iterators to the input particle range
+ * from a [multinomial distribution](https://en.wikipedia.org/wiki/Multinomial_distribution)
+ * parameterized after particle weights (and assumed uniform for non-weighted particle ranges).
  */
 inline constexpr ranges::views::view_closure<detail::sample_fn> sample;
 
