@@ -103,8 +103,8 @@ struct propagate_fn : public propagate_base_fn {
 /// [Range adaptor object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject) that
 /// can update the state in a particle range using a motion model.
 /**
- * This step generates a hyphotetical state based on the current particle state and controls,
- * while leaving its importance weight unchanged.
+ * This action updates particle states based on their current value and a state-transition function (or motion model).
+ * Every other particle attribute (such as importance sampling weights) is left unchanged.
  */
 inline constexpr detail::propagate_fn propagate;
 

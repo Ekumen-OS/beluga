@@ -103,8 +103,9 @@ struct reweight_fn : public reweight_base_fn {
 /// [Range adaptor object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject) that
 /// can update the weights in a particle range using a sensor model.
 /**
- * This step computes the importance factor or weight of each particle to incorporate measurements.
- * The importance is proportional to the probability of seeing the measurement given the current particle state.
+ * This action updates particle weights by importance weight multiplication. 
+ * These importance weights are computed by a given measurement likelihood 
+ * function (or sensor model) for current particle states.
  */
 inline constexpr detail::reweight_fn reweight;
 
