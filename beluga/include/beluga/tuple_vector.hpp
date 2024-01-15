@@ -203,7 +203,7 @@ class TupleContainer<InternalContainer, std::tuple<Types...>> {
   }
 
   [[nodiscard]] constexpr auto all() const {
-    return std::apply([](const auto&... containers) { return beluga::views::zip(containers...); }, sequences_);
+    return std::apply([](auto&... containers) { return beluga::views::zip(containers...); }, sequences_);
   }
 
   [[nodiscard]] constexpr auto all() {
