@@ -90,10 +90,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a44d6e18d478644508e92079cc78ff30c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a44d6e18d478644508e92079cc78ff30c">operator()</a> (Range &amp;&amp;range, URNG &amp;engine=ranges::detail::get_random_engine()) const</td></tr>
 <tr class="memdesc:a44d6e18d478644508e92079cc78ff30c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that implements the sample algorithm for non-weighted ranges.  <a href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a44d6e18d478644508e92079cc78ff30c">More...</a><br /></td></tr>
 <tr class="separator:a44d6e18d478644508e92079cc78ff30c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44d6e18d478644508e92079cc78ff30c"><td class="memTemplParams" colspan="2"><a id="a44d6e18d478644508e92079cc78ff30c"></a>
-template&lt;class Range , class URNG  = typename ranges::detail::default_random_engine, std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0, std::enable_if_t&lt; is_particle_range_v&lt; Range &gt;, int &gt;  = 0, std::enable_if_t&lt;!ranges::range&lt; URNG &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a44d6e18d478644508e92079cc78ff30c"><td class="memTemplParams" colspan="2">template&lt;class Range , class URNG  = typename ranges::detail::default_random_engine, std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0, std::enable_if_t&lt; is_particle_range_v&lt; Range &gt;, int &gt;  = 0, std::enable_if_t&lt;!ranges::range&lt; URNG &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a44d6e18d478644508e92079cc78ff30c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a44d6e18d478644508e92079cc78ff30c">operator()</a> (Range &amp;&amp;range, URNG &amp;engine=ranges::detail::get_random_engine()) const</td></tr>
-<tr class="memdesc:a44d6e18d478644508e92079cc78ff30c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that handles particle ranges. <br /></td></tr>
+<tr class="memdesc:a44d6e18d478644508e92079cc78ff30c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that handles particle ranges.  <a href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a44d6e18d478644508e92079cc78ff30c">More...</a><br /></td></tr>
 <tr class="separator:a44d6e18d478644508e92079cc78ff30c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ad2579b30c59b1d651ae5fb546bfc97"><td class="memTemplParams" colspan="2"><a id="a2ad2579b30c59b1d651ae5fb546bfc97"></a>
 template&lt;class Range , class URNG , typename std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0&gt; </td></tr>
@@ -110,7 +109,7 @@ template&lt;class URNG , std::enable_if_t&lt;!ranges::range&lt; URNG &gt;, int &
 <div class="textblock"><p>Implementation detail for a sample range adaptor object. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a44d6e18d478644508e92079cc78ff30c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44d6e18d478644508e92079cc78ff30c">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a44d6e18d478644508e92079cc78ff30c">&#9670;&nbsp;</a></span>operator()() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -150,8 +149,49 @@ template&lt;class Range , class URNG  = typename ranges::detail::default_random_
 
 </div>
 </div>
+<a id="a44d6e18d478644508e92079cc78ff30c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44d6e18d478644508e92079cc78ff30c">&#9670;&nbsp;</a></span>operator()() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Range , class URNG  = typename ranges::detail::default_random_engine, std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0, std::enable_if_t&lt; is_particle_range_v&lt; Range &gt;, int &gt;  = 0, std::enable_if_t&lt;!ranges::range&lt; URNG &gt;, int &gt;  = 0&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto beluga::views::detail::sample_fn::operator() </td>
+          <td>(</td>
+          <td class="paramtype">Range &amp;&amp;&#160;</td>
+          <td class="paramname"><em>range</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">URNG &amp;&#160;</td>
+          <td class="paramname"><em>engine</em> = <code>ranges::detail::get_random_engine()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Overload that handles particle ranges. </p>
+<p>The new particles will all have a weight equal to 1, since, after resampling, the probability will be represented by the number of particles rather than their individual weight. </p>
+
+</div>
+</div>
 <a id="a9109c102b7e8c8f96dfee8637c9dd79b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9109c102b7e8c8f96dfee8637c9dd79b">&#9670;&nbsp;</a></span>operator()() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9109c102b7e8c8f96dfee8637c9dd79b">&#9670;&nbsp;</a></span>operator()() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

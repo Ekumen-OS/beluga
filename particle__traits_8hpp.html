@@ -79,22 +79,23 @@ $(function() {
 <p>Implementation of traits for particle types, see the <a class="el" href="ParticlePage.html">Particle</a> named requirements.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="primitives_8hpp_source.html">beluga/primitives.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="tuple__traits_8hpp_source.html">beluga/type_traits/tuple_traits.hpp</a>&gt;</code><br />
 <code>#include &lt;range/v3/range/traits.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for particle_traits.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="particle__traits_8hpp__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2type__traits_2particle__traits_8hpp" alt=""/></div>
 <map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2type__traits_2particle__traits_8hpp" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2type__traits_2particle__traits_8hpp">
-<area shape="rect" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="205,5,403,76"/>
-<area shape="rect" href="primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="122,124,286,151"/>
-<area shape="rect" title=" " alt="" coords="311,124,497,151"/>
-<area shape="rect" title=" " alt="" coords="15,288,70,315"/>
-<area shape="rect" title=" " alt="" coords="158,288,250,315"/>
-<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="241,199,452,240"/>
-<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="26,199,166,240"/>
-<area shape="rect" href="forward__like_8hpp_source.html" title=" " alt="" coords="476,199,639,240"/>
-<area shape="rect" title=" " alt="" coords="289,288,375,315"/>
-<area shape="rect" title=" " alt="" coords="400,288,459,315"/>
+<area shape="rect" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="489,5,687,76"/>
+<area shape="rect" href="primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="377,124,541,151"/>
+<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="529,199,669,240"/>
+<area shape="rect" title=" " alt="" coords="625,124,812,151"/>
+<area shape="rect" title=" " alt="" coords="541,288,595,315"/>
+<area shape="rect" title=" " alt="" coords="394,288,486,315"/>
+<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="192,199,403,240"/>
+<area shape="rect" href="forward__like_8hpp_source.html" title=" " alt="" coords="5,199,168,240"/>
+<area shape="rect" title=" " alt="" coords="178,288,265,315"/>
+<area shape="rect" title=" " alt="" coords="289,288,348,315"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -188,7 +189,8 @@ template&lt;class Particle , class T  = state_t&lt;Particle&gt;&gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The new particle, created from the given state. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The new particle, created from the given state.</dd></dl>
+<p>The new particle will have a weight equal to 1. </p>
 
 </div>
 </div>
