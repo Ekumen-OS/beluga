@@ -189,7 +189,8 @@ TEST(TupleVectorTest, TraitConsistency) {
                 ranges::range_rvalue_reference_t<ConstContainer>,  //
                 ranges::common_tuple<const float&&, const int&&>>);
 
-  // Sadness... :(
+  // Expected value type of a const view would be the same as the value type of the
+  // adapted container (std::tuple<float, int>)... This is not the case. :(
   static_assert(std::is_same_v<
                 ranges::range_value_t<ConstView>,  //
                 ranges::common_tuple<const float&, const int&>>);
