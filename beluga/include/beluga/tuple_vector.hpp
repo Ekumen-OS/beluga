@@ -203,19 +203,11 @@ class TupleContainer<InternalContainer, std::tuple<Types...>> {
   }
 
   [[nodiscard]] constexpr auto all() const {
-    return std::apply(
-        [](auto&... containers) {  //
-          return beluga::views::zip(containers...) | ranges::views::const_;
-        },
-        sequences_);
+    return std::apply([](auto&... containers) { return beluga::views::zip(containers...); }, sequences_);
   }
 
   [[nodiscard]] constexpr auto all() {
-    return std::apply(
-        [](auto&... containers) {  //
-          return beluga::views::zip(containers...);
-        },
-        sequences_);
+    return std::apply([](auto&... containers) { return beluga::views::zip(containers...); }, sequences_);
   }
 };
 
@@ -235,7 +227,7 @@ class TupleVector : public TupleContainer<Vector, T> {
 
 /// Deduction guide to construct from iterators.
 template <class I, class S, typename = std::enable_if_t<ranges::input_iterator<I> && ranges::input_iterator<S>>>
-TupleVector(I, S) -> TupleVector<std_tuple_decay_t<ranges::iter_value_t<I>>>;
+TupleVector(I, S) -> TupleVector<decay_tuple_like_t<ranges::iter_value_t<I>>>;
 
 }  // namespace beluga
 

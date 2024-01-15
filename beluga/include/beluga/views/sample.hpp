@@ -150,6 +150,10 @@ struct sample_fn {
   }
 
   /// Overload that handles particle ranges.
+  /**
+   * The new particles will all have a weight equal to 1, since, after resampling, the probability
+   * will be represented by the number of particles rather than their individual weight.
+   */
   template <
       class Range,
       class URNG = typename ranges::detail::default_random_engine,
@@ -157,7 +161,8 @@ struct sample_fn {
       std::enable_if_t<is_particle_range_v<Range>, int> = 0,
       std::enable_if_t<!ranges::range<URNG>, int> = 0>
   constexpr auto operator()(Range&& range, URNG& engine = ranges::detail::get_random_engine()) const {
-    return (*this)(ranges::views::all(range), beluga::views::weights(range), engine);
+    return (*this)(beluga::views::states(range), beluga::views::weights(range), engine) |
+           ranges::views::transform(beluga::make_from_state<ranges::range_value_t<Range>>);
   }
 
   /// Overload that unwraps the engine reference from a view closure.
@@ -183,6 +188,11 @@ struct sample_fn {
  * To use this, the input range must model the
  * [random_access_range](https://en.cppreference.com/w/cpp/ranges/random_access_range)
  * and [sized_range](https://en.cppreference.com/w/cpp/ranges/sized_range) concepts.
+ *
+ * This view implements multinomial resampling for a given range of particles.
+ * The core idea is to draw random indices / iterators to the input particle range
+ * from a [multinomial distribution](https://en.wikipedia.org/wiki/Multinomial_distribution)
+ * parameterized after particle weights (and assumed uniform for non-weighted particle ranges).
  */
 inline constexpr ranges::views::view_closure<detail::sample_fn> sample;
 

@@ -165,6 +165,8 @@ TEST(TupleVectorTest, ConceptChecks) {
 
 TEST(TupleVectorTest, TraitConsistency) {
   using Container = beluga::TupleVector<std::tuple<float, int>>;
+  using ConstContainer = decltype(std::declval<const Container&>());
+  using ConstView = decltype(std::declval<const Container&>() | ranges::views::const_);
   using Iterator = decltype(ranges::begin(std::declval<Container&>()));
 
   // Expected types
@@ -177,6 +179,21 @@ TEST(TupleVectorTest, TraitConsistency) {
   static_assert(std::is_same_v<
                 ranges::range_rvalue_reference_t<Container>,  //
                 ranges::common_tuple<float&&, int&&>>);
+  static_assert(std::is_same_v<
+                ranges::range_value_t<ConstContainer>,  //
+                std::tuple<float, int>>);
+  static_assert(std::is_same_v<
+                ranges::range_reference_t<ConstContainer>,  //
+                ranges::common_tuple<const float&, const int&>>);
+  static_assert(std::is_same_v<
+                ranges::range_rvalue_reference_t<ConstContainer>,  //
+                ranges::common_tuple<const float&&, const int&&>>);
+
+  // Expected value type of a const view would be the same as the value type of the
+  // adapted container (std::tuple<float, int>)... This is not the case. :(
+  static_assert(std::is_same_v<
+                ranges::range_value_t<ConstView>,  //
+                ranges::common_tuple<const float&, const int&>>);
 
   // Consistency
   static_assert(std::is_same_v<
