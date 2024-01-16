@@ -16,6 +16,8 @@
 #define BELUGA_ACTIONS_HPP
 
 #include <beluga/actions/assign.hpp>
+#include <beluga/actions/propagate.hpp>
+#include <beluga/actions/reweight.hpp>
 
 /**
  * \file
