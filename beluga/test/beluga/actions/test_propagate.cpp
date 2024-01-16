@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include <beluga/actions/assign.hpp>
 #include <beluga/actions/propagate.hpp>
@@ -47,7 +47,8 @@ TEST(PropagateAction, Composition) {
            beluga::views::sample |                                          //
            ranges::views::take_exactly(5) |                                 //
            beluga::actions::assign;
-  ASSERT_TRUE(ranges::equal(beluga::views::states(input), std::vector{4, 4, 4, 4, 4}));
+  auto states = input | beluga::views::states | ranges::to<std::vector>;
+  ASSERT_THAT(states, testing::ElementsAre(4, 4, 4, 4, 4));
 }
 
 TEST(PropagateAction, StatefulModel) {
@@ -57,7 +58,8 @@ TEST(PropagateAction, StatefulModel) {
            ranges::views::take_exactly(5) |  //
            beluga::actions::assign |         //
            beluga::actions::propagate(std::ref(model));
-  ASSERT_TRUE(ranges::equal(beluga::views::states(input), std::vector{0, 1, 2, 3, 4}));
+  auto states = input | beluga::views::states | ranges::to<std::vector>;
+  ASSERT_THAT(states, testing::ElementsAre(0, 1, 2, 3, 4));
   ASSERT_EQ(model(0), 5);  // the model was passed by reference
 }
 
