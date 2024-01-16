@@ -50,4 +50,15 @@ TEST(ReweightAction, Composition) {
   ASSERT_TRUE(ranges::equal(beluga::views::weights(input), std::vector<beluga::Weight>{2, 2, 2, 2, 2}));
 }
 
+TEST(ReweightAction, StatefulModel) {
+  auto input = std::vector{std::make_tuple(5, beluga::Weight(1.0))};
+  auto model = [value = 0](int) mutable { return value++; };
+  input |= beluga::views::sample |           //
+           ranges::views::take_exactly(5) |  //
+           beluga::actions::assign |         //
+           beluga::actions::reweight(std::ref(model));
+  ASSERT_TRUE(ranges::equal(beluga::views::weights(input), std::vector<beluga::Weight>{0, 1, 2, 3, 4}));
+  ASSERT_EQ(model(0), 5);  // the model was passed by reference
+}
+
 }  // namespace
