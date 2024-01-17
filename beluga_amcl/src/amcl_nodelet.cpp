@@ -226,7 +226,7 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
       params.z_hit = config_.laser_z_hit;
       params.z_random = config_.laser_z_rand;
       params.sigma_hit = config_.laser_sigma_hit;
-      return beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>{params, beluga_ros::OccupancyGrid{map}};
+      return beluga::LikelihoodFieldModel{params, beluga_ros::OccupancyGrid{map}};
     }
     if (name == kBeamSensorModelName) {
       auto params = beluga::BeamModelParam{};
@@ -237,7 +237,7 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
       params.sigma_hit = config_.laser_sigma_hit;
       params.lambda_short = config_.laser_lambda_short;
       params.beam_max_range = config_.laser_max_range;
-      return beluga::BeamSensorModel<beluga_ros::OccupancyGrid>{params, beluga_ros::OccupancyGrid{map}};
+      return beluga::BeamSensorModel{params, beluga_ros::OccupancyGrid{map}};
     }
     throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
   };
