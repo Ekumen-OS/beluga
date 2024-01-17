@@ -67,12 +67,11 @@ struct LikelihoodFieldModelParam {
  *
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4.
  *
- * \tparam Mixin The mixed-in type with no particular requirements.
  * \tparam OccupancyGrid Type representing an occupancy grid.
  *  It must satisfy \ref OccupancyGrid2Page.
  */
-template <class Mixin, class OccupancyGrid>
-class LikelihoodFieldModel : public Mixin {
+template <class OccupancyGrid>
+class LikelihoodFieldModel {
  public:
   /// State type of a particle.
   using state_type = Sophus::SE2d;
@@ -80,22 +79,19 @@ class LikelihoodFieldModel : public Mixin {
   using weight_type = double;
   /// Measurement type of the sensor: a point cloud for the range finder.
   using measurement_type = std::vector<std::pair<double, double>>;
-
+  /// Map representation type.
+  using map_type = OccupancyGrid;
   /// Parameter type that the constructor uses to configure the likelihood field model.
   using param_type = LikelihoodFieldModelParam;
 
   /// Constructs a LikelihoodFieldModel instance.
   /**
-   * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param params Parameters to configure this instance.
    *  See beluga::LikelihoodFieldModelParam for details.
    * \param grid Occupancy grid representing the static map.
-   * \param ...rest Arguments that are not used by this part of the mixin, but by others.
    */
-  template <class... Args>
-  explicit LikelihoodFieldModel(const param_type& params, OccupancyGrid grid, Args&&... rest)
-      : Mixin(std::forward<Args>(rest)...),
-        params_{params},
+  explicit LikelihoodFieldModel(const param_type& params, OccupancyGrid grid)
+      : params_{params},
         grid_{std::move(grid)},
         free_states_{compute_free_states(grid_)},
         likelihood_field_{make_likelihood_field(params, grid_)} {}
@@ -153,10 +149,10 @@ class LikelihoodFieldModel : public Mixin {
   }
 
   /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
-  void update_sensor(measurement_type&& points) final { points_ = std::move(points); }
+  void update_sensor(measurement_type&& points) { points_ = std::move(points); }
 
   /// \copydoc LaserSensorModelInterface2d::update_map(Map&& map)
-  void update_map(OccupancyGrid&& map) final {
+  void update_map(map_type&& map) {
     grid_ = std::move(map);
     free_states_ = compute_free_states(grid_);
     likelihood_field_ = make_likelihood_field(params_, grid_);

@@ -44,6 +44,19 @@ namespace beluga {
  * - \ref localization.hpp
  */
 
+/// Composes multiple interfaces into a single interface type.
+/**
+ * \tparam Interfaces Interfaces to combine.
+ */
+template <class... Interfaces>
+struct compose_interfaces : public Interfaces... {
+  /// Virtual destructor.
+  /**
+   * Makes it so at least one of the interfaces provides a virtual destructor.
+   */
+  ~compose_interfaces() override = default;
+};
+
 /// A null mixin interface. Meant to be the default value for an optional customization point.
 class NullMixinInterface {
  public:
@@ -70,7 +83,7 @@ class NullMixin : public Mixin {
  * \tparam CustomExtensionMixinInterface An optional mixin interface for the user to customize the filter.
  */
 template <class Map, class CustomExtensionMixinInterface = NullMixinInterface>
-using LaserLocalizationInterface2d = beluga::mixin::compose_interfaces<
+using LaserLocalizationInterface2d = beluga::compose_interfaces<
     BaseParticleFilterInterface,
     StorageInterface<Sophus::SE2d, beluga::Weight>,
     EstimationInterface2d,
@@ -78,22 +91,52 @@ using LaserLocalizationInterface2d = beluga::mixin::compose_interfaces<
     LaserSensorModelInterface2d<Map>,
     CustomExtensionMixinInterface>;
 
+/// \cond
+
+/// Wrapper to convert a motion model class into a mixin.
+template <typename Mixin, typename Model>
+struct MotionMixin : public Mixin, public Model {
+  using update_type = typename Model::update_type;
+
+  template <typename... Args>
+  constexpr explicit MotionMixin(Model model, Args&&... args)
+      : Model(std::move(model)), Mixin(static_cast<decltype(args)>(args)...) {}
+
+  void update_motion(const update_type& pose) { Model::update_motion(pose); }
+};
+
+/// Wrapper to convert a sensor model class into a mixin.
+template <typename Mixin, typename Model>
+struct SensorMixin : public Mixin, public Model {
+  using measurement_type = typename Model::measurement_type;
+  using map_type = typename Model::map_type;
+
+  template <typename... Args>
+  constexpr explicit SensorMixin(Model model, Args&&... args)
+      : Model(std::move(model)), Mixin(static_cast<decltype(args)>(args)...) {}
+
+  void update_sensor(measurement_type&& measurement) { Model::update_sensor(std::move(measurement)); }
+  void update_map(map_type&& map) { Model::update_map(std::move(map)); }
+};
+
+/// \endcond
+
 /// An implementation of Monte Carlo Localization.
 /**
  * An instance of this class template implements beluga::LaserLocalizationInterface2d
  * and \ref LocalizationPage.
  *
- * \tparam MotionDescriptor A descriptor of a mixin that implements \ref MotionModelPage.
- * \tparam SensorDescriptor A descriptor of a mixin that implements \ref SensorModelPage.
+ * \tparam MotionModel A class that implements \ref MotionModelPage.
+ * \tparam SensorModel A class that implements \ref SensorModelPage.
  * \tparam Map Environment representation type consistent with the sensor descriptor.
- * \tparam CustomExtensionMixinInterface An optional mixin interface for the user to customize the filter.
+ * \tparam Interface An optional mixin interface for the user to customize the filter.
  * \tparam CustomExtensionMixin An optional mixin type for the user to customize the filter.
  */
 template <
-    class MotionDescriptor,
-    class SensorDescriptor,
+    class MotionModel,
+    class SensorModel,
     class Map,
-    class CustomExtensionMixinInterface = NullMixinInterface,
+    class Interface = NullMixinInterface,
     template <class> class CustomExtensionMixin = NullMixin>
 using MonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
@@ -102,27 +145,27 @@ using MonteCarloLocalization2d = ciabatta::mixin<
     RandomStateGenerator,
     NaiveSampler,
     FixedLimiter,
-    MotionDescriptor::template mixin,
-    SensorDescriptor::template mixin,
+    ciabatta::curry<MotionMixin, MotionModel>::template mixin,
+    ciabatta::curry<SensorMixin, SensorModel>::template mixin,
     CustomExtensionMixin,
-    ciabatta::provides<LaserLocalizationInterface2d<Map, CustomExtensionMixinInterface>>::template mixin>;
+    ciabatta::provides<Interface>::template mixin>;
 
 /// An implementation of Adaptive Monte Carlo Localization.
 /**
  * An instance of this class template implements beluga::LaserLocalizationInterface2d
  * and \ref LocalizationPage.
  *
- * \tparam MotionDescriptor A descriptor of a mixin that implements \ref MotionModelPage.
- * \tparam SensorDescriptor A descriptor of a mixin that implements \ref SensorModelPage.
+ * \tparam MotionModel A class that implements \ref MotionModelPage.
+ * \tparam SensorModel A class that implements \ref SensorModelPage.
  * \tparam Map Environment representation type consistent with the sensor descriptor.
- * \tparam CustomExtensionMixinInterface An optional mixin interface for the user to customize the filter.
+ * \tparam Interface An optional mixin interface for the user to customize the filter.
  * \tparam CustomExtensionMixin An optional mixin type for the user to customize the filter.
  */
 template <
-    class MotionDescriptor,
-    class SensorDescriptor,
+    class MotionModel,
+    class SensorModel,
     class Map,
-    class CustomExtensionMixinInterface = NullMixinInterface,
+    class Interface = NullMixinInterface,
     template <class> class CustomExtensionMixin = NullMixin>
 using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     BootstrapParticleFilter,
@@ -131,10 +174,10 @@ using AdaptiveMonteCarloLocalization2d = ciabatta::mixin<
     RandomStateGenerator,
     AdaptiveSampler,
     ciabatta::curry<KldLimiter, Sophus::SE2d>::mixin,
-    MotionDescriptor::template mixin,
-    SensorDescriptor::template mixin,
+    ciabatta::curry<MotionMixin, MotionModel>::template mixin,
+    ciabatta::curry<SensorMixin, SensorModel>::template mixin,
     CustomExtensionMixin,
-    ciabatta::provides<LaserLocalizationInterface2d<Map, CustomExtensionMixinInterface>>::template mixin>;
+    ciabatta::provides<Interface>::template mixin>;
 
 }  // namespace beluga
 

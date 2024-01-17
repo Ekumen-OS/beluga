@@ -63,12 +63,11 @@ struct BeamModelParam {
  *
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.2.
  *
- * \tparam Mixin The mixed-in type with no particular requirements.
  * \tparam OccupancyGrid Type representing an occupancy grid.
  *  It must satisfy \ref OccupancyGrid2Page.
  */
-template <class Mixin, class OccupancyGrid>
-class BeamSensorModel : public Mixin {
+template <class OccupancyGrid>
+class BeamSensorModel {
  public:
   /// State type of a particle.
   using state_type = Sophus::SE2d;
@@ -76,24 +75,19 @@ class BeamSensorModel : public Mixin {
   using weight_type = double;
   /// Measurement type of the sensor: a point cloud for the range finder.
   using measurement_type = std::vector<std::pair<double, double>>;
-
+  /// Map representation type.
+  using map_type = OccupancyGrid;
   /// Parameter type that the constructor uses to configure the beam sensor model.
   using param_type = BeamModelParam;
 
   /// Constructs a BeamSensorModel instance.
   /**
-   * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param params Parameters to configure this instance.
    *  See beluga::BeamModelParams for details.
    * \param grid Occupancy grid representing the static map.
-   * \param ...rest Arguments that are not used by this part of the mixin, but by others.
    */
-  template <class... Args>
-  explicit BeamSensorModel(const param_type& params, OccupancyGrid grid, Args&&... rest)
-      : Mixin(std::forward<Args>(rest)...),
-        params_{params},
-        grid_{std::move(grid)},
-        free_states_{compute_free_states(grid_)} {}
+  explicit BeamSensorModel(const param_type& params, OccupancyGrid grid)
+      : params_{params}, grid_{std::move(grid)}, free_states_{compute_free_states(grid_)} {}
 
   // TODO(ivanpauno): is sensor model the best place for this?
   // Maybe the map could be provided by a different part of the mixin,
@@ -166,10 +160,10 @@ class BeamSensorModel : public Mixin {
   }
 
   /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
-  void update_sensor(measurement_type&& points) final { points_ = std::move(points); }
+  void update_sensor(measurement_type&& points) { points_ = std::move(points); }
 
   /// \copydoc LaserSensorModelInterface2d::update_map(Map&& map)
-  void update_map(OccupancyGrid&& map) final {
+  void update_map(map_type&& map) {
     grid_ = std::move(map);
     free_states_ = compute_free_states(grid_);
   }

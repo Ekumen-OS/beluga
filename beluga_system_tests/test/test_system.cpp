@@ -58,20 +58,20 @@ using ConcreteResamplingPoliciesPoller = beluga_amcl::FilterUpdateControlMixin<
     beluga_amcl::ResampleIntervalPolicy,
     beluga_amcl::SelectiveResamplingPolicy>;
 
-template <class MotionDescriptor, class SensorDescriptor>
+template <class MotionModel, class SensorModel>
 using AdaptiveMonteCarloLocalization2d = beluga::AdaptiveMonteCarloLocalization2d<
-    MotionDescriptor,
-    SensorDescriptor,
+    MotionModel,
+    SensorModel,
     beluga_ros::OccupancyGrid,
-    beluga_amcl::FilterUpdateControlInterface,
+    LaserLocalizationInterface2d,
     ConcreteResamplingPoliciesPoller>;
 
-template <class MotionDescriptor, class SensorDescriptor>
+template <class MotionModel, class SensorModel>
 using MonteCarloLocalization2d = beluga::MonteCarloLocalization2d<
-    MotionDescriptor,
-    SensorDescriptor,
+    MotionModel,
+    SensorModel,
     beluga_ros::OccupancyGrid,
-    beluga_amcl::FilterUpdateControlInterface,
+    LaserLocalizationInterface2d,
     ConcreteResamplingPoliciesPoller>;
 
 using beluga::MultivariateNormalDistribution;
@@ -296,15 +296,16 @@ std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::Oc
   auto selective_resampling_params = beluga_amcl::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = false;
 
-  using DifferentialDrive =
-      beluga::mixin::descriptor<beluga::DifferentialDriveModel, beluga::DifferentialDriveModelParam>;
-  using LikelihoodField = beluga::mixin::descriptor<
-      ciabatta::curry<beluga::LikelihoodFieldModel, beluga_ros::OccupancyGrid>::mixin,
-      beluga::LikelihoodFieldModelParam>;
-
-  return beluga::mixin::make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
-      sampler_params, limiter_params, DifferentialDrive{motion_params}, LikelihoodField{sensor_params},
-      beluga_ros::OccupancyGrid{std::move(map)}, resample_on_motion_params, resample_interval_params,
+  return std::make_unique<AdaptiveMonteCarloLocalization2d<
+      beluga::DifferentialDriveModel, beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>>(
+      sampler_params,                                 //
+      limiter_params,                                 //
+      beluga::DifferentialDriveModel{motion_params},  //
+      beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>{
+          sensor_params,                               //
+          beluga_ros::OccupancyGrid{std::move(map)}},  //
+      resample_on_motion_params,                       //
+      resample_interval_params,                        //
       selective_resampling_params);
 }
 
@@ -335,15 +336,15 @@ std::unique_ptr<LaserLocalizationInterface2d> likelihood_mcl_pf_from_map(nav_msg
   auto selective_resampling_params = beluga_amcl::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = false;
 
-  using DifferentialDrive =
-      beluga::mixin::descriptor<beluga::DifferentialDriveModel, beluga::DifferentialDriveModelParam>;
-  using LikelihoodField = beluga::mixin::descriptor<
-      ciabatta::curry<beluga::LikelihoodFieldModel, beluga_ros::OccupancyGrid>::mixin,
-      beluga::LikelihoodFieldModelParam>;
-
-  return beluga::mixin::make_mixin<LaserLocalizationInterface2d, MonteCarloLocalization2d>(
-      limiter_params, DifferentialDrive{motion_params}, LikelihoodField{sensor_params},
-      beluga_ros::OccupancyGrid{std::move(map)}, resample_on_motion_params, resample_interval_params,
+  return std::make_unique<MonteCarloLocalization2d<
+      beluga::DifferentialDriveModel, beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>>(
+      limiter_params,                                 //
+      beluga::DifferentialDriveModel{motion_params},  //
+      beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>{
+          sensor_params,                               //
+          beluga_ros::OccupancyGrid{std::move(map)}},  //
+      resample_on_motion_params,                       //
+      resample_interval_params,                        //
       selective_resampling_params);
 }
 
@@ -370,14 +371,15 @@ std::unique_ptr<LaserLocalizationInterface2d> beam_mcl_pf_from_map(nav_msgs::msg
   auto selective_resampling_params = beluga_amcl::SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = false;
 
-  using DifferentialDrive =
-      beluga::mixin::descriptor<beluga::DifferentialDriveModel, beluga::DifferentialDriveModelParam>;
-  using BeamSensorModel = beluga::mixin::descriptor<
-      ciabatta::curry<beluga::BeamSensorModel, beluga_ros::OccupancyGrid>::mixin, beluga::BeamModelParam>;
-
-  return beluga::mixin::make_mixin<LaserLocalizationInterface2d, MonteCarloLocalization2d>(
-      limiter_params, DifferentialDrive{motion_params}, BeamSensorModel{sensor_params},
-      beluga_ros::OccupancyGrid{std::move(map)}, resample_on_motion_params, resample_interval_params,
+  return std::make_unique<
+      MonteCarloLocalization2d<beluga::DifferentialDriveModel, beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>>(
+      limiter_params,                                 //
+      beluga::DifferentialDriveModel{motion_params},  //
+      beluga::BeamSensorModel<beluga_ros::OccupancyGrid>{
+          sensor_params,                               //
+          beluga_ros::OccupancyGrid{std::move(map)}},  //
+      resample_on_motion_params,                       //
+      resample_interval_params,                        //
       selective_resampling_params);
 }
 

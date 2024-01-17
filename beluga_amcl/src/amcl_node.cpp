@@ -683,13 +683,6 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
   auto selective_resampling_params = SelectiveResamplingPolicyParam{};
   selective_resampling_params.enabled = get_parameter("selective_resampling").as_bool();
 
-  using Stationary = beluga::mixin::descriptor<beluga::StationaryModel>;
-  using DifferentialDrive =
-      beluga::mixin::descriptor<beluga::DifferentialDriveModel, beluga::DifferentialDriveModelParam>;
-  using OmnidirectionalDrive =
-      beluga::mixin::descriptor<beluga::OmnidirectionalDriveModel, beluga::OmnidirectionalDriveModelParam>;
-
-  using MotionDescriptor = std::variant<Stationary, DifferentialDrive, OmnidirectionalDrive>;
   auto get_motion_descriptor = [this](std::string_view name) -> MotionDescriptor {
     if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
       auto params = beluga::DifferentialDriveModelParam{};
@@ -697,7 +690,7 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
       params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
       params.translation_noise_from_translation = get_parameter("alpha3").as_double();
       params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
-      return DifferentialDrive{params};
+      return beluga::DifferentialDriveModel{params};
     }
     if (name == kOmnidirectionalModelName || name == kNav2OmnidirectionalModelName) {
       auto params = beluga::OmnidirectionalDriveModelParam{};
@@ -706,23 +699,15 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
       params.translation_noise_from_translation = get_parameter("alpha3").as_double();
       params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
       params.strafe_noise_from_translation = get_parameter("alpha5").as_double();
-      return OmnidirectionalDrive{params};
+      return beluga::OmnidirectionalDriveModel{params};
     }
     if (name == kStationaryModelName) {
-      return Stationary{};
+      return beluga::StationaryModel{};
     }
     throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
   };
 
-  using LikelihoodField = beluga::mixin::descriptor<
-      ciabatta::curry<beluga::LikelihoodFieldModel, beluga_ros::OccupancyGrid>::mixin,
-      beluga::LikelihoodFieldModelParam>;
-
-  using BeamSensorModel = beluga::mixin::descriptor<
-      ciabatta::curry<beluga::BeamSensorModel, beluga_ros::OccupancyGrid>::mixin, beluga::BeamModelParam>;
-
-  using SensorDescriptor = std::variant<LikelihoodField, BeamSensorModel>;
-  auto get_sensor_descriptor = [this](std::string_view name) -> SensorDescriptor {
+  auto get_sensor_descriptor = [this, map](std::string_view name) -> SensorDescriptor {
     if (name == kLikelihoodFieldModelName) {
       auto params = beluga::LikelihoodFieldModelParam{};
       params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
@@ -730,7 +715,7 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
       params.z_hit = get_parameter("z_hit").as_double();
       params.z_random = get_parameter("z_rand").as_double();
       params.sigma_hit = get_parameter("sigma_hit").as_double();
-      return LikelihoodField{params};
+      return beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>{params, beluga_ros::OccupancyGrid{map}};
     }
     if (name == kBeamSensorModelName) {
       auto params = beluga::BeamModelParam{};
@@ -741,17 +726,27 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
       params.sigma_hit = get_parameter("sigma_hit").as_double();
       params.lambda_short = get_parameter("lambda_short").as_double();
       params.beam_max_range = get_parameter("laser_max_range").as_double();
-      return BeamSensorModel{params};
+      return beluga::BeamSensorModel<beluga_ros::OccupancyGrid>{params, beluga_ros::OccupancyGrid{map}};
     }
     throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
   };
 
   try {
-    using beluga::mixin::make_mixin;
-    return make_mixin<LaserLocalizationInterface2d, AdaptiveMonteCarloLocalization2d>(
-        sampler_params, limiter_params, get_motion_descriptor(get_parameter("robot_model_type").as_string()),
-        get_sensor_descriptor(get_parameter("laser_model_type").as_string()), beluga_ros::OccupancyGrid{map},
-        resample_on_motion_params, resample_interval_params, selective_resampling_params);
+    return std::visit(
+        [&](auto motion_model, auto sensor_model) -> std::unique_ptr<LaserLocalizationInterface2d> {
+          using MotionModel = decltype(motion_model);
+          using SensorModel = decltype(sensor_model);
+          return std::make_unique<AdaptiveMonteCarloLocalization2d<MotionModel, SensorModel>>(
+              sampler_params,             //
+              limiter_params,             //
+              motion_model,               //
+              sensor_model,               //
+              resample_on_motion_params,  //
+              resample_interval_params,   //
+              selective_resampling_params);
+        },
+        get_motion_descriptor(get_parameter("robot_model_type").as_string()),
+        get_sensor_descriptor(get_parameter("laser_model_type").as_string()));
   } catch (const std::invalid_argument& error) {
     RCLCPP_ERROR(get_logger(), "Coudn't instantiate the particle filter: %s", error.what());
   }
