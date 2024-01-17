@@ -29,11 +29,12 @@ namespace beluga {
 
 /// Calculate the ESS of a given a range of weights.
 /**
- * The effective sample size (ESS) is a metric that measures how much information content is loss due to the
- * correlation in the sequence. In other words, although our sequence may have a length (sample size) of N,
- * our effective sample size will be smaller due to the correlation and redundancy between the samples.
- *
- * When compared with the sample size, it can be used as a measure of weight degeneracy.
+ * The effective sample size (ESS) is a figure of merit for importance sampling methods' output. It characterizes
+ * how well the target posterior distribution is approximated (as it is proportional to the efficiency of distribution
+ * parameter estimators, \cite kong1994sequentialimputations, section 4.1). It can be interpreted as the number of
+ * samples effectively approximating the distribution, and thus comparing with the total number of samples makes for a
+ * good mechanism to detect and react to performance degradation e.g. triggering a resample when the ESS falls below a
+ * fraction of the total number of samples.
  *
  * The algorithm is based on \cite grisetti2007selectiveresampling, according to the description given in
  * \cite tiacheng2015resamplingmethods.
