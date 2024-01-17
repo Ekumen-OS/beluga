@@ -51,8 +51,8 @@ auto effective_sample_size(Range&& range) {
   }
 
   auto normalize_and_square = [total_weight](auto weight) {
-    const auto normalized = weight / total_weight;
-    return normalized * normalized;
+    const auto normalized_weight = weight / total_weight;
+    return normalized_weight * normalized_weight;
   };
 
   return 1.0 / ranges::accumulate(range, 0.0, std::plus<>{}, std::move(normalize_and_square));
