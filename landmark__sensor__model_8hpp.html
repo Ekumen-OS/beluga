@@ -124,34 +124,34 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1LandmarkModelParam.html">beluga::LandmarkModelParam</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct a <a class="el" href="classbeluga_1_1LandmarkSensorModel.html" title="Generic landmark model for discrete detection sensors (both 2D and 3D).">LandmarkSensorModel</a> instance (both 2D and 3D).  <a href="structbeluga_1_1LandmarkModelParam.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel&lt; Mixin, LandmarkMap, StateType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic landmark model for discrete detection sensors (both 2D and 3D).  <a href="classbeluga_1_1LandmarkSensorModel.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a5246fde903d620ef3094141e8b38fd0b"><td class="memTemplParams" colspan="2">template&lt;class Mixin , class LandmarkMap &gt; </td></tr>
-<tr class="memitem:a5246fde903d620ef3094141e8b38fd0b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="landmark__sensor__model_8hpp.html#a5246fde903d620ef3094141e8b38fd0b">beluga::LandmarkSensorModel2d</a> = LandmarkSensorModel&lt; Mixin, LandmarkMap, Sophus::SE2d &gt;</td></tr>
-<tr class="memdesc:a5246fde903d620ef3094141e8b38fd0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor model based on discrete landmarks for 2D state types.  <a href="landmark__sensor__model_8hpp.html#a5246fde903d620ef3094141e8b38fd0b">More...</a><br /></td></tr>
-<tr class="separator:a5246fde903d620ef3094141e8b38fd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cf95ed8ef6ff404c782ef6d1cdce623"><td class="memTemplParams" colspan="2">template&lt;class Mixin , class LandmarkMap &gt; </td></tr>
-<tr class="memitem:a4cf95ed8ef6ff404c782ef6d1cdce623"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="landmark__sensor__model_8hpp.html#a4cf95ed8ef6ff404c782ef6d1cdce623">beluga::LandmarkSensorModel3d</a> = LandmarkSensorModel&lt; Mixin, LandmarkMap, Sophus::SE3d &gt;</td></tr>
-<tr class="memdesc:a4cf95ed8ef6ff404c782ef6d1cdce623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor model based on discrete landmarks for 3D state types.  <a href="landmark__sensor__model_8hpp.html#a4cf95ed8ef6ff404c782ef6d1cdce623">More...</a><br /></td></tr>
-<tr class="separator:a4cf95ed8ef6ff404c782ef6d1cdce623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdb1a8b8eea1cc0042f8a6af18dae88b"><td class="memTemplParams" colspan="2">template&lt;class LandmarkMap &gt; </td></tr>
+<tr class="memitem:abdb1a8b8eea1cc0042f8a6af18dae88b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="landmark__sensor__model_8hpp.html#abdb1a8b8eea1cc0042f8a6af18dae88b">beluga::LandmarkSensorModel2d</a> = LandmarkSensorModel&lt; LandmarkMap, Sophus::SE2d &gt;</td></tr>
+<tr class="memdesc:abdb1a8b8eea1cc0042f8a6af18dae88b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor model based on discrete landmarks for 2D state types.  <a href="landmark__sensor__model_8hpp.html#abdb1a8b8eea1cc0042f8a6af18dae88b">More...</a><br /></td></tr>
+<tr class="separator:abdb1a8b8eea1cc0042f8a6af18dae88b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acda37046f0ae0f34cc32d4375a305b39"><td class="memTemplParams" colspan="2">template&lt;class LandmarkMap &gt; </td></tr>
+<tr class="memitem:acda37046f0ae0f34cc32d4375a305b39"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="landmark__sensor__model_8hpp.html#acda37046f0ae0f34cc32d4375a305b39">beluga::LandmarkSensorModel3d</a> = LandmarkSensorModel&lt; LandmarkMap, Sophus::SE3d &gt;</td></tr>
+<tr class="memdesc:acda37046f0ae0f34cc32d4375a305b39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor model based on discrete landmarks for 3D state types.  <a href="landmark__sensor__model_8hpp.html#acda37046f0ae0f34cc32d4375a305b39">More...</a><br /></td></tr>
+<tr class="separator:acda37046f0ae0f34cc32d4375a305b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of a discrete landmark sensor model. </p>
 </div><h2 class="groupheader">Typedef Documentation</h2>
-<a id="a5246fde903d620ef3094141e8b38fd0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5246fde903d620ef3094141e8b38fd0b">&#9670;&nbsp;</a></span>LandmarkSensorModel2d</h2>
+<a id="abdb1a8b8eea1cc0042f8a6af18dae88b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdb1a8b8eea1cc0042f8a6af18dae88b">&#9670;&nbsp;</a></span>LandmarkSensorModel2d</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class LandmarkMap &gt; </div>
+template&lt;class LandmarkMap &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="landmark__sensor__model_8hpp.html#a5246fde903d620ef3094141e8b38fd0b">beluga::LandmarkSensorModel2d</a> = typedef LandmarkSensorModel&lt;Mixin, LandmarkMap, Sophus::SE2d&gt;</td>
+          <td class="memname">using <a class="el" href="landmark__sensor__model_8hpp.html#abdb1a8b8eea1cc0042f8a6af18dae88b">beluga::LandmarkSensorModel2d</a> = typedef LandmarkSensorModel&lt;LandmarkMap, Sophus::SE2d&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -159,7 +159,6 @@ template&lt;class Mixin , class LandmarkMap &gt; </div>
 <p>Sensor model based on discrete landmarks for 2D state types. </p>
 <p>This class implements the BearingSensorModelInterface interface and satisfies <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mixin</td><td>The mixed-in type with no particular requirements. </td></tr>
     <tr><td class="paramname">LandmarkMap</td><td>class managing the list of known landmarks. </td></tr>
   </table>
   </dd>
@@ -167,16 +166,16 @@ template&lt;class Mixin , class LandmarkMap &gt; </div>
 
 </div>
 </div>
-<a id="a4cf95ed8ef6ff404c782ef6d1cdce623"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4cf95ed8ef6ff404c782ef6d1cdce623">&#9670;&nbsp;</a></span>LandmarkSensorModel3d</h2>
+<a id="acda37046f0ae0f34cc32d4375a305b39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acda37046f0ae0f34cc32d4375a305b39">&#9670;&nbsp;</a></span>LandmarkSensorModel3d</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class LandmarkMap &gt; </div>
+template&lt;class LandmarkMap &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="landmark__sensor__model_8hpp.html#a4cf95ed8ef6ff404c782ef6d1cdce623">beluga::LandmarkSensorModel3d</a> = typedef LandmarkSensorModel&lt;Mixin, LandmarkMap, Sophus::SE3d&gt;</td>
+          <td class="memname">using <a class="el" href="landmark__sensor__model_8hpp.html#acda37046f0ae0f34cc32d4375a305b39">beluga::LandmarkSensorModel3d</a> = typedef LandmarkSensorModel&lt;LandmarkMap, Sophus::SE3d&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -184,7 +183,6 @@ template&lt;class Mixin , class LandmarkMap &gt; </div>
 <p>Sensor model based on discrete landmarks for 3D state types. </p>
 <p>This class implements the BearingSensorModelInterface interface and satisfies <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mixin</td><td>The mixed-in type with no particular requirements. </td></tr>
     <tr><td class="paramname">LandmarkMap</td><td>class managing the list of known landmarks. </td></tr>
   </table>
   </dd>

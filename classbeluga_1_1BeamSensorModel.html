@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt; Class Template Reference</title>
+<title>Beluga: beluga::BeamSensorModel&lt; OccupancyGrid &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classbeluga_1_1BeamSensorModel-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt; Class Template Reference</div>  </div>
+<div class="title">beluga::BeamSensorModel&lt; OccupancyGrid &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -80,109 +80,85 @@ $(function() {
  <a href="classbeluga_1_1BeamSensorModel.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="beam__model_8hpp_source.html">beam_model.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classbeluga_1_1BeamSensorModel__inherit__graph.png" border="0" usemap="#abeluga_1_1BeamSensorModel_3_01Mixin_00_01OccupancyGrid_01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="abeluga_1_1BeamSensorModel_3_01Mixin_00_01OccupancyGrid_01_4_inherit__map" id="abeluga_1_1BeamSensorModel_3_01Mixin_00_01OccupancyGrid_01_4_inherit__map">
-<area shape="rect" title="Beam sensor model for range finders." alt="" coords="5,80,201,121"/>
-<area shape="rect" title=" " alt="" coords="74,5,133,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classbeluga_1_1BeamSensorModel__coll__graph.png" border="0" usemap="#abeluga_1_1BeamSensorModel_3_01Mixin_00_01OccupancyGrid_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="abeluga_1_1BeamSensorModel_3_01Mixin_00_01OccupancyGrid_01_4_coll__map" id="abeluga_1_1BeamSensorModel_3_01Mixin_00_01OccupancyGrid_01_4_coll__map">
-<area shape="rect" title="Beam sensor model for range finders." alt="" coords="5,80,201,121"/>
-<area shape="rect" title=" " alt="" coords="74,5,133,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aed17d785c2af5480dffcc1e2a452115e"><td class="memItemLeft" align="right" valign="top"><a id="aed17d785c2af5480dffcc1e2a452115e"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#aed17d785c2af5480dffcc1e2a452115e">state_type</a> = Sophus::SE2d</td></tr>
-<tr class="memdesc:aed17d785c2af5480dffcc1e2a452115e"><td class="mdescLeft">&#160;</td><td class="mdescRight">State type of a particle. <br /></td></tr>
-<tr class="separator:aed17d785c2af5480dffcc1e2a452115e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53e6dfd600998fd2950ee3ec8a057388"><td class="memItemLeft" align="right" valign="top"><a id="a53e6dfd600998fd2950ee3ec8a057388"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a53e6dfd600998fd2950ee3ec8a057388">weight_type</a> = double</td></tr>
-<tr class="memdesc:a53e6dfd600998fd2950ee3ec8a057388"><td class="mdescLeft">&#160;</td><td class="mdescRight">Weight type of the particle. <br /></td></tr>
-<tr class="separator:a53e6dfd600998fd2950ee3ec8a057388"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8c48f1b0980120892530de3e830fb1b"><td class="memItemLeft" align="right" valign="top"><a id="ae8c48f1b0980120892530de3e830fb1b"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#ae8c48f1b0980120892530de3e830fb1b">measurement_type</a> = std::vector&lt; std::pair&lt; double, double &gt; &gt;</td></tr>
-<tr class="memdesc:ae8c48f1b0980120892530de3e830fb1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement type of the sensor: a point cloud for the range finder. <br /></td></tr>
-<tr class="separator:ae8c48f1b0980120892530de3e830fb1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a4a60b25e4e5ace58dd76f0a3e28ac2"><td class="memItemLeft" align="right" valign="top"><a id="a7a4a60b25e4e5ace58dd76f0a3e28ac2"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a7a4a60b25e4e5ace58dd76f0a3e28ac2">param_type</a> = <a class="el" href="structbeluga_1_1BeamModelParam.html">BeamModelParam</a></td></tr>
-<tr class="memdesc:a7a4a60b25e4e5ace58dd76f0a3e28ac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter type that the constructor uses to configure the beam sensor model. <br /></td></tr>
-<tr class="separator:a7a4a60b25e4e5ace58dd76f0a3e28ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa28cd0a50ede746d7f634517d74c4cd8"><td class="memItemLeft" align="right" valign="top"><a id="aa28cd0a50ede746d7f634517d74c4cd8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#aa28cd0a50ede746d7f634517d74c4cd8">state_type</a> = Sophus::SE2d</td></tr>
+<tr class="memdesc:aa28cd0a50ede746d7f634517d74c4cd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">State type of a particle. <br /></td></tr>
+<tr class="separator:aa28cd0a50ede746d7f634517d74c4cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15934f1caebd06f58ebf6654fbc414a3"><td class="memItemLeft" align="right" valign="top"><a id="a15934f1caebd06f58ebf6654fbc414a3"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a15934f1caebd06f58ebf6654fbc414a3">weight_type</a> = double</td></tr>
+<tr class="memdesc:a15934f1caebd06f58ebf6654fbc414a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Weight type of the particle. <br /></td></tr>
+<tr class="separator:a15934f1caebd06f58ebf6654fbc414a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a482382f1b371924d04e4c34f4789ad1e"><td class="memItemLeft" align="right" valign="top"><a id="a482382f1b371924d04e4c34f4789ad1e"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a482382f1b371924d04e4c34f4789ad1e">measurement_type</a> = std::vector&lt; std::pair&lt; double, double &gt; &gt;</td></tr>
+<tr class="memdesc:a482382f1b371924d04e4c34f4789ad1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement type of the sensor: a point cloud for the range finder. <br /></td></tr>
+<tr class="separator:a482382f1b371924d04e4c34f4789ad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac82ae747926b0471bd2ad5e7eaa26712"><td class="memItemLeft" align="right" valign="top"><a id="ac82ae747926b0471bd2ad5e7eaa26712"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#ac82ae747926b0471bd2ad5e7eaa26712">map_type</a> = OccupancyGrid</td></tr>
+<tr class="memdesc:ac82ae747926b0471bd2ad5e7eaa26712"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map representation type. <br /></td></tr>
+<tr class="separator:ac82ae747926b0471bd2ad5e7eaa26712"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57cb0014dc65c2f08fd4300f95cc1cb6"><td class="memItemLeft" align="right" valign="top"><a id="a57cb0014dc65c2f08fd4300f95cc1cb6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a57cb0014dc65c2f08fd4300f95cc1cb6">param_type</a> = <a class="el" href="structbeluga_1_1BeamModelParam.html">BeamModelParam</a></td></tr>
+<tr class="memdesc:a57cb0014dc65c2f08fd4300f95cc1cb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter type that the constructor uses to configure the beam sensor model. <br /></td></tr>
+<tr class="separator:a57cb0014dc65c2f08fd4300f95cc1cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac4f3d66e80db4207c55cee8354bff0e0"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:ac4f3d66e80db4207c55cee8354bff0e0"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#ac4f3d66e80db4207c55cee8354bff0e0">BeamSensorModel</a> (const <a class="el" href="classbeluga_1_1BeamSensorModel.html#a7a4a60b25e4e5ace58dd76f0a3e28ac2">param_type</a> &amp;params, OccupancyGrid grid, Args &amp;&amp;... rest)</td></tr>
-<tr class="memdesc:ac4f3d66e80db4207c55cee8354bff0e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1BeamSensorModel.html" title="Beam sensor model for range finders.">BeamSensorModel</a> instance.  <a href="classbeluga_1_1BeamSensorModel.html#ac4f3d66e80db4207c55cee8354bff0e0">More...</a><br /></td></tr>
-<tr class="separator:ac4f3d66e80db4207c55cee8354bff0e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afff428004a0af2b3f60f5c1a07cf18f6"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
-<tr class="memitem:afff428004a0af2b3f60f5c1a07cf18f6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1BeamSensorModel.html#aed17d785c2af5480dffcc1e2a452115e">state_type</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#afff428004a0af2b3f60f5c1a07cf18f6">make_random_state</a> (Generator &amp;gen) const</td></tr>
-<tr class="memdesc:afff428004a0af2b3f60f5c1a07cf18f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a random particle state.  <a href="classbeluga_1_1BeamSensorModel.html#afff428004a0af2b3f60f5c1a07cf18f6">More...</a><br /></td></tr>
-<tr class="separator:afff428004a0af2b3f60f5c1a07cf18f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab402a646c7adfc1146b4bc34796fc85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a53e6dfd600998fd2950ee3ec8a057388">weight_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#aab402a646c7adfc1146b4bc34796fc85">importance_weight</a> (const <a class="el" href="classbeluga_1_1BeamSensorModel.html#aed17d785c2af5480dffcc1e2a452115e">state_type</a> &amp;state) const</td></tr>
-<tr class="memdesc:aab402a646c7adfc1146b4bc34796fc85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the importance weight for a particle with the provided state.  <a href="classbeluga_1_1BeamSensorModel.html#aab402a646c7adfc1146b4bc34796fc85">More...</a><br /></td></tr>
-<tr class="separator:aab402a646c7adfc1146b4bc34796fc85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29dca59d0f2e5aa496de554d73101945"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a29dca59d0f2e5aa496de554d73101945">update_sensor</a> (<a class="el" href="classbeluga_1_1BeamSensorModel.html#ae8c48f1b0980120892530de3e830fb1b">measurement_type</a> &amp;&amp;points) final</td></tr>
-<tr class="memdesc:a29dca59d0f2e5aa496de554d73101945"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="classbeluga_1_1BeamSensorModel.html#a29dca59d0f2e5aa496de554d73101945">More...</a><br /></td></tr>
-<tr class="separator:a29dca59d0f2e5aa496de554d73101945"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae12bb417aec95bec33e5a37100044300"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#ae12bb417aec95bec33e5a37100044300">update_map</a> (OccupancyGrid &amp;&amp;map) final</td></tr>
-<tr class="memdesc:ae12bb417aec95bec33e5a37100044300"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with a new map.  <a href="classbeluga_1_1BeamSensorModel.html#ae12bb417aec95bec33e5a37100044300">More...</a><br /></td></tr>
-<tr class="separator:ae12bb417aec95bec33e5a37100044300"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6621e0d9de95cfd619cc5ffb30eb4a7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#ae6621e0d9de95cfd619cc5ffb30eb4a7">BeamSensorModel</a> (const <a class="el" href="classbeluga_1_1BeamSensorModel.html#a57cb0014dc65c2f08fd4300f95cc1cb6">param_type</a> &amp;params, OccupancyGrid grid)</td></tr>
+<tr class="memdesc:ae6621e0d9de95cfd619cc5ffb30eb4a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1BeamSensorModel.html" title="Beam sensor model for range finders.">BeamSensorModel</a> instance.  <a href="classbeluga_1_1BeamSensorModel.html#ae6621e0d9de95cfd619cc5ffb30eb4a7">More...</a><br /></td></tr>
+<tr class="separator:ae6621e0d9de95cfd619cc5ffb30eb4a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9991ebf2c6d63df3049b4c0229923ed7"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
+<tr class="memitem:a9991ebf2c6d63df3049b4c0229923ed7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1BeamSensorModel.html#aa28cd0a50ede746d7f634517d74c4cd8">state_type</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a9991ebf2c6d63df3049b4c0229923ed7">make_random_state</a> (Generator &amp;gen) const</td></tr>
+<tr class="memdesc:a9991ebf2c6d63df3049b4c0229923ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a random particle state.  <a href="classbeluga_1_1BeamSensorModel.html#a9991ebf2c6d63df3049b4c0229923ed7">More...</a><br /></td></tr>
+<tr class="separator:a9991ebf2c6d63df3049b4c0229923ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4415ae84f38374c68d1f853573a77d4f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a15934f1caebd06f58ebf6654fbc414a3">weight_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a4415ae84f38374c68d1f853573a77d4f">importance_weight</a> (const <a class="el" href="classbeluga_1_1BeamSensorModel.html#aa28cd0a50ede746d7f634517d74c4cd8">state_type</a> &amp;state) const</td></tr>
+<tr class="memdesc:a4415ae84f38374c68d1f853573a77d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the importance weight for a particle with the provided state.  <a href="classbeluga_1_1BeamSensorModel.html#a4415ae84f38374c68d1f853573a77d4f">More...</a><br /></td></tr>
+<tr class="separator:a4415ae84f38374c68d1f853573a77d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfbd7cb8be77a713941d89322e52b937"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#abfbd7cb8be77a713941d89322e52b937">update_sensor</a> (<a class="el" href="classbeluga_1_1BeamSensorModel.html#a482382f1b371924d04e4c34f4789ad1e">measurement_type</a> &amp;&amp;points)</td></tr>
+<tr class="memdesc:abfbd7cb8be77a713941d89322e52b937"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="classbeluga_1_1BeamSensorModel.html#abfbd7cb8be77a713941d89322e52b937">More...</a><br /></td></tr>
+<tr class="separator:abfbd7cb8be77a713941d89322e52b937"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89ff3943ca2923769f7e25a98ced1c83"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a89ff3943ca2923769f7e25a98ced1c83">update_map</a> (<a class="el" href="classbeluga_1_1BeamSensorModel.html#ac82ae747926b0471bd2ad5e7eaa26712">map_type</a> &amp;&amp;map)</td></tr>
+<tr class="memdesc:a89ff3943ca2923769f7e25a98ced1c83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with a new map.  <a href="classbeluga_1_1BeamSensorModel.html#a89ff3943ca2923769f7e25a98ced1c83">More...</a><br /></td></tr>
+<tr class="separator:a89ff3943ca2923769f7e25a98ced1c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Mixin, class OccupancyGrid&gt;<br />
-class beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;</h3>
+<div class="textblock"><h3>template&lt;class OccupancyGrid&gt;<br />
+class beluga::BeamSensorModel&lt; OccupancyGrid &gt;</h3>
 
 <p>Beam sensor model for range finders. </p>
 <p>This class implements the <a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html" title="Pure abstract class representing the laser sensor model interface.">LaserSensorModelInterface2d</a> interface and satisfies <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>.</p>
 <p>See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[2]</a> Chapter 6.2.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mixin</td><td>The mixed-in type with no particular requirements. </td></tr>
     <tr><td class="paramname">OccupancyGrid</td><td>Type representing an occupancy grid. It must satisfy <a class="el" href="OccupancyGrid2Page.html">Beluga named requirements: OccupancyGrid2d</a>. </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac4f3d66e80db4207c55cee8354bff0e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4f3d66e80db4207c55cee8354bff0e0">&#9670;&nbsp;</a></span>BeamSensorModel()</h2>
+<a id="ae6621e0d9de95cfd619cc5ffb30eb4a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6621e0d9de95cfd619cc5ffb30eb4a7">&#9670;&nbsp;</a></span>BeamSensorModel()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class OccupancyGrid &gt; </div>
-<div class="memtemplate">
-template&lt;class... Args&gt; </div>
+template&lt;class OccupancyGrid &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; Mixin, OccupancyGrid &gt;::<a class="el" href="classbeluga_1_1BeamSensorModel.html">BeamSensorModel</a> </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; OccupancyGrid &gt;::<a class="el" href="classbeluga_1_1BeamSensorModel.html">BeamSensorModel</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classbeluga_1_1BeamSensorModel.html#a7a4a60b25e4e5ace58dd76f0a3e28ac2">param_type</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classbeluga_1_1BeamSensorModel.html#a57cb0014dc65c2f08fd4300f95cc1cb6">param_type</a> &amp;&#160;</td>
           <td class="paramname"><em>params</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">OccupancyGrid&#160;</td>
-          <td class="paramname"><em>grid</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Args &amp;&amp;...&#160;</td>
-          <td class="paramname"><em>rest</em>&#160;</td>
+          <td class="paramname"><em>grid</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -198,17 +174,10 @@ template&lt;class... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>Constructs a <a class="el" href="classbeluga_1_1BeamSensorModel.html" title="Beam sensor model for range finders.">BeamSensorModel</a> instance. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">...Args</td><td>Arguments types for the remaining mixin constructors. </td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">params</td><td>Parameters to configure this instance. See beluga::BeamModelParams for details. </td></tr>
     <tr><td class="paramname">grid</td><td>Occupancy grid representing the static map. </td></tr>
-    <tr><td class="paramname">...rest</td><td>Arguments that are not used by this part of the mixin, but by others. </td></tr>
   </table>
   </dd>
 </dl>
@@ -216,21 +185,21 @@ template&lt;class... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aab402a646c7adfc1146b4bc34796fc85"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab402a646c7adfc1146b4bc34796fc85">&#9670;&nbsp;</a></span>importance_weight()</h2>
+<a id="a4415ae84f38374c68d1f853573a77d4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4415ae84f38374c68d1f853573a77d4f">&#9670;&nbsp;</a></span>importance_weight()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class OccupancyGrid &gt; </div>
+template&lt;class OccupancyGrid &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a53e6dfd600998fd2950ee3ec8a057388">weight_type</a> <a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; Mixin, OccupancyGrid &gt;::importance_weight </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a15934f1caebd06f58ebf6654fbc414a3">weight_type</a> <a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; OccupancyGrid &gt;::importance_weight </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classbeluga_1_1BeamSensorModel.html#aed17d785c2af5480dffcc1e2a452115e">state_type</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classbeluga_1_1BeamSensorModel.html#aa28cd0a50ede746d7f634517d74c4cd8">state_type</a> &amp;&#160;</td>
           <td class="paramname"><em>state</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -253,13 +222,13 @@ template&lt;class Mixin , class OccupancyGrid &gt; </div>
 
 </div>
 </div>
-<a id="afff428004a0af2b3f60f5c1a07cf18f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afff428004a0af2b3f60f5c1a07cf18f6">&#9670;&nbsp;</a></span>make_random_state()</h2>
+<a id="a9991ebf2c6d63df3049b4c0229923ed7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9991ebf2c6d63df3049b4c0229923ed7">&#9670;&nbsp;</a></span>make_random_state()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class OccupancyGrid &gt; </div>
+template&lt;class OccupancyGrid &gt; </div>
 <div class="memtemplate">
 template&lt;class Generator &gt; </div>
 <table class="mlabels">
@@ -267,7 +236,7 @@ template&lt;class Generator &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1BeamSensorModel.html#aed17d785c2af5480dffcc1e2a452115e">state_type</a> <a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; Mixin, OccupancyGrid &gt;::make_random_state </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1BeamSensorModel.html#aa28cd0a50ede746d7f634517d74c4cd8">state_type</a> <a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; OccupancyGrid &gt;::make_random_state </td>
           <td>(</td>
           <td class="paramtype">Generator &amp;&#160;</td>
           <td class="paramname"><em>gen</em></td><td>)</td>
@@ -299,28 +268,28 @@ template&lt;class Generator &gt; </div>
 
 </div>
 </div>
-<a id="ae12bb417aec95bec33e5a37100044300"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae12bb417aec95bec33e5a37100044300">&#9670;&nbsp;</a></span>update_map()</h2>
+<a id="a89ff3943ca2923769f7e25a98ced1c83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89ff3943ca2923769f7e25a98ced1c83">&#9670;&nbsp;</a></span>update_map()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class OccupancyGrid &gt; </div>
+template&lt;class OccupancyGrid &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; Mixin, OccupancyGrid &gt;::update_map </td>
+          <td class="memname">void <a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; OccupancyGrid &gt;::update_map </td>
           <td>(</td>
-          <td class="paramtype">OccupancyGrid &amp;&amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1BeamSensorModel.html#ac82ae747926b0471bd2ad5e7eaa26712">map_type</a> &amp;&amp;&#160;</td>
           <td class="paramname"><em>map</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -336,34 +305,34 @@ template&lt;class Mixin , class OccupancyGrid &gt; </div>
 
 </div>
 </div>
-<a id="a29dca59d0f2e5aa496de554d73101945"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29dca59d0f2e5aa496de554d73101945">&#9670;&nbsp;</a></span>update_sensor()</h2>
+<a id="abfbd7cb8be77a713941d89322e52b937"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfbd7cb8be77a713941d89322e52b937">&#9670;&nbsp;</a></span>update_sensor()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class OccupancyGrid &gt; </div>
+template&lt;class OccupancyGrid &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; Mixin, OccupancyGrid &gt;::update_sensor </td>
+          <td class="memname">void <a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; OccupancyGrid &gt;::update_sensor </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classbeluga_1_1BeamSensorModel.html#ae8c48f1b0980120892530de3e830fb1b">measurement_type</a> &amp;&amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a482382f1b371924d04e4c34f4789ad1e">measurement_type</a> &amp;&amp;&#160;</td>
           <td class="paramname"><em>points</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Update the sensor model with the measured points. </p>
-<p>This method updates the sensor model with the information it needs to compute the weight of each particle. The weight of each particle is calculated by subsequent calls to the <code><a class="el" href="classbeluga_1_1BeamSensorModel.html#aab402a646c7adfc1146b4bc34796fc85" title="Gets the importance weight for a particle with the provided state.">importance_weight()</a></code> method provided by the same mixin component.</p>
+<p>This method updates the sensor model with the information it needs to compute the weight of each particle. The weight of each particle is calculated by subsequent calls to the <code><a class="el" href="classbeluga_1_1BeamSensorModel.html#a4415ae84f38374c68d1f853573a77d4f" title="Gets the importance weight for a particle with the provided state.">importance_weight()</a></code> method provided by the same mixin component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">points</td><td>The range finder points in the reference frame of the particle. </td></tr>

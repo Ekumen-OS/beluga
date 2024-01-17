@@ -67,13 +67,19 @@ $(function() {
 
 <h3><a id="index_m"></a>- m -</h3><ul>
 <li>make_random_state()
-: <a class="el" href="classbeluga_1_1BeamSensorModel.html#afff428004a0af2b3f60f5c1a07cf18f6">beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;</a>
-, <a class="el" href="classbeluga_1_1BearingSensorModel.html#a33d00f2d8bc4220b60ccdc7f01a24385">beluga::BearingSensorModel&lt; Mixin, LandmarkMap, StateType &gt;</a>
-, <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a57667314cb3cbe381fd997aa6ef09db5">beluga::LandmarkSensorModel&lt; Mixin, LandmarkMap, StateType &gt;</a>
-, <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#af6b74a82d3ec5baa6a49553317eb6939">beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</a>
+: <a class="el" href="classbeluga_1_1BeamSensorModel.html#a9991ebf2c6d63df3049b4c0229923ed7">beluga::BeamSensorModel&lt; OccupancyGrid &gt;</a>
+, <a class="el" href="classbeluga_1_1BearingSensorModel.html#ad4b7cbdc08034888c45a59a872d66255">beluga::BearingSensorModel&lt; LandmarkMap, StateType &gt;</a>
+, <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a065295a40ca9086cd5b2a4be09d64746">beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt;</a>
+, <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#adf98f504b1824eb699160bf26d547b76">beluga::LikelihoodFieldModel&lt; OccupancyGrid &gt;</a>
 </li>
 <li>map_limits()
 : <a class="el" href="classbeluga_1_1LandmarkMap.html#a41b1cc41fefdf681cfa721a9f9e5d4b6">beluga::LandmarkMap</a>
+</li>
+<li>map_type
+: <a class="el" href="classbeluga_1_1BeamSensorModel.html#ac82ae747926b0471bd2ad5e7eaa26712">beluga::BeamSensorModel&lt; OccupancyGrid &gt;</a>
+, <a class="el" href="classbeluga_1_1BearingSensorModel.html#aafc3f714632996b40ddad886e9acb840">beluga::BearingSensorModel&lt; LandmarkMap, StateType &gt;</a>
+, <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aa54af8be385ca83eeb2f8ad32b513ec8">beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt;</a>
+, <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a4c9a3e4f644ddec25557c4fa7c294539">beluga::LikelihoodFieldModel&lt; OccupancyGrid &gt;</a>
 </li>
 <li>max_laser_distance
 : <a class="el" href="structbeluga_1_1LikelihoodFieldModelParam.html#a7d71848306f0d0e2a6601b240ff847b1">beluga::LikelihoodFieldModelParam</a>
@@ -88,22 +94,18 @@ $(function() {
 , <a class="el" href="structbeluga_1_1KldLimiterParam.html#a663c86603c35ee10e75ef9f1cba414e5">beluga::KldLimiterParam&lt; State &gt;</a>
 </li>
 <li>measurement_type
-: <a class="el" href="classbeluga_1_1BeamSensorModel.html#ae8c48f1b0980120892530de3e830fb1b">beluga::BeamSensorModel&lt; Mixin, OccupancyGrid &gt;</a>
-, <a class="el" href="classbeluga_1_1BearingSensorModel.html#a5d6dedf9791987f5b686ac59a5ee49c0">beluga::BearingSensorModel&lt; Mixin, LandmarkMap, StateType &gt;</a>
+: <a class="el" href="classbeluga_1_1BeamSensorModel.html#a482382f1b371924d04e4c34f4789ad1e">beluga::BeamSensorModel&lt; OccupancyGrid &gt;</a>
+, <a class="el" href="classbeluga_1_1BearingSensorModel.html#a8386712ce119ac9cd799945514c8879c">beluga::BearingSensorModel&lt; LandmarkMap, StateType &gt;</a>
 , <a class="el" href="structbeluga_1_1BearingSensorModelInterface.html#adb8350ea2e848bebe832c9a91b0ac7f9">beluga::BearingSensorModelInterface&lt; Map &gt;</a>
-, <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a1f8e3eb14a645c1d163a9d1cd39baac6">beluga::LandmarkSensorModel&lt; Mixin, LandmarkMap, StateType &gt;</a>
+, <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aacdb98d34fa7554be9946f8e1858dc78">beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt;</a>
 , <a class="el" href="structbeluga_1_1LandmarkSensorModelInterface.html#af970e2de03bebd6f7dce78402483039c">beluga::LandmarkSensorModelInterface&lt; Map &gt;</a>
 , <a class="el" href="structbeluga_1_1LaserSensorModelInterface2d.html#ad42083fa2ead255f6a57ee5296cc452d">beluga::LaserSensorModelInterface2d&lt; Map &gt;</a>
-, <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a9d326f9aea9643cce21a2413d15f655a">beluga::LikelihoodFieldModel&lt; Mixin, OccupancyGrid &gt;</a>
+, <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#aa497e6673cb94c6204fc4f7ff3ac6da9">beluga::LikelihoodFieldModel&lt; OccupancyGrid &gt;</a>
 </li>
 <li>min_samples()
 : <a class="el" href="classbeluga_1_1FixedLimiter.html#ac3ff20c2103a9fc6151701af3db6fd35">beluga::FixedLimiter&lt; Mixin &gt;</a>
 , <a class="el" href="classbeluga_1_1KldLimiter.html#a840515ba6a2192d0f9cd300f990a67b2">beluga::KldLimiter&lt; Mixin, State &gt;</a>
 , <a class="el" href="structbeluga_1_1KldLimiterParam.html#a5508d8a71932cd46fe23b966edeebc51">beluga::KldLimiterParam&lt; State &gt;</a>
-</li>
-<li>mixin
-: <a class="el" href="structbeluga_1_1mixin_1_1descriptor_3_01Mixin_01_4.html#abb4a70553723e74ad828f389bb3f540f">beluga::mixin::descriptor&lt; Mixin &gt;</a>
-, <a class="el" href="structbeluga_1_1mixin_1_1descriptor_3_01Mixin_00_01Param_01_4.html#a4dc6e38b20add3b8a09bb1d7d2f1ca09">beluga::mixin::descriptor&lt; Mixin, Param &gt;</a>
 </li>
 <li>MultivariateNormalDistribution()
 : <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a75e3ab5b3f5d873c49f526663e3a7c39">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>

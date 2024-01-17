@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::LandmarkSensorModel&lt; Mixin, LandmarkMap, StateType &gt; Class Template Reference</title>
+<title>Beluga: beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classbeluga_1_1LandmarkSensorModel-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::LandmarkSensorModel&lt; Mixin, LandmarkMap, StateType &gt; Class Template Reference</div>  </div>
+<div class="title">beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -80,109 +80,85 @@ $(function() {
  <a href="classbeluga_1_1LandmarkSensorModel.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="landmark__sensor__model_8hpp_source.html">landmark_sensor_model.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for beluga::LandmarkSensorModel&lt; Mixin, LandmarkMap, StateType &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classbeluga_1_1LandmarkSensorModel__inherit__graph.png" border="0" usemap="#abeluga_1_1LandmarkSensorModel_3_01Mixin_00_01LandmarkMap_00_01StateType_01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="abeluga_1_1LandmarkSensorModel_3_01Mixin_00_01LandmarkMap_00_01StateType_01_4_inherit__map" id="abeluga_1_1LandmarkSensorModel_3_01Mixin_00_01LandmarkMap_00_01StateType_01_4_inherit__map">
-<area shape="rect" title="Generic landmark model for discrete detection sensors (both 2D and 3D)." alt="" coords="5,80,267,121"/>
-<area shape="rect" title=" " alt="" coords="107,5,165,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for beluga::LandmarkSensorModel&lt; Mixin, LandmarkMap, StateType &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classbeluga_1_1LandmarkSensorModel__coll__graph.png" border="0" usemap="#abeluga_1_1LandmarkSensorModel_3_01Mixin_00_01LandmarkMap_00_01StateType_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="abeluga_1_1LandmarkSensorModel_3_01Mixin_00_01LandmarkMap_00_01StateType_01_4_coll__map" id="abeluga_1_1LandmarkSensorModel_3_01Mixin_00_01LandmarkMap_00_01StateType_01_4_coll__map">
-<area shape="rect" title="Generic landmark model for discrete detection sensors (both 2D and 3D)." alt="" coords="5,80,267,121"/>
-<area shape="rect" title=" " alt="" coords="107,5,165,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a7361c0e2e281ce4fbc36a019f70d30e4"><td class="memItemLeft" align="right" valign="top"><a id="a7361c0e2e281ce4fbc36a019f70d30e4"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a7361c0e2e281ce4fbc36a019f70d30e4">state_type</a> = StateType</td></tr>
-<tr class="memdesc:a7361c0e2e281ce4fbc36a019f70d30e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">State type of a particle. <br /></td></tr>
-<tr class="separator:a7361c0e2e281ce4fbc36a019f70d30e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6263a272db0a2d02fa3d16291a9f98b7"><td class="memItemLeft" align="right" valign="top"><a id="a6263a272db0a2d02fa3d16291a9f98b7"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a6263a272db0a2d02fa3d16291a9f98b7">weight_type</a> = double</td></tr>
-<tr class="memdesc:a6263a272db0a2d02fa3d16291a9f98b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Weight type of the particle. <br /></td></tr>
-<tr class="separator:a6263a272db0a2d02fa3d16291a9f98b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f8e3eb14a645c1d163a9d1cd39baac6"><td class="memItemLeft" align="right" valign="top"><a id="a1f8e3eb14a645c1d163a9d1cd39baac6"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a1f8e3eb14a645c1d163a9d1cd39baac6">measurement_type</a> = std::vector&lt; <a class="el" href="structbeluga_1_1LandmarkPositionDetection.html">LandmarkPositionDetection</a> &gt;</td></tr>
-<tr class="memdesc:a1f8e3eb14a645c1d163a9d1cd39baac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement type of the sensor, detection position in robot frame. <br /></td></tr>
-<tr class="separator:a1f8e3eb14a645c1d163a9d1cd39baac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d7917b7813e59a932ce4f63cc80b0d7"><td class="memItemLeft" align="right" valign="top"><a id="a2d7917b7813e59a932ce4f63cc80b0d7"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a2d7917b7813e59a932ce4f63cc80b0d7">param_type</a> = <a class="el" href="structbeluga_1_1LandmarkModelParam.html">LandmarkModelParam</a></td></tr>
-<tr class="memdesc:a2d7917b7813e59a932ce4f63cc80b0d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter type that the constructor uses to configure the beam sensor model. <br /></td></tr>
-<tr class="separator:a2d7917b7813e59a932ce4f63cc80b0d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7db76607143683fc78e7346fd98b395"><td class="memItemLeft" align="right" valign="top"><a id="ac7db76607143683fc78e7346fd98b395"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ac7db76607143683fc78e7346fd98b395">state_type</a> = StateType</td></tr>
+<tr class="memdesc:ac7db76607143683fc78e7346fd98b395"><td class="mdescLeft">&#160;</td><td class="mdescRight">State type of a particle. <br /></td></tr>
+<tr class="separator:ac7db76607143683fc78e7346fd98b395"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae14c681f2da95af1d7daac24e2846b32"><td class="memItemLeft" align="right" valign="top"><a id="ae14c681f2da95af1d7daac24e2846b32"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ae14c681f2da95af1d7daac24e2846b32">weight_type</a> = double</td></tr>
+<tr class="memdesc:ae14c681f2da95af1d7daac24e2846b32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Weight type of the particle. <br /></td></tr>
+<tr class="separator:ae14c681f2da95af1d7daac24e2846b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacdb98d34fa7554be9946f8e1858dc78"><td class="memItemLeft" align="right" valign="top"><a id="aacdb98d34fa7554be9946f8e1858dc78"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aacdb98d34fa7554be9946f8e1858dc78">measurement_type</a> = std::vector&lt; <a class="el" href="structbeluga_1_1LandmarkPositionDetection.html">LandmarkPositionDetection</a> &gt;</td></tr>
+<tr class="memdesc:aacdb98d34fa7554be9946f8e1858dc78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement type of the sensor, detection position in robot frame. <br /></td></tr>
+<tr class="separator:aacdb98d34fa7554be9946f8e1858dc78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa54af8be385ca83eeb2f8ad32b513ec8"><td class="memItemLeft" align="right" valign="top"><a id="aa54af8be385ca83eeb2f8ad32b513ec8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aa54af8be385ca83eeb2f8ad32b513ec8">map_type</a> = <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a></td></tr>
+<tr class="memdesc:aa54af8be385ca83eeb2f8ad32b513ec8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map representation type. <br /></td></tr>
+<tr class="separator:aa54af8be385ca83eeb2f8ad32b513ec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ca01d33ba37d26e4f4b827078207a4e"><td class="memItemLeft" align="right" valign="top"><a id="a9ca01d33ba37d26e4f4b827078207a4e"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a9ca01d33ba37d26e4f4b827078207a4e">param_type</a> = <a class="el" href="structbeluga_1_1LandmarkModelParam.html">LandmarkModelParam</a></td></tr>
+<tr class="memdesc:a9ca01d33ba37d26e4f4b827078207a4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter type that the constructor uses to configure the beam sensor model. <br /></td></tr>
+<tr class="separator:a9ca01d33ba37d26e4f4b827078207a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4d7084634c3d6b9580ac2f53dc06c755"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:a4d7084634c3d6b9580ac2f53dc06c755"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a4d7084634c3d6b9580ac2f53dc06c755">LandmarkSensorModel</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a2d7917b7813e59a932ce4f63cc80b0d7">param_type</a> params, <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a> landmark_map, Args &amp;&amp;... rest)</td></tr>
-<tr class="memdesc:a4d7084634c3d6b9580ac2f53dc06c755"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1LandmarkSensorModel.html" title="Generic landmark model for discrete detection sensors (both 2D and 3D).">LandmarkSensorModel</a> instance.  <a href="classbeluga_1_1LandmarkSensorModel.html#a4d7084634c3d6b9580ac2f53dc06c755">More...</a><br /></td></tr>
-<tr class="separator:a4d7084634c3d6b9580ac2f53dc06c755"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57667314cb3cbe381fd997aa6ef09db5"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
-<tr class="memitem:a57667314cb3cbe381fd997aa6ef09db5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a7361c0e2e281ce4fbc36a019f70d30e4">state_type</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a57667314cb3cbe381fd997aa6ef09db5">make_random_state</a> (Generator &amp;gen) const</td></tr>
-<tr class="separator:a57667314cb3cbe381fd997aa6ef09db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9026b1a77f35bef9af91385cb076fe79"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a6263a272db0a2d02fa3d16291a9f98b7">weight_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a9026b1a77f35bef9af91385cb076fe79">importance_weight</a> (const <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a7361c0e2e281ce4fbc36a019f70d30e4">state_type</a> &amp;state) const</td></tr>
-<tr class="memdesc:a9026b1a77f35bef9af91385cb076fe79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the importance weight for a particle with the provided state.  <a href="classbeluga_1_1LandmarkSensorModel.html#a9026b1a77f35bef9af91385cb076fe79">More...</a><br /></td></tr>
-<tr class="separator:a9026b1a77f35bef9af91385cb076fe79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a021bbe3945ba3485e76c7ddd61d223ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a021bbe3945ba3485e76c7ddd61d223ef">update_sensor</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a1f8e3eb14a645c1d163a9d1cd39baac6">measurement_type</a> &amp;&amp;points) final</td></tr>
-<tr class="memdesc:a021bbe3945ba3485e76c7ddd61d223ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="classbeluga_1_1LandmarkSensorModel.html#a021bbe3945ba3485e76c7ddd61d223ef">More...</a><br /></td></tr>
-<tr class="separator:a021bbe3945ba3485e76c7ddd61d223ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae19d89bfb5d0e999dab7337ae89533f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ae19d89bfb5d0e999dab7337ae89533f1">update_map</a> (<a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a> &amp;&amp;map) final</td></tr>
-<tr class="memdesc:ae19d89bfb5d0e999dab7337ae89533f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with a new map.  <a href="classbeluga_1_1LandmarkSensorModel.html#ae19d89bfb5d0e999dab7337ae89533f1">More...</a><br /></td></tr>
-<tr class="separator:ae19d89bfb5d0e999dab7337ae89533f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26dbefb41ce8394ee818068738ae4e55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a26dbefb41ce8394ee818068738ae4e55">LandmarkSensorModel</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a9ca01d33ba37d26e4f4b827078207a4e">param_type</a> params, <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a> landmark_map)</td></tr>
+<tr class="memdesc:a26dbefb41ce8394ee818068738ae4e55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1LandmarkSensorModel.html" title="Generic landmark model for discrete detection sensors (both 2D and 3D).">LandmarkSensorModel</a> instance.  <a href="classbeluga_1_1LandmarkSensorModel.html#a26dbefb41ce8394ee818068738ae4e55">More...</a><br /></td></tr>
+<tr class="separator:a26dbefb41ce8394ee818068738ae4e55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a065295a40ca9086cd5b2a4be09d64746"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
+<tr class="memitem:a065295a40ca9086cd5b2a4be09d64746"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ac7db76607143683fc78e7346fd98b395">state_type</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a065295a40ca9086cd5b2a4be09d64746">make_random_state</a> (Generator &amp;gen) const</td></tr>
+<tr class="separator:a065295a40ca9086cd5b2a4be09d64746"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e13f398fae5d6c9c3a632a00de2fa05"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ae14c681f2da95af1d7daac24e2846b32">weight_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a4e13f398fae5d6c9c3a632a00de2fa05">importance_weight</a> (const <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ac7db76607143683fc78e7346fd98b395">state_type</a> &amp;state) const</td></tr>
+<tr class="memdesc:a4e13f398fae5d6c9c3a632a00de2fa05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the importance weight for a particle with the provided state.  <a href="classbeluga_1_1LandmarkSensorModel.html#a4e13f398fae5d6c9c3a632a00de2fa05">More...</a><br /></td></tr>
+<tr class="separator:a4e13f398fae5d6c9c3a632a00de2fa05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cbebac93577a51e68a2332ca467df00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a5cbebac93577a51e68a2332ca467df00">update_sensor</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aacdb98d34fa7554be9946f8e1858dc78">measurement_type</a> &amp;&amp;points)</td></tr>
+<tr class="memdesc:a5cbebac93577a51e68a2332ca467df00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="classbeluga_1_1LandmarkSensorModel.html#a5cbebac93577a51e68a2332ca467df00">More...</a><br /></td></tr>
+<tr class="separator:a5cbebac93577a51e68a2332ca467df00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa14e9e26971963f41ff9afca69ecbe8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#afa14e9e26971963f41ff9afca69ecbe8">update_map</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aa54af8be385ca83eeb2f8ad32b513ec8">map_type</a> &amp;&amp;map)</td></tr>
+<tr class="memdesc:afa14e9e26971963f41ff9afca69ecbe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with a new map.  <a href="classbeluga_1_1LandmarkSensorModel.html#afa14e9e26971963f41ff9afca69ecbe8">More...</a><br /></td></tr>
+<tr class="separator:afa14e9e26971963f41ff9afca69ecbe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Mixin, class LandmarkMap, class StateType&gt;<br />
-class beluga::LandmarkSensorModel&lt; Mixin, LandmarkMap, StateType &gt;</h3>
+<div class="textblock"><h3>template&lt;class LandmarkMap, class StateType&gt;<br />
+class beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt;</h3>
 
 <p>Generic landmark model for discrete detection sensors (both 2D and 3D). </p>
 <p>This class implements the <a class="el" href="structbeluga_1_1LandmarkSensorModelInterface.html" title="Pure abstract class representing a generic landmark sensor model.">LandmarkSensorModelInterface</a> interface and satisfies <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>.</p>
 <p>This sensor model is a generalization of the model described in Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[2]</a> Chapter 6.6 .</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mixin</td><td>The mixed-in type with no particular requirements. </td></tr>
     <tr><td class="paramname"><a class="el" href="classbeluga_1_1LandmarkMap.html" title="Basic 3D landmark map datatype.">LandmarkMap</a></td><td>class managing the list of known landmarks. </td></tr>
     <tr><td class="paramname">StateType</td><td>type of the state of the particle. </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a4d7084634c3d6b9580ac2f53dc06c755"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d7084634c3d6b9580ac2f53dc06c755">&#9670;&nbsp;</a></span>LandmarkSensorModel()</h2>
+<a id="a26dbefb41ce8394ee818068738ae4e55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26dbefb41ce8394ee818068738ae4e55">&#9670;&nbsp;</a></span>LandmarkSensorModel()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class LandmarkMap , class StateType &gt; </div>
-<div class="memtemplate">
-template&lt;class... Args&gt; </div>
+template&lt;class LandmarkMap , class StateType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; Mixin, <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::<a class="el" href="classbeluga_1_1LandmarkSensorModel.html">LandmarkSensorModel</a> </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::<a class="el" href="classbeluga_1_1LandmarkSensorModel.html">LandmarkSensorModel</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a2d7917b7813e59a932ce4f63cc80b0d7">param_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a9ca01d33ba37d26e4f4b827078207a4e">param_type</a>&#160;</td>
           <td class="paramname"><em>params</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>&#160;</td>
-          <td class="paramname"><em>landmark_map</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Args &amp;&amp;...&#160;</td>
-          <td class="paramname"><em>rest</em>&#160;</td>
+          <td class="paramname"><em>landmark_map</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -198,17 +174,10 @@ template&lt;class... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>Constructs a <a class="el" href="classbeluga_1_1LandmarkSensorModel.html" title="Generic landmark model for discrete detection sensors (both 2D and 3D).">LandmarkSensorModel</a> instance. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">...Args</td><td>Arguments types for the remaining mixin constructors. </td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">params</td><td>Parameters to configure this instance. See beluga::BeamModelParams for details. </td></tr>
     <tr><td class="paramname">landmark_map</td><td>Map of landmarks to be used by this sensor model. </td></tr>
-    <tr><td class="paramname">...rest</td><td>Arguments that are not used by this part of the mixin, but by others. </td></tr>
   </table>
   </dd>
 </dl>
@@ -216,21 +185,21 @@ template&lt;class... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9026b1a77f35bef9af91385cb076fe79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9026b1a77f35bef9af91385cb076fe79">&#9670;&nbsp;</a></span>importance_weight()</h2>
+<a id="a4e13f398fae5d6c9c3a632a00de2fa05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e13f398fae5d6c9c3a632a00de2fa05">&#9670;&nbsp;</a></span>importance_weight()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class LandmarkMap , class StateType &gt; </div>
+template&lt;class LandmarkMap , class StateType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a6263a272db0a2d02fa3d16291a9f98b7">weight_type</a> <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; Mixin, <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::importance_weight </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ae14c681f2da95af1d7daac24e2846b32">weight_type</a> <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::importance_weight </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a7361c0e2e281ce4fbc36a019f70d30e4">state_type</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ac7db76607143683fc78e7346fd98b395">state_type</a> &amp;&#160;</td>
           <td class="paramname"><em>state</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -253,13 +222,13 @@ template&lt;class Mixin , class LandmarkMap , class StateType &gt; </div>
 
 </div>
 </div>
-<a id="a57667314cb3cbe381fd997aa6ef09db5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57667314cb3cbe381fd997aa6ef09db5">&#9670;&nbsp;</a></span>make_random_state()</h2>
+<a id="a065295a40ca9086cd5b2a4be09d64746"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a065295a40ca9086cd5b2a4be09d64746">&#9670;&nbsp;</a></span>make_random_state()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class LandmarkMap , class StateType &gt; </div>
+template&lt;class LandmarkMap , class StateType &gt; </div>
 <div class="memtemplate">
 template&lt;class Generator &gt; </div>
 <table class="mlabels">
@@ -267,7 +236,7 @@ template&lt;class Generator &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a7361c0e2e281ce4fbc36a019f70d30e4">state_type</a> <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; Mixin, <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::make_random_state </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ac7db76607143683fc78e7346fd98b395">state_type</a> <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::make_random_state </td>
           <td>(</td>
           <td class="paramtype">Generator &amp;&#160;</td>
           <td class="paramname"><em>gen</em></td><td>)</td>
@@ -297,28 +266,28 @@ template&lt;class Generator &gt; </div>
 
 </div>
 </div>
-<a id="ae19d89bfb5d0e999dab7337ae89533f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae19d89bfb5d0e999dab7337ae89533f1">&#9670;&nbsp;</a></span>update_map()</h2>
+<a id="afa14e9e26971963f41ff9afca69ecbe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa14e9e26971963f41ff9afca69ecbe8">&#9670;&nbsp;</a></span>update_map()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class LandmarkMap , class StateType &gt; </div>
+template&lt;class LandmarkMap , class StateType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; Mixin, <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::update_map </td>
+          <td class="memname">void <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::update_map </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a> &amp;&amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aa54af8be385ca83eeb2f8ad32b513ec8">map_type</a> &amp;&amp;&#160;</td>
           <td class="paramname"><em>map</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -334,34 +303,34 @@ template&lt;class Mixin , class LandmarkMap , class StateType &gt; </div>
 
 </div>
 </div>
-<a id="a021bbe3945ba3485e76c7ddd61d223ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a021bbe3945ba3485e76c7ddd61d223ef">&#9670;&nbsp;</a></span>update_sensor()</h2>
+<a id="a5cbebac93577a51e68a2332ca467df00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cbebac93577a51e68a2332ca467df00">&#9670;&nbsp;</a></span>update_sensor()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Mixin , class LandmarkMap , class StateType &gt; </div>
+template&lt;class LandmarkMap , class StateType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; Mixin, <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::update_sensor </td>
+          <td class="memname">void <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::update_sensor </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a1f8e3eb14a645c1d163a9d1cd39baac6">measurement_type</a> &amp;&amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aacdb98d34fa7554be9946f8e1858dc78">measurement_type</a> &amp;&amp;&#160;</td>
           <td class="paramname"><em>points</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">final</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Update the sensor model with the measured points. </p>
-<p>This method updates the sensor model with the information it needs to compute the weight of each particle. The weight of each particle is calculated by subsequent calls to the <code><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a9026b1a77f35bef9af91385cb076fe79" title="Gets the importance weight for a particle with the provided state.">importance_weight()</a></code> method provided by the same mixin component.</p>
+<p>This method updates the sensor model with the information it needs to compute the weight of each particle. The weight of each particle is calculated by subsequent calls to the <code><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a4e13f398fae5d6c9c3a632a00de2fa05" title="Gets the importance weight for a particle with the provided state.">importance_weight()</a></code> method provided by the same mixin component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">points</td><td>The discrete sensor detections in the reference frame of the particle. </td></tr>
