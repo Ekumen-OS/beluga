@@ -48,12 +48,11 @@ struct BearingModelParam {
 /**
  * This class implements the BearingSensorModelInterface interface
  * and satisfies \ref SensorModelPage.
- * \tparam Mixin The mixed-in type with no particular requirements.
  * \tparam LandmarkMap class managing the list of known landmarks.
  * \tparam StateType type of the state of the particle.
  */
-template <class Mixin, class LandmarkMap, class StateType>
-class BearingSensorModel : public Mixin {
+template <class LandmarkMap, class StateType>
+class BearingSensorModel {
  public:
   /// State type of a particle.
   using state_type = StateType;
@@ -61,20 +60,20 @@ class BearingSensorModel : public Mixin {
   using weight_type = double;
   /// Measurement type of the sensor: vector of landmark detections
   using measurement_type = std::vector<LandmarkBearingDetection>;
+  /// Map representation type.
+  using map_type = LandmarkMap;
   /// Parameter type that the constructor uses to configure the bearing sensor model.
   using param_type = BearingModelParam;
 
   /// Constructs a BearingSensorModel instance.
   /**
-   * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param params Parameters to configure this instance. See beluga::BearingModelParam for details.
    * \param landmark_map Map of landmarks to be used by this sensor model.
-   * \param ...rest Arguments that are not used by this part of the mixin, but
    * by others.
    */
   template <class... Args>
-  explicit BearingSensorModel(param_type params, LandmarkMap landmark_map, Args&&... rest)
-      : Mixin(std::forward<Args>(rest)...), params_{std::move(params)}, landmark_map_{std::move(landmark_map)} {}
+  explicit BearingSensorModel(param_type params, LandmarkMap landmark_map)
+      : params_{std::move(params)}, landmark_map_{std::move(landmark_map)} {}
 
   /**
    * The generated state is an unoccupied cell of the grid, any free cell is
@@ -167,10 +166,10 @@ class BearingSensorModel : public Mixin {
   }
 
   /// \copydoc BearingSensorModelInterface::update_sensor(measurement_type&&points)
-  void update_sensor(measurement_type&& points) final { points_ = std::move(points); }
+  void update_sensor(measurement_type&& points) { points_ = std::move(points); }
 
   /// \copydoc BearingSensorModelInterface::update_map(Map&& map)
-  void update_map(LandmarkMap&& map) final { landmark_map_ = std::move(map); }
+  void update_map(map_type&& map) { landmark_map_ = std::move(map); }
 
  private:
   param_type params_;
@@ -182,21 +181,19 @@ class BearingSensorModel : public Mixin {
 /**
  * This class implements the BearingSensorModelInterface interface
  * and satisfies \ref SensorModelPage.
- * \tparam Mixin The mixed-in type with no particular requirements.
  * \tparam LandmarkMap class managing the list of known landmarks.
  */
-template <class Mixin, class LandmarkMap>
-using BearingSensorModel2d = BearingSensorModel<Mixin, LandmarkMap, Sophus::SE2d>;
+template <class LandmarkMap>
+using BearingSensorModel2d = BearingSensorModel<LandmarkMap, Sophus::SE2d>;
 
 /// Sensor model based on discrete landmarks bearing detection for 3D state types.
 /**
  * This class implements the BearingSensorModelInterface interface
  * and satisfies \ref SensorModelPage.
- * \tparam Mixin The mixed-in type with no particular requirements.
  * \tparam LandmarkMap class managing the list of known landmarks.
  */
-template <class Mixin, class LandmarkMap>
-using BearingSensorModel3d = BearingSensorModel<Mixin, LandmarkMap, Sophus::SE3d>;
+template <class LandmarkMap>
+using BearingSensorModel3d = BearingSensorModel<LandmarkMap, Sophus::SE3d>;
 
 }  // namespace beluga
 

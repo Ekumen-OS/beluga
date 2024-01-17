@@ -28,13 +28,8 @@
 
 namespace beluga {
 
-using Sensor2D = ciabatta::mixin<
-    ciabatta::curry<beluga::BearingSensorModel2d, LandmarkMap>::mixin,
-    ciabatta::provides<beluga::BearingSensorModelInterface<LandmarkMap>>::mixin>;
-
-using Sensor3D = ciabatta::mixin<
-    ciabatta::curry<beluga::BearingSensorModel3d, LandmarkMap>::mixin,
-    ciabatta::provides<beluga::BearingSensorModelInterface<LandmarkMap>>::mixin>;
+using Sensor2D = beluga::BearingSensorModel2d<LandmarkMap>;
+using Sensor3D = beluga::BearingSensorModel3d<LandmarkMap>;
 
 LandmarkMapBoundaries default_map_boundaries{-10.0, -10.0, 10.0, 10.0, 0.0, 0.0};
 

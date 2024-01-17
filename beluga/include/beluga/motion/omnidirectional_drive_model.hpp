@@ -70,11 +70,8 @@ struct OmnidirectionalDriveModelParam {
 /// Sampled odometry model for an omnidirectional drive.
 /**
  * This class implements the OdometryMotionModelInterface2d and satisfies \ref MotionModelPage.
- *
- * \tparam Mixin The mixed-in type with no particular requirements.
  */
-template <class Mixin>
-class OmnidirectionalDriveModel : public Mixin {
+class OmnidirectionalDriveModel {
  public:
   /// Update type of the motion model, same as the state_type in the odometry model.
   using update_type = Sophus::SE2d;
@@ -86,14 +83,10 @@ class OmnidirectionalDriveModel : public Mixin {
 
   /// Constructs an OmnidirectionalDriveModel instance.
   /**
-   * \tparam ...Args Arguments types for the remaining mixin constructors.
    * \param params Parameters to configure this instance.
    *  See beluga::OmnidirectionalDriveModelParam for details.
-   * \param ...args Arguments that are not used by this part of the mixin, but by others.
    */
-  template <class... Args>
-  explicit OmnidirectionalDriveModel(const param_type& params, Args&&... args)
-      : Mixin(std::forward<Args>(args)...), params_{params} {}
+  explicit OmnidirectionalDriveModel(const param_type& params) : params_{params} {}
 
   /// Applies the last motion update to the given particle state.
   /**
@@ -121,7 +114,7 @@ class OmnidirectionalDriveModel : public Mixin {
   }
 
   /// \copydoc OdometryMotionModelInterface2d::update_motion(const Sophus::SE2d&)
-  void update_motion(const update_type& pose) final {
+  void update_motion(const update_type& pose) {
     if (last_pose_) {
       const auto translation = pose.translation() - last_pose_.value().translation();
       const double distance = translation.norm();

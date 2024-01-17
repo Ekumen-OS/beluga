@@ -25,9 +25,7 @@ namespace beluga {
 
 using beluga::testing::StaticOccupancyGrid;
 
-using UUT = ciabatta::mixin<
-    ciabatta::curry<beluga::BeamSensorModel, StaticOccupancyGrid<5, 5>>::mixin,
-    ciabatta::provides<beluga::LaserSensorModelInterface2d<StaticOccupancyGrid<5, 5>>>::mixin>;
+using UUT = beluga::BeamSensorModel<StaticOccupancyGrid<5, 5>>;
 
 BeamModelParam GetParams() {
   BeamModelParam ret;
@@ -53,25 +51,25 @@ TEST(BeamSensorModel, ImportanceWeight) {
   // clang-format on
 
   const auto params = GetParams();
-  auto mixin = UUT{params, grid};
+  auto model = UUT{params, grid};
 
   // Perfect hit.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
-  EXPECT_NEAR(1.0171643824743635, mixin.importance_weight(grid.origin()), 1e-6);
+  model.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
+  EXPECT_NEAR(1.0171643824743635, model.importance_weight(grid.origin()), 1e-6);
 
   // This is a hit that's before the obstacle, hence is affected by the unexpected obstacle part of the distribution.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{0.75, 0.75}});
-  EXPECT_NEAR(0.015905891701088148, mixin.importance_weight(grid.origin()), 1e-6);
+  model.update_sensor(std::vector<std::pair<double, double>>{{0.75, 0.75}});
+  EXPECT_NEAR(0.015905891701088148, model.importance_weight(grid.origin()), 1e-6);
 
   // Hit that's past the obstacle, hence is not affected by the unexpected obstacle part of the distribution.
   // This should be really close to zero.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{2.25, 2.25}});
-  EXPECT_NEAR(0.000, mixin.importance_weight(grid.origin()), 1e-6);
+  model.update_sensor(std::vector<std::pair<double, double>>{{2.25, 2.25}});
+  EXPECT_NEAR(0.000, model.importance_weight(grid.origin()), 1e-6);
 
   // Range return longer than beam_max_range, so the max measurement distribution kicks in and this shouldn't be
   // zero.
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{params.beam_max_range, params.beam_max_range}});
-  EXPECT_NEAR(0.00012500000000000003, mixin.importance_weight(grid.origin()), 1e-6);
+  model.update_sensor(std::vector<std::pair<double, double>>{{params.beam_max_range, params.beam_max_range}});
+  EXPECT_NEAR(0.00012500000000000003, model.importance_weight(grid.origin()), 1e-6);
 }
 
 TEST(BeamSensorModel, GridUpdates) {
@@ -89,10 +87,10 @@ TEST(BeamSensorModel, GridUpdates) {
   // clang-format on
 
   const auto params = GetParams();
-  auto mixin = UUT{params, std::move(grid)};
+  auto model = UUT{params, std::move(grid)};
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
-  EXPECT_NEAR(1.0171643824743635, mixin.importance_weight(origin), 1e-6);
+  model.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
+  EXPECT_NEAR(1.0171643824743635, model.importance_weight(origin), 1e-6);
 
   // clang-format off
   grid = StaticOccupancyGrid<5, 5>{{
@@ -104,10 +102,10 @@ TEST(BeamSensorModel, GridUpdates) {
     kResolution, origin};
   // clang-format on
 
-  mixin.update_map(std::move(grid));
+  model.update_map(std::move(grid));
 
-  mixin.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
-  EXPECT_NEAR(0.0, mixin.importance_weight(origin), 1e-3);
+  model.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
+  EXPECT_NEAR(0.0, model.importance_weight(origin), 1e-3);
 }
 
 }  // namespace beluga

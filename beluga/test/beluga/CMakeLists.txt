@@ -22,11 +22,9 @@ add_executable(
   algorithm/test_estimation.cpp
   algorithm/test_exponential_filter.cpp
   algorithm/test_raycasting.cpp
-  mixin/test_descriptor.cpp
   mixin/test_particle_filter.cpp
   mixin/test_sampling.cpp
   mixin/test_storage.cpp
-  mixin/test_utility.cpp
   motion/test_differential_drive_model.cpp
   motion/test_omnidirectional_drive_model.cpp
   random/test_multivariate_normal_distribution.cpp
@@ -40,7 +38,6 @@ add_executable(
   sensor/test_bearing_sensor_model.cpp
   sensor/test_landmark_sensor_model.cpp
   sensor/test_likelihood_field_model.cpp
-  test_mixin.cpp
   test_primitives.cpp
   test_spatial_hash.cpp
   test_tuple_vector.cpp

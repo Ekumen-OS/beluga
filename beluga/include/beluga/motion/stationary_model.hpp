@@ -34,24 +34,13 @@ namespace beluga {
  *
  * It ignores all odometry updates and only adds Gaussian noise to the
  * input states.
- *
- * \tparam Mixin The mixed-in type with no particular requirements.
  */
-template <class Mixin>
-class StationaryModel : public Mixin {
+class StationaryModel {
  public:
   /// Update type of the motion model.
   using update_type = Sophus::SE2d;
   /// State type of a particle.
   using state_type = Sophus::SE2d;
-
-  /// Constructs a StationaryModel instance.
-  /**
-   * \tparam ...Args Arguments types for the remaining mixin constructors.
-   * \param ...args Arguments that are not used by this part of the mixin, but by others.
-   */
-  template <class... Args>
-  explicit StationaryModel(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
 
   /// Applies motion to the given particle state.
   /**
@@ -75,7 +64,7 @@ class StationaryModel : public Mixin {
    *
    * For this model, odometry updates are ignored.
    */
-  void update_motion([[maybe_unused]] const update_type& pose) final {}
+  void update_motion([[maybe_unused]] const update_type& pose) {}
 };
 
 }  // namespace beluga
