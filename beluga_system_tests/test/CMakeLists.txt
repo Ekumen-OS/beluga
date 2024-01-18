@@ -28,5 +28,16 @@ target_link_libraries(
          GTest::gtest_main
          rosbag2_cpp::rosbag2_cpp)
 
+add_executable(test_system_new test_system_new.cpp)
+
+target_link_libraries(
+  test_system_new
+  PUBLIC beluga::beluga
+         beluga_ros::beluga_ros
+         GTest::gtest_main
+         rosbag2_cpp::rosbag2_cpp)
+
 include(GoogleTest)
 gtest_discover_tests(test_system WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+gtest_discover_tests(test_system_new
+                     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
