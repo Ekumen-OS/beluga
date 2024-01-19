@@ -190,8 +190,10 @@ auto particle_filter_test(
         beluga::actions::propagate([&motion](const auto& state) { return motion.apply_motion(state, engine); }) |
         beluga::actions::reweight([&sensor](const auto& state) { return sensor.importance_weight(state); });
 
-    // TODO(nahuel): Reweight should normalize over the total weight.
-    // Computing the slow and fast average ratio in adaptive sampling is the same before and after normalizing.
+    // TODO(nahuel): Implement a `normalize` action closure that normalizes over the total weight.
+    /**
+     * particles |= beluga::actions::normalize;
+     */
     const double total_weight = ranges::accumulate(beluga::views::weights(particles), 0.0);
     particles |= beluga::actions::reweight([total_weight](auto) { return 1.0 / total_weight; });  // HACK
 
