@@ -87,6 +87,14 @@ struct StandardAMCLParams {
 };
 
 // All possible particle filter configuration variants to test against.
+/**
+ * New particle filter implementation variants can be added by following these steps:
+ *
+ * - Create a new struct with the necessary configuration parameters (could be empty).
+ * - Add the new struct type to this variant declaration.
+ * - Add one or more instances of that struct to the `get_particle_filter_params` function.
+ * - Implement a new  `particle_filter_test` overload taking that struct as a first parameter.
+ */
 using ParticleFilterParams = std::variant<StandardAMCLParams>;
 
 auto get_particle_filter_params() {
