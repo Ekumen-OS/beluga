@@ -1,4 +1,4 @@
-// Copyright 2022-2024 Ekumen, Inc.
+// Copyright 2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_BELUGA_HPP
-#define BELUGA_BELUGA_HPP
+#ifndef BELUGA_POLICIES_HPP
+#define BELUGA_POLICIES_HPP
+
+#include <beluga/policies/every_n.hpp>
+#include <beluga/policies/on_effective_size_drop.hpp>
+#include <beluga/policies/on_motion.hpp>
+#include <beluga/policies/policy.hpp>
+#include <beluga/policies/while.hpp>
 
 /**
  * \file
- * \brief Includes all the Beluga API.
+ * \brief Implementation of useful policies.
  */
-
-#include <beluga/actions.hpp>
-#include <beluga/algorithm.hpp>
-#include <beluga/mixin.hpp>
-#include <beluga/motion.hpp>
-#include <beluga/policies.hpp>
-#include <beluga/primitives.hpp>
-#include <beluga/random.hpp>
-#include <beluga/sensor.hpp>
-#include <beluga/tuple_vector.hpp>
-#include <beluga/type_traits.hpp>
-#include <beluga/views.hpp>
 
 #endif
