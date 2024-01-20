@@ -123,8 +123,6 @@ auto particle_filter_test(
 
   using Particle = std::tuple<Sophus::SE2d, beluga::Weight>;
 
-  [[maybe_unused]] static thread_local auto engine = std::mt19937{std::random_device()()};
-
   auto hasher = beluga::spatial_hash<Sophus::SE2d>{0.1, 0.1, 0.1};
 
   // Use the initial distribution to initialize particles.
@@ -138,6 +136,7 @@ auto particle_filter_test(
    *                  ranges::to<beluga::TupleVector>;
    */
   auto particles = ranges::views::generate([initial_distribution]() mutable {
+                     static thread_local auto engine = std::mt19937{std::random_device()()};
                      const auto sample = initial_distribution(engine);
                      return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
                    }) |
@@ -181,14 +180,19 @@ auto particle_filter_test(
 
     // TODO(nahuel): Update this once the new model features are ready.
     /**
-     * particles |= beluga::actions::propagate(motion(odom)) |
-     *              beluga::actions::reweight(sensor(measurement));
+     * particles |= beluga::actions::propagate(std::execution::par, motion(odom)) |
+     *              beluga::actions::reweight(std::execution::par, sensor(measurement));
      */
     motion.update_motion(odom);
     sensor.update_sensor(std::move(measurement));
-    particles |=
-        beluga::actions::propagate([&motion](const auto& state) { return motion.apply_motion(state, engine); }) |
-        beluga::actions::reweight([&sensor](const auto& state) { return sensor.importance_weight(state); });
+    particles |= beluga::actions::propagate(
+                     std::execution::par,
+                     [&motion](const auto& state) {
+                       static thread_local auto engine = std::mt19937{std::random_device()()};
+                       return motion.apply_motion(state, engine);
+                     }) |
+                 beluga::actions::reweight(
+                     std::execution::par, [&sensor](const auto& state) { return sensor.importance_weight(state); });
 
     // TODO(nahuel): Implement a `normalize` action closure that normalizes over the total weight.
     /**
@@ -217,6 +221,7 @@ auto particle_filter_test(
       const auto random_state_probability = 0.1;
 
       auto make_random_particle = [&sensor] {
+        static thread_local auto engine = std::mt19937{std::random_device()()};
         return beluga::make_from_state<Particle>(sensor.make_random_state(engine));
       };
 
