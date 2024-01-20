@@ -145,11 +145,14 @@ auto particle_filter_test(
                    ranges::to<beluga::TupleVector>;
 
   auto should_update = beluga::policies::on_motion(params.update_min_d, params.update_min_a);
-  auto should_resample = beluga::policies::every_n(params.resample_interval_count) and      //
-                         (                                                                  //
-                             beluga::policies::while_false(params.selective_resampling) or  //
-                             beluga::policies::on_effective_size_drop                       //
-                         );
+
+  std::function<bool()> should_resample;
+  if (params.selective_resampling) {
+    should_resample = beluga::policies::every_n(params.resample_interval_count) &&  //
+                      beluga::policies::on_effective_size_drop(std::cref(particles));
+  } else {
+    should_resample = beluga::policies::every_n(params.resample_interval_count);
+  }
 
   // Iteratively run the filter through all the data points.
   for (auto [measurement, odom, ground_truth] : datapoints) {
@@ -185,7 +188,7 @@ auto particle_filter_test(
      * adaptive_probability_estimator.update(particles);
      */
 
-    if (should_resample(particles)) {
+    if (should_resample()) {
       // TODO(nahuel): Implement adaptive probability estimator.
       /**
        * const auto random_state_probability = adaptive_probability_estimator();

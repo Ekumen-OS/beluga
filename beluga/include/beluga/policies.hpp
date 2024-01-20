@@ -19,7 +19,6 @@
 #include <beluga/policies/on_effective_size_drop.hpp>
 #include <beluga/policies/on_motion.hpp>
 #include <beluga/policies/policy.hpp>
-#include <beluga/policies/while.hpp>
 
 /**
  * \file

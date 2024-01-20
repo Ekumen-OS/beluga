@@ -21,7 +21,7 @@ namespace beluga::policies {
 
 namespace detail {
 
-struct on_effective_size_drop_fn {
+struct on_effective_size_drop_policy {
   template <class Range>
   constexpr bool operator()(Range&& range) const {
     const double size = static_cast<double>(ranges::size(range));
@@ -29,9 +29,16 @@ struct on_effective_size_drop_fn {
   }
 };
 
+struct on_effective_size_drop_fn {
+  template <class Range>
+  constexpr auto operator()(Range range) const {
+    return beluga::make_policy_closure(ranges::bind_back(on_effective_size_drop_policy{}, std::move(range)));
+  }
+};
+
 }  // namespace detail
 
-inline constexpr policy_closure<detail::on_effective_size_drop_fn> on_effective_size_drop;
+inline constexpr detail::on_effective_size_drop_fn on_effective_size_drop;
 
 }  // namespace beluga::policies
 
