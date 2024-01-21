@@ -26,7 +26,7 @@ namespace beluga::policies {
 
 namespace detail {
 
-/// Implementation detail for a every_n_policy policy.
+/// Implementation detail for the every_n_policy.
 /**
  * This policy triggers an action every N calls, where N is a specified count.
  */
@@ -49,12 +49,12 @@ struct every_n_policy {
     return current_ == 0;
   }
 
- public:
+ private:
   std::size_t count_{0};    ///< The count specifying when the action should be triggered.
   std::size_t current_{0};  ///< The current count of calls.
 };
 
-/// Implementation detail for a every_n_policy policy closure.
+/// Implementation detail for an every_n_fn object.
 struct every_n_fn {
   /// Overload that creates a policy closure.
   constexpr auto operator()(std::size_t count) const { return beluga::make_policy_closure(every_n_policy{count}); }

@@ -31,7 +31,7 @@ namespace detail {
 
 struct make_policy_closure_fn {
   template <class Fn>
-  constexpr policies::policy_closure<Fn> operator()(Fn fn) const {
+  constexpr policies::policy_closure<Fn> operator()(Fn&& fn) const {
     return policies::policy_closure<Fn>{std::forward<Fn>(fn)};
   }
 };

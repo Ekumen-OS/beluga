@@ -44,7 +44,7 @@ struct on_motion_policy {
    * \param min_distance The minimum translation distance to trigger the action.
    * \param min_angle The minimum rotation angle (in radians) to trigger the action.
    */
-  constexpr on_motion_policy(double min_distance, double min_angle)
+  constexpr on_motion_policy(Scalar min_distance, Scalar min_angle)
       : min_distance_(min_distance), min_angle_(min_angle) {}
 
   /// Call operator overload for SE2 elements.
@@ -74,9 +74,9 @@ struct on_motion_policy {
     return delta_is_above_threshold;
   }
 
- public:
-  double min_distance_{0.0};                        ///< The minimum translation distance to trigger the action.
-  double min_angle_{0.0};                           ///< The minimum rotation angle (in radians) to trigger the action.
+ private:
+  Scalar min_distance_{0.0};                        ///< The minimum translation distance to trigger the action.
+  Scalar min_angle_{0.0};                           ///< The minimum rotation angle (in radians) to trigger the action.
   std::optional<Sophus::SE2<Scalar>> latest_pose_;  ///< The latest SE2 pose for motion comparison.
 };
 
