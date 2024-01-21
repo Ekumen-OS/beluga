@@ -17,15 +17,30 @@
 
 #include <beluga/policies/policy.hpp>
 
+/**
+ * \file
+ * \brief Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric.
+ */
+
 namespace beluga::policies {
 
 namespace detail {
 
 /// Implementation detail for a on_effective_size_drop policy closure.
+/**
+ * This policy triggers an action when the Effective Sample Size (ESS) drops below half
+ * the number of particles in the given range.
+ */
 struct on_effective_size_drop_fn {
   /// Overload that implements the condition.
+  /**
+   * \tparam Range The type of the range containing particles.
+   * \param range The range containing particles for which the ESS is calculated.
+   * \return True if resampling should be triggered, false otherwise.
+   */
   template <class Range>
   constexpr bool operator()(Range&& range) const {
+    static_assert(ranges::sized_range<Range>);
     const double size = static_cast<double>(ranges::size(range));
     return beluga::effective_sample_size(std::forward<Range>(range)) < size / 2.0;
   }
@@ -33,10 +48,10 @@ struct on_effective_size_drop_fn {
 
 }  // namespace detail
 
-/// Policy that can be used to trigger resampling based on the ESS metric.
+/// Policy that can be used to trigger an action based on the Effective Sample Size (ESS) metric.
 /**
- * When the effective sample size drops below half the amount of particles, this policy
- * returns true.
+ * This policy is designed for scenarios where an action is desired when the Effective Sample Size
+ * drops below a certain threshold, specifically half the number of particles.
  */
 inline constexpr policy_closure<detail::on_effective_size_drop_fn> on_effective_size_drop;
 

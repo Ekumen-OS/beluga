@@ -17,35 +17,56 @@
 
 #include <beluga/policies/policy.hpp>
 
+/**
+ * \file
+ * \brief Defines a policy for triggering an action every N calls.
+ */
+
 namespace beluga::policies {
 
 namespace detail {
 
 /// Implementation detail for a every_n_policy policy.
+/**
+ * This policy triggers an action every N calls, where N is a specified count.
+ */
 struct every_n_policy {
  public:
   /// Constructor.
+  /**
+   * \param count The count specifying when the action should be triggered (every N calls).
+   */
   explicit constexpr every_n_policy(std::size_t count) : count_(count) {}
 
   /// Call operator overload.
+  /**
+   * \return True if the action should be triggered, false otherwise.
+   *
+   * Increments the internal counter and returns true if the current count is a multiple of N.
+   */
   constexpr bool operator()() {
     current_ = (current_ + 1) % count_;
     return current_ == 0;
   }
 
  public:
-  std::size_t count_{0};
-  std::size_t current_{0};
+  std::size_t count_{0};    ///< The count specifying when the action should be triggered.
+  std::size_t current_{0};  ///< The current count of calls.
 };
 
 /// Implementation detail for a every_n_policy policy closure.
 struct every_n_fn {
+  /// Overload that creates a policy closure.
   constexpr auto operator()(std::size_t count) const { return beluga::make_policy_closure(every_n_policy{count}); }
 };
 
 }  // namespace detail
 
-/// Policy that can be used to trigger every N calls.
+/// Policy that triggers an action every N calls.
+/**
+ * This policy is designed to be used for scenarios where an action needs to be performed
+ * periodically based on a specified count of calls.
+ */
 inline constexpr detail::every_n_fn every_n;
 
 }  // namespace beluga::policies

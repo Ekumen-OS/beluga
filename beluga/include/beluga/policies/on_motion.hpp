@@ -18,19 +18,43 @@
 #include <beluga/policies/policy.hpp>
 #include <sophus/se2.hpp>
 
+/**
+ * \file
+ * \brief Defines a policy for triggering an action based on motion in SE2 space.
+ */
+
 namespace beluga::policies {
 
 namespace detail {
 
-/// Implementation detail for an on_motion policy.
+/// Implementation detail for the on_motion_policy.
+/**
+ * This policy triggers an action based on motion in SE2 space, where motion is determined
+ * by a minimum distance and a minimum angle threshold.
+ *
+ * \tparam Scalar The scalar type for Sophus::SE2.
+ */
 template <class Scalar>
 struct on_motion_policy {
  public:
+  static_assert(std::is_arithmetic_v<Scalar>);
+
   /// Constructor.
+  /**
+   * \param min_distance The minimum translation distance to trigger the action.
+   * \param min_angle The minimum rotation angle (in radians) to trigger the action.
+   */
   constexpr on_motion_policy(double min_distance, double min_angle)
       : min_distance_(min_distance), min_angle_(min_angle) {}
 
-  /// Call operator overload.
+  /// Call operator overload for SE2 elements.
+  /**
+   * \param pose The SE2 pose to check for motion.
+   * \return True if the action should be triggered based on motion, false otherwise.
+   *
+   * Checks the motion based on the provided SE2 pose, and triggers the action if the
+   * motion surpasses the specified distance and angle thresholds.
+   */
   constexpr bool operator()(const Sophus::SE2<Scalar>& pose) {
     if (!latest_pose_) {
       latest_pose_ = pose;
@@ -51,9 +75,9 @@ struct on_motion_policy {
   }
 
  public:
-  double min_distance_{0.0};
-  double min_angle_{0.0};
-  std::optional<Sophus::SE2<Scalar>> latest_pose_;
+  double min_distance_{0.0};                        ///< The minimum translation distance to trigger the action.
+  double min_angle_{0.0};                           ///< The minimum rotation angle (in radians) to trigger the action.
+  std::optional<Sophus::SE2<Scalar>> latest_pose_;  ///< The latest SE2 pose for motion comparison.
 };
 
 /// Implementation detail for an on_motion_fn object.
@@ -67,7 +91,11 @@ struct on_motion_fn {
 
 }  // namespace detail
 
-/// Policy that can be used to trigger on motion.
+/// Policy that triggers an action based on motion in SE2 space.
+/**
+ * This policy is designed to be used for scenarios where an action needs to be performed
+ * based on the detected motion in the SE2 space, considering specified distance and angle thresholds.
+ */
 inline constexpr detail::on_motion_fn on_motion;
 
 }  // namespace beluga::policies
