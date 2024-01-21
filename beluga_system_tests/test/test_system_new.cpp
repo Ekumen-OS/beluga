@@ -146,12 +146,10 @@ auto particle_filter_test(
 
   auto should_update = beluga::policies::on_motion(params.update_min_d, params.update_min_a);
 
-  beluga::any_policy<decltype(particles)> should_resample;
+  using Particles = decltype(particles);
+  beluga::any_policy<Particles> should_resample = beluga::policies::every_n(params.resample_interval_count);
   if (params.selective_resampling) {
-    should_resample = beluga::policies::every_n(params.resample_interval_count) &&  //
-                      beluga::policies::on_effective_size_drop;
-  } else {
-    should_resample = beluga::policies::every_n(params.resample_interval_count);
+    should_resample = should_resample && beluga::policies::on_effective_size_drop;
   }
 
   // Iteratively run the filter through all the data points.

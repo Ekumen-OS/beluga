@@ -110,6 +110,8 @@ struct policy_closure : public policy_closure_base, public PolicyFn {
   /// Conversion constructor.
   constexpr explicit policy_closure(PolicyFn fn) : PolicyFn(std::move(fn)) {}
 
+  using PolicyFn::PolicyFn;
+  using PolicyFn::operator=;
   using PolicyFn::operator();
 
   /// Call operator overload.
@@ -130,7 +132,7 @@ struct policy_closure : public policy_closure_base, public PolicyFn {
 
 /// Type erased policy.
 template <class... Args>
-using any_policy = std::function<bool(Args...)>;
+using any_policy = policies::policy_closure<std::function<bool(Args...)>>;
 
 }  // namespace beluga
 
