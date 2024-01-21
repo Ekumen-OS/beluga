@@ -45,116 +45,37 @@ inline constexpr detail::make_policy_closure_fn make_policy_closure;
 
 namespace policies {
 
-namespace detail {
-
-/// \cond
-
-template <class Left, class Right, class... Args>
-struct policy_invocable_traits {
-  static constexpr bool both_args = std::is_invocable_r_v<bool, Left, Args...> &&  //
-                                    std::is_invocable_r_v<bool, Right, Args...>;
-
-  static constexpr bool left_args = std::is_invocable_r_v<bool, Left, Args...> &&  //
-                                    std::is_invocable_r_v<bool, Right>;
-
-  static constexpr bool right_args = std::is_invocable_r_v<bool, Left> &&  //
-                                     std::is_invocable_r_v<bool, Right, Args...>;
-
-  static constexpr bool no_args = std::is_invocable_r_v<bool, Left> &&  //
-                                  std::is_invocable_r_v<bool, Right>;
-};
-
-/// \endcond
-
-}  // namespace detail
-
 /// Implementation detail for a policy closure base object.
 struct policy_closure_base {
   /// Short-circuited logical AND operation.
   template <class Left, class Right>
   friend constexpr auto operator&&(policy_closure<Left> left, policy_closure<Right> right) {
-    return make_policy_closure([=](const auto&... args) mutable -> bool {
-      using invocable_traits = typename detail::policy_invocable_traits<Left, Right, decltype(args)...>;
-      if constexpr (invocable_traits::both_args) {
-        return left(args...) && right(args...);
-      } else if constexpr (invocable_traits::right_args) {
-        return left() && right(args...);
-      } else if constexpr (invocable_traits::left_args) {
-        return left(args...) && right();
-      } else {
-        static_assert(invocable_traits::no_args);
-        return left() && right();
-      }
-    });
+    return make_policy_closure([=](const auto&... args) mutable -> bool { return left(args...) && right(args...); });
   }
 
   /// Non-short-circuited logical AND operation.
   template <class Left, class Right>
   friend constexpr auto operator&(policy_closure<Left> left, policy_closure<Right> right) {
     return make_policy_closure([=](const auto&... args) mutable -> bool {
-      using invocable_traits = typename detail::policy_invocable_traits<Left, Right, decltype(args)...>;
-      if constexpr (invocable_traits::both_args) {
-        const bool first = left(args...);
-        const bool second = right(args...);
-        return first && second;
-      } else if constexpr (invocable_traits::right_args) {
-        const bool first = left();
-        const bool second = right(args...);
-        return first && second;
-      } else if constexpr (invocable_traits::left_args) {
-        const bool first = left(args...);
-        const bool second = right();
-        return first && second;
-      } else {
-        static_assert(invocable_traits::no_args);
-        const bool first = left();
-        const bool second = right();
-        return first && second;
-      }
+      const bool first = left(args...);
+      const bool second = right(args...);
+      return first && second;
     });
   }
 
   /// Short-circuited logical OR operation.
   template <class Left, class Right>
   friend constexpr auto operator||(policy_closure<Left> left, policy_closure<Right> right) {
-    return make_policy_closure([=](const auto&... args) mutable -> bool {
-      using invocable_traits = typename detail::policy_invocable_traits<Left, Right, decltype(args)...>;
-      if constexpr (invocable_traits::both_args) {
-        return left(args...) || right(args...);
-      } else if constexpr (invocable_traits::right_args) {
-        return left() || right(args...);
-      } else if constexpr (invocable_traits::left_args) {
-        return left(args...) || right();
-      } else {
-        static_assert(invocable_traits::no_args);
-        return left() || right();
-      }
-    });
+    return make_policy_closure([=](const auto&... args) mutable -> bool { return left(args...) || right(args...); });
   }
 
   /// Non-short-circuited logical OR operation.
   template <class Left, class Right>
   friend constexpr auto operator|(policy_closure<Left> left, policy_closure<Right> right) {
     return make_policy_closure([=](const auto&... args) mutable -> bool {
-      using invocable_traits = typename detail::policy_invocable_traits<Left, Right, decltype(args)...>;
-      if constexpr (invocable_traits::both_args) {
-        const bool first = left(args...);
-        const bool second = right(args...);
-        return first || second;
-      } else if constexpr (invocable_traits::right_args) {
-        const bool first = left();
-        const bool second = right(args...);
-        return first || second;
-      } else if constexpr (invocable_traits::left_args) {
-        const bool first = left(args...);
-        const bool second = right();
-        return first || second;
-      } else {
-        static_assert(invocable_traits::no_args);
-        const bool first = left();
-        const bool second = right();
-        return first || second;
-      }
+      const bool first = left(args...);
+      const bool second = right(args...);
+      return first || second;
     });
   }
 
@@ -178,7 +99,8 @@ struct policy_closure_base {
  * If the second condition applies, the resulting policy will have to be called with
  * the arguments of the one that does take arguments.
  *
- * They should be cheaply copyable and the arguments will be passed by const-reference.
+ * A policy closure should be cheaply copyable and its arguments will always be passed
+ * by const-reference.
  */
 template <class PolicyFn>
 struct policy_closure : public policy_closure_base, public PolicyFn {
@@ -187,9 +109,28 @@ struct policy_closure : public policy_closure_base, public PolicyFn {
 
   /// Conversion constructor.
   constexpr explicit policy_closure(PolicyFn fn) : PolicyFn(std::move(fn)) {}
+
+  using PolicyFn::operator();
+
+  /// Call operator overload.
+  /**
+   * If the function object can be called with no arguments, enable this overload that
+   * takes any amount of arguments so it can be composed with any other policy.
+   */
+  template <class... Args>
+  constexpr auto operator()(Args...) ->  //
+      std::enable_if_t<                  //
+          std::is_invocable_r_v<bool, PolicyFn> && !std::is_invocable_r_v<bool, PolicyFn, Args...>,
+          bool> {
+    return (*this)();
+  }
 };
 
 }  // namespace policies
+
+/// Type erased policy.
+template <class... Args>
+using any_policy = std::function<bool(Args...)>;
 
 }  // namespace beluga
 
