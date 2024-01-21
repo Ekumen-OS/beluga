@@ -21,7 +21,9 @@ namespace beluga::policies {
 
 namespace detail {
 
+/// Implementation detail for a on_effective_size_drop policy closure.
 struct on_effective_size_drop_fn {
+  /// Overload that implements the condition.
   template <class Range>
   constexpr bool operator()(Range&& range) const {
     const double size = static_cast<double>(ranges::size(range));
@@ -31,6 +33,11 @@ struct on_effective_size_drop_fn {
 
 }  // namespace detail
 
+/// Policy that can be used to trigger resampling based on the ESS metric.
+/**
+ * When the effective sample size drops below half the amount of particles, this policy
+ * returns true.
+ */
 inline constexpr policy_closure<detail::on_effective_size_drop_fn> on_effective_size_drop;
 
 }  // namespace beluga::policies

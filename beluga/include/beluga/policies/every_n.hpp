@@ -21,10 +21,13 @@ namespace beluga::policies {
 
 namespace detail {
 
+/// Implementation detail for a every_n_policy policy.
 struct every_n_policy {
  public:
+  /// Constructor.
   explicit constexpr every_n_policy(std::size_t count) : count_(count) {}
 
+  /// Call operator overload.
   constexpr bool operator()() {
     current_ = (current_ + 1) % count_;
     return current_ == 0;
@@ -35,12 +38,14 @@ struct every_n_policy {
   std::size_t current_{0};
 };
 
+/// Implementation detail for a every_n_policy policy closure.
 struct every_n_fn {
   constexpr auto operator()(std::size_t count) const { return beluga::make_policy_closure(every_n_policy{count}); }
 };
 
 }  // namespace detail
 
+/// Policy that can be used to trigger every N calls.
 inline constexpr detail::every_n_fn every_n;
 
 }  // namespace beluga::policies

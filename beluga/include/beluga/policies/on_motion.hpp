@@ -22,12 +22,15 @@ namespace beluga::policies {
 
 namespace detail {
 
+/// Implementation detail for an on_motion policy.
 template <class Scalar>
 struct on_motion_policy {
  public:
+  /// Constructor.
   constexpr on_motion_policy(double min_distance, double min_angle)
       : min_distance_(min_distance), min_angle_(min_angle) {}
 
+  /// Call operator overload.
   constexpr bool operator()(const Sophus::SE2<Scalar>& pose) {
     if (!latest_pose_) {
       latest_pose_ = pose;
@@ -53,7 +56,9 @@ struct on_motion_policy {
   std::optional<Sophus::SE2<Scalar>> latest_pose_;
 };
 
+/// Implementation detail for an on_motion_fn object.
 struct on_motion_fn {
+  /// Overload that creates the policy closure.
   template <class Scalar>
   constexpr auto operator()(Scalar min_distance, Scalar min_angle) const {
     return beluga::make_policy_closure(on_motion_policy<Scalar>{min_distance, min_angle});
@@ -62,6 +67,7 @@ struct on_motion_fn {
 
 }  // namespace detail
 
+/// Policy that can be used to trigger on motion.
 inline constexpr detail::on_motion_fn on_motion;
 
 }  // namespace beluga::policies
