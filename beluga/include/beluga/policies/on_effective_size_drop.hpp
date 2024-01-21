@@ -15,6 +15,9 @@
 #ifndef BELUGA_POLICIES_ON_EFFECTIVE_SIZE_DROP_HPP
 #define BELUGA_POLICIES_ON_EFFECTIVE_SIZE_DROP_HPP
 
+#include <range/v3/range/concepts.hpp>
+
+#include <beluga/algorithm/effective_sample_size.hpp>
 #include <beluga/policies/policy.hpp>
 
 /**
@@ -26,8 +29,8 @@ namespace beluga::policies {
 
 namespace detail {
 
-/// Implementation detail for a on_effective_size_drop_fn object.
-struct on_effective_size_drop_fn {
+/// Implementation detail for a on_effective_size_drop_policy object.
+struct on_effective_size_drop_policy {
   /// Overload that implements the condition.
   /**
    * \tparam Range The type of the range containing particles.
@@ -49,7 +52,7 @@ struct on_effective_size_drop_fn {
  * This policy is designed for scenarios where an action is desired when the Effective Sample Size
  * drops below a certain threshold, specifically half the number of particles.
  */
-inline constexpr policy_closure<detail::on_effective_size_drop_fn> on_effective_size_drop;
+inline constexpr policy_closure<detail::on_effective_size_drop_policy> on_effective_size_drop;
 
 }  // namespace beluga::policies
 

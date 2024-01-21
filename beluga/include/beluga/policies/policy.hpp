@@ -15,6 +15,8 @@
 #ifndef BELUGA_POLICIES_POLICY_HPP
 #define BELUGA_POLICIES_POLICY_HPP
 
+#include <type_traits>
+
 namespace beluga {
 
 namespace policies {
