@@ -27,6 +27,15 @@ TEST(AdaptiveProbabilityEstimator, ProbabilityWithNoParticles) {
   ASSERT_EQ(estimator(), 0.0);
 }
 
+TEST(AdaptiveProbabilityEstimator, ProbabilityWithZeroWeight) {
+  // Test the probability when the total weight is zero.
+  const double alpha_slow = 0.2;
+  const double alpha_fast = 0.4;
+  auto estimator = beluga::AdaptiveProbabilityEstimator{alpha_slow, alpha_fast};
+  estimator.update(std::vector<std::tuple<int, beluga::Weight>>{{1, 0.0}, {2, 0.0}});
+  ASSERT_EQ(estimator(), 0.0);
+}
+
 TEST(AdaptiveProbabilityEstimator, ProbabilityAfterUpdateAndReset) {
   const double alpha_slow = 0.5;
   const double alpha_fast = 1.0;
