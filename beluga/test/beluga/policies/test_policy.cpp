@@ -23,7 +23,7 @@ using testing::Return;
 struct MockPredicate {
   MOCK_METHOD(bool, eval, ());
   bool operator()() { return eval(); }
-  auto policy() { return beluga::make_policy_closure(std::ref(*this)); }
+  auto policy() { return beluga::make_policy(std::ref(*this)); }
 };
 
 TEST(Policy, AndTrue) {
@@ -90,8 +90,8 @@ TEST(Policy, Not) {
 }
 
 TEST(Policy, SameArgumentCombinations) {
-  auto is_even = beluga::make_policy_closure([](int n) { return n % 2 == 0; });
-  auto never = beluga::make_policy_closure([](int) { return false; });
+  auto is_even = beluga::make_policy([](int n) { return n % 2 == 0; });
+  auto never = beluga::make_policy([](int) { return false; });
   auto policy1 = is_even || never;
   ASSERT_TRUE(policy1(2));
   ASSERT_FALSE(policy1(3));
@@ -101,8 +101,8 @@ TEST(Policy, SameArgumentCombinations) {
 }
 
 TEST(Policy, DifferentArgumentCombinations) {
-  auto is_even = beluga::make_policy_closure([](int n) { return n % 2 == 0; });
-  auto always = beluga::make_policy_closure([]() { return true; });
+  auto is_even = beluga::make_policy([](int n) { return n % 2 == 0; });
+  auto always = beluga::make_policy([]() { return true; });
   auto policy1 = is_even && always;
   ASSERT_TRUE(policy1(2));
   ASSERT_FALSE(policy1(3));
@@ -113,20 +113,20 @@ TEST(Policy, DifferentArgumentCombinations) {
 
 TEST(Policy, AnyAssignment) {
   beluga::any_policy<double> policy;
-  policy = beluga::make_policy_closure([](double value) { return value > 0.0; });
+  policy = beluga::make_policy([](double value) { return value > 0.0; });
   ASSERT_TRUE(policy(1.0));
   ASSERT_FALSE(policy(-1.0));
-  policy = beluga::make_policy_closure([]() { return true; });
+  policy = beluga::make_policy([]() { return true; });
   ASSERT_TRUE(policy(1.0));
   ASSERT_TRUE(policy(-1.0));
 }
 
 TEST(Policy, AnyComposition) {
   beluga::any_policy<double> policy;
-  policy = beluga::make_policy_closure([](double value) { return value > 0.0; });
+  policy = beluga::make_policy([](double value) { return value > 0.0; });
   ASSERT_TRUE(policy(1.0));
   ASSERT_FALSE(policy(-1.0));
-  policy = policy && beluga::make_policy_closure([]() { return true; });
+  policy = policy && beluga::make_policy([]() { return true; });
   ASSERT_TRUE(policy(1.0));
   ASSERT_FALSE(policy(-1.0));
 }

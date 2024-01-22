@@ -85,7 +85,7 @@ struct on_motion_fn {
   /// Overload that creates the policy closure.
   template <class Scalar>
   constexpr auto operator()(Scalar min_distance, Scalar min_angle) const {
-    return beluga::make_policy_closure(on_motion_policy<Scalar>{min_distance, min_angle});
+    return beluga::make_policy(on_motion_policy<Scalar>{min_distance, min_angle});
   }
 };
 

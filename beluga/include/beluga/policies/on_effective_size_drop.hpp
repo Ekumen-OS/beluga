@@ -52,7 +52,7 @@ struct on_effective_size_drop_policy {
  * This policy is designed for scenarios where an action is desired when the Effective Sample Size
  * drops below a certain threshold, specifically half the number of particles.
  */
-inline constexpr policy_closure<detail::on_effective_size_drop_policy> on_effective_size_drop;
+inline constexpr policy<detail::on_effective_size_drop_policy> on_effective_size_drop;
 
 }  // namespace beluga::policies
 

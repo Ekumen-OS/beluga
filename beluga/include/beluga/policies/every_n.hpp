@@ -57,7 +57,7 @@ struct every_n_policy {
 /// Implementation detail for an every_n_fn object.
 struct every_n_fn {
   /// Overload that creates a policy closure.
-  constexpr auto operator()(std::size_t count) const { return beluga::make_policy_closure(every_n_policy{count}); }
+  constexpr auto operator()(std::size_t count) const { return beluga::make_policy(every_n_policy{count}); }
 };
 
 }  // namespace detail

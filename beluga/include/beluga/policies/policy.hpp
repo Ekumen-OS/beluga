@@ -21,9 +21,9 @@ namespace beluga {
 
 namespace policies {
 
-/// Forward declaration of policy closure.
+/// Forward declaration of policy.
 template <class PolicyFn>
-struct policy_closure;
+struct policy;
 
 }  // namespace policies
 
@@ -31,10 +31,10 @@ namespace detail {
 
 /// \cond
 
-struct make_policy_closure_fn {
+struct make_policy_fn {
   template <class Fn>
-  constexpr policies::policy_closure<Fn> operator()(Fn&& fn) const {
-    return policies::policy_closure<Fn>{std::forward<Fn>(fn)};
+  constexpr policies::policy<Fn> operator()(Fn&& fn) const {
+    return policies::policy<Fn>{std::forward<Fn>(fn)};
   }
 };
 
@@ -42,23 +42,23 @@ struct make_policy_closure_fn {
 
 }  // namespace detail
 
-/// Make policy closure function objects.
-inline constexpr detail::make_policy_closure_fn make_policy_closure;
+/// Make policy function objects.
+inline constexpr detail::make_policy_fn make_policy;
 
 namespace policies {
 
-/// Implementation detail for a policy closure base object.
-struct policy_closure_base {
+/// Implementation detail for a policy base object.
+struct policy_base {
   /// Short-circuited logical AND operation.
   template <class Left, class Right>
-  friend constexpr auto operator&&(policy_closure<Left> left, policy_closure<Right> right) {
-    return make_policy_closure([=](const auto&... args) mutable -> bool { return left(args...) && right(args...); });
+  friend constexpr auto operator&&(policy<Left> left, policy<Right> right) {
+    return make_policy([=](const auto&... args) mutable -> bool { return left(args...) && right(args...); });
   }
 
   /// Non-short-circuited logical AND operation.
   template <class Left, class Right>
-  friend constexpr auto operator&(policy_closure<Left> left, policy_closure<Right> right) {
-    return make_policy_closure([=](const auto&... args) mutable -> bool {
+  friend constexpr auto operator&(policy<Left> left, policy<Right> right) {
+    return make_policy([=](const auto&... args) mutable -> bool {
       const bool first = left(args...);
       const bool second = right(args...);
       return first && second;
@@ -67,14 +67,14 @@ struct policy_closure_base {
 
   /// Short-circuited logical OR operation.
   template <class Left, class Right>
-  friend constexpr auto operator||(policy_closure<Left> left, policy_closure<Right> right) {
-    return make_policy_closure([=](const auto&... args) mutable -> bool { return left(args...) || right(args...); });
+  friend constexpr auto operator||(policy<Left> left, policy<Right> right) {
+    return make_policy([=](const auto&... args) mutable -> bool { return left(args...) || right(args...); });
   }
 
   /// Non-short-circuited logical OR operation.
   template <class Left, class Right>
-  friend constexpr auto operator|(policy_closure<Left> left, policy_closure<Right> right) {
-    return make_policy_closure([=](const auto&... args) mutable -> bool {
+  friend constexpr auto operator|(policy<Left> left, policy<Right> right) {
+    return make_policy([=](const auto&... args) mutable -> bool {
       const bool first = left(args...);
       const bool second = right(args...);
       return first || second;
@@ -83,12 +83,12 @@ struct policy_closure_base {
 
   /// Logical NOT operation.
   template <class Fn>
-  friend constexpr auto operator!(policy_closure<Fn> fn) {
-    return make_policy_closure([=](const auto&... args) mutable -> bool { return !fn(args...); });
+  friend constexpr auto operator!(policy<Fn> fn) {
+    return make_policy([=](const auto&... args) mutable -> bool { return !fn(args...); });
   }
 };
 
-/// Policy closure template class.
+/// Policy template class.
 /**
  * A policy is a declarative lazily-evaluated possibly stateful predicate that can be
  * composed with other predicates using overloaded boolean operators.
@@ -101,16 +101,16 @@ struct policy_closure_base {
  * If the second condition applies, the resulting policy will have to be called with
  * the arguments of the one that does take arguments.
  *
- * A policy closure should be cheaply copyable and its arguments will always be passed
+ * A policy should be cheaply copyable and its arguments will always be passed
  * by const-reference.
  */
 template <class PolicyFn>
-struct policy_closure : public policy_closure_base, public PolicyFn {
+struct policy : public policy_base, public PolicyFn {
   /// Default constructor.
-  policy_closure() = default;
+  policy() = default;
 
   /// Conversion constructor.
-  constexpr explicit policy_closure(PolicyFn fn) : PolicyFn(std::move(fn)) {}
+  constexpr explicit policy(PolicyFn fn) : PolicyFn(std::move(fn)) {}
 
   using PolicyFn::PolicyFn;
   using PolicyFn::operator=;
@@ -134,7 +134,7 @@ struct policy_closure : public policy_closure_base, public PolicyFn {
 
 /// Type erased policy.
 template <class... Args>
-using any_policy = policies::policy_closure<std::function<bool(Args...)>>;
+using any_policy = policies::policy<std::function<bool(Args...)>>;
 
 }  // namespace beluga
 
