@@ -19,13 +19,9 @@
 
 namespace beluga {
 
-namespace policies {
-
 /// Forward declaration of policy.
 template <class PolicyFn>
 struct policy;
-
-}  // namespace policies
 
 namespace detail {
 
@@ -33,8 +29,8 @@ namespace detail {
 
 struct make_policy_fn {
   template <class Fn>
-  constexpr policies::policy<Fn> operator()(Fn&& fn) const {
-    return policies::policy<Fn>{std::forward<Fn>(fn)};
+  constexpr policy<Fn> operator()(Fn&& fn) const {
+    return policy<Fn>{std::forward<Fn>(fn)};
   }
 };
 
@@ -44,8 +40,6 @@ struct make_policy_fn {
 
 /// Make policy function objects.
 inline constexpr detail::make_policy_fn make_policy;
-
-namespace policies {
 
 /// Implementation detail for a policy base object.
 struct policy_base {
@@ -130,11 +124,9 @@ struct policy : public policy_base, public PolicyFn {
   }
 };
 
-}  // namespace policies
-
 /// Type erased policy.
 template <class... Args>
-using any_policy = policies::policy<std::function<bool(Args...)>>;
+using any_policy = policy<std::function<bool(Args...)>>;
 
 }  // namespace beluga
 
