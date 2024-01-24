@@ -20,83 +20,107 @@
 
 /**
  * \file
- * \brief Defines a policy for triggering an action based on motion in SE2 space.
+ * \brief Defines a policy for triggering an action based on motion.
  */
 
 namespace beluga::policies {
 
 namespace detail {
 
-/// Implementation detail for the on_motion_policy.
+/// Primary template for the on_motion_policy_base class.
 /**
- * This policy triggers an action based on motion in SE2 space, where motion is determined
- * by a minimum distance and a minimum angle threshold.
- *
- * \tparam Scalar The scalar type for Sophus::SE2.
+ * \tparam Pose The pose type to check for motion.
+ */
+template <class Pose>
+struct on_motion_policy_base;
+
+/// Specialization for on_motion_policy_base in SE2 space.
+/**
+ * \tparam Scalar The scalar type for SE2 elements.
  */
 template <class Scalar>
-struct on_motion_policy {
+struct on_motion_policy_base<Sophus::SE2<Scalar>> {
  public:
-  static_assert(std::is_arithmetic_v<Scalar>);
-
   /// Constructor.
   /**
    * \param min_distance The minimum translation distance to trigger the action.
    * \param min_angle The minimum rotation angle (in radians) to trigger the action.
    */
-  constexpr on_motion_policy(Scalar min_distance, Scalar min_angle)
+  constexpr on_motion_policy_base(Scalar min_distance, Scalar min_angle)
       : min_distance_(min_distance), min_angle_(min_angle) {}
 
-  /// Call operator overload for SE2 elements.
+  /// Return true if motion has been detected.
   /**
-   * \param pose The SE2 pose to check for motion.
+   * \param prev The previous SE2 pose to check for motion.
+   * \param current The current SE2 pose to check for motion.
    * \return True if the action should be triggered based on motion, false otherwise.
    *
    * Checks the motion based on the provided SE2 pose, and triggers the action if the
    * motion surpasses the specified distance and angle thresholds.
    */
-  constexpr bool operator()(const Sophus::SE2<Scalar>& pose) {
+  constexpr bool operator()(const Sophus::SE2<Scalar>& prev, const Sophus::SE2<Scalar>& current) {
+    const auto delta = prev.inverse() * current;
+    return std::abs(delta.translation().x()) > min_distance_ ||  //
+           std::abs(delta.translation().y()) > min_distance_ ||  //
+           std::abs(delta.so2().log()) > min_angle_;
+  }
+
+ private:
+  Scalar min_distance_{0.0};  ///< The minimum translation distance to trigger the action.
+  Scalar min_angle_{0.0};     ///< The minimum rotation angle (in radians) to trigger the action.
+};
+
+/// Base implementation for the on_motion_policy algorithm.
+/**
+ * \tparam Pose The pose type to check for motion.
+ */
+template <class Pose>
+struct on_motion_policy : public on_motion_policy_base<Pose> {
+ public:
+  using on_motion_policy_base<Pose>::on_motion_policy_base;
+  using on_motion_policy_base<Pose>::operator();
+
+  /// Return true if motion has been detected.
+  constexpr bool operator()(const Pose& pose) {
     if (!latest_pose_) {
       latest_pose_ = pose;
       return true;
     }
 
-    const auto delta = latest_pose_->inverse() * pose;
-    const bool delta_is_above_threshold =                     //
-        std::abs(delta.translation().x()) > min_distance_ ||  //
-        std::abs(delta.translation().y()) > min_distance_ ||  //
-        std::abs(delta.so2().log()) > min_angle_;
-
-    if (delta_is_above_threshold) {
+    const bool moved = (*this)(*latest_pose_, pose);
+    if (moved) {
       latest_pose_ = pose;
     }
 
-    return delta_is_above_threshold;
+    return moved;
   }
 
  private:
-  Scalar min_distance_{0.0};                        ///< The minimum translation distance to trigger the action.
-  Scalar min_angle_{0.0};                           ///< The minimum rotation angle (in radians) to trigger the action.
-  std::optional<Sophus::SE2<Scalar>> latest_pose_;  ///< The latest SE2 pose for motion comparison.
+  std::optional<Pose> latest_pose_;  ///< The latest pose for motion comparison.
 };
 
-/// Implementation detail for an on_motion_fn object.
+/// Implementation detail for the on_motion_fn object.
+template <class Pose>
 struct on_motion_fn {
   /// Overload that creates the policy closure.
-  template <class Scalar>
-  constexpr auto operator()(Scalar min_distance, Scalar min_angle) const {
-    return beluga::make_policy(on_motion_policy<Scalar>{min_distance, min_angle});
+  /**
+   * This policy triggers an action based on motion.
+   */
+  template <class... Args>
+  constexpr auto operator()(Args&&... args) const {
+    return beluga::make_policy(on_motion_policy<Pose>{std::forward<Args>(args)...});
   }
 };
 
 }  // namespace detail
 
-/// Policy that triggers an action based on motion in SE2 space.
+/// Policy that triggers an action based on motion.
 /**
  * This policy is designed to be used for scenarios where an action needs to be performed
- * based on the detected motion in the SE2 space, considering specified distance and angle thresholds.
+ * based on the detected motion, considering specified distance and angle thresholds.
  */
-inline constexpr detail::on_motion_fn on_motion;
+template <class Pose>
+inline constexpr detail::on_motion_fn<Pose> on_motion;
 
 }  // namespace beluga::policies
 

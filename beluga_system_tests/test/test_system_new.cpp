@@ -144,7 +144,7 @@ auto particle_filter_test(
                    ranges::views::take_exactly(params.max_particles) |            //
                    ranges::to<beluga::TupleVector>;
 
-  auto should_update = beluga::policies::on_motion(params.update_min_d, params.update_min_a);
+  auto should_update = beluga::policies::on_motion<Sophus::SE2d>(params.update_min_d, params.update_min_a);
 
   using Particles = decltype(particles);
   beluga::any_policy<Particles> should_resample = beluga::policies::every_n(params.resample_interval_count);
