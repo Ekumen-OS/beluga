@@ -31,17 +31,26 @@ namespace detail {
 
 /// Implementation detail for a on_effective_size_drop_policy object.
 struct on_effective_size_drop_policy {
+  /// Default percentage threshold.
+  static constexpr double kDefaultThreshold = 0.5;
+
   /// Overload that implements the condition.
   /**
    * \tparam Range The type of the range containing particles.
    * \param range The range containing particles for which the ESS is calculated.
+   * \param threshold Percentage threshold to use for detecting the drop.
    * \return True if resampling should be triggered, false otherwise.
    */
   template <class Range>
-  constexpr bool operator()(Range&& range) const {
+  constexpr bool operator()(Range&& range, double threshold = kDefaultThreshold) const {
     static_assert(ranges::sized_range<Range>);
     const auto size = static_cast<double>(ranges::size(range));
-    return beluga::effective_sample_size(std::forward<Range>(range)) < size / 2.0;
+    return beluga::effective_sample_size(std::forward<Range>(range)) < size * threshold;
+  }
+
+  /// Overload that binds a specified threshold.
+  constexpr auto operator()(double threshold) const {
+    return beluga::make_policy(ranges::bind_back(on_effective_size_drop_policy{}, threshold));
   }
 };
 
@@ -50,7 +59,7 @@ struct on_effective_size_drop_policy {
 /// Policy that can be used to trigger an action based on the Effective Sample Size (ESS) metric.
 /**
  * This policy is designed for scenarios where an action is desired when the Effective Sample Size
- * drops below a certain threshold, specifically half the number of particles.
+ * drops below a certain threshold (half the number of particles by default).
  */
 inline constexpr policy<detail::on_effective_size_drop_policy> on_effective_size_drop;
 
