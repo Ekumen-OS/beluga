@@ -28,6 +28,10 @@ add_executable(
   mixin/test_storage.cpp
   motion/test_differential_drive_model.cpp
   motion/test_omnidirectional_drive_model.cpp
+  policies/test_every_n.cpp
+  policies/test_on_effective_size_drop.cpp
+  policies/test_on_motion.cpp
+  policies/test_policy.cpp
   random/test_multivariate_normal_distribution.cpp
   sensor/data/test_dense_grid.cpp
   sensor/data/test_landmark_map.cpp
