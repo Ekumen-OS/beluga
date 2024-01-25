@@ -23,8 +23,7 @@ TEST(ThrunRecoveryProbabilityEstimator, ProbabilityWithNoParticles) {
   const double alpha_slow = 0.2;
   const double alpha_fast = 0.4;
   auto estimator = beluga::ThrunRecoveryProbabilityEstimator{alpha_slow, alpha_fast};
-  estimator.update(std::vector<std::tuple<int, beluga::Weight>>{});
-  ASSERT_EQ(estimator(), 0.0);
+  ASSERT_EQ(estimator(std::vector<std::tuple<int, beluga::Weight>>{}), 0.0);
 }
 
 TEST(ThrunRecoveryProbabilityEstimator, ProbabilityWithZeroWeight) {
@@ -32,8 +31,7 @@ TEST(ThrunRecoveryProbabilityEstimator, ProbabilityWithZeroWeight) {
   const double alpha_slow = 0.2;
   const double alpha_fast = 0.4;
   auto estimator = beluga::ThrunRecoveryProbabilityEstimator{alpha_slow, alpha_fast};
-  estimator.update(std::vector<std::tuple<int, beluga::Weight>>{{1, 0.0}, {2, 0.0}});
-  ASSERT_EQ(estimator(), 0.0);
+  ASSERT_EQ(estimator(std::vector<std::tuple<int, beluga::Weight>>{{1, 0.0}, {2, 0.0}}), 0.0);
 }
 
 TEST(ThrunRecoveryProbabilityEstimator, ProbabilityAfterUpdateAndReset) {
@@ -42,18 +40,17 @@ TEST(ThrunRecoveryProbabilityEstimator, ProbabilityAfterUpdateAndReset) {
   auto estimator = beluga::ThrunRecoveryProbabilityEstimator{alpha_slow, alpha_fast};
 
   // Test the probability after updating the estimator with particle weights.
-  estimator.update(std::vector<std::tuple<int, beluga::Weight>>{{5, 1.0}, {6, 2.0}, {7, 3.0}});
-  ASSERT_EQ(estimator(), 0.0);
+  auto input = std::vector<std::tuple<int, beluga::Weight>>{{5, 1.0}, {6, 2.0}, {7, 3.0}};
+  ASSERT_EQ(estimator(input), 0.0);
 
-  estimator.update(std::vector<std::tuple<int, beluga::Weight>>{{5, 0.5}, {6, 1.0}, {7, 1.5}});
-  ASSERT_NEAR(estimator(), 0.33, 0.01);
+  input = std::vector<std::tuple<int, beluga::Weight>>{{5, 0.5}, {6, 1.0}, {7, 1.5}};
+  ASSERT_NEAR(estimator(input), 0.33, 0.01);
 
-  estimator.update(std::vector<std::tuple<int, beluga::Weight>>{{5, 0.5}, {6, 1.0}, {7, 1.5}});
-  ASSERT_NEAR(estimator(), 0.20, 0.01);
+  input = std::vector<std::tuple<int, beluga::Weight>>{{5, 0.5}, {6, 1.0}, {7, 1.5}};
+  ASSERT_NEAR(estimator(input), 0.20, 0.01);
 
-  // Test the probability after resetting the estimator.
   estimator.reset();
-  ASSERT_EQ(estimator(), 0.0);
+  ASSERT_EQ(estimator(input), 0.0);  // Test the probability after resetting the estimator.
 }
 
 class ThrunRecoveryProbabilityWithParam : public ::testing::TestWithParam<std::tuple<double, double, double>> {};
@@ -66,13 +63,11 @@ TEST_P(ThrunRecoveryProbabilityWithParam, Probabilities) {
   auto estimator = beluga::ThrunRecoveryProbabilityEstimator{alpha_slow, alpha_fast};
   auto particles = std::vector<std::tuple<int, beluga::Weight>>{{1, initial_weight}};
 
-  estimator.update(particles);
-  ASSERT_NEAR(estimator(), 0.0, 0.01);
+  ASSERT_NEAR(estimator(particles), 0.0, 0.01);
 
   beluga::weight(particles.front()) = final_weight;
 
-  estimator.update(particles);
-  ASSERT_NEAR(estimator(), expected_probability, 0.01);
+  ASSERT_NEAR(estimator(particles), expected_probability, 0.01);
 }
 
 INSTANTIATE_TEST_SUITE_P(

@@ -27,10 +27,8 @@ namespace beluga {
 /**
  * This class implements an estimator for what probability to use for injecting random
  * particles (not sampled directly from the particle set) during the resampling step of a
- * particle filter.
- *
- * The addition of random samples allows the filter to recover in case it converged to
- * the wrong estimate, adding an additional level of robustness.
+ * particle filter. The inclusion of random samples enhances the filter's ability to recover
+ * in case it converges to an incorrect estimate, thereby adding an extra layer of robustness.
  *
  * This estimator averages the total weight of the particles and computes the ratio
  * between a short-term and a long-term average over time.
@@ -58,19 +56,22 @@ class ThrunRecoveryProbabilityEstimator {
   constexpr void reset() noexcept {
     slow_filter_.reset();
     fast_filter_.reset();
-    probability_ = 0.0;
   }
 
   /// Update the estimation based on a particle range.
+  /**
+   * \param range A range containing particles.
+   * \return The estimated random state probability to be used by the particle filter.
+   */
   template <class Range>
-  constexpr void update(Range&& range) {
+  constexpr double operator()(Range&& range) {
     static_assert(ranges::sized_range<Range>);
     static_assert(beluga::is_particle_range_v<Range>);
     const std::size_t size = range.size();
 
-    if (size == 0.0) {
+    if (size == 0) {
       reset();
-      return;
+      return 0.0;
     }
 
     const double total_weight = ranges::accumulate(beluga::views::weights(range), 0.0);
@@ -79,20 +80,15 @@ class ThrunRecoveryProbabilityEstimator {
     const double slow_average = slow_filter_(average_weight);
 
     if (slow_average == 0.0) {
-      probability_ = 0.0;
-      return;
+      return 0.0;
     }
 
-    probability_ = std::clamp(1.0 - fast_average / slow_average, 0.0, 1.0);
+    return std::clamp(1.0 - fast_average / slow_average, 0.0, 1.0);
   }
 
-  /// Returns the estimated random state probability to be used by the filter.
-  constexpr double operator()() const noexcept { return probability_; }
-
  private:
-  ExponentialFilter slow_filter_;
-  ExponentialFilter fast_filter_;
-  double probability_ = 0.0;
+  ExponentialFilter slow_filter_;  ///< Exponential filter for the long-term average.
+  ExponentialFilter fast_filter_;  ///< Exponential filter for the short-term average.
 };
 
 }  // namespace beluga

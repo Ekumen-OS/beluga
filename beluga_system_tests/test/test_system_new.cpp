@@ -203,7 +203,7 @@ auto particle_filter_test(
     const double total_weight = ranges::accumulate(beluga::views::weights(particles), 0.0);
     particles |= beluga::actions::reweight([total_weight](auto) { return 1.0 / total_weight; });  // HACK
 
-    probability_estimator.update(particles);
+    const double random_state_probability = probability_estimator(particles);
 
     // TODO(nahuel): Sort out resampling policies.
     if (!should_resample()) {
@@ -213,7 +213,6 @@ auto particle_filter_test(
     // Nav2 updates the filter estimates regardless of whether selective resampling actually resamples or not.
     if (!params.selective_resampling ||
         beluga::effective_sample_size(particles) < static_cast<double>(ranges::size(particles)) / 2.0) {
-      const auto random_state_probability = probability_estimator();
       if (random_state_probability > 0.0) {
         probability_estimator.reset();
       }
