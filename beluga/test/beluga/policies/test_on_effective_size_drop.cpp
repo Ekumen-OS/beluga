@@ -18,7 +18,7 @@
 
 namespace {
 
-TEST(OnEffectiveSizeDropPolicy, TriggerOnDropBelowHalf) {
+TEST(OnEffectiveSizeDropPolicy, TriggerOnDropBelow30Percent) {
   auto policy = beluga::policies::on_effective_size_drop(0.3);
   auto weights1 = std::vector{1.0, 1.0, 1.0, 1.0, 1.0};
   auto weights2 = std::vector{1.0, 0.0, 0.0, 0.0, 0.0};  // Fewer effective particles
@@ -27,7 +27,7 @@ TEST(OnEffectiveSizeDropPolicy, TriggerOnDropBelowHalf) {
   ASSERT_TRUE(policy(weights2));   // ESS drops below 30% on the second call, triggering the policy
 }
 
-TEST(OnEffectiveSizeDropPolicy, NoTriggerAboveHalf) {
+TEST(OnEffectiveSizeDropPolicy, NoTriggerAbove30Percent) {
   auto policy = beluga::policies::on_effective_size_drop(0.3);
   auto weights1 = std::vector{1.0, 1.0, 1.0, 1.0, 1.0};
   auto weights2 = std::vector{1.0, 1.0, 0.0, 0.0, 0.0};  // Still above 30%
@@ -36,7 +36,7 @@ TEST(OnEffectiveSizeDropPolicy, NoTriggerAboveHalf) {
   ASSERT_FALSE(policy(weights1));  // ESS remains above 30%, no trigger
 }
 
-TEST(OnEffectiveSizeDropPolicy, kDefaultThreshold) {
+TEST(OnEffectiveSizeDropPolicy, TriggerOnDropBelowDefaultThreshold) {
   auto policy = beluga::policies::on_effective_size_drop;
   auto weights = std::vector{1.0, 1.0, 0.0, 0.0, 0.0};
 
