@@ -23,6 +23,7 @@ add_executable(
   algorithm/test_estimation.cpp
   algorithm/test_exponential_filter.cpp
   algorithm/test_raycasting.cpp
+  algorithm/test_thrun_recovery_probability_estimator.cpp
   mixin/test_particle_filter.cpp
   mixin/test_sampling.cpp
   mixin/test_storage.cpp
