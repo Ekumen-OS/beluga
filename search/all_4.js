@@ -15,5 +15,5 @@ var searchData=
   ['every_5fn_5ffn_97',['every_n_fn',['../structbeluga_1_1policies_1_1detail_1_1every__n__fn.html',1,'beluga::policies::detail']]],
   ['every_5fn_5fpolicy_98',['every_n_policy',['../structbeluga_1_1policies_1_1detail_1_1every__n__policy.html',1,'beluga::policies::detail::every_n_policy'],['../structbeluga_1_1policies_1_1detail_1_1every__n__policy.html#ab18ca05451fdba2630028d01ed7399a0',1,'beluga::policies::detail::every_n_policy::every_n_policy()']]],
   ['exponential_5ffilter_2ehpp_99',['exponential_filter.hpp',['../exponential__filter_8hpp.html',1,'']]],
-  ['exponentialfilter_100',['ExponentialFilter',['../classbeluga_1_1ExponentialFilter.html',1,'beluga::ExponentialFilter'],['../classbeluga_1_1ExponentialFilter.html#a67402a6a745a19829e3d5611ccc4a11c',1,'beluga::ExponentialFilter::ExponentialFilter()']]]
+  ['exponentialfilter_100',['ExponentialFilter',['../classbeluga_1_1ExponentialFilter.html',1,'beluga::ExponentialFilter'],['../classbeluga_1_1ExponentialFilter.html#acc79485c5ca405bfbc8f3b2b6abd15ef',1,'beluga::ExponentialFilter::ExponentialFilter()']]]
 ];
