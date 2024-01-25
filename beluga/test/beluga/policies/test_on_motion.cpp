@@ -19,7 +19,7 @@
 namespace {
 
 TEST(OnMotionPolicy, TriggerOnMotion) {
-  auto policy = beluga::policies::on_motion<Sophus::SE2d>(0.1, 0.05);
+  auto policy = beluga::policies::on_motion(0.1, 0.05);
   Sophus::SE2d pose1(Sophus::SO2d(0.2), Eigen::Vector2d(1.0, 2.0));
   Sophus::SE2d pose2(Sophus::SO2d(0.25), Eigen::Vector2d(1.2, 2.2));
 
@@ -29,7 +29,7 @@ TEST(OnMotionPolicy, TriggerOnMotion) {
 }
 
 TEST(OnMotionPolicy, NoTriggerWithoutMotion) {
-  auto policy = beluga::policies::on_motion<Sophus::SE2d>(0.1, 0.05);
+  auto policy = beluga::policies::on_motion(0.1, 0.05);
   Sophus::SE2d pose1(Sophus::SO2d(0.1), Eigen::Vector2d(1.0, 2.0));
   Sophus::SE2d pose2(Sophus::SO2d(0.1), Eigen::Vector2d(1.05, 2.05));
 

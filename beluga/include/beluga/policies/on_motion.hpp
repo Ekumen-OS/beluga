@@ -100,15 +100,14 @@ struct on_motion_policy : public on_motion_policy_base<Pose> {
 };
 
 /// Implementation detail for the on_motion_fn object.
-template <class Pose>
 struct on_motion_fn {
-  /// Overload that creates the policy closure.
+  /// Overload that creates the policy closure in SE2 space.
   /**
    * This policy triggers an action based on motion.
    */
-  template <class... Args>
-  constexpr auto operator()(Args&&... args) const {
-    return beluga::make_policy(on_motion_policy<Pose>{std::forward<Args>(args)...});
+  template <class Scalar>
+  constexpr auto operator()(Scalar min_distance, Scalar min_angle) const {
+    return beluga::make_policy(on_motion_policy<Sophus::SE2<Scalar>>{min_distance, min_angle});
   }
 };
 
@@ -119,8 +118,7 @@ struct on_motion_fn {
  * This policy is designed to be used for scenarios where an action needs to be performed
  * based on the detected motion, considering specified distance and angle thresholds.
  */
-template <class Pose>
-inline constexpr detail::on_motion_fn<Pose> on_motion;
+inline constexpr detail::on_motion_fn on_motion;
 
 }  // namespace beluga::policies
 
