@@ -186,7 +186,6 @@ auto particle_filter_test(
     const double random_state_probability = probability_estimator(particles);
 
     if (should_resample(particles)) {
-
       if (random_state_probability > 0.0) {
         probability_estimator.reset();
       }
