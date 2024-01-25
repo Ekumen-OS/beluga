@@ -79,7 +79,7 @@ class ThrunRecoveryProbabilityEstimator {
     const double fast_average = fast_filter_(average_weight);
     const double slow_average = slow_filter_(average_weight);
 
-    if (slow_average == 0.0) {
+    if (std::abs(slow_average) < std::numeric_limits<double>::epsilon()) {
       return 0.0;
     }
 
