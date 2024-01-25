@@ -144,39 +144,19 @@ auto particle_filter_test(
                    ranges::views::take_exactly(params.max_particles) |            //
                    ranges::to<beluga::TupleVector>;
 
-  // Don't update the filter unless we've moved far enough from the latest pose where an update was performed.
-  // It's an approximation of the recommendations Probabilistic Robotics \cite thrun2005probabilistic
-  // Chapter 4.2.4 based in Nav2 AMCL's implementation .
-  // TODO(nahuel): This should be part of the library (in some form).
-  auto far_enough_to_update = [params, latest_pose = std::optional<Sophus::SE2d>{}](auto pose) mutable -> bool {
-    if (!latest_pose) {
-      latest_pose = pose;
-      return true;
-    }
+  auto should_update = beluga::policies::on_motion(params.update_min_d, params.update_min_a);
 
-    const auto delta = latest_pose->inverse() * pose;
-    const bool delta_is_above_threshold =                           //
-        std::abs(delta.translation().x()) > params.update_min_d ||  //
-        std::abs(delta.translation().y()) > params.update_min_d ||  //
-        std::abs(delta.so2().log()) > params.update_min_a;
-
-    if (delta_is_above_threshold) {
-      latest_pose = pose;
-    }
-
-    return delta_is_above_threshold;
-  };
-
-  // TODO(nahuel): This should be part of the library (in some form).
-  auto should_resample = [params, count = 0UL]() mutable -> bool {
-    return ++count % params.resample_interval_count == 0;
-  };
+  using Particles = decltype(particles);
+  beluga::any_policy<Particles> should_resample = beluga::policies::every_n(params.resample_interval_count);
+  if (params.selective_resampling) {
+    should_resample = should_resample && beluga::policies::on_effective_size_drop;
+  }
 
   auto probability_estimator = beluga::ThrunRecoveryProbabilityEstimator(params.alpha_slow, params.alpha_fast);
 
   // Iteratively run the filter through all the data points.
   for (auto [measurement, odom, ground_truth] : datapoints) {
-    if (!far_enough_to_update(odom)) {
+    if (!should_update(odom)) {
       continue;
     }
 
@@ -205,14 +185,8 @@ auto particle_filter_test(
 
     const double random_state_probability = probability_estimator(particles);
 
-    // TODO(nahuel): Sort out resampling policies.
-    if (!should_resample()) {
-      continue;
-    }
+    if (should_resample(particles)) {
 
-    // Nav2 updates the filter estimates regardless of whether selective resampling actually resamples or not.
-    if (!params.selective_resampling ||
-        beluga::effective_sample_size(particles) < static_cast<double>(ranges::size(particles)) / 2.0) {
       if (random_state_probability > 0.0) {
         probability_estimator.reset();
       }
