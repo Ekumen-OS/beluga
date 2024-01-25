@@ -172,7 +172,7 @@ auto particle_filter_test(
     return ++count % params.resample_interval_count == 0;
   };
 
-  auto adaptive_probability_estimator = beluga::AdaptiveProbabilityEstimator(params.alpha_slow, params.alpha_fast);
+  auto probability_estimator = beluga::ThrunRecoveryProbabilityEstimator(params.alpha_slow, params.alpha_fast);
 
   // Iteratively run the filter through all the data points.
   for (auto [measurement, odom, ground_truth] : datapoints) {
@@ -203,7 +203,7 @@ auto particle_filter_test(
     const double total_weight = ranges::accumulate(beluga::views::weights(particles), 0.0);
     particles |= beluga::actions::reweight([total_weight](auto) { return 1.0 / total_weight; });  // HACK
 
-    adaptive_probability_estimator.update(particles);
+    probability_estimator.update(particles);
 
     // TODO(nahuel): Sort out resampling policies.
     if (!should_resample()) {
@@ -213,9 +213,9 @@ auto particle_filter_test(
     // Nav2 updates the filter estimates regardless of whether selective resampling actually resamples or not.
     if (!params.selective_resampling ||
         beluga::effective_sample_size(particles) < static_cast<double>(ranges::size(particles)) / 2.0) {
-      const auto random_state_probability = adaptive_probability_estimator();
+      const auto random_state_probability = probability_estimator();
       if (random_state_probability > 0.0) {
-        adaptive_probability_estimator.reset();
+        probability_estimator.reset();
       }
 
       auto make_random_particle = [&sensor] {

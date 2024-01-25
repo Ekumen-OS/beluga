@@ -18,12 +18,12 @@ add_executable(
   actions/test_propagate.cpp
   actions/test_reweight.cpp
   algorithm/raycasting/test_bresenham.cpp
-  algorithm/test_adaptive_probability_estimator.cpp
   algorithm/test_distance_map.cpp
   algorithm/test_effective_sample_size.cpp
   algorithm/test_estimation.cpp
   algorithm/test_exponential_filter.cpp
   algorithm/test_raycasting.cpp
+  algorithm/test_thrun_recovery_probability_estimator.cpp
   mixin/test_particle_filter.cpp
   mixin/test_sampling.cpp
   mixin/test_storage.cpp

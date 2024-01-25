@@ -14,32 +14,32 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/algorithm/adaptive_probability_estimator.hpp>
+#include <beluga/algorithm/thrun_recovery_probability_estimator.hpp>
 
 namespace {
 
-TEST(AdaptiveProbabilityEstimator, ProbabilityWithNoParticles) {
+TEST(ThrunRecoveryProbabilityEstimator, ProbabilityWithNoParticles) {
   // Test the probability when the particle set is empty.
   const double alpha_slow = 0.2;
   const double alpha_fast = 0.4;
-  auto estimator = beluga::AdaptiveProbabilityEstimator{alpha_slow, alpha_fast};
+  auto estimator = beluga::ThrunRecoveryProbabilityEstimator{alpha_slow, alpha_fast};
   estimator.update(std::vector<std::tuple<int, beluga::Weight>>{});
   ASSERT_EQ(estimator(), 0.0);
 }
 
-TEST(AdaptiveProbabilityEstimator, ProbabilityWithZeroWeight) {
+TEST(ThrunRecoveryProbabilityEstimator, ProbabilityWithZeroWeight) {
   // Test the probability when the total weight is zero.
   const double alpha_slow = 0.2;
   const double alpha_fast = 0.4;
-  auto estimator = beluga::AdaptiveProbabilityEstimator{alpha_slow, alpha_fast};
+  auto estimator = beluga::ThrunRecoveryProbabilityEstimator{alpha_slow, alpha_fast};
   estimator.update(std::vector<std::tuple<int, beluga::Weight>>{{1, 0.0}, {2, 0.0}});
   ASSERT_EQ(estimator(), 0.0);
 }
 
-TEST(AdaptiveProbabilityEstimator, ProbabilityAfterUpdateAndReset) {
+TEST(ThrunRecoveryProbabilityEstimator, ProbabilityAfterUpdateAndReset) {
   const double alpha_slow = 0.5;
   const double alpha_fast = 1.0;
-  auto estimator = beluga::AdaptiveProbabilityEstimator{alpha_slow, alpha_fast};
+  auto estimator = beluga::ThrunRecoveryProbabilityEstimator{alpha_slow, alpha_fast};
 
   // Test the probability after updating the estimator with particle weights.
   estimator.update(std::vector<std::tuple<int, beluga::Weight>>{{5, 1.0}, {6, 2.0}, {7, 3.0}});
@@ -56,14 +56,14 @@ TEST(AdaptiveProbabilityEstimator, ProbabilityAfterUpdateAndReset) {
   ASSERT_EQ(estimator(), 0.0);
 }
 
-class AdaptiveProbabilityWithParam : public ::testing::TestWithParam<std::tuple<double, double, double>> {};
+class ThrunRecoveryProbabilityWithParam : public ::testing::TestWithParam<std::tuple<double, double, double>> {};
 
-TEST_P(AdaptiveProbabilityWithParam, Probabilities) {
+TEST_P(ThrunRecoveryProbabilityWithParam, Probabilities) {
   const auto [initial_weight, final_weight, expected_probability] = GetParam();
 
   const double alpha_slow = 0.001;
   const double alpha_fast = 0.1;
-  auto estimator = beluga::AdaptiveProbabilityEstimator{alpha_slow, alpha_fast};
+  auto estimator = beluga::ThrunRecoveryProbabilityEstimator{alpha_slow, alpha_fast};
   auto particles = std::vector<std::tuple<int, beluga::Weight>>{{1, initial_weight}};
 
   estimator.update(particles);
@@ -76,8 +76,8 @@ TEST_P(AdaptiveProbabilityWithParam, Probabilities) {
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    AdaptiveProbability,
-    AdaptiveProbabilityWithParam,
+    ThrunRecoveryProbability,
+    ThrunRecoveryProbabilityWithParam,
     testing::Values(
         std::make_tuple(1.0, 1.5, 0.00),
         std::make_tuple(1.0, 2.0, 0.00),

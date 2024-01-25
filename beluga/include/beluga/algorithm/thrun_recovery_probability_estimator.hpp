@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_ALGORITHM_ADAPTIVE_PROBABILITY_ESTIMATOR_HPP
-#define BELUGA_ALGORITHM_ADAPTIVE_PROBABILITY_ESTIMATOR_HPP
+#ifndef BELUGA_ALGORITHM_THRUN_RECOVERY_PROBABILITY_ESTIMATOR_HPP
+#define BELUGA_ALGORITHM_THRUN_RECOVERY_PROBABILITY_ESTIMATOR_HPP
 
 #include <beluga/algorithm/exponential_filter.hpp>
 #include <beluga/type_traits/particle_traits.hpp>
@@ -37,14 +37,14 @@ namespace beluga {
  *
  * See Probabilistic Robotics \cite thrun2005probabilistic, Chapter 8.3.3.
  */
-class AdaptiveProbabilityEstimator {
+class ThrunRecoveryProbabilityEstimator {
  public:
   /// Constructor.
   /**
    * \param alpha_slow Decay rate for the long-term average.
    * \param alpha_fast Decay rate for the short-term average.
    */
-  constexpr AdaptiveProbabilityEstimator(double alpha_slow, double alpha_fast) noexcept
+  constexpr ThrunRecoveryProbabilityEstimator(double alpha_slow, double alpha_fast) noexcept
       : slow_filter_{alpha_slow}, fast_filter_{alpha_fast} {
     assert(0 < alpha_slow);
     assert(alpha_slow < alpha_fast);
