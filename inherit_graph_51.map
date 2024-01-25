@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01st82aee1c4aa004416efdc2dd54a3ad958.html" title="Specialization for arrays." alt="" coords="5,5,177,91"/>
+<area shape="rect" id="node1" href="$structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html" title="Primary template for the on_motion_policy_base class." alt="" coords="5,5,188,61"/>
+<area shape="rect" id="node2" href="$structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html" title="Base implementation for the on_motion_policy algorithm." alt="" coords="236,13,443,54"/>
 </map>

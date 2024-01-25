@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['y_5fmax_654',['y_max',['../structbeluga_1_1LandmarkMapBoundaries.html#a604dc75eb78bd65b25a5d3edce08f62a',1,'beluga::LandmarkMapBoundaries']]],
-  ['y_5fmin_655',['y_min',['../structbeluga_1_1LandmarkMapBoundaries.html#a4909fc05c0b1e8d7da3c2b52d79953ab',1,'beluga::LandmarkMapBoundaries']]]
+  ['x_5fmax_693',['x_max',['../structbeluga_1_1LandmarkMapBoundaries.html#ab46d8532f743d78a3923bdcb4304fc55',1,'beluga::LandmarkMapBoundaries']]],
+  ['x_5fmin_694',['x_min',['../structbeluga_1_1LandmarkMapBoundaries.html#af05e08f369992b7219bc8e099eb9c51c',1,'beluga::LandmarkMapBoundaries']]]
 ];

@@ -72,6 +72,9 @@ $(function() {
 <li>OmnidirectionalDriveModel()
 : <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a9bd35a27690615a4a0713ca12de746e4">beluga::OmnidirectionalDriveModel</a>
 </li>
+<li>on_motion_policy_base()
+: <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a7635bba21c07ecedbdc84a630e4fc69c">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE2&lt; Scalar &gt; &gt;</a>
+</li>
 <li>operator const T &amp;()
 : <a class="el" href="classbeluga_1_1Numeric.html#a8ec8f54330d481ff1f764e827c979af3">beluga::Numeric&lt; T, PhantomType, typename &gt;</a>
 </li>
@@ -94,17 +97,24 @@ $(function() {
 , <a class="el" href="structbeluga_1_1cluster__detail_1_1cluster__fn.html#aa781af22fe53f12e3bfeb3af743a3239">beluga::cluster_detail::cluster_fn</a>
 , <a class="el" href="classbeluga_1_1ExponentialFilter.html#af5e03a9b1f4d935ca25fb9e0c54cf5ac">beluga::ExponentialFilter</a>
 , <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a106f63a73d83bcd24a611825f7aed90c">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
+, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1every__n__fn.html#abbb5d0b10ca6cc1b4a2c42298db9e680">beluga::policies::detail::every_n_fn</a>
+, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1every__n__policy.html#a6be34f70df0aef03b92ad356a99d6b9a">beluga::policies::detail::every_n_policy</a>
+, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__effective__size__drop__policy.html#a61bf85e33defa393a1e264964c2cebc1">beluga::policies::detail::on_effective_size_drop_policy</a>
+, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#ae508e9927bcb40dd34915237c7e840b6">beluga::policies::detail::on_motion_fn</a>
+, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a13815a93b8b9f2754055b76325e55dac">beluga::policies::detail::on_motion_policy&lt; Pose &gt;</a>
+, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ac36600763c7e6df543d8a35fca493dc6">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE2&lt; Scalar &gt; &gt;</a>
+, <a class="el" href="structbeluga_1_1policy.html#a6578daeb127a8d5f2163478ec319bdc8">beluga::policy&lt; PolicyFn &gt;</a>
 , <a class="el" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#a7eaa3e5bf38cc8bcdbb96092f16d03e0">beluga::spatial_hash&lt; Sophus::SE2d, void &gt;</a>
 , <a class="el" href="classbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01st82aee1c4aa004416efdc2dd54a3ad958.html#aeccaed7b096fd2750169a911f95b8a92">beluga::spatial_hash&lt; std::array&lt; T, N &gt;, std::enable_if_t&lt; std::is_arithmetic_v&lt; T &gt;, void &gt; &gt;</a>
 , <a class="el" href="classbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1_7c7412bd4d4b17eb2e661212dfcf682d.html#a5f8e8a26fbf2984fe467b2b4ba10dd94">beluga::spatial_hash&lt; Tuple&lt; Types... &gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt; Types &gt; &amp;&amp;...), void &gt; &gt;</a>
-, <a class="el" href="structbeluga_1_1state__detail_1_1state__fn.html#abd8f2e60b354ab751ec023b7617072e6">beluga::state_detail::state_fn</a>
+, <a class="el" href="structbeluga_1_1state__detail_1_1state__fn.html#ae25209b9a2fe11f915ff15ffef58b294">beluga::state_detail::state_fn</a>
 , <a class="el" href="structbeluga_1_1views_1_1detail_1_1as__common__tuple__indirect__fn.html#ae3b07c5124e500a1399cc9132143bc68">beluga::views::detail::as_common_tuple_indirect_fn</a>
 , <a class="el" href="structbeluga_1_1views_1_1detail_1_1random__intersperse__fn.html#a24dc6d70cdd4d9a18dafab83cef8c0f3">beluga::views::detail::random_intersperse_fn</a>
-, <a class="el" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a5a88ea4d51d36f46de3f240cac3d0122">beluga::views::detail::sample_fn</a>
+, <a class="el" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a9109c102b7e8c8f96dfee8637c9dd79b">beluga::views::detail::sample_fn</a>
 , <a class="el" href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html#a9bb994c8fa05025ae524c7722fa07f6e">beluga::views::detail::take_evenly_fn</a>
-, <a class="el" href="structbeluga_1_1views_1_1detail_1_1take__while__kld__fn.html#a62890852142ddf6707b0ba3199caf5ce">beluga::views::detail::take_while_kld_fn</a>
+, <a class="el" href="structbeluga_1_1views_1_1detail_1_1take__while__kld__fn.html#a156383be8b2761aea744de6cc9fa6b01">beluga::views::detail::take_while_kld_fn</a>
 , <a class="el" href="structbeluga_1_1views_1_1detail_1_1zip__fn.html#a73e4852c75adfd157d9b5e8f0087b5f6">beluga::views::detail::zip_fn</a>
-, <a class="el" href="structbeluga_1_1weight__detail_1_1weight__fn.html#a9cb94b785aef1fdd9badf0105889b8a9">beluga::weight_detail::weight_fn</a>
+, <a class="el" href="structbeluga_1_1weight__detail_1_1weight__fn.html#a859e871684c153eba5e32ba4e48601c7">beluga::weight_detail::weight_fn</a>
 , <a class="el" href="structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html#a110271dc3b316a8b40ba7203fe93456b">std::hash&lt; beluga::Numeric&lt; T, PhantomType &gt; &gt;</a>
 </li>
 <li>operator*()

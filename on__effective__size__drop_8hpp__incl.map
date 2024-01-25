@@ -1,0 +1,19 @@
+<map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/policies/on_effective_size_drop.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/policies/on_effective_size_drop.hpp">
+<area shape="rect" id="node1" title="Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric." alt="" coords="277,5,485,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="49,131,259,158"/>
+<area shape="rect" id="node3" href="$effective__sample__size_8hpp.html" title="Implementation of an algorithm to calculate the effective sample size (ESS)." alt="" coords="283,124,478,165"/>
+<area shape="rect" id="node17" href="$policy_8hpp_source.html" title=" " alt="" coords="571,131,761,158"/>
+<area shape="rect" id="node4" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="274,213,418,255"/>
+<area shape="rect" id="node14" href="$particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="443,221,639,247"/>
+<area shape="rect" id="node16" title=" " alt="" coords="5,221,249,247"/>
+<area shape="rect" id="node5" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="324,303,488,329"/>
+<area shape="rect" id="node11" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="228,377,368,419"/>
+<area shape="rect" id="node13" title=" " alt="" coords="62,303,249,329"/>
+<area shape="rect" id="node6" title=" " alt="" coords="325,467,380,493"/>
+<area shape="rect" id="node7" title=" " alt="" coords="633,467,725,493"/>
+<area shape="rect" id="node8" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="798,377,1009,419"/>
+<area shape="rect" id="node12" href="$forward__like_8hpp_source.html" title=" " alt="" coords="443,377,606,419"/>
+<area shape="rect" id="node9" title=" " alt="" coords="811,467,897,493"/>
+<area shape="rect" id="node10" title=" " alt="" coords="922,467,981,493"/>
+<area shape="rect" id="node15" title=" " alt="" coords="513,303,723,329"/>
+</map>
