@@ -66,7 +66,7 @@ class ThrunRecoveryProbabilityEstimator {
   constexpr void update(Range&& range) {
     static_assert(ranges::sized_range<Range>);
     static_assert(beluga::is_particle_range_v<Range>);
-    const auto size = static_cast<double>(range.size());
+    const std::size_t size = range.size();
 
     if (size == 0.0) {
       reset();
@@ -74,7 +74,7 @@ class ThrunRecoveryProbabilityEstimator {
     }
 
     const double total_weight = ranges::accumulate(beluga::views::weights(range), 0.0);
-    const double average_weight = total_weight / size;
+    const double average_weight = total_weight / static_cast<double>(size);
     const double fast_average = fast_filter_(average_weight);
     const double slow_average = slow_filter_(average_weight);
 
