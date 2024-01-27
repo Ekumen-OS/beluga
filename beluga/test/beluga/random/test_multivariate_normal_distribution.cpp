@@ -27,7 +27,7 @@ namespace {
 
 TEST(MultivariateNormalDistribution, CopyAndCompare) {
   Eigen::Matrix3d covariance = Eigen::Vector3d::Ones().asDiagonal();
-  auto distribution = beluga::MultivariateNormalDistribution{covariance};
+  auto distribution = beluga::MultivariateNormalDistribution<Eigen::Vector3d>{covariance};
   auto other_distribution = distribution;
   ASSERT_EQ(distribution, other_distribution);
   auto generator = std::mt19937{std::random_device()()};
@@ -39,12 +39,12 @@ TEST(MultivariateNormalDistribution, CopyAndCompare) {
 
 TEST(MultivariateNormalDistribution, NegativeEigenvaluesMatrix) {
   Eigen::Matrix3d covariance = Eigen::Matrix3d::Ones();
-  EXPECT_THROW(beluga::MultivariateNormalDistribution{covariance}, std::runtime_error);
+  EXPECT_THROW(beluga::MultivariateNormalDistribution<Eigen::Vector3d>{covariance}, std::runtime_error);
 }
 
 TEST(MultivariateNormalDistribution, NonSymmetricMatrix) {
   auto covariance = testing::as<Eigen::Matrix3d>({{1.0, 2.0, 0.0}, {1.0, 1.0, 0.0}, {0.0, 0.0, 1.0}});
-  EXPECT_THROW(beluga::MultivariateNormalDistribution{covariance}, std::runtime_error);
+  EXPECT_THROW(beluga::MultivariateNormalDistribution<Eigen::Vector3d>{covariance}, std::runtime_error);
 }
 
 TEST(MultivariateNormalDistribution, SampleZero) {
@@ -85,5 +85,62 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_pair(Eigen::Vector2d{3.0, 4.0}, testing::as<Eigen::Matrix2d>({{1.0, 0.0}, {0.0, 1.0}})),
         std::make_pair(Eigen::Vector2d{3.0, 4.0}, testing::as<Eigen::Matrix2d>({{1.5, -0.3}, {-0.3, 1.5}})),
         std::make_pair(Eigen::Vector2d{5.0, 6.0}, testing::as<Eigen::Matrix2d>({{2.0, 0.7}, {0.7, 2.0}}))));
+
+TEST(MultivariateNormalDistribution, RowVector) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto expected_mean = Eigen::RowVector2d{1.0, 2.0};
+  auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix2d::Zero()};
+  auto mean = distribution(generator);
+  ASSERT_NEAR(mean(0), expected_mean(0), 0.001);
+  ASSERT_NEAR(mean(1), expected_mean(1), 0.001);
+}
+
+TEST(MultivariateNormalDistribution, SO2Element) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto expected_mean = Sophus::SO2d{1.5};
+  auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix<double, 1, 1>::Zero()};
+  auto mean = distribution(generator);
+  ASSERT_NEAR((mean).log(), expected_mean.log(), 0.001);
+}
+
+TEST(MultivariateNormalDistribution, SE2Element) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto expected_mean = Sophus::SE2d{Sophus::SO2d{1.57}, Eigen::Vector2d{1.0, 2.0}};
+  auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix3d::Zero()};
+  auto mean = distribution(generator);
+  ASSERT_NEAR(mean.so2().log(), expected_mean.so2().log(), 0.001);
+  ASSERT_NEAR(mean.translation()(0), expected_mean.translation()(0), 0.001);
+  ASSERT_NEAR(mean.translation()(1), expected_mean.translation()(1), 0.001);
+}
+
+TEST(MultivariateNormalDistribution, SO3Element) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto expected_mean = Sophus::SO3d::exp(Eigen::Vector3d{0.5, 1.0, 1.5});
+  auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix3d::Zero()};
+  auto mean = distribution(generator);
+  ASSERT_NEAR(mean.log()(0), expected_mean.log()(0), 0.001);
+  ASSERT_NEAR(mean.log()(1), expected_mean.log()(1), 0.001);
+  ASSERT_NEAR(mean.log()(2), expected_mean.log()(2), 0.001);
+}
+
+TEST(MultivariateNormalDistribution, SE3Element) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto expected_mean = Sophus::SE3d{Sophus::SO3d::exp(Eigen::Vector3d{0.5, 1.0, 1.5}), Eigen::Vector3d{1.0, 2.0, 3.0}};
+  auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix<double, 6, 6>::Zero()};
+  auto mean = distribution(generator);
+  ASSERT_NEAR(mean.log()(0), expected_mean.log()(0), 0.001);
+  ASSERT_NEAR(mean.log()(1), expected_mean.log()(1), 0.001);
+  ASSERT_NEAR(mean.log()(2), expected_mean.log()(2), 0.001);
+  ASSERT_NEAR(mean.translation()(0), expected_mean.translation()(0), 0.001);
+  ASSERT_NEAR(mean.translation()(1), expected_mean.translation()(1), 0.001);
+  ASSERT_NEAR(mean.translation()(2), expected_mean.translation()(2), 0.001);
+}
+
+TEST(MultivariateNormalDistribution, SameCovarianceTypeAssignment) {
+  auto distribution1 = beluga::MultivariateNormalDistribution{Sophus::SE2f{}, Eigen::Matrix3f::Zero()};
+  auto distribution2 = beluga::MultivariateNormalDistribution<Eigen::Vector3f>{distribution1};
+  auto distribution3 = beluga::MultivariateNormalDistribution{Sophus::SE2f{}, Eigen::Matrix3f::Zero()};
+  distribution3 = distribution2;
+}
 
 }  // namespace

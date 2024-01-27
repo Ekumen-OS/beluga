@@ -125,19 +125,7 @@ auto particle_filter_test(
 
   auto hasher = beluga::spatial_hash<Sophus::SE2d>{0.1, 0.1, 0.1};
 
-  // Use the initial distribution to initialize particles.
-  // TODO(nahuel): We should have a view to convert from Eigen to Sophus types.
-  /**
-   * auto particles = beluga::views::sample(initial_distribution) |
-   *                  (something to convert from Eigen::Vector3d to Sophus::SE2d) |
-   *                  ranges::views::transform(beluga::make_from_state<Particle>) |
-   *                  ranges::views::take_exactly(params.max_particles) |
-   *                  ranges::to<beluga::TupleVector>;
-   */
-  auto particles = beluga::views::sample(initial_distribution) |  //
-                   ranges::views::transform([](const auto& sample) {
-                     return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
-                   }) |
+  auto particles = beluga::views::sample(initial_distribution) |                  //
                    ranges::views::transform(beluga::make_from_state<Particle>) |  //
                    ranges::views::take_exactly(params.max_particles) |            //
                    ranges::to<beluga::TupleVector>;
@@ -296,7 +284,7 @@ auto get_perfect_odometry_data() {
   auto datapoints = ranges::views::zip(measurements, odometry, ground_truth);
 
   auto initial_distribution = beluga::MultivariateNormalDistribution{
-      Eigen::Vector3d{0.0, 2.0, 0.0},                                          // initial pose mean
+      Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{0.0, 2.0}},                 // initial pose mean
       Eigen::Matrix3d{{0.125, 0.0, 0.0}, {0.0, 0.125, 0.0}, {0.0, 0.0, 0.04}}  // initial pose covariance
   };
 
