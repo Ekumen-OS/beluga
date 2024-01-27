@@ -19,6 +19,7 @@
 
 #include <range/v3/utility/random.hpp>
 #include <range/v3/view/common.hpp>
+#include <range/v3/view/generate.hpp>
 
 #include <beluga/type_traits/particle_traits.hpp>
 #include <beluga/views/particles.hpp>
@@ -112,19 +113,28 @@ struct sample_view : public ranges::view_facade<sample_view<Range, Distribution,
   URNG* engine_;
 };
 
-/// Implementation detail for a sample range adaptor object.
-struct sample_fn {
-  /// Overload that implements the sample algorithm for weighted ranges.
-  /**
-   * It uses std::discrete_distribution to sample from the range.
-   */
-  template <
-      class Range,
-      class Weights,
-      class URNG = typename ranges::detail::default_random_engine,
-      std::enable_if_t<ranges::range<Range> && ranges::range<Weights>, int> = 0>
-  constexpr auto operator()(Range&& range, Weights&& weights, URNG& engine = ranges::detail::get_random_engine())
-      const {
+/// \cond
+
+template <class T, class Enable = void>
+struct is_random_distribution : public std::false_type {};
+
+template <class T>
+struct is_random_distribution<T, std::void_t<decltype(std::declval<T&>()(std::declval<std::mt19937&>()))>>
+    : std::true_type {};
+
+template <class T>
+inline constexpr bool is_random_distribution_v = is_random_distribution<T>::value;
+
+/// \endcond
+
+/// Implementation detail for a sample algorithm.
+struct sample_base_fn {
+ protected:
+  /// Sample from weighted ranges.
+  template <class Range, class Weights, class URNG>
+  constexpr auto sample_from_range(Range&& range, Weights&& weights, URNG& engine) const {
+    static_assert(ranges::sized_range<Range>);
+    static_assert(ranges::random_access_range<Range>);
     static_assert(ranges::input_range<Weights>);
     using result_type = ranges::range_difference_t<Range>;
     auto w = ranges::views::common(weights);
@@ -132,49 +142,83 @@ struct sample_fn {
     return sample_view{ranges::views::all(std::forward<Range>(range)), std::move(distribution), engine};
   }
 
-  /// Overload that implements the sample algorithm for non-weighted ranges.
+  /// Sample from any range.
   /**
-   * It uses std::uniform_int_distribution to sample from the range.
+   * If the input range is a particle range, it will extract the weights and treat it as a weighted range.
+   * The new particles will all have a weight equal to 1, since, after resampling, the probability will be
+   * represented by the number of particles rather than their individual weight.
+   *
+   * If the input range is not a particle range, it will assume a uniform distribution.
    */
-  template <
-      class Range,
-      class URNG = typename ranges::detail::default_random_engine,
-      std::enable_if_t<ranges::range<Range>, int> = 0,
-      std::enable_if_t<!is_particle_range_v<Range>, int> = 0,
-      std::enable_if_t<!ranges::range<URNG>, int> = 0>
-  constexpr auto operator()(Range&& range, URNG& engine = ranges::detail::get_random_engine()) const {
-    using result_type = ranges::range_difference_t<Range>;
-    auto distribution =
-        std::uniform_int_distribution<result_type>{0, static_cast<result_type>(ranges::size(range) - 1)};
-    return sample_view{ranges::views::all(std::forward<Range>(range)), std::move(distribution), engine};
+  template <class Range, class URNG>
+  constexpr auto sample_from_range(Range&& range, URNG& engine) const {
+    static_assert(ranges::sized_range<Range>);
+    static_assert(ranges::random_access_range<Range>);
+    if constexpr (beluga::is_particle_range_v<Range>) {
+      return sample_from_range(beluga::views::states(range), beluga::views::weights(range), engine) |
+             ranges::views::transform(beluga::make_from_state<ranges::range_value_t<Range>>);
+    } else {
+      using result_type = ranges::range_difference_t<Range>;
+      auto distribution =
+          std::uniform_int_distribution<result_type>{0, static_cast<result_type>(ranges::size(range) - 1)};
+      return sample_view{ranges::views::all(std::forward<Range>(range)), std::move(distribution), engine};
+    }
   }
 
-  /// Overload that handles particle ranges.
-  /**
-   * The new particles will all have a weight equal to 1, since, after resampling, the probability
-   * will be represented by the number of particles rather than their individual weight.
-   */
-  template <
-      class Range,
-      class URNG = typename ranges::detail::default_random_engine,
-      std::enable_if_t<ranges::range<Range>, int> = 0,
-      std::enable_if_t<is_particle_range_v<Range>, int> = 0,
-      std::enable_if_t<!ranges::range<URNG>, int> = 0>
-  constexpr auto operator()(Range&& range, URNG& engine = ranges::detail::get_random_engine()) const {
-    return (*this)(beluga::views::states(range), beluga::views::weights(range), engine) |
-           ranges::views::transform(beluga::make_from_state<ranges::range_value_t<Range>>);
+  /// Sample from random distributions.
+  template <class Distribution, class URNG>
+  constexpr auto sample_from_distribution(Distribution distribution, URNG& engine) const {
+    return ranges::views::generate(
+        [distribution = std::move(distribution), &engine]() mutable { return distribution(engine); });
+  }
+};
+
+/// Implementation detail for a sample range adaptor object.
+struct sample_fn : public sample_base_fn {
+  /// Overload that takes three arguments.
+  template <class T, class U, class V>
+  constexpr auto operator()(T&& t, U&& u, V& v) const {
+    static_assert(ranges::range<T>);
+    static_assert(ranges::range<U>);
+    return sample_from_range(std::forward<T>(t), std::forward<U>(u), v);  // Assume V is a URNG
+  }
+
+  /// Overload that takes two arguments.
+  template <class T, class U>
+  constexpr auto operator()(T&& t, U&& u) const {
+    if constexpr (ranges::range<T> && ranges::range<U>) {
+      auto& engine = ranges::detail::get_random_engine();
+      return sample_from_range(std::forward<T>(t), std::forward<U>(u), engine);
+    } else if constexpr (is_random_distribution_v<T>) {
+      static_assert(std::is_lvalue_reference_v<U&&>);  // Assume U is a URNG
+      return sample_from_distribution(std::forward<T>(t), u);
+    } else {
+      static_assert(ranges::range<T>);
+      static_assert(std::is_lvalue_reference_v<U&&>);  // Assume U is a URNG
+      return sample_from_range(std::forward<T>(t), u);
+    }
+  }
+
+  /// Overload that takes one argument.
+  template <class T>
+  constexpr auto operator()(T&& t) const {
+    if constexpr (ranges::range<T>) {
+      auto& engine = ranges::detail::get_random_engine();
+      return sample_from_range(std::forward<T>(t), engine);
+    } else if constexpr (is_random_distribution_v<T>) {
+      auto& engine = ranges::detail::get_random_engine();
+      return sample_from_distribution(std::forward<T>(t), engine);
+    } else {
+      static_assert(std::is_lvalue_reference_v<T&&>);  // Assume T is a URNG
+      return ranges::make_view_closure(ranges::bind_back(sample_fn{}, std::ref(t)));
+    }
   }
 
   /// Overload that unwraps the engine reference from a view closure.
-  template <class Range, class URNG, typename std::enable_if_t<ranges::range<Range>, int> = 0>
+  template <class Range, class URNG>
   constexpr auto operator()(Range&& range, std::reference_wrapper<URNG> engine) const {
-    return (*this)(ranges::views::all(std::forward<Range>(range)), engine.get());
-  }
-
-  /// Overload that returns a view closure to compose with other views.
-  template <class URNG, std::enable_if_t<!ranges::range<URNG>, int> = 0>
-  constexpr auto operator()(URNG& engine) const {
-    return ranges::make_view_closure(ranges::bind_back(sample_fn{}, std::ref(engine)));
+    static_assert(ranges::range<Range>);
+    return sample_from_range(std::forward<Range>(range), engine.get());
   }
 };
 
@@ -193,6 +237,9 @@ struct sample_fn {
  * The core idea is to draw random indices / iterators to the input particle range
  * from a [multinomial distribution](https://en.wikipedia.org/wiki/Multinomial_distribution)
  * parameterized after particle weights (and assumed uniform for non-weighted particle ranges).
+ *
+ * This view can also be used to convert any random distribution (a callable that takes a URNG as an
+ * input argument) into an infinite view that generates values from that distribution.
  */
 inline constexpr ranges::views::view_closure<detail::sample_fn> sample;
 

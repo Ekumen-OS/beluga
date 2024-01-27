@@ -126,7 +126,6 @@ auto particle_filter_test(
   auto hasher = beluga::spatial_hash<Sophus::SE2d>{0.1, 0.1, 0.1};
 
   // Use the initial distribution to initialize particles.
-  // TODO(nahuel): We should have a view to sample from an existing distribution.
   // TODO(nahuel): We should have a view to convert from Eigen to Sophus types.
   /**
    * auto particles = beluga::views::sample(initial_distribution) |
@@ -135,9 +134,8 @@ auto particle_filter_test(
    *                  ranges::views::take_exactly(params.max_particles) |
    *                  ranges::to<beluga::TupleVector>;
    */
-  auto particles = ranges::views::generate([initial_distribution]() mutable {
-                     static thread_local auto engine = std::mt19937{std::random_device()()};
-                     const auto sample = initial_distribution(engine);
+  auto particles = beluga::views::sample(initial_distribution) |  //
+                   ranges::views::transform([](const auto& sample) {
                      return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
                    }) |
                    ranges::views::transform(beluga::make_from_state<Particle>) |  //
