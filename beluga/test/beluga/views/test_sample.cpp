@@ -151,4 +151,16 @@ TEST(SampleView, DiscreteDistributionProbability) {
   ASSERT_NEAR(static_cast<double>(buckets[4]) / size, 0.2, 0.01);
 }
 
+TEST(SampleView, FromRandomDistributionFalse) {
+  auto distribution = std::bernoulli_distribution{0.0};
+  auto output = beluga::views::sample(distribution) | ranges::views::take_exactly(10);
+  ASSERT_EQ(ranges::count(output, false), 10);
+}
+
+TEST(SampleView, FromRandomDistributionTrue) {
+  auto distribution = std::bernoulli_distribution{1.0};
+  auto output = beluga::views::sample(distribution) | ranges::views::take_exactly(10);
+  ASSERT_EQ(ranges::count(output, true), 10);
+}
+
 }  // namespace
