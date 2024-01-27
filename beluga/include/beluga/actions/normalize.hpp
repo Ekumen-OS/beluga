@@ -45,8 +45,7 @@ struct normalize_base_fn {
       std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0,
       std::enable_if_t<ranges::range<Range>, int> = 0>
   constexpr auto operator()(ExecutionPolicy&& policy, Range& range, double factor) const -> Range& {
-    const double epsilon = std::numeric_limits<double>::epsilon();
-    if (factor < epsilon || std::abs(factor - 1.0) < epsilon) {
+    if (std::abs(factor - 1.0) < std::numeric_limits<double>::epsilon()) {
       return range;  // No change.
     }
 

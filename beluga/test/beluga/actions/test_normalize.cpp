@@ -81,13 +81,13 @@ TEST(NormalizeAction, MultipleElements) {
 TEST(NormalizeAction, ZeroFactor) {
   auto input = std::vector{std::make_tuple(5, beluga::Weight(4.0))};
   input |= beluga::actions::normalize(0.0);
-  ASSERT_EQ(input.front(), std::make_tuple(5, beluga::Weight(4.0)));  // No change
+  ASSERT_TRUE(std::isinf(beluga::weight(input.front())));
 }
 
 TEST(NormalizeAction, NegativeFactor) {
   auto input = std::vector{std::make_tuple(5, beluga::Weight(4.0))};
   input |= beluga::actions::normalize(-2.0);
-  ASSERT_EQ(input.front(), std::make_tuple(5, beluga::Weight(4.0)));  // No change
+  ASSERT_EQ(input.front(), std::make_tuple(5, beluga::Weight(-2.0)));
 }
 
 }  // namespace
