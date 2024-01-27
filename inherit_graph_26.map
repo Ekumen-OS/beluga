@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,49,117,76"/>
-<area shape="rect" id="node2" href="$structbeluga_1_1has__single__element_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_00_01std_1_1enable74bb370853b4969c8155f7c3b3c0dd64.html" title="has_single_element specialization for tuples." alt="" coords="165,5,431,120"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,20,124,47"/>
+<area shape="rect" id="node2" href="$structbeluga_1_1has__single__element.html" title="Meta&#45;function that returns true if there is a single element of type T in the tuple&#45;like type." alt="" coords="172,5,351,61"/>
 </map>
