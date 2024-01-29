@@ -74,8 +74,6 @@ using MonteCarloLocalization2d = beluga::MonteCarloLocalization2d<
     LaserLocalizationInterface2d,
     ConcreteResamplingPoliciesPoller>;
 
-using beluga::MultivariateNormalDistribution;
-
 struct InitialPose {
   Eigen::Vector3d mean;
   Eigen::Matrix3d covariance;
@@ -112,7 +110,7 @@ TEST_P(BelugaSystemTest, testEstimatedPath) {
   auto test_data = GetParam()();
   auto& pf = *test_data.particle_filter;
   pf.initialize_states(
-      ranges::views::generate([distribution = MultivariateNormalDistribution{
+      ranges::views::generate([distribution = beluga::MultivariateNormalDistribution{
                                    test_data.initial_pose.mean, test_data.initial_pose.covariance}]() mutable {
         static auto generator = std::mt19937{std::random_device()()};
         const auto sample = distribution(generator);
