@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['is_5ftuple_5flike_409',['is_tuple_like',['../structbeluga_1_1is__tuple__like.html',1,'beluga']]],
-  ['iterator_410',['iterator',['../classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html',1,'beluga::Bresenham2i::Line']]]
+  ['is_5ftuple_5flike_419',['is_tuple_like',['../structbeluga_1_1is__tuple__like.html',1,'beluga']]],
+  ['iterator_420',['iterator',['../classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html',1,'beluga::Bresenham2i::Line']]]
 ];

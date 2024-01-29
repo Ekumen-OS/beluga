@@ -1,7 +1,8 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/random/multivariate_normal_distribution.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/random/multivariate_normal_distribution.hpp">
-<area shape="rect" id="node1" title="Implementation of a multivariate normal distribution." alt="" coords="115,5,323,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,124,77,151"/>
-<area shape="rect" id="node3" title=" " alt="" coords="102,124,194,151"/>
-<area shape="rect" id="node4" title=" " alt="" coords="219,124,360,151"/>
-<area shape="rect" id="node5" title=" " alt="" coords="385,124,445,151"/>
+<area shape="rect" id="node1" title="Implementation of a multivariate normal distribution." alt="" coords="28,5,236,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,131,77,158"/>
+<area shape="rect" id="node3" title=" " alt="" coords="102,131,162,158"/>
+<area shape="rect" id="node4" href="$multivariate__distribution__traits_8hpp.html" title="Implementation of multivariate distribution traits." alt="" coords="186,124,390,165"/>
+<area shape="rect" id="node5" title=" " alt="" coords="175,213,267,240"/>
+<area shape="rect" id="node6" title=" " alt="" coords="292,213,415,240"/>
 </map>

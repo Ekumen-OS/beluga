@@ -72,13 +72,20 @@ $(function() {
 </ul>
 
 
+<h3><a id="index_c"></a>- c -</h3><ul>
+<li>covariance_type
+: <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is7335572249efb8242f8ba7b16eaa7821.html#a744f202618a302dfcb56d8d5e521b7d9">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Eigen::EigenBase&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1ise7ac88d52952e6533296e162494fd0f1.html#a6630a99809a039f30ab8f2bd187c4bd0">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Sophus::SE2Base&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is108ecb65e882d1fe2fc8b637bf46b34c.html#a3671611e1b0eb97b7aef3dfb3b04ce60">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Sophus::SO2Base&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#aa134e261ada451d1bffd1a14cc150a7b">beluga::MultivariateNormalDistribution&lt; T &gt;</a>
+</li>
+</ul>
+
+
 <h3><a id="index_d"></a>- d -</h3><ul>
 <li>difference_type
 : <a class="el" href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a16fea874ae17dc122f0e8abd5f780578">beluga::Bresenham2i::Line&lt; Vector2, Integer &gt;::iterator</a>
 , <a class="el" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01std_1_1tuple_3_01Types_8_8_8_01_4_01_4.html#a3004ad65b96edf284cdd80046face8fd">beluga::TupleContainer&lt; InternalContainer, std::tuple&lt; Types... &gt; &gt;</a>
-</li>
-<li>distribution_type
-: <a class="el" href="classbeluga_1_1MultivariateNormalDistribution_1_1Param.html#a9978e145e026637e87026fc8014a9fd2">beluga::MultivariateNormalDistribution&lt; Matrix &gt;::Param</a>
 </li>
 </ul>
 
@@ -107,6 +114,9 @@ $(function() {
 , <a class="el" href="classbeluga_1_1BearingSensorModel.html#aafc3f714632996b40ddad886e9acb840">beluga::BearingSensorModel&lt; LandmarkMap, StateType &gt;</a>
 , <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aa54af8be385ca83eeb2f8ad32b513ec8">beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt;</a>
 , <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a4c9a3e4f644ddec25557c4fa7c294539">beluga::LikelihoodFieldModel&lt; OccupancyGrid &gt;</a>
+</li>
+<li>matrix_type
+: <a class="el" href="classbeluga_1_1MultivariateNormalDistributionParam.html#ae3e0f2f56d5a59737f51df7246074beb">beluga::MultivariateNormalDistributionParam&lt; Vector, Matrix &gt;</a>
 </li>
 <li>measurement_type
 : <a class="el" href="classbeluga_1_1BeamSensorModel.html#a482382f1b371924d04e4c34f4789ad1e">beluga::BeamSensorModel&lt; OccupancyGrid &gt;</a>
@@ -138,7 +148,7 @@ $(function() {
 , <a class="el" href="classbeluga_1_1KldLimiter.html#ac369521e27c552b4a0bf55f6de6b1139">beluga::KldLimiter&lt; Mixin, State &gt;</a>
 , <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a9ca01d33ba37d26e4f4b827078207a4e">beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt;</a>
 , <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a38e5f120969fabe7ddd1f8a525f34ea9">beluga::LikelihoodFieldModel&lt; OccupancyGrid &gt;</a>
-, <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a14bf9023eee96ea35e3f48e380990e67">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
+, <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#af548c1fdab9775710408f7f1a13d24b2">beluga::MultivariateNormalDistribution&lt; T &gt;</a>
 , <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a877d22d1436520cd255fd92d1c97076d">beluga::OmnidirectionalDriveModel</a>
 </li>
 <li>particle_type
@@ -162,14 +172,21 @@ $(function() {
 , <a class="el" href="classbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1_7c7412bd4d4b17eb2e661212dfcf682d.html#a08692e76e34cc1e34ac1e0de4674f0be">beluga::spatial_hash&lt; Tuple&lt; Types... &gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt; Types &gt; &amp;&amp;...), void &gt; &gt;</a>
 </li>
 <li>result_type
-: <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#ad02b12fb064397e5e579968a7dc7444e">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
+: <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is7335572249efb8242f8ba7b16eaa7821.html#ac069ae48d2080688f9b81360a06b5997">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Eigen::EigenBase&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1ise7ac88d52952e6533296e162494fd0f1.html#aa50cd466a8a8f4c2f33b33f18c060cc5">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Sophus::SE2Base&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is108ecb65e882d1fe2fc8b637bf46b34c.html#a0ec33408677ade3ddfd47cac5e7b01e6">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Sophus::SO2Base&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a4b128d2f76a4528de2f3b817c7632b63">beluga::MultivariateNormalDistribution&lt; T &gt;</a>
 </li>
 </ul>
 
 
 <h3><a id="index_s"></a>- s -</h3><ul>
-<li>Scalar
-: <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a38c68b2332e80fb872607f067119d8d9">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
+<li>scalar_type
+: <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is7335572249efb8242f8ba7b16eaa7821.html#a559545b3e17a6f8a97c79932397cec71">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Eigen::EigenBase&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1ise7ac88d52952e6533296e162494fd0f1.html#ae1ccd8011d8682a31623d4ef19de559b">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Sophus::SE2Base&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is108ecb65e882d1fe2fc8b637bf46b34c.html#a51afa2f9d162cca3859b478c1bc9922b">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Sophus::SO2Base&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#ad14e83b02c121c73f7c0343e26573180">beluga::MultivariateNormalDistribution&lt; T &gt;</a>
+, <a class="el" href="classbeluga_1_1MultivariateNormalDistributionParam.html#a0e90506d3e76852016d00e87f637b2ff">beluga::MultivariateNormalDistributionParam&lt; Vector, Matrix &gt;</a>
 </li>
 <li>size_type
 : <a class="el" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01std_1_1tuple_3_01Types_8_8_8_01_4_01_4.html#acaa850757e773afe4c1b45a7c8f28bd6">beluga::TupleContainer&lt; InternalContainer, std::tuple&lt; Types... &gt; &gt;</a>
@@ -211,8 +228,12 @@ $(function() {
 : <a class="el" href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a47c01d3ee0b39824a13ad4a6d1b21343">beluga::Bresenham2i::Line&lt; Vector2, Integer &gt;::iterator</a>
 , <a class="el" href="classbeluga_1_1TupleContainer_3_01InternalContainer_00_01std_1_1tuple_3_01Types_8_8_8_01_4_01_4.html#a578f82a73a395574516ce491e7b75f70">beluga::TupleContainer&lt; InternalContainer, std::tuple&lt; Types... &gt; &gt;</a>
 </li>
-<li>Vector
-: <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a7f1ed9fd1590cfb951c4f13059564667">beluga::MultivariateNormalDistribution&lt; Matrix &gt;</a>
+<li>vector_type
+: <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is7335572249efb8242f8ba7b16eaa7821.html#ac543380e42fe64108df638db7dc68047">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Eigen::EigenBase&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1ise7ac88d52952e6533296e162494fd0f1.html#a9eb09a11b31e310bb8685d77b2d1f999">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Sophus::SE2Base&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is108ecb65e882d1fe2fc8b637bf46b34c.html#a1d2973dea48029feb01afe1cb6217c61">beluga::multivariate_distribution_traits&lt; T, std::enable_if_t&lt; std::is_base_of_v&lt; Sophus::SO2Base&lt; T &gt;, T &gt; &gt; &gt;</a>
+, <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a5a56f71163ac8f1d4f007b89dfd7f4e2">beluga::MultivariateNormalDistribution&lt; T &gt;</a>
+, <a class="el" href="classbeluga_1_1MultivariateNormalDistributionParam.html#ae01496e7a8df36da5fae27847a78f214">beluga::MultivariateNormalDistributionParam&lt; Vector, Matrix &gt;</a>
 </li>
 </ul>
 

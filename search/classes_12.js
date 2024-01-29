@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['weight_5ffn_479',['weight_fn',['../structbeluga_1_1weight__detail_1_1weight__fn.html',1,'beluga::weight_detail']]],
-  ['weightedstateestimator_480',['WeightedStateEstimator',['../classbeluga_1_1WeightedStateEstimator.html',1,'beluga']]],
-  ['weightedstateestimator_3c_20mixin_2c_20sophus_3a_3ase2d_20_3e_481',['WeightedStateEstimator&lt; Mixin, Sophus::SE2d &gt;',['../classbeluga_1_1WeightedStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html',1,'beluga']]]
+  ['weight_5ffn_494',['weight_fn',['../structbeluga_1_1weight__detail_1_1weight__fn.html',1,'beluga::weight_detail']]],
+  ['weightedstateestimator_495',['WeightedStateEstimator',['../classbeluga_1_1WeightedStateEstimator.html',1,'beluga']]],
+  ['weightedstateestimator_3c_20mixin_2c_20sophus_3a_3ase2d_20_3e_496',['WeightedStateEstimator&lt; Mixin, Sophus::SE2d &gt;',['../classbeluga_1_1WeightedStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html',1,'beluga']]]
 ];
