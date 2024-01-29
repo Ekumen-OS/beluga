@@ -87,7 +87,7 @@ class MultivariateNormalDistributionParam {
   /**
    * \tparam Generator The generator type that must meet the requirements of
    * [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator).
-   * \param distribution A reference to a normal distribution instance.
+   * \param distribution A reference to a standard normal distribution instance.
    * \param generator An uniform random bit generator object.
    * \return The generated random object.
    */

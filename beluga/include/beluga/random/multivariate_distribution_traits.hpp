@@ -17,7 +17,6 @@
 
 #include <Eigen/Core>
 #include <sophus/se2.hpp>
-#include <sophus/se3.hpp>
 
 /**
  * \file
@@ -108,58 +107,6 @@ struct multivariate_distribution_traits<T, std::enable_if_t<std::is_base_of_v<So
   /// Convert from vector to result representation.
   [[nodiscard]] static constexpr result_type from_vector(const vector_type& v) {
     return {Sophus::SO2<scalar_type>::exp(v.z()), v.head(2)};
-  }
-};
-
-/// Specialization for types derived from Sophus::SO3Base.
-template <class T>
-struct multivariate_distribution_traits<T, std::enable_if_t<std::is_base_of_v<Sophus::SO3Base<T>, T>>> {
-  /// The scalar type.
-  using scalar_type = typename T::Scalar;
-
-  /// The result type representation.
-  using result_type = Sophus::SO3<scalar_type>;
-
-  /// The vector type.
-  using vector_type = typename Eigen::Matrix<scalar_type, 3, 1>;
-
-  /// The covariance matrix type.
-  using covariance_type = typename Eigen::Matrix<scalar_type, 3, 3>;
-
-  /// Convert from result to vector representation.
-  [[nodiscard]] static constexpr vector_type to_vector(const result_type& t) { return t.log(); }
-
-  /// Convert from vector to result representation.
-  [[nodiscard]] static constexpr result_type from_vector(const vector_type& v) {
-    return Sophus::SO3<scalar_type>::exp(v);
-  }
-};
-
-/// Specialization for types derived from Sophus::SE3Base.
-template <class T>
-struct multivariate_distribution_traits<T, std::enable_if_t<std::is_base_of_v<Sophus::SE3Base<T>, T>>> {
-  /// The scalar type.
-  using scalar_type = typename T::Scalar;
-
-  /// The result type representation.
-  using result_type = Sophus::SE3<scalar_type>;
-
-  /// The vector type.
-  using vector_type = typename Eigen::Matrix<scalar_type, 6, 1>;
-
-  /// The covariance matrix type.
-  using covariance_type = typename Eigen::Matrix<scalar_type, 6, 6>;
-
-  /// Convert from result to vector representation.
-  [[nodiscard]] static constexpr vector_type to_vector(const result_type& t) {
-    vector_type v;
-    v << t.translation(), t.so3().log();
-    return v;
-  }
-
-  /// Convert from vector to result representation.
-  [[nodiscard]] static constexpr result_type from_vector(const vector_type& v) {
-    return result_type{Sophus::SO3<scalar_type>::exp(v.tail(3)), v.head(3)};
   }
 };
 
