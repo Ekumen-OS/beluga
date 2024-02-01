@@ -15,16 +15,13 @@
 #include <gmock/gmock.h>
 
 #include <beluga/algorithm/estimation.hpp>
+#include <beluga/testing.hpp>
 #include <ciabatta/ciabatta.hpp>
-
-#include "beluga/test/utils/sophus_matchers.hpp"
 
 namespace {
 
+using beluga::testing::SE2Near;
 using testing::ReturnRef;
-using testing::SE2Eq;
-using testing::SO2Eq;
-using testing::Vector2Eq;
 
 using Constants = Sophus::Constants<double>;
 using Eigen::Vector2d;
@@ -109,8 +106,7 @@ TEST_F(PoseCovarianceEstimation, PureTranslation) {
   const auto states = std::vector{SE2d{SO2d{0.0}, Vector2d{1.0, 2.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}};
   const auto weights = std::vector(states.size(), 1.0);
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose.translation(), Vector2Eq(Vector2d{0.5, 1.0}));
-  ASSERT_THAT(pose.so2(), SO2Eq(SO2d{0.0}));
+  ASSERT_THAT(pose, SE2Near(SO2d{0.0}, Vector2d{0.5, 1.0}, 0.001));
   ASSERT_NEAR(covariance(0, 0), 0.5, 0.001);
   ASSERT_NEAR(covariance(0, 1), 1.0, 0.001);
   ASSERT_NEAR(covariance(0, 2), 0.0, 0.001);
@@ -128,8 +124,7 @@ TEST_F(PoseCovarianceEstimation, PureRotation) {
       std::vector{SE2d{SO2d{-Constants::pi() / 2}, Vector2d{0.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}};
   const auto weights = std::vector(states.size(), 1.0);
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose.translation(), Vector2Eq(Vector2d{0.0, 0.0}));
-  ASSERT_THAT(pose.so2(), SO2Eq(SO2d{-Constants::pi() / 4}));
+  ASSERT_THAT(pose, SE2Near(SO2d{-Constants::pi() / 4}, Vector2d{0.0, 0.0}, 0.001));
   ASSERT_NEAR(covariance(0, 0), 0.000, 0.001);
   ASSERT_NEAR(covariance(0, 1), 0.000, 0.001);
   ASSERT_NEAR(covariance(0, 2), 0.000, 0.001);
@@ -148,8 +143,7 @@ TEST_F(PoseCovarianceEstimation, JointTranslationAndRotation) {
       SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, -1.0}}, SE2d{SO2d{0.0}, Vector2d{3.0, 0.0}}};
   const auto weights = std::vector(states.size(), 1.0);
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose.translation(), Vector2Eq(Vector2d{1.5, -1.5}));
-  ASSERT_THAT(pose.so2(), SO2Eq(SO2d{Constants::pi() / 4}));
+  ASSERT_THAT(pose, SE2Near(SO2d{Constants::pi() / 4}, Vector2d{1.5, -1.5}, 0.001));
   ASSERT_NEAR(covariance(0, 0), 1.666, 0.001);
   ASSERT_NEAR(covariance(0, 1), 1.666, 0.001);
   ASSERT_NEAR(covariance(0, 2), 0.000, 0.001);
@@ -168,8 +162,7 @@ TEST_F(PoseCovarianceEstimation, CancellingOrientations) {
       SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 0.0}}, SE2d{SO2d{-Constants::pi() / 2}, Vector2d{0.0, 0.0}}};
   const auto weights = std::vector(states.size(), 1.0);
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose.translation(), Vector2Eq(Vector2d{0.0, 0.0}));
-  ASSERT_THAT(pose.so2(), SO2Eq(SO2d{0.0}));
+  ASSERT_THAT(pose, SE2Near(SO2d{0.0}, Vector2d{0.0, 0.0}, 0.001));
   ASSERT_NEAR(covariance(0, 0), 0.0, 0.001);
   ASSERT_NEAR(covariance(0, 1), 0.0, 0.001);
   ASSERT_NEAR(covariance(0, 2), 0.0, 0.001);
@@ -197,8 +190,7 @@ TEST_F(PoseCovarianceEstimation, RandomWalkWithSmoothRotationWithUniformWeights)
   };
   const auto weights = std::vector(states.size(), 1.0);
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose.translation(), Vector2Eq(Vector2d{1.700, 0.0}));
-  ASSERT_THAT(pose.so2(), SO2Eq(SO2d{0.8762}));
+  ASSERT_THAT(pose, SE2Near(SO2d{0.8762}, Vector2d{1.700, 0.0}, 0.001));
   ASSERT_NEAR(covariance(0, 0), 0.900, 0.001);
   ASSERT_NEAR(covariance(0, 1), 0.5556, 0.001);
   ASSERT_NEAR(covariance(0, 2), 0.0000, 0.001);
@@ -220,8 +212,7 @@ TEST_F(PoseCovarianceEstimation, WeightsCanSingleOutOneSample) {
   };
   const auto weights = std::vector{0.0, 1.0, 0.0, 1.0};
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose.translation(), Vector2Eq(Vector2d{1.0, -2.0}));
-  ASSERT_THAT(pose.so2(), SO2Eq(SO2d{Constants::pi() / 2}));
+  ASSERT_THAT(pose, SE2Near(SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}, 0.001));
   ASSERT_NEAR(covariance(0, 0), 0.000, 0.001);
   ASSERT_NEAR(covariance(0, 1), 0.000, 0.001);
   ASSERT_NEAR(covariance(0, 2), 0.000, 0.001);
@@ -249,8 +240,7 @@ TEST_F(PoseCovarianceEstimation, RandomWalkWithSmoothRotationAndNonUniformWeight
   };
   const auto weights = std::vector{0.1, 0.4, 0.7, 0.1, 0.9, 0.2, 0.2, 0.4, 0.1, 0.4};
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose.translation(), Vector2Eq(Vector2d{1.800, 0.3143}));
-  ASSERT_THAT(pose.so2(), SO2Eq(SO2d{0.8687}));
+  ASSERT_THAT(pose, SE2Near(SO2d{0.8687}, Vector2d{1.800, 0.3143}, 0.001));
   ASSERT_NEAR(covariance(0, 0), 0.5946, 0.001);
   ASSERT_NEAR(covariance(0, 1), 0.0743, 0.001);
   ASSERT_NEAR(covariance(0, 2), 0.0000, 0.001);
@@ -282,7 +272,7 @@ TEST(SimpleStateEstimator, SimpleStateEstimatorUsesUniformWeights) {
   EXPECT_CALL(mixin, weights).Times(0);
   const auto [pose, covariance] = mixin.estimate();
   const auto [expected_pose, expected_covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Eq(expected_pose));
+  ASSERT_THAT(pose, SE2Near(expected_pose, 0.001));
   ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), 0.001);
   ASSERT_NEAR(covariance(0, 1), expected_covariance(0, 1), 0.001);
   ASSERT_NEAR(covariance(0, 2), expected_covariance(0, 2), 0.001);
@@ -307,7 +297,7 @@ TEST(WeightedStateEstimator, WeightedStateEstimatorDoesWeightedEstimation) {
   EXPECT_CALL(mixin, weights).WillRepeatedly(ReturnRef(weights));
   const auto [pose, covariance] = mixin.estimate();
   const auto [expected_pose, expected_covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Eq(expected_pose));
+  ASSERT_THAT(pose, SE2Near(expected_pose, 0.001));
   ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), 0.001);
   ASSERT_NEAR(covariance(0, 1), expected_covariance(0, 1), 0.001);
   ASSERT_NEAR(covariance(0, 2), expected_covariance(0, 2), 0.001);

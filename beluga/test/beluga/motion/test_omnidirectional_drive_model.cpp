@@ -15,11 +15,11 @@
 #include <gmock/gmock.h>
 
 #include <beluga/motion.hpp>
+#include <beluga/testing.hpp>
+
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
-
-#include "beluga/test/utils/sophus_matchers.hpp"
 
 namespace {
 
@@ -28,6 +28,7 @@ using Eigen::Vector2d;
 using Sophus::SE2d;
 using Sophus::SO2d;
 
+using beluga::testing::SE2Near;
 using UUT = beluga::OmnidirectionalDriveModel;
 
 class OmnidirectionalDriveModelTest : public ::testing::Test {
@@ -38,47 +39,47 @@ class OmnidirectionalDriveModelTest : public ::testing::Test {
 
 TEST_F(OmnidirectionalDriveModelTest, NoUpdate) {
   const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
-  ASSERT_THAT(model_.apply_motion(pose, generator_), testing::SE2Eq(pose));
+  ASSERT_THAT(model_.apply_motion(pose, generator_), SE2Near(pose, 0.001));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, OneUpdate) {
   const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
   model_.update_motion(SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}});
-  ASSERT_THAT(model_.apply_motion(pose, generator_), testing::SE2Eq(pose));
+  ASSERT_THAT(model_.apply_motion(pose, generator_), SE2Near(pose, 0.001));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, Translate) {
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{1.0, 0.0}});
   const auto result1 = model_.apply_motion(SE2d{SO2d{0.0}, Vector2d{2.0, 0.0}}, generator_);
-  ASSERT_THAT(result1, testing::SE2Eq(SO2d{0.0}, Vector2d{3.0, 0.0}));
+  ASSERT_THAT(result1, SE2Near(SO2d{0.0}, Vector2d{3.0, 0.0}, 0.001));
   const auto result2 = model_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 3.0}}, generator_);
-  ASSERT_THAT(result2, testing::SE2Eq(SO2d{0.0}, Vector2d{1.0, 3.0}));
+  ASSERT_THAT(result2, SE2Near(SO2d{0.0}, Vector2d{1.0, 3.0}, 0.001));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, RotateTranslate) {
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   model_.update_motion(SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}});
   const auto result1 = model_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}, generator_);
-  ASSERT_THAT(result1, testing::SE2Eq(SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}));
+  ASSERT_THAT(result1, SE2Near(SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}, 0.001));
   const auto result2 = model_.apply_motion(SE2d{SO2d{-Constants::pi() / 2}, Vector2d{2.0, 3.0}}, generator_);
-  ASSERT_THAT(result2, testing::SE2Eq(SO2d{0.0}, Vector2d{3.0, 3.0}));
+  ASSERT_THAT(result2, SE2Near(SO2d{0.0}, Vector2d{3.0, 3.0}, 0.001));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, Rotate) {
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   model_.update_motion(SE2d{SO2d{Constants::pi() / 4}, Vector2d{0.0, 0.0}});
   const auto result1 = model_.apply_motion(SE2d{SO2d{Constants::pi()}, Vector2d{0.0, 0.0}}, generator_);
-  ASSERT_THAT(result1, testing::SE2Eq(SO2d{Constants::pi() * 5 / 4}, Vector2d{0.0, 0.0}));
+  ASSERT_THAT(result1, SE2Near(SO2d{Constants::pi() * 5 / 4}, Vector2d{0.0, 0.0}, 0.001));
   const auto result2 = model_.apply_motion(SE2d{SO2d{-Constants::pi() / 2}, Vector2d{0.0, 0.0}}, generator_);
-  ASSERT_THAT(result2, testing::SE2Eq(SO2d{-Constants::pi() / 4}, Vector2d{0.0, 0.0}));
+  ASSERT_THAT(result2, SE2Near(SO2d{-Constants::pi() / 4}, Vector2d{0.0, 0.0}, 0.001));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, TranslateStrafe) {
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 1.0}});
   const auto result1 = model_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}, generator_);
-  ASSERT_THAT(result1, testing::SE2Eq(SO2d{0.0}, Vector2d{0.0, 1.0}));
+  ASSERT_THAT(result1, SE2Near(SO2d{0.0}, Vector2d{0.0, 1.0}, 0.001));
 }
 
 template <class Range>

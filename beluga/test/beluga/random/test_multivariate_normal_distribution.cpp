@@ -16,14 +16,17 @@
 
 #include <beluga/algorithm/estimation.hpp>
 #include <beluga/random/multivariate_normal_distribution.hpp>
+#include <beluga/testing.hpp>
+
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
 #include "beluga/test/utils/eigen_initializers.hpp"
-#include "beluga/test/utils/sophus_matchers.hpp"
 
 namespace {
+
+using beluga::testing::Vector2Near;
 
 TEST(MultivariateNormalDistribution, CopyAndCompare) {
   Eigen::Matrix3d covariance = Eigen::Vector3d::Ones().asDiagonal();
@@ -50,7 +53,7 @@ TEST(MultivariateNormalDistribution, NonSymmetricMatrix) {
 TEST(MultivariateNormalDistribution, SampleZero) {
   auto generator = std::mt19937{std::random_device()()};
   auto distribution = beluga::MultivariateNormalDistribution{Eigen::Vector2d::Zero(), Eigen::Matrix2d::Zero()};
-  ASSERT_THAT(distribution(generator), testing::Vector2Eq(Eigen::Vector2d{0, 0}));
+  ASSERT_THAT(distribution(generator), Vector2Near(Eigen::Vector2d{0, 0}, 0.001));
 }
 
 class MultivariateNormalDistributionWithParam
