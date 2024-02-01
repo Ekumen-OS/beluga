@@ -55,11 +55,11 @@ inline auto Vector2Near(const Sophus::Vector2<Scalar>& t, Scalar e) {
  * \param e The max absolute error.
  */
 template <class Scalar>
-inline auto Vector3Near(const Sophus::Vector2<Scalar>& t, Scalar e) {
+inline auto Vector3Near(const Sophus::Vector3<Scalar>& t, Scalar e) {
   return AllOf(
-      Property("x", &Sophus::Vector2<Scalar>::x, DoubleNear(t.x(), e)),
-      Property("y", &Sophus::Vector2<Scalar>::y, DoubleNear(t.y(), e)),
-      Property("z", &Sophus::Vector2<Scalar>::z, DoubleNear(t.z(), e)));
+      Property("x", &Sophus::Vector3<Scalar>::x, DoubleNear(t.x(), e)),
+      Property("y", &Sophus::Vector3<Scalar>::y, DoubleNear(t.y(), e)),
+      Property("z", &Sophus::Vector3<Scalar>::z, DoubleNear(t.z(), e)));
 }
 
 /// SO2 element matcher.

@@ -48,6 +48,8 @@ add_executable(
   test_primitives.cpp
   test_spatial_hash.cpp
   test_tuple_vector.cpp
+  testing/test_sophus_matchers.cpp
+  testing/test_sophus_printers.cpp
   type_traits/test_particle_traits.cpp
   type_traits/test_strongly_typed_numeric.cpp
   type_traits/test_tuple_traits.cpp
