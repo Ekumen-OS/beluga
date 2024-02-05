@@ -26,7 +26,6 @@
 
 #include <range/v3/algorithm/transform.hpp>
 
-#include "beluga_amcl/amcl_node_utils.hpp"
 #include "beluga_amcl/private/amcl_nodelet.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
 

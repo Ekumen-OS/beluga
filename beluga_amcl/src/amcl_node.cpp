@@ -37,7 +37,6 @@
 #include <range/v3/range/conversion.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 
-#include "beluga_amcl/amcl_node_utils.hpp"
 #include "beluga_amcl/private/execution_policy.hpp"
 #include "beluga_ros/laser_scan.hpp"
 #include "beluga_ros/occupancy_grid.hpp"

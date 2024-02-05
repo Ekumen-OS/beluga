@@ -18,10 +18,6 @@ ament_add_gmock(test_amcl_node test_amcl_node.cpp)
 target_compile_options(test_amcl_node PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_amcl_node amcl_node_component)
 
-ament_add_gmock(test_amcl_node_utils test_amcl_node_utils.cpp)
-target_compile_options(test_amcl_node_utils PRIVATE -Wno-deprecated-copy)
-target_link_libraries(test_amcl_node_utils amcl_node_component)
-
 ament_add_gmock(
   test_amcl_node_resampling_policies
   filter_update_control/test_filter_update_control_mixin.cpp

@@ -15,11 +15,11 @@
 #include <gmock/gmock.h>
 
 #include <beluga/motion.hpp>
+#include <beluga/testing.hpp>
+
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
-
-#include "beluga/test/utils/sophus_matchers.hpp"
 
 namespace {
 
@@ -28,6 +28,7 @@ using Eigen::Vector2d;
 using Sophus::SE2d;
 using Sophus::SO2d;
 
+using beluga::testing::SE2Near;
 using UUT = beluga::OmnidirectionalDriveModel;
 
 class OmnidirectionalDriveModelTest : public ::testing::Test {
@@ -37,48 +38,54 @@ class OmnidirectionalDriveModelTest : public ::testing::Test {
 };
 
 TEST_F(OmnidirectionalDriveModelTest, NoUpdate) {
+  constexpr double kTolerance = 0.001;
   const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
-  ASSERT_THAT(model_.apply_motion(pose, generator_), testing::SE2Eq(pose));
+  ASSERT_THAT(model_.apply_motion(pose, generator_), SE2Near(pose, kTolerance));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, OneUpdate) {
+  constexpr double kTolerance = 0.001;
   const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
   model_.update_motion(SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}});
-  ASSERT_THAT(model_.apply_motion(pose, generator_), testing::SE2Eq(pose));
+  ASSERT_THAT(model_.apply_motion(pose, generator_), SE2Near(pose, kTolerance));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, Translate) {
+  constexpr double kTolerance = 0.001;
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{1.0, 0.0}});
   const auto result1 = model_.apply_motion(SE2d{SO2d{0.0}, Vector2d{2.0, 0.0}}, generator_);
-  ASSERT_THAT(result1, testing::SE2Eq(SO2d{0.0}, Vector2d{3.0, 0.0}));
+  ASSERT_THAT(result1, SE2Near(SO2d{0.0}, Vector2d{3.0, 0.0}, kTolerance));
   const auto result2 = model_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 3.0}}, generator_);
-  ASSERT_THAT(result2, testing::SE2Eq(SO2d{0.0}, Vector2d{1.0, 3.0}));
+  ASSERT_THAT(result2, SE2Near(SO2d{0.0}, Vector2d{1.0, 3.0}, kTolerance));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, RotateTranslate) {
+  constexpr double kTolerance = 0.001;
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   model_.update_motion(SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}});
   const auto result1 = model_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}, generator_);
-  ASSERT_THAT(result1, testing::SE2Eq(SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}));
+  ASSERT_THAT(result1, SE2Near(SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}, kTolerance));
   const auto result2 = model_.apply_motion(SE2d{SO2d{-Constants::pi() / 2}, Vector2d{2.0, 3.0}}, generator_);
-  ASSERT_THAT(result2, testing::SE2Eq(SO2d{0.0}, Vector2d{3.0, 3.0}));
+  ASSERT_THAT(result2, SE2Near(SO2d{0.0}, Vector2d{3.0, 3.0}, kTolerance));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, Rotate) {
+  constexpr double kTolerance = 0.001;
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   model_.update_motion(SE2d{SO2d{Constants::pi() / 4}, Vector2d{0.0, 0.0}});
   const auto result1 = model_.apply_motion(SE2d{SO2d{Constants::pi()}, Vector2d{0.0, 0.0}}, generator_);
-  ASSERT_THAT(result1, testing::SE2Eq(SO2d{Constants::pi() * 5 / 4}, Vector2d{0.0, 0.0}));
+  ASSERT_THAT(result1, SE2Near(SO2d{Constants::pi() * 5 / 4}, Vector2d{0.0, 0.0}, kTolerance));
   const auto result2 = model_.apply_motion(SE2d{SO2d{-Constants::pi() / 2}, Vector2d{0.0, 0.0}}, generator_);
-  ASSERT_THAT(result2, testing::SE2Eq(SO2d{-Constants::pi() / 4}, Vector2d{0.0, 0.0}));
+  ASSERT_THAT(result2, SE2Near(SO2d{-Constants::pi() / 4}, Vector2d{0.0, 0.0}, kTolerance));
 }
 
 TEST_F(OmnidirectionalDriveModelTest, TranslateStrafe) {
+  constexpr double kTolerance = 0.001;
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   model_.update_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 1.0}});
   const auto result1 = model_.apply_motion(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}, generator_);
-  ASSERT_THAT(result1, testing::SE2Eq(SO2d{0.0}, Vector2d{0.0, 1.0}));
+  ASSERT_THAT(result1, SE2Near(SO2d{0.0}, Vector2d{0.0, 1.0}, kTolerance));
 }
 
 template <class Range>
@@ -96,6 +103,7 @@ auto get_statistics(Range&& range) {
 }
 
 TEST(OmnidirectionalDriveModelSamples, Translate) {
+  const double tolerance = 0.01;
   const double alpha = 0.2;
   const double origin = 5.0;
   const double distance = 3.0;
@@ -108,11 +116,12 @@ TEST(OmnidirectionalDriveModelSamples, Translate) {
               }) |
               ranges::views::take_exactly(1'000'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
-  ASSERT_NEAR(mean, origin + distance, 0.01);
-  ASSERT_NEAR(stddev, std::sqrt(alpha * distance * distance), 0.01);
+  ASSERT_NEAR(mean, origin + distance, tolerance);
+  ASSERT_NEAR(stddev, std::sqrt(alpha * distance * distance), tolerance);
 }
 
 TEST(OmnidirectionalDriveModelSamples, RotateFirstQuadrant) {
+  const double tolerance = 0.01;
   const double alpha = 0.2;
   const double initial_angle = Constants::pi() / 6;
   const double motion_angle = Constants::pi() / 4;
@@ -125,11 +134,12 @@ TEST(OmnidirectionalDriveModelSamples, RotateFirstQuadrant) {
               }) |
               ranges::views::take_exactly(1'000'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
-  ASSERT_NEAR(mean, initial_angle + motion_angle, 0.01);
-  ASSERT_NEAR(stddev, std::sqrt(alpha * motion_angle * motion_angle), 0.01);
+  ASSERT_NEAR(mean, initial_angle + motion_angle, tolerance);
+  ASSERT_NEAR(stddev, std::sqrt(alpha * motion_angle * motion_angle), tolerance);
 }
 
 TEST(OmnidirectionalDriveModelSamples, RotateThirdQuadrant) {
+  const double tolerance = 0.01;
   const double alpha = 0.2;
   const double initial_angle = Constants::pi() / 6;
   const double motion_angle = -Constants::pi() * 3 / 4;
@@ -142,11 +152,11 @@ TEST(OmnidirectionalDriveModelSamples, RotateThirdQuadrant) {
               }) |
               ranges::views::take_exactly(1'000'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
-  ASSERT_NEAR(mean, initial_angle + motion_angle, 0.01);
+  ASSERT_NEAR(mean, initial_angle + motion_angle, tolerance);
 
   // Treat backward and forward motion symmetrically for the noise models.
   const double flipped_angle = Constants::pi() + motion_angle;
-  ASSERT_NEAR(stddev, std::sqrt(alpha * flipped_angle * flipped_angle), 0.01);
+  ASSERT_NEAR(stddev, std::sqrt(alpha * flipped_angle * flipped_angle), tolerance);
 }
 
 }  // namespace

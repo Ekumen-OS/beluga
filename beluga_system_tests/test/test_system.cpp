@@ -26,7 +26,8 @@
 #include <beluga/mixin/particle_filter.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga_amcl/amcl_node_utils.hpp>
+#include <beluga/testing.hpp>
+
 #include <beluga_amcl/filter_update_control/filter_update_control_mixin.hpp>
 #include <beluga_amcl/filter_update_control/resample_interval_policy.hpp>
 #include <beluga_amcl/filter_update_control/selective_resampling_policy.hpp>
@@ -100,12 +101,6 @@ using TestDataBuilder = std::function<TestData()>;
 
 class BelugaSystemTest : public testing::TestWithParam<TestDataBuilder> {};
 
-std::string se2d_to_string(const Sophus::SE2d& input) {
-  std::ostringstream oss;
-  oss << "x=" << input.translation().x() << " y=" << input.translation().y() << " theta=" << input.so2().log();
-  return oss.str();
-}
-
 TEST_P(BelugaSystemTest, testEstimatedPath) {
   auto test_data = GetParam()();
   auto& pf = *test_data.particle_filter;
@@ -125,12 +120,12 @@ TEST_P(BelugaSystemTest, testEstimatedPath) {
       auto error = data_point.ground_truth.inverse() * estimation.first;
       auto distance_error = error.translation().norm();
       EXPECT_LE(distance_error, test_data.distance_tolerance) << "iteration: " << iteration << "\nestimation\n"
-                                                              << se2d_to_string(estimation.first) << "\nactual\n"
-                                                              << se2d_to_string(data_point.ground_truth) << std::endl;
+                                                              << estimation.first << "\nactual\n"
+                                                              << data_point.ground_truth << std::endl;
       auto angle_error = error.so2().log();
       EXPECT_LE(angle_error, test_data.angular_tolerance) << "iteration: " << iteration << "\nestimation\n"
-                                                          << se2d_to_string(estimation.first) << "\nactual\n"
-                                                          << se2d_to_string(data_point.ground_truth) << std::endl;
+                                                          << estimation.first << "\nactual\n"
+                                                          << data_point.ground_truth << std::endl;
     }
   }
 }
@@ -388,8 +383,7 @@ std::vector<TestDataBuilder> get_test_parameters() {
     };
     LaserScanInfo laser_info;
     laser_info.laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
-    auto format = beluga_amcl::utils::make_eigen_comma_format();
-    std::cout << laser_info.laser_transform.matrix().format(format) << std::endl;
+    std::cout << laser_info.laser_transform.matrix() << std::endl;
     laser_info.max_beam_count = 60;
     laser_info.range_max = 100.;
     laser_info.range_min = 0.;
@@ -408,8 +402,7 @@ std::vector<TestDataBuilder> get_test_parameters() {
     };
     LaserScanInfo laser_info;
     laser_info.laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
-    auto format = beluga_amcl::utils::make_eigen_comma_format();
-    std::cout << laser_info.laser_transform.matrix().format(format) << std::endl;
+    std::cout << laser_info.laser_transform.matrix() << std::endl;
     laser_info.max_beam_count = 60;
     laser_info.range_max = 100.;
     laser_info.range_min = 0.;
@@ -428,8 +421,7 @@ std::vector<TestDataBuilder> get_test_parameters() {
     };
     LaserScanInfo laser_info;
     laser_info.laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
-    auto format = beluga_amcl::utils::make_eigen_comma_format();
-    std::cout << laser_info.laser_transform.matrix().format(format) << std::endl;
+    std::cout << laser_info.laser_transform.matrix() << std::endl;
     laser_info.max_beam_count = 60;
     laser_info.range_max = 100.;
     laser_info.range_min = 0.;
