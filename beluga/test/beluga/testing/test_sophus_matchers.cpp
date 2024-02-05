@@ -31,24 +31,31 @@ using beluga::testing::Vector3Near;
 using testing::Not;
 
 TEST(SophusMatchers, Vector2Near) {
-  ASSERT_THAT(Vector2d(1.0, 2.0), Vector2Near({1.5, 1.5}, 0.6));
-  ASSERT_THAT(Vector2d(1.0, 2.0), Not(Vector2Near({1.5, 1.5}, 0.4)));
+  constexpr double kHighTolerance = 0.6;
+  constexpr double kLowTolerance = 0.4;
+  ASSERT_THAT(Vector2d(1.0, 2.0), Vector2Near({1.5, 1.5}, kHighTolerance));
+  ASSERT_THAT(Vector2d(1.0, 2.0), Not(Vector2Near({1.5, 1.5}, kLowTolerance)));
 }
 
 TEST(SophusMatchers, Vector3Near) {
-  ASSERT_THAT(Vector3d(1.0, 2.0, 3.0), Vector3Near({1.0, 2.5, 3.0}, 0.6));
-  ASSERT_THAT(Vector3d(1.0, 2.0, 3.0), Not(Vector3Near({1.0, 2.5, 3.0}, 0.4)));
+  constexpr double kHighTolerance = 0.6;
+  constexpr double kLowTolerance = 0.4;
+  ASSERT_THAT(Vector3d(1.0, 2.0, 3.0), Vector3Near({1.0, 2.5, 3.0}, kHighTolerance));
+  ASSERT_THAT(Vector3d(1.0, 2.0, 3.0), Not(Vector3Near({1.0, 2.5, 3.0}, kLowTolerance)));
 }
 
 TEST(SophusMatchers, SO2Near) {
-  ASSERT_THAT(SO2d(1.0, 0.0), SO2Near({1.0, 0.0}, 0.1));
-  ASSERT_THAT(SO2d(1.0, 0.0), Not(SO2Near({0.0, 1.0}, 0.1)));
+  constexpr double kTolerance = 0.1;
+  ASSERT_THAT(SO2d(1.0, 0.0), SO2Near({1.0, 0.0}, kTolerance));
+  ASSERT_THAT(SO2d(1.0, 0.0), Not(SO2Near({0.0, 1.0}, kTolerance)));
 }
 
 TEST(SophusMatchers, SE2Near) {
-  ASSERT_THAT(SE2d(SO2d(1.0, 0.0), Vector2d(1.0, 2.0)), SE2Near({1.0, 0.0}, {1.5, 2.5}, 0.6));
-  ASSERT_THAT(SE2d(SO2d(1.0, 0.0), Vector2d(1.0, 2.0)), Not(SE2Near({1.0, 0.0}, {1.5, 2.5}, 0.4)));
-  ASSERT_THAT(SE2d(SO2d(1.0, 0.0), Vector2d(1.0, 2.0)), Not(SE2Near({0.0, 1.0}, {1.5, 2.5}, 0.6)));
+  constexpr double kHighTolerance = 0.6;
+  constexpr double kLowTolerance = 0.4;
+  ASSERT_THAT(SE2d(SO2d(1.0, 0.0), Vector2d(1.0, 2.0)), SE2Near({1.0, 0.0}, {1.5, 2.5}, kHighTolerance));
+  ASSERT_THAT(SE2d(SO2d(1.0, 0.0), Vector2d(1.0, 2.0)), Not(SE2Near({1.0, 0.0}, {1.5, 2.5}, kLowTolerance)));
+  ASSERT_THAT(SE2d(SO2d(1.0, 0.0), Vector2d(1.0, 2.0)), Not(SE2Near({0.0, 1.0}, {1.5, 2.5}, kHighTolerance)));
 }
 
 }  // namespace

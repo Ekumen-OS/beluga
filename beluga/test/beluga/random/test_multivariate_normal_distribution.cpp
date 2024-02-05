@@ -51,15 +51,17 @@ TEST(MultivariateNormalDistribution, NonSymmetricMatrix) {
 }
 
 TEST(MultivariateNormalDistribution, SampleZero) {
+  constexpr double kTolerance = 0.001;
   auto generator = std::mt19937{std::random_device()()};
   auto distribution = beluga::MultivariateNormalDistribution{Eigen::Vector2d::Zero(), Eigen::Matrix2d::Zero()};
-  ASSERT_THAT(distribution(generator), Vector2Near(Eigen::Vector2d{0, 0}, 0.001));
+  ASSERT_THAT(distribution(generator), Vector2Near(Eigen::Vector2d{0, 0}, kTolerance));
 }
 
 class MultivariateNormalDistributionWithParam
     : public ::testing::TestWithParam<std::pair<Eigen::Vector2d, Eigen::Matrix2d>> {};
 
 TEST_P(MultivariateNormalDistributionWithParam, DistributionCovarianceAndMean) {
+  constexpr double kTolerance = 0.01;
   const Eigen::Vector2d& expected_mean = std::get<0>(GetParam());
   const Eigen::Matrix2d& expected_covariance = std::get<1>(GetParam());
   auto distribution = beluga::MultivariateNormalDistribution{expected_mean, expected_covariance};
@@ -71,13 +73,13 @@ TEST_P(MultivariateNormalDistributionWithParam, DistributionCovarianceAndMean) {
 
   const auto sum = std::accumulate(sequence.begin(), sequence.end(), Eigen::Vector2d{0, 0});
   const auto mean = Eigen::Vector2d{sum / sequence.size()};
-  ASSERT_NEAR(mean(0), expected_mean(0), 0.01);
-  ASSERT_NEAR(mean(1), expected_mean(1), 0.01);
+  ASSERT_NEAR(mean(0), expected_mean(0), kTolerance);
+  ASSERT_NEAR(mean(1), expected_mean(1), kTolerance);
   const auto covariance = beluga::calculate_covariance(sequence, mean);
-  ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), 0.01);
-  ASSERT_NEAR(covariance(0, 1), expected_covariance(0, 1), 0.01);
-  ASSERT_NEAR(covariance(1, 0), expected_covariance(1, 0), 0.01);
-  ASSERT_NEAR(covariance(1, 1), expected_covariance(1, 1), 0.01);
+  ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), kTolerance);
+  ASSERT_NEAR(covariance(0, 1), expected_covariance(0, 1), kTolerance);
+  ASSERT_NEAR(covariance(1, 0), expected_covariance(1, 0), kTolerance);
+  ASSERT_NEAR(covariance(1, 1), expected_covariance(1, 1), kTolerance);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -90,30 +92,33 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_pair(Eigen::Vector2d{5.0, 6.0}, testing::as<Eigen::Matrix2d>({{2.0, 0.7}, {0.7, 2.0}}))));
 
 TEST(MultivariateNormalDistribution, RowVector) {
+  constexpr double kTolerance = 0.001;
   auto generator = std::mt19937{std::random_device()()};
   auto expected_mean = Eigen::RowVector2d{1.0, 2.0};
   auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix2d::Zero()};
   auto mean = distribution(generator);
-  ASSERT_NEAR(mean(0), expected_mean(0), 0.001);
-  ASSERT_NEAR(mean(1), expected_mean(1), 0.001);
+  ASSERT_NEAR(mean(0), expected_mean(0), kTolerance);
+  ASSERT_NEAR(mean(1), expected_mean(1), kTolerance);
 }
 
 TEST(MultivariateNormalDistribution, SO2Element) {
+  constexpr double kTolerance = 0.001;
   auto generator = std::mt19937{std::random_device()()};
   auto expected_mean = Sophus::SO2d{1.5};
   auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix<double, 1, 1>::Zero()};
   auto mean = distribution(generator);
-  ASSERT_NEAR((mean).log(), expected_mean.log(), 0.001);
+  ASSERT_NEAR((mean).log(), expected_mean.log(), kTolerance);
 }
 
 TEST(MultivariateNormalDistribution, SE2Element) {
+  constexpr double kTolerance = 0.001;
   auto generator = std::mt19937{std::random_device()()};
   auto expected_mean = Sophus::SE2d{Sophus::SO2d{1.57}, Eigen::Vector2d{1.0, 2.0}};
   auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix3d::Zero()};
   auto mean = distribution(generator);
-  ASSERT_NEAR(mean.so2().log(), expected_mean.so2().log(), 0.001);
-  ASSERT_NEAR(mean.translation()(0), expected_mean.translation()(0), 0.001);
-  ASSERT_NEAR(mean.translation()(1), expected_mean.translation()(1), 0.001);
+  ASSERT_NEAR(mean.so2().log(), expected_mean.so2().log(), kTolerance);
+  ASSERT_NEAR(mean.translation()(0), expected_mean.translation()(0), kTolerance);
+  ASSERT_NEAR(mean.translation()(1), expected_mean.translation()(1), kTolerance);
 }
 
 }  // namespace

@@ -21,6 +21,7 @@
 namespace {
 
 using beluga::testing::SE2Near;
+using beluga::testing::Vector3Near;
 using testing::ReturnRef;
 
 using Constants = Sophus::Constants<double>;
@@ -105,17 +106,12 @@ TEST_F(PoseCovarianceEstimation, PureTranslation) {
   // test the mean and covariance estimations for states that have different translations but the same rotation
   const auto states = std::vector{SE2d{SO2d{0.0}, Vector2d{1.0, 2.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}};
   const auto weights = std::vector(states.size(), 1.0);
+  constexpr double kTolerance = 0.001;
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(SO2d{0.0}, Vector2d{0.5, 1.0}, 0.001));
-  ASSERT_NEAR(covariance(0, 0), 0.5, 0.001);
-  ASSERT_NEAR(covariance(0, 1), 1.0, 0.001);
-  ASSERT_NEAR(covariance(0, 2), 0.0, 0.001);
-  ASSERT_NEAR(covariance(1, 0), 1.0, 0.001);
-  ASSERT_NEAR(covariance(1, 1), 2.0, 0.001);
-  ASSERT_NEAR(covariance(1, 2), 0.0, 0.001);
-  ASSERT_NEAR(covariance(2, 0), 0.0, 0.001);
-  ASSERT_NEAR(covariance(2, 1), 0.0, 0.001);
-  ASSERT_NEAR(covariance(2, 2), 0.0, 0.001);
+  ASSERT_THAT(pose, SE2Near(SO2d{0.0}, Vector2d{0.5, 1.0}, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near({0.5, 1.0, 0.0}, kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near({1.0, 2.0, 0.0}, kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.0, 0.0, 0.0}, kTolerance));
 }
 
 TEST_F(PoseCovarianceEstimation, PureRotation) {
@@ -123,17 +119,12 @@ TEST_F(PoseCovarianceEstimation, PureRotation) {
   const auto states =
       std::vector{SE2d{SO2d{-Constants::pi() / 2}, Vector2d{0.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}};
   const auto weights = std::vector(states.size(), 1.0);
+  constexpr double kTolerance = 0.001;
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(SO2d{-Constants::pi() / 4}, Vector2d{0.0, 0.0}, 0.001));
-  ASSERT_NEAR(covariance(0, 0), 0.000, 0.001);
-  ASSERT_NEAR(covariance(0, 1), 0.000, 0.001);
-  ASSERT_NEAR(covariance(0, 2), 0.000, 0.001);
-  ASSERT_NEAR(covariance(1, 0), 0.000, 0.001);
-  ASSERT_NEAR(covariance(1, 1), 0.000, 0.001);
-  ASSERT_NEAR(covariance(1, 2), 0.000, 0.001);
-  ASSERT_NEAR(covariance(2, 0), 0.000, 0.001);
-  ASSERT_NEAR(covariance(2, 1), 0.000, 0.001);
-  ASSERT_NEAR(covariance(2, 2), 0.693, 0.001);
+  ASSERT_THAT(pose, SE2Near(SO2d{-Constants::pi() / 4}, Vector2d{0.0, 0.0}, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near({0.000, 0.000, 0.000}, kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near({0.000, 0.000, 0.000}, kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.000, 0.000, 0.693}, kTolerance));
 }
 
 TEST_F(PoseCovarianceEstimation, JointTranslationAndRotation) {
@@ -142,17 +133,12 @@ TEST_F(PoseCovarianceEstimation, JointTranslationAndRotation) {
       SE2d{SO2d{Constants::pi() / 6}, Vector2d{0.0, -3.0}}, SE2d{SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}},
       SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, -1.0}}, SE2d{SO2d{0.0}, Vector2d{3.0, 0.0}}};
   const auto weights = std::vector(states.size(), 1.0);
+  constexpr double kTolerance = 0.001;
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(SO2d{Constants::pi() / 4}, Vector2d{1.5, -1.5}, 0.001));
-  ASSERT_NEAR(covariance(0, 0), 1.666, 0.001);
-  ASSERT_NEAR(covariance(0, 1), 1.666, 0.001);
-  ASSERT_NEAR(covariance(0, 2), 0.000, 0.001);
-  ASSERT_NEAR(covariance(1, 0), 1.666, 0.001);
-  ASSERT_NEAR(covariance(1, 1), 1.666, 0.001);
-  ASSERT_NEAR(covariance(1, 2), 0.000, 0.001);
-  ASSERT_NEAR(covariance(2, 0), 0.000, 0.001);
-  ASSERT_NEAR(covariance(2, 1), 0.000, 0.001);
-  ASSERT_NEAR(covariance(2, 2), 0.357, 0.001);
+  ASSERT_THAT(pose, SE2Near(SO2d{Constants::pi() / 4}, Vector2d{1.5, -1.5}, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near({1.666, 1.666, 0.000}, kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near({1.666, 1.666, 0.000}, kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.000, 0.000, 0.357}, kTolerance));
 }
 
 TEST_F(PoseCovarianceEstimation, CancellingOrientations) {
@@ -161,16 +147,13 @@ TEST_F(PoseCovarianceEstimation, CancellingOrientations) {
   const auto states = std::vector{
       SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 0.0}}, SE2d{SO2d{-Constants::pi() / 2}, Vector2d{0.0, 0.0}}};
   const auto weights = std::vector(states.size(), 1.0);
+  constexpr double kTolerance = 0.001;
+  constexpr double kInf = std::numeric_limits<double>::infinity();
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(SO2d{0.0}, Vector2d{0.0, 0.0}, 0.001));
-  ASSERT_NEAR(covariance(0, 0), 0.0, 0.001);
-  ASSERT_NEAR(covariance(0, 1), 0.0, 0.001);
-  ASSERT_NEAR(covariance(0, 2), 0.0, 0.001);
-  ASSERT_NEAR(covariance(1, 0), 0.0, 0.001);
-  ASSERT_NEAR(covariance(1, 1), 0.0, 0.001);
-  ASSERT_NEAR(covariance(1, 2), 0.0, 0.001);
-  ASSERT_NEAR(covariance(2, 0), 0.0, 0.001);
-  ASSERT_NEAR(covariance(2, 1), 0.0, 0.001);
+  ASSERT_THAT(pose, SE2Near(SO2d{0.0}, Vector2d{0.0, 0.0}, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near({0.0, 0.0, 0.0}, kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near({0.0, 0.0, 0.0}, kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.0, 0.0, kInf}, kTolerance));
   ASSERT_EQ(covariance(2, 2), std::numeric_limits<double>::infinity());
 }
 
@@ -189,17 +172,12 @@ TEST_F(PoseCovarianceEstimation, RandomWalkWithSmoothRotationWithUniformWeights)
       SE2d{SO2d{Constants::pi() * 0.4}, Vector2d{1.0, 2.0}},   //
   };
   const auto weights = std::vector(states.size(), 1.0);
+  constexpr double kTolerance = 0.001;
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(SO2d{0.8762}, Vector2d{1.700, 0.0}, 0.001));
-  ASSERT_NEAR(covariance(0, 0), 0.900, 0.001);
-  ASSERT_NEAR(covariance(0, 1), 0.5556, 0.001);
-  ASSERT_NEAR(covariance(0, 2), 0.0000, 0.001);
-  ASSERT_NEAR(covariance(1, 0), 0.5556, 0.001);
-  ASSERT_NEAR(covariance(1, 1), 2.4444, 0.001);
-  ASSERT_NEAR(covariance(1, 2), 0.0000, 0.001);
-  ASSERT_NEAR(covariance(2, 0), 0.0000, 0.001);
-  ASSERT_NEAR(covariance(2, 1), 0.0000, 0.001);
-  ASSERT_NEAR(covariance(2, 2), 0.1355, 0.001);
+  ASSERT_THAT(pose, SE2Near(SO2d{0.8762}, Vector2d{1.700, 0.0}, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near({0.9000, 0.5556, 0.0000}, kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near({0.5556, 2.4444, 0.0000}, kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.0000, 0.0000, 0.1355}, kTolerance));
 }
 
 TEST_F(PoseCovarianceEstimation, WeightsCanSingleOutOneSample) {
@@ -211,17 +189,12 @@ TEST_F(PoseCovarianceEstimation, WeightsCanSingleOutOneSample) {
       SE2d{SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}},  //
   };
   const auto weights = std::vector{0.0, 1.0, 0.0, 1.0};
+  constexpr double kTolerance = 0.001;
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}, 0.001));
-  ASSERT_NEAR(covariance(0, 0), 0.000, 0.001);
-  ASSERT_NEAR(covariance(0, 1), 0.000, 0.001);
-  ASSERT_NEAR(covariance(0, 2), 0.000, 0.001);
-  ASSERT_NEAR(covariance(1, 0), 0.000, 0.001);
-  ASSERT_NEAR(covariance(1, 1), 0.000, 0.001);
-  ASSERT_NEAR(covariance(1, 2), 0.000, 0.001);
-  ASSERT_NEAR(covariance(2, 0), 0.000, 0.001);
-  ASSERT_NEAR(covariance(2, 1), 0.000, 0.001);
-  ASSERT_NEAR(covariance(2, 2), 0.000, 0.001);
+  ASSERT_THAT(pose, SE2Near(SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near({0.0, 0.0, 0.0}, kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near({0.0, 0.0, 0.0}, kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.0, 0.0, 0.0}, kTolerance));
 }
 
 TEST_F(PoseCovarianceEstimation, RandomWalkWithSmoothRotationAndNonUniformWeights) {
@@ -239,17 +212,12 @@ TEST_F(PoseCovarianceEstimation, RandomWalkWithSmoothRotationAndNonUniformWeight
       SE2d{SO2d{Constants::pi() * 0.4}, Vector2d{1.0, 2.0}},   //
   };
   const auto weights = std::vector{0.1, 0.4, 0.7, 0.1, 0.9, 0.2, 0.2, 0.4, 0.1, 0.4};
+  constexpr double kTolerance = 0.001;
   const auto [pose, covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(SO2d{0.8687}, Vector2d{1.800, 0.3143}, 0.001));
-  ASSERT_NEAR(covariance(0, 0), 0.5946, 0.001);
-  ASSERT_NEAR(covariance(0, 1), 0.0743, 0.001);
-  ASSERT_NEAR(covariance(0, 2), 0.0000, 0.001);
-  ASSERT_NEAR(covariance(1, 0), 0.0743, 0.001);
-  ASSERT_NEAR(covariance(1, 1), 1.8764, 0.001);
-  ASSERT_NEAR(covariance(1, 2), 0.0000, 0.001);
-  ASSERT_NEAR(covariance(2, 0), 0.0000, 0.001);
-  ASSERT_NEAR(covariance(2, 1), 0.0000, 0.001);
-  ASSERT_NEAR(covariance(2, 2), 0.0855, 0.001);
+  ASSERT_THAT(pose, SE2Near(SO2d{0.8687}, Vector2d{1.800, 0.3143}, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near({0.5946, 0.0743, 0.0000}, kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near({0.0743, 1.8764, 0.0000}, kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.0000, 0.0000, 0.0855}, kTolerance));
 }
 
 template <class Mixin>
@@ -268,20 +236,15 @@ TEST(SimpleStateEstimator, SimpleStateEstimatorUsesUniformWeights) {
       SE2d{SO2d{Constants::pi() / 6}, Vector2d{0.0, -3.0}}, SE2d{SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}},
       SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, -1.0}}, SE2d{SO2d{0.0}, Vector2d{3.0, 0.0}}};
   const auto weights = std::vector(states.size(), 1.0);
+  constexpr double kTolerance = 0.001;
   EXPECT_CALL(mixin, states).WillRepeatedly(ReturnRef(states));
   EXPECT_CALL(mixin, weights).Times(0);
   const auto [pose, covariance] = mixin.estimate();
   const auto [expected_pose, expected_covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(expected_pose, 0.001));
-  ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), 0.001);
-  ASSERT_NEAR(covariance(0, 1), expected_covariance(0, 1), 0.001);
-  ASSERT_NEAR(covariance(0, 2), expected_covariance(0, 2), 0.001);
-  ASSERT_NEAR(covariance(1, 0), expected_covariance(1, 0), 0.001);
-  ASSERT_NEAR(covariance(1, 1), expected_covariance(1, 1), 0.001);
-  ASSERT_NEAR(covariance(1, 2), expected_covariance(1, 2), 0.001);
-  ASSERT_NEAR(covariance(2, 0), expected_covariance(2, 0), 0.001);
-  ASSERT_NEAR(covariance(2, 1), expected_covariance(2, 1), 0.001);
-  ASSERT_NEAR(covariance(2, 2), expected_covariance(2, 2), 0.001);
+  ASSERT_THAT(pose, SE2Near(expected_pose, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near(expected_covariance.col(0).eval(), kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near(expected_covariance.col(1).eval(), kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near(expected_covariance.col(2).eval(), kTolerance));
 }
 
 TEST(WeightedStateEstimator, WeightedStateEstimatorDoesWeightedEstimation) {
@@ -293,20 +256,15 @@ TEST(WeightedStateEstimator, WeightedStateEstimatorDoesWeightedEstimation) {
       SE2d{SO2d{Constants::pi() / 6}, Vector2d{0.0, -3.0}}, SE2d{SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}},
       SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, -1.0}}, SE2d{SO2d{0.0}, Vector2d{3.0, 0.0}}};
   const auto weights = std::vector{0.1, 0.5, 0.5, 0.1};
+  constexpr double kTolerance = 0.001;
   EXPECT_CALL(mixin, states).WillRepeatedly(ReturnRef(states));
   EXPECT_CALL(mixin, weights).WillRepeatedly(ReturnRef(weights));
   const auto [pose, covariance] = mixin.estimate();
   const auto [expected_pose, expected_covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(expected_pose, 0.001));
-  ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), 0.001);
-  ASSERT_NEAR(covariance(0, 1), expected_covariance(0, 1), 0.001);
-  ASSERT_NEAR(covariance(0, 2), expected_covariance(0, 2), 0.001);
-  ASSERT_NEAR(covariance(1, 0), expected_covariance(1, 0), 0.001);
-  ASSERT_NEAR(covariance(1, 1), expected_covariance(1, 1), 0.001);
-  ASSERT_NEAR(covariance(1, 2), expected_covariance(1, 2), 0.001);
-  ASSERT_NEAR(covariance(2, 0), expected_covariance(2, 0), 0.001);
-  ASSERT_NEAR(covariance(2, 1), expected_covariance(2, 1), 0.001);
-  ASSERT_NEAR(covariance(2, 2), expected_covariance(2, 2), 0.001);
+  ASSERT_THAT(pose, SE2Near(expected_pose, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near(expected_covariance.col(0).eval(), kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near(expected_covariance.col(1).eval(), kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near(expected_covariance.col(2).eval(), kTolerance));
 }
 
 }  // namespace

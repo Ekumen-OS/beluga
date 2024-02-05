@@ -28,6 +28,7 @@ using testing::ElementsAre;
 
 constexpr double kMinRange = 5.;
 constexpr double kMaxRange = 100.;
+constexpr double kTolerance = 0.001;
 
 class SimpleLaserScan : public beluga::BaseLaserScan<SimpleLaserScan> {
  public:
@@ -60,7 +61,7 @@ TEST(LaserScan, InvalidValues) {
   };
   auto polar = laser_scan.points_in_polar_coordinates() | ranges::to<std::vector>;
   ASSERT_EQ(polar.size(), 1UL);
-  ASSERT_THAT(polar.front(), Vector2Near<double>({50., 0.3}, 0.001));
+  ASSERT_THAT(polar.front(), Vector2Near<double>({50., 0.3}, kTolerance));
 }
 
 TEST(LaserScan, TransformPolar) {
@@ -72,10 +73,10 @@ TEST(LaserScan, TransformPolar) {
   auto polar = laser_scan.points_in_polar_coordinates() | ranges::to<std::vector>;
   ASSERT_THAT(
       polar, ElementsAre(
-                 Vector2Near<double>({10., 0.}, 0.001),      //
-                 Vector2Near<double>({20., pi / 2}, 0.001),  //
-                 Vector2Near<double>({30., pi}, 0.001),      //
-                 Vector2Near<double>({40., -pi / 2}, 0.001)));
+                 Vector2Near<double>({10., 0.}, kTolerance),      //
+                 Vector2Near<double>({20., pi / 2}, kTolerance),  //
+                 Vector2Near<double>({30., pi}, kTolerance),      //
+                 Vector2Near<double>({40., -pi / 2}, kTolerance)));
 }
 
 TEST(LaserScan, TransformCartesian) {
@@ -87,10 +88,10 @@ TEST(LaserScan, TransformCartesian) {
   auto polar = laser_scan.points_in_cartesian_coordinates() | ranges::to<std::vector>;
   ASSERT_THAT(
       polar, ElementsAre(
-                 Vector2Near<double>({10., 0.}, 0.001),   //
-                 Vector2Near<double>({0., 20.}, 0.001),   //
-                 Vector2Near<double>({-30., 0.}, 0.001),  //
-                 Vector2Near<double>({0., -40.}, 0.001)));
+                 Vector2Near<double>({10., 0.}, kTolerance),   //
+                 Vector2Near<double>({0., 20.}, kTolerance),   //
+                 Vector2Near<double>({-30., 0.}, kTolerance),  //
+                 Vector2Near<double>({0., -40.}, kTolerance)));
 }
 
 }  // namespace
