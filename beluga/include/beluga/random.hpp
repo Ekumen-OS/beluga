@@ -21,6 +21,7 @@
  */
 
 #include <beluga/random/multivariate_normal_distribution.hpp>
+#include <beluga/random/uniform_grid_distribution.hpp>
 
 /**
  * \page RandomStateDistributionPage Beluga named requirements: RandomStateDistribution
