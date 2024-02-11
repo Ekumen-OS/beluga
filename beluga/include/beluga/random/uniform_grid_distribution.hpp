@@ -54,11 +54,11 @@ class UniformGridDistribution<Sophus::SE2d> {
    * based on the provided occupancy grid.
    *
    * \tparam URNG The type of the random number generator.
-   * \param engine The random number generator engine (default is a default generator).
+   * \param engine The random number generator engine.
    * \return A random Sophus::SE2d pose.
    */
-  template <class URNG = typename ranges::detail::default_random_engine>
-  [[nodiscard]] Sophus::SE2d operator()(URNG& engine = ranges::detail::get_random_engine()) {
+  template <class URNG>
+  [[nodiscard]] Sophus::SE2d operator()(URNG& engine) {
     return {Sophus::SO2d::sampleUniform(engine), free_states_[distribution_(engine)]};
   }
 

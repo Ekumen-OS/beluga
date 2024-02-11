@@ -18,6 +18,7 @@
 #include <functional>
 #include <optional>
 #include <random>
+#include <type_traits>
 
 #include <range/v3/functional/bind_back.hpp>
 #include <range/v3/utility/random.hpp>
@@ -126,7 +127,7 @@ struct random_intersperse_fn {
   /// Overload that implements the andom_intersperse algorithm.
   /**
    * \tparam Range A [forward range](https://en.cppreference.com/w/cpp/ranges/forward_range).
-   * \tparam Fn A callable type which takes no arguments and returns values to be inserted.
+   * \tparam Fn A callable type which takes no arguments or a distribution type that takes a URNG.
    * \tparam URNG A random number generator that satisfies the
    *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
    *  requirements.
@@ -141,7 +142,16 @@ struct random_intersperse_fn {
       Fn fn,
       double probability = kDefaultProbability,
       URNG& engine = ranges::detail::get_random_engine()) const {
-    return random_intersperse_view{ranges::views::all(std::forward<Range>(range)), std::move(fn), probability, engine};
+    auto gen = [&fn, &engine]() {
+      if constexpr (std::is_invocable_v<Fn>) {
+        return std::move(fn);
+      } else {
+        static_assert(std::is_invocable_v<Fn, decltype(engine)>);
+        return [fn = std::move(fn), &engine]() { return fn(engine); };
+      }
+    }();
+
+    return random_intersperse_view{ranges::views::all(std::forward<Range>(range)), std::move(gen), probability, engine};
   }
 
   /// Overload that unwraps the engine reference from a view closure.

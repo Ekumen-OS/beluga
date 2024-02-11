@@ -17,10 +17,10 @@
 #include <beluga/random/uniform_grid_distribution.hpp>
 #include <beluga/testing/sophus_matchers.hpp>
 #include <beluga/testing/sophus_printers.hpp>
+#include <beluga/views/sample.hpp>
 
 #include <beluga/test/static_occupancy_grid.hpp>
 
-#include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
 namespace {
@@ -33,7 +33,8 @@ TEST(UniformGridDistribution, SingleSlot) {
   const auto origin = Sophus::SE2d{Sophus::SO2d{}, Sophus::Vector2d{1.0, 2.0}};
   const auto grid = beluga::testing::StaticOccupancyGrid<1, 1>{{false}, kResolution, origin};
   auto distribution = beluga::UniformGridDistribution{grid};
-  auto pose = distribution();
+  auto engine = std::mt19937{std::random_device()()};
+  auto pose = distribution(engine);
   ASSERT_THAT(pose.translation(), Vector2Near({1.25, 2.25}, kTolerance));
 }
 
@@ -49,7 +50,8 @@ TEST(UniformGridDistribution, SingleFreeSlot) {
       kResolution,
   };
   auto distribution = beluga::UniformGridDistribution{grid};
-  auto pose = distribution();
+  auto engine = std::mt19937{std::random_device()()};
+  auto pose = distribution(engine);
   ASSERT_THAT(pose.translation(), Vector2Near({2.5, 2.5}, kTolerance));
 }
 
@@ -64,7 +66,8 @@ TEST(UniformGridDistribution, SomeFreeSlots) {
   };
   auto distribution = beluga::UniformGridDistribution{grid};
 
-  auto output = ranges::views::generate(distribution) | ranges::views::take_exactly(kSize);
+  auto engine = std::mt19937{std::random_device()()};
+  auto output = beluga::views::sample(distribution, engine) | ranges::views::take_exactly(kSize);
 
   struct bucket_hash {
     std::size_t operator()(const Sophus::Vector2d& s) const noexcept {
