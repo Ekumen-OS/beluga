@@ -142,8 +142,10 @@ struct random_intersperse_fn {
       Fn fn,
       double probability = kDefaultProbability,
       URNG& engine = ranges::detail::get_random_engine()) const {
+    // Support nullary function objects and distribution-like objects (that take a URNG).
     auto gen = [&fn, &engine]() {
       if constexpr (std::is_invocable_v<Fn>) {
+        (void)(engine);  // Not used.
         return std::move(fn);
       } else {
         static_assert(std::is_invocable_v<Fn, decltype(engine)>);
