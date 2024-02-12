@@ -141,7 +141,7 @@ auto particle_filter_test(
 
   auto probability_estimator = beluga::ThrunRecoveryProbabilityEstimator(params.alpha_slow, params.alpha_fast);
 
-  auto map_distribution = beluga::UniformGridDistribution{map};
+  auto map_distribution = ranges::compose(beluga::make_from_state<Particle>, beluga::UniformGridDistribution{map});
 
   // Iteratively run the filter through all the data points.
   for (auto [measurement, odom, ground_truth] : datapoints) {
@@ -174,9 +174,7 @@ auto particle_filter_test(
       }
 
       particles |= beluga::views::sample |
-                   beluga::views::random_intersperse(
-                       ranges::compose(beluga::make_from_state<Particle>, std::ref(map_distribution)),
-                       random_state_probability) |
+                   beluga::views::random_intersperse(std::ref(map_distribution), random_state_probability) |
                    beluga::views::take_while_kld(
                        hasher, params.min_particles, params.max_particles, params.kld_epsilon, params.kld_z) |
                    beluga::actions::assign;
