@@ -56,7 +56,7 @@ TEST(UniformFreeSpaceGridDistribution, SingleFreeSlot) {
 }
 
 TEST(UniformFreeSpaceGridDistribution, SomeFreeSlots) {
-  constexpr std::size_t kSize = 10'000;
+  constexpr std::size_t kSize = 100'000;
   constexpr double kResolution = 1.0;
   const auto grid = beluga::testing::StaticOccupancyGrid<3, 3>{
       {true, false, true,   //
