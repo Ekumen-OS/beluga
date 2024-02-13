@@ -22,6 +22,7 @@
 
 #include <beluga/actions.hpp>
 #include <beluga/algorithm.hpp>
+#include <beluga/circular_array.hpp>
 #include <beluga/mixin.hpp>
 #include <beluga/motion.hpp>
 #include <beluga/policies.hpp>

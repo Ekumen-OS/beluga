@@ -45,6 +45,7 @@ add_executable(
   sensor/test_bearing_sensor_model.cpp
   sensor/test_landmark_sensor_model.cpp
   sensor/test_likelihood_field_model.cpp
+  test_circular_array.cpp
   test_primitives.cpp
   test_spatial_hash.cpp
   test_tuple_vector.cpp
@@ -54,6 +55,7 @@ add_executable(
   type_traits/test_strongly_typed_numeric.cpp
   type_traits/test_tuple_traits.cpp
   utility/test_forward_like.cpp
+  utility/test_indexing_iterator.cpp
   views/test_random_intersperse.cpp
   views/test_sample.cpp
   views/test_take_evenly.cpp
