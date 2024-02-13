@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_RANDOM_UNIFORM_GRID_DISTRIBUTION_HPP
-#define BELUGA_RANDOM_UNIFORM_GRID_DISTRIBUTION_HPP
+#ifndef BELUGA_RANDOM_UNIFORM_FREE_SPACE_GRID_DISTRIBUTION_HPP
+#define BELUGA_RANDOM_UNIFORM_FREE_SPACE_GRID_DISTRIBUTION_HPP
 
 #include <random>
 
