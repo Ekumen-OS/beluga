@@ -29,11 +29,11 @@ namespace beluga {
  * \tparam T The result type for sampling from the distribution.
  */
 template <class T>
-class UniformGridDistribution;
+class UniformFreeSpaceGridDistribution;
 
 /// Specialization of uniform grid distribution for Sophus::SE2d.
 template <>
-class UniformGridDistribution<Sophus::SE2d> {
+class UniformFreeSpaceGridDistribution<Sophus::SE2d> {
  public:
   /// Constructs a uniform grid distribution based on the provided occupancy grid.
   /**
@@ -41,7 +41,7 @@ class UniformGridDistribution<Sophus::SE2d> {
    * \param grid The occupancy grid from which free states will be computed.
    */
   template <class Derived>
-  constexpr explicit UniformGridDistribution(const BaseOccupancyGrid2<Derived>& grid)
+  constexpr explicit UniformFreeSpaceGridDistribution(const BaseOccupancyGrid2<Derived>& grid)
       : free_states_{compute_free_states(static_cast<const Derived&>(grid))},
         distribution_{0, free_states_.size() - 1} {
     assert(free_states_.size() > 0);
@@ -74,7 +74,7 @@ class UniformGridDistribution<Sophus::SE2d> {
 
 /// Deduction guide for 2D occupancy grids.
 template <class Derived>
-UniformGridDistribution(const BaseOccupancyGrid2<Derived>&) -> UniformGridDistribution<Sophus::SE2d>;
+UniformFreeSpaceGridDistribution(const BaseOccupancyGrid2<Derived>&) -> UniformFreeSpaceGridDistribution<Sophus::SE2d>;
 
 }  // namespace beluga
 
