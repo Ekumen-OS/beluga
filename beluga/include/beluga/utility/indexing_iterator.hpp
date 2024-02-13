@@ -104,6 +104,11 @@ class IndexingIterator {
     return other;
   }
 
+  /// Forwards `iterator` a given `offset`, yielding a modified copy.
+  [[nodiscard]] friend IndexingIterator operator+(difference_type offset, const IndexingIterator& iterator) {
+    return iterator + offset;
+  }
+
   /// Rewinds iterator position a given `offset`, in-place.
   IndexingIterator& operator-=(difference_type offset) noexcept {
     using raw_difference_type = decltype(cursor_ - cursor_);
@@ -191,14 +196,6 @@ class IndexingIterator {
   Indexable* indexable_{nullptr};
   Index cursor_{};
 };
-
-/// Rewinds `iterator` a given `offset`, yielding a modified copy.
-template <class Indexable, class Index>
-[[nodiscard]] IndexingIterator<Indexable, Index> operator+(
-    typename IndexingIterator<Indexable, Index>::difference_type offset,
-    const IndexingIterator<Indexable, Index>& iterator) {
-  return iterator + offset;
-}
 
 }  // namespace beluga
 

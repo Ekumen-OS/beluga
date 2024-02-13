@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_TUPLE_VECTOR_HPP
-#define BELUGA_TUPLE_VECTOR_HPP
+#ifndef BELUGA_CONTAINERS_TUPLE_VECTOR_HPP
+#define BELUGA_CONTAINERS_TUPLE_VECTOR_HPP
 
 #include <tuple>
 #include <vector>

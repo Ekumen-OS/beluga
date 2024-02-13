@@ -90,6 +90,9 @@ class CircularArray {
   /// Constant value pointer type of the arra.y
   using const_pointer = const value_type*;
 
+  /// Allocator type of the array (required in range-v3 10.0).
+  using allocator_type = void;
+
   /// Iterator type of the array.
   using iterator = IndexingIterator<CircularArray<T, N, F>>;
   /// Constant iterator type of the array.
@@ -112,14 +115,15 @@ class CircularArray {
    * feature is enabled. That is, both range and array layouts match.
    *
    * \param first Iterator to the beginning of a range.
-   * \param last Iterator to the end of a range.
+   * \param last Sentinel for the end of a range.
    * \throws std::length_error If the range does not fit in the array
    * (and the rollover on write feature is not enabled).
    */
   template <
       typename Iterator,
+      typename Sentinel,
       typename = std::enable_if_t<std::is_same_v<T, typename std::iterator_traits<Iterator>::value_type>>>
-  CircularArray(Iterator first, Iterator last) {
+  CircularArray(Iterator first, Sentinel last) {
     if constexpr (F & CircularArrayFeatureFlags::kLayoutReversal) {
       tail_index_ = N - 1;
       for (size_ = 0; size_ < N && first != last; ++size_, ++first) {

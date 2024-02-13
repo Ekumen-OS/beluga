@@ -17,12 +17,12 @@
 
 #include <gmock/gmock.h>
 
+#include <beluga/containers/circular_array.hpp>
+#include <beluga/type_traits/tuple_traits.hpp>
+
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/transform.hpp>
-
-#include <beluga/circular_array.hpp>
-#include <beluga/type_traits/tuple_traits.hpp>
 
 namespace {
 
@@ -51,6 +51,19 @@ TEST(CircularArrayTest, Full) {
   EXPECT_EQ(array.max_size(), 2);
   EXPECT_FALSE(array.empty());
   EXPECT_TRUE(array.full());
+}
+
+TEST(CircularArrayTest, FromRange) {
+  auto input = std::array{1, 2, 3};
+  auto array = beluga::CircularArray<int, 5>{input.begin(), input.end()};
+  EXPECT_THAT(array, ::testing::ElementsAre(1, 2, 3));
+}
+
+TEST(CircularArrayTest, FromRangeUsingReverseLayout) {
+  auto input = std::array{1, 2, 3};
+  constexpr auto kFlags = beluga::CircularArrayFeatureFlags::kLayoutReversal;
+  auto array = beluga::CircularArray<int, 5, kFlags>{input.begin(), input.end()};
+  EXPECT_THAT(array, ::testing::ElementsAre(1, 2, 3));
 }
 
 TEST(CircularArrayTest, Read) {
