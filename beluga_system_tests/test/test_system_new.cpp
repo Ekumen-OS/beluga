@@ -109,9 +109,10 @@ auto get_particle_filter_params() {
 }
 
 /// Overload of particle_filter_test with a standard AMCL implementation.
-template <class MotionModel, class SensorModel, class Distribution, class Range>
+template <class Map, class MotionModel, class SensorModel, class Distribution, class Range>
 auto particle_filter_test(
     const StandardAMCLParams& params,
+    Map&& map,
     MotionModel&& motion,
     SensorModel&& sensor,
     Distribution&& initial_distribution,
@@ -139,6 +140,9 @@ auto particle_filter_test(
   }
 
   auto probability_estimator = beluga::ThrunRecoveryProbabilityEstimator(params.alpha_slow, params.alpha_fast);
+
+  auto map_distribution =
+      ranges::compose(beluga::make_from_state<Particle>, beluga::UniformFreeSpaceGridDistribution{map});
 
   // Iteratively run the filter through all the data points.
   for (auto [measurement, odom, ground_truth] : datapoints) {
@@ -170,13 +174,8 @@ auto particle_filter_test(
         probability_estimator.reset();
       }
 
-      auto make_random_particle = [&sensor] {
-        static thread_local auto engine = std::mt19937{std::random_device()()};
-        return beluga::make_from_state<Particle>(sensor.make_random_state(engine));
-      };
-
       particles |= beluga::views::sample |
-                   beluga::views::random_intersperse(make_random_particle, random_state_probability) |
+                   beluga::views::random_intersperse(std::ref(map_distribution), random_state_probability) |
                    beluga::views::take_while_kld(
                        hasher, params.min_particles, params.max_particles, params.kld_epsilon, params.kld_z) |
                    beluga::actions::assign;
@@ -219,23 +218,23 @@ using SensorModel = std::variant<
     beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>,
     beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>;
 
-using SensorModelBuilder = std::function<SensorModel(std::shared_ptr<nav_msgs::msg::OccupancyGrid>)>;
+using SensorModelBuilder = std::function<SensorModel(const beluga_ros::OccupancyGrid&)>;
 
 auto get_sensor_model_builders() {
   return std::vector<SensorModelBuilder>{
-      [](auto map) -> SensorModel {
+      [](const auto& map) -> SensorModel {
         auto sensor_params = beluga::LikelihoodFieldModelParam{};
         sensor_params.max_obstacle_distance = 2.0;
         sensor_params.max_laser_distance = 100.0;
         sensor_params.z_hit = 0.5;
         sensor_params.z_random = 0.5;
         sensor_params.sigma_hit = 0.2;
-        return beluga::LikelihoodFieldModel{sensor_params, beluga_ros::OccupancyGrid{std::move(map)}};
+        return beluga::LikelihoodFieldModel{sensor_params, map};
       },
-      [](auto map) -> SensorModel {
+      [](const auto& map) -> SensorModel {
         auto sensor_params = beluga::BeamModelParam{};
         sensor_params.beam_max_range = 100.0;
-        return beluga::BeamSensorModel{sensor_params, beluga_ros::OccupancyGrid{std::move(map)}};
+        return beluga::BeamSensorModel{sensor_params, map};
       }};
 }
 
@@ -288,7 +287,7 @@ auto get_perfect_odometry_data() {
       Eigen::Matrix3d{{0.125, 0.0, 0.0}, {0.0, 0.125, 0.0}, {0.0, 0.0, 0.04}}  // initial pose covariance
   };
 
-  return std::make_tuple(map, datapoints, initial_distribution);
+  return std::make_tuple(beluga_ros::OccupancyGrid{std::move(map)}, datapoints, initial_distribution);
 }
 
 TEST_P(ParticleFilterTest, PerfectOdometryEstimatedPath) {
@@ -296,10 +295,11 @@ TEST_P(ParticleFilterTest, PerfectOdometryEstimatedPath) {
   auto [particle_filter_params, motion_model, sensor_model_builder] = GetParam();
   auto sensor_model = sensor_model_builder(map);
   std::visit(
-      [distribution = std::move(distribution), datapoints = std::move(datapoints)]  //
+      [map = std::move(map), distribution = std::move(distribution), datapoints = std::move(datapoints)]  //
       (auto particle_filter_params, auto motion_model, auto sensor_model) mutable {
         particle_filter_test(
             particle_filter_params,   //
+            std::move(map),           //
             std::move(motion_model),  //
             std::move(sensor_model),  //
             std::move(distribution),  //

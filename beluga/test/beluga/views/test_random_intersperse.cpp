@@ -96,7 +96,7 @@ TEST(RandomIntersperseView, GuaranteedIntersperseDoubleDereference) {
   ASSERT_EQ(*it, 1);
 }
 
-TEST(RandomIntersperseView, GuaranteedIntersperseTakeFive) {
+TEST(RandomIntersperseView, GuaranteedIntersperseWithNullaryFunction) {
   const double probability = 1.0;
   auto input = std::array{10, 20, 30};
   auto output = input |                                                               //
@@ -105,6 +105,17 @@ TEST(RandomIntersperseView, GuaranteedIntersperseTakeFive) {
                 ranges::to<std::vector>;
   ASSERT_EQ(ranges::size(output), 5);
   ASSERT_THAT(output, testing::ElementsAre(10, 4, 4, 4, 4));
+}
+
+TEST(RandomIntersperseView, GuaranteedIntersperseWithUnaryFunction) {
+  const double probability = 1.0;
+  auto input = std::array{10, 20, 30};
+  auto output = input |                                                                     //
+                beluga::views::random_intersperse([](auto&) { return 42; }, probability) |  //
+                ranges::views::take(2) |                                                    //
+                ranges::to<std::vector>;
+  ASSERT_EQ(ranges::size(output), 2);
+  ASSERT_THAT(output, testing::ElementsAre(10, 42));
 }
 
 TEST(RandomIntersperseView, ZeroProbabilityIntersperseTakeFive) {
