@@ -220,7 +220,7 @@ template&lt;class Range , class Fn , class URNG  = typename ranges::detail::defa
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/forward_range">forward range</a>. </td></tr>
-    <tr><td class="paramname">Fn</td><td>A callable type which takes no arguments and returns values to be inserted. </td></tr>
+    <tr><td class="paramname">Fn</td><td>A callable type which takes no arguments or a distribution type that takes a URNG. </td></tr>
     <tr><td class="paramname">URNG</td><td>A random number generator that satisfies the <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a> requirements. </td></tr>
   </table>
   </dd>
