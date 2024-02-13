@@ -518,7 +518,7 @@ constexpr const T&& get(const CircularArray<T, N, F>&& array) noexcept {
 template <typename T, std::size_t N, CircularArrayFeatureFlags F, CircularArrayFeatureFlags G>
 constexpr void swap(CircularArray<T, N, F>& a, CircularArray<T, N, G>& b) {
   a.swap(b);
-};
+}
 
 }  // namespace beluga
 
@@ -531,7 +531,7 @@ struct tuple_size<beluga::CircularArray<T, N, F>> : std::integral_constant<std::
 /// `std::tuple_element` specialization for circular arrays.
 template <std::size_t I, typename T, std::size_t N, beluga::CircularArrayFeatureFlags F>
 struct tuple_element<I, beluga::CircularArray<T, N, F>> {
-  using type = T;
+  using type = T;  ///<! Always T since circular arrays are homogeneous.
 };
 
 }  // namespace std
