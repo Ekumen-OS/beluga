@@ -72,32 +72,28 @@ TYPED_TEST_SUITE(LandmarkSensorModelTests, LandmarkSensorModelTestsTypes);
 
 TYPED_TEST(LandmarkSensorModelTests, BullsEyeDetection) {
   // test case where the landmark is exactly where we expected it
-  auto uut = std::make_unique<TypeParam>(
-      get_default_model_params(), LandmarkMap(default_map_boundaries, {{{3.0, -2.0, 0.0}, 0}}));
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, 2.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({1.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  auto map = LandmarkMap{default_map_boundaries, {{{3.0, -2.0, 0.0}, 0}}};
+  const auto sensor_model = TypeParam{get_default_model_params(), std::move(map)};
+  const auto state_weighting_function = sensor_model({{{1.0, 2.0, 0.0}, 0}});
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
+  EXPECT_NEAR(expected_aggregate_probability({1.0}), state_weighting_function(pose), 1e-02);
 }
 
 TYPED_TEST(LandmarkSensorModelTests, MapUpdate) {
   // test calls to the update_map function
   auto map_1 = LandmarkMap(default_map_boundaries, {});
   auto map_2 = LandmarkMap(default_map_boundaries, {{{3.0, -2.0, 0.0}, 0}});
-  auto uut = std::make_unique<TypeParam>(get_default_model_params(), std::move(map_1));
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, 2.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
-  ASSERT_NO_THROW(uut->update_map(std::move(map_2)));
-  EXPECT_NEAR(
-      expected_aggregate_probability({1.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  auto sensor_model = TypeParam{get_default_model_params(), std::move(map_1)};
+  const auto state_weighting_function = sensor_model({{{1.0, 2.0, 0.0}, 0}});
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
+  EXPECT_NEAR(expected_aggregate_probability({0.0}), state_weighting_function(pose), 1e-02);
+  ASSERT_NO_THROW(sensor_model.update_map(std::move(map_2)));
+  EXPECT_NEAR(expected_aggregate_probability({1.0}), state_weighting_function(pose), 1e-02);
 }
 
 TYPED_TEST(LandmarkSensorModelTests, MultipleBullsEyeDetections) {
   // Test multiple detections of with different ids, all perfectly matching
-  auto uut = std::make_unique<TypeParam>(
+  const auto sensor_model = TypeParam{
       get_default_model_params(),  //
       LandmarkMap(                 //
           default_map_boundaries,  //
@@ -106,70 +102,70 @@ TYPED_TEST(LandmarkSensorModelTests, MultipleBullsEyeDetections) {
               {{1.0, -0.0, 0.0}, 1},  // landmark 1
               {{2.0, -1.0, 0.0}, 2},  // landmark 2
               {{0.0, -1.0, 0.0}, 3},  // landmark 3
-          }));
+          })};
 
-  ASSERT_NO_THROW(uut->update_sensor({
+  const auto state_weighting_function = sensor_model({
       {{+1.0, +0.0, 0.0}, 0},  // landmark 0 detection
       {{-1.0, +0.0, 0.0}, 1},  // landmark 1 detection
       {{+0.0, +1.0, 0.0}, 2},  // landmark 2 detection
       {{+0.0, -1.0, 0.0}, 3},  // landmark 3 detection
-  }));
+  });
 
-  EXPECT_NEAR(
-      expected_aggregate_probability({1.0, 1.0, 1.0, 1.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
+  EXPECT_NEAR(expected_aggregate_probability({1.0, 1.0, 1.0, 1.0}), state_weighting_function(pose), 1e-02);
 }
 
 TYPED_TEST(LandmarkSensorModelTests, OneStdInRange) {
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
   // test case where the landmark is 1 std offset from the expected range
-  auto uut = std::make_unique<TypeParam>(
-      get_default_model_params(), LandmarkMap(default_map_boundaries, {{{1.0, -11.0, 0.0}, 0}}));
+  auto map = LandmarkMap(default_map_boundaries, {{{1.0, -11.0, 0.0}, 0}});
+  const auto sensor_model = TypeParam{get_default_model_params(), std::move(map)};
   // baseline
-  ASSERT_NO_THROW(uut->update_sensor({{{10.0, 0.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({1.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{10.0, 0.0, 0.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({1.0}), state_weighting_function(pose), 1e-02);
+  }
   // 1 std default
-  ASSERT_NO_THROW(uut->update_sensor({{{9.0, 0.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.6}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{9.0, 0.0, 0.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({0.6}), state_weighting_function(pose), 1e-02);
+  }
   // 1 std excess
-  ASSERT_NO_THROW(uut->update_sensor({{{11.0, 0.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.6}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{11.0, 0.0, 0.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({0.6}), state_weighting_function(pose), 1e-02);
+  }
 }
 
 TYPED_TEST(LandmarkSensorModelTests, OneStdInBearing) {
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
   // test case where the landmark is 1 std offset from the expected bearing
-  auto uut = std::make_unique<TypeParam>(
-      get_default_model_params(), LandmarkMap(default_map_boundaries, {{{1.0, -11.0, 0.0}, 0}}));
+  auto map = LandmarkMap(default_map_boundaries, {{{1.0, -11.0, 0.0}, 0}});
+  auto sensor_model = TypeParam{get_default_model_params(), std::move(map)};
   // baseline
-  ASSERT_NO_THROW(uut->update_sensor({{{10.0, 0.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({1.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{10.0, 0.0, 0.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({1.0}), state_weighting_function(pose), 1e-02);
+  }
   // 1 std default
-  ASSERT_NO_THROW(uut->update_sensor({{{0.0, 10.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.6}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{0.0, 10.0, 0.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({0.6}), state_weighting_function(pose), 1e-02);
+  }
   // 1 std excess
-  ASSERT_NO_THROW(uut->update_sensor({{{0.0, -10.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.6}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{0.0, -10.0, 0.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({0.6}), state_weighting_function(pose), 1e-02);
+  }
 }
 
 TYPED_TEST(LandmarkSensorModelTests, NoSuchLandmark) {
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
   // test case where there is not landmark in the map of the detected id
-  auto uut = std::make_unique<TypeParam>(
-      get_default_model_params(), LandmarkMap(default_map_boundaries, {{{0.0, 1.0, 0.0}, 99}}));
-  ASSERT_NO_THROW(uut->update_sensor({{{0.0, 2.0, 0.0}, 88}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  auto map = LandmarkMap(default_map_boundaries, {{{0.0, 1.0, 0.0}, 99}});
+  auto sensor_model = TypeParam{get_default_model_params(), std::move(map)};
+  auto state_weighting_function = sensor_model({{{0.0, 2.0, 0.0}, 88}});
+  EXPECT_NEAR(expected_aggregate_probability({0.0}), state_weighting_function(pose), 1e-02);
 }
 
 }  // namespace

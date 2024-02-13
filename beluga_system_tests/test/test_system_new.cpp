@@ -113,8 +113,8 @@ template <class Map, class MotionModel, class SensorModel, class Distribution, c
 auto particle_filter_test(
     const StandardAMCLParams& params,
     Map&& map,
-    MotionModel&& motion,
-    SensorModel&& sensor,
+    MotionModel&& motion_model,
+    SensorModel&& sensor_model,
     Distribution&& initial_distribution,
     Range&& datapoints) {
   // Tolerance values ​​prove that the filter performs approximately well, they do not prove accuracy.
@@ -151,14 +151,8 @@ auto particle_filter_test(
       continue;
     }
 
-    // TODO(nahuel): Update this once the new model features are ready.
-    /**
-     * particles |= beluga::actions::reweight(std::execution::par, sensor_model(measurement));
-     */
-    sensor.update_sensor(std::move(measurement));
-    particles |= beluga::actions::propagate(std::execution::par, motion(control_action_window << odom)) |
-                 beluga::actions::reweight(
-                     std::execution::par, [&sensor](const auto& state) { return sensor.importance_weight(state); }) |
+    particles |= beluga::actions::propagate(std::execution::par, motion_model(control_action_window << odom)) |
+                 beluga::actions::reweight(std::execution::par, sensor_model(std::move(measurement))) |
                  beluga::actions::normalize(std::execution::par_unseq);
 
     const double random_state_probability = probability_estimator(particles);

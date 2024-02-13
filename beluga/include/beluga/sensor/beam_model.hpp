@@ -58,8 +58,7 @@ struct BeamModelParam {
 
 /// Beam sensor model for range finders.
 /**
- * This class implements the LaserSensorModelInterface2d interface
- * and satisfies \ref SensorModelPage.
+ * This class satisfies \ref SensorModelPage.
  *
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.2.
  *
@@ -84,80 +83,74 @@ class BeamSensorModel {
   /**
    * \param params Parameters to configure this instance.
    *  See beluga::BeamModelParams for details.
-   * \param grid Occupancy grid representing the static map.
+   * \param grid Occupancy grid representing the static map that the sensor model
+   *  uses to raytrace lidar beams and compute importance weights for particle states.
    */
-  explicit BeamSensorModel(const param_type& params, OccupancyGrid grid)
-      : params_{params}, grid_{std::move(grid)}, free_states_{compute_free_states(grid_)} {}
+  explicit BeamSensorModel(const param_type& params, OccupancyGrid grid) : params_{params}, grid_{std::move(grid)} {}
 
-  /// Gets the importance weight for a particle with the provided state.
+  /// Returns a state weighting function conditioned on 2D lidar hits.
   /**
-   * \param state State of the particle to calculate its importance weight.
-   * \return Calculated importance weight.
+   * \param points 2D lidar hit points in the reference frame of particle states.
+   * \return a state weighting function satisfying \ref StateWeightingFunctionPage
+   *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
-  [[nodiscard]] weight_type importance_weight(const state_type& state) const {
-    const auto beam = Ray2d{grid_, state, params_.beam_max_range};
-    const double n = 1. / (std::sqrt(2. * M_PI) * params_.sigma_hit);
-    return std::transform_reduce(
-        points_.cbegin(), points_.cend(), 0.0, std::plus{}, [this, &beam, n](const auto& point) {
-          // TODO(Ramiro): We're converting from range + bearing to cartesian points in the ROS node, but we want range
-          // + bearing here. We might want to make that conversion in the likelihood model instead, and let the
-          // measurement type be range, bearing instead of x, y.
+  [[nodiscard]] auto operator()(measurement_type&& points) const {
+    return [this, points = std::move(points)](const state_type& state) -> weight_type {
+      const auto beam = Ray2d{grid_, state, params_.beam_max_range};
+      const double n = 1. / (std::sqrt(2. * M_PI) * params_.sigma_hit);
+      return std::transform_reduce(
+          points.cbegin(), points.cend(), 0.0, std::plus{}, [this, &beam, n](const auto& point) {
+            // TODO(Ramiro): We're converting from range + bearing to cartesian points in the ROS node, but we want
+            // range
+            // + bearing here. We might want to make that conversion in the likelihood model instead, and let the
+            // measurement type be range, bearing instead of x, y.
 
-          // Compute the range according to the measurement.
-          const double z = std::sqrt(point.first * point.first + point.second * point.second);
+            // Compute the range according to the measurement.
+            const double z = std::sqrt(point.first * point.first + point.second * point.second);
 
-          // dirty hack to prevent SO2d from calculating the hypot again to normalize the vector.
-          auto beam_bearing = Sophus::SO2d{};
-          beam_bearing.data()[0] = point.first / z;
-          beam_bearing.data()[1] = point.second / z;
+            // dirty hack to prevent SO2d from calculating the hypot again to normalize the vector.
+            auto beam_bearing = Sophus::SO2d{};
+            beam_bearing.data()[0] = point.first / z;
+            beam_bearing.data()[1] = point.second / z;
 
-          // Compute range according to the map (raycasting).
-          const double z_mean = beam.cast(beam_bearing).value_or(params_.beam_max_range);
-          // 1: Correct range with local measurement noise.
-          const double eta_hit =
-              2. / (std::erf((params_.beam_max_range - z_mean) / (std::sqrt(2.) * params_.sigma_hit)) -
-                    std::erf(-z_mean / (std::sqrt(2.) * params_.sigma_hit)));
-          const double d = (z - z_mean) / params_.sigma_hit;
-          double pz = params_.z_hit * eta_hit * n * std::exp(-(d * d) / 2.);
+            // Compute range according to the map (raycasting).
+            const double z_mean = beam.cast(beam_bearing).value_or(params_.beam_max_range);
+            // 1: Correct range with local measurement noise.
+            const double eta_hit =
+                2. / (std::erf((params_.beam_max_range - z_mean) / (std::sqrt(2.) * params_.sigma_hit)) -
+                      std::erf(-z_mean / (std::sqrt(2.) * params_.sigma_hit)));
+            const double d = (z - z_mean) / params_.sigma_hit;
+            double pz = params_.z_hit * eta_hit * n * std::exp(-(d * d) / 2.);
 
-          // 2: Unexpected objects.
-          if (z < z_mean) {
-            const double eta_short = 1. / (1. - std::exp(-params_.lambda_short * z_mean));
-            pz += params_.z_short * params_.lambda_short * eta_short * std::exp(-params_.lambda_short * z);
-          }
+            // 2: Unexpected objects.
+            if (z < z_mean) {
+              const double eta_short = 1. / (1. - std::exp(-params_.lambda_short * z_mean));
+              pz += params_.z_short * params_.lambda_short * eta_short * std::exp(-params_.lambda_short * z);
+            }
 
-          // 3 and 4: Max range return or random return.
-          if (z < params_.beam_max_range) {
-            pz += params_.z_rand / params_.beam_max_range;
-          } else {
-            pz += params_.z_max;
-          }
+            // 3 and 4: Max range return or random return.
+            if (z < params_.beam_max_range) {
+              pz += params_.z_rand / params_.beam_max_range;
+            } else {
+              pz += params_.z_max;
+            }
 
-          // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
-          // See https://github.com/Ekumen-OS/beluga/issues/153
-          return pz * pz * pz;
-        });
+            // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
+            // See https://github.com/Ekumen-OS/beluga/issues/153
+            return pz * pz * pz;
+          });
+    };
   }
 
-  /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
-  void update_sensor(measurement_type&& points) { points_ = std::move(points); }
-
-  /// \copydoc LaserSensorModelInterface2d::update_map(Map&& map)
-  void update_map(map_type&& map) {
-    grid_ = std::move(map);
-    free_states_ = compute_free_states(grid_);
-  }
+  /// Update the sensor model with a new occupancy grid map.
+  /**
+   * \param map New occupancy grid representing the static map.
+   */
+  void update_map(map_type&& map) { grid_ = std::move(map); }
 
  private:
   param_type params_;
   OccupancyGrid grid_;
-  std::vector<Eigen::Vector2d> free_states_;
-  std::vector<std::pair<double, double>> points_;
-
-  static std::vector<Eigen::Vector2d> compute_free_states(const OccupancyGrid& grid) {
-    constexpr auto kFrame = OccupancyGrid::Frame::kGlobal;
-    return grid.coordinates_for(grid.free_cells(), kFrame) | ranges::to<std::vector>;
-  }
 };
 
 }  // namespace beluga

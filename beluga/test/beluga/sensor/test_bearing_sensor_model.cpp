@@ -75,38 +75,34 @@ using BearingSensorModelTestsTypes = ::testing::Types<Sensor2D, Sensor3D>;
 TYPED_TEST_SUITE(BearingSensorModelTests, BearingSensorModelTestsTypes);
 
 TYPED_TEST(BearingSensorModelTests, SmokeTest) {
-  auto uut = std::make_unique<TypeParam>(
-      get_default_model_params(), LandmarkMap(default_map_boundaries, {{{1.0, -1.0, 1.0}, 0}}));
+  auto sensor_model =
+      TypeParam{get_default_model_params(), LandmarkMap(default_map_boundaries, {{{1.0, -1.0, 1.0}, 0}})};
 }
 
 TYPED_TEST(BearingSensorModelTests, BullsEyeDetection) {
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
   // test case where the landmark is exactly where we expected it
-  auto uut = std::make_unique<TypeParam>(
-      get_default_model_params(), LandmarkMap(default_map_boundaries, {{{1.0, -2.0, 1.0}, 0}}));
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, 0.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({1.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  auto map = LandmarkMap(default_map_boundaries, {{{1.0, -2.0, 1.0}, 0}});
+  auto sensor_model = TypeParam{get_default_model_params(), std::move(map)};
+  auto state_weighting_function = sensor_model({{{1.0, 0.0, 0.0}, 0}});
+  EXPECT_NEAR(expected_aggregate_probability({1.0}), state_weighting_function(pose), 1e-02);
 }
 
 TYPED_TEST(BearingSensorModelTests, MapUpdate) {
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
   // test calls to the update_map function
   auto map_1 = LandmarkMap(default_map_boundaries, {});
   auto map_2 = LandmarkMap(default_map_boundaries, {{{1.0, -2.0, 1.0}, 0}});
-  auto uut = std::make_unique<TypeParam>(get_default_model_params(), std::move(map_1));
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, 0.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
-  ASSERT_NO_THROW(uut->update_map(std::move(map_2)));
-  EXPECT_NEAR(
-      expected_aggregate_probability({1.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  auto sensor_model = TypeParam{get_default_model_params(), std::move(map_1)};
+  auto state_weighting_function = sensor_model({{{1.0, 0.0, 0.0}, 0}});
+  EXPECT_NEAR(expected_aggregate_probability({0.0}), state_weighting_function(pose), 1e-02);
+  ASSERT_NO_THROW(sensor_model.update_map(std::move(map_2)));
+  EXPECT_NEAR(expected_aggregate_probability({1.0}), state_weighting_function(pose), 1e-02);
 }
 
 TYPED_TEST(BearingSensorModelTests, MultipleBullsEyeDetections) {
   // Test multiple detections of with different ids, all perfectly matching
-  auto uut = std::make_unique<TypeParam>(
+  const auto sensor_model = TypeParam{
       get_default_model_params(),  //
       LandmarkMap(                 //
           default_map_boundaries,  //
@@ -114,58 +110,57 @@ TYPED_TEST(BearingSensorModelTests, MultipleBullsEyeDetections) {
               {{1.0, -2.0, 0.0}, 0},  // landmark 0
               {{1.0, -2.0, 1.0}, 1},  // landmark 1
               {{1.0, -2.0, 2.0}, 2},  // landmark 2
-          }));
+          })};
 
-  ASSERT_NO_THROW(uut->update_sensor({
+  const auto state_weighting_function = sensor_model({
       {{+1.0, +0.0, -1.0}, 0},  // landmark 0 detection
       {{+1.0, +0.0, +0.0}, 1},  // landmark 1 detection
       {{+1.0, +0.0, +1.0}, 2},  // landmark 2 detection
-  }));
+  });
 
-  EXPECT_NEAR(
-      expected_aggregate_probability({1.0, 1.0, 1.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
+  EXPECT_NEAR(expected_aggregate_probability({1.0, 1.0, 1.0}), state_weighting_function(pose), 1e-02);
 }
 
 TYPED_TEST(BearingSensorModelTests, OneStdInBearing) {
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
   // test case where the landmark is 1 std offset from the expected bearing
-  auto uut = std::make_unique<TypeParam>(
-      get_default_model_params(), LandmarkMap(default_map_boundaries, {{{1.0, -2.0, 1.0}, 0}}));
+  auto map = LandmarkMap(default_map_boundaries, {{{1.0, -2.0, 1.0}, 0}});
+  auto sensor_model = TypeParam{get_default_model_params(), std::move(map)};
   // baseline
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, 0.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({1.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{1.0, 0.0, 0.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({1.0}), state_weighting_function(pose), 1e-02);
+  }
   // 1 std left
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, 1.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.6}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{1.0, 1.0, 0.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({0.6}), state_weighting_function(pose), 1e-02);
+  }
   // 1 std right
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, -1.0, 0.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.6}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{1.0, -1.0, 0.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({0.6}), state_weighting_function(pose), 1e-02);
+  }
   // 1 std up
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, 0.0, 1.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.6}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{1.0, 0.0, 1.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({0.6}), state_weighting_function(pose), 1e-02);
+  }
   // 1 std down
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, 0.0, -1.0}, 0}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.6}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  {
+    auto state_weighting_function = sensor_model({{{1.0, 0.0, -1.0}, 0}});
+    EXPECT_NEAR(expected_aggregate_probability({0.6}), state_weighting_function(pose), 1e-02);
+  }
 }
 
 TYPED_TEST(BearingSensorModelTests, NoSuchLandmark) {
   // perfect bearing measurement
-  auto uut = std::make_unique<TypeParam>(
-      get_default_model_params(), LandmarkMap(default_map_boundaries, {{{1.0, -1.0, 1.0}, 0}}));
-  ASSERT_NO_THROW(uut->update_sensor({{{1.0, 0.0, 0.0}, 99}}));
-  EXPECT_NEAR(
-      expected_aggregate_probability({0.0}),
-      uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
+  auto map = LandmarkMap(default_map_boundaries, {{{1.0, -1.0, 1.0}, 0}});
+  const auto sensor_model = TypeParam{get_default_model_params(), std::move(map)};
+  const auto state_weighting_function = sensor_model({{{1.0, 0.0, 0.0}, 99}});
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
+  EXPECT_NEAR(expected_aggregate_probability({0.0}), state_weighting_function(pose), 1e-02);
 }
 
 }  // namespace beluga

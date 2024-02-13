@@ -46,8 +46,7 @@ struct BearingModelParam {
 
 /// Generic bearing sensor model, for both 2D and 3D state types.
 /**
- * This class implements the BearingSensorModelInterface interface
- * and satisfies \ref SensorModelPage.
+ * This class satisfies \ref SensorModelPage.
  * \tparam LandmarkMap class managing the list of known landmarks.
  * \tparam StateType type of the state of the particle.
  */
@@ -68,102 +67,91 @@ class BearingSensorModel {
   /// Constructs a BearingSensorModel instance.
   /**
    * \param params Parameters to configure this instance. See beluga::BearingModelParam for details.
-   * \param landmark_map Map of landmarks to be used by this sensor model.
-   * by others.
+   * \param landmark_map Map of landmarks to be used by the sensor model to compute importance weights
+   *  for particle states.
    */
   template <class... Args>
   explicit BearingSensorModel(param_type params, LandmarkMap landmark_map)
       : params_{std::move(params)}, landmark_map_{std::move(landmark_map)} {}
 
-  /// Gets the importance weight for a particle with the provided state.
+  /// Returns a state weighting function conditioned on landmark bearing detections.
   /**
-   * \param state State of the particle to calculate its importance weight.
-   * \return Calculated importance weight.
+   * \param detections Landmark bearing detections in the reference frame of particle states.
+   * \return a state weighting function satisfying \ref StateWeightingFunctionPage
+   *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
-  [[nodiscard]] weight_type importance_weight(const state_type& state) const {
-    Sophus::SE3d robot_pose_in_world;
+  [[nodiscard]] auto operator()(measurement_type&& detections) const {
+    return [this, detections = std::move(detections)](const state_type& state) -> weight_type {
+      Sophus::SE3d robot_pose_in_world;
 
-    if constexpr (std::is_same_v<state_type, Sophus::SE3d>) {
-      // The robot pose state is already given in 3D,
-      robot_pose_in_world = state;
-    } else {
-      // The robot pose state is given in 2D. Notice that in this case
-      // the 2D pose of the robot is assumed to be that of the robot footprint (projection of the robot
-      // on the z=0 plane of the 3D world frame). This is so that we can tie the sensor reference frame
-      // to the world frame where the landmarks are given without additional structural information.
-      robot_pose_in_world = Sophus::SE3d{
-          Sophus::SO3d::rotZ(state.so2().log()),
-          Eigen::Vector3d{state.translation().x(), state.translation().y(), 0.0}};
-    }
-
-    // precalculate the sensor pose in the world frame
-    const auto sensor_pose_in_world = robot_pose_in_world * params_.sensor_pose_in_robot;
-
-    const auto detection_weight = [this, &sensor_pose_in_world](const auto& detection) {
-      // find the landmark the most closely matches the sample bearing vector
-      const auto opt_landmark_bearing_in_sensor = landmark_map_.find_closest_bearing_landmark(
-          detection.detection_bearing_in_sensor, detection.category, sensor_pose_in_world);
-
-      // if we did not find a matching landmark, return 0.0
-      if (!opt_landmark_bearing_in_sensor) {
-        return 0.0;
+      if constexpr (std::is_same_v<state_type, Sophus::SE3d>) {
+        // The robot pose state is already given in 3D,
+        robot_pose_in_world = state;
+      } else {
+        // The robot pose state is given in 2D. Notice that in this case
+        // the 2D pose of the robot is assumed to be that of the robot footprint (projection of the robot
+        // on the z=0 plane of the 3D world frame). This is so that we can tie the sensor reference frame
+        // to the world frame where the landmarks are given without additional structural information.
+        robot_pose_in_world = Sophus::SE3d{
+            Sophus::SO3d::rotZ(state.so2().log()),
+            Eigen::Vector3d{state.translation().x(), state.translation().y(), 0.0}};
       }
 
-      // recover sample bearing vector
-      const auto detection_bearing_in_sensor = detection.detection_bearing_in_sensor.normalized();
+      // precalculate the sensor pose in the world frame
+      const auto sensor_pose_in_world = robot_pose_in_world * params_.sensor_pose_in_robot;
 
-      // recover landmark bearing vector
-      const auto& landmark_bearing_in_sensor = *opt_landmark_bearing_in_sensor;
+      const auto detection_weight = [this, &sensor_pose_in_world](const auto& detection) {
+        // find the landmark the most closely matches the sample bearing vector
+        const auto opt_landmark_bearing_in_sensor = landmark_map_.find_closest_bearing_landmark(
+            detection.detection_bearing_in_sensor, detection.category, sensor_pose_in_world);
 
-      // calculate the aperture angle between the detection and the landmark
-      const auto cos_aperture = detection_bearing_in_sensor.dot(landmark_bearing_in_sensor);
-      const auto sin_aperture = detection_bearing_in_sensor.cross(landmark_bearing_in_sensor).norm();
+        // if we did not find a matching landmark, return 0.0
+        if (!opt_landmark_bearing_in_sensor) {
+          return 0.0;
+        }
 
-      // calculate the angle between the sample and the landmark
-      const auto bearing_error = std::atan2(sin_aperture, cos_aperture);
+        // recover sample bearing vector
+        const auto detection_bearing_in_sensor = detection.detection_bearing_in_sensor.normalized();
 
-      // model the probability of the landmark being detected as depending on the bearing error
-      const auto bearing_error_prob =
-          std::exp(-bearing_error * bearing_error / (2. * params_.sigma_bearing * params_.sigma_bearing));
+        // recover landmark bearing vector
+        const auto& landmark_bearing_in_sensor = *opt_landmark_bearing_in_sensor;
 
-      // We'll assume the probability of identification error to be zero
-      const auto prob = bearing_error_prob;
+        // calculate the aperture angle between the detection and the landmark
+        const auto cos_aperture = detection_bearing_in_sensor.dot(landmark_bearing_in_sensor);
+        const auto sin_aperture = detection_bearing_in_sensor.cross(landmark_bearing_in_sensor).norm();
 
-      // TODO(unknown): We continue to use the sum-of-cubes formula that nav2 uses
-      // See https://github.com/Ekumen-OS/beluga/issues/153
-      return prob * prob * prob;
+        // calculate the angle between the sample and the landmark
+        const auto bearing_error = std::atan2(sin_aperture, cos_aperture);
+
+        // model the probability of the landmark being detected as depending on the bearing error
+        const auto bearing_error_prob =
+            std::exp(-bearing_error * bearing_error / (2. * params_.sigma_bearing * params_.sigma_bearing));
+
+        // We'll assume the probability of identification error to be zero
+        const auto prob = bearing_error_prob;
+
+        // TODO(unknown): We continue to use the sum-of-cubes formula that nav2 uses
+        // See https://github.com/Ekumen-OS/beluga/issues/153
+        return prob * prob * prob;
+      };
+
+      return std::transform_reduce(detections.cbegin(), detections.cend(), 1.0, std::plus{}, detection_weight);
     };
-
-    return std::transform_reduce(points_.cbegin(), points_.cend(), 1.0, std::plus{}, detection_weight);
   }
 
-  /// \copydoc BearingSensorModelInterface::update_sensor(measurement_type&&points)
-  void update_sensor(measurement_type&& points) { points_ = std::move(points); }
-
-  /// \copydoc BearingSensorModelInterface::update_map(Map&& map)
+  /// Update the sensor model with a new landmark `map`.
   void update_map(map_type&& map) { landmark_map_ = std::move(map); }
 
  private:
   param_type params_;
   LandmarkMap landmark_map_;
-  measurement_type points_;
 };
 
 /// Sensor model based on discrete landmarks bearing detection for 2D state types.
-/**
- * This class implements the BearingSensorModelInterface interface
- * and satisfies \ref SensorModelPage.
- * \tparam LandmarkMap class managing the list of known landmarks.
- */
 template <class LandmarkMap>
 using BearingSensorModel2d = BearingSensorModel<LandmarkMap, Sophus::SE2d>;
 
 /// Sensor model based on discrete landmarks bearing detection for 3D state types.
-/**
- * This class implements the BearingSensorModelInterface interface
- * and satisfies \ref SensorModelPage.
- * \tparam LandmarkMap class managing the list of known landmarks.
- */
 template <class LandmarkMap>
 using BearingSensorModel3d = BearingSensorModel<LandmarkMap, Sophus::SE3d>;
 

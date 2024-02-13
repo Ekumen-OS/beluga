@@ -62,8 +62,7 @@ struct LikelihoodFieldModelParam {
 
 /// Likelihood field sensor model for range finders.
 /**
- * This class implements the LaserSensorModelInterface2d interface
- * and satisfies \ref SensorModelPage.
+ * This class satisfies \ref SensorModelPage.
  *
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4.
  *
@@ -88,67 +87,64 @@ class LikelihoodFieldModel {
   /**
    * \param params Parameters to configure this instance.
    *  See beluga::LikelihoodFieldModelParam for details.
-   * \param grid Occupancy grid representing the static map.
+   * \param grid Occupancy grid representing the static map that the sensor model
+   *  uses to compute a likelihood field for lidar hits and compute importance weights
+   *  for particle states.
    */
   explicit LikelihoodFieldModel(const param_type& params, OccupancyGrid grid)
-      : params_{params},
-        grid_{std::move(grid)},
-        free_states_{compute_free_states(grid_)},
-        likelihood_field_{make_likelihood_field(params, grid_)} {}
+      : params_{params}, grid_{std::move(grid)}, likelihood_field_{make_likelihood_field(params, grid_)} {}
 
   /// Returns the likelihood field, constructed from the provided map.
   [[nodiscard]] const auto& likelihood_field() const { return likelihood_field_; }
 
-  /// Gets the importance weight for a particle with the provided state.
+  /// Returns a state weighting function conditioned on 2D lidar hits.
   /**
-   * \param state State of the particle to calculate its importance weight.
-   * \return Calculated importance weight.
+   * \param points 2D lidar hit points in the reference frame of particle states.
+   * \return a state weighting function satisfying \ref StateWeightingFunctionPage
+   *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
-  [[nodiscard]] weight_type importance_weight(const state_type& state) const {
-    const auto transform = grid_.origin().inverse() * state;
-    const auto x_offset = transform.translation().x();
-    const auto y_offset = transform.translation().y();
-    const auto cos_theta = transform.so2().unit_complex().x();
-    const auto sin_theta = transform.so2().unit_complex().y();
-    const auto unknown_space_occupancy_prob = 1. / params_.max_laser_distance;
-    // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
-    // See https://github.com/Ekumen-OS/beluga/issues/153
-    const auto unknown_space_occupancy_likelihood_cubed =
-        unknown_space_occupancy_prob * unknown_space_occupancy_prob * unknown_space_occupancy_prob;
-    return std::transform_reduce(
-        points_.cbegin(), points_.cend(), 1.0, std::plus{},
-        [this, x_offset, y_offset, cos_theta, sin_theta, unknown_space_occupancy_likelihood_cubed](const auto& point) {
-          // Transform the end point of the laser to the grid local coordinate system.
-          // Not using Eigen/Sophus because they make the routine x10 slower.
-          // See `benchmark_likelihood_field_model.cpp` for reference.
-          const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
-          const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
-          // for performance, we store the likelihood already elevated to the cube
-          return likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_likelihood_cubed);
-        });
+  [[nodiscard]] auto operator()(measurement_type&& points) const {
+    return [this, points = std::move(points)](const state_type& state) -> weight_type {
+      const auto transform = grid_.origin().inverse() * state;
+      const auto x_offset = transform.translation().x();
+      const auto y_offset = transform.translation().y();
+      const auto cos_theta = transform.so2().unit_complex().x();
+      const auto sin_theta = transform.so2().unit_complex().y();
+      const auto unknown_space_occupancy_prob = 1. / params_.max_laser_distance;
+      // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
+      // See https://github.com/Ekumen-OS/beluga/issues/153
+      const auto unknown_space_occupancy_likelihood_cubed =
+          unknown_space_occupancy_prob * unknown_space_occupancy_prob * unknown_space_occupancy_prob;
+      return std::transform_reduce(
+          points.cbegin(), points.cend(), 1.0, std::plus{},
+          [this, x_offset, y_offset, cos_theta, sin_theta,
+           unknown_space_occupancy_likelihood_cubed](const auto& point) {
+            // Transform the end point of the laser to the grid local coordinate system.
+            // Not using Eigen/Sophus because they make the routine x10 slower.
+            // See `benchmark_likelihood_field_model.cpp` for reference.
+            const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
+            const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
+            // for performance, we store the likelihood already elevated to the cube
+            return likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_likelihood_cubed);
+          });
+    };
   }
 
-  /// \copydoc LaserSensorModelInterface2d::update_sensor(measurement_type&& points)
-  void update_sensor(measurement_type&& points) { points_ = std::move(points); }
-
-  /// \copydoc LaserSensorModelInterface2d::update_map(Map&& map)
+  /// Update the sensor model with a new occupancy grid map.
+  /**
+   * This method also re-computes the underlying likelihood field.
+   *
+   * \param map New occupancy grid representing the static map.
+   */
   void update_map(map_type&& map) {
     grid_ = std::move(map);
-    free_states_ = compute_free_states(grid_);
     likelihood_field_ = make_likelihood_field(params_, grid_);
   }
 
  private:
   param_type params_;
   OccupancyGrid grid_;
-  std::vector<Eigen::Vector2d> free_states_;
   ValueGrid2<double> likelihood_field_;
-  std::vector<std::pair<double, double>> points_;
-
-  static std::vector<Eigen::Vector2d> compute_free_states(const OccupancyGrid& grid) {
-    constexpr auto kFrame = OccupancyGrid::Frame::kGlobal;
-    return grid.coordinates_for(grid.free_cells(), kFrame) | ranges::to<std::vector>;
-  }
 
   static ValueGrid2<double> make_likelihood_field(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid) {
     const auto squared_distance = [&grid,
