@@ -51,6 +51,15 @@ TEST(IndexingIterator, Arithmetic) {
   auto end = beluga::IndexingIterator(sequence, sequence.size());
   EXPECT_EQ(std::next(begin, std::distance(begin, end)), end);
   EXPECT_EQ(std::prev(end, std::distance(begin, end)), begin);
+  EXPECT_EQ(std::abs(end - begin), std::abs(begin - end));
+}
+
+TEST(IndexingIterator, EqualityPreserving) {
+  const auto sequence = std::vector{0, 1};
+  auto begin = beluga::IndexingIterator(sequence);
+  auto end = beluga::IndexingIterator(sequence, sequence.size());
+  EXPECT_EQ(begin, --(begin + 1));
+  EXPECT_EQ(end, ++(end - 1));
 }
 
 TEST(IndexingIterator, Iterate) {

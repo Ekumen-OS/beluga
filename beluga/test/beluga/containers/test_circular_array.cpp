@@ -57,6 +57,7 @@ TEST(CircularArrayTest, FromRange) {
   auto input = std::array{1, 2, 3};
   auto array = beluga::CircularArray<int, 5>{input.begin(), input.end()};
   EXPECT_THAT(array, ::testing::ElementsAre(1, 2, 3));
+  EXPECT_THROW((beluga::CircularArray<int, 2>(input.begin(), input.end())), std::length_error);
 }
 
 TEST(CircularArrayTest, FromRangeUsingReverseLayout) {
@@ -64,6 +65,7 @@ TEST(CircularArrayTest, FromRangeUsingReverseLayout) {
   constexpr auto kFlags = beluga::CircularArrayFeatureFlags::kLayoutReversal;
   auto array = beluga::CircularArray<int, 5, kFlags>{input.begin(), input.end()};
   EXPECT_THAT(array, ::testing::ElementsAre(1, 2, 3));
+  EXPECT_THROW((beluga::CircularArray<int, 2, kFlags>(input.begin(), input.end())), std::length_error);
 }
 
 TEST(CircularArrayTest, Read) {
@@ -110,6 +112,7 @@ TEST(CircularArrayTest, Write) {
   array.push_back(1);
   array << 2;
   EXPECT_TRUE(array.full());
+  EXPECT_THROW({ array.push_back(3); }, std::length_error);
   EXPECT_THAT(array, ::testing::ElementsAre(1, 2));
   array.pop_front();
   EXPECT_THAT(array, ::testing::ElementsAre(2));
@@ -124,6 +127,7 @@ TEST(CircularArrayTest, ReverseLayoutWrite) {
   array.push_front(1);
   array << 2;
   EXPECT_TRUE(array.full());
+  EXPECT_THROW({ array.push_front(3); }, std::length_error);
   EXPECT_THAT(array, ::testing::ElementsAre(2, 1));
   array.pop_back();
   EXPECT_THAT(array, ::testing::ElementsAre(2));
