@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['variant_807',['Variant',['../classbeluga_1_1Bresenham2i.html#a2f81cd0b471b21ac5956f0b46bfa11ce',1,'beluga::Bresenham2i']]]
+  ['frame_898',['Frame',['../classbeluga_1_1BaseOccupancyGrid2.html#a9e94d3fcf24855146a145d9ad654759a',1,'beluga::BaseOccupancyGrid2']]]
 ];

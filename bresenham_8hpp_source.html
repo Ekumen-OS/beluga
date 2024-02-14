@@ -145,9 +145,9 @@ $(function() {
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordflow">if</span> (xspan_ &lt; yspan_) {</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;          <span class="keyword">using</span> std::swap;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;          swap(x_, y_);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;          swap(xspan_, yspan_);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;          swap(xstep_, ystep_);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;          <a class="code" href="circular__array_8hpp.html#a35228f88e4dd147943dfd594b25444c5">swap</a>(x_, y_);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;          <a class="code" href="circular__array_8hpp.html#a35228f88e4dd147943dfd594b25444c5">swap</a>(xspan_, yspan_);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;          <a class="code" href="circular__array_8hpp.html#a35228f88e4dd147943dfd594b25444c5">swap</a>(xstep_, ystep_);</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;          reversed_ = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        }</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
@@ -224,7 +224,7 @@ $(function() {
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;      <span class="keywordtype">void</span> step_to(Integer x, Integer y) {</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        <span class="keywordflow">if</span> (reversed_) {</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;          <span class="keyword">using</span> std::swap;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;          swap(x, y);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;          <a class="code" href="circular__array_8hpp.html#a35228f88e4dd147943dfd594b25444c5">swap</a>(x, y);</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        }</div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        current_point_.x() = x;</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        current_point_.y() = y;</div>
@@ -285,6 +285,7 @@ $(function() {
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;}  <span class="comment">// namespace beluga</span></div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160; </div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="acircular__array_8hpp_html_a35228f88e4dd147943dfd594b25444c5"><div class="ttname"><a href="circular__array_8hpp.html#a35228f88e4dd147943dfd594b25444c5">beluga::swap</a></div><div class="ttdeci">constexpr void swap(CircularArray&lt; T, N, F &gt; &amp;a, CircularArray&lt; T, N, G &gt; &amp;b)</div><div class="ttdoc">Swaps arrays a and b.</div><div class="ttdef"><b>Definition:</b> circular_array.hpp:523</div></div>
 <div class="ttc" id="aclassbeluga_1_1Bresenham2i_1_1Line_1_1iterator_html"><div class="ttname"><a href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html">beluga::Bresenham2i::Line::iterator</a></div><div class="ttdoc">Bresenham's 2D line drawing iterator, one cell at a time.</div><div class="ttdef"><b>Definition:</b> bresenham.hpp:53</div></div>
 <div class="ttc" id="aclassbeluga_1_1Bresenham2i_1_1Line_1_1iterator_html_a0a631772c6b2e48ff5768083e91a3eff"><div class="ttname"><a href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a0a631772c6b2e48ff5768083e91a3eff">beluga::Bresenham2i::Line::iterator::iterator</a></div><div class="ttdeci">iterator()=default</div><div class="ttdoc">Default constructor.</div></div>
 <div class="ttc" id="aclassbeluga_1_1Bresenham2i_1_1Line_1_1iterator_html_a16fea874ae17dc122f0e8abd5f780578"><div class="ttname"><a href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a16fea874ae17dc122f0e8abd5f780578">beluga::Bresenham2i::Line::iterator::difference_type</a></div><div class="ttdeci">std::ptrdiff_t difference_type</div><div class="ttdoc">Iterator difference type (as required by ranges::view_).</div><div class="ttdef"><b>Definition:</b> bresenham.hpp:68</div></div>

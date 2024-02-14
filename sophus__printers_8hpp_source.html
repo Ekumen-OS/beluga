@@ -98,7 +98,7 @@ $(function() {
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar, <span class="keywordtype">int</span> Rows, <span class="keywordtype">int</span> Cols&gt;</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="sophus__printers_8hpp.html#a9c3feaf14f48189f651062f5514fed95">   40</a></span>&#160;std::ostream&amp; <a class="code" href="sophus__printers_8hpp.html#a9c3feaf14f48189f651062f5514fed95">operator&lt;&lt;</a>(std::ostream&amp; os, <span class="keyword">const</span> Eigen::Matrix&lt;Scalar, Rows, Cols&gt;&amp; t) {</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="sophus__printers_8hpp.html#a9c3feaf14f48189f651062f5514fed95">   40</a></span>&#160;std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, <span class="keyword">const</span> Eigen::Matrix&lt;Scalar, Rows, Cols&gt;&amp; t) {</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> kSingleLine = Eigen::IOFormat{</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      Eigen::StreamPrecision,  <span class="comment">//</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      Eigen::DontAlignCols,    <span class="comment">//</span></div>
@@ -127,7 +127,6 @@ $(function() {
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}  <span class="comment">// namespace Sophus</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="asophus__printers_8hpp_html_a9c3feaf14f48189f651062f5514fed95"><div class="ttname"><a href="sophus__printers_8hpp.html#a9c3feaf14f48189f651062f5514fed95">Eigen::operator&lt;&lt;</a></div><div class="ttdeci">std::ostream &amp; operator&lt;&lt;(std::ostream &amp;os, const Eigen::Matrix&lt; Scalar, Rows, Cols &gt; &amp;t)</div><div class="ttdoc">Printer for Eigen matrices.</div><div class="ttdef"><b>Definition:</b> sophus_printers.hpp:40</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

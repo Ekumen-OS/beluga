@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['effective_5fsample_5fsize_2ehpp_520',['effective_sample_size.hpp',['../effective__sample__size_8hpp.html',1,'']]],
-  ['elements_2ehpp_521',['elements.hpp',['../elements_8hpp.html',1,'']]],
-  ['estimation_2ehpp_522',['estimation.hpp',['../estimation_8hpp.html',1,'']]],
-  ['every_5fn_2ehpp_523',['every_n.hpp',['../every__n_8hpp.html',1,'']]],
-  ['exponential_5ffilter_2ehpp_524',['exponential_filter.hpp',['../exponential__filter_8hpp.html',1,'']]]
+  ['dense_5fgrid_2ehpp_568',['dense_grid.hpp',['../dense__grid_8hpp.html',1,'']]],
+  ['differential_5fdrive_5fmodel_2ehpp_569',['differential_drive_model.hpp',['../differential__drive__model_8hpp.html',1,'']]],
+  ['distance_5fmap_2ehpp_570',['distance_map.hpp',['../distance__map_8hpp.html',1,'']]]
 ];
