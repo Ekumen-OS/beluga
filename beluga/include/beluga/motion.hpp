@@ -31,20 +31,31 @@
  * \section MotionModelRequirements Requirements
  * A type `T` satisfies the `MotionModel` requirements if the following is satisfied:
  * - `T::state_type` is a valid type, representing a particle state.
- * - `T::update_type` is a valid type, representing a motion model update.
+ * - `T::control_type` is a valid type, representing a control action
+ *    to condition the motion model.
  *
  * Given:
- * - An instance `p` of `T`.
  * - A possibly const instance `cp` of `T`.
- * - A possibly const instance of `T::update_type` `u`.
- * - A possibly const instance of `T::state_type` `s`.
+ * - A possibly const instance `u` of `T::control_type` (or convertible type `U`).
  *
  * Then:
- * - `p.update_motion(u)` will update the motion model with `u`.
- *   This will not actually update the particle states, but the update done here
- *   will be used in subsequent calls to the `apply_motion()` method.
- * - `cp.apply_motion(s)` returns a `T::state_type`, that is the result of applying the motion model
- *   to `s` based on the updates.
+ * - `cp(u)` returns a callable satisfying \ref StateSamplingFunctionPage for `T::state_type`.
+ *
+ * \section StateSamplingFunctionPage Beluga named requirements: StateSamplingFunction
+ * Requirements for a callable to sample a motion distribution when propagating
+ * particle states in a Beluga `ParticleFilter`.
+ *
+ * \section StateSamplingFunctionRequirements Requirements
+ * A type `F` satisfies the `StateSamplingFunction` requirements for some state type `S` if:
+ *
+ * Given:
+ * - A possibly const instance `fn` of `F`.
+ * - A possible const instance `s` of `S`.
+ * - An instance `e` satisfying [URNG](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
+ * requirements.
+ *
+ * Then:
+ * - `fn(s, e)` returns another sampled state `ss` of `S`.
  *
  * \section MotionModelLinks See also
  * - beluga::DifferentialDriveModel
@@ -54,7 +65,7 @@
 
 namespace beluga {
 
-/// Pure abstract class representing the odometry motion model interface.
+/// Pure abstract class representing the odometry motion model mixin interface.
 struct OdometryMotionModelInterface2d {
   /// Update type of the motion model.
   using update_type = Sophus::SE2d;

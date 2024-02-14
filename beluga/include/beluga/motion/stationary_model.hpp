@@ -17,6 +17,10 @@
 
 #include <optional>
 #include <random>
+#include <tuple>
+#include <type_traits>
+
+#include <beluga/type_traits/tuple_traits.hpp>
 
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
@@ -30,41 +34,33 @@ namespace beluga {
 
 /// A stationary motion model.
 /**
- * This class implements the OdometryMotionModelInterface2d and satisfies \ref MotionModelPage.
+ * This class satisfies \ref MotionModelPage.
  *
- * It ignores all odometry updates and only adds Gaussian noise to the
- * input states.
+ * It ignores all odometry updates and only adds Gaussian noise to the input states.
  */
 class StationaryModel {
  public:
-  /// Update type of the motion model.
-  using update_type = Sophus::SE2d;
-  /// State type of a particle.
+  /// Current and previous odometry estimates as motion model control action.
+  using control_type = std::tuple<Sophus::SE2d, Sophus::SE2d>;
+  /// 2D pose as motion model state (to match that of the particles).
   using state_type = Sophus::SE2d;
 
-  /// Applies motion to the given particle state.
+  /// Computes a state sampling function conditioned on a given control action.
   /**
    * The updated state will be centered around `state` with some covariance.
+   * For this model, control actions are ignored.
    *
-   * \tparam Generator  A random number generator that must satisfy the
-   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
-   *  requirements.
-   * \param state The state of the particle to which the motion will be applied.
-   * \param gen An uniform random bit generator object.
-   * \return The new particle state.
+   * \tparam Control A tuple-like container matching the model's `control_action_type`.
+   * \return a callable satisfying \ref StateSamplingFunctionPage.
    */
-  template <class Generator>
-  [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) const {
-    auto distribution = std::normal_distribution<>{0, 0.02};
-    return state * Sophus::SE2d{Sophus::SO2d{distribution(gen)}, Eigen::Vector2d{distribution(gen), distribution(gen)}};
+  template <class Control, typename = common_tuple_type_t<Control, control_type>>
+  [[nodiscard]] auto operator()([[maybe_unused]] Control&&) const {
+    return [](const state_type& state, auto& gen) {
+      static thread_local auto distribution = std::normal_distribution<>{0, 0.02};
+      return state *
+             Sophus::SE2d{Sophus::SO2d{distribution(gen)}, Eigen::Vector2d{distribution(gen), distribution(gen)}};
+    };
   }
-
-  /**
-   * \copydoc OdometryMotionModelInterface2d::update_motion(const Sophus::SE2d&)
-   *
-   * For this model, odometry updates are ignored.
-   */
-  void update_motion([[maybe_unused]] const update_type& pose) {}
 };
 
 }  // namespace beluga

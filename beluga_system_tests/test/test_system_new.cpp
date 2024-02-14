@@ -145,6 +145,7 @@ auto particle_filter_test(
       ranges::compose(beluga::make_from_state<Particle>, beluga::UniformFreeSpaceGridDistribution{map});
 
   // Iteratively run the filter through all the data points.
+  beluga::RollingWindow<Sophus::SE2d, 2> control_action_window{};
   for (auto [measurement, odom, ground_truth] : datapoints) {
     if (!should_update(odom)) {
       continue;
@@ -152,17 +153,10 @@ auto particle_filter_test(
 
     // TODO(nahuel): Update this once the new model features are ready.
     /**
-     * particles |= beluga::actions::propagate(std::execution::par, motion(odom)) |
-     *              beluga::actions::reweight(std::execution::par, sensor(measurement));
+     * particles |= beluga::actions::reweight(std::execution::par, sensor_model(measurement));
      */
-    motion.update_motion(odom);
     sensor.update_sensor(std::move(measurement));
-    particles |= beluga::actions::propagate(
-                     std::execution::par,
-                     [&motion](const auto& state) {
-                       static thread_local auto engine = std::mt19937{std::random_device()()};
-                       return motion.apply_motion(state, engine);
-                     }) |
+    particles |= beluga::actions::propagate(std::execution::par, motion(control_action_window << odom)) |
                  beluga::actions::reweight(
                      std::execution::par, [&sensor](const auto& state) { return sensor.importance_weight(state); }) |
                  beluga::actions::normalize(std::execution::par_unseq);

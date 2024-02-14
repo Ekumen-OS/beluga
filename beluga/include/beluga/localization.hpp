@@ -16,6 +16,7 @@
 #define BELUGA_MIXIN_LOCALIZATION_HPP
 
 #include <beluga/algorithm/estimation.hpp>
+#include <beluga/containers/circular_array.hpp>
 #include <beluga/mixin.hpp>
 #include <beluga/motion.hpp>
 #include <beluga/sensor.hpp>
@@ -95,14 +96,32 @@ using LaserLocalizationInterface2d = beluga::compose_interfaces<
 
 /// Wrapper to convert a motion model class into a mixin.
 template <typename Mixin, typename Model>
-struct MotionMixin : public Mixin, public Model {
-  using update_type = typename Model::update_type;
+class MotionMixin : public Mixin {
+ public:
+  using update_type = std::tuple_element_t<0, typename Model::control_type>;
+  using state_type = typename Model::state_type;
 
   template <typename... Args>
   constexpr explicit MotionMixin(Model model, Args&&... args)
-      : Model(std::move(model)), Mixin(static_cast<decltype(args)>(args)...) {}
+      : Mixin(static_cast<decltype(args)>(args)...), model_(std::move(model)) {}
 
-  void update_motion(const update_type& pose) { Model::update_motion(pose); }
+  template <class Generator>
+  [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) {
+    if (state_sampling_function_.has_value()) {
+      return (*state_sampling_function_)(state, gen);
+    }
+    return state;
+  }
+
+  void update_motion(const update_type& pose) { state_sampling_function_.emplace(model_(control_window_ << pose)); }
+
+ private:
+  Model model_;
+  static constexpr auto kWindowSize = std::tuple_size_v<typename Model::control_type>;
+  RollingWindow<update_type, kWindowSize> control_window_;
+  using StateSamplingFunction =
+      decltype(std::declval<Model>()(std::declval<RollingWindow<update_type, kWindowSize>&>()));
+  std::optional<StateSamplingFunction> state_sampling_function_;
 };
 
 /// Wrapper to convert a sensor model class into a mixin.
