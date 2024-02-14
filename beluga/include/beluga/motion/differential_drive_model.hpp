@@ -126,7 +126,7 @@ class DifferentialDriveModel {
                                    params_.rotation_noise_from_translation * distance_variance)};
 
     return [=](const state_type& state, auto& gen) {
-      auto distribution = std::normal_distribution<double>{};
+      static thread_local auto distribution = std::normal_distribution<double>{};
       const auto first_rotation = Sophus::SO2d{distribution(gen, first_rotation_params)};
       const auto translation = Eigen::Vector2d{distribution(gen, translation_params), 0.0};
       const auto second_rotation = Sophus::SO2d{distribution(gen, second_rotation_params)};

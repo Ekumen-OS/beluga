@@ -56,7 +56,7 @@ class StationaryModel {
   template <class Control, typename = common_tuple_type_t<Control, control_type>>
   [[nodiscard]] auto operator()([[maybe_unused]] Control&&) const {
     return [](const state_type& state, auto& gen) {
-      auto distribution = std::normal_distribution<>{0, 0.02};
+      static thread_local auto distribution = std::normal_distribution<>{0, 0.02};
       return state *
              Sophus::SE2d{Sophus::SO2d{distribution(gen)}, Eigen::Vector2d{distribution(gen), distribution(gen)}};
     };

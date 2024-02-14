@@ -131,7 +131,7 @@ class OmnidirectionalDriveModel {
                  params_.translation_noise_from_rotation * rotation_variance(rotation))};
 
     return [=](const state_type& state, auto& gen) {
-      auto distribution = std::normal_distribution<double>{};
+      static thread_local auto distribution = std::normal_distribution<double>{};
       // This is an implementation based on the same set of parameters that is used in
       // nav2's omni_motion_model. To simplify the implementation, the following
       // variable substitutions were performed:
