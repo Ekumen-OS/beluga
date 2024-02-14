@@ -31,12 +31,12 @@
  * \section MotionModelRequirements Requirements
  * A type `T` satisfies the `MotionModel` requirements if the following is satisfied:
  * - `T::state_type` is a valid type, representing a particle state.
- * - `T::control_action_type` is a valid type, representing a control action
+ * - `T::control_type` is a valid type, representing a control action
  *    to condition the motion model.
  *
  * Given:
  * - A possibly const instance `cp` of `T`.
- * - A possibly const instance `u` of `T::control_action_type` (or convertible type `U`).
+ * - A possibly const instance `u` of `T::control_type` (or convertible type `U`).
  *
  * Then:
  * - `cp(u)` returns a callable satisfying \ref StateSamplingFunctionPage for `T::state_type`.
