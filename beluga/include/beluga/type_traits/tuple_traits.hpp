@@ -17,6 +17,7 @@
 
 #include <tuple>
 #include <type_traits>
+#include <utility>
 
 /**
  * \file
@@ -50,6 +51,43 @@ struct is_tuple_like : detail::is_complete<std::tuple_size<std::decay_t<T>>> {};
 /// Convenience template variable for `is_tuple_like`.
 template <class T>
 inline constexpr bool is_tuple_like_v = is_tuple_like<T>::value;
+
+/// Meta-function that computes a common tuple type given two tuple-like types T and U.
+/**
+ * Equivalent to `common_types_t` specialization for tuple-like types in C++23.
+ * See https://en.cppreference.com/w/cpp/utility/tuple/common_type.
+ */
+template <
+    typename T,
+    typename U,
+    typename Is = std::enable_if_t<
+        std::tuple_size_v<std::decay_t<T>> == std::tuple_size_v<std::decay_t<U>>,
+        std::make_index_sequence<std::tuple_size_v<std::decay_t<T>>>>>
+struct common_tuple_type;
+
+/// `common_tuple_type` specialization for `std::index_sequence`.
+template <typename T, typename U, std::size_t... I>
+struct common_tuple_type<T, U, std::index_sequence<I...>> {
+  /// Common tuple type based on an std::tuple.
+  using type = std::tuple<
+      std::common_type_t<std::tuple_element_t<I, std::decay_t<T>>, std::tuple_element_t<I, std::decay_t<U>>>...>;
+};
+
+/// Convenience template type alias for `common_tuple_type`.
+template <typename T, typename U>
+using common_tuple_type_t = typename common_tuple_type<T, U>::type;
+
+/// Meta-function that checks for the existence of a common tuple type.
+template <typename, typename, typename = void>
+struct has_common_tuple_type : std::false_type {};
+
+/// `has_common_tuple_type` specialization for tuple-like types T and U for which a common tuple type exists.
+template <typename T, typename U>
+struct has_common_tuple_type<T, U, std::void_t<common_tuple_type_t<T, U>>> : std::true_type {};
+
+/// Convenience template variable for `has_common_tuple_type`.
+template <typename T, typename U>
+inline constexpr bool has_common_tuple_type_v = has_common_tuple_type<T, U>::value;
 
 namespace detail {
 

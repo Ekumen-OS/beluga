@@ -17,6 +17,10 @@
 
 #include <optional>
 #include <random>
+#include <tuple>
+#include <type_traits>
+
+#include <beluga/type_traits/tuple_traits.hpp>
 
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
@@ -69,13 +73,13 @@ struct OmnidirectionalDriveModelParam {
 
 /// Sampled odometry model for an omnidirectional drive.
 /**
- * This class implements the OdometryMotionModelInterface2d and satisfies \ref MotionModelPage.
+ * This class satisfies \ref MotionModelPage.
  */
 class OmnidirectionalDriveModel {
  public:
-  /// Update type of the motion model, same as the state_type in the odometry model.
-  using update_type = Sophus::SE2d;
-  /// State type of a particle.
+  /// Current and previous odometry estimates as motion model control action.
+  using control_type = std::tuple<Sophus::SE2d, Sophus::SE2d>;
+  /// 2D pose as motion model state (to match that of the particles).
   using state_type = Sophus::SE2d;
 
   /// Parameter type that the constructor uses to configure the motion model.
@@ -88,75 +92,61 @@ class OmnidirectionalDriveModel {
    */
   explicit OmnidirectionalDriveModel(const param_type& params) : params_{params} {}
 
-  /// Applies the last motion update to the given particle state.
+  /// Computes a state sampling function conditioned on a given control action.
   /**
-   * \tparam Generator  A random number generator that must satisfy the
-   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
-   *  requirements.
-   * \param state The state of the particle to which the motion will be applied.
-   * \param gen An uniform random bit generator object.
+   * \tparam Control A tuple-like container matching the model's `control_action_type`.
+   * \param action Control action to condition the motion model with.
+   * \return a callable satisfying \ref StateSamplingFunctionPage.
    */
-  template <class Generator>
-  [[nodiscard]] state_type apply_motion(const state_type& state, Generator& gen) const {
-    static thread_local auto distribution = std::normal_distribution<double>{};
-    // This is an implementation based on the same set of parameters that is used in
-    // nav2's omni_motion_model. To simplify the implementation, the following
-    // variable substitutions were performed:
-    // - first_rotation = delta_bearing - previous_orientation
-    // - second_rotation = delta_rot_hat - first_rotation
-    const auto second_rotation = Sophus::SO2d{distribution(gen, rotation_params_)} * first_rotation_.inverse();
-    const auto translation = Eigen::Vector2d{
-        distribution(gen, translation_params_),
-        -1.0 * distribution(gen, strafe_params_),
+  template <class Control, typename = common_tuple_type_t<Control, control_type>>
+  [[nodiscard]] auto operator()(Control&& action) const {
+    const auto& [pose, previous_pose] = action;
+
+    const auto translation = pose.translation() - previous_pose.translation();
+    const double distance = translation.norm();
+    const double distance_variance = distance * distance;
+
+    const auto& previous_orientation = previous_pose.so2();
+    const auto& current_orientation = pose.so2();
+    const auto rotation = current_orientation * previous_orientation.inverse();
+
+    const auto heading_rotation = Sophus::SO2d{std::atan2(translation.y(), translation.x())};
+    const auto first_rotation =
+        distance > params_.distance_threshold ? heading_rotation * previous_orientation.inverse() : Sophus::SO2d{};
+
+    using DistributionParam = typename std::normal_distribution<double>::param_type;
+    const auto rotation_params = DistributionParam{
+        rotation.log(), std::sqrt(
+                            params_.rotation_noise_from_rotation * rotation_variance(rotation) +
+                            params_.rotation_noise_from_translation * distance_variance)};
+
+    const auto translation_params = DistributionParam{
+        distance, std::sqrt(
+                      params_.translation_noise_from_translation * distance_variance +
+                      params_.translation_noise_from_rotation * rotation_variance(rotation))};
+
+    const auto strafe_params = DistributionParam{
+        0.0, std::sqrt(
+                 params_.strafe_noise_from_translation * distance_variance +
+                 params_.translation_noise_from_rotation * rotation_variance(rotation))};
+
+    return [=](const state_type& state, auto& gen) {
+      auto distribution = std::normal_distribution<double>{};
+      // This is an implementation based on the same set of parameters that is used in
+      // nav2's omni_motion_model. To simplify the implementation, the following
+      // variable substitutions were performed:
+      // - first_rotation = delta_bearing - previous_orientation
+      // - second_rotation = delta_rot_hat - first_rotation
+      const auto second_rotation = Sophus::SO2d{distribution(gen, rotation_params)} * first_rotation.inverse();
+      const auto translation =
+          Eigen::Vector2d{distribution(gen, translation_params), -distribution(gen, strafe_params)};
+      return state * Sophus::SE2d{first_rotation, Eigen::Vector2d{0.0, 0.0}} *
+             Sophus::SE2d{second_rotation, translation};
     };
-    return state * Sophus::SE2d{first_rotation_, Eigen::Vector2d{0.0, 0.0}} *
-           Sophus::SE2d{second_rotation, translation};
-  }
-
-  /// \copydoc OdometryMotionModelInterface2d::update_motion(const Sophus::SE2d&)
-  void update_motion(const update_type& pose) {
-    if (last_pose_) {
-      const auto translation = pose.translation() - last_pose_.value().translation();
-      const double distance = translation.norm();
-      const double distance_variance = distance * distance;
-
-      const auto& previous_orientation = last_pose_.value().so2();
-      const auto& current_orientation = pose.so2();
-      const auto rotation = current_orientation * previous_orientation.inverse();
-
-      {
-        first_rotation_ =
-            distance > params_.distance_threshold
-                ? Sophus::SO2d{std::atan2(translation.y(), translation.x())} * previous_orientation.inverse()
-                : Sophus::SO2d{0.0};
-
-        rotation_params_ = DistributionParam{
-            rotation.log(), std::sqrt(
-                                params_.rotation_noise_from_rotation * rotation_variance(rotation) +
-                                params_.rotation_noise_from_translation * distance_variance)};
-        translation_params_ = DistributionParam{
-            distance, std::sqrt(
-                          params_.translation_noise_from_translation * distance_variance +
-                          params_.translation_noise_from_rotation * rotation_variance(rotation))};
-        strafe_params_ = DistributionParam{
-            0.0, std::sqrt(
-                     params_.strafe_noise_from_translation * distance_variance +
-                     params_.translation_noise_from_rotation * rotation_variance(rotation))};
-      }
-    }
-    last_pose_ = pose;
   }
 
  private:
-  using DistributionParam = typename std::normal_distribution<double>::param_type;
-
-  OmnidirectionalDriveModelParam params_;
-  std::optional<Sophus::SE2d> last_pose_;
-
-  DistributionParam rotation_params_{0.0, 0.0};
-  DistributionParam strafe_params_{0.0, 0.0};
-  DistributionParam translation_params_{0.0, 0.0};
-  Sophus::SO2d first_rotation_;
+  param_type params_;
 
   static double rotation_variance(const Sophus::SO2d& rotation) {
     // Treat backward and forward motion symmetrically for the noise models.

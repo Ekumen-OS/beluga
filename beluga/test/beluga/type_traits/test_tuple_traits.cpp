@@ -31,6 +31,14 @@ static_assert(
 static_assert(!beluga::is_tuple_like_v<int>);
 static_assert(!beluga::is_tuple_like_v<struct Object>);
 
+static_assert(
+    std::is_same_v<beluga::common_tuple_type_t<std::pair<int, int>, std::tuple<int, int>>, std::tuple<int, int>>);
+static_assert(
+    std::is_same_v<beluga::common_tuple_type_t<std::array<int, 2>, std::tuple<int, int>>, std::tuple<int, int>>);
+static_assert(
+    std::is_same_v<beluga::common_tuple_type_t<std::array<float, 2>, std::tuple<char, int>>, std::tuple<float, float>>);
+static_assert(!beluga::has_common_tuple_type_v<std::tuple<int, int, bool>, std::tuple<int, int>>);
+
 static_assert(beluga::tuple_index_v<int, std::tuple<int, double>> == 0);
 static_assert(beluga::tuple_index_v<double, std::tuple<int, double>> == 1);
 
