@@ -1,17 +1,18 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/take_while_kld.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/take_while_kld.hpp">
-<area shape="rect" id="node1" title="Implementation of a take_while_kld range adaptor object." alt="" coords="492,5,684,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="290,131,353,158"/>
-<area shape="rect" id="node3" title=" " alt="" coords="377,131,492,158"/>
-<area shape="rect" id="node4" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="516,124,660,165"/>
-<area shape="rect" id="node14" title=" " alt="" coords="685,131,859,158"/>
-<area shape="rect" id="node15" title=" " alt="" coords="884,124,1031,165"/>
-<area shape="rect" id="node5" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="377,213,541,240"/>
-<area shape="rect" id="node11" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="529,288,669,329"/>
-<area shape="rect" id="node13" title=" " alt="" coords="625,213,812,240"/>
-<area shape="rect" id="node6" title=" " alt="" coords="541,377,595,404"/>
-<area shape="rect" id="node7" title=" " alt="" coords="394,377,486,404"/>
-<area shape="rect" id="node8" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="192,288,403,329"/>
-<area shape="rect" id="node12" href="$forward__like_8hpp_source.html" title=" " alt="" coords="5,288,168,329"/>
-<area shape="rect" id="node9" title=" " alt="" coords="178,377,265,404"/>
-<area shape="rect" id="node10" title=" " alt="" coords="289,377,348,404"/>
+<area shape="rect" id="node1" title="Implementation of a take_while_kld range adaptor object." alt="" coords="207,5,399,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,131,68,158"/>
+<area shape="rect" id="node3" title=" " alt="" coords="93,131,207,158"/>
+<area shape="rect" id="node4" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="231,124,375,165"/>
+<area shape="rect" id="node15" title=" " alt="" coords="400,131,575,158"/>
+<area shape="rect" id="node16" title=" " alt="" coords="599,124,746,165"/>
+<area shape="rect" id="node5" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="221,213,385,240"/>
+<area shape="rect" id="node11" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="72,288,212,329"/>
+<area shape="rect" id="node14" title=" " alt="" coords="410,213,597,240"/>
+<area shape="rect" id="node6" title=" " alt="" coords="20,377,75,404"/>
+<area shape="rect" id="node7" title=" " alt="" coords="391,377,483,404"/>
+<area shape="rect" id="node8" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="474,288,685,329"/>
+<area shape="rect" id="node13" href="$forward__like_8hpp_source.html" title=" " alt="" coords="237,288,399,329"/>
+<area shape="rect" id="node9" title=" " alt="" coords="612,377,699,404"/>
+<area shape="rect" id="node10" title=" " alt="" coords="529,377,587,404"/>
+<area shape="rect" id="node12" title=" " alt="" coords="112,377,172,404"/>
 </map>

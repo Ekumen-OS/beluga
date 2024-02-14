@@ -72,17 +72,28 @@ $(function() {
 Requirements</h1>
 <p>A type <code>T</code> satisfies the <code>MotionModel</code> requirements if the following is satisfied:</p><ul>
 <li><code>T::state_type</code> is a valid type, representing a particle state.</li>
-<li><code>T::update_type</code> is a valid type, representing a motion model update.</li>
+<li><code>T::control_type</code> is a valid type, representing a control action to condition the motion model.</li>
 </ul>
 <p>Given:</p><ul>
-<li>An instance <code>p</code> of <code>T</code>.</li>
 <li>A possibly const instance <code>cp</code> of <code>T</code>.</li>
-<li>A possibly const instance of <code>T::update_type</code> <code>u</code>.</li>
-<li>A possibly const instance of <code>T::state_type</code> <code>s</code>.</li>
+<li>A possibly const instance <code>u</code> of <code>T::control_type</code> (or convertible type <code>U</code>).</li>
 </ul>
 <p>Then:</p><ul>
-<li><code>p.update_motion(u)</code> will update the motion model with <code>u</code>. This will not actually update the particle states, but the update done here will be used in subsequent calls to the <code>apply_motion()</code> method.</li>
-<li><code>cp.apply_motion(s)</code> returns a <code>T::state_type</code>, that is the result of applying the motion model to <code>s</code> based on the updates.</li>
+<li><code>cp(u)</code> returns a callable satisfying <a class="el" href="MotionModelPage.html#StateSamplingFunctionPage">Beluga named requirements: StateSamplingFunction</a> for <code>T::state_type</code>.</li>
+</ul>
+<h1><a class="anchor" id="StateSamplingFunctionPage"></a>
+Beluga named requirements: StateSamplingFunction</h1>
+<p>Requirements for a callable to sample a motion distribution when propagating particle states in a Beluga <code>ParticleFilter</code>.</p>
+<h1><a class="anchor" id="StateSamplingFunctionRequirements"></a>
+Requirements</h1>
+<p>A type <code>F</code> satisfies the <code>StateSamplingFunction</code> requirements for some state type <code>S</code> if:</p>
+<p>Given:</p><ul>
+<li>A possibly const instance <code>fn</code> of <code>F</code>.</li>
+<li>A possible const instance <code>s</code> of <code>S</code>.</li>
+<li>An instance <code>e</code> satisfying <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">URNG</a> requirements.</li>
+</ul>
+<p>Then:</p><ul>
+<li><code>fn(s, e)</code> returns another sampled state <code>ss</code> of <code>S</code>.</li>
 </ul>
 <h1><a class="anchor" id="MotionModelLinks"></a>
 See also</h1>

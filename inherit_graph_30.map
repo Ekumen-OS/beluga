@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,152,32"/>
-<area shape="rect" id="node2" href="$structbeluga_1_1is__tuple__like.html" title="Meta&#45;function that returns true if T is a tuple&#45;like type." alt="" coords="200,5,393,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,60,124,87"/>
+<area shape="rect" id="node2" href="$structbeluga_1_1has__common__tuple__type.html" title="Meta&#45;function that checks for the existence of a common tuple type." alt="" coords="172,5,355,61"/>
+<area shape="rect" id="node3" href="$structbeluga_1_1has__single__element.html" title="Meta&#45;function that returns true if there is a single element of type T in the tuple&#45;like type." alt="" coords="174,85,353,141"/>
 </map>

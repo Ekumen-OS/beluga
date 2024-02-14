@@ -91,31 +91,31 @@ Inheritance diagram for beluga::actions::detail::propagate_base_fn:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1dfe868e8d3406e65c51b61773a63815"><td class="memTemplParams" colspan="2">template&lt;class ExecutionPolicy , class Range , class Model , std::enable_if_t&lt; std::is_execution_policy_v&lt; std::decay_t&lt; ExecutionPolicy &gt;&gt;, int &gt;  = 0, std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a1dfe868e8d3406e65c51b61773a63815"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a1dfe868e8d3406e65c51b61773a63815">operator()</a> (ExecutionPolicy &amp;&amp;<a class="el" href="structbeluga_1_1policy.html">policy</a>, Range &amp;range, Model model) const -&gt; Range &amp;</td></tr>
-<tr class="memdesc:a1dfe868e8d3406e65c51b61773a63815"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that implements the propagate algorithm.  <a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a1dfe868e8d3406e65c51b61773a63815">More...</a><br /></td></tr>
-<tr class="separator:a1dfe868e8d3406e65c51b61773a63815"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69a2e27e25a9e8c963dad4b7093310cb"><td class="memTemplParams" colspan="2"><a id="a69a2e27e25a9e8c963dad4b7093310cb"></a>
-template&lt;class Range , class Model , class ExecutionPolicy , std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0, std::enable_if_t&lt; std::is_execution_policy_v&lt; ExecutionPolicy &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a69a2e27e25a9e8c963dad4b7093310cb"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a69a2e27e25a9e8c963dad4b7093310cb">operator()</a> (Range &amp;&amp;range, Model model, ExecutionPolicy <a class="el" href="structbeluga_1_1policy.html">policy</a>) const -&gt; Range &amp;</td></tr>
-<tr class="memdesc:a69a2e27e25a9e8c963dad4b7093310cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that re-orders arguments from a view closure. <br /></td></tr>
-<tr class="separator:a69a2e27e25a9e8c963dad4b7093310cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d10dd17a6a02a001895104de52ebbe5"><td class="memTemplParams" colspan="2"><a id="a5d10dd17a6a02a001895104de52ebbe5"></a>
-template&lt;class ExecutionPolicy , class Model , std::enable_if_t&lt; std::is_execution_policy_v&lt; ExecutionPolicy &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a5d10dd17a6a02a001895104de52ebbe5"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a5d10dd17a6a02a001895104de52ebbe5">operator()</a> (ExecutionPolicy <a class="el" href="structbeluga_1_1policy.html">policy</a>, Model model) const</td></tr>
-<tr class="memdesc:a5d10dd17a6a02a001895104de52ebbe5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that returns a view closure to compose with other views. <br /></td></tr>
-<tr class="separator:a5d10dd17a6a02a001895104de52ebbe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a8dcfb7d1636a782ba953e6469a1f65"><td class="memTemplParams" colspan="2">template&lt;class ExecutionPolicy , class Range , class StateSamplingFunction , std::enable_if_t&lt; std::is_execution_policy_v&lt; std::decay_t&lt; ExecutionPolicy &gt;&gt;, int &gt;  = 0, std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a3a8dcfb7d1636a782ba953e6469a1f65"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a3a8dcfb7d1636a782ba953e6469a1f65">operator()</a> (ExecutionPolicy &amp;&amp;<a class="el" href="structbeluga_1_1policy.html">policy</a>, Range &amp;range, StateSamplingFunction fn) const -&gt; Range &amp;</td></tr>
+<tr class="memdesc:a3a8dcfb7d1636a782ba953e6469a1f65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that implements the propagate algorithm.  <a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a3a8dcfb7d1636a782ba953e6469a1f65">More...</a><br /></td></tr>
+<tr class="separator:a3a8dcfb7d1636a782ba953e6469a1f65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad78190769fd9419a64bd9ad160a5b8c9"><td class="memTemplParams" colspan="2"><a id="ad78190769fd9419a64bd9ad160a5b8c9"></a>
+template&lt;class Range , class StateSamplingFunction , class ExecutionPolicy , std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0, std::enable_if_t&lt; std::is_execution_policy_v&lt; ExecutionPolicy &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:ad78190769fd9419a64bd9ad160a5b8c9"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#ad78190769fd9419a64bd9ad160a5b8c9">operator()</a> (Range &amp;&amp;range, StateSamplingFunction fn, ExecutionPolicy <a class="el" href="structbeluga_1_1policy.html">policy</a>) const -&gt; Range &amp;</td></tr>
+<tr class="memdesc:ad78190769fd9419a64bd9ad160a5b8c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that re-orders arguments from a view closure. <br /></td></tr>
+<tr class="separator:ad78190769fd9419a64bd9ad160a5b8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc32aff26e909c054b0ab2ed19b1ecb3"><td class="memTemplParams" colspan="2"><a id="afc32aff26e909c054b0ab2ed19b1ecb3"></a>
+template&lt;class ExecutionPolicy , class StateSamplingFunction , std::enable_if_t&lt; std::is_execution_policy_v&lt; ExecutionPolicy &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:afc32aff26e909c054b0ab2ed19b1ecb3"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#afc32aff26e909c054b0ab2ed19b1ecb3">operator()</a> (ExecutionPolicy <a class="el" href="structbeluga_1_1policy.html">policy</a>, StateSamplingFunction fn) const</td></tr>
+<tr class="memdesc:afc32aff26e909c054b0ab2ed19b1ecb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that returns a view closure to compose with other views. <br /></td></tr>
+<tr class="separator:afc32aff26e909c054b0ab2ed19b1ecb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation detail for a propagate range adaptor object. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a1dfe868e8d3406e65c51b61773a63815"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1dfe868e8d3406e65c51b61773a63815">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="a3a8dcfb7d1636a782ba953e6469a1f65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a8dcfb7d1636a782ba953e6469a1f65">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ExecutionPolicy , class Range , class Model , std::enable_if_t&lt; std::is_execution_policy_v&lt; std::decay_t&lt; ExecutionPolicy &gt;&gt;, int &gt;  = 0, std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0&gt; </div>
+template&lt;class ExecutionPolicy , class Range , class StateSamplingFunction , std::enable_if_t&lt; std::is_execution_policy_v&lt; std::decay_t&lt; ExecutionPolicy &gt;&gt;, int &gt;  = 0, std::enable_if_t&lt; ranges::range&lt; Range &gt;, int &gt;  = 0&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -135,8 +135,8 @@ template&lt;class ExecutionPolicy , class Range , class Model , std::enable_if_t
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Model&#160;</td>
-          <td class="paramname"><em>model</em>&#160;</td>
+          <td class="paramtype">StateSamplingFunction&#160;</td>
+          <td class="paramname"><em>fn</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -156,7 +156,7 @@ template&lt;class ExecutionPolicy , class Range , class Model , std::enable_if_t
   <table class="tparams">
     <tr><td class="paramname">ExecutionPolicy</td><td>An <a href="https://en.cppreference.com/w/cpp/algorithm/execution_policy_tag_t">execution policy</a>. </td></tr>
     <tr><td class="paramname">Range</td><td>An <a href="https://en.cppreference.com/w/cpp/ranges/input_range">input range</a> of particles. </td></tr>
-    <tr><td class="paramname">Model</td><td>A callable that can compute the new state from the previous state. </td></tr>
+    <tr><td class="paramname">StateSamplingFunction</td><td>A callable that samples a posterior state given a prior state. Callables satisfying <a class="el" href="MotionModelPage.html#StateSamplingFunctionPage">Beluga named requirements: StateSamplingFunction</a> are also supported. This will be bound to the default random number generator for ranges. </td></tr>
   </table>
   </dd>
 </dl>
@@ -164,7 +164,7 @@ template&lt;class ExecutionPolicy , class Range , class Model , std::enable_if_t
   <table class="params">
     <tr><td class="paramname">policy</td><td>The execution policy to use. </td></tr>
     <tr><td class="paramname">range</td><td>An existing range of particles to apply this action to. </td></tr>
-    <tr><td class="paramname">model</td><td>A callable instance to compute the states from the previous states. </td></tr>
+    <tr><td class="paramname">fn</td><td>A state sampling function instance. </td></tr>
   </table>
   </dd>
 </dl>

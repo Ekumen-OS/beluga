@@ -1,10 +1,11 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/primitives.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/primitives.hpp">
-<area shape="rect" id="node1" title="Implementation of library primitives to abstract member access." alt="" coords="108,5,300,61"/>
-<area shape="rect" id="node2" title=" " alt="" coords="15,199,70,225"/>
-<area shape="rect" id="node3" title=" " alt="" coords="158,199,250,225"/>
-<area shape="rect" id="node4" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="241,109,452,151"/>
-<area shape="rect" id="node7" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="26,109,166,151"/>
-<area shape="rect" id="node8" href="$forward__like_8hpp_source.html" title=" " alt="" coords="476,109,638,151"/>
-<area shape="rect" id="node5" title=" " alt="" coords="288,199,375,225"/>
-<area shape="rect" id="node6" title=" " alt="" coords="400,199,458,225"/>
+<area shape="rect" id="node1" title="Implementation of library primitives to abstract member access." alt="" coords="139,5,331,61"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,199,60,225"/>
+<area shape="rect" id="node3" title=" " alt="" coords="189,199,281,225"/>
+<area shape="rect" id="node4" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="273,109,483,151"/>
+<area shape="rect" id="node7" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="57,109,197,151"/>
+<area shape="rect" id="node9" href="$forward__like_8hpp_source.html" title=" " alt="" coords="507,109,670,151"/>
+<area shape="rect" id="node5" title=" " alt="" coords="411,199,497,225"/>
+<area shape="rect" id="node6" title=" " alt="" coords="327,199,386,225"/>
+<area shape="rect" id="node8" title=" " alt="" coords="97,199,157,225"/>
 </map>
