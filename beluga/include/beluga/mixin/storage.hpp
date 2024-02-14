@@ -18,7 +18,7 @@
 #include <execution>
 #include <utility>
 
-#include <beluga/tuple_vector.hpp>
+#include <beluga/containers/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
 #include <beluga/views/particles.hpp>
 #include <range/v3/algorithm/copy.hpp>

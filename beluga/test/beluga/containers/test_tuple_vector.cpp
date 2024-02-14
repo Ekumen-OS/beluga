@@ -14,7 +14,7 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/tuple_vector.hpp>
+#include <beluga/containers/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
 #include <beluga/views/particles.hpp>
 

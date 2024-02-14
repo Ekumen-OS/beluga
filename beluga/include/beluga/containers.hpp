@@ -1,4 +1,4 @@
-// Copyright 2022-2024 Ekumen, Inc.
+// Copyright 2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_BELUGA_HPP
-#define BELUGA_BELUGA_HPP
+#ifndef BELUGA_CONTAINERS_HPP
+#define BELUGA_CONTAINERS_HPP
+
+#include <beluga/containers/circular_array.hpp>
+#include <beluga/containers/tuple_vector.hpp>
 
 /**
  * \file
- * \brief Includes all the Beluga API.
+ * \brief Implementation of efficient containers.
  */
-
-#include <beluga/actions.hpp>
-#include <beluga/algorithm.hpp>
-#include <beluga/containers.hpp>
-#include <beluga/mixin.hpp>
-#include <beluga/motion.hpp>
-#include <beluga/policies.hpp>
-#include <beluga/primitives.hpp>
-#include <beluga/random.hpp>
-#include <beluga/sensor.hpp>
-#include <beluga/type_traits.hpp>
-#include <beluga/views.hpp>
 
 #endif

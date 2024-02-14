@@ -15,7 +15,7 @@
 #include <benchmark/benchmark.h>
 
 #include <beluga/algorithm/spatial_hash.hpp>
-#include <beluga/tuple_vector.hpp>
+#include <beluga/containers/tuple_vector.hpp>
 #include <beluga/type_traits.hpp>
 #include <beluga/views/particles.hpp>
 #include <beluga/views/sample.hpp>

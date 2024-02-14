@@ -16,7 +16,7 @@
 
 #include "beluga/views/sample.hpp"
 
-#include <beluga/tuple_vector.hpp>
+#include <beluga/containers/tuple_vector.hpp>
 
 #include <range/v3/algorithm/count.hpp>
 #include <range/v3/algorithm/find.hpp>

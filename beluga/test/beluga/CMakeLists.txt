@@ -25,6 +25,8 @@ add_executable(
   algorithm/test_exponential_filter.cpp
   algorithm/test_raycasting.cpp
   algorithm/test_thrun_recovery_probability_estimator.cpp
+  containers/test_circular_array.cpp
+  containers/test_tuple_vector.cpp
   mixin/test_particle_filter.cpp
   mixin/test_sampling.cpp
   mixin/test_storage.cpp
@@ -48,13 +50,13 @@ add_executable(
   sensor/test_likelihood_field_model.cpp
   test_primitives.cpp
   test_spatial_hash.cpp
-  test_tuple_vector.cpp
   testing/test_sophus_matchers.cpp
   testing/test_sophus_printers.cpp
   type_traits/test_particle_traits.cpp
   type_traits/test_strongly_typed_numeric.cpp
   type_traits/test_tuple_traits.cpp
   utility/test_forward_like.cpp
+  utility/test_indexing_iterator.cpp
   views/test_random_intersperse.cpp
   views/test_sample.cpp
   views/test_take_evenly.cpp
