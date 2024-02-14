@@ -123,7 +123,7 @@ class CircularArray {
       typename Iterator,
       typename Sentinel,
       typename = std::enable_if_t<std::is_same_v<T, typename std::iterator_traits<Iterator>::value_type>>>
-  CircularArray(Iterator first, Sentinel const last) {
+  CircularArray(Iterator first, Sentinel last) {  // NOLINT(readability-non-const-parameter)
     if constexpr (F & CircularArrayFeatureFlags::kLayoutReversal) {
       tail_index_ = N - 1;
       for (size_ = 0; size_ < N && first != last; ++size_, ++first) {
