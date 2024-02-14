@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_CIRCULAR_ARRAY_HPP
-#define BELUGA_CIRCULAR_ARRAY_HPP
+#ifndef BELUGA_CONTAINERS_CIRCULAR_ARRAY_HPP
+#define BELUGA_CONTAINERS_CIRCULAR_ARRAY_HPP
 
 #include <array>
 #include <cstdint>
