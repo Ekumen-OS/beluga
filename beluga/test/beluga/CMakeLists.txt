@@ -37,7 +37,7 @@ add_executable(
   policies/test_on_motion.cpp
   policies/test_policy.cpp
   random/test_multivariate_normal_distribution.cpp
-  random/test_uniform_free_space_grid_distribution.cpp
+  random/test_multivariate_uniform_distribution.cpp
   sensor/data/test_dense_grid.cpp
   sensor/data/test_landmark_map.cpp
   sensor/data/test_laser_scan.cpp
