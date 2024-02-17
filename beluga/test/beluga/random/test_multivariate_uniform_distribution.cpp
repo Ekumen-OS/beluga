@@ -14,7 +14,7 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/random/uniform_free_space_grid_distribution.hpp>
+#include <beluga/random/multivariate_uniform_distribution.hpp>
 #include <beluga/testing/sophus_matchers.hpp>
 #include <beluga/testing/sophus_printers.hpp>
 #include <beluga/views/sample.hpp>
@@ -26,19 +26,42 @@
 namespace {
 
 using beluga::testing::Vector2Near;
+using beluga::testing::Vector3Near;
 
-TEST(UniformFreeSpaceGridDistribution, SingleSlot) {
+TEST(MultivariateUniformDistribution, BoundingRegion2d) {
+  constexpr double kTolerance = 0.01;
+  auto region = Eigen::AlignedBox2d{};
+  region.min() = Eigen::Vector2d{3.00, -2.00};
+  region.max() = region.min() + kTolerance * Eigen::Vector2d::Ones();
+  auto distribution = beluga::MultivariateUniformDistribution{region};
+  auto engine = std::mt19937{std::random_device()()};
+  auto pose = distribution(engine);
+  ASSERT_THAT(pose.translation(), Vector2Near(region.min(), kTolerance));
+}
+
+TEST(MultivariateUniformDistribution, BoundingRegion3d) {
+  constexpr double kTolerance = 0.01;
+  auto region = Eigen::AlignedBox3d{};
+  region.min() = Eigen::Vector3d{3.00, -2.00, 1.00};
+  region.max() = region.min() + kTolerance * Eigen::Vector3d::Ones();
+  auto distribution = beluga::MultivariateUniformDistribution{region};
+  auto engine = std::mt19937{std::random_device()()};
+  auto pose = distribution(engine);
+  ASSERT_THAT(pose.translation(), Vector3Near(region.min(), kTolerance));
+}
+
+TEST(MultivariateUniformDistribution, GridSingleSlot) {
   constexpr double kTolerance = 0.001;
   constexpr double kResolution = 0.5;
   const auto origin = Sophus::SE2d{Sophus::SO2d{}, Sophus::Vector2d{1.0, 2.0}};
   const auto grid = beluga::testing::StaticOccupancyGrid<1, 1>{{false}, kResolution, origin};
-  auto distribution = beluga::UniformFreeSpaceGridDistribution{grid};
+  auto distribution = beluga::MultivariateUniformDistribution{grid};
   auto engine = std::mt19937{std::random_device()()};
   auto pose = distribution(engine);
   ASSERT_THAT(pose.translation(), Vector2Near({1.25, 2.25}, kTolerance));
 }
 
-TEST(UniformFreeSpaceGridDistribution, SingleFreeSlot) {
+TEST(MultivariateUniformDistribution, GridSingleFreeSlot) {
   constexpr double kTolerance = 0.001;
   constexpr double kResolution = 1.0;
   const auto grid = beluga::testing::StaticOccupancyGrid<5, 5>{
@@ -49,13 +72,13 @@ TEST(UniformFreeSpaceGridDistribution, SingleFreeSlot) {
        true, true, true,  true, true},
       kResolution,
   };
-  auto distribution = beluga::UniformFreeSpaceGridDistribution{grid};
+  auto distribution = beluga::MultivariateUniformDistribution{grid};
   auto engine = std::mt19937{std::random_device()()};
   auto pose = distribution(engine);
   ASSERT_THAT(pose.translation(), Vector2Near({2.5, 2.5}, kTolerance));
 }
 
-TEST(UniformFreeSpaceGridDistribution, SomeFreeSlots) {
+TEST(MultivariateUniformDistribution, GridSomeFreeSlots) {
   constexpr std::size_t kSize = 100'000;
   constexpr double kResolution = 1.0;
   const auto grid = beluga::testing::StaticOccupancyGrid<3, 3>{
@@ -64,7 +87,7 @@ TEST(UniformFreeSpaceGridDistribution, SomeFreeSlots) {
        true, false, true},
       kResolution,
   };
-  auto distribution = beluga::UniformFreeSpaceGridDistribution{grid};
+  auto distribution = beluga::MultivariateUniformDistribution{grid};
 
   auto engine = std::mt19937{std::random_device()()};
   auto output = beluga::views::sample(distribution, engine) | ranges::views::take_exactly(kSize);

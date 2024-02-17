@@ -142,7 +142,7 @@ auto particle_filter_test(
   auto probability_estimator = beluga::ThrunRecoveryProbabilityEstimator(params.alpha_slow, params.alpha_fast);
 
   auto map_distribution =
-      ranges::compose(beluga::make_from_state<Particle>, beluga::UniformFreeSpaceGridDistribution{map});
+      ranges::compose(beluga::make_from_state<Particle>, beluga::MultivariateUniformDistribution{map});
 
   // Iteratively run the filter through all the data points.
   beluga::RollingWindow<Sophus::SE2d, 2> control_action_window{};
