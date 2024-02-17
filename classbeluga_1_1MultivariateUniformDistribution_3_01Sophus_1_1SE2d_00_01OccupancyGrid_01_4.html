@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::UniformFreeSpaceGridDistribution&lt; Sophus::SE2d &gt; Class Reference</title>
+<title>Beluga: beluga::MultivariateUniformDistribution&lt; Sophus::SE2d, OccupancyGrid &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,52 +63,55 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>beluga</b></li><li class="navelem"><a class="el" href="classbeluga_1_1UniformFreeSpaceGridDistribution_3_01Sophus_1_1SE2d_01_4.html">UniformFreeSpaceGridDistribution&lt; Sophus::SE2d &gt;</a></li>  </ul>
+<li class="navelem"><b>beluga</b></li><li class="navelem"><a class="el" href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4.html">MultivariateUniformDistribution&lt; Sophus::SE2d, OccupancyGrid &gt;</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classbeluga_1_1UniformFreeSpaceGridDistribution_3_01Sophus_1_1SE2d_01_4-members.html">List of all members</a>  </div>
+<a href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::UniformFreeSpaceGridDistribution&lt; Sophus::SE2d &gt; Class Reference</div>  </div>
+<div class="title">beluga::MultivariateUniformDistribution&lt; Sophus::SE2d, OccupancyGrid &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Specialization of uniform grid distribution for Sophus::SE2d.  
- <a href="classbeluga_1_1UniformFreeSpaceGridDistribution_3_01Sophus_1_1SE2d_01_4.html#details">More...</a></p>
+<p>Specialization of multivariate uniform distribution for occupancy grids.  
+ <a href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="uniform__free__space__grid__distribution_8hpp_source.html">uniform_free_space_grid_distribution.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="multivariate__uniform__distribution_8hpp_source.html">multivariate_uniform_distribution.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae50e1d88109330afa5679c7cc93119a5"><td class="memTemplParams" colspan="2">template&lt;class Derived &gt; </td></tr>
-<tr class="memitem:ae50e1d88109330afa5679c7cc93119a5"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1UniformFreeSpaceGridDistribution_3_01Sophus_1_1SE2d_01_4.html#ae50e1d88109330afa5679c7cc93119a5">UniformFreeSpaceGridDistribution</a> (const <a class="el" href="classbeluga_1_1BaseOccupancyGrid2.html">BaseOccupancyGrid2</a>&lt; Derived &gt; &amp;grid)</td></tr>
-<tr class="memdesc:ae50e1d88109330afa5679c7cc93119a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a uniform grid distribution based on the provided occupancy grid.  <a href="classbeluga_1_1UniformFreeSpaceGridDistribution_3_01Sophus_1_1SE2d_01_4.html#ae50e1d88109330afa5679c7cc93119a5">More...</a><br /></td></tr>
-<tr class="separator:ae50e1d88109330afa5679c7cc93119a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3801caffc4f70e7cdd6abcbc2b3d62e6"><td class="memTemplParams" colspan="2">template&lt;class URNG &gt; </td></tr>
-<tr class="memitem:a3801caffc4f70e7cdd6abcbc2b3d62e6"><td class="memTemplItemLeft" align="right" valign="top">Sophus::SE2d&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1UniformFreeSpaceGridDistribution_3_01Sophus_1_1SE2d_01_4.html#a3801caffc4f70e7cdd6abcbc2b3d62e6">operator()</a> (URNG &amp;engine)</td></tr>
-<tr class="memdesc:a3801caffc4f70e7cdd6abcbc2b3d62e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a random 2D pose.  <a href="classbeluga_1_1UniformFreeSpaceGridDistribution_3_01Sophus_1_1SE2d_01_4.html#a3801caffc4f70e7cdd6abcbc2b3d62e6">More...</a><br /></td></tr>
-<tr class="separator:a3801caffc4f70e7cdd6abcbc2b3d62e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8b2679121c0a02f85a0eeb10929a402"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4.html#aa8b2679121c0a02f85a0eeb10929a402">MultivariateUniformDistribution</a> (const OccupancyGrid &amp;grid)</td></tr>
+<tr class="memdesc:aa8b2679121c0a02f85a0eeb10929a402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a multivariate uniform distribution based on the provided occupancy grid.  <a href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4.html#aa8b2679121c0a02f85a0eeb10929a402">More...</a><br /></td></tr>
+<tr class="separator:aa8b2679121c0a02f85a0eeb10929a402"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac56de9ec248454be52db5b6fcb2a532b"><td class="memTemplParams" colspan="2">template&lt;class URNG &gt; </td></tr>
+<tr class="memitem:ac56de9ec248454be52db5b6fcb2a532b"><td class="memTemplItemLeft" align="right" valign="top">Sophus::SE2d&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4.html#ac56de9ec248454be52db5b6fcb2a532b">operator()</a> (URNG &amp;engine)</td></tr>
+<tr class="memdesc:ac56de9ec248454be52db5b6fcb2a532b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a random 2D pose.  <a href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4.html#ac56de9ec248454be52db5b6fcb2a532b">More...</a><br /></td></tr>
+<tr class="separator:ac56de9ec248454be52db5b6fcb2a532b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Specialization of uniform grid distribution for Sophus::SE2d. </p>
+<div class="textblock"><h3>template&lt;class OccupancyGrid&gt;<br />
+class beluga::MultivariateUniformDistribution&lt; Sophus::SE2d, OccupancyGrid &gt;</h3>
+
+<p>Specialization of multivariate uniform distribution for occupancy grids. </p>
+<p>The range of the distribution is limited to the free space available in the occupancy grid. The rotation is sampled uniformly and the translation will match the exact grid coordinates of one of the free cells. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ae50e1d88109330afa5679c7cc93119a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae50e1d88109330afa5679c7cc93119a5">&#9670;&nbsp;</a></span>UniformFreeSpaceGridDistribution()</h2>
+<a id="aa8b2679121c0a02f85a0eeb10929a402"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8b2679121c0a02f85a0eeb10929a402">&#9670;&nbsp;</a></span>MultivariateUniformDistribution()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Derived &gt; </div>
+template&lt;class OccupancyGrid &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="classbeluga_1_1UniformFreeSpaceGridDistribution.html">beluga::UniformFreeSpaceGridDistribution</a>&lt; Sophus::SE2d &gt;::<a class="el" href="classbeluga_1_1UniformFreeSpaceGridDistribution.html">UniformFreeSpaceGridDistribution</a> </td>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1MultivariateUniformDistribution.html">beluga::MultivariateUniformDistribution</a>&lt; Sophus::SE2d, OccupancyGrid &gt;::<a class="el" href="classbeluga_1_1MultivariateUniformDistribution.html">MultivariateUniformDistribution</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classbeluga_1_1BaseOccupancyGrid2.html">BaseOccupancyGrid2</a>&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramtype">const OccupancyGrid &amp;&#160;</td>
           <td class="paramname"><em>grid</em></td><td>)</td>
           <td></td>
         </tr>
@@ -120,10 +123,10 @@ template&lt;class Derived &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Constructs a uniform grid distribution based on the provided occupancy grid. </p>
+<p>Constructs a multivariate uniform distribution based on the provided occupancy grid. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Derived</td><td>A type derived from <a class="el" href="classbeluga_1_1BaseOccupancyGrid2.html" title="Occupancy 2D grid base type.">BaseOccupancyGrid2</a>. </td></tr>
+    <tr><td class="paramname">OccupancyGrid</td><td>A type of the occupancy grid. </td></tr>
   </table>
   </dd>
 </dl>
@@ -137,11 +140,13 @@ template&lt;class Derived &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3801caffc4f70e7cdd6abcbc2b3d62e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3801caffc4f70e7cdd6abcbc2b3d62e6">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="ac56de9ec248454be52db5b6fcb2a532b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac56de9ec248454be52db5b6fcb2a532b">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class OccupancyGrid &gt; </div>
 <div class="memtemplate">
 template&lt;class URNG &gt; </div>
 <table class="mlabels">
@@ -149,7 +154,7 @@ template&lt;class URNG &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Sophus::SE2d <a class="el" href="classbeluga_1_1UniformFreeSpaceGridDistribution.html">beluga::UniformFreeSpaceGridDistribution</a>&lt; Sophus::SE2d &gt;::operator() </td>
+          <td class="memname">Sophus::SE2d <a class="el" href="classbeluga_1_1MultivariateUniformDistribution.html">beluga::MultivariateUniformDistribution</a>&lt; Sophus::SE2d, OccupancyGrid &gt;::operator() </td>
           <td>(</td>
           <td class="paramtype">URNG &amp;&#160;</td>
           <td class="paramname"><em>engine</em></td><td>)</td>
@@ -182,7 +187,7 @@ template&lt;class URNG &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/__w/beluga/beluga/src/beluga/beluga/include/beluga/random/<a class="el" href="uniform__free__space__grid__distribution_8hpp_source.html">uniform_free_space_grid_distribution.hpp</a></li>
+<li>/__w/beluga/beluga/src/beluga/beluga/include/beluga/random/<a class="el" href="multivariate__uniform__distribution_8hpp_source.html">multivariate_uniform_distribution.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

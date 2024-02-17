@@ -2,10 +2,10 @@
 <area shape="rect" id="node1" title="Concepts and abstract implementations of linear (ie. contiguous storage) grids." alt="" coords="137,5,329,76"/>
 <area shape="rect" id="node2" href="$occupancy__grid_8hpp.html" title="Concepts and abstract implementations of occupancy grids." alt="" coords="5,124,228,195"/>
 <area shape="rect" id="node9" href="$value__grid_8hpp.html" title="Implementation of generic value grid." alt="" coords="253,124,445,195"/>
-<area shape="rect" id="node3" href="$uniform__free__space__grid__distribution_8hpp_source.html" title=" " alt="" coords="11,243,223,313"/>
-<area shape="rect" id="node6" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="247,243,439,313"/>
-<area shape="rect" id="node4" href="$random_8hpp.html" title="Includes all Beluga random distributions." alt="" coords="26,361,218,417"/>
-<area shape="rect" id="node5" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="27,465,219,521"/>
-<area shape="rect" id="node7" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="245,361,437,417"/>
-<area shape="rect" id="node8" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="245,465,437,521"/>
+<area shape="rect" id="node3" href="$multivariate__uniform__distribution_8hpp.html" title="Implementation of a multivariate uniform distribution for SE(2) and SE(3) spaces." alt="" coords="13,243,221,313"/>
+<area shape="rect" id="node6" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="245,243,437,313"/>
+<area shape="rect" id="node4" href="$random_8hpp.html" title="Includes all Beluga random distributions." alt="" coords="25,361,217,417"/>
+<area shape="rect" id="node5" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="26,465,218,521"/>
+<area shape="rect" id="node7" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="242,361,434,417"/>
+<area shape="rect" id="node8" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="242,465,434,521"/>
 </map>
