@@ -30,30 +30,24 @@ using beluga::testing::Vector3Near;
 
 TEST(MultivariateUniformDistribution, BoundingRegion2d) {
   constexpr double kTolerance = 0.01;
-  auto region = beluga::BoundingRegion2d{};
-  region.x_min = 3.00;
-  region.x_max = region.x_min + kTolerance;
-  region.y_min = -2.00;
-  region.y_max = region.y_min + kTolerance;
+  auto region = Eigen::AlignedBox2d{};
+  region.min() = Eigen::Vector2d{3.00, -2.00};
+  region.max() = region.min() + kTolerance * Eigen::Vector2d::Ones();
   auto distribution = beluga::MultivariateUniformDistribution{region};
   auto engine = std::mt19937{std::random_device()()};
   auto pose = distribution(engine);
-  ASSERT_THAT(pose.translation(), Vector2Near({region.x_min, region.y_min}, kTolerance));
+  ASSERT_THAT(pose.translation(), Vector2Near(region.min(), kTolerance));
 }
 
 TEST(MultivariateUniformDistribution, BoundingRegion3d) {
   constexpr double kTolerance = 0.01;
-  auto region = beluga::BoundingRegion3d{};
-  region.x_min = 3.00;
-  region.x_max = region.x_min + kTolerance;
-  region.y_min = -2.01;
-  region.y_max = region.y_min + kTolerance;
-  region.z_min = 1.00;
-  region.z_max = region.z_min + kTolerance;
+  auto region = Eigen::AlignedBox3d{};
+  region.min() = Eigen::Vector3d{3.00, -2.00, 1.00};
+  region.max() = region.min() + kTolerance * Eigen::Vector3d::Ones();
   auto distribution = beluga::MultivariateUniformDistribution{region};
   auto engine = std::mt19937{std::random_device()()};
   auto pose = distribution(engine);
-  ASSERT_THAT(pose.translation(), Vector3Near({region.x_min, region.y_min, region.z_min}, kTolerance));
+  ASSERT_THAT(pose.translation(), Vector3Near(region.min(), kTolerance));
 }
 
 TEST(MultivariateUniformDistribution, GridSingleSlot) {

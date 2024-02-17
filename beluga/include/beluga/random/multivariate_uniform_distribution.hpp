@@ -20,6 +20,8 @@
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 
+#include <Eigen/Geometry>
+
 #include <beluga/sensor/data/occupancy_grid.hpp>
 
 /**
@@ -37,27 +39,16 @@ namespace beluga {
 template <class T, class Constraint>
 class MultivariateUniformDistribution;
 
-/// Struct representing an axis-aligned bounding region in 2D space.
-struct BoundingRegion2d {
-  double x_min;  ///< Minimum x coordinate of the map.
-  double x_max;  ///< Maximum x coordinate of the map.
-  double y_min;  ///< Minimum y coordinate of the map.
-  double y_max;  ///< Maximum y coordinate of the map.
-};
-
 /// Specialization of multivariate uniform distribution for bounding regions in 2D space.
 template <>
-class MultivariateUniformDistribution<Sophus::SE2d, BoundingRegion2d> {
+class MultivariateUniformDistribution<Sophus::SE2d, Eigen::AlignedBox2d> {
  public:
   /// Constructs a multivariate uniform distribution in SE(2) with 2D bounding region.
   /**
-   * \param params The bounding region parameters.
+   * \param box The axis-aligned bounding region.
    */
-  explicit MultivariateUniformDistribution(const BoundingRegion2d& params)
-      : x_distribution_{params.x_min, params.x_max}, y_distribution_{params.y_min, params.y_max} {
-    assert(params.x_min < params.x_max);
-    assert(params.y_min < params.y_max);
-  }
+  explicit MultivariateUniformDistribution(const Eigen::AlignedBox2d& box)
+      : x_distribution_{box.min().x(), box.max().x()}, y_distribution_{box.min().y(), box.max().y()} {}
 
   /// Generates a random 2D pose within the bounding region.
   /**
@@ -82,35 +73,21 @@ class MultivariateUniformDistribution<Sophus::SE2d, BoundingRegion2d> {
 };
 
 /// Deduction guide for bounding regions in SE2 space.
-MultivariateUniformDistribution(const BoundingRegion2d&)
-    -> MultivariateUniformDistribution<Sophus::SE2d, BoundingRegion2d>;
-
-/// Struct representing an axis-aligned bounding region in 3D space.
-struct BoundingRegion3d {
-  double x_min;  ///< Minimum x coordinate of the map.
-  double x_max;  ///< Maximum x coordinate of the map.
-  double y_min;  ///< Minimum y coordinate of the map.
-  double y_max;  ///< Maximum y coordinate of the map.
-  double z_min;  ///< Minimum z coordinate of the map.
-  double z_max;  ///< Maximum z coordinate of the map.
-};
+MultivariateUniformDistribution(const Eigen::AlignedBox2d&)
+    -> MultivariateUniformDistribution<Sophus::SE2d, Eigen::AlignedBox2d>;
 
 /// Specialization of multivariate uniform distribution for bounding regions in 3D space.
 template <>
-class MultivariateUniformDistribution<Sophus::SE3d, BoundingRegion3d> {
+class MultivariateUniformDistribution<Sophus::SE3d, Eigen::AlignedBox3d> {
  public:
   /// Constructs a multivariate uniform distribution in SE(3) with 3D bounding region.
   /**
-   * \param params The bounding region parameters.
+   * \param box The axis-aligned bounding region.
    */
-  explicit MultivariateUniformDistribution(const BoundingRegion3d& params)
-      : x_distribution_{params.x_min, params.x_max},
-        y_distribution_{params.y_min, params.y_max},
-        z_distribution_{params.z_min, params.z_max} {
-    assert(params.x_min < params.x_max);
-    assert(params.y_min < params.y_max);
-    assert(params.z_min < params.z_max);
-  }
+  explicit MultivariateUniformDistribution(const Eigen::AlignedBox3d& box)
+      : x_distribution_{box.min().x(), box.max().x()},
+        y_distribution_{box.min().y(), box.max().y()},
+        z_distribution_{box.min().z(), box.max().z()} {}
 
   /// Generates a random 3D pose within the bounding region.
   /**
@@ -137,8 +114,8 @@ class MultivariateUniformDistribution<Sophus::SE3d, BoundingRegion3d> {
 };
 
 /// Deduction guide for bounding regions in SE3 space.
-MultivariateUniformDistribution(const BoundingRegion3d&)
-    -> MultivariateUniformDistribution<Sophus::SE3d, BoundingRegion3d>;
+MultivariateUniformDistribution(const Eigen::AlignedBox3d&)
+    -> MultivariateUniformDistribution<Sophus::SE3d, Eigen::AlignedBox3d>;
 
 /// Specialization of multivariate uniform distribution for occupancy grids.
 /**
