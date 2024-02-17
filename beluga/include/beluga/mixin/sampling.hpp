@@ -21,6 +21,7 @@
 
 #include <beluga/algorithm/exponential_filter.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
+#include <beluga/random/multivariate_uniform_distribution.hpp>
 #include <beluga/type_traits.hpp>
 #include <beluga/views/particles.hpp>
 #include <beluga/views/random_intersperse.hpp>
@@ -52,6 +53,7 @@ namespace beluga {
  * - An instance `g` of `G`.
  *
  * Then:
+ * - `p.make_random_state()` returns an `S` value.
  * - `p.generate_samples(g)` returns a [range](https://en.cppreference.com/w/cpp/ranges/range)
  *   whose value type is `S`.
  *
@@ -114,26 +116,40 @@ namespace beluga {
 /**
  * An implementation of \ref StateGeneratorPage.
  *
- * \tparam Mixin The mixed-in type. An instance `m` of `Mixin` must provide:
- * - A `make_random_state()` method that satisfies the requirements specified
- *   in \ref SensorModelPage.
+ * \tparam Mixin The mixed-in type.
+ * \tparam State The state type of a particle.
+ * \tparam Constraint The constraint type for state generation.
  */
-template <class Mixin>
+template <class Mixin, class State, class Constraint>
 class RandomStateGenerator : public Mixin {
  public:
   /// Constructs a RandomStateGenerator instance.
   /**
    * \tparam ...Args Arguments types for the remaining mixin constructors.
+   * \param constraint Constraint (or limits) to abide to during state generation.
    * \param ...args Arguments that are not used by this part of the mixin, but by others.
    */
   template <class... Args>
-  explicit RandomStateGenerator(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+  explicit RandomStateGenerator(Constraint constraint, Args&&... args)
+      : Mixin(std::forward<Args>(args)...), state_distribution_(std::move(constraint)) {}
+
+  /// Generates a new random state.
+  /**
+   * The generated state will abide to generator constraints.
+   *
+   * \tparam Generator  A random number generator that must satisfy the
+   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
+   *  requirements.
+   * \param engine An uniform random bit generator object.
+   * \return The generated random state.
+   */
+  template <class Generator>
+  [[nodiscard]] State make_random_state(Generator& engine) {
+    return state_distribution_(engine);
+  }
 
   /// Generates new random state samples.
   /**
-   * The states are generated according to the `make_random_state()` method
-   * provided by the mixin.
-   *
    * \tparam Generator  A random number generator that must satisfy the
    *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
    *  requirements.
@@ -144,6 +160,9 @@ class RandomStateGenerator : public Mixin {
   [[nodiscard]] auto generate_samples(Generator& engine) {
     return ranges::views::generate([this, &engine]() { return this->self().make_random_state(engine); });
   }
+
+ private:
+  MultivariateUniformDistribution<State, Constraint> state_distribution_;
 };
 
 /// Generation of samples from input particles.
@@ -207,7 +226,7 @@ struct AdaptiveSamplerParam {
  * - A `states()` and `weights()`  methods that satisfy
  *   the requirements specified in \ref StoragePolicyPage.
  * - A `make_random_state()` method that satisfies the requirements specified in
- *   \ref SensorModelPage.
+ *   \ref StateGeneratorPage.
  */
 template <class Mixin>
 class AdaptiveSampler : public Mixin {

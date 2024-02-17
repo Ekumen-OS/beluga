@@ -47,6 +47,18 @@ void AssertWeights(Input&& input, Output&& output) {
 }
 
 template <class Mixin>
+using RandomStateGenerator2d = beluga::RandomStateGenerator<Mixin, Sophus::SE2d, Eigen::AlignedBox2d>;
+
+TEST(RandomStateGenerator, InstantiateAndCall) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto limits = Eigen::AlignedBox2d{Eigen::Vector2d{-1., -1.}, Eigen::Vector2d{1., 1.}};
+  auto instance = ciabatta::mixin<RandomStateGenerator2d>{limits};
+  for (auto state : instance.generate_samples(generator) | ranges::views::take_exactly(100'000)) {
+    EXPECT_TRUE(limits.contains(state.translation()));
+  }
+}
+
+template <class Mixin>
 class MockStorage : public Mixin {
  public:
   using particle_type = std::tuple<int, beluga::Weight>;
@@ -57,14 +69,6 @@ class MockStorage : public Mixin {
   MOCK_METHOD(int, make_random_state, (std::mt19937&));
   MOCK_METHOD(const std::vector<particle_type>&, particles, (), (const));
 };
-
-TEST(RandomStateGenerator, InstantiateAndCall) {
-  auto generator = std::mt19937{std::random_device()()};
-  auto instance = ciabatta::mixin<MockStorage, beluga::RandomStateGenerator>{};
-  EXPECT_CALL(instance, make_random_state(_)).WillRepeatedly(Return(5));
-  auto output = instance.generate_samples(generator) | ranges::views::take_exactly(50);
-  ASSERT_EQ(ranges::size(output), 50);
-}
 
 TEST(NaiveSampler, Distribution) {
   auto generator = std::mt19937{std::random_device()()};

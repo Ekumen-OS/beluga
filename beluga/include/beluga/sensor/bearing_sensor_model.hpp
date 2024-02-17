@@ -75,34 +75,6 @@ class BearingSensorModel {
   explicit BearingSensorModel(param_type params, LandmarkMap landmark_map)
       : params_{std::move(params)}, landmark_map_{std::move(landmark_map)} {}
 
-  /**
-   * The generated state is an unoccupied cell of the grid, any free cell is
-   * sampled uniformly. The rotation is sampled uniformly as well.
-   *
-   * \tparam Generator  A random number generator that must satisfy the
-   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
-   *  requirements.
-   * \param gen An uniform random bit generator object.
-   * \return The generated random state.
-   */
-  template <class Generator>
-  [[nodiscard]] state_type make_random_state(Generator& gen) const {
-    const auto map_boundaries = landmark_map_.map_limits();
-
-    if constexpr (std::is_same_v<state_type, Sophus::SE3d>) {
-      auto x_distribution = std::uniform_real_distribution<double>{map_boundaries.x_min, map_boundaries.x_max};
-      auto y_distribution = std::uniform_real_distribution<double>{map_boundaries.y_min, map_boundaries.y_max};
-      auto z_distribution = std::uniform_real_distribution<double>{map_boundaries.z_min, map_boundaries.z_max};
-      return Sophus::SE3d{
-          Sophus::SO3d::sampleUniform(gen),
-          Eigen::Vector3d{x_distribution(gen), y_distribution(gen), z_distribution(gen)}};
-    } else {
-      auto x_distribution = std::uniform_real_distribution<double>{map_boundaries.x_min, map_boundaries.x_max};
-      auto y_distribution = std::uniform_real_distribution<double>{map_boundaries.y_min, map_boundaries.y_max};
-      return Sophus::SE2d{Sophus::SO2d::sampleUniform(gen), Eigen::Vector2d{x_distribution(gen), y_distribution(gen)}};
-    }
-  }
-
   /// Gets the importance weight for a particle with the provided state.
   /**
    * \param state State of the particle to calculate its importance weight.

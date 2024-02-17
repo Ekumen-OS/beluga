@@ -41,7 +41,6 @@
  *   This will not actually update the particle weights, but the update done here
  *   will be used in the following `importance_weight()` method calls.
  * - `cp.importance_weight(s)` returns a `T::weight_type` instance representing the weight of the particle.
- * - `cp.make_random_state()` returns a `T::state_type` instance.
  *
  * \section SensorModelLinks See also
  * - beluga::LikelihoodFieldModel

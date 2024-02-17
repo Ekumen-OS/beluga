@@ -656,6 +656,8 @@ AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State& st
 
 std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
     nav_msgs::msg::OccupancyGrid::SharedPtr map) {
+  auto state_constraints = beluga_ros::OccupancyGrid{map};
+
   auto sampler_params = beluga::AdaptiveSamplerParam{};
   sampler_params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
   sampler_params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
@@ -736,6 +738,7 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNode::make_particle_filter(
           using MotionModel = decltype(motion_model);
           using SensorModel = decltype(sensor_model);
           return std::make_unique<AdaptiveMonteCarloLocalization2d<MotionModel, SensorModel>>(
+              state_constraints,          //
               sampler_params,             //
               limiter_params,             //
               motion_model,               //
