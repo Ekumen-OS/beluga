@@ -30,21 +30,37 @@ fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 
-echo "::group::Build"
-# Do a build without coverage flags first to avoid generating .gcno files
-# that prevent the html output from lcov from being generated correctly.
-colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
-colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest --cmake-args -DBUILD_TESTING=ON -DBUILD_DOCS=ON
-echo "::endgroup::"
+echo ::group::Build
+colcon build \
+    --packages-up-to ${ROS_PACKAGES} \
+    --cmake-force-configure \
+    --event-handlers=console_cohesion+ \
+    --symlink-install \
+    --mixin ccache coverage-gcc coverage-pytest \
+    --cmake-args \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DBUILD_TESTING=ON \
+        -DBUILD_DOCS=ON
+echo ::endgroup::
 
-echo "::group::Test"
+echo ::group::Test
 colcon lcov-result --initial
-colcon test --packages-select ${ROS_PACKAGES} --event-handlers=console_cohesion+ --return-code-on-test-failure --mixin coverage-pytest
-echo "::endgroup::"
+colcon test \
+    --packages-select ${ROS_PACKAGES} \
+    --event-handlers=console_cohesion+ \
+    --return-code-on-test-failure \
+    --mixin coverage-pytest
+echo ::endgroup::
 
 LCOV_CONFIG_PATH=${SCRIPT_PATH}/../.lcovrc
 
-echo "::group::Generate code coverage results"
-colcon lcov-result --packages-select ${ROS_PACKAGES} --lcov-config-file ${LCOV_CONFIG_PATH} --verbose
-colcon coveragepy-result --packages-select ${ROS_PACKAGES} --verbose --coverage-report-args -m
-echo "::endgroup::"
+echo ::group::Generate code coverage results
+colcon lcov-result \
+    --packages-select ${ROS_PACKAGES} \
+    --lcov-config-file ${LCOV_CONFIG_PATH} \
+    --verbose
+colcon coveragepy-result \
+    --packages-select ${ROS_PACKAGES} \
+    --coverage-report-args -m \
+    --verbose
+echo ::endgroup::

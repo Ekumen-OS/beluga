@@ -61,8 +61,9 @@ struct sample_view : public ranges::view_facade<sample_view<Range, Distribution,
       : range_{std::move(range)},
         distribution_{std::make_shared<Distribution>(std::move(distribution))},
         engine_{std::addressof(engine)} {
+    assert(ranges::size(range) > 0);
     assert(distribution_->min() == 0);
-    assert(distribution_->max() == ranges::size(range_) - 1);
+    assert(distribution_->max() == static_cast<typename Distribution::result_type>(ranges::size(range_)) - 1);
   }
 
  private:

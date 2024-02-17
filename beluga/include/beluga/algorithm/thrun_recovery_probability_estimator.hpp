@@ -44,8 +44,8 @@ class ThrunRecoveryProbabilityEstimator {
    */
   constexpr ThrunRecoveryProbabilityEstimator(double alpha_slow, double alpha_fast) noexcept
       : slow_filter_{alpha_slow}, fast_filter_{alpha_fast} {
-    assert(0 < alpha_slow);
-    assert(alpha_slow < alpha_fast);
+    assert(0 <= alpha_slow);
+    assert(alpha_slow <= alpha_fast);
   }
 
   /// Reset the internal state of the estimator.

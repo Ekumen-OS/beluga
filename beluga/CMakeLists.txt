@@ -25,6 +25,18 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "Build type" FORCE)
 endif()
 
+# Enable assertions in RelWithDebInfo builds by removing the NDEBUG definition.
+string(
+  REPLACE "-DNDEBUG"
+          ""
+          CMAKE_CXX_FLAGS_RELWITHDEBINFO
+          "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+string(
+  REPLACE "-DNDEBUG"
+          ""
+          CMAKE_C_FLAGS_RELWITHDEBINFO
+          "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+
 add_library(beluga_compile_options INTERFACE)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   target_compile_options(

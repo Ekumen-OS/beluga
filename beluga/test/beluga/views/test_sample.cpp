@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest-death-test.h>
 
 #include "beluga/views/sample.hpp"
 
@@ -24,6 +25,11 @@
 #include <range/v3/view/take_exactly.hpp>
 
 namespace {
+
+TEST(SampleView, FromEmptyRange) {
+  auto input = std::vector<int>{};
+  ASSERT_DEBUG_DEATH(beluga::views::sample(input), "Assertion");
+}
 
 TEST(SampleView, ConceptChecksFromContiguousRange) {
   auto input = std::array{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};

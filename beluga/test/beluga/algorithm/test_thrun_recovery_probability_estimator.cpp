@@ -13,10 +13,23 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest-death-test.h>
 
 #include <beluga/algorithm/thrun_recovery_probability_estimator.hpp>
 
 namespace {
+
+TEST(ThrunRecoveryProbabilityEstimator, InvalidAlphaSlow) {
+  const double alpha_slow = -0.2;
+  const double alpha_fast = 0.4;
+  ASSERT_DEBUG_DEATH(beluga::ThrunRecoveryProbabilityEstimator(alpha_slow, alpha_fast), "Assertion");
+}
+
+TEST(ThrunRecoveryProbabilityEstimator, InvalidAlphaFast) {
+  const double alpha_slow = 0.2;
+  const double alpha_fast = 0.1;
+  ASSERT_DEBUG_DEATH(beluga::ThrunRecoveryProbabilityEstimator(alpha_slow, alpha_fast), "Assertion");
+}
 
 TEST(ThrunRecoveryProbabilityEstimator, ProbabilityWithNoParticles) {
   // Test the probability when the particle set is empty.
