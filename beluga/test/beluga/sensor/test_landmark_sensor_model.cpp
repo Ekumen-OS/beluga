@@ -61,7 +61,7 @@ Sophus::SE3d get_robot_pose_in_world<Sophus::SE3d>() {
   return Sophus::SE3d{Sophus::SO3d::rotZ(-Sophus::Constants<double>::pi() / 2.0), Eigen::Vector3d{1.0, -1.0, 0.0}};
 }
 
-LandmarkMapBoundaries default_map_boundaries{-10.0, -10.0, 10.0, 10.0, 0.0, 0.0};
+LandmarkMapBoundaries default_map_boundaries{Eigen::Vector3d{-10.0, -10.0, 0.0}, Eigen::Vector3d{10.0, 10.0, 0.0}};
 
 template <typename T>
 struct LandmarkSensorModelTests : public ::testing::Test {};

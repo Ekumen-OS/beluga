@@ -17,6 +17,7 @@
 
 // external
 #include <eigen3/Eigen/Core>
+#include <eigen3/Eigen/Geometry>
 
 // standard library
 #include <cstdint>
@@ -32,15 +33,7 @@ using LandmarkCategory = uint32_t;          ///< Type used to represent landmark
 using LandmarkPosition3 = Eigen::Vector3d;  ///< Position of a landmark in the world reference frame.
 using LandmarkBearing3 = Eigen::Vector3d;   ///< Bearing of a landmark in the sensor reference frame.
 
-/// Landmark bearing detection data
-struct LandmarkMapBoundaries {
-  double x_min;  ///< Minimum x coordinate of the map.
-  double x_max;  ///< Maximum x coordinate of the map.
-  double y_min;  ///< Minimum y coordinate of the map.
-  double y_max;  ///< Maximum y coordinate of the map.
-  double z_min;  ///< Minimum z coordinate of the map.
-  double z_max;  ///< Maximum z coordinate of the map.
-};
+using LandmarkMapBoundaries = Eigen::AlignedBox3d;  ///< Boundaries of a landmark map.
 
 /// Landmark bearing detection data
 struct LandmarkPositionDetection {

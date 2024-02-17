@@ -26,7 +26,8 @@
 namespace {
 
 struct LandmarkMapCartesianTest : public ::testing::Test {
-  beluga::LandmarkMapBoundaries default_map_boundaries{0.0, 10.0, 1.0, 11.0, 2.0, 12.0};
+  beluga::LandmarkMapBoundaries default_map_boundaries{
+      Eigen::Vector3d{0.0, 1.0, 2.0}, Eigen::Vector3d{10.0, 11.0, 12.0}};
 };
 
 TEST_F(LandmarkMapCartesianTest, SmokeTest) {
@@ -65,7 +66,8 @@ TEST_F(LandmarkMapCartesianTest, EmptyMap) {
 }
 
 struct LandmarkMapBearingTest : public ::testing::Test {
-  beluga::LandmarkMapBoundaries default_map_boundaries{0.0, 10.0, 1.0, 11.0, 2.0, 12.0};
+  beluga::LandmarkMapBoundaries default_map_boundaries{
+      Eigen::Vector3d{0.0, 1.0, 2.0}, Eigen::Vector3d{10.0, 11.0, 12.0}};
 
   beluga::LandmarkMap uut{
       default_map_boundaries,
@@ -86,12 +88,12 @@ struct LandmarkMapBearingTest : public ::testing::Test {
 };
 
 TEST_F(LandmarkMapBearingTest, MapLimits) {
-  ASSERT_DOUBLE_EQ(uut.map_limits().x_min, 0.0);
-  ASSERT_DOUBLE_EQ(uut.map_limits().x_max, 10.0);
-  ASSERT_DOUBLE_EQ(uut.map_limits().y_min, 1.0);
-  ASSERT_DOUBLE_EQ(uut.map_limits().y_max, 11.0);
-  ASSERT_DOUBLE_EQ(uut.map_limits().z_min, 2.0);
-  ASSERT_DOUBLE_EQ(uut.map_limits().z_max, 12.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().min().x(), 0.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().max().x(), 10.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().min().y(), 1.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().max().y(), 11.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().min().z(), 2.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().max().z(), 12.0);
 }
 
 TEST_F(LandmarkMapBearingTest, TrivialQuery1) {
