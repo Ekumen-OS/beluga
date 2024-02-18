@@ -22,6 +22,7 @@ add_executable(
   actions/test_reweight.cpp
   algorithm/raycasting/test_bresenham.cpp
   algorithm/test_amcl_core.cpp
+  algorithm/test_cluster_based_estimation.cpp
   algorithm/test_distance_map.cpp
   algorithm/test_effective_sample_size.cpp
   algorithm/test_estimation.cpp
