@@ -31,7 +31,7 @@ namespace beluga {
 using Sensor2D = beluga::BearingSensorModel2d<LandmarkMap>;
 using Sensor3D = beluga::BearingSensorModel3d<LandmarkMap>;
 
-LandmarkMapBoundaries default_map_boundaries{-10.0, -10.0, 10.0, 10.0, 0.0, 0.0};
+LandmarkMapBoundaries default_map_boundaries{Eigen::Vector3d{-10.0, -10.0, 0.0}, Eigen::Vector3d{10.0, 10.0, 0.0}};
 
 double expected_aggregate_probability(std::vector<double> landmark_probs) {
   // nav2_amcl formula, $1.0 + \sum_{i=1}^n p_i^3$
