@@ -14,9 +14,12 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/algorithm/estimation.hpp>
+#include <beluga/estimation.hpp>
 #include <beluga/testing.hpp>
 #include <ciabatta/ciabatta.hpp>
+#include <range/v3/view/cache1.hpp>
+#include <range/v3/view/filter.hpp>
+#include <range/v3/view/zip.hpp>
 
 namespace {
 
@@ -220,6 +223,47 @@ TEST_F(PoseCovarianceEstimation, RandomWalkWithSmoothRotationAndNonUniformWeight
   ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.0000, 0.0000, 0.0855}, kTolerance));
 }
 
+TEST_F(PoseCovarianceEstimation, ClusterEstimation) {
+  // test the weights have effect by selecting a few states and ignoring others
+  const auto states = std::vector{
+      SE2d{SO2d{Constants::pi() / 6}, Vector2d{0.0, -3.0}},  //
+      SE2d{SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}},  //
+      SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, -1.0}},  //
+      SE2d{SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}},  //
+      SE2d{SO2d{Constants::pi() / 6}, Vector2d{2.0, -3.0}},  //
+      SE2d{SO2d{Constants::pi() / 2}, Vector2d{3.0, -2.0}},  //
+      SE2d{SO2d{Constants::pi() / 3}, Vector2d{4.0, -2.0}},  //
+      SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, -3.0}},  //
+  };
+
+  // cluster 0 has the max weight, except for cluster 3 which will be ignored because it has only a single particle
+  const auto weights = std::vector{0.5, 0.5, 0.2, 0.3, 0.3, 0.2, 0.2, 1.0};
+  const auto clusters = std::vector{0, 0, 1, 2, 2, 1, 1, 3};
+
+  const auto particles = ranges::views::zip(states, weights, clusters);
+
+  auto cluster_0_particles =
+      particles | ranges::views::cache1 | ranges::views::filter([](const auto& p) { return std::get<2>(p) == 0; });
+
+  auto cluster_0_states = cluster_0_particles | beluga::views::elements<0>;
+  auto cluster_0_weights = cluster_0_particles | beluga::views::elements<1>;
+
+  const auto [expected_pose, expected_covariance] = beluga::estimate(cluster_0_states, cluster_0_weights);
+  const auto per_cluster_estimates = beluga::estimate_clusters(states, weights, clusters);
+
+  ASSERT_EQ(per_cluster_estimates.size(), 3);  // cluster 3 should be ignored because it has only one particle
+
+  const auto [_, pose, covariance] =
+      *ranges::max_element(per_cluster_estimates, std::less{}, [](const auto& t) { return std::get<0>(t); });
+
+  constexpr double kTolerance = 0.001;
+
+  ASSERT_THAT(pose, SE2Near(expected_pose.so2(), expected_pose.translation(), kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near(expected_covariance.col(0).eval(), kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near(expected_covariance.col(1).eval(), kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near(expected_covariance.col(2).eval(), kTolerance));
+}
+
 template <class Mixin>
 class MockMixin : public Mixin {
  public:
@@ -248,6 +292,26 @@ TEST(SimpleStateEstimator, SimpleStateEstimatorUsesUniformWeights) {
 }
 
 TEST(WeightedStateEstimator, WeightedStateEstimatorDoesWeightedEstimation) {
+  // test that the weighted state estimator uses the provided weights for mean and covariance estimation
+  using UUT = ciabatta::mixin<
+      beluga::WeightedStateEstimator2d, MockMixin, ciabatta::provides<beluga::EstimationInterface2d>::mixin>;
+  const auto mixin = UUT{};
+  const auto states = std::vector{
+      SE2d{SO2d{Constants::pi() / 6}, Vector2d{0.0, -3.0}}, SE2d{SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}},
+      SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, -1.0}}, SE2d{SO2d{0.0}, Vector2d{3.0, 0.0}}};
+  const auto weights = std::vector{0.1, 0.5, 0.5, 0.1};
+  constexpr double kTolerance = 0.001;
+  EXPECT_CALL(mixin, states).WillRepeatedly(ReturnRef(states));
+  EXPECT_CALL(mixin, weights).WillRepeatedly(ReturnRef(weights));
+  const auto [pose, covariance] = mixin.estimate();
+  const auto [expected_pose, expected_covariance] = beluga::estimate(states, weights);
+  ASSERT_THAT(pose, SE2Near(expected_pose, kTolerance));
+  ASSERT_THAT(covariance.col(0).eval(), Vector3Near(expected_covariance.col(0).eval(), kTolerance));
+  ASSERT_THAT(covariance.col(1).eval(), Vector3Near(expected_covariance.col(1).eval(), kTolerance));
+  ASSERT_THAT(covariance.col(2).eval(), Vector3Near(expected_covariance.col(2).eval(), kTolerance));
+}
+
+TEST(ClusterStateEstimator, ClusterEstimationReturnsTheRightEstimates) {
   // test that the weighted state estimator uses the provided weights for mean and covariance estimation
   using UUT = ciabatta::mixin<
       beluga::WeightedStateEstimator2d, MockMixin, ciabatta::provides<beluga::EstimationInterface2d>::mixin>;

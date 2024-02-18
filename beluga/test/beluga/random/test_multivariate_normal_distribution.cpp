@@ -14,7 +14,7 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga/algorithm/estimation.hpp>
+#include <beluga/estimation.hpp>
 #include <beluga/random/multivariate_normal_distribution.hpp>
 #include <beluga/testing.hpp>
 
