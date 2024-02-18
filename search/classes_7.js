@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['indexingiterator_489',['IndexingIterator',['../classbeluga_1_1IndexingIterator.html',1,'beluga']]],
-  ['is_5ftuple_5flike_490',['is_tuple_like',['../structbeluga_1_1is__tuple__like.html',1,'beluga']]],
-  ['iterator_491',['iterator',['../classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html',1,'beluga::Bresenham2i::Line']]]
+  ['indexingiterator_484',['IndexingIterator',['../classbeluga_1_1IndexingIterator.html',1,'beluga']]],
+  ['is_5ftuple_5flike_485',['is_tuple_like',['../structbeluga_1_1is__tuple__like.html',1,'beluga']]],
+  ['iterator_486',['iterator',['../classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html',1,'beluga::Bresenham2i::Line']]]
 ];

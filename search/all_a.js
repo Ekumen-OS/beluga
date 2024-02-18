@@ -9,7 +9,7 @@ var searchData=
   ['landmarkbearingdetection_174',['LandmarkBearingDetection',['../structbeluga_1_1LandmarkBearingDetection.html',1,'beluga']]],
   ['landmarkcategory_175',['LandmarkCategory',['../landmark__detection__types_8hpp.html#a3f3fd6c08450af2a226fbb4f87d19736',1,'beluga']]],
   ['landmarkmap_176',['LandmarkMap',['../classbeluga_1_1LandmarkMap.html',1,'beluga::LandmarkMap'],['../classbeluga_1_1LandmarkMap.html#a6b60e286b5386b4e3077de9f8ec7881b',1,'beluga::LandmarkMap::LandmarkMap()']]],
-  ['landmarkmapboundaries_177',['LandmarkMapBoundaries',['../structbeluga_1_1LandmarkMapBoundaries.html',1,'beluga']]],
+  ['landmarkmapboundaries_177',['LandmarkMapBoundaries',['../landmark__detection__types_8hpp.html#aef2cc9d22f63d2e373431b4560a7761d',1,'beluga']]],
   ['landmarkmodelparam_178',['LandmarkModelParam',['../structbeluga_1_1LandmarkModelParam.html',1,'beluga']]],
   ['landmarkposition3_179',['LandmarkPosition3',['../landmark__detection__types_8hpp.html#aba152cf80db0f1b6d33cf85ecaa77513',1,'beluga']]],
   ['landmarkpositiondetection_180',['LandmarkPositionDetection',['../structbeluga_1_1LandmarkPositionDetection.html',1,'beluga']]],
