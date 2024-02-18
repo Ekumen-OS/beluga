@@ -171,6 +171,8 @@ void AmclNodelet::config_callback(beluga_amcl::AmclConfig& config, [[maybe_unuse
 
 std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
     const nav_msgs::OccupancyGrid::ConstPtr& map) {
+  auto state_constraints = beluga_ros::OccupancyGrid{map};
+
   auto sampler_params = beluga::AdaptiveSamplerParam{};
   sampler_params.alpha_slow = config_.recovery_alpha_slow;
   sampler_params.alpha_fast = config_.recovery_alpha_fast;
@@ -247,6 +249,7 @@ std::unique_ptr<LaserLocalizationInterface2d> AmclNodelet::make_particle_filter(
           using MotionModel = decltype(motion_model);
           using SensorModel = decltype(sensor_model);
           return std::make_unique<AdaptiveMonteCarloLocalization2d<MotionModel, SensorModel>>(
+              state_constraints,          //
               sampler_params,             //
               limiter_params,             //
               motion_model,               //

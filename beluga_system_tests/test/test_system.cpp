@@ -259,6 +259,8 @@ TestData test_data_from_ros2bag(
 }
 
 std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
+  auto state_constraints = beluga_ros::OccupancyGrid{map};
+
   auto sampler_params = beluga::AdaptiveSamplerParam{};
   sampler_params.alpha_slow = 0.001;
   sampler_params.alpha_fast = 0.1;
@@ -291,6 +293,7 @@ std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::Oc
 
   return std::make_unique<AdaptiveMonteCarloLocalization2d<
       beluga::DifferentialDriveModel, beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>>(
+      state_constraints,                                                                       //
       sampler_params,                                                                          //
       limiter_params,                                                                          //
       beluga::DifferentialDriveModel{motion_params},                                           //
@@ -301,6 +304,8 @@ std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::Oc
 }
 
 std::unique_ptr<LaserLocalizationInterface2d> likelihood_mcl_pf_from_map(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
+  auto state_constraints = beluga_ros::OccupancyGrid{map};
+
   auto limiter_params = beluga::FixedLimiterParam{};
   limiter_params.max_samples = 2000UL;
 
@@ -329,6 +334,7 @@ std::unique_ptr<LaserLocalizationInterface2d> likelihood_mcl_pf_from_map(nav_msg
 
   return std::make_unique<MonteCarloLocalization2d<
       beluga::DifferentialDriveModel, beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>>(
+      state_constraints,                                                                       //
       limiter_params,                                                                          //
       beluga::DifferentialDriveModel{motion_params},                                           //
       beluga::LikelihoodFieldModel{sensor_params, beluga_ros::OccupancyGrid{std::move(map)}},  //
@@ -338,6 +344,8 @@ std::unique_ptr<LaserLocalizationInterface2d> likelihood_mcl_pf_from_map(nav_msg
 }
 
 std::unique_ptr<LaserLocalizationInterface2d> beam_mcl_pf_from_map(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
+  auto state_constraints = beluga_ros::OccupancyGrid{map};
+
   auto limiter_params = beluga::FixedLimiterParam{};
   limiter_params.max_samples = 2000UL;
 
@@ -362,6 +370,7 @@ std::unique_ptr<LaserLocalizationInterface2d> beam_mcl_pf_from_map(nav_msgs::msg
 
   return std::make_unique<
       MonteCarloLocalization2d<beluga::DifferentialDriveModel, beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>>(
+      state_constraints,                                                                  //
       limiter_params,                                                                     //
       beluga::DifferentialDriveModel{motion_params},                                      //
       beluga::BeamSensorModel{sensor_params, beluga_ros::OccupancyGrid{std::move(map)}},  //

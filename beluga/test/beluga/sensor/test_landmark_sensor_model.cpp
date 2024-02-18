@@ -172,37 +172,6 @@ TYPED_TEST(LandmarkSensorModelTests, NoSuchLandmark) {
       uut->importance_weight(get_robot_pose_in_world<typename TypeParam::state_type>()), 1e-02);
 }
 
-TYPED_TEST(LandmarkSensorModelTests, SampleGeneration) {
-  // check that if I draw 1000 samples, I get a distribution that matches the expected one
-  auto uut = std::make_unique<TypeParam>(
-      get_default_model_params(),  //
-      LandmarkMap(                 //
-          default_map_boundaries,  //
-          {}));
-
-  // create a random generator engine
-  std::default_random_engine rd{42};
-
-  // get the limits of the map
-  const auto [xmin, xmax, ymin, ymax, zmin, zmax] = default_map_boundaries;
-
-  // generate 1000 samples, checking each of them to be within the map limits
-  std::vector<typename TypeParam::state_type> samples;
-  for (int i = 0; i < 1000; ++i) {
-    const auto sample = uut->make_random_state(rd);
-
-    EXPECT_GE(sample.translation().x(), xmin);
-    EXPECT_LE(sample.translation().x(), xmax);
-    EXPECT_GE(sample.translation().y(), ymin);
-    EXPECT_LE(sample.translation().y(), ymax);
-
-    if constexpr (std::is_same_v<typename TypeParam::state_type, Sophus::SE3d>) {
-      EXPECT_GE(sample.translation().z(), zmin);
-      EXPECT_LE(sample.translation().z(), zmax);
-    }
-  }
-}
-
 }  // namespace
 
 }  // namespace beluga

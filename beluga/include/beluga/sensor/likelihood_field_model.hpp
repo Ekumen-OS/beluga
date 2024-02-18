@@ -99,26 +99,6 @@ class LikelihoodFieldModel {
   /// Returns the likelihood field, constructed from the provided map.
   [[nodiscard]] const auto& likelihood_field() const { return likelihood_field_; }
 
-  // TODO(ivanpauno): is sensor model the best place for this?
-  // Maybe the map could be provided by a different part of the mixin,
-  // and that part could be used to generate the random state.
-  /// Generates a random particle state.
-  /**
-   * The generated state is an unoccupied cell of the grid, any free cell is sampled uniformly.
-   * The rotation is as well sampled uniformly.
-   *
-   * \tparam Generator  A random number generator that must satisfy the
-   *  [UniformRandomBitGenerator](https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator)
-   *  requirements.
-   * \param gen An uniform random bit generator object.
-   * \return The generated random state.
-   */
-  template <class Generator>
-  [[nodiscard]] state_type make_random_state(Generator& gen) const {
-    auto index_distribution = std::uniform_int_distribution<std::size_t>{0, free_states_.size() - 1};
-    return Sophus::SE2d{Sophus::SO2d::sampleUniform(gen), free_states_[index_distribution(gen)]};
-  }
-
   /// Gets the importance weight for a particle with the provided state.
   /**
    * \param state State of the particle to calculate its importance weight.
