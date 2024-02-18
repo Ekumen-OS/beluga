@@ -91,8 +91,10 @@ class LikelihoodFieldModel {
    *  uses to compute a likelihood field for lidar hits and compute importance weights
    *  for particle states.
    */
-  explicit LikelihoodFieldModel(const param_type& params, OccupancyGrid grid)
-      : params_{params}, grid_{std::move(grid)}, likelihood_field_{make_likelihood_field(params, grid_)} {}
+  explicit LikelihoodFieldModel(const param_type& params, const map_type& grid)
+      : params_{params},
+        likelihood_field_{make_likelihood_field(params, grid)},
+        world_to_likelihood_field_transform_{grid.origin().inverse()} {}
 
   /// Returns the likelihood field, constructed from the provided map.
   [[nodiscard]] const auto& likelihood_field() const { return likelihood_field_; }
@@ -105,7 +107,7 @@ class LikelihoodFieldModel {
    */
   [[nodiscard]] auto operator()(measurement_type&& points) const {
     return [this, points = std::move(points)](const state_type& state) -> weight_type {
-      const auto transform = grid_.origin().inverse() * state;
+      const auto transform = world_to_likelihood_field_transform_ * state;
       const auto x_offset = transform.translation().x();
       const auto y_offset = transform.translation().y();
       const auto cos_theta = transform.so2().unit_complex().x();
@@ -132,19 +134,19 @@ class LikelihoodFieldModel {
 
   /// Update the sensor model with a new occupancy grid map.
   /**
-   * This method also re-computes the underlying likelihood field.
+   * This method re-computes the underlying likelihood field.
    *
    * \param map New occupancy grid representing the static map.
    */
-  void update_map(map_type&& map) {
-    grid_ = std::move(map);
-    likelihood_field_ = make_likelihood_field(params_, grid_);
+  void update_map(const map_type& grid) {
+    likelihood_field_ = make_likelihood_field(params_, grid);
+    world_to_likelihood_field_transform_ = grid.origin().inverse();
   }
 
  private:
   param_type params_;
-  OccupancyGrid grid_;
   ValueGrid2<double> likelihood_field_;
+  Sophus::SE2d world_to_likelihood_field_transform_;
 
   static ValueGrid2<double> make_likelihood_field(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid) {
     const auto squared_distance = [&grid,
