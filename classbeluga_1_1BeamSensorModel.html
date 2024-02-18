@@ -109,10 +109,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae6621e0d9de95cfd619cc5ffb30eb4a7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#ae6621e0d9de95cfd619cc5ffb30eb4a7">BeamSensorModel</a> (const <a class="el" href="classbeluga_1_1BeamSensorModel.html#a57cb0014dc65c2f08fd4300f95cc1cb6">param_type</a> &amp;params, OccupancyGrid grid)</td></tr>
 <tr class="memdesc:ae6621e0d9de95cfd619cc5ffb30eb4a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1BeamSensorModel.html" title="Beam sensor model for range finders.">BeamSensorModel</a> instance.  <a href="classbeluga_1_1BeamSensorModel.html#ae6621e0d9de95cfd619cc5ffb30eb4a7">More...</a><br /></td></tr>
 <tr class="separator:ae6621e0d9de95cfd619cc5ffb30eb4a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9991ebf2c6d63df3049b4c0229923ed7"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
-<tr class="memitem:a9991ebf2c6d63df3049b4c0229923ed7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1BeamSensorModel.html#aa28cd0a50ede746d7f634517d74c4cd8">state_type</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a9991ebf2c6d63df3049b4c0229923ed7">make_random_state</a> (Generator &amp;gen) const</td></tr>
-<tr class="memdesc:a9991ebf2c6d63df3049b4c0229923ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a random particle state.  <a href="classbeluga_1_1BeamSensorModel.html#a9991ebf2c6d63df3049b4c0229923ed7">More...</a><br /></td></tr>
-<tr class="separator:a9991ebf2c6d63df3049b4c0229923ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4415ae84f38374c68d1f853573a77d4f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a15934f1caebd06f58ebf6654fbc414a3">weight_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BeamSensorModel.html#a4415ae84f38374c68d1f853573a77d4f">importance_weight</a> (const <a class="el" href="classbeluga_1_1BeamSensorModel.html#aa28cd0a50ede746d7f634517d74c4cd8">state_type</a> &amp;state) const</td></tr>
 <tr class="memdesc:a4415ae84f38374c68d1f853573a77d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the importance weight for a particle with the provided state.  <a href="classbeluga_1_1BeamSensorModel.html#a4415ae84f38374c68d1f853573a77d4f">More...</a><br /></td></tr>
 <tr class="separator:a4415ae84f38374c68d1f853573a77d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,52 +215,6 @@ template&lt;class OccupancyGrid &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Calculated importance weight. </dd></dl>
-
-</div>
-</div>
-<a id="a9991ebf2c6d63df3049b4c0229923ed7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9991ebf2c6d63df3049b4c0229923ed7">&#9670;&nbsp;</a></span>make_random_state()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class OccupancyGrid &gt; </div>
-<div class="memtemplate">
-template&lt;class Generator &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1BeamSensorModel.html#aa28cd0a50ede746d7f634517d74c4cd8">state_type</a> <a class="el" href="classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a>&lt; OccupancyGrid &gt;::make_random_state </td>
-          <td>(</td>
-          <td class="paramtype">Generator &amp;&#160;</td>
-          <td class="paramname"><em>gen</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Generates a random particle state. </p>
-<p>The generated state is an unoccupied cell of the grid, any free cell is sampled uniformly. The rotation is as well sampled uniformly.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Generator</td><td>A random number generator that must satisfy the <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a> requirements. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gen</td><td>An uniform random bit generator object. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The generated random state. </dd></dl>
 
 </div>
 </div>

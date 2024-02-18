@@ -113,10 +113,6 @@ Public Member Functions</h2></td></tr>
 const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#af2e987224f34d5be18fbd97b456a6ac6">likelihood_field</a> () const</td></tr>
 <tr class="memdesc:af2e987224f34d5be18fbd97b456a6ac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the likelihood field, constructed from the provided map. <br /></td></tr>
 <tr class="separator:af2e987224f34d5be18fbd97b456a6ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf98f504b1824eb699160bf26d547b76"><td class="memTemplParams" colspan="2">template&lt;class Generator &gt; </td></tr>
-<tr class="memitem:adf98f504b1824eb699160bf26d547b76"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a4b2067a91263de5cfeadd58a919d961d">state_type</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#adf98f504b1824eb699160bf26d547b76">make_random_state</a> (Generator &amp;gen) const</td></tr>
-<tr class="memdesc:adf98f504b1824eb699160bf26d547b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a random particle state.  <a href="classbeluga_1_1LikelihoodFieldModel.html#adf98f504b1824eb699160bf26d547b76">More...</a><br /></td></tr>
-<tr class="separator:adf98f504b1824eb699160bf26d547b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac3e958903627146c03ad5f6a22430cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a3ae1f32598d7ddb01fd933f254f902bb">weight_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#aac3e958903627146c03ad5f6a22430cf">importance_weight</a> (const <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a4b2067a91263de5cfeadd58a919d961d">state_type</a> &amp;state) const</td></tr>
 <tr class="memdesc:aac3e958903627146c03ad5f6a22430cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the importance weight for a particle with the provided state.  <a href="classbeluga_1_1LikelihoodFieldModel.html#aac3e958903627146c03ad5f6a22430cf">More...</a><br /></td></tr>
 <tr class="separator:aac3e958903627146c03ad5f6a22430cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,52 +219,6 @@ template&lt;class OccupancyGrid &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Calculated importance weight. </dd></dl>
-
-</div>
-</div>
-<a id="adf98f504b1824eb699160bf26d547b76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf98f504b1824eb699160bf26d547b76">&#9670;&nbsp;</a></span>make_random_state()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class OccupancyGrid &gt; </div>
-<div class="memtemplate">
-template&lt;class Generator &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html#a4b2067a91263de5cfeadd58a919d961d">state_type</a> <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html">beluga::LikelihoodFieldModel</a>&lt; OccupancyGrid &gt;::make_random_state </td>
-          <td>(</td>
-          <td class="paramtype">Generator &amp;&#160;</td>
-          <td class="paramname"><em>gen</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Generates a random particle state. </p>
-<p>The generated state is an unoccupied cell of the grid, any free cell is sampled uniformly. The rotation is as well sampled uniformly.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Generator</td><td>A random number generator that must satisfy the <a href="https://en.cppreference.com/w/cpp/named_req/UniformRandomBitGenerator">UniformRandomBitGenerator</a> requirements. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gen</td><td>An uniform random bit generator object. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The generated random state. </dd></dl>
 
 </div>
 </div>
