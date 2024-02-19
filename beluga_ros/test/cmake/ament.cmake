@@ -14,6 +14,10 @@
 
 find_package(ament_cmake_gmock REQUIRED)
 
+ament_add_gmock(test_amcl_impl test_amcl_impl.cpp)
+target_compile_options(test_amcl_impl PRIVATE -Wno-deprecated-copy)
+target_link_libraries(test_amcl_impl beluga_ros)
+
 ament_add_gmock(test_messages test_messages.cpp)
 target_compile_options(test_messages PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_messages beluga_ros)

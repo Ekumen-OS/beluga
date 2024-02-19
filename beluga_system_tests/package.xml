@@ -13,7 +13,6 @@
   <license>Apache License 2.0</license>
 
   <test_depend>beluga</test_depend>
-  <test_depend>beluga_amcl</test_depend>
   <test_depend>beluga_ros</test_depend>
   <test_depend condition="$ROS_VERSION == 2">google-mock</test_depend>
   <test_depend condition="$ROS_VERSION == 2">gmock_vendor</test_depend>

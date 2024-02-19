@@ -14,25 +14,15 @@
 
 #include <filesystem>
 #include <memory>
-#include <sstream>
+#include <utility>
 
 #include <gtest/gtest.h>
 #include <Eigen/Core>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 
-#include <beluga/algorithm/estimation.hpp>
-#include <beluga/localization.hpp>
-#include <beluga/mixin/particle_filter.hpp>
-#include <beluga/motion/differential_drive_model.hpp>
-#include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga/testing.hpp>
-
-#include <beluga_amcl/filter_update_control/filter_update_control_mixin.hpp>
-#include <beluga_amcl/filter_update_control/resample_interval_policy.hpp>
-#include <beluga_amcl/filter_update_control/selective_resampling_policy.hpp>
-#include <beluga_amcl/filter_update_control/update_filter_when_moving_policy.hpp>
-#include <beluga_amcl/particle_filtering.hpp>
+#include <beluga/beluga.hpp>
+#include <beluga_ros/amcl_impl.hpp>
 #include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
@@ -41,405 +31,225 @@
 #include <rosbag2_cpp/reader.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
-#include <range/v3/view/any_view.hpp>
 #include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/generate_n.hpp>
-#include <utility>
 
 namespace {
 
-using LaserLocalizationInterface2d =
-    beluga::LaserLocalizationInterface2d<beluga_ros::OccupancyGrid, beluga_amcl::FilterUpdateControlInterface>;
+// ****************************************************************************
+// Test utilities.
+// ****************************************************************************
 
-template <typename Mixin>
-using ConcreteResamplingPoliciesPoller = beluga_amcl::FilterUpdateControlMixin<
-    Mixin,
-    beluga_amcl::UpdateFilterWhenMovingPolicy,
-    beluga_amcl::ResampleIntervalPolicy,
-    beluga_amcl::SelectiveResamplingPolicy>;
+/// Read messages from a specific topic in a ROS bag.
+template <typename Message>
+auto read_messages(const std::filesystem::path& bagfile, std::string_view topic) {
+  auto reader = std::make_shared<rosbag2_cpp::Reader>();  // wrapped in a shared pointer to make it copyable :)
+  reader->open(bagfile.native());
 
-template <class MotionModel, class SensorModel>
-using AdaptiveMonteCarloLocalization2d = beluga::AdaptiveMonteCarloLocalization2d<
-    MotionModel,
-    SensorModel,
-    beluga_ros::OccupancyGrid,
-    LaserLocalizationInterface2d,
-    ConcreteResamplingPoliciesPoller>;
+  auto filter = rosbag2_storage::StorageFilter{};
+  filter.topics.emplace_back(topic);
+  reader->set_filter(filter);
 
-template <class MotionModel, class SensorModel>
-using MonteCarloLocalization2d = beluga::MonteCarloLocalization2d<
-    MotionModel,
-    SensorModel,
-    beluga_ros::OccupancyGrid,
-    LaserLocalizationInterface2d,
-    ConcreteResamplingPoliciesPoller>;
-
-struct InitialPose {
-  Eigen::Vector3d mean;
-  Eigen::Matrix3d covariance;
-};
-
-struct TestDataPoint {
-  Sophus::SE2d odom;
-  std::vector<std::pair<double, double>> scan;
-  Sophus::SE2d ground_truth;
-};
-
-struct TestData {
-  std::unique_ptr<LaserLocalizationInterface2d> particle_filter;
-  InitialPose initial_pose;
-  // to avoid problem with rosbag2_cpp::Reader destructor (captured objects).
-  // see comment below
-  ranges::any_view<TestDataPoint> data_points = ranges::empty_view<TestDataPoint>();
-  double distance_tolerance;
-  double angular_tolerance;
-};
-
-// Workaround to avoid opening/closing bagfiles at static initialization time.
-using TestDataBuilder = std::function<TestData()>;
-
-class BelugaSystemTest : public testing::TestWithParam<TestDataBuilder> {};
-
-TEST_P(BelugaSystemTest, testEstimatedPath) {
-  auto test_data = GetParam()();
-  auto& pf = *test_data.particle_filter;
-  pf.initialize_states(
-      ranges::views::generate([distribution = beluga::MultivariateNormalDistribution{
-                                   test_data.initial_pose.mean, test_data.initial_pose.covariance}]() mutable {
-        static auto generator = std::mt19937{std::random_device()()};
-        const auto sample = distribution(generator);
-        return Sophus::SE2d{Sophus::SO2d{sample.z()}, Eigen::Vector2d{sample.x(), sample.y()}};
-      }));
-  for (const auto [iteration, data_point] : ranges::views::enumerate(test_data.data_points)) {
-    auto scan_copy = data_point.scan;
-    constexpr bool kForceUpdate = true;
-    const auto updated_pose = pf.update_filter(data_point.odom, std::move(scan_copy), !kForceUpdate);
-    if (updated_pose) {
-      auto estimation = pf.estimate();
-      auto error = data_point.ground_truth.inverse() * estimation.first;
-      auto distance_error = error.translation().norm();
-      EXPECT_LE(distance_error, test_data.distance_tolerance) << "iteration: " << iteration << "\nestimation\n"
-                                                              << estimation.first << "\nactual\n"
-                                                              << data_point.ground_truth << std::endl;
-      auto angle_error = error.so2().log();
-      EXPECT_LE(angle_error, test_data.angular_tolerance) << "iteration: " << iteration << "\nestimation\n"
-                                                          << estimation.first << "\nactual\n"
-                                                          << data_point.ground_truth << std::endl;
+  std::size_t size = 0UL;
+  for (const auto& [topic_metadata, message_count] : reader->get_metadata().topics_with_message_count) {
+    if (topic_metadata.name == topic) {
+      size = message_count;
+      break;
     }
   }
+
+  return ranges::views::generate_n([reader]() mutable { return reader->read_next<Message>(); }, size);
 }
 
-template <typename MessageT>
-struct OneTopicReader {
-  OneTopicReader(const std::filesystem::path& bagfile_path, std::string_view topic_name)
-      : reader_{std::make_unique<rosbag2_cpp::Reader>()} {
-    reader_->open(bagfile_path.native());
-    rosbag2_storage::StorageFilter filter;
-    filter.topics.emplace_back(topic_name);
-    reader_->set_filter(filter);
-    for (const auto& topic_info_with_count : reader_->get_metadata().topics_with_message_count) {
-      if (topic_info_with_count.topic_metadata.name == topic_name) {
-        size_ = topic_info_with_count.message_count;
-        return;
-      }
-    }
-  }
+/// Transform a range of odometry messages into a range of SE2 elements.
+auto odometry_to_sophus() {
+  return ranges::views::transform([](const nav_msgs::msg::Odometry& message) {
+    Sophus::SE2d out;
+    tf2::convert(message.pose.pose, out);
+    return out;
+  });
+}
 
-  MessageT next() { return reader_->read_next<MessageT>(); }
+// ****************************************************************************
+// Particle filter implementation variants.
+// ****************************************************************************
 
-  std::size_t size() { return size_; }
+// All possible particle filter configuration variants to test against.
+/**
+ * New particle filter implementation variants can be added by following these steps:
+ *
+ * - Create a new struct with the necessary configuration parameters (could be empty).
+ * - Add the new struct type to this variant declaration.
+ * - Add one or more instances of that struct to the `get_particle_filter_params` function.
+ * - Implement a new  `particle_filter_test` overload taking that struct as a first parameter.
+ */
+using ParticleFilterParams = std::variant<beluga_ros::AmclImplParams>;
 
- private:
-  // wrapped in a unique pointer to make it movable :)
-  std::unique_ptr<rosbag2_cpp::Reader> reader_;
-  std::size_t size_{0UL};
-};
-
-struct SE2dFromOdometryReader {
-  SE2dFromOdometryReader(const std::filesystem::path& bagfile_path, std::string_view topic_name)
-      : reader_{bagfile_path, std::move(topic_name)} {}
-
-  Sophus::SE2d next() {
-    Sophus::SE2d ret;
-    tf2::convert(reader_.next().pose.pose, ret);
-    return ret;
-  }
-
-  std::size_t size() { return reader_.size(); }
-
- private:
-  OneTopicReader<nav_msgs::msg::Odometry> reader_;
-};
-
-struct LaserScanInfo {
-  Sophus::SE3d laser_transform;
-  std::size_t max_beam_count;
-  float range_min;
-  float range_max;
-};
-
-struct PointsFromScanReader {
-  PointsFromScanReader(const std::filesystem::path& bagfile_path, std::string_view topic_name, LaserScanInfo info)
-      : reader_{bagfile_path, std::move(topic_name)}, info_{std::move(info)} {}
-
-  auto next() {
-    auto scan_msg = reader_.next();
-    return beluga_ros::LaserScan{
-               std::make_shared<sensor_msgs::msg::LaserScan>(scan_msg),
-               info_.laser_transform,
-               info_.max_beam_count,
-               info_.range_min,
-               info_.range_max,
-           }
-               .points_in_cartesian_coordinates() |
-           ranges::views::transform([this](const auto& p) {
-             const auto result = info_.laser_transform * Sophus::Vector3d{p.x(), p.y(), 0};
-             return std::make_pair(result.x(), result.y());
-           }) |
-           ranges::to<std::vector>;
-  }
-
-  std::size_t size() { return reader_.size(); }
-
- private:
-  OneTopicReader<sensor_msgs::msg::LaserScan> reader_;
-  LaserScanInfo info_;
-};
-
-template <typename GroundTruthReader, typename ParticleFilterFromMap>
-TestData test_data_from_ros2bag(
-    ParticleFilterFromMap&& particle_filter_from_map,
-    const std::filesystem::path& bagfile_path,
-    InitialPose initial_pose,
-    LaserScanInfo laser_scan_info,
-    std::string_view map_topic,
-    std::string_view odom_topic,
-    std::string_view scan_topic,
-    std::string_view ground_truth_topic,
-    // Tolerance value shouldn't be testing accuracy,
-    // but only that it's working grossly well
-    double distance_tolerance = 0.8,
-    double angular_tolerance = 30. * Sophus::Constants<double>::pi() / 180.) {
-  TestData test_data;
-  test_data.initial_pose = std::move(initial_pose);
-  test_data.distance_tolerance = distance_tolerance;
-  test_data.angular_tolerance = angular_tolerance;
-
-  OneTopicReader<nav_msgs::msg::OccupancyGrid> map_reader{bagfile_path, map_topic};
-  if (map_reader.size() != 1) {
-    std::ostringstream oss;
-    oss << "Expected map topic [" << map_topic << "] to have 1 message, got: " << map_reader.size();
-    throw std::runtime_error{oss.str()};
-  }
-  auto map = std::make_shared<nav_msgs::msg::OccupancyGrid>(map_reader.next());
-
-  PointsFromScanReader scan_reader{bagfile_path, scan_topic, std::move(laser_scan_info)};
-  SE2dFromOdometryReader odometry_reader{bagfile_path, odom_topic};
-  GroundTruthReader ground_truth_reader{bagfile_path, ground_truth_topic};
-  auto range_size = scan_reader.size();
-  if (range_size != odometry_reader.size() || range_size != ground_truth_reader.size()) {
-    std::ostringstream oss;
-    oss << "Expected scan, odometry and ground truth topics to have the same number of messages, got: " << range_size
-        << ", " << odometry_reader.size() << ", " << ground_truth_reader.size();
-    throw std::runtime_error{oss.str()};
-  }
-  auto generate_fn = [scan_reader = std::move(scan_reader), odometry_reader = std::move(odometry_reader),
-                      ground_truth_reader = std::move(ground_truth_reader)]() mutable {
-    TestDataPoint next_test_data;
-    next_test_data.scan = scan_reader.next();
-    next_test_data.odom = odometry_reader.next();
-    next_test_data.ground_truth = ground_truth_reader.next();
-    return next_test_data;
+auto get_particle_filter_params() {
+  return std::vector<ParticleFilterParams>{
+      beluga_ros::AmclImplParams{},  // Default configuration.
+      []() {
+        auto params = beluga_ros::AmclImplParams{};
+        params.selective_resampling = true;  // Enable selective resampling.
+        return params;
+      }(),
   };
-  auto generate_view = ranges::generate_n_view<std::decay_t<decltype(generate_fn)>>(std::move(generate_fn), range_size);
-  test_data.data_points = std::move(generate_view);
-  test_data.particle_filter = particle_filter_from_map(std::move(map));
-  return test_data;
 }
 
-std::unique_ptr<LaserLocalizationInterface2d> amcl_pf_from_map(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
-  auto state_constraints = beluga_ros::OccupancyGrid{map};
+/// Overload of particle_filter_test with a standard AMCL implementation.
+template <class Map, class MotionModel, class SensorModel, class Distribution, class Range>
+auto particle_filter_test(
+    const beluga_ros::AmclImplParams& params,
+    Map&& map,
+    MotionModel&& motion_model,
+    SensorModel&& sensor_model,
+    Distribution&& initial_distribution,
+    Range&& datapoints) {
+  auto filter = beluga_ros::AmclImpl{params, map, motion_model, sensor_model, std::execution::par};
+  filter.initialize(std::forward<Distribution>(initial_distribution));
 
-  auto sampler_params = beluga::AdaptiveSamplerParam{};
-  sampler_params.alpha_slow = 0.001;
-  sampler_params.alpha_fast = 0.1;
+  // Tolerance values ​​prove that the filter performs approximately well, they do not prove accuracy.
+  // The values were adjusted to have a 100% success rate over 100 runs of the same test.
+  const double position_tolerance = 0.9;
+  const double orientation_tolerance = 30.0 * Sophus::Constants<double>::pi() / 180.0;
 
-  auto limiter_params =
-      beluga::KldLimiterParam<Sophus::SE2d>{500UL, 2000UL, beluga::spatial_hash<Sophus::SE2d>{0.1, 0.1, 0.1}, 0.05, 3.};
+  std::size_t update_count = 0;
 
-  auto resample_on_motion_params = beluga_amcl::UpdateFilterWhenMovingPolicyParam{};
-  resample_on_motion_params.update_min_d = 0.25;
-  resample_on_motion_params.update_min_a = 0.2;
+  for (auto [measurement, odom, ground_truth] : datapoints) {
+    const auto estimate = filter.update(std::move(odom), std::move(measurement));
 
-  auto resample_interval_params = beluga_amcl::ResampleIntervalPolicyParam{};
-  resample_interval_params.resample_interval_count = 1;
+    if (!estimate.has_value()) {
+      continue;
+    }
 
-  auto sensor_params = beluga::LikelihoodFieldModelParam{};
-  sensor_params.max_obstacle_distance = 2.0;
-  sensor_params.max_laser_distance = 100.0;
-  sensor_params.z_hit = 0.5;
-  sensor_params.z_random = 0.5;
-  sensor_params.sigma_hit = 0.2;
+    const auto [mean, covariance] = estimate.value();
+    const auto error = mean.inverse() * ground_truth;
 
-  auto motion_params = beluga::DifferentialDriveModelParam{};
-  motion_params.rotation_noise_from_rotation = 0.2;
-  motion_params.rotation_noise_from_translation = 0.2;
-  motion_params.translation_noise_from_translation = 0.2;
-  motion_params.translation_noise_from_rotation = 0.2;
+    ASSERT_LE(error.translation().norm(), position_tolerance);
+    ASSERT_LE(error.so2().log(), orientation_tolerance);
 
-  auto selective_resampling_params = beluga_amcl::SelectiveResamplingPolicyParam{};
-  selective_resampling_params.enabled = false;
+    ++update_count;
+  }
 
-  return std::make_unique<AdaptiveMonteCarloLocalization2d<
-      beluga::DifferentialDriveModel, beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>>(
-      state_constraints,                                                                       //
-      sampler_params,                                                                          //
-      limiter_params,                                                                          //
-      beluga::DifferentialDriveModel{motion_params},                                           //
-      beluga::LikelihoodFieldModel{sensor_params, beluga_ros::OccupancyGrid{std::move(map)}},  //
-      resample_on_motion_params,                                                               //
-      resample_interval_params,                                                                //
-      selective_resampling_params);
+  ASSERT_GE(update_count, 2) << "There were less than 2 updates to the filter";
 }
 
-std::unique_ptr<LaserLocalizationInterface2d> likelihood_mcl_pf_from_map(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
-  auto state_constraints = beluga_ros::OccupancyGrid{map};
+// ****************************************************************************
+// Motion model variants.
+// ****************************************************************************
+using MotionModel = std::variant<beluga::DifferentialDriveModel>;
 
-  auto limiter_params = beluga::FixedLimiterParam{};
-  limiter_params.max_samples = 2000UL;
-
-  auto resample_on_motion_params = beluga_amcl::UpdateFilterWhenMovingPolicyParam{};
-  resample_on_motion_params.update_min_d = 0.;
-  resample_on_motion_params.update_min_a = 0.;
-
-  auto resample_interval_params = beluga_amcl::ResampleIntervalPolicyParam{};
-  resample_interval_params.resample_interval_count = 1;
-
-  auto sensor_params = beluga::LikelihoodFieldModelParam{};
-  sensor_params.max_obstacle_distance = 2.0;
-  sensor_params.max_laser_distance = 100.0;
-  sensor_params.z_hit = 0.5;
-  sensor_params.z_random = 0.5;
-  sensor_params.sigma_hit = 0.2;
-
-  auto motion_params = beluga::DifferentialDriveModelParam{};
-  motion_params.rotation_noise_from_rotation = 0.2;
-  motion_params.rotation_noise_from_translation = 0.2;
-  motion_params.translation_noise_from_translation = 0.2;
-  motion_params.translation_noise_from_rotation = 0.2;
-
-  auto selective_resampling_params = beluga_amcl::SelectiveResamplingPolicyParam{};
-  selective_resampling_params.enabled = false;
-
-  return std::make_unique<MonteCarloLocalization2d<
-      beluga::DifferentialDriveModel, beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>>(
-      state_constraints,                                                                       //
-      limiter_params,                                                                          //
-      beluga::DifferentialDriveModel{motion_params},                                           //
-      beluga::LikelihoodFieldModel{sensor_params, beluga_ros::OccupancyGrid{std::move(map)}},  //
-      resample_on_motion_params,                                                               //
-      resample_interval_params,                                                                //
-      selective_resampling_params);
+auto get_motion_models() {
+  return std::vector<MotionModel>{
+      [] {
+        auto motion_params = beluga::DifferentialDriveModelParam{};
+        motion_params.rotation_noise_from_rotation = 0.2;
+        motion_params.rotation_noise_from_translation = 0.2;
+        motion_params.translation_noise_from_translation = 0.2;
+        motion_params.translation_noise_from_rotation = 0.2;
+        return beluga::DifferentialDriveModel{motion_params};
+      }(),
+  };
 }
 
-std::unique_ptr<LaserLocalizationInterface2d> beam_mcl_pf_from_map(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
-  auto state_constraints = beluga_ros::OccupancyGrid{map};
+// ****************************************************************************
+// Sensor model variants.
+// ****************************************************************************
+using SensorModel = std::variant<
+    beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>,
+    beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>;
 
-  auto limiter_params = beluga::FixedLimiterParam{};
-  limiter_params.max_samples = 2000UL;
+using SensorModelBuilder = std::function<SensorModel(const beluga_ros::OccupancyGrid&)>;
 
-  auto resample_on_motion_params = beluga_amcl::UpdateFilterWhenMovingPolicyParam{};
-  resample_on_motion_params.update_min_d = 0.;
-  resample_on_motion_params.update_min_a = 0.;
-
-  auto resample_interval_params = beluga_amcl::ResampleIntervalPolicyParam{};
-  resample_interval_params.resample_interval_count = 1;
-
-  auto sensor_params = beluga::BeamModelParam{};
-  sensor_params.beam_max_range = 100.0;
-
-  auto motion_params = beluga::DifferentialDriveModelParam{};
-  motion_params.rotation_noise_from_rotation = 0.2;
-  motion_params.rotation_noise_from_translation = 0.2;
-  motion_params.translation_noise_from_translation = 0.2;
-  motion_params.translation_noise_from_rotation = 0.2;
-
-  auto selective_resampling_params = beluga_amcl::SelectiveResamplingPolicyParam{};
-  selective_resampling_params.enabled = false;
-
-  return std::make_unique<
-      MonteCarloLocalization2d<beluga::DifferentialDriveModel, beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>>(
-      state_constraints,                                                                  //
-      limiter_params,                                                                     //
-      beluga::DifferentialDriveModel{motion_params},                                      //
-      beluga::BeamSensorModel{sensor_params, beluga_ros::OccupancyGrid{std::move(map)}},  //
-      resample_on_motion_params,                                                          //
-      resample_interval_params,                                                           //
-      selective_resampling_params);
+auto get_sensor_model_builders() {
+  return std::vector<SensorModelBuilder>{
+      [](const auto& map) -> SensorModel {
+        auto sensor_params = beluga::LikelihoodFieldModelParam{};
+        sensor_params.max_obstacle_distance = 2.0;
+        sensor_params.max_laser_distance = 100.0;
+        sensor_params.z_hit = 0.5;
+        sensor_params.z_random = 0.5;
+        sensor_params.sigma_hit = 0.2;
+        return beluga::LikelihoodFieldModel{sensor_params, map};
+      },
+      [](const auto& map) -> SensorModel {
+        auto sensor_params = beluga::BeamModelParam{};
+        sensor_params.beam_max_range = 100.0;
+        return beluga::BeamSensorModel{sensor_params, map};
+      }};
 }
 
-std::vector<TestDataBuilder> get_test_parameters() {
-  std::vector<TestDataBuilder> ret;
-  ret.emplace_back([]() {
-    InitialPose initial_pose{
-        Eigen::Vector3d{0.0, 2.0, 0.0},
-        Eigen::Matrix3d{
-            {0.125, 0.0, 0.0},
-            {0.0, 0.125, 0.0},
-            {0.0, 0.0, 0.04},
-        },
+// ****************************************************************************
+// Test cases.
+// ****************************************************************************
+class ParticleFilterTest
+    : public testing::TestWithParam<std::tuple<ParticleFilterParams, MotionModel, SensorModelBuilder>> {};
+
+/// Get ROS bag perfect odometry data to be used in the tests.
+auto get_perfect_odometry_data() {
+  constexpr std::string_view bagfile = "./bags/perfect_odometry";
+  constexpr std::string_view map_topic = "/map";
+  constexpr std::string_view scan_topic = "/scan";
+  constexpr std::string_view odom_topic = "/odometry/ground_truth";
+  constexpr std::string_view grount_truth_topic = "/odometry/ground_truth";
+
+  auto maps = read_messages<nav_msgs::msg::OccupancyGrid>(bagfile, map_topic);
+  EXPECT_EQ(maps.size(), 1) << "Expected map topic [" << map_topic << "] to have 1 message, got: " << maps.size();
+  auto map = std::make_shared<nav_msgs::msg::OccupancyGrid>(*maps.begin());
+
+  auto scan_to_measurement = ranges::views::transform([](sensor_msgs::msg::LaserScan msg) {
+    const auto laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
+    return beluga_ros::LaserScan{
+        std::make_shared<sensor_msgs::msg::LaserScan>(msg),
+        laser_transform,
+        60,    // max beam count
+        0.,    // range min
+        100.,  // range max
     };
-    LaserScanInfo laser_info;
-    laser_info.laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
-    std::cout << laser_info.laser_transform.matrix() << std::endl;
-    laser_info.max_beam_count = 60;
-    laser_info.range_max = 100.;
-    laser_info.range_min = 0.;
-    return test_data_from_ros2bag<SE2dFromOdometryReader>(
-        amcl_pf_from_map, "./bags/perfect_odometry", initial_pose, laser_info, "/map", "/odometry/ground_truth",
-        "/scan", "/odometry/ground_truth");
   });
-  ret.emplace_back([]() {
-    InitialPose initial_pose{
-        Eigen::Vector3d{0.0, 2.0, 0.0},
-        Eigen::Matrix3d{
-            {0.125, 0.0, 0.0},
-            {0.0, 0.125, 0.0},
-            {0.0, 0.0, 0.04},
-        },
-    };
-    LaserScanInfo laser_info;
-    laser_info.laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
-    std::cout << laser_info.laser_transform.matrix() << std::endl;
-    laser_info.max_beam_count = 60;
-    laser_info.range_max = 100.;
-    laser_info.range_min = 0.;
-    return test_data_from_ros2bag<SE2dFromOdometryReader>(
-        likelihood_mcl_pf_from_map, "./bags/perfect_odometry", initial_pose, laser_info, "/map",
-        "/odometry/ground_truth", "/scan", "/odometry/ground_truth");
-  });
-  ret.emplace_back([]() {
-    InitialPose initial_pose{
-        Eigen::Vector3d{0.0, 2.0, 0.0},
-        Eigen::Matrix3d{
-            {0.125, 0.0, 0.0},
-            {0.0, 0.125, 0.0},
-            {0.0, 0.0, 0.04},
-        },
-    };
-    LaserScanInfo laser_info;
-    laser_info.laser_transform = Sophus::SE3d{Eigen::Quaterniond{1., 0., 0., 0.}, Eigen::Vector3d{0.28, 0., 0.}};
-    std::cout << laser_info.laser_transform.matrix() << std::endl;
-    laser_info.max_beam_count = 60;
-    laser_info.range_max = 100.;
-    laser_info.range_min = 0.;
-    return test_data_from_ros2bag<SE2dFromOdometryReader>(
-        beam_mcl_pf_from_map, "./bags/perfect_odometry", initial_pose, laser_info, "/map", "/odometry/ground_truth",
-        "/scan", "/odometry/ground_truth");
-  });
-  return ret;
+
+  auto odometry = read_messages<nav_msgs::msg::Odometry>(bagfile, odom_topic) | odometry_to_sophus();
+  auto ground_truth = read_messages<nav_msgs::msg::Odometry>(bagfile, grount_truth_topic) | odometry_to_sophus();
+  auto measurements = read_messages<sensor_msgs::msg::LaserScan>(bagfile, scan_topic) | scan_to_measurement;
+
+  EXPECT_EQ(measurements.size(), odometry.size());
+  EXPECT_EQ(measurements.size(), ground_truth.size());
+
+  auto datapoints = ranges::views::zip(measurements, odometry, ground_truth);
+
+  auto initial_distribution = beluga::MultivariateNormalDistribution{
+      Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{0.0, 2.0}},                 // initial pose mean
+      Eigen::Matrix3d{{0.125, 0.0, 0.0}, {0.0, 0.125, 0.0}, {0.0, 0.0, 0.04}}  // initial pose covariance
+  };
+
+  return std::make_tuple(beluga_ros::OccupancyGrid{std::move(map)}, datapoints, initial_distribution);
 }
 
-INSTANTIATE_TEST_SUITE_P(BagFileTests, BelugaSystemTest, testing::ValuesIn(get_test_parameters()));
+TEST_P(ParticleFilterTest, PerfectOdometryEstimatedPath) {
+  auto [map, datapoints, distribution] = get_perfect_odometry_data();
+  auto [particle_filter_params, motion_model, sensor_model_builder] = GetParam();
+  auto sensor_model = sensor_model_builder(map);
+  std::visit(
+      [map = std::move(map), distribution = std::move(distribution), datapoints = std::move(datapoints)]  //
+      (auto particle_filter_params, auto motion_model, auto sensor_model) mutable {
+        particle_filter_test(
+            particle_filter_params,   //
+            std::move(map),           //
+            std::move(motion_model),  //
+            std::move(sensor_model),  //
+            std::move(distribution),  //
+            std::move(datapoints));
+      },
+      particle_filter_params, std::move(motion_model), std::move(sensor_model));
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    BagFileTest,
+    ParticleFilterTest,
+    testing::Combine(
+        testing::ValuesIn(get_particle_filter_params()),  //
+        testing::ValuesIn(get_motion_models()),           //
+        testing::ValuesIn(get_sensor_model_builders())));
+
 }  // namespace

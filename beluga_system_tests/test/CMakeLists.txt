@@ -14,7 +14,6 @@
 
 find_package(rosbag2_cpp REQUIRED)
 find_package(beluga REQUIRED)
-find_package(beluga_amcl REQUIRED)
 find_package(beluga_ros REQUIRED)
 find_package(GTest REQUIRED)
 
@@ -23,21 +22,9 @@ add_executable(test_system test_system.cpp)
 target_link_libraries(
   test_system
   PUBLIC beluga::beluga
-         beluga_amcl::amcl_node_utils
-         beluga_ros::beluga_ros
-         GTest::gtest_main
-         rosbag2_cpp::rosbag2_cpp)
-
-add_executable(test_system_new test_system_new.cpp)
-
-target_link_libraries(
-  test_system_new
-  PUBLIC beluga::beluga
          beluga_ros::beluga_ros
          GTest::gtest_main
          rosbag2_cpp::rosbag2_cpp)
 
 include(GoogleTest)
 gtest_discover_tests(test_system WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
-gtest_discover_tests(test_system_new
-                     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
