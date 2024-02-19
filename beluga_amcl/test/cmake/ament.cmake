@@ -1,4 +1,4 @@
-# Copyright 2023 Ekumen, Inc.
+# Copyright 2023-2024 Ekumen, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,14 +17,3 @@ find_package(ament_cmake_gmock REQUIRED)
 ament_add_gmock(test_amcl_node test_amcl_node.cpp)
 target_compile_options(test_amcl_node PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_amcl_node amcl_node_component)
-
-ament_add_gmock(
-  test_amcl_node_resampling_policies
-  filter_update_control/test_filter_update_control_mixin.cpp
-  filter_update_control/test_resample_interval_policy.cpp
-  filter_update_control/test_selective_resampling_policy.cpp
-  filter_update_control/test_update_filter_when_moving_policy.cpp)
-target_compile_options(
-  test_amcl_node_resampling_policies
-  PRIVATE -Wno-deprecated-copy -Wno-gnu-zero-variadic-macro-arguments)
-target_link_libraries(test_amcl_node_resampling_policies amcl_node_component)

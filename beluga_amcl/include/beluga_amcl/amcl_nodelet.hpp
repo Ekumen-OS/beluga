@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2023-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,9 +41,8 @@
 
 #include <sophus/se2.hpp>
 
-#include "beluga_amcl/AmclConfig.h"
-#include "beluga_amcl/particle_filtering.hpp"
-#include "beluga_amcl/private/execution_policy.hpp"
+#include <beluga_amcl/AmclConfig.h>
+#include <beluga_ros/amcl_impl.hpp>
 
 namespace beluga_amcl {
 
@@ -55,6 +54,17 @@ class AmclNodelet : public nodelet::Nodelet {
  protected:
   void onInit() override;
 
+  auto get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>>;
+
+  auto get_motion_model(std::string_view) -> beluga_ros::AmclImpl::motion_model_variant;
+
+  auto get_sensor_model(std::string_view, const nav_msgs::OccupancyGrid::ConstPtr&)
+      -> beluga_ros::AmclImpl::sensor_model_variant;
+
+  auto get_execution_policy(std::string_view) -> beluga_ros::AmclImpl::execution_policy_variant;
+
+  auto get_amcl_impl(const nav_msgs::OccupancyGrid::ConstPtr&) -> std::unique_ptr<beluga_ros::AmclImpl>;
+
   void config_callback(beluga_amcl::AmclConfig& config, uint32_t level);
 
   void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& message);
@@ -65,12 +75,9 @@ class AmclNodelet : public nodelet::Nodelet {
 
   void handle_map_with_default_initial_pose(const nav_msgs::OccupancyGrid::ConstPtr& map);
 
-  std::unique_ptr<LaserLocalizationInterface2d> make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& map);
-
   void particle_cloud_timer_callback(const ros::TimerEvent& ev);
 
-  template <typename ExecutionPolicy>
-  void laser_callback(ExecutionPolicy&& exec_policy, const sensor_msgs::LaserScan::ConstPtr& laser_scan);
+  void laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_scan);
 
   void initial_pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& message);
 
@@ -80,11 +87,28 @@ class AmclNodelet : public nodelet::Nodelet {
 
   void save_pose_timer_callback(const ros::TimerEvent& ev);
 
-  void reinitialize_with_pose(const Sophus::SE2d& pose, const Eigen::Matrix3d& covariance);
+  /// Initialize particles from an estimated pose and covariance.
+  /**
+   * If an exception occurs during the initialization, an error message is logged, and the initialization
+   * process is also aborted, returning false. If the initialization is successful, the TF broadcast is
+   * enabled.
+   *
+   * \param estimate A pair representing the estimated pose and covariance for initialization.
+   * \return True if the initialization is successful, false otherwise.
+   */
+  bool initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Matrix3d>& estimate);
+
+  /// Initialize particles from map.
+  /**
+   * The TF broadcast is not enabled during the initialization to match the original implementation,
+   * as it is typically enabled only in response to external global localization requests and not during
+   * the initial setup of the filter.
+   *
+   * \return True if the initialization is successful, false otherwise.
+   */
+  bool initialize_from_map();
 
   void update_covariance_diagnostics(diagnostic_updater::DiagnosticStatusWrapper& status);
-
-  std::unique_ptr<LaserLocalizationInterface2d> particle_filter_;
 
   std::mutex mutex_;
 
@@ -109,7 +133,6 @@ class AmclNodelet : public nodelet::Nodelet {
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
-  bool enable_tf_broadcast_{false};
 
   diagnostic_updater::Updater diagnosic_updater_;
 
@@ -117,12 +140,10 @@ class AmclNodelet : public nodelet::Nodelet {
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::LaserScan>> laser_scan_filter_;
   message_filters::Connection laser_scan_connection_;
 
-  nav_msgs::OccupancyGrid::ConstPtr last_known_map_;
-
+  std::unique_ptr<beluga_ros::AmclImpl> impl_;
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_;
-  std::optional<Sophus::SE2d> latest_map_to_odom_transform_;
-
-  bool force_filter_update_{false};
+  nav_msgs::OccupancyGrid::ConstPtr last_known_map_;
+  bool enable_tf_broadcast_{false};
 };
 
 }  // namespace beluga_amcl

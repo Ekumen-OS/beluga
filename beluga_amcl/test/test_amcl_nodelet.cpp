@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2023-2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 
 #include <geometry_msgs/PoseArray.h>
 
-#include <beluga_amcl/private/amcl_nodelet.hpp>
+#include <beluga_amcl/amcl_nodelet.hpp>
 
 namespace {
 
@@ -55,10 +55,13 @@ void spin_for(const std::chrono::duration<Rep, Period>& duration) {
 class AmclNodeletUnderTest : public beluga_amcl::AmclNodelet {
  public:
   /// Get particle filter pointer.
-  const auto& particle_filter() { return particle_filter_; }
+  const auto& particle_filter() { return impl_; }
 
   /// Return true if the particle filter has been initialized.
-  bool is_initialized() const { return particle_filter_ != nullptr; }
+  bool is_initialized() const { return impl_ != nullptr; }
+
+  /// Return the last known estimate. Throws if there is no estimate.
+  const auto& estimate() { return last_known_estimate_.value(); }
 
   /// Retrieve nodelet default configuration (may fail).
   bool default_config(beluga_amcl::AmclConfig& config) {
@@ -319,8 +322,8 @@ TEST_P(TestInitializationWithModel, ParticleCount) {
   tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 
-  ASSERT_GE(amcl_nodelet_->particle_filter()->particle_count(), 10UL);
-  ASSERT_LE(amcl_nodelet_->particle_filter()->particle_count(), 30UL);
+  ASSERT_GE(amcl_nodelet_->particle_filter()->particles().size(), 10UL);
+  ASSERT_LE(amcl_nodelet_->particle_filter()->particles().size(), 30UL);
 }
 
 class TestFixture : public BaseTestFixture<::testing::Test> {};
@@ -367,7 +370,7 @@ TEST_F(TestFixture, SetInitialPose) {
 
   tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
+  const auto [pose, _] = amcl_nodelet_->estimate();
   ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
   ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
   ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -387,14 +390,14 @@ TEST_F(TestFixture, SetMapAndInitialPose) {
   tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   {
-    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->estimate();
     ASSERT_NEAR(pose.translation().x(), -1.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 1.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 1.0, 0.01);
   }
   ASSERT_TRUE(tester_->set_map_and_initial_pose(1.0, -1.0, -1.0));
   {
-    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->estimate();
     ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), -1.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), -1.0, 0.01);
@@ -469,7 +472,7 @@ TEST_F(TestFixture, NoBroadcastWhenInitialPoseInvalid) {
   ASSERT_FALSE(tester_->can_transform("map", "odom"));
   tester_->create_pose_subscriber();
   tester_->publish_laser_scan();
-  ASSERT_TRUE(wait_for_pose_estimate());
+  ASSERT_FALSE(wait_for_pose_estimate());
   ASSERT_FALSE(tester_->can_transform("map", "odom"));
 }
 
@@ -500,7 +503,7 @@ TEST_F(TestFixture, FirstMapOnly) {
 
   {
     // Initialized with the first map and initial pose values.
-    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -519,7 +522,7 @@ TEST_F(TestFixture, FirstMapOnly) {
 
   {
     // Ignored the new initial pose values (and map).
-    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -532,7 +535,7 @@ TEST_F(TestFixture, FirstMapOnly) {
 
   {
     // Initialized with the new initial pose values (and map).
-    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->estimate();
     ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 29.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), -0.4, 0.01);
@@ -564,7 +567,7 @@ TEST_F(TestFixture, KeepCurrentEstimate) {
     // Initializing with the first map and initial pose values.
     tester_->publish_map();
     ASSERT_TRUE(wait_for_initialization());
-    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -573,7 +576,7 @@ TEST_F(TestFixture, KeepCurrentEstimate) {
   tester_->create_pose_subscriber();
   tester_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  const auto [estimate, _] = amcl_nodelet_->particle_filter()->estimate();
+  const auto [estimate, _] = amcl_nodelet_->estimate();
 
   {
     // Set new initial pose values that will be ignored.
@@ -589,7 +592,7 @@ TEST_F(TestFixture, KeepCurrentEstimate) {
   {
     // Initializing with the second map but keeping the old estimate.
     // Ignoring the new initial pose values.
-    const auto [pose, _] = amcl_nodelet_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_nodelet_->estimate();
     ASSERT_NEAR(pose.translation().x(), estimate.translation().x(), 0.01);
     ASSERT_NEAR(pose.translation().y(), estimate.translation().y(), 0.01);
     ASSERT_NEAR(pose.so2().log(), estimate.so2().log(), 0.01);
