@@ -46,14 +46,15 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto model = UUT{params, grid};
+  auto sensor_model = UUT{params, grid};
 
   // the likelihood field model includes an optimization that stores the likelihood elevated to the cube
   auto expected_cubed_likelihood =
       expected_likelihood_field | ranges::views::transform([](auto v) { return v * v * v; }) | ranges::to<std::vector>;
 
   ASSERT_THAT(
-      model.likelihood_field().data(), testing::Pointwise(testing::DoubleNear(0.003), expected_cubed_likelihood));
+      sensor_model.likelihood_field().data(),
+      testing::Pointwise(testing::DoubleNear(0.003), expected_cubed_likelihood));
 }
 
 TEST(LikelihoodFieldModel, ImportanceWeight) {
@@ -69,22 +70,33 @@ TEST(LikelihoodFieldModel, ImportanceWeight) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto model = UUT{params, grid};
+  auto sensor_model = UUT{params, grid};
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{1.25, 1.25}});
-  ASSERT_NEAR(2.068, model.importance_weight(grid.origin()), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{1.25, 1.25}});
+    ASSERT_NEAR(2.068, state_weighting_function(grid.origin()), 0.003);
+  }
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{2.25, 2.25}});
-  ASSERT_NEAR(1.000, model.importance_weight(grid.origin()), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{2.25, 2.25}});
+    ASSERT_NEAR(1.000, state_weighting_function(grid.origin()), 0.003);
+  }
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{-50.0, 50.0}});
-  ASSERT_NEAR(1.000, model.importance_weight(grid.origin()), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{-50.0, 50.0}});
+    ASSERT_NEAR(1.000, state_weighting_function(grid.origin()), 0.003);
+  }
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{1.20, 1.20}, {1.25, 1.25}, {1.30, 1.30}});
-  ASSERT_NEAR(4.205, model.importance_weight(grid.origin()), 0.01);
+  {
+    auto state_weighting_function =
+        sensor_model(std::vector<std::pair<double, double>>{{1.20, 1.20}, {1.25, 1.25}, {1.30, 1.30}});
+    ASSERT_NEAR(4.205, state_weighting_function(grid.origin()), 0.01);
+  }
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{0.0, 0.0}});
-  ASSERT_NEAR(2.068, model.importance_weight(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.25, 1.25}}), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{0.0, 0.0}});
+    ASSERT_NEAR(2.068, state_weighting_function(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.25, 1.25}}), 0.003);
+  }
 }
 
 TEST(LikelihoodFieldModel, GridWithOffset) {
@@ -101,13 +113,17 @@ TEST(LikelihoodFieldModel, GridWithOffset) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto model = UUT{params, grid};
+  auto sensor_model = UUT{params, grid};
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{4.5, 4.5}});
-  ASSERT_NEAR(2.068, model.importance_weight(Sophus::SE2d{}), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{4.5, 4.5}});
+    ASSERT_NEAR(2.068, state_weighting_function(Sophus::SE2d{}), 0.003);
+  }
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
-  ASSERT_NEAR(2.068, model.importance_weight(grid.origin()), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{9.5, 9.5}});
+    ASSERT_NEAR(2.068, state_weighting_function(grid.origin()), 0.003);
+  }
 }
 
 TEST(LikelihoodFieldModel, GridWithRotation) {
@@ -124,13 +140,17 @@ TEST(LikelihoodFieldModel, GridWithRotation) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto model = UUT{params, grid};
+  auto sensor_model = UUT{params, grid};
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{-9.5, 9.5}});
-  ASSERT_NEAR(2.068, model.importance_weight(Sophus::SE2d{}), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{-9.5, 9.5}});
+    ASSERT_NEAR(2.068, state_weighting_function(Sophus::SE2d{}), 0.003);
+  }
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
-  ASSERT_NEAR(2.068, model.importance_weight(grid.origin()), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{9.5, 9.5}});
+    ASSERT_NEAR(2.068, state_weighting_function(grid.origin()), 0.003);
+  }
 }
 
 TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
@@ -150,13 +170,17 @@ TEST(LikelihoodFieldModel, GridWithRotationAndOffset) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto model = UUT{params, grid};
+  auto sensor_model = UUT{params, grid};
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{-4.5, 4.5}});
-  ASSERT_NEAR(2.068, model.importance_weight(Sophus::SE2d{}), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{-4.5, 4.5}});
+    ASSERT_NEAR(2.068, state_weighting_function(Sophus::SE2d{}), 0.003);
+  }
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{9.5, 9.5}});
-  ASSERT_NEAR(2.068, model.importance_weight(grid.origin()), 0.003);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{9.5, 9.5}});
+    ASSERT_NEAR(2.068, state_weighting_function(grid.origin()), 0.003);
+  }
 }
 
 TEST(LikelihoodFieldModel, GridUpdates) {
@@ -174,10 +198,12 @@ TEST(LikelihoodFieldModel, GridUpdates) {
   // clang-format on
 
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto model = UUT{params, std::move(grid)};
+  auto sensor_model = UUT{params, std::move(grid)};
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
-  EXPECT_NEAR(2.068577607986223, model.importance_weight(origin), 1e-6);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{1., 1.}});
+    EXPECT_NEAR(2.068577607986223, state_weighting_function(origin), 1e-6);
+  }
 
   // clang-format off
   grid = StaticOccupancyGrid<5, 5>{{
@@ -188,10 +214,12 @@ TEST(LikelihoodFieldModel, GridUpdates) {
     false, false, false, false, true},
     kResolution, origin};
   // clang-format on
-  model.update_map(std::move(grid));
+  sensor_model.update_map(std::move(grid));
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
-  EXPECT_NEAR(1.0, model.importance_weight(origin), 1e-3);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{1., 1.}});
+    EXPECT_NEAR(1.0, state_weighting_function(origin), 1e-3);
+  }
 }
 
 }  // namespace

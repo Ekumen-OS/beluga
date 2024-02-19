@@ -31,16 +31,26 @@
  * - `T::measurement_type` is a valid type, representing a sensor measurement.
  *
  * Given:
- * - An instance `p` of `T`.
  * - A possibly const instance `cp` of `T`.
- * - A possibly const instance `m` of `T::measurement_type`.
- * - A possibly const instance `s` of `T::state_type`.
+ * - A movable instance `m` of `T::measurement_type`.
  *
  * Then:
- * - `p.update_sensor(m)` will update the sensor model with `p`.
- *   This will not actually update the particle weights, but the update done here
- *   will be used in the following `importance_weight()` method calls.
- * - `cp.importance_weight(s)` returns a `T::weight_type` instance representing the weight of the particle.
+ * - `cp(m)` returns a callable satisfying \ref StateWeightingFunctionPage
+ * for states of `T::state_type` and weights of `T::weight_type` types.
+ *
+ * \section StateWeightingFunctionPage Beluga named requirements: StateWeightingFunction
+ * Requirements on a callable used for reweighting particle states in a Beluga `ParticleFilter`.
+ *
+ * \section StateWeightingFunctionRequirements Requirements
+ * A type `F` satisfies the `StateWeightingFunction` requirements for some state type `S`
+ * and weight type `W` if:
+ *
+ * Given:
+ * - A possibly const instance `fn` of `F`.
+ * - A possible const instance `s` of `S`.
+ *
+ * Then:
+ * - `fn(s)` returns a weight `w` of `W`.
  *
  * \section SensorModelLinks See also
  * - beluga::LikelihoodFieldModel

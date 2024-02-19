@@ -126,16 +126,31 @@ class MotionMixin : public Mixin {
 
 /// Wrapper to convert a sensor model class into a mixin.
 template <typename Mixin, typename Model>
-struct SensorMixin : public Mixin, public Model {
+class SensorMixin : public Mixin {
+ public:
   using measurement_type = typename Model::measurement_type;
   using map_type = typename Model::map_type;
+  using state_type = typename Model::state_type;
+  using weight_type = typename Model::weight_type;
 
   template <typename... Args>
   constexpr explicit SensorMixin(Model model, Args&&... args)
-      : Model(std::move(model)), Mixin(static_cast<decltype(args)>(args)...) {}
+      : Mixin(static_cast<decltype(args)>(args)...), model_(std::move(model)) {}
 
-  void update_sensor(measurement_type&& measurement) { Model::update_sensor(std::move(measurement)); }
-  void update_map(map_type&& map) { Model::update_map(std::move(map)); }
+  [[nodiscard]] weight_type importance_weight(const state_type& state) const {
+    return state_weighting_function_.has_value() ? (*state_weighting_function_)(state) : 1.0;
+  }
+
+  void update_sensor(measurement_type&& measurement) {
+    state_weighting_function_.emplace(model_(std::move(measurement)));
+  }
+
+  void update_map(map_type&& map) { model_.update_map(std::move(map)); }
+
+ private:
+  Model model_;
+  using StateWeightingFunction = decltype(std::declval<Model>()(std::declval<measurement_type>()));
+  std::optional<StateWeightingFunction> state_weighting_function_;
 };
 
 /// \endcond

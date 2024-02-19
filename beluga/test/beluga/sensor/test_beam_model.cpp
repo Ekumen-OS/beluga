@@ -51,25 +51,35 @@ TEST(BeamSensorModel, ImportanceWeight) {
   // clang-format on
 
   const auto params = GetParams();
-  auto model = UUT{params, grid};
+  auto sensor_model = UUT{params, grid};
 
   // Perfect hit.
-  model.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
-  EXPECT_NEAR(1.0171643824743635, model.importance_weight(grid.origin()), 1e-6);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{1., 1.}});
+    EXPECT_NEAR(1.0171643824743635, state_weighting_function(grid.origin()), 1e-6);
+  }
 
   // This is a hit that's before the obstacle, hence is affected by the unexpected obstacle part of the distribution.
-  model.update_sensor(std::vector<std::pair<double, double>>{{0.75, 0.75}});
-  EXPECT_NEAR(0.015905891701088148, model.importance_weight(grid.origin()), 1e-6);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{0.75, 0.75}});
+    EXPECT_NEAR(0.015905891701088148, state_weighting_function(grid.origin()), 1e-6);
+  }
 
   // Hit that's past the obstacle, hence is not affected by the unexpected obstacle part of the distribution.
   // This should be really close to zero.
-  model.update_sensor(std::vector<std::pair<double, double>>{{2.25, 2.25}});
-  EXPECT_NEAR(0.000, model.importance_weight(grid.origin()), 1e-6);
+
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{2.25, 2.25}});
+    EXPECT_NEAR(0.000, state_weighting_function(grid.origin()), 1e-6);
+  }
 
   // Range return longer than beam_max_range, so the max measurement distribution kicks in and this shouldn't be
   // zero.
-  model.update_sensor(std::vector<std::pair<double, double>>{{params.beam_max_range, params.beam_max_range}});
-  EXPECT_NEAR(0.00012500000000000003, model.importance_weight(grid.origin()), 1e-6);
+  {
+    auto state_weighting_function =
+        sensor_model(std::vector<std::pair<double, double>>{{params.beam_max_range, params.beam_max_range}});
+    EXPECT_NEAR(0.00012500000000000003, state_weighting_function(grid.origin()), 1e-6);
+  }
 }
 
 TEST(BeamSensorModel, GridUpdates) {
@@ -87,10 +97,12 @@ TEST(BeamSensorModel, GridUpdates) {
   // clang-format on
 
   const auto params = GetParams();
-  auto model = UUT{params, std::move(grid)};
+  auto sensor_model = UUT{params, std::move(grid)};
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
-  EXPECT_NEAR(1.0171643824743635, model.importance_weight(origin), 1e-6);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{1., 1.}});
+    EXPECT_NEAR(1.0171643824743635, state_weighting_function(origin), 1e-6);
+  }
 
   // clang-format off
   grid = StaticOccupancyGrid<5, 5>{{
@@ -102,10 +114,12 @@ TEST(BeamSensorModel, GridUpdates) {
     kResolution, origin};
   // clang-format on
 
-  model.update_map(std::move(grid));
+  sensor_model.update_map(std::move(grid));
 
-  model.update_sensor(std::vector<std::pair<double, double>>{{1., 1.}});
-  EXPECT_NEAR(0.0, model.importance_weight(origin), 1e-3);
+  {
+    auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{1., 1.}});
+    EXPECT_NEAR(0.0, state_weighting_function(origin), 1e-3);
+  }
 }
 
 }  // namespace beluga
