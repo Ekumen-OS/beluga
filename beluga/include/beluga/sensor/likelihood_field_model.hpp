@@ -136,7 +136,7 @@ class LikelihoodFieldModel {
   /**
    * This method re-computes the underlying likelihood field.
    *
-   * \param map New occupancy grid representing the static map.
+   * \param grid New occupancy grid representing the static map.
    */
   void update_map(const map_type& grid) {
     likelihood_field_ = make_likelihood_field(params_, grid);
