@@ -109,14 +109,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a26dbefb41ce8394ee818068738ae4e55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a26dbefb41ce8394ee818068738ae4e55">LandmarkSensorModel</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a9ca01d33ba37d26e4f4b827078207a4e">param_type</a> params, <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a> landmark_map)</td></tr>
 <tr class="memdesc:a26dbefb41ce8394ee818068738ae4e55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1LandmarkSensorModel.html" title="Generic landmark model for discrete detection sensors (both 2D and 3D).">LandmarkSensorModel</a> instance.  <a href="classbeluga_1_1LandmarkSensorModel.html#a26dbefb41ce8394ee818068738ae4e55">More...</a><br /></td></tr>
 <tr class="separator:a26dbefb41ce8394ee818068738ae4e55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e13f398fae5d6c9c3a632a00de2fa05"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ae14c681f2da95af1d7daac24e2846b32">weight_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a4e13f398fae5d6c9c3a632a00de2fa05">importance_weight</a> (const <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ac7db76607143683fc78e7346fd98b395">state_type</a> &amp;state) const</td></tr>
-<tr class="memdesc:a4e13f398fae5d6c9c3a632a00de2fa05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the importance weight for a particle with the provided state.  <a href="classbeluga_1_1LandmarkSensorModel.html#a4e13f398fae5d6c9c3a632a00de2fa05">More...</a><br /></td></tr>
-<tr class="separator:a4e13f398fae5d6c9c3a632a00de2fa05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cbebac93577a51e68a2332ca467df00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a5cbebac93577a51e68a2332ca467df00">update_sensor</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aacdb98d34fa7554be9946f8e1858dc78">measurement_type</a> &amp;&amp;points)</td></tr>
-<tr class="memdesc:a5cbebac93577a51e68a2332ca467df00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with the measured points.  <a href="classbeluga_1_1LandmarkSensorModel.html#a5cbebac93577a51e68a2332ca467df00">More...</a><br /></td></tr>
-<tr class="separator:a5cbebac93577a51e68a2332ca467df00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa14e9e26971963f41ff9afca69ecbe8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#afa14e9e26971963f41ff9afca69ecbe8">update_map</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aa54af8be385ca83eeb2f8ad32b513ec8">map_type</a> &amp;&amp;map)</td></tr>
-<tr class="memdesc:afa14e9e26971963f41ff9afca69ecbe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with a new map.  <a href="classbeluga_1_1LandmarkSensorModel.html#afa14e9e26971963f41ff9afca69ecbe8">More...</a><br /></td></tr>
+<tr class="memitem:ad92899dca6c21affbff2db90d5b296f7"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ad92899dca6c21affbff2db90d5b296f7">operator()</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aacdb98d34fa7554be9946f8e1858dc78">measurement_type</a> &amp;&amp;detections) const</td></tr>
+<tr class="memdesc:ad92899dca6c21affbff2db90d5b296f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a state weighting function conditioned on landmark position detections.  <a href="classbeluga_1_1LandmarkSensorModel.html#ad92899dca6c21affbff2db90d5b296f7">More...</a><br /></td></tr>
+<tr class="separator:ad92899dca6c21affbff2db90d5b296f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa14e9e26971963f41ff9afca69ecbe8"><td class="memItemLeft" align="right" valign="top"><a id="afa14e9e26971963f41ff9afca69ecbe8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#afa14e9e26971963f41ff9afca69ecbe8">update_map</a> (<a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aa54af8be385ca83eeb2f8ad32b513ec8">map_type</a> &amp;&amp;map)</td></tr>
+<tr class="memdesc:afa14e9e26971963f41ff9afca69ecbe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sensor model with a new landmark <code>map</code>. <br /></td></tr>
 <tr class="separator:afa14e9e26971963f41ff9afca69ecbe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -124,7 +122,7 @@ Public Member Functions</h2></td></tr>
 class beluga::LandmarkSensorModel&lt; LandmarkMap, StateType &gt;</h3>
 
 <p>Generic landmark model for discrete detection sensors (both 2D and 3D). </p>
-<p>This class implements the <a class="el" href="structbeluga_1_1LandmarkSensorModelInterface.html" title="Pure abstract class representing a generic landmark sensor model.">LandmarkSensorModelInterface</a> interface and satisfies <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>.</p>
+<p>This class satisfies <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>.</p>
 <p>This sensor model is a generalization of the model described in Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[5]</a> Chapter 6.6 .</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -174,7 +172,7 @@ template&lt;class LandmarkMap , class StateType &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">params</td><td>Parameters to configure this instance. See beluga::BeamModelParams for details. </td></tr>
-    <tr><td class="paramname">landmark_map</td><td>Map of landmarks to be used by this sensor model. </td></tr>
+    <tr><td class="paramname">landmark_map</td><td>Map of landmarks to be used by the sensor model to compute importance weights for particle states. </td></tr>
   </table>
   </dd>
 </dl>
@@ -182,8 +180,8 @@ template&lt;class LandmarkMap , class StateType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4e13f398fae5d6c9c3a632a00de2fa05"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e13f398fae5d6c9c3a632a00de2fa05">&#9670;&nbsp;</a></span>importance_weight()</h2>
+<a id="ad92899dca6c21affbff2db90d5b296f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad92899dca6c21affbff2db90d5b296f7">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -194,10 +192,10 @@ template&lt;class LandmarkMap , class StateType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ae14c681f2da95af1d7daac24e2846b32">weight_type</a> <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::importance_weight </td>
+          <td class="memname">auto <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::operator() </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classbeluga_1_1LandmarkSensorModel.html#ac7db76607143683fc78e7346fd98b395">state_type</a> &amp;&#160;</td>
-          <td class="paramname"><em>state</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aacdb98d34fa7554be9946f8e1858dc78">measurement_type</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>detections</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -208,88 +206,14 @@ template&lt;class LandmarkMap , class StateType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the importance weight for a particle with the provided state. </p>
+<p>Returns a state weighting function conditioned on landmark position detections. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">state</td><td>State of the particle to calculate its importance weight. </td></tr>
+    <tr><td class="paramname">detections</td><td>2D lidar hit points in the reference frame of filter particles. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Calculated importance weight. </dd></dl>
-
-</div>
-</div>
-<a id="afa14e9e26971963f41ff9afca69ecbe8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa14e9e26971963f41ff9afca69ecbe8">&#9670;&nbsp;</a></span>update_map()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class LandmarkMap , class StateType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::update_map </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aa54af8be385ca83eeb2f8ad32b513ec8">map_type</a> &amp;&amp;&#160;</td>
-          <td class="paramname"><em>map</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Update the sensor model with a new map. </p>
-<p>This method updates the sensor model with a new map, i.e. a representation of the environment, that it needs to compute the weight of each particle.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">map</td><td>The range finder map. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a5cbebac93577a51e68a2332ca467df00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5cbebac93577a51e68a2332ca467df00">&#9670;&nbsp;</a></span>update_sensor()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class LandmarkMap , class StateType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classbeluga_1_1LandmarkSensorModel.html">beluga::LandmarkSensorModel</a>&lt; <a class="el" href="classbeluga_1_1LandmarkMap.html">LandmarkMap</a>, StateType &gt;::update_sensor </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#aacdb98d34fa7554be9946f8e1858dc78">measurement_type</a> &amp;&amp;&#160;</td>
-          <td class="paramname"><em>points</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Update the sensor model with the measured points. </p>
-<p>This method updates the sensor model with the information it needs to compute the weight of each particle. The weight of each particle is calculated by subsequent calls to the <code><a class="el" href="classbeluga_1_1LandmarkSensorModel.html#a4e13f398fae5d6c9c3a632a00de2fa05" title="Gets the importance weight for a particle with the provided state.">importance_weight()</a></code> method provided by the same mixin component.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">points</td><td>The discrete sensor detections in the reference frame of the particle. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>a state weighting function satisfying <a class="el" href="SensorModelPage.html#StateWeightingFunctionPage">Beluga named requirements: StateWeightingFunction</a> and borrowing a reference to this sensor model (and thus their lifetime are bound). </dd></dl>
 
 </div>
 </div>

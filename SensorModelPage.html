@@ -76,14 +76,24 @@ Requirements</h1>
 <li><code>T::measurement_type</code> is a valid type, representing a sensor measurement.</li>
 </ul>
 <p>Given:</p><ul>
-<li>An instance <code>p</code> of <code>T</code>.</li>
 <li>A possibly const instance <code>cp</code> of <code>T</code>.</li>
-<li>A possibly const instance <code>m</code> of <code>T::measurement_type</code>.</li>
-<li>A possibly const instance <code>s</code> of <code>T::state_type</code>.</li>
+<li>A movable instance <code>m</code> of <code>T::measurement_type</code>.</li>
 </ul>
 <p>Then:</p><ul>
-<li><code>p.update_sensor(m)</code> will update the sensor model with <code>p</code>. This will not actually update the particle weights, but the update done here will be used in the following <code>importance_weight()</code> method calls.</li>
-<li><code>cp.importance_weight(s)</code> returns a <code>T::weight_type</code> instance representing the weight of the particle.</li>
+<li><code>cp(m)</code> returns a callable satisfying <a class="el" href="SensorModelPage.html#StateWeightingFunctionPage">Beluga named requirements: StateWeightingFunction</a> for states of <code>T::state_type</code> and weights of <code>T::weight_type</code> types.</li>
+</ul>
+<h1><a class="anchor" id="StateWeightingFunctionPage"></a>
+Beluga named requirements: StateWeightingFunction</h1>
+<p>Requirements on a callable used for reweighting particle states in a Beluga <code>ParticleFilter</code>.</p>
+<h1><a class="anchor" id="StateWeightingFunctionRequirements"></a>
+Requirements</h1>
+<p>A type <code>F</code> satisfies the <code>StateWeightingFunction</code> requirements for some state type <code>S</code> and weight type <code>W</code> if:</p>
+<p>Given:</p><ul>
+<li>A possibly const instance <code>fn</code> of <code>F</code>.</li>
+<li>A possible const instance <code>s</code> of <code>S</code>.</li>
+</ul>
+<p>Then:</p><ul>
+<li><code>fn(s)</code> returns a weight <code>w</code> of <code>W</code>.</li>
 </ul>
 <h1><a class="anchor" id="SensorModelLinks"></a>
 See also</h1>
