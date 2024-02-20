@@ -61,7 +61,7 @@ class AmclNodelet : public nodelet::Nodelet {
   auto get_sensor_model(std::string_view, const nav_msgs::OccupancyGrid::ConstPtr&)
       -> beluga_ros::Amcl::sensor_model_variant;
 
-  auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
+  static auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
 
   auto make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr&) -> std::unique_ptr<beluga_ros::Amcl>;
 

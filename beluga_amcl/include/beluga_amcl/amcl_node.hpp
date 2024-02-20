@@ -63,7 +63,7 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
   auto get_sensor_model(std::string_view, nav_msgs::msg::OccupancyGrid::SharedPtr)
       -> beluga_ros::Amcl::sensor_model_variant;
 
-  auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
+  static auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
 
   auto make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr) -> std::unique_ptr<beluga_ros::Amcl>;
 
@@ -136,4 +136,4 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL_PRIVATE_AMCL_NODE_HPP
+#endif  // BELUGA_AMCL_AMCL_NODE_HPP
