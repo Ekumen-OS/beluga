@@ -22,7 +22,7 @@
 #include <sophus/se3.hpp>
 
 #include <beluga/beluga.hpp>
-#include <beluga_ros/amcl_impl.hpp>
+#include <beluga_ros/amcl.hpp>
 #include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
@@ -84,13 +84,13 @@ auto odometry_to_sophus() {
  * - Add one or more instances of that struct to the `get_particle_filter_params` function.
  * - Implement a new  `particle_filter_test` overload taking that struct as a first parameter.
  */
-using ParticleFilterParams = std::variant<beluga_ros::AmclImplParams>;
+using ParticleFilterParams = std::variant<beluga_ros::AmclParams>;
 
 auto get_particle_filter_params() {
   return std::vector<ParticleFilterParams>{
-      beluga_ros::AmclImplParams{},  // Default configuration.
+      beluga_ros::AmclParams{},  // Default configuration.
       []() {
-        auto params = beluga_ros::AmclImplParams{};
+        auto params = beluga_ros::AmclParams{};
         params.selective_resampling = true;  // Enable selective resampling.
         return params;
       }(),
@@ -99,14 +99,14 @@ auto get_particle_filter_params() {
 
 /// Overload of particle_filter_test with a standard AMCL implementation.
 template <class Map, class MotionModel, class SensorModel, class Distribution, class Range>
-auto particle_filter_test(
-    const beluga_ros::AmclImplParams& params,
+void particle_filter_test(
+    const beluga_ros::AmclParams& params,
     Map&& map,
     MotionModel&& motion_model,
     SensorModel&& sensor_model,
     Distribution&& initial_distribution,
     Range&& datapoints) {
-  auto filter = beluga_ros::AmclImpl{params, map, motion_model, sensor_model, std::execution::par};
+  auto filter = beluga_ros::Amcl{map, motion_model, sensor_model, params, std::execution::par};
   filter.initialize(std::forward<Distribution>(initial_distribution));
 
   // Tolerance values ​​prove that the filter performs approximately well, they do not prove accuracy.

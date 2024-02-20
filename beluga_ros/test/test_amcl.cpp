@@ -14,7 +14,7 @@
 
 #include <gmock/gmock.h>
 
-#include <beluga_ros/amcl_impl.hpp>
+#include <beluga_ros/amcl.hpp>
 
 #if BELUGA_ROS_VERSION == 1
 #include <boost/smart_ptr.hpp>
@@ -58,42 +58,42 @@ auto make_dummy_laser_scan() {
 
 auto make_amcl() {
   auto map = make_dummy_occupancy_grid();
-  auto params = beluga_ros::AmclImplParams{};
+  auto params = beluga_ros::AmclParams{};
   params.max_particles = 50UL;
-  return beluga_ros::AmclImpl{
-      params,                                                                                             //
-      map,                                                                                                //
-      beluga::DifferentialDriveModel{beluga::DifferentialDriveModelParam{}},                              //
-      beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>{beluga::LikelihoodFieldModelParam{}, map},  //
+  return beluga_ros::Amcl{
+      map,                                                                     //
+      beluga::DifferentialDriveModel{beluga::DifferentialDriveModelParam{}},   //
+      beluga::LikelihoodFieldModel{beluga::LikelihoodFieldModelParam{}, map},  //
+      params,                                                                  //
       std::execution::seq,
   };
 }
 
-TEST(TestAmclImpl, InitializeWithNoParticles) {
+TEST(TestAmcl, InitializeWithNoParticles) {
   auto amcl = make_amcl();
   ASSERT_EQ(amcl.particles().size(), 0);
 }
 
-TEST(TestAmclImpl, InitializeFromMap) {
+TEST(TestAmcl, InitializeFromMap) {
   auto amcl = make_amcl();
   amcl.initialize_from_map();
   ASSERT_EQ(amcl.particles().size(), 50UL);
 }
 
-TEST(TestAmclImpl, InitializeFromPose) {
+TEST(TestAmcl, InitializeFromPose) {
   auto amcl = make_amcl();
   amcl.initialize(Sophus::SE2d{}, Eigen::Vector3d::Ones().asDiagonal());
   ASSERT_EQ(amcl.particles().size(), 50UL);
 }
 
-TEST(TestAmclImpl, UpdateWithNoParticles) {
+TEST(TestAmcl, UpdateWithNoParticles) {
   auto amcl = make_amcl();
   ASSERT_EQ(amcl.particles().size(), 0);
   auto estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
   ASSERT_FALSE(estimate.has_value());
 }
 
-TEST(TestAmclImpl, UpdateWithParticles) {
+TEST(TestAmcl, UpdateWithParticles) {
   auto amcl = make_amcl();
   ASSERT_EQ(amcl.particles().size(), 0);
   amcl.initialize_from_map();
@@ -102,7 +102,7 @@ TEST(TestAmclImpl, UpdateWithParticles) {
   ASSERT_TRUE(estimate.has_value());
 }
 
-TEST(TestAmclImpl, UpdateWithParticlesNoMotion) {
+TEST(TestAmcl, UpdateWithParticlesNoMotion) {
   auto amcl = make_amcl();
   ASSERT_EQ(amcl.particles().size(), 0);
   amcl.initialize_from_map();
@@ -113,7 +113,7 @@ TEST(TestAmclImpl, UpdateWithParticlesNoMotion) {
   ASSERT_FALSE(estimate.has_value());
 }
 
-TEST(TestAmclImpl, UpdateWithParticlesForced) {
+TEST(TestAmcl, UpdateWithParticlesForced) {
   auto amcl = make_amcl();
   ASSERT_EQ(amcl.particles().size(), 0);
   amcl.initialize_from_map();

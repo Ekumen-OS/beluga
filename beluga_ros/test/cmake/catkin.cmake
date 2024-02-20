@@ -14,9 +14,9 @@
 
 find_package(rostest REQUIRED)
 
-catkin_add_gmock(test_amcl_impl test_amcl_impl.cpp)
+catkin_add_gmock(test_amcl test_amcl.cpp)
 target_link_libraries(
-  test_amcl_impl
+  test_amcl
   ${PROJECT_NAME}
   ${catkin_LIBRARIES}
   gmock_main)

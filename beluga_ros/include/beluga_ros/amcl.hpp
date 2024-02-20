@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_ROS_AMCL_IMPL_HPP
-#define BELUGA_ROS_AMCL_IMPL_HPP
+#ifndef BELUGA_ROS_AMCL_HPP
+#define BELUGA_ROS_AMCL_HPP
 
 #include <optional>
 #include <utility>
@@ -26,7 +26,7 @@
 namespace beluga_ros {
 
 /// Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.
-struct AmclImplParams {
+struct AmclParams {
   double update_min_d = 0.25;
   double update_min_a = 0.2;
   std::size_t resample_interval = 1UL;
@@ -42,33 +42,36 @@ struct AmclImplParams {
   double spatial_resolution_theta = 10 * Sophus::Constants<double>::pi() / 180;
 };
 
-/// Implementation of the Beluga Adaptive Monte Carlo Localization (AMCL) algorithm.
-class AmclImpl {
+/// Implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm.
+class Amcl {
  public:
   using particle_type = std::tuple<Sophus::SE2d, beluga::Weight>;
+
   using motion_model_variant = std::variant<
       beluga::DifferentialDriveModel,     //
       beluga::OmnidirectionalDriveModel,  //
       beluga::StationaryModel>;
+
   using sensor_model_variant = std::variant<
       beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>,  //
       beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>;
+
   using execution_policy_variant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 
   /// Constructor.
   /**
-   * \param params Parameters for AMCL implementation.
    * \param map Occupancy grid map.
    * \param motion_model Variant of motion model.
    * \param sensor_model Variant of sensor model.
+   * \param params Parameters for AMCL implementation.
    * \param execution_policy Variant of execution policy.
    */
-  AmclImpl(
-      const AmclImplParams& params,
+  Amcl(
       beluga_ros::OccupancyGrid map,
       motion_model_variant motion_model,
       sensor_model_variant sensor_model,
-      execution_policy_variant execution_policy)
+      const AmclParams& params = AmclParams{},
+      execution_policy_variant execution_policy = std::execution::seq)
       : params_{params},
         map_distribution_{map},
         motion_model_{std::move(motion_model)},
@@ -145,48 +148,13 @@ class AmclImpl {
                        ranges::to<std::vector>;
 
     std::visit(
-        [&, this](auto& execution_policy, auto& motion_model, auto& sensor_model) {
-          update_particles(
-              execution_policy,                                           //
-              motion_model(control_action_window_ << base_pose_in_odom),  //
-              sensor_model(std::move(measurement)));
+        [&, this](auto& policy, auto& motion_model, auto& sensor_model) {
+          particles_ |=
+              beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_in_odom)) |  //
+              beluga::actions::reweight(policy, sensor_model(std::move(measurement))) |                        //
+              beluga::actions::normalize(policy);
         },
         execution_policy_, motion_model_, sensor_model_);
-    force_update_ = false;
-    return beluga::estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
-  }
-
-  /// Force a manual update of the particles on the next iteration of the filter.
-  void force_update() { force_update_ = true; }
-
- private:
-  beluga::TupleVector<particle_type> particles_;
-
-  AmclImplParams params_;
-  beluga::MultivariateUniformDistribution<Sophus::SE2d, beluga_ros::OccupancyGrid> map_distribution_;
-  motion_model_variant motion_model_;
-  sensor_model_variant sensor_model_;
-  execution_policy_variant execution_policy_;
-
-  beluga::spatial_hash<Sophus::SE2d> spatial_hasher_;
-  beluga::ThrunRecoveryProbabilityEstimator random_probability_estimator_;
-  beluga::any_policy<Sophus::SE2d> update_policy_;
-  beluga::any_policy<decltype(particles_)> resample_policy_;
-
-  beluga::RollingWindow<Sophus::SE2d, 2> control_action_window_;
-
-  bool force_update_{true};
-
-  std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> latest_estimate_;
-  std::optional<Sophus::SE2d> latest_odom_transform_in_map_;
-
-  double random_state_probability_{0.0};
-
-  template <class ExecutionPolicy, class MotionUpdate, class SensorUpdate>
-  void update_particles(ExecutionPolicy&& policy, MotionUpdate motion_update, SensorUpdate sensor_update) {
-    particles_ |= beluga::actions::propagate(policy, std::move(motion_update)) |  //
-                  beluga::actions::reweight(policy, std::move(sensor_update)) |   //
-                  beluga::actions::normalize(policy);
 
     random_state_probability_ = random_probability_estimator_(particles_);
 
@@ -207,7 +175,36 @@ class AmclImpl {
                         params_.kld_z) |
                     beluga::actions::assign;
     }
+
+    force_update_ = false;
+    return beluga::estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
   }
+
+  /// Force a manual update of the particles on the next iteration of the filter.
+  void force_update() { force_update_ = true; }
+
+ private:
+  beluga::TupleVector<particle_type> particles_;
+
+  AmclParams params_;
+  beluga::MultivariateUniformDistribution<Sophus::SE2d, beluga_ros::OccupancyGrid> map_distribution_;
+  motion_model_variant motion_model_;
+  sensor_model_variant sensor_model_;
+  execution_policy_variant execution_policy_;
+
+  beluga::spatial_hash<Sophus::SE2d> spatial_hasher_;
+  beluga::ThrunRecoveryProbabilityEstimator random_probability_estimator_;
+  beluga::any_policy<Sophus::SE2d> update_policy_;
+  beluga::any_policy<decltype(particles_)> resample_policy_;
+
+  beluga::RollingWindow<Sophus::SE2d, 2> control_action_window_;
+
+  bool force_update_{true};
+
+  std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> latest_estimate_;
+  std::optional<Sophus::SE2d> latest_odom_transform_in_map_;
+
+  double random_state_probability_{0.0};
 };
 
 }  // namespace beluga_ros
