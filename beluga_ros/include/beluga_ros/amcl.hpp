@@ -209,4 +209,4 @@ class Amcl {
 
 }  // namespace beluga_ros
 
-#endif  // BELUGA_ROS_AMCL_IMPL_HPP
+#endif  // BELUGA_ROS_AMCL_HPP
