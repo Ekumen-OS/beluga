@@ -73,10 +73,10 @@ void spin_for(const std::chrono::duration<Rep, Period>& duration, const std::sha
 class AmclNodeUnderTest : public beluga_amcl::AmclNode {
  public:
   /// Get particle filter pointer.
-  const auto& particle_filter() { return impl_; }
+  const auto& particle_filter() { return particle_filter_; }
 
   /// Return true if the particle filter has been initialized.
-  bool is_initialized() const { return impl_ != nullptr; }
+  bool is_initialized() const { return particle_filter_ != nullptr; }
 
   /// Return the last known estimate. Throws if there is no estimate.
   const auto& estimate() { return last_known_estimate_.value(); }
@@ -476,7 +476,7 @@ TEST_F(TestNode, SetInitialPose) {
   amcl_node_->activate();
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  const auto [pose, _] = amcl_node_->estimate();  // <-- bad optional access
+  const auto [pose, _] = amcl_node_->estimate();
   ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
   ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
   ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -501,7 +501,6 @@ TEST_F(TestNode, NoBroadcastWhenNoInitialPose) {
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
-  std::cout << amcl_node_->particle_filter()->particles().size() << std::endl;
   tester_node_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));

@@ -621,7 +621,7 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   pose_pub_.reset();
-  impl_.reset();
+  particle_filter_.reset();
   enable_tf_broadcast_ = false;
   return CallbackReturn::SUCCESS;
 }
@@ -724,7 +724,7 @@ auto AmclNode::get_execution_policy(std::string_view name) -> beluga_ros::Amcl::
   throw std::invalid_argument("Execution policy must be seq or par.");
 }
 
-auto AmclNode::get_amcl_impl(nav_msgs::msg::OccupancyGrid::SharedPtr map) -> std::unique_ptr<beluga_ros::Amcl> {
+auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map) -> std::unique_ptr<beluga_ros::Amcl> {
   auto params = beluga_ros::AmclParams{};
   params.update_min_d = get_parameter("update_min_d").as_double();
   params.update_min_a = get_parameter("update_min_a").as_double();
@@ -757,7 +757,7 @@ auto AmclNode::get_amcl_impl(nav_msgs::msg::OccupancyGrid::SharedPtr map) -> std
 void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
   RCLCPP_INFO(get_logger(), "A new map was received");
 
-  if (impl_ && get_parameter("first_map_only").as_bool()) {
+  if (particle_filter_ && get_parameter("first_map_only").as_bool()) {
     RCLCPP_WARN(get_logger(), "Ignoring new map because the particle filter has already been initialized");
     return;
   }
@@ -770,21 +770,23 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
   }
 
   const bool should_reset_initial_pose = get_parameter("always_reset_initial_pose").as_bool() ||  //
-                                         (!impl_ && !last_known_estimate_.has_value());
+                                         (!particle_filter_ && !last_known_estimate_.has_value());
 
-  if (!impl_) {
-    impl_ = get_amcl_impl(map);
+  if (!particle_filter_) {
+    particle_filter_ = make_particle_filter(map);
   } else {
-    impl_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
+    particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
   }
 
-  if (!impl_) {
+  if (!particle_filter_) {
     return;  // Initialization failed and the error was already logged.
   }
 
-  const auto initial_estimate = get_initial_estimate();
-  if (should_reset_initial_pose && initial_estimate.has_value()) {
-    last_known_estimate_ = initial_estimate;
+  if (should_reset_initial_pose) {
+    const auto initial_estimate = get_initial_estimate();
+    if (initial_estimate.has_value()) {
+      last_known_estimate_ = initial_estimate;
+    }
   }
 
   if (last_known_estimate_.has_value()) {
@@ -795,7 +797,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
 }
 
 void AmclNode::timer_callback() {
-  if (!impl_) {
+  if (!particle_filter_) {
     return;
   }
 
@@ -840,10 +842,10 @@ void AmclNode::timer_callback() {
 
   std::unordered_map<Sophus::SE2d, RepresentativeData, RepresentativeBinHash, RepresentativeBinEqual>
       representatives_map;
-  representatives_map.reserve(impl_->particles().size());
+  representatives_map.reserve(particle_filter_->particles().size());
   double max_weight = 1e-5;  // never risk dividing by zero
 
-  for (const auto& [state, weight] : impl_->particles()) {
+  for (const auto& [state, weight] : particle_filter_->particles()) {
     auto& representative = representatives_map[state];  // if the element does not exist, create it
     representative.state = state;
     representative.weight += weight;
@@ -855,7 +857,7 @@ void AmclNode::timer_callback() {
   auto message = nav2_msgs::msg::ParticleCloud{};
   message.header.stamp = now();
   message.header.frame_id = get_parameter("global_frame_id").as_string();
-  message.particles.reserve(impl_->particles().size());
+  message.particles.reserve(particle_filter_->particles().size());
 
   for (const auto& [key, representative] : representatives_map) {
     auto& particle = message.particles.emplace_back();
@@ -867,7 +869,7 @@ void AmclNode::timer_callback() {
 }
 
 void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
-  if (!impl_) {
+  if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 2000, "Ignoring laser data because the particle filter has not been initialized");
     return;
@@ -904,7 +906,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   }
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
-  auto new_estimate = impl_->update(
+  auto new_estimate = particle_filter_->update(
       base_pose_in_odom,  //
       beluga_ros::LaserScan{
           laser_scan,
@@ -921,7 +923,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
     RCLCPP_INFO(
         get_logger(), "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
-        impl_->particles().size(), laser_scan->ranges.size(),
+        particle_filter_->particles().size(), laser_scan->ranges.size(),
         std::chrono::duration<double, std::milli>(update_duration).count());
   }
 
@@ -988,19 +990,19 @@ void AmclNode::nomotion_update_callback(
     [[maybe_unused]] std::shared_ptr<rmw_request_id_t> request_header,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Request> req,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res) {
-  if (!impl_) {
+  if (!particle_filter_) {
     RCLCPP_WARN(get_logger(), "Ignoring no-motion update request because the particle filter has not been initialized");
     return;
   }
 
-  impl_->force_update();
+  particle_filter_->force_update();
   RCLCPP_INFO(get_logger(), "No-motion update requested");
 }
 
 bool AmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Matrix3d>& estimate) {
   RCLCPP_INFO(get_logger(), "Initializing particles from estimated pose and covariance");
 
-  if (!impl_) {
+  if (!particle_filter_) {
     RCLCPP_ERROR(get_logger(), "Could not initialize particles: The particle filter has not been initialized");
     return false;
   }
@@ -1008,7 +1010,7 @@ bool AmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Mat
   const auto& [pose, covariance] = estimate;
 
   try {
-    impl_->initialize(pose, covariance);
+    particle_filter_->initialize(pose, covariance);
   } catch (const std::runtime_error& error) {
     RCLCPP_ERROR(get_logger(), "Could not initialize particles: %s", error.what());
     return false;
@@ -1018,7 +1020,7 @@ bool AmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Mat
 
   RCLCPP_INFO(
       get_logger(), "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, yaw=%g",
-      impl_->particles().size(), pose.translation().x(), pose.translation().y(), pose.so2().log());
+      particle_filter_->particles().size(), pose.translation().x(), pose.translation().y(), pose.so2().log());
 
   return true;
 }
@@ -1026,18 +1028,18 @@ bool AmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Mat
 bool AmclNode::initialize_from_map() {
   RCLCPP_INFO(get_logger(), "Initializing particles from map");
 
-  if (!impl_) {
+  if (!particle_filter_) {
     RCLCPP_ERROR(get_logger(), "Could not initialize particles: The particle filter has not been initialized");
     return false;
   }
 
-  impl_->initialize_from_map();
+  particle_filter_->initialize_from_map();
 
   // NOTE: We do not set `enable_tf_broadcast_ = true` here to match the original implementation.
 
   RCLCPP_INFO(
       get_logger(), "Particle filter initialized with %ld particles distributed across the map",
-      impl_->particles().size());
+      particle_filter_->particles().size());
 
   return true;
 }

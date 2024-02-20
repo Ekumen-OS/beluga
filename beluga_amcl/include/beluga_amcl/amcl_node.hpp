@@ -65,7 +65,7 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
 
   auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
 
-  auto get_amcl_impl(nav_msgs::msg::OccupancyGrid::SharedPtr) -> std::unique_ptr<beluga_ros::Amcl>;
+  auto make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr) -> std::unique_ptr<beluga_ros::Amcl>;
 
   void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
 
@@ -129,7 +129,7 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>> laser_scan_filter_;
   message_filters::Connection laser_scan_connection_;
 
-  std::unique_ptr<beluga_ros::Amcl> impl_;
+  std::unique_ptr<beluga_ros::Amcl> particle_filter_;
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_;
   bool enable_tf_broadcast_{false};
 };

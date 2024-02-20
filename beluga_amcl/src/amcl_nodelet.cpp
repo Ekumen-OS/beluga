@@ -220,7 +220,8 @@ auto AmclNodelet::get_execution_policy(std::string_view name) -> beluga_ros::Amc
   throw std::invalid_argument("Execution policy must be seq or par.");
 }
 
-auto AmclNodelet::get_amcl_impl(const nav_msgs::OccupancyGrid::ConstPtr& map) -> std::unique_ptr<beluga_ros::Amcl> {
+auto AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& map)
+    -> std::unique_ptr<beluga_ros::Amcl> {
   auto params = beluga_ros::AmclParams{};
   params.update_min_d = config_.update_min_d;
   params.update_min_a = config_.update_min_a;
@@ -272,7 +273,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
   std::lock_guard<std::mutex> lock(mutex_);
   NODELET_INFO("A new map has been requested to be set");
 
-  if (!impl_) {
+  if (!particle_filter_) {
     NODELET_WARN("Ignoring set map request because the particle filter has not been initialized");
     response.success = static_cast<unsigned char>(false);
     return true;
@@ -294,13 +295,13 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
 
   auto map = boost::make_shared<nav_msgs::OccupancyGrid>(request.map);
 
-  if (!impl_) {
-    impl_ = get_amcl_impl(map);
+  if (!particle_filter_) {
+    particle_filter_ = make_particle_filter(map);
   } else {
-    impl_->update_map(beluga_ros::OccupancyGrid{map});
+    particle_filter_->update_map(beluga_ros::OccupancyGrid{map});
   }
 
-  if (!impl_) {
+  if (!particle_filter_) {
     return false;  // Initialization failed and the error was already logged.
   }
 
@@ -323,7 +324,7 @@ void AmclNodelet::map_callback(const nav_msgs::OccupancyGrid::ConstPtr& message)
   std::lock_guard<std::mutex> lock(mutex_);
   NODELET_INFO("A new map was received");
 
-  if (impl_ && config_.first_map_only) {
+  if (particle_filter_ && config_.first_map_only) {
     NODELET_INFO("Ignoring new map because the particle filter has already been initialized.");
     return;
   }
@@ -339,21 +340,23 @@ void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::Occupancy
   }
 
   const bool should_reset_initial_pose = config_.always_reset_initial_pose ||  //
-                                         (!impl_ && !last_known_estimate_.has_value());
+                                         (!particle_filter_ && !last_known_estimate_.has_value());
 
-  if (!impl_) {
-    impl_ = get_amcl_impl(map);
+  if (!particle_filter_) {
+    particle_filter_ = make_particle_filter(map);
   } else {
-    impl_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
+    particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
   }
 
-  if (!impl_) {
+  if (!particle_filter_) {
     return;  // Initialization failed and the error was already logged.
   }
 
-  const auto initial_estimate = get_initial_estimate();
-  if (should_reset_initial_pose && initial_estimate.has_value()) {
-    last_known_estimate_ = initial_estimate;
+  if (should_reset_initial_pose) {
+    const auto initial_estimate = get_initial_estimate();
+    if (initial_estimate.has_value()) {
+      last_known_estimate_ = initial_estimate;
+    }
   }
 
   if (last_known_estimate_.has_value()) {
@@ -367,7 +370,7 @@ void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::Occupancy
 
 void AmclNodelet::particle_cloud_timer_callback(const ros::TimerEvent& ev) {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (!impl_) {
+  if (!particle_filter_) {
     return;
   }
 
@@ -378,18 +381,20 @@ void AmclNodelet::particle_cloud_timer_callback(const ros::TimerEvent& ev) {
   auto message = geometry_msgs::PoseArray{};
   message.header.stamp = ev.current_real;
   message.header.frame_id = config_.global_frame_id;
-  message.poses.resize(impl_->particles().size());
-  ranges::transform(impl_->particles() | beluga::views::states, std::begin(message.poses), [](const auto& state) {
-    auto message = geometry_msgs::Pose{};
-    tf2::toMsg(state, message);
-    return message;
-  });
+  message.poses.resize(particle_filter_->particles().size());
+  ranges::transform(
+      particle_filter_->particles() | beluga::views::states,  //
+      std::begin(message.poses), [](const auto& state) {
+        auto message = geometry_msgs::Pose{};
+        tf2::toMsg(state, message);
+        return message;
+      });
   particle_cloud_pub_.publish(message);
 }
 
 void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_scan) {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (!impl_) {
+  if (!particle_filter_) {
     NODELET_WARN_THROTTLE(2, "Ignoring laser data because the particle filter has not been initialized");
     return;
   }
@@ -418,7 +423,7 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
   }
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
-  auto new_estimate = impl_->update(
+  auto new_estimate = particle_filter_->update(
       base_pose_in_odom,  //
       beluga_ros::LaserScan{
           laser_scan,
@@ -434,8 +439,10 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
     last_known_estimate_ = new_estimate;
 
     NODELET_INFO(
-        "Particle filter update iteration stats: %ld particles %ld points - %.3fms", impl_->particles().size(),
-        laser_scan->ranges.size(), std::chrono::duration<double, std::milli>(update_duration).count());
+        "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
+        particle_filter_->particles().size(),  //
+        laser_scan->ranges.size(),             //
+        std::chrono::duration<double, std::milli>(update_duration).count());
   }
 
   if (!last_known_estimate_.has_value()) {
@@ -472,7 +479,7 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
 
 void AmclNodelet::initial_pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& message) {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (!impl_) {
+  if (!particle_filter_) {
     NODELET_WARN("Ignoring initial pose request because the particle filter has not been initialized.");
     return;
   }
@@ -526,12 +533,12 @@ bool AmclNodelet::nomotion_update_callback(
     [[maybe_unused]] std_srvs::Empty::Request&,
     [[maybe_unused]] std_srvs::Empty::Response&) {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (!impl_) {
+  if (!particle_filter_) {
     NODELET_WARN("Ignoring no-motion request because the particle filter has not been initialized.");
     return false;
   }
 
-  impl_->force_update();
+  particle_filter_->force_update();
   NODELET_INFO("No-motion update requested");
   return true;
 }
@@ -539,7 +546,7 @@ bool AmclNodelet::nomotion_update_callback(
 bool AmclNodelet::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Matrix3d>& estimate) {
   NODELET_INFO("Initializing particles from estimated pose and covariance");
 
-  if (!impl_) {
+  if (!particle_filter_) {
     NODELET_ERROR("Could not initialize particles: The particle filter has not been initialized");
     return false;
   }
@@ -547,7 +554,7 @@ bool AmclNodelet::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::
   const auto& [pose, covariance] = estimate;
 
   try {
-    impl_->initialize(pose, covariance);
+    particle_filter_->initialize(pose, covariance);
   } catch (const std::runtime_error& error) {
     NODELET_ERROR("Could not initialize particles: %s", error.what());
     return false;
@@ -556,8 +563,11 @@ bool AmclNodelet::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::
   enable_tf_broadcast_ = true;
 
   NODELET_INFO(
-      "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, yaw=%g", impl_->particles().size(),
-      pose.translation().x(), pose.translation().y(), pose.so2().log());
+      "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, yaw=%g",
+      particle_filter_->particles().size(),  //
+      pose.translation().x(),                //
+      pose.translation().y(),                //
+      pose.so2().log());
 
   return true;
 }
@@ -565,16 +575,18 @@ bool AmclNodelet::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::
 bool AmclNodelet::initialize_from_map() {
   NODELET_INFO("Initializing particles from map");
 
-  if (!impl_) {
+  if (!particle_filter_) {
     NODELET_ERROR("Could not initialize particles: The particle filter has not been initialized");
     return false;
   }
 
-  impl_->initialize_from_map();
+  particle_filter_->initialize_from_map();
 
   // NOTE: We do not set `enable_tf_broadcast_ = true` here to match the original implementation.
 
-  NODELET_INFO("Particle filter initialized with %ld particles distributed across the map", impl_->particles().size());
+  NODELET_INFO(
+      "Particle filter initialized with %ld particles distributed across the map",
+      particle_filter_->particles().size());
 
   return true;
 }
