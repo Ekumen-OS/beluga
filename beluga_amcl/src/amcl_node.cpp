@@ -665,7 +665,7 @@ auto AmclNode::get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d, E
   return std::make_pair(pose, covariance);
 }
 
-auto AmclNode::get_motion_model(std::string_view name) -> beluga_ros::AmclImpl::motion_model_variant {
+auto AmclNode::get_motion_model(std::string_view name) -> beluga_ros::Amcl::motion_model_variant {
   if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
     auto params = beluga::DifferentialDriveModelParam{};
     params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
@@ -690,7 +690,7 @@ auto AmclNode::get_motion_model(std::string_view name) -> beluga_ros::AmclImpl::
 }
 
 auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyGrid::SharedPtr map)
-    -> beluga_ros::AmclImpl::sensor_model_variant {
+    -> beluga_ros::Amcl::sensor_model_variant {
   if (name == kLikelihoodFieldModelName) {
     auto params = beluga::LikelihoodFieldModelParam{};
     params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
@@ -714,7 +714,7 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
   throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
 }
 
-auto AmclNode::get_execution_policy(std::string_view name) -> beluga_ros::AmclImpl::execution_policy_variant {
+auto AmclNode::get_execution_policy(std::string_view name) -> beluga_ros::Amcl::execution_policy_variant {
   if (name == "seq") {
     return std::execution::seq;
   }
@@ -724,8 +724,8 @@ auto AmclNode::get_execution_policy(std::string_view name) -> beluga_ros::AmclIm
   throw std::invalid_argument("Execution policy must be seq or par.");
 }
 
-auto AmclNode::get_amcl_impl(nav_msgs::msg::OccupancyGrid::SharedPtr map) -> std::unique_ptr<beluga_ros::AmclImpl> {
-  auto params = beluga_ros::AmclImplParams{};
+auto AmclNode::get_amcl_impl(nav_msgs::msg::OccupancyGrid::SharedPtr map) -> std::unique_ptr<beluga_ros::Amcl> {
+  auto params = beluga_ros::AmclParams{};
   params.update_min_d = get_parameter("update_min_d").as_double();
   params.update_min_a = get_parameter("update_min_a").as_double();
   params.resample_interval = static_cast<std::size_t>(get_parameter("resample_interval").as_int());
@@ -741,11 +741,11 @@ auto AmclNode::get_amcl_impl(nav_msgs::msg::OccupancyGrid::SharedPtr map) -> std
   params.spatial_resolution_theta = get_parameter("spatial_resolution_theta").as_double();
 
   try {
-    return std::make_unique<beluga_ros::AmclImpl>(
-        params,                                                                //
+    return std::make_unique<beluga_ros::Amcl>(
         beluga_ros::OccupancyGrid{map},                                        //
         get_motion_model(get_parameter("robot_model_type").as_string()),       //
         get_sensor_model(get_parameter("laser_model_type").as_string(), map),  //
+        params,                                                                //
         get_execution_policy(get_parameter("execution_policy").as_string()));
   } catch (const std::invalid_argument& error) {
     RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());

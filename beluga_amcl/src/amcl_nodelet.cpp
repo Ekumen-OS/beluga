@@ -161,7 +161,7 @@ auto AmclNodelet::get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d
   return std::make_pair(pose, covariance);
 }
 
-auto AmclNodelet::get_motion_model(std::string_view name) -> beluga_ros::AmclImpl::motion_model_variant {
+auto AmclNodelet::get_motion_model(std::string_view name) -> beluga_ros::Amcl::motion_model_variant {
   if (name == kDifferentialModelName || name == kAMCLDifferentialModelName) {
     auto params = beluga::DifferentialDriveModelParam{};
     params.rotation_noise_from_rotation = config_.odom_alpha1;
@@ -186,7 +186,7 @@ auto AmclNodelet::get_motion_model(std::string_view name) -> beluga_ros::AmclImp
 }
 
 auto AmclNodelet::get_sensor_model(std::string_view name, const nav_msgs::OccupancyGrid::ConstPtr& map)
-    -> beluga_ros::AmclImpl::sensor_model_variant {
+    -> beluga_ros::Amcl::sensor_model_variant {
   if (name == kLikelihoodFieldModelName) {
     auto params = beluga::LikelihoodFieldModelParam{};
     params.max_obstacle_distance = config_.laser_likelihood_max_dist;
@@ -210,7 +210,7 @@ auto AmclNodelet::get_sensor_model(std::string_view name, const nav_msgs::Occupa
   throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
 }
 
-auto AmclNodelet::get_execution_policy(std::string_view name) -> beluga_ros::AmclImpl::execution_policy_variant {
+auto AmclNodelet::get_execution_policy(std::string_view name) -> beluga_ros::Amcl::execution_policy_variant {
   if (name == "seq") {
     return std::execution::seq;
   }
@@ -220,8 +220,8 @@ auto AmclNodelet::get_execution_policy(std::string_view name) -> beluga_ros::Amc
   throw std::invalid_argument("Execution policy must be seq or par.");
 }
 
-auto AmclNodelet::get_amcl_impl(const nav_msgs::OccupancyGrid::ConstPtr& map) -> std::unique_ptr<beluga_ros::AmclImpl> {
-  auto params = beluga_ros::AmclImplParams{};
+auto AmclNodelet::get_amcl_impl(const nav_msgs::OccupancyGrid::ConstPtr& map) -> std::unique_ptr<beluga_ros::Amcl> {
+  auto params = beluga_ros::AmclParams{};
   params.update_min_d = config_.update_min_d;
   params.update_min_a = config_.update_min_a;
   params.resample_interval = static_cast<std::size_t>(config_.resample_interval);
@@ -237,11 +237,11 @@ auto AmclNodelet::get_amcl_impl(const nav_msgs::OccupancyGrid::ConstPtr& map) ->
   params.spatial_resolution_theta = config_.spatial_resolution_theta;
 
   try {
-    return std::make_unique<beluga_ros::AmclImpl>(
-        params,                                           //
+    return std::make_unique<beluga_ros::Amcl>(
         beluga_ros::OccupancyGrid{map},                   //
         get_motion_model(config_.odom_model_type),        //
         get_sensor_model(config_.laser_model_type, map),  //
+        params,                                           //
         get_execution_policy(config_.execution_policy));
   } catch (const std::invalid_argument& error) {
     NODELET_ERROR("Could not initialize particle filter: %s", error.what());

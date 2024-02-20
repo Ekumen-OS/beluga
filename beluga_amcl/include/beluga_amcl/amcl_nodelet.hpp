@@ -42,7 +42,7 @@
 #include <sophus/se2.hpp>
 
 #include <beluga_amcl/AmclConfig.h>
-#include <beluga_ros/amcl_impl.hpp>
+#include <beluga_ros/amcl.hpp>
 
 namespace beluga_amcl {
 
@@ -56,14 +56,14 @@ class AmclNodelet : public nodelet::Nodelet {
 
   auto get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>>;
 
-  auto get_motion_model(std::string_view) -> beluga_ros::AmclImpl::motion_model_variant;
+  auto get_motion_model(std::string_view) -> beluga_ros::Amcl::motion_model_variant;
 
   auto get_sensor_model(std::string_view, const nav_msgs::OccupancyGrid::ConstPtr&)
-      -> beluga_ros::AmclImpl::sensor_model_variant;
+      -> beluga_ros::Amcl::sensor_model_variant;
 
-  auto get_execution_policy(std::string_view) -> beluga_ros::AmclImpl::execution_policy_variant;
+  auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
 
-  auto get_amcl_impl(const nav_msgs::OccupancyGrid::ConstPtr&) -> std::unique_ptr<beluga_ros::AmclImpl>;
+  auto get_amcl_impl(const nav_msgs::OccupancyGrid::ConstPtr&) -> std::unique_ptr<beluga_ros::Amcl>;
 
   void config_callback(beluga_amcl::AmclConfig& config, uint32_t level);
 
@@ -140,7 +140,7 @@ class AmclNodelet : public nodelet::Nodelet {
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::LaserScan>> laser_scan_filter_;
   message_filters::Connection laser_scan_connection_;
 
-  std::unique_ptr<beluga_ros::AmclImpl> impl_;
+  std::unique_ptr<beluga_ros::Amcl> impl_;
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_;
   nav_msgs::OccupancyGrid::ConstPtr last_known_map_;
   bool enable_tf_broadcast_{false};

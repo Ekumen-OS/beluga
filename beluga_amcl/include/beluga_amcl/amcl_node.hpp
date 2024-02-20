@@ -34,7 +34,7 @@
 #include <std_srvs/srv/empty.hpp>
 
 #include <beluga/beluga.hpp>
-#include <beluga_ros/amcl_impl.hpp>
+#include <beluga_ros/amcl.hpp>
 
 namespace beluga_amcl {
 
@@ -58,14 +58,14 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
 
   auto get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>>;
 
-  auto get_motion_model(std::string_view) -> beluga_ros::AmclImpl::motion_model_variant;
+  auto get_motion_model(std::string_view) -> beluga_ros::Amcl::motion_model_variant;
 
   auto get_sensor_model(std::string_view, nav_msgs::msg::OccupancyGrid::SharedPtr)
-      -> beluga_ros::AmclImpl::sensor_model_variant;
+      -> beluga_ros::Amcl::sensor_model_variant;
 
-  auto get_execution_policy(std::string_view) -> beluga_ros::AmclImpl::execution_policy_variant;
+  auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
 
-  auto get_amcl_impl(nav_msgs::msg::OccupancyGrid::SharedPtr) -> std::unique_ptr<beluga_ros::AmclImpl>;
+  auto get_amcl_impl(nav_msgs::msg::OccupancyGrid::SharedPtr) -> std::unique_ptr<beluga_ros::Amcl>;
 
   void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
 
@@ -129,7 +129,7 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>> laser_scan_filter_;
   message_filters::Connection laser_scan_connection_;
 
-  std::unique_ptr<beluga_ros::AmclImpl> impl_;
+  std::unique_ptr<beluga_ros::Amcl> impl_;
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_;
   bool enable_tf_broadcast_{false};
 };
