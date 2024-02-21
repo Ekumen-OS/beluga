@@ -156,17 +156,17 @@ class Amcl {
         },
         execution_policy_, motion_model_, sensor_model_);
 
-    random_state_probability_ = random_probability_estimator_(particles_);
+    const double random_state_probability = random_probability_estimator_(particles_);
 
     if (resample_policy_(particles_)) {
       auto random_state = ranges::compose(beluga::make_from_state<particle_type>, std::ref(map_distribution_));
 
-      if (random_state_probability_ > 0.0) {
+      if (random_state_probability > 0.0) {
         random_probability_estimator_.reset();
       }
 
       particles_ |= beluga::views::sample |
-                    beluga::views::random_intersperse(std::move(random_state), random_state_probability_) |
+                    beluga::views::random_intersperse(std::move(random_state), random_state_probability) |
                     beluga::views::take_while_kld(
                         spatial_hasher_,        //
                         params_.min_particles,  //
@@ -200,11 +200,6 @@ class Amcl {
   beluga::RollingWindow<Sophus::SE2d, 2> control_action_window_;
 
   bool force_update_{true};
-
-  std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> latest_estimate_;
-  std::optional<Sophus::SE2d> latest_odom_transform_in_map_;
-
-  double random_state_probability_{0.0};
 };
 
 }  // namespace beluga_ros
