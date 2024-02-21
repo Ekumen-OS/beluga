@@ -236,18 +236,12 @@ auto AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& 
   params.spatial_resolution_y = config_.spatial_resolution_y;
   params.spatial_resolution_theta = config_.spatial_resolution_theta;
 
-  try {
-    return std::make_unique<beluga_ros::Amcl>(
-        beluga_ros::OccupancyGrid{map},                   //
-        get_motion_model(config_.odom_model_type),        //
-        get_sensor_model(config_.laser_model_type, map),  //
-        params,                                           //
-        get_execution_policy(config_.execution_policy));
-  } catch (const std::invalid_argument& error) {
-    NODELET_ERROR("Could not initialize particle filter: %s", error.what());
-  }
-
-  return nullptr;
+  return std::make_unique<beluga_ros::Amcl>(
+      beluga_ros::OccupancyGrid{map},                   //
+      get_motion_model(config_.odom_model_type),        //
+      get_sensor_model(config_.laser_model_type, map),  //
+      params,                                           //
+      get_execution_policy(config_.execution_policy));
 }
 
 void AmclNodelet::map_timer_callback(const ros::TimerEvent&) {
@@ -295,13 +289,14 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
   auto map = boost::make_shared<nav_msgs::OccupancyGrid>(request.map);
 
   if (!particle_filter_) {
-    particle_filter_ = make_particle_filter(map);
+    try {
+      particle_filter_ = make_particle_filter(map);
+    } catch (const std::invalid_argument& error) {
+      NODELET_ERROR("Could not initialize particle filter: %s", error.what());
+      return false;
+    }
   } else {
     particle_filter_->update_map(beluga_ros::OccupancyGrid{map});
-  }
-
-  if (!particle_filter_) {
-    return false;  // Initialization failed and the error was already logged.
   }
 
   last_known_map_ = map;
@@ -342,13 +337,14 @@ void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::Occupancy
                                          (!particle_filter_ && !last_known_estimate_.has_value());
 
   if (!particle_filter_) {
-    particle_filter_ = make_particle_filter(map);
+    try {
+      particle_filter_ = make_particle_filter(map);
+    } catch (const std::invalid_argument& error) {
+      NODELET_ERROR("Could not initialize particle filter: %s", error.what());
+      return;
+    }
   } else {
     particle_filter_->update_map(beluga_ros::OccupancyGrid{map});
-  }
-
-  if (!particle_filter_) {
-    return;  // Initialization failed and the error was already logged.
   }
 
   if (should_reset_initial_pose) {

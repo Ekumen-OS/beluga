@@ -740,18 +740,12 @@ auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   params.spatial_resolution_y = get_parameter("spatial_resolution_y").as_double();
   params.spatial_resolution_theta = get_parameter("spatial_resolution_theta").as_double();
 
-  try {
-    return std::make_unique<beluga_ros::Amcl>(
-        beluga_ros::OccupancyGrid{map},                                        //
-        get_motion_model(get_parameter("robot_model_type").as_string()),       //
-        get_sensor_model(get_parameter("laser_model_type").as_string(), map),  //
-        params,                                                                //
-        get_execution_policy(get_parameter("execution_policy").as_string()));
-  } catch (const std::invalid_argument& error) {
-    RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());
-  }
-
-  return nullptr;
+  return std::make_unique<beluga_ros::Amcl>(
+      beluga_ros::OccupancyGrid{map},                                        //
+      get_motion_model(get_parameter("robot_model_type").as_string()),       //
+      get_sensor_model(get_parameter("laser_model_type").as_string(), map),  //
+      params,                                                                //
+      get_execution_policy(get_parameter("execution_policy").as_string()));
 }
 
 void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
@@ -773,13 +767,14 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
                                          (!particle_filter_ && !last_known_estimate_.has_value());
 
   if (!particle_filter_) {
-    particle_filter_ = make_particle_filter(std::move(map));
+    try {
+      particle_filter_ = make_particle_filter(std::move(map));
+    } catch (const std::invalid_argument& error) {
+      RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());
+      return;
+    }
   } else {
     particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
-  }
-
-  if (!particle_filter_) {
-    return;  // Initialization failed and the error was already logged.
   }
 
   if (should_reset_initial_pose) {
