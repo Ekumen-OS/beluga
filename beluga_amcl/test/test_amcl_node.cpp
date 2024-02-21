@@ -15,7 +15,7 @@
 #include <gmock/gmock.h>
 #include <tf2_ros/create_timer_ros.h>
 
-#include <beluga_amcl/private/amcl_node.hpp>
+#include <beluga_amcl/amcl_node.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
 
 #include <lifecycle_msgs/msg/state.hpp>
@@ -77,6 +77,9 @@ class AmclNodeUnderTest : public beluga_amcl::AmclNode {
 
   /// Return true if the particle filter has been initialized.
   bool is_initialized() const { return particle_filter_ != nullptr; }
+
+  /// Return the last known estimate. Throws if there is no estimate.
+  const auto& estimate() { return last_known_estimate_.value(); }
 };
 
 // Tester node that can publish default messages and test ROS interactions.
@@ -445,8 +448,8 @@ TEST_P(TestInitializationWithModel, ParticleCount) {
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 
-  ASSERT_GE(amcl_node_->particle_filter()->particle_count(), 10UL);
-  ASSERT_LE(amcl_node_->particle_filter()->particle_count(), 30UL);
+  ASSERT_GE(amcl_node_->particle_filter()->particles().size(), 10UL);
+  ASSERT_LE(amcl_node_->particle_filter()->particles().size(), 30UL);
 }
 
 class TestNode : public BaseNodeFixture<::testing::Test> {};
@@ -473,7 +476,7 @@ TEST_F(TestNode, SetInitialPose) {
   amcl_node_->activate();
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+  const auto [pose, _] = amcl_node_->estimate();
   ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
   ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
   ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -565,7 +568,7 @@ TEST_F(TestNode, FirstMapOnly) {
 
   {
     // Initialized with the first map and initial pose values.
-    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_node_->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -583,7 +586,7 @@ TEST_F(TestNode, FirstMapOnly) {
 
   {
     // Ignored the new initial pose values (and map).
-    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_node_->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -595,7 +598,7 @@ TEST_F(TestNode, FirstMapOnly) {
 
   {
     // Initialized with the new initial pose values (and map).
-    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_node_->estimate();
     ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 29.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), -0.4, 0.01);
@@ -627,7 +630,7 @@ TEST_F(TestNode, KeepCurrentEstimate) {
     // Initializing with the first map and initial pose values.
     tester_node_->publish_map();
     ASSERT_TRUE(wait_for_initialization());
-    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_node_->estimate();
     ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -635,7 +638,7 @@ TEST_F(TestNode, KeepCurrentEstimate) {
 
   tester_node_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  const auto [estimate, _] = amcl_node_->particle_filter()->estimate();
+  const auto [estimate, _] = amcl_node_->estimate();
 
   {
     // Set new initial pose values that will be ignored.
@@ -650,7 +653,7 @@ TEST_F(TestNode, KeepCurrentEstimate) {
   {
     // Initializing with the second map but keeping the old estimate.
     // Ignoring the new initial pose values.
-    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_node_->estimate();
     ASSERT_NEAR(pose.translation().x(), estimate.translation().x(), 0.01);
     ASSERT_NEAR(pose.translation().y(), estimate.translation().y(), 0.01);
     ASSERT_NEAR(pose.so2().log(), estimate.so2().log(), 0.01);
@@ -695,7 +698,7 @@ TEST_F(TestNode, KeepCurrentEstimateAfterCleanup) {
   ASSERT_EQ(amcl_node_->particle_filter().get(), nullptr);
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
-  const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+  const auto [pose, _] = amcl_node_->estimate();
   ASSERT_NEAR(pose.translation().x(), 34.0, 0.01);
   ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
   ASSERT_NEAR(pose.so2().log(), 0.3, 0.01);
@@ -715,6 +718,30 @@ TEST_F(TestNode, InvalidSensorModel) {
   amcl_node_->activate();
   tester_node_->publish_map();
   ASSERT_FALSE(wait_for_initialization());
+}
+
+TEST_F(TestNode, InvalidExecutionPolicy) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "non_existing_policy"});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_FALSE(wait_for_initialization());
+}
+
+TEST_F(TestNode, SequentialExecutionPolicy) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "seq"});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+}
+
+TEST_F(TestNode, ParallelExecutionPolicy) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "par"});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
 }
 
 TEST_F(TestNode, InitialPoseBeforeInitialize) {
@@ -765,7 +792,7 @@ TEST_F(TestNode, CanUpdatePoseEstimate) {
   ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
 
   {
-    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_node_->estimate();
     ASSERT_NEAR(pose.translation().x(), 0.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 0.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0., 0.01);
@@ -777,7 +804,7 @@ TEST_F(TestNode, CanUpdatePoseEstimate) {
   ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
 
   {
-    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_node_->estimate();
     ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 1.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0., 0.01);
@@ -797,7 +824,7 @@ TEST_F(TestNode, CanForcePoseEstimate) {
   ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
 
   {
-    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_node_->estimate();
     ASSERT_NEAR(pose.translation().x(), 0.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 0.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0., 0.01);
@@ -809,7 +836,7 @@ TEST_F(TestNode, CanForcePoseEstimate) {
   ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
 
   {
-    const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+    const auto [pose, _] = amcl_node_->estimate();
     ASSERT_NEAR(pose.translation().x(), 0.0, 0.01);
     ASSERT_NEAR(pose.translation().y(), 0.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), 0., 0.01);
@@ -871,7 +898,7 @@ TEST_F(TestNode, TransformValue) {
   });
   ASSERT_TRUE(wait_for_pose_estimate());
 
-  const auto [pose, _] = amcl_node_->particle_filter()->estimate();
+  const auto [pose, _] = amcl_node_->estimate();
   ASSERT_NEAR(pose.translation().x(), 1.0, 0.01);
   ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
   ASSERT_NEAR(pose.so2().log(), Sophus::Constants<double>::pi() / 3, 0.01);
@@ -928,11 +955,6 @@ INSTANTIATE_TEST_SUITE_P(
 TEST_P(TestParameterValue, InvalidValue) {
   const auto options = rclcpp::NodeOptions().parameter_overrides({GetParam()});
   ASSERT_ANY_THROW(std::make_shared<beluga_amcl::AmclNode>(options));
-}
-
-TEST_F(TestNode, InvalidValueDoesNotThrow) {
-  const auto options = rclcpp::NodeOptions().parameter_overrides({rclcpp::Parameter("execution_policy", "x")});
-  ASSERT_NO_THROW(std::make_shared<beluga_amcl::AmclNode>(options));
 }
 
 }  // namespace

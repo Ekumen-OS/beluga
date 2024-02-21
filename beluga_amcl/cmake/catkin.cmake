@@ -41,34 +41,27 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 add_definitions(${catkin_DEFINITIONS})
 
-add_library(${PROJECT_NAME} SHARED)
-target_sources(${PROJECT_NAME} PRIVATE src/particle_filtering.cpp)
-target_include_directories(
-  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(${PROJECT_NAME} beluga::beluga ${catkin_LIBRARIES})
-
 add_library(${PROJECT_NAME}_nodelet SHARED)
 target_sources(${PROJECT_NAME}_nodelet PRIVATE src/amcl_nodelet.cpp)
+target_include_directories(
+  ${PROJECT_NAME}_nodelet
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_compile_features(${PROJECT_NAME}_nodelet PUBLIC cxx_std_17)
-target_link_libraries(${PROJECT_NAME}_nodelet PUBLIC ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_nodelet beluga::beluga
+                      ${catkin_LIBRARIES})
 add_dependencies(${PROJECT_NAME}_nodelet ${PROJECT_NAME}_gencfg)
 
 add_nodelet_executable(amcl_node "beluga_amcl/AmclNodelet")
 target_compile_features(amcl_node PUBLIC cxx_std_17)
 
 install(
-  TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_nodelet
+  TARGETS ${PROJECT_NAME}_nodelet
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(TARGETS amcl_node RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(
-  DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  PATTERN "beluga_amcl/private" EXCLUDE)
 
 install(FILES nodelet_plugins.xml
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/)
