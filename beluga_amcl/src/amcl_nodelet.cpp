@@ -423,7 +423,7 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
   }
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
-  auto new_estimate = particle_filter_->update(
+  const auto new_estimate = particle_filter_->update(
       base_pose_in_odom,  //
       beluga_ros::LaserScan{
           laser_scan,
@@ -464,7 +464,7 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
 
   // Transforms are always published to keep them current
   if (enable_tf_broadcast_ && config_.tf_broadcast) {
-    auto odom_transform_in_map = base_pose_in_map * base_pose_in_odom.inverse();
+    const auto odom_transform_in_map = base_pose_in_map * base_pose_in_odom.inverse();
     auto message = geometry_msgs::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
     message.header.stamp = ros::Time::now() + ros::Duration(config_.transform_tolerance);
