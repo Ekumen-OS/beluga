@@ -163,7 +163,7 @@ class MultivariateUniformDistribution<Sophus::SE2d, OccupancyGrid> {
 /// Deduction guide for 2D occupancy grids.
 template <class Derived>
 MultivariateUniformDistribution(const BaseOccupancyGrid2<Derived>&)
-    -> MultivariateUniformDistribution<Sophus::SE2d, BaseOccupancyGrid2<Derived>>;
+    -> MultivariateUniformDistribution<Sophus::SE2d, Derived>;
 
 }  // namespace beluga
 
