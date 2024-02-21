@@ -789,11 +789,11 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
     }
   }
 
-  if (last_known_estimate_.has_value()) {
-    initialize_from_estimate(last_known_estimate_.value());
-  } else {
-    initialize_from_map();
+  if (last_known_estimate_.has_value() && initialize_from_estimate(last_known_estimate_.value())) {
+    return;  // Success!
   }
+
+  initialize_from_map();
 }
 
 void AmclNode::timer_callback() {

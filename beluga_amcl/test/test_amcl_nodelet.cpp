@@ -472,7 +472,7 @@ TEST_F(TestFixture, NoBroadcastWhenInitialPoseInvalid) {
   ASSERT_FALSE(tester_->can_transform("map", "odom"));
   tester_->create_pose_subscriber();
   tester_->publish_laser_scan();
-  ASSERT_FALSE(wait_for_pose_estimate());
+  ASSERT_TRUE(wait_for_pose_estimate());
   ASSERT_FALSE(tester_->can_transform("map", "odom"));
 }
 

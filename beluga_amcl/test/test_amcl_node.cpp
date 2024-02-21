@@ -539,7 +539,7 @@ TEST_F(TestNode, NoBroadcastWhenInitialPoseInvalid) {
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
   tester_node_->publish_laser_scan();
-  ASSERT_FALSE(wait_for_pose_estimate());
+  ASSERT_TRUE(wait_for_pose_estimate());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
 }
 

@@ -359,13 +359,13 @@ void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::Occupancy
     }
   }
 
-  if (last_known_estimate_.has_value()) {
-    initialize_from_estimate(last_known_estimate_.value());
-  } else {
-    initialize_from_map();
+  last_known_map_ = map;
+
+  if (last_known_estimate_.has_value() && initialize_from_estimate(last_known_estimate_.value())) {
+    return;  // Success!
   }
 
-  last_known_map_ = map;
+  initialize_from_map();
 }
 
 void AmclNodelet::particle_cloud_timer_callback(const ros::TimerEvent& ev) {
