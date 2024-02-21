@@ -133,7 +133,7 @@ class MultivariateUniformDistribution<Sophus::SE2d, OccupancyGrid> {
    */
   constexpr explicit MultivariateUniformDistribution(const OccupancyGrid& grid)
       : free_states_{compute_free_states(grid)}, distribution_{0, free_states_.size() - 1} {
-    assert(free_states_.size() > 0);
+    assert(!free_states_.empty());
   }
 
   /// Generates a random 2D pose.
