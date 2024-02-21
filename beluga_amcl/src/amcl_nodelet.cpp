@@ -366,6 +366,10 @@ void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::Occupancy
   }
 
   initialize_from_map();
+
+  // TF broadcasting should be enabled only if we initialize from an estimate or in response
+  // to external global localization requests, and not during the initial setup of the filter.
+  enable_tf_broadcast_ = false;
 }
 
 void AmclNodelet::particle_cloud_timer_callback(const ros::TimerEvent& ev) {
@@ -522,11 +526,7 @@ bool AmclNodelet::global_localization_callback(
     [[maybe_unused]] std_srvs::Empty::Request&,
     [[maybe_unused]] std_srvs::Empty::Response&) {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (initialize_from_map()) {
-    enable_tf_broadcast_ = true;
-    return true;
-  }
-  return false;
+  return initialize_from_map();
 }
 
 bool AmclNodelet::nomotion_update_callback(
@@ -581,8 +581,7 @@ bool AmclNodelet::initialize_from_map() {
   }
 
   particle_filter_->initialize_from_map();
-
-  // NOTE: We do not set `enable_tf_broadcast_ = true` here to match the original implementation.
+  enable_tf_broadcast_ = true;
 
   NODELET_INFO(
       "Particle filter initialized with %ld particles distributed across the map",

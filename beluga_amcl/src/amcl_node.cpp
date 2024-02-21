@@ -794,6 +794,10 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
   }
 
   initialize_from_map();
+
+  // TF broadcasting should be enabled only if we initialize from an estimate or in response
+  // to external global localization requests, and not during the initial setup of the filter.
+  enable_tf_broadcast_ = false;
 }
 
 void AmclNode::timer_callback() {
@@ -983,7 +987,6 @@ void AmclNode::global_localization_callback(
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Request> req,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res) {
   initialize_from_map();
-  enable_tf_broadcast_ = true;
 }
 
 void AmclNode::nomotion_update_callback(
@@ -1034,8 +1037,7 @@ bool AmclNode::initialize_from_map() {
   }
 
   particle_filter_->initialize_from_map();
-
-  // NOTE: We do not set `enable_tf_broadcast_ = true` here to match the original implementation.
+  enable_tf_broadcast_ = true;
 
   RCLCPP_INFO(
       get_logger(), "Particle filter initialized with %ld particles distributed across the map",

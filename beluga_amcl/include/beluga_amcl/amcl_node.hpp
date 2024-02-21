@@ -98,9 +98,9 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
 
   /// Initialize particles from map.
   /**
-   * The TF broadcast is not enabled during the initialization to match the original implementation,
-   * as it is typically enabled only in response to external global localization requests and not during
-   * the initial setup of the filter.
+   * If an exception occurs during the initialization, an error message is logged, and the initialization
+   * process is also aborted, returning false. If the initialization is successful, the TF broadcast is
+   * enabled.
    *
    * \return True if the initialization is successful, false otherwise.
    */
