@@ -491,7 +491,6 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Execution policy used to process particles [seq, par].";
-    descriptor.read_only = true;
     declare_parameter("execution_policy", "seq", descriptor);
   }
 }

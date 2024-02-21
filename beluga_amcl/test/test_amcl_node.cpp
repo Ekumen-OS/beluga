@@ -720,6 +720,30 @@ TEST_F(TestNode, InvalidSensorModel) {
   ASSERT_FALSE(wait_for_initialization());
 }
 
+TEST_F(TestNode, InvalidExecutionPolicy) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "non_existing_policy"});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_FALSE(wait_for_initialization());
+}
+
+TEST_F(TestNode, SequentialExecutionPolicy) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "seq"});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+}
+
+TEST_F(TestNode, ParallelExecutionPolicy) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "par"});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+}
+
 TEST_F(TestNode, InitialPoseBeforeInitialize) {
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
   amcl_node_->configure();
@@ -931,11 +955,6 @@ INSTANTIATE_TEST_SUITE_P(
 TEST_P(TestParameterValue, InvalidValue) {
   const auto options = rclcpp::NodeOptions().parameter_overrides({GetParam()});
   ASSERT_ANY_THROW(std::make_shared<beluga_amcl::AmclNode>(options));
-}
-
-TEST_F(TestNode, InvalidValueDoesNotThrow) {
-  const auto options = rclcpp::NodeOptions().parameter_overrides({rclcpp::Parameter("execution_policy", "x")});
-  ASSERT_NO_THROW(std::make_shared<beluga_amcl::AmclNode>(options));
 }
 
 }  // namespace
