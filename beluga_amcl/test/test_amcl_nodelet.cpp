@@ -617,27 +617,30 @@ TEST_F(TestFixture, InvalidSensorModel) {
   ASSERT_FALSE(wait_for_initialization());
 }
 
-TEST_F(TestNode, InvalidExecutionPolicy) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "non_existing_policy"});
-  amcl_node_->configure();
-  amcl_node_->activate();
-  tester_node_->publish_map();
+TEST_F(TestFixture, InvalidExecutionPolicy) {
+  beluga_amcl::AmclConfig config;
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.execution_policy = "non_existing_policy";
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_FALSE(wait_for_initialization());
 }
 
-TEST_F(TestNode, SequentialExecutionPolicy) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "seq"});
-  amcl_node_->configure();
-  amcl_node_->activate();
-  tester_node_->publish_map();
+TEST_F(TestFixture, SequentialExecutionPolicy) {
+  beluga_amcl::AmclConfig config;
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.execution_policy = "seq";
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 }
 
-TEST_F(TestNode, ParallelExecutionPolicy) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "par"});
-  amcl_node_->configure();
-  amcl_node_->activate();
-  tester_node_->publish_map();
+TEST_F(TestFixture, ParallelExecutionPolicy) {
+  beluga_amcl::AmclConfig config;
+  ASSERT_TRUE(amcl_nodelet_->default_config(config));
+  config.execution_policy = "par";
+  ASSERT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 }
 

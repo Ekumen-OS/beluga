@@ -126,7 +126,6 @@ void AmclNodelet::config_callback(beluga_amcl::AmclConfig& config, [[maybe_unuse
     config.map_service = config_.map_service;
     config.initial_pose_topic = config_.initial_pose_topic;
     config.scan_topic = config_.scan_topic;
-    config.execution_policy = config_.execution_policy;
   }
 
   configured_ = true;
@@ -220,8 +219,8 @@ auto AmclNodelet::get_execution_policy(std::string_view name) -> beluga_ros::Amc
   throw std::invalid_argument("Execution policy must be seq or par.");
 }
 
-auto AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& map)
-    -> const std::unique_ptr<beluga_ros::Amcl> {
+auto AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& map) const
+    -> std::unique_ptr<beluga_ros::Amcl> {
   auto params = beluga_ros::AmclParams{};
   params.update_min_d = config_.update_min_d;
   params.update_min_a = config_.update_min_a;
