@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL_PRIVATE_AMCL_NODELET_HPP
-#define BELUGA_AMCL_PRIVATE_AMCL_NODELET_HPP
+#ifndef BELUGA_AMCL_AMCL_NODELET_HPP
+#define BELUGA_AMCL_AMCL_NODELET_HPP
 
 #include <nodelet/nodelet.h>
 #include <ros/ros.h>
@@ -54,16 +54,16 @@ class AmclNodelet : public nodelet::Nodelet {
  protected:
   void onInit() override;
 
-  auto get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>>;
+  auto get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>>;
 
-  auto get_motion_model(std::string_view) -> beluga_ros::Amcl::motion_model_variant;
+  auto get_motion_model(std::string_view) const -> beluga_ros::Amcl::motion_model_variant;
 
-  auto get_sensor_model(std::string_view, const nav_msgs::OccupancyGrid::ConstPtr&)
+  auto get_sensor_model(std::string_view, const nav_msgs::OccupancyGrid::ConstPtr&) const
       -> beluga_ros::Amcl::sensor_model_variant;
 
   static auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
 
-  auto make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr&) -> std::unique_ptr<beluga_ros::Amcl>;
+  auto make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr&) const -> std::unique_ptr<beluga_ros::Amcl>;
 
   void config_callback(beluga_amcl::AmclConfig& config, uint32_t level);
 
@@ -148,4 +148,4 @@ class AmclNodelet : public nodelet::Nodelet {
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL_PRIVATE_AMCL_NODELET_HPP
+#endif  // BELUGA_AMCL_AMCL_NODELET_HPP

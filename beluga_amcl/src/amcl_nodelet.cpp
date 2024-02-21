@@ -137,7 +137,7 @@ void AmclNodelet::config_callback(beluga_amcl::AmclConfig& config, [[maybe_unuse
   }
 }
 
-auto AmclNodelet::get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
+auto AmclNodelet::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
   if (!config_.set_initial_pose) {
     return std::nullopt;
   }
@@ -161,7 +161,7 @@ auto AmclNodelet::get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d
   return std::make_pair(pose, covariance);
 }
 
-auto AmclNodelet::get_motion_model(std::string_view name) -> beluga_ros::Amcl::motion_model_variant {
+auto AmclNodelet::get_motion_model(std::string_view name) const -> beluga_ros::Amcl::motion_model_variant {
   if (name == kDifferentialModelName || name == kAMCLDifferentialModelName) {
     auto params = beluga::DifferentialDriveModelParam{};
     params.rotation_noise_from_rotation = config_.odom_alpha1;
@@ -185,7 +185,7 @@ auto AmclNodelet::get_motion_model(std::string_view name) -> beluga_ros::Amcl::m
   throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
 }
 
-auto AmclNodelet::get_sensor_model(std::string_view name, const nav_msgs::OccupancyGrid::ConstPtr& map)
+auto AmclNodelet::get_sensor_model(std::string_view name, const nav_msgs::OccupancyGrid::ConstPtr& map) const
     -> beluga_ros::Amcl::sensor_model_variant {
   if (name == kLikelihoodFieldModelName) {
     auto params = beluga::LikelihoodFieldModelParam{};
@@ -221,7 +221,7 @@ auto AmclNodelet::get_execution_policy(std::string_view name) -> beluga_ros::Amc
 }
 
 auto AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& map)
-    -> std::unique_ptr<beluga_ros::Amcl> {
+    -> const std::unique_ptr<beluga_ros::Amcl> {
   auto params = beluga_ros::AmclParams{};
   params.update_min_d = config_.update_min_d;
   params.update_min_a = config_.update_min_a;
@@ -345,7 +345,7 @@ void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::Occupancy
   if (!particle_filter_) {
     particle_filter_ = make_particle_filter(map);
   } else {
-    particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
+    particle_filter_->update_map(beluga_ros::OccupancyGrid{map});
   }
 
   if (!particle_filter_) {

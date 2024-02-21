@@ -638,7 +638,7 @@ AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State& st
   return CallbackReturn::SUCCESS;
 }
 
-auto AmclNode::get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
+auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
   if (!get_parameter("set_initial_pose").as_bool()) {
     return std::nullopt;
   }
@@ -665,7 +665,7 @@ auto AmclNode::get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d, E
   return std::make_pair(pose, covariance);
 }
 
-auto AmclNode::get_motion_model(std::string_view name) -> beluga_ros::Amcl::motion_model_variant {
+auto AmclNode::get_motion_model(std::string_view name) const -> beluga_ros::Amcl::motion_model_variant {
   if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
     auto params = beluga::DifferentialDriveModelParam{};
     params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
@@ -689,7 +689,7 @@ auto AmclNode::get_motion_model(std::string_view name) -> beluga_ros::Amcl::moti
   throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
 }
 
-auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyGrid::SharedPtr map)
+auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyGrid::SharedPtr map) const
     -> beluga_ros::Amcl::sensor_model_variant {
   if (name == kLikelihoodFieldModelName) {
     auto params = beluga::LikelihoodFieldModelParam{};
@@ -724,7 +724,8 @@ auto AmclNode::get_execution_policy(std::string_view name) -> beluga_ros::Amcl::
   throw std::invalid_argument("Execution policy must be seq or par.");
 }
 
-auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map) -> std::unique_ptr<beluga_ros::Amcl> {
+auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map) const
+    -> std::unique_ptr<beluga_ros::Amcl> {
   auto params = beluga_ros::AmclParams{};
   params.update_min_d = get_parameter("update_min_d").as_double();
   params.update_min_a = get_parameter("update_min_a").as_double();
@@ -773,7 +774,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
                                          (!particle_filter_ && !last_known_estimate_.has_value());
 
   if (!particle_filter_) {
-    particle_filter_ = make_particle_filter(map);
+    particle_filter_ = make_particle_filter(std::move(map));
   } else {
     particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
   }

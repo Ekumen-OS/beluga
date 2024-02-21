@@ -56,16 +56,16 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
 
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State&) override;
 
-  auto get_initial_estimate() -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>>;
+  auto get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>>;
 
-  auto get_motion_model(std::string_view) -> beluga_ros::Amcl::motion_model_variant;
+  auto get_motion_model(std::string_view) const -> beluga_ros::Amcl::motion_model_variant;
 
-  auto get_sensor_model(std::string_view, nav_msgs::msg::OccupancyGrid::SharedPtr)
+  auto get_sensor_model(std::string_view, nav_msgs::msg::OccupancyGrid::SharedPtr) const
       -> beluga_ros::Amcl::sensor_model_variant;
 
   static auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
 
-  auto make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr) -> std::unique_ptr<beluga_ros::Amcl>;
+  auto make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr) const -> std::unique_ptr<beluga_ros::Amcl>;
 
   void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
 
