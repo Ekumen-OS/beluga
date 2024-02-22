@@ -30,24 +30,44 @@ fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 
-echo ::group::Build
+echo ::group::Release Build
 colcon build \
+    --build-base build-release \
+    --install-base install-release \
+    --event-handlers console_cohesion+ \
     --packages-up-to ${ROS_PACKAGES} \
-    --cmake-force-configure \
-    --event-handlers=console_cohesion+ \
     --symlink-install \
-    --mixin ccache coverage-gcc coverage-pytest \
-    --cmake-args \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DBUILD_TESTING=ON \
-        -DBUILD_DOCS=ON
+    --mixin \
+        build-testing-on \
+        ccache \
+        release \
+    --cmake-force-configure
+echo ::endgroup::
+
+echo ::group::Debug Build
+colcon build \
+    --build-base build-debug \
+    --install-base install-debug \
+    --packages-up-to ${ROS_PACKAGES} \
+    --event-handlers console_cohesion+ \
+    --symlink-install \
+    --mixin \
+        build-testing-on \
+        ccache \
+        coverage-gcc \
+        coverage-pytest \
+        debug \
+    --cmake-force-configure \
+    --cmake-args -DBUILD_DOCS=ON
 echo ::endgroup::
 
 echo ::group::Test
 colcon lcov-result --initial
 colcon test \
+    --build-base build-debug \
+    --install-base install-debug \
     --packages-select ${ROS_PACKAGES} \
-    --event-handlers=console_cohesion+ \
+    --event-handlers console_cohesion+ \
     --return-code-on-test-failure \
     --mixin coverage-pytest
 echo ::endgroup::

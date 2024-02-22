@@ -24,8 +24,6 @@
 #include <beluga/type_traits/particle_traits.hpp>
 #include <beluga/views/particles.hpp>
 
-#include <beluga/detail/prologue.hpp>
-
 /**
  * \file
  * \brief Implementation of a sample (with replacement) range adaptor object.
@@ -58,12 +56,10 @@ struct sample_view : public ranges::view_facade<sample_view<Range, Distribution,
    * \param engine The random number generator object.
    */
   constexpr sample_view(Range range, Distribution distribution, URNG& engine = ranges::detail::get_random_engine())
-      : range_{std::move(range)},
-        distribution_{std::make_shared<Distribution>(std::move(distribution))},
-        engine_{std::addressof(engine)} {
+      : range_{std::move(range)}, distribution_{std::move(distribution)}, engine_{std::addressof(engine)} {
     assert(ranges::size(range) > 0);
-    assert(distribution_->min() == 0);
-    assert(distribution_->max() == static_cast<typename Distribution::result_type>(ranges::size(range_)) - 1);
+    assert(distribution_.min() == 0);
+    assert(distribution_.max() == static_cast<typename Distribution::result_type>(ranges::size(range_)) - 1);
   }
 
  private:
@@ -81,36 +77,32 @@ struct sample_view : public ranges::view_facade<sample_view<Range, Distribution,
     cursor() = default;
 
     /// Construct a cursor from the parent view elements.
-    constexpr cursor(std::shared_ptr<Distribution> distribution, URNG* engine, ranges::iterator_t<Range> first)
-        : distribution_{std::move(distribution)}, engine_{engine}, first_{std::move(first)} {
-      assert(distribution_ != nullptr);
-      next();
-    }
+    constexpr cursor(sample_view* view)
+        : view_(view), first_{ranges::begin(view_->range_)}, it_{first_ + view_->compute_offset()} {}
 
     /// Access the current iterator.
-    [[nodiscard]] decltype(auto) read() const noexcept(noexcept(*this->it_)) { return *it_; }
+    [[nodiscard]] constexpr decltype(auto) read() const noexcept(noexcept(*this->it_)) { return *it_; }
 
     /// Position the current iterator.
-    void next() { it_ = first_ + (*distribution_)(*engine_); }
+    constexpr void next() { it_ = first_ + view_->compute_offset(); }
 
    private:
-    std::shared_ptr<Distribution> distribution_;
-    URNG* engine_;
+    sample_view* view_;
     ranges::iterator_t<Range> first_;
     ranges::iterator_t<Range> it_;
   };
 
   /// Return the cursor for the begin iterator.
-  [[nodiscard]] constexpr auto begin_cursor() { return cursor{distribution_, engine_, ranges::begin(range_)}; }
+  [[nodiscard]] constexpr auto begin_cursor() { return cursor{this}; }
 
   /// Return an unreachable sentinel since this is an infinite range.
   [[nodiscard]] constexpr auto end_cursor() const noexcept { return ranges::unreachable_sentinel_t{}; }
 
-  Range range_;
+  /// Return a new offset value to advance the current iterator.
+  [[nodiscard]] constexpr auto compute_offset() { return distribution_(*engine_); }
 
-  // Using a shared resource as the current version of range-v3 does not support move-only views.
-  // This is to ensure the O(1) (cheaply) copyable semantic requirement for views.
-  std::shared_ptr<Distribution> distribution_;
+  Range range_;
+  Distribution distribution_;
   URNG* engine_;
 };
 
@@ -241,28 +233,12 @@ struct sample_fn : public sample_base_fn {
  *
  * This view can also be used to convert any random distribution (a callable that takes a URNG as an
  * input argument) into an infinite view that generates values from that distribution.
+ *
+ * This view is not cheap to copy, so care must be taken when moving it around.
+ * Range-v3 does not support move-only views at the time of this implementation.
  */
 inline constexpr ranges::views::view_closure<detail::sample_fn> sample;
 
 }  // namespace beluga::views
-
-namespace ranges {
-
-/// \cond
-
-/// Enable borrowed range specialization.
-/**
- * A function can take this range by value and return iterators obtained from it without danger of dangling,
- * as long as the input range is also a borrowed range.
- */
-template <class Range, class Distribution, class URNG>
-inline constexpr bool enable_borrowed_range<beluga::views::detail::sample_view<Range, Distribution, URNG>> =
-    enable_borrowed_range<Range>;
-
-/// \endcond
-
-}  // namespace ranges
-
-#include <beluga/detail/epilogue.hpp>
 
 #endif
