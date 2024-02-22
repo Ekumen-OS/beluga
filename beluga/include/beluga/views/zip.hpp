@@ -51,6 +51,7 @@ struct as_common_tuple_indirect_fn {
   template <class... Its>
   constexpr auto operator()(ranges::copy_tag, Its...) const -> std::tuple<ranges::iter_value_t<Its>...> {
     assert(false);  // NOLINT(misc-static-assert)
+    return {};
   }
 };
 
