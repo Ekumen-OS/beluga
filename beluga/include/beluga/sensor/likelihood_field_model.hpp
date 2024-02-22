@@ -81,8 +81,6 @@ class LikelihoodFieldModel {
   using state_type = Sophus::SE2d;
   /// Weight type of the particle.
   using weight_type = double;
-  /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<std::pair<double, double>>;
   /// Map representation type.
   using map_type = OccupancyGrid;
   /// Parameter type that the constructor uses to configure the likelihood field model.
@@ -110,9 +108,11 @@ class LikelihoodFieldModel {
    * \return a state weighting function satisfying \ref StateWeightingFunctionPage
    *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
-  [[nodiscard]] auto operator()(measurement_type&& points) const {
-    return [this, points = std::move(points)](const state_type& state) -> weight_type {
-      const auto transform = world_to_likelihood_field_transform_ * state;
+  template <class LaserScan>
+  [[nodiscard]] auto operator()(LaserScan&& scan) const {
+    auto points = scan.points_in_cartesian_coordinates(LaserScan::Frame::kLocal) | ranges::to<std::vector>;
+    return [this, points = std::move(points)](const state_type& state_in_world) -> weight_type {
+      const auto transform = world_to_likelihood_field_transform_ * state_in_world;
       const auto x_offset = transform.translation().x();
       const auto y_offset = transform.translation().y();
       const auto cos_theta = transform.so2().unit_complex().x();
@@ -129,8 +129,8 @@ class LikelihoodFieldModel {
             // Transform the end point of the laser to the grid local coordinate system.
             // Not using Eigen/Sophus because they make the routine x10 slower.
             // See `benchmark_likelihood_field_model.cpp` for reference.
-            const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
-            const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
+            const auto x = point.x() * cos_theta - point.y() * sin_theta + x_offset;
+            const auto y = point.x() * sin_theta + point.y() * cos_theta + y_offset;
             // for performance, we store the likelihood already elevated to the cube
             return likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_likelihood_cubed);
           });
@@ -177,8 +177,10 @@ class LikelihoodFieldModel {
     // when calculating the importance weight
     const auto to_the_cube = [](auto likelihood) { return likelihood * likelihood * likelihood; };
 
-    auto likelihood_data = distance_map | ranges::views::transform(to_likelihood) |
-                           ranges::views::transform(to_the_cube) | ranges::to<std::vector>;
+    auto likelihood_data = distance_map |                             //
+                           ranges::views::transform(to_likelihood) |  //
+                           ranges::views::transform(to_the_cube) |    //
+                           ranges::to<std::vector>;
     return ValueGrid2<double>{std::move(likelihood_data), grid.width(), grid.resolution()};
   }
 };

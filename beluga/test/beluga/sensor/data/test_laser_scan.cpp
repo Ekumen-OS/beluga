@@ -31,6 +31,7 @@
 namespace {
 
 using beluga::testing::Vector2Near;
+using beluga::testing::Vector3Near;
 using testing::ElementsAre;
 
 constexpr double kMinRange = 5.;
@@ -92,13 +93,13 @@ TEST(LaserScan, TransformCartesian) {
       {10., 20., 30., 40.},
       {0., pi / 2, pi, -pi / 2},
   };
-  auto polar = laser_scan.points_in_cartesian_coordinates() | ranges::to<std::vector>;
+  auto polar = laser_scan.points_in_cartesian_coordinates(SimpleLaserScan::Frame::kLocal) | ranges::to<std::vector>;
   ASSERT_THAT(
       polar, ElementsAre(
-                 Vector2Near<double>({10., 0.}, kTolerance),   //
-                 Vector2Near<double>({0., 20.}, kTolerance),   //
-                 Vector2Near<double>({-30., 0.}, kTolerance),  //
-                 Vector2Near<double>({0., -40.}, kTolerance)));
+                 Vector3Near<double>({10., 0., 0.}, kTolerance),   //
+                 Vector3Near<double>({0., 20., 0.}, kTolerance),   //
+                 Vector3Near<double>({-30., 0., 0.}, kTolerance),  //
+                 Vector3Near<double>({0., -40., 0.}, kTolerance)));
 }
 
 }  // namespace

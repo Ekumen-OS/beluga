@@ -185,19 +185,11 @@ class Amcl {
       return std::nullopt;
     }
 
-    // TODO(nahuel): Remove this once we update the measurement type.
-    auto measurement = laser_scan.points_in_cartesian_coordinates() |  //
-                       ranges::views::transform([&laser_scan](const auto& p) {
-                         const auto result = laser_scan.origin() * Sophus::Vector3d{p.x(), p.y(), 0};
-                         return std::make_pair(result.x(), result.y());
-                       }) |
-                       ranges::to<std::vector>;
-
     std::visit(
         [&, this](auto& policy, auto& motion_model, auto& sensor_model) {
           particles_ |=
               beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_in_odom)) |  //
-              beluga::actions::reweight(policy, sensor_model(std::move(measurement))) |                        //
+              beluga::actions::reweight(policy, sensor_model(std::move(laser_scan))) |                         //
               beluga::actions::normalize(policy);
         },
         execution_policy_, motion_model_, sensor_model_);

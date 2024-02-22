@@ -78,8 +78,6 @@ class BeamSensorModel {
   using state_type = Sophus::SE2d;
   /// Weight type of the particle.
   using weight_type = double;
-  /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<std::pair<double, double>>;
   /// Map representation type.
   using map_type = OccupancyGrid;
   /// Parameter type that the constructor uses to configure the beam sensor model.
@@ -100,27 +98,21 @@ class BeamSensorModel {
    * \return a state weighting function satisfying \ref StateWeightingFunctionPage
    *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
-  [[nodiscard]] auto operator()(measurement_type&& points) const {
+  template <class LaserScan>
+  [[nodiscard]] auto operator()(LaserScan&& scan) const {
+    auto points = scan.points_in_polar_coordinates() | ranges::to<std::vector>;
     return [this, points = std::move(points)](const state_type& state) -> weight_type {
       const auto beam = Ray2d{grid_, state, params_.beam_max_range};
       const double n = 1. / (std::sqrt(2. * M_PI) * params_.sigma_hit);
       return std::transform_reduce(
           points.cbegin(), points.cend(), 0.0, std::plus{}, [this, &beam, n](const auto& point) {
-            // TODO(Ramiro): We're converting from range + bearing to cartesian points in the ROS node, but we want
-            // range
-            // + bearing here. We might want to make that conversion in the likelihood model instead, and let the
-            // measurement type be range, bearing instead of x, y.
-
             // Compute the range according to the measurement.
-            const double z = std::sqrt(point.first * point.first + point.second * point.second);
-
-            // dirty hack to prevent SO2d from calculating the hypot again to normalize the vector.
-            auto beam_bearing = Sophus::SO2d{};
-            beam_bearing.data()[0] = point.first / z;
-            beam_bearing.data()[1] = point.second / z;
+            const double z = point.x();
+            const auto beam_bearing = Sophus::SO2d{point.y()};
 
             // Compute range according to the map (raycasting).
             const double z_mean = beam.cast(beam_bearing).value_or(params_.beam_max_range);
+
             // 1: Correct range with local measurement noise.
             const double eta_hit =
                 2. / (std::erf((params_.beam_max_range - z_mean) / (std::sqrt(2.) * params_.sigma_hit)) -
