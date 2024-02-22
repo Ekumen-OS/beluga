@@ -58,12 +58,23 @@ namespace beluga {
 template <typename Derived>
 class BaseLaserScan : public ciabatta::ciabatta_top<Derived> {
  public:
-  /// View points in cartesian coordinates in sensor frame.
-  [[nodiscard]] auto points_in_cartesian_coordinates() const {
-    return this->self().points_in_polar_coordinates() | ranges::views::transform([](const auto& vector) {
+  /// Coordinate frames.
+  enum class Frame { kLocal, kGlobal };
+
+  /// View points in cartesian coordinates in the given frame.
+  [[nodiscard]] auto points_in_cartesian_coordinates(Frame frame) const {
+    return this->self().points_in_polar_coordinates() |  //
+           ranges::views::transform([this, frame](const auto& vector) {
              using std::cos, std::sin;
-             return Sophus::Vector2<typename Derived::Scalar>{
-                 vector.x() * cos(vector.y()), vector.x() * sin(vector.y())};
+             auto point = Sophus::Vector3<typename Derived::Scalar>{
+                 vector.x() * cos(vector.y()),
+                 vector.x() * sin(vector.y()),
+                 0,
+             };
+             if (frame == Frame::kGlobal) {
+               point = this->self().origin() * point;
+             }
+             return point;
            });
   }
 

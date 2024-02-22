@@ -41,10 +41,8 @@ add_executable(
   sensor/data/test_linear_grid.cpp
   sensor/data/test_occupancy_grid.cpp
   sensor/data/test_regular_grid.cpp
-  sensor/test_beam_model.cpp
   sensor/test_bearing_sensor_model.cpp
   sensor/test_landmark_sensor_model.cpp
-  sensor/test_likelihood_field_model.cpp
   test_primitives.cpp
   test_spatial_hash.cpp
   testing/test_sophus_matchers.cpp

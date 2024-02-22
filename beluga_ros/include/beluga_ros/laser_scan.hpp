@@ -46,7 +46,8 @@ class LaserScan : public beluga::BaseLaserScan<LaserScan> {
   [[nodiscard]] const auto& origin() const { return origin_; }
 
   [[nodiscard]] auto angles() const {
-    return ranges::views::iota(0, static_cast<int>(scan_->ranges.size())) | beluga::views::take_evenly(max_beams_) |
+    return ranges::views::iota(0, static_cast<int>(scan_->ranges.size())) |  //
+           beluga::views::take_evenly(max_beams_) |                          //
            ranges::views::transform([this](int i) {
              return static_cast<Scalar>(scan_->angle_min + static_cast<float>(i) * scan_->angle_increment);
            });
