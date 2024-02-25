@@ -34,9 +34,8 @@ using Sensor3D = beluga::BearingSensorModel3d<LandmarkMap>;
 LandmarkMapBoundaries default_map_boundaries{Eigen::Vector3d{-10.0, -10.0, 0.0}, Eigen::Vector3d{10.0, 10.0, 0.0}};
 
 double expected_aggregate_probability(std::vector<double> landmark_probs) {
-  // nav2_amcl formula, $1.0 + \sum_{i=1}^n p_i^3$
   return std::transform_reduce(
-      landmark_probs.cbegin(), landmark_probs.cend(), 1.0, std::plus{}, [](const double v) { return v * v * v; });
+      landmark_probs.cbegin(), landmark_probs.cend(), 1.0, std::multiplies{}, [](const double v) { return v; });
 }
 
 BearingModelParam get_default_model_params() {
