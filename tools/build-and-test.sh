@@ -46,8 +46,6 @@ echo ::endgroup::
 
 echo ::group::Debug Build
 colcon build \
-    --build-base build-debug \
-    --install-base install-debug \
     --packages-up-to ${ROS_PACKAGES} \
     --event-handlers console_cohesion+ \
     --symlink-install \
@@ -64,8 +62,6 @@ echo ::endgroup::
 echo ::group::Test
 colcon lcov-result --initial
 colcon test \
-    --build-base build-debug \
-    --install-base install-debug \
     --packages-select ${ROS_PACKAGES} \
     --event-handlers console_cohesion+ \
     --return-code-on-test-failure \
