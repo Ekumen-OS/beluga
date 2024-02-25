@@ -77,7 +77,7 @@ struct sample_view : public ranges::view_facade<sample_view<Range, Distribution,
     cursor() = default;
 
     /// Construct a cursor from the parent view elements.
-    constexpr cursor(sample_view* view)
+    constexpr explicit cursor(sample_view* view)
         : view_(view), first_{ranges::begin(view_->range_)}, it_{first_ + view_->compute_offset()} {}
 
     /// Access the current iterator.
