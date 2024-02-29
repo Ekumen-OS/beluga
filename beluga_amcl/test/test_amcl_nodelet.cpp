@@ -65,7 +65,6 @@ class AmclNodeletUnderTest : public beluga_amcl::AmclNodelet {
 
   /// Retrieve nodelet default configuration (may fail).
   bool default_config(beluga_amcl::AmclConfig& config) {
-    const std::lock_guard lock(config_mutex_);
     if (!config_client_) {
       config_client_ = std::make_unique<AmclConfigClient>(getName() + "/config_client", getPrivateNodeHandle());
     }
@@ -74,7 +73,6 @@ class AmclNodeletUnderTest : public beluga_amcl::AmclNodelet {
 
   /// Retrieve nodelet configuration (may fail).
   bool get(beluga_amcl::AmclConfig& config) {
-    const std::lock_guard lock(config_mutex_);
     if (!config_client_) {
       config_client_ = std::make_unique<AmclConfigClient>(getName() + "/config_client", getPrivateNodeHandle());
     }
@@ -82,15 +80,11 @@ class AmclNodeletUnderTest : public beluga_amcl::AmclNodelet {
   }
 
   /// Set nodelet configuration (may fail).
-  bool set(beluga_amcl::AmclConfig& config) {
-    const std::lock_guard lock(config_mutex_);
-    return config_client_->setConfiguration(config);
-  }
+  bool set(beluga_amcl::AmclConfig& config) { return config_client_->setConfiguration(config); }
 
  private:
   using AmclConfigClient = dynamic_reconfigure::Client<beluga_amcl::AmclConfig>;
   std::unique_ptr<AmclConfigClient> config_client_;
-  std::mutex config_mutex_;
 };
 
 // Tester node that can publish default messages and test ROS interactions.
