@@ -55,13 +55,22 @@ void spin_for(const std::chrono::duration<Rep, Period>& duration) {
 class AmclNodeletUnderTest : public beluga_amcl::AmclNodelet {
  public:
   /// Get particle filter pointer.
-  const auto& particle_filter() { return particle_filter_; }
+  const auto& particle_filter() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return particle_filter_;
+  }
 
   /// Return true if the particle filter has been initialized.
-  bool is_initialized() const { return particle_filter_ != nullptr; }
+  bool is_initialized() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return particle_filter_ != nullptr;
+  }
 
   /// Return the last known estimate. Throws if there is no estimate.
-  const auto& estimate() { return last_known_estimate_.value(); }
+  const auto& estimate() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return last_known_estimate_.value();
+  }
 
   /// Retrieve nodelet default configuration (may fail).
   bool default_config(beluga_amcl::AmclConfig& config) {
