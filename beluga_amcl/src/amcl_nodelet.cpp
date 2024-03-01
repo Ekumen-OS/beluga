@@ -245,6 +245,7 @@ auto AmclNodelet::make_particle_filter(const nav_msgs::OccupancyGrid::ConstPtr& 
 }
 
 void AmclNodelet::map_timer_callback(const ros::TimerEvent&) {
+  std::lock_guard<std::mutex> lock(mutex_);
   if (!get_map_client_.exists()) {
     NODELET_INFO_THROTTLE(10, "Waiting for map service to be available");
     return;
