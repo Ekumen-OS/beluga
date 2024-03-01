@@ -24,26 +24,21 @@ namespace user {
 struct SimplestPossibleParticle {
   float state;
   double weight;
-  int cluster;
 };
 
 struct ParticleWithMemberExtensions {
   float state_;
   double weight_;
-  int cluster_;
 
   float& state() { return state_; }
   [[nodiscard]] float state() const { return state_; }
   double& weight() { return weight_; }
   [[nodiscard]] double weight() const { return weight_; }
-  int& cluster() { return cluster_; }
-  [[nodiscard]] int cluster() const { return cluster_; }
 };
 
 struct ParticleWithNonMemberExtensions {
   float s;
   double w;
-  int c;
 };
 
 /*
@@ -63,12 +58,6 @@ struct ParticleWithNonMemberExtensions {
 [[maybe_unused]] double weight(const ParticleWithNonMemberExtensions& p) {
   return p.w;
 }
-[[maybe_unused]] int& cluster(ParticleWithNonMemberExtensions& p) {
-  return p.c;
-}
-[[maybe_unused]] int cluster(const ParticleWithNonMemberExtensions& p) {
-  return p.c;
-}
 
 }  // namespace user
 
@@ -76,8 +65,8 @@ template <class T>
 class PrimitivesTest : public testing::Test {};
 
 using PrimitivesTestCases = testing::Types<
-    std::tuple<int, beluga::Weight, beluga::Cluster>,
-    ranges::common_tuple<int, beluga::Weight, beluga::Cluster>,
+    std::tuple<int, beluga::Weight>,
+    ranges::common_tuple<int, beluga::Weight>,
     user::SimplestPossibleParticle,
     user::ParticleWithMemberExtensions,
     user::ParticleWithNonMemberExtensions>;
@@ -88,17 +77,14 @@ TYPED_TEST(PrimitivesTest, Assignment) {
   auto particle = TypeParam{};
   beluga::state(particle) = 1;
   beluga::weight(particle) = 2;
-  beluga::cluster(particle) = 3;
   ASSERT_EQ(beluga::state(particle), 1);
   ASSERT_EQ(beluga::weight(particle), 2);
-  ASSERT_EQ(beluga::cluster(particle), 3);
 }
 
 TYPED_TEST(PrimitivesTest, Const) {
-  const auto particle = TypeParam{4, 5, 6};
+  const auto particle = TypeParam{4, 5};
   ASSERT_EQ(beluga::state(particle), 4);
   ASSERT_EQ(beluga::weight(particle), 5);
-  ASSERT_EQ(beluga::cluster(particle), 6);
 }
 
 }  // namespace

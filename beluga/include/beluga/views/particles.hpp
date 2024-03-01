@@ -33,10 +33,6 @@ inline constexpr auto states = ranges::views::transform(beluga::state);
 /// will obtain a reference to the weight of each particle in the input range lazily.
 inline constexpr auto weights = ranges::views::transform(beluga::weight);
 
-/// [Range adaptor object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject) that
-/// will obtain a reference to the cluster of each particle in the input range lazily.
-inline constexpr auto clusters = ranges::views::transform(beluga::cluster);
-
 }  // namespace beluga::views
 
 #endif
