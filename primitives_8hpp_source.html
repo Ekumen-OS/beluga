@@ -280,104 +280,13 @@ $(function() {
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
 <div class="line"><a name="l00264"></a><span class="lineno"><a class="line" href="primitives_8hpp.html#a80abdff6d85df8ef392ca252ed8588c1">  264</a></span>&#160;<span class="keyword">inline</span> constexpr <a class="code" href="structbeluga_1_1weight__detail_1_1weight__fn.html">weight_detail::weight_fn</a> <a class="code" href="primitives_8hpp.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a>;</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160; </div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="keyword">namespace </span>cluster_detail {</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;}  <span class="comment">// namespace beluga</span></div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> = <span class="keywordtype">void</span>&gt;</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="keyword">struct </span>has_member_variable_cluster : std::false_type {};</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="keyword">struct </span>has_member_variable_cluster&lt;T, std::void_t&lt;decltype(std::declval&lt;T&gt;().cluster)&gt;&gt; : std::true_type {};</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> has_member_variable_cluster_v = has_member_variable_cluster&lt;T&gt;::value;</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> = <span class="keywordtype">void</span>&gt;</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="keyword">struct </span>has_member_cluster : std::false_type {};</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160; </div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="keyword">struct </span>has_member_cluster&lt;T, std::void_t&lt;decltype(std::declval&lt;T&gt;().cluster())&gt;&gt; : std::true_type {};</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> has_member_cluster_v = has_member_cluster&lt;T&gt;::value;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> = <span class="keywordtype">void</span>&gt;</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="keyword">struct </span>has_non_member_cluster : std::false_type {};</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="keyword">struct </span>has_non_member_cluster&lt;T, std::void_t&lt;decltype(cluster(std::declval&lt;T&gt;()))&gt;&gt; : std::true_type {};</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> has_non_member_cluster_v = has_non_member_cluster&lt;T&gt;::value;</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
-<div class="line"><a name="l00303"></a><span class="lineno"><a class="line" href="structbeluga_1_1cluster__detail_1_1cluster__fn.html">  303</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1cluster__detail_1_1cluster__fn.html">cluster_fn</a> {</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;  <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;      <span class="keyword">class </span>T,</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;      std::enable_if_t&lt;</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;          std::conjunction_v&lt;</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;              has_member_variable_cluster&lt;T&gt;,        <span class="comment">//</span></div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;              std::negation&lt;has_member_cluster&lt;T&gt;&gt;,  <span class="comment">//</span></div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;              std::negation&lt;has_non_member_cluster&lt;T&gt;&gt;&gt;,</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;          <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00313"></a><span class="lineno"><a class="line" href="structbeluga_1_1cluster__detail_1_1cluster__fn.html#a9d9b16d8b61a2dd5b2f671324832c366">  313</a></span>&#160;  constexpr decltype(<span class="keyword">auto</span>) operator()(T&amp;&amp; t) const noexcept {</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    <span class="keywordflow">return</span> beluga::forward_like&lt;T&gt;(t.cluster);</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;  }</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;  <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;      <span class="keyword">class </span>T,</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;      std::enable_if_t&lt;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;          std::conjunction_v&lt;</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;              std::negation&lt;has_member_variable_cluster&lt;T&gt;&gt;,  <span class="comment">//</span></div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;              has_member_cluster&lt;T&gt;,                          <span class="comment">//</span></div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;              std::negation&lt;has_non_member_cluster&lt;T&gt;&gt;&gt;,</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;          <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00326"></a><span class="lineno"><a class="line" href="structbeluga_1_1cluster__detail_1_1cluster__fn.html#aa0619f2bd6756e7be80fb2e77c3a85a9">  326</a></span>&#160;  constexpr decltype(<span class="keyword">auto</span>) operator()(T&amp;&amp; t) const noexcept(noexcept(std::forward&lt;T&gt;(t).cluster())) {</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    <span class="keywordflow">return</span> std::forward&lt;T&gt;(t).cluster();</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;  }</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160; </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;  <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;      <span class="keyword">class </span>T,</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;      std::enable_if_t&lt;</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;          std::conjunction_v&lt;</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;              std::negation&lt;has_member_variable_cluster&lt;T&gt;&gt;,  <span class="comment">//</span></div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;              std::negation&lt;has_member_cluster&lt;T&gt;&gt;,           <span class="comment">//</span></div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;              has_non_member_cluster&lt;T&gt;&gt;,</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;          <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00342"></a><span class="lineno"><a class="line" href="structbeluga_1_1cluster__detail_1_1cluster__fn.html#aa4a721ccb6800fb2fd8edcfed7e2948c">  342</a></span>&#160;  constexpr decltype(<span class="keyword">auto</span>) operator()(T&amp;&amp; t) const noexcept(noexcept(cluster(std::forward&lt;T&gt;(t)))) {</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="primitives_8hpp.html#af92b21fca67804a8e05cdb4acc55edef">cluster</a>(std::forward&lt;T&gt;(t));</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;  }</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;  <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;      <span class="keyword">class </span>T,</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;      std::enable_if_t&lt;</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;          std::conjunction_v&lt;</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;              std::negation&lt;has_member_variable_cluster&lt;T&gt;&gt;,  <span class="comment">//</span></div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;              std::negation&lt;has_member_cluster&lt;T&gt;&gt;,           <span class="comment">//</span></div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;              std::negation&lt;has_non_member_cluster&lt;T&gt;&gt;,       <span class="comment">//</span></div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;              <a class="code" href="structbeluga_1_1is__tuple__like.html">is_tuple_like&lt;T&gt;</a>,                               <span class="comment">//</span></div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;              <a class="code" href="structbeluga_1_1has__single__element.html">has_single_element&lt;beluga::Cluster, std::decay_t&lt;T&gt;</a>&gt;&gt;,</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;          <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00357"></a><span class="lineno"><a class="line" href="structbeluga_1_1cluster__detail_1_1cluster__fn.html#aa781af22fe53f12e3bfeb3af743a3239">  357</a></span>&#160;  constexpr decltype(<span class="keyword">auto</span>) operator()(T&amp;&amp; t) const noexcept(noexcept(element&lt;beluga::<a class="code" href="classbeluga_1_1Numeric.html">Cluster</a>&gt;(std::forward&lt;T&gt;(t)))) {</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <span class="keywordflow">return</span> element&lt;beluga::Cluster&gt;(std::forward&lt;T&gt;(t));</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;  }</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;};</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160; </div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;}  <span class="comment">// namespace cluster_detail</span></div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160; </div>
-<div class="line"><a name="l00365"></a><span class="lineno"><a class="line" href="primitives_8hpp.html#af92b21fca67804a8e05cdb4acc55edef">  365</a></span>&#160;<span class="keyword">inline</span> constexpr <a class="code" href="structbeluga_1_1cluster__detail_1_1cluster__fn.html">cluster_detail::cluster_fn</a> <a class="code" href="primitives_8hpp.html#af92b21fca67804a8e05cdb4acc55edef">cluster</a>;</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160; </div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160; </div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassbeluga_1_1Numeric_html"><div class="ttname"><a href="classbeluga_1_1Numeric.html">beluga::Numeric</a></div><div class="ttdoc">Helper for creating strongly typed numeric types.</div><div class="ttdef"><b>Definition:</b> strongly_typed_numeric.hpp:38</div></div>
 <div class="ttc" id="aprimitives_8hpp_html_a706431bba3d6cfb1ee0690221f3a9af9"><div class="ttname"><a href="primitives_8hpp.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a></div><div class="ttdeci">constexpr state_detail::state_fn state</div><div class="ttdoc">Customization point object for accessing the state of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:163</div></div>
 <div class="ttc" id="aprimitives_8hpp_html_a80abdff6d85df8ef392ca252ed8588c1"><div class="ttname"><a href="primitives_8hpp.html#a80abdff6d85df8ef392ca252ed8588c1">beluga::weight</a></div><div class="ttdeci">constexpr weight_detail::weight_fn weight</div><div class="ttdoc">Customization point object for accessing the weight of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:264</div></div>
-<div class="ttc" id="aprimitives_8hpp_html_af92b21fca67804a8e05cdb4acc55edef"><div class="ttname"><a href="primitives_8hpp.html#af92b21fca67804a8e05cdb4acc55edef">beluga::cluster</a></div><div class="ttdeci">constexpr cluster_detail::cluster_fn cluster</div><div class="ttdoc">Customization point object for accessing the cluster of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:365</div></div>
 <div class="ttc" id="astrongly__typed__numeric_8hpp_html"><div class="ttname"><a href="strongly__typed__numeric_8hpp.html">strongly_typed_numeric.hpp</a></div><div class="ttdoc">Implementation of a strongly typed numeric helper.</div></div>
-<div class="ttc" id="astructbeluga_1_1cluster__detail_1_1cluster__fn_html"><div class="ttname"><a href="structbeluga_1_1cluster__detail_1_1cluster__fn.html">beluga::cluster_detail::cluster_fn</a></div><div class="ttdoc">Customization point object type for accessing the cluster of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:303</div></div>
 <div class="ttc" id="astructbeluga_1_1has__single__element_html"><div class="ttname"><a href="structbeluga_1_1has__single__element.html">beluga::has_single_element</a></div><div class="ttdoc">Meta-function that returns true if there is a single element of type T in the tuple-like type.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:153</div></div>
 <div class="ttc" id="astructbeluga_1_1is__tuple__like_html"><div class="ttname"><a href="structbeluga_1_1is__tuple__like.html">beluga::is_tuple_like</a></div><div class="ttdoc">Meta-function that returns true if T is a tuple-like type.</div><div class="ttdef"><b>Definition:</b> tuple_traits.hpp:49</div></div>
 <div class="ttc" id="astructbeluga_1_1state__detail_1_1state__fn_html"><div class="ttname"><a href="structbeluga_1_1state__detail_1_1state__fn.html">beluga::state_detail::state_fn</a></div><div class="ttdoc">Customization point object type for accessing the state of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:98</div></div>
