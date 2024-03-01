@@ -59,12 +59,6 @@
  * - beluga::BearingSensorModel2d
  */
 
-// interfaces
-#include <beluga/interfaces/bearing_sensor_model_interface.hpp>
-#include <beluga/interfaces/landmark_sensor_model_interface.hpp>
-#include <beluga/interfaces/laser_sensor_model_interface_2d.hpp>
-
-// implementations
 #include <beluga/sensor/beam_model.hpp>
 #include <beluga/sensor/bearing_sensor_model.hpp>
 #include <beluga/sensor/landmark_sensor_model.hpp>

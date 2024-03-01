@@ -27,9 +27,6 @@ add_executable(
   algorithm/test_thrun_recovery_probability_estimator.cpp
   containers/test_circular_array.cpp
   containers/test_tuple_vector.cpp
-  mixin/test_particle_filter.cpp
-  mixin/test_sampling.cpp
-  mixin/test_storage.cpp
   motion/test_differential_drive_model.cpp
   motion/test_omnidirectional_drive_model.cpp
   policies/test_every_n.cpp
