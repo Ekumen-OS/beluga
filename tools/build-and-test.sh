@@ -32,8 +32,6 @@ source /opt/ros/${ROS_DISTRO}/setup.sh
 
 echo ::group::Release Build
 colcon build \
-    --build-base build-release \
-    --install-base install-release \
     --event-handlers console_cohesion+ \
     --packages-up-to ${ROS_PACKAGES} \
     --symlink-install \
