@@ -23,6 +23,8 @@
 #include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
 
+#include <range/v3/view/take_exactly.hpp>
+
 namespace beluga_ros {
 
 /// Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.
