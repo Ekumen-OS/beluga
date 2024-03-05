@@ -5,11 +5,15 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
+> [!TIP]
+> For the latest stable version of our codebase, please refer to the [release](https://github.com/Ekumen-OS/beluga/tree/release) branch.
+> If you are interested in ongoing development and cutting-edge features, the [main](https://github.com/Ekumen-OS/beluga/tree/main) branch is the place to be.
+
 ## Overview
 
 Beluga is an extensible C++17 library with a ground-up implementation of the Monte Carlo Localization (MCL) family of estimation algorithms featuring:
 
-- A modular design based on orthogonal components that can be merged together using the mixin pattern.
+- A modular design based on orthogonal components.
 - Emphasis on the prevention of regressions and facilitation of code improvements through test coverage.
 - Semi-automated benchmarks that can be used to validate different configurations.
 
@@ -24,6 +28,7 @@ This repository contains the following packages:
 | Package                                      | Description                                                                                                             |
 |----------------------------------------------| ------------------------------------------------------------------------------------------------------------------------|
 | [`beluga`](beluga)                           | A ROS-agnostic extensible library to implement algorithms based on particle filters.                                    |
+| [`beluga_ros`](beluga)                       | A ROS library, providing utilities to interface ROS with Beluga.                                                        |
 | [`beluga_amcl`](beluga_amcl)                 | A ROS wrapper, providing an executable node and component (or nodelet).<br> It provides interface parity with `nav2_amcl` (and `amcl`). |
 | [`beluga_example`](beluga_example)           | Example launch files, showing how to run Beluga-based nodes.                                                            |
 | [`beluga_benchmark`](beluga_benchmark)       | Scripts to benchmark, profile and also compare Beluga with other MCL implementations.                                   |
