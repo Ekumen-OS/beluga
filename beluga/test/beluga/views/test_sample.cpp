@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest-death-test.h>
 
 #include "beluga/views/sample.hpp"
 
@@ -24,6 +25,11 @@
 #include <range/v3/view/take_exactly.hpp>
 
 namespace {
+
+TEST(SampleView, FromEmptyRange) {
+  auto input = std::vector<int>{};
+  ASSERT_DEBUG_DEATH(beluga::views::sample(input), "Assertion");
+}
 
 TEST(SampleView, ConceptChecksFromContiguousRange) {
   auto input = std::array{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -93,18 +99,9 @@ TEST(SampleView, DoubleDereference) {
   ASSERT_EQ(value, *it);
 }
 
-TEST(SampleView, BorrowedRange) {
-  auto input = std::array{42};
-  const auto create_view = [&]() { return input | beluga::views::sample; };
-  auto it = ranges::find(create_view(), 42);
-  ASSERT_EQ(*it, 42);  // the iterator is not dangling after the view is destroyed
-}
-
-inline constexpr auto identity = [](auto&& t) noexcept { return std::forward<decltype(t)>(t); };
-
 TEST(SampleView, NonBorrowedRange) {
   auto input = std::array{42};
-  const auto create_view = [&]() { return input | ranges::views::transform(identity) | beluga::views::sample; };
+  const auto create_view = [&]() { return input | beluga::views::sample; };
   auto it = ranges::find(create_view(), 42);
   static_assert(std::is_same_v<decltype(it), ranges::dangling>);  // the iterator is dangling since transform is not a
                                                                   // borrowed range

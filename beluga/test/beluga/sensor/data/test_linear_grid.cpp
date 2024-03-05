@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest-death-test.h>
 
 #include <cstdint>
 #include <optional>
@@ -24,6 +25,11 @@
 #include <Eigen/Core>
 
 namespace {
+
+TEST(LinearGrid2, InvalidSize) {
+  constexpr std::size_t kWidth = 4;
+  ASSERT_DEBUG_DEATH(beluga::ValueGrid2<bool>({{true, false, true, false, false}}, kWidth), "Assertion");
+}
 
 TEST(LinearGrid2, Indices) {
   constexpr std::size_t kWidth = 4;

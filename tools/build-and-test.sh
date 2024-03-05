@@ -30,21 +30,51 @@ fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 
-echo "::group::Build"
-# Do a build without coverage flags first to avoid generating .gcno files
-# that prevent the html output from lcov from being generated correctly.
-colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
-colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache coverage-gcc coverage-pytest --cmake-args -DBUILD_TESTING=ON -DBUILD_DOCS=ON
-echo "::endgroup::"
+echo ::group::Release Build
+colcon build \
+    --event-handlers console_cohesion+ \
+    --packages-up-to ${ROS_PACKAGES} \
+    --symlink-install \
+    --mixin \
+        build-testing-on \
+        ccache \
+        release \
+    --cmake-force-configure
+echo ::endgroup::
 
-echo "::group::Test"
+echo ::group::Debug Build
+colcon build \
+    --packages-up-to ${ROS_PACKAGES} \
+    --event-handlers console_cohesion+ \
+    --symlink-install \
+    --mixin \
+        build-testing-on \
+        ccache \
+        coverage-gcc \
+        coverage-pytest \
+        debug \
+    --cmake-force-configure \
+    --cmake-args -DBUILD_DOCS=ON
+echo ::endgroup::
+
+echo ::group::Test
 colcon lcov-result --initial
-colcon test --packages-select ${ROS_PACKAGES} --event-handlers=console_cohesion+ --return-code-on-test-failure --mixin coverage-pytest
-echo "::endgroup::"
+colcon test \
+    --packages-select ${ROS_PACKAGES} \
+    --event-handlers console_cohesion+ \
+    --return-code-on-test-failure \
+    --mixin coverage-pytest
+echo ::endgroup::
 
 LCOV_CONFIG_PATH=${SCRIPT_PATH}/../.lcovrc
 
-echo "::group::Generate code coverage results"
-colcon lcov-result --packages-select ${ROS_PACKAGES} --lcov-config-file ${LCOV_CONFIG_PATH} --verbose
-colcon coveragepy-result --packages-select ${ROS_PACKAGES} --verbose --coverage-report-args -m
-echo "::endgroup::"
+echo ::group::Generate code coverage results
+colcon lcov-result \
+    --packages-select ${ROS_PACKAGES} \
+    --lcov-config-file ${LCOV_CONFIG_PATH} \
+    --verbose
+colcon coveragepy-result \
+    --packages-select ${ROS_PACKAGES} \
+    --coverage-report-args -m \
+    --verbose
+echo ::endgroup::

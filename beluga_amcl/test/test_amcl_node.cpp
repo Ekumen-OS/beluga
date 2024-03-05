@@ -310,7 +310,7 @@ class BaseNodeFixture : public T {
   bool wait_for_pose_estimate() {
     tester_node_->latest_pose().reset();
     tester_node_->create_pose_subscriber();
-    return spin_until([this] { return tester_node_->latest_pose().has_value(); }, 100ms, amcl_node_, tester_node_);
+    return spin_until([this] { return tester_node_->latest_pose().has_value(); }, 1000ms, amcl_node_, tester_node_);
   }
 
   bool wait_for_particle_cloud() {

@@ -110,7 +110,7 @@ class AmclNodelet : public nodelet::Nodelet {
 
   void update_covariance_diagnostics(diagnostic_updater::DiagnosticStatusWrapper& status);
 
-  std::mutex mutex_;
+  mutable std::mutex mutex_;
 
   ros::Timer particle_cloud_timer_;
   ros::Publisher particle_cloud_pub_;
