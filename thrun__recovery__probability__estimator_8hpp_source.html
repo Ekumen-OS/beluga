@@ -102,8 +102,8 @@ $(function() {
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
 <div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a495cb1a41b1ae21cab0302ff5e87bd76">   45</a></span>&#160;  constexpr <a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a495cb1a41b1ae21cab0302ff5e87bd76">ThrunRecoveryProbabilityEstimator</a>(<span class="keywordtype">double</span> alpha_slow, <span class="keywordtype">double</span> alpha_fast) noexcept</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      : slow_filter_{alpha_slow}, fast_filter_{alpha_fast} {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    assert(0 &lt; alpha_slow);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    assert(alpha_slow &lt; alpha_fast);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    assert(0 &lt;= alpha_slow);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    assert(alpha_slow &lt;= alpha_fast);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  }</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>

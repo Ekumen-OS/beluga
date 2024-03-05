@@ -83,33 +83,29 @@ $(function() {
 <code>#include &lt;range/v3/view/generate.hpp&gt;</code><br />
 <code>#include &lt;<a class="el" href="particle__traits_8hpp_source.html">beluga/type_traits/particle_traits.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="particles_8hpp_source.html">beluga/views/particles.hpp</a>&gt;</code><br />
-<code>#include &lt;beluga/detail/prologue.hpp&gt;</code><br />
-<code>#include &lt;beluga/detail/epilogue.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for sample.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="sample_8hpp__incl.png" border="0" usemap="#a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2views_2sample_8hpp" alt=""/></div>
 <map name="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2views_2sample_8hpp" id="a_2____w_2beluga_2beluga_2src_2beluga_2beluga_2include_2beluga_2views_2sample_8hpp">
-<area shape="rect" title="Implementation of a sample (with replacement) range adaptor object." alt="" coords="660,5,852,61"/>
+<area shape="rect" title="Implementation of a sample (with replacement) range adaptor object." alt="" coords="447,5,639,61"/>
 <area shape="rect" title=" " alt="" coords="5,117,77,143"/>
 <area shape="rect" title=" " alt="" coords="101,117,304,143"/>
 <area shape="rect" title=" " alt="" coords="328,117,531,143"/>
 <area shape="rect" title=" " alt="" coords="555,117,759,143"/>
 <area shape="rect" href="particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="784,109,928,151"/>
-<area shape="rect" href="particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="953,117,1149,143"/>
-<area shape="rect" href="prologue_8hpp_source.html" title=" " alt="" coords="1173,117,1369,143"/>
-<area shape="rect" href="epilogue_8hpp_source.html" title=" " alt="" coords="1393,117,1588,143"/>
-<area shape="rect" href="primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="969,199,1133,225"/>
-<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="702,273,842,315"/>
-<area shape="rect" title=" " alt="" coords="757,199,944,225"/>
-<area shape="rect" title=" " alt="" coords="839,363,894,389"/>
-<area shape="rect" title=" " alt="" coords="1071,363,1163,389"/>
-<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="1155,273,1365,315"/>
-<area shape="rect" href="forward__like_8hpp_source.html" title=" " alt="" coords="917,273,1080,315"/>
-<area shape="rect" title=" " alt="" coords="1293,363,1379,389"/>
-<area shape="rect" title=" " alt="" coords="1209,363,1268,389"/>
-<area shape="rect" title=" " alt="" coords="742,363,802,389"/>
-<area shape="rect" title=" " alt="" coords="1157,199,1368,225"/>
+<area shape="rect" href="particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="955,117,1151,143"/>
+<area shape="rect" href="primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="971,199,1135,225"/>
+<area shape="rect" href="tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="705,273,845,315"/>
+<area shape="rect" title=" " alt="" coords="760,199,947,225"/>
+<area shape="rect" title=" " alt="" coords="842,363,897,389"/>
+<area shape="rect" title=" " alt="" coords="1074,363,1166,389"/>
+<area shape="rect" href="strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="1157,273,1368,315"/>
+<area shape="rect" href="forward__like_8hpp_source.html" title=" " alt="" coords="920,273,1083,315"/>
+<area shape="rect" title=" " alt="" coords="1295,363,1382,389"/>
+<area shape="rect" title=" " alt="" coords="1212,363,1271,389"/>
+<area shape="rect" title=" " alt="" coords="745,363,805,389"/>
+<area shape="rect" title=" " alt="" coords="1160,199,1371,225"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -169,7 +165,8 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p><a href="https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject">Range adaptor object</a> that will randomly sample with replacement from an input range. Unlike <code>std::views::sample</code>, this does not require a size parameter and the samples will be taken from the population <b>with replacement</b>, making the sample values independent. To use this, the input range must model the <a href="https://en.cppreference.com/w/cpp/ranges/random_access_range">random_access_range</a> and <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized_range</a> concepts.</p>
 <p>This view implements multinomial resampling for a given range of particles. The core idea is to draw random indices / iterators to the input particle range from a <a href="https://en.wikipedia.org/wiki/Multinomial_distribution">multinomial distribution</a> parameterized after particle weights (and assumed uniform for non-weighted particle ranges).</p>
-<p>This view can also be used to convert any random distribution (a callable that takes a URNG as an input argument) into an infinite view that generates values from that distribution. </p>
+<p>This view can also be used to convert any random distribution (a callable that takes a URNG as an input argument) into an infinite view that generates values from that distribution.</p>
+<p>This view is not cheap to copy, so care must be taken when moving it around. Range-v3 does not support move-only views at the time of this implementation. </p>
 
 </div>
 </div>

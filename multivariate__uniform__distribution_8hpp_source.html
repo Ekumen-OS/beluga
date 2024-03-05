@@ -168,7 +168,7 @@ $(function() {
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
 <div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4.html#aa8b2679121c0a02f85a0eeb10929a402">  134</a></span>&#160;  constexpr <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4.html#aa8b2679121c0a02f85a0eeb10929a402">MultivariateUniformDistribution</a>(<span class="keyword">const</span> OccupancyGrid&amp; grid)</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;      : free_states_{compute_free_states(grid)}, distribution_{0, free_states_.size() - 1} {</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    assert(free_states_.size() &gt; 0);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    assert(!free_states_.empty());</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  }</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
