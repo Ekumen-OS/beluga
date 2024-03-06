@@ -3,20 +3,27 @@
 Beluga is a ROS-agnostic C++17 library that provides implementations for Monte Carlo-based localization algorithms widely used in robotics applications.
 Its modularity allows users to compose solutions from reusable modules and to combine them with new ones to configure the MCL algorithm that best suits their needs.
 
-![Beluga diagram](https://github.com/Ekumen-OS/beluga/assets/33042669/c3a9375c-8beb-44ee-bcde-d4c0f62f576e)
-
 ## Features
 
 The current set of features includes:
 
-- A configurable particle filter with support for:
-  - [Structure of arrays and array of structures][aos_soa] storage policies.
-  - Fixed resampling and [adaptive KLD resampling][fox2001] policies to determine how many samples to take per iteration.
-  - [Selective resampling][grisetti2007], on-motion resampling, interval resampling policies to determine when to resample.
-  - Sequential and parallel execution policies.
-  - Weighted mean and covariance statistics for pose estimation.
-- Likelihood field and beam sensor models.
-- Differential drive and omnidirectional motion models.
+- Particle containers:
+  - Support for [Array-of-Structures and Structure-of-Arrays][aos_soa] tuple containers
+- Composable randge adaptor views, actions, and algorithms:
+  - Multivariate normal distributions in SE(2) and SE(3) space
+  - Multivariate uniform distributions in SE(2) compatible with occupancy grids
+  - Multinomial resampling from a particle range
+  - [Adaptive KLD resampling][fox2001]
+  - [Selective resampling][grisetti2007], on-motion resampling, and interval resampling policies
+  - Support for sequential and parallel execution policies
+  - Weighted mean and covariance statistics for pose estimation
+- Sensor models:
+  - Likelihood field model
+  - Beam model
+  - Landmark-based models (using landmark position or bearing)
+- Motion models:
+  - Differential drive model
+  - Omnidirectional model
 
 ## Documentation
 
