@@ -13,6 +13,14 @@
 # limitations under the License.
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+
+ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR
+                             ${PROJECT_SOURCE_DIR}/tools)
+
+install(DIRECTORY tools USE_SOURCE_PERMISSIONS DESTINATION lib/${PROJECT_NAME})
+
+find_package(ament_cmake REQUIRED)
 find_package(beluga REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
