@@ -29,6 +29,9 @@
   <test_depend condition="$ROS_VERSION == 2">ament_cmake_gtest</test_depend>
 
   <exec_depend condition="$ROS_VERSION == 2">python3-h5py</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-matplotlib</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-numpy</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-scipy</exec_depend>
 
   <export>
     <build_type condition="$ROS_VERSION == 1">catkin</build_type>
