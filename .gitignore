@@ -4,6 +4,10 @@ install/
 lcov/
 logs/
 
+
+# Python related
+**/__pycache__/**/*
+
 # Development environments
 .vscode/
 .idea/
