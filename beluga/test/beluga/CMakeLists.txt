@@ -21,12 +21,13 @@ add_executable(
   algorithm/raycasting/test_bresenham.cpp
   algorithm/test_distance_map.cpp
   algorithm/test_effective_sample_size.cpp
-  algorithm/test_estimation.cpp
   algorithm/test_exponential_filter.cpp
   algorithm/test_raycasting.cpp
   algorithm/test_thrun_recovery_probability_estimator.cpp
   containers/test_circular_array.cpp
   containers/test_tuple_vector.cpp
+  estimation/test_cluster_based_estimation.cpp
+  estimation/test_estimation.cpp
   mixin/test_particle_filter.cpp
   mixin/test_sampling.cpp
   mixin/test_storage.cpp

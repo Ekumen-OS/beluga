@@ -23,6 +23,8 @@
 #include <beluga/actions.hpp>
 #include <beluga/algorithm.hpp>
 #include <beluga/containers.hpp>
+#include <beluga/estimation.hpp>
+#include <beluga/localization.hpp>
 #include <beluga/mixin.hpp>
 #include <beluga/motion.hpp>
 #include <beluga/policies.hpp>

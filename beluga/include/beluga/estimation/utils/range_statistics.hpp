@@ -12,40 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_ALGORITHM_ESTIMATION_HPP
-#define BELUGA_ALGORITHM_ESTIMATION_HPP
+#ifndef BELUGA_ESTIMATION_UTILS_RANGE_STATISTICS_HPP
+#define BELUGA_ESTIMATION_UTILS_RANGE_STATISTICS_HPP
 
+// standard library
+#include <algorithm>
+#include <numeric>
+#include <tuple>
+
+// external
+#include <beluga/views/elements.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/transform.hpp>
+
 #include <sophus/se2.hpp>
 #include <sophus/types.hpp>
 
-#include <numeric>
+// project
+#include <beluga/views.hpp>
 
 /**
  * \file
  * \brief Implementation of algorithms that allow calculating the estimated state of
  *  a particle filter.
- */
-
-/**
- * \page StateEstimatorPage Beluga named requirements: StateEstimator
- * The requirements that a state estimator must satisfy.
- *
- * \section StateEstimationRequirements Requirements
- * `T` is a `StateEstimator` if given a (possibly const) instance `p` of `T`, the following is satisfied:
- * - `p.estimate()` is a valid expression.
- * - `std::get<0>(p.estimate())` is valid.
- *   `decltype(std::get<0>(p.estimate()))` represents the type of the estimated state.
- * - `std::get<1>(p.estimate())` is valid.
- *   `decltype(std::get<1>(p.estimate()))` represents the type of the covariance of the estimation.
- *
- * \section StateEstimationLinks See also
- * - beluga::SimpleStateEstimator<Mixin, Sophus::SE2d>
- * - beluga::WeightedStateEstimator<Mixin, Sophus::SE2d>
  */
 
 namespace beluga {
@@ -143,6 +135,7 @@ template <
     typename = std::enable_if_t<std::is_same_v<Pose, typename Sophus::SE2<Scalar>>>>
 std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, Weights&& weights) {
   auto translation_view = poses | ranges::views::transform([](const auto& pose) { return pose.translation(); });
+  auto poses_view = poses | ranges::views::common;
   auto weights_view = weights | ranges::views::common;
   const auto weights_sum = std::accumulate(weights_view.begin(), weights_view.end(), 0.0);
   auto normalized_weights_view =
@@ -159,8 +152,8 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, 
   // This is expected and the value will be renormalized after having used the non-normal result to estimate the
   // orientation autocovariance.
   const Sophus::Vector4<Scalar> mean_pose_vector = std::transform_reduce(
-      poses.begin(), poses.end(), normalized_weights_view.begin(), Sophus::Vector4<Scalar>::Zero().eval(), std::plus{},
-      pose_to_weighted_eigen_vector);
+      poses_view.begin(), poses_view.end(), normalized_weights_view.begin(), Sophus::Vector4<Scalar>::Zero().eval(),
+      std::plus{}, pose_to_weighted_eigen_vector);
 
   // Calculate the weighted pose estimation
   Sophus::SE2<Scalar> estimated_pose = Eigen::Map<const Sophus::SE2<Scalar>>{mean_pose_vector.data()};
@@ -210,81 +203,48 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses) 
   return beluga::estimate(poses, ranges::views::repeat_n(1.0, static_cast<std::ptrdiff_t>(poses.size())));
 }
 
-/// Pure abstract class representing the estimation interface.
-struct EstimationInterface2d {
-  /// Virtual destructor.
-  virtual ~EstimationInterface2d() = default;
+/// \brief For each cluster, estimate the mean and covariance of the states that belong to it.
+/// \tparam GridCellDataMapType Type of the grid cell data map.
+/// \tparam Range Range type of the states.
+/// \tparam Weights Range type of the weights.
+/// \tparam Hashes Range type of the hashes.
+/// \param states Range containing the states of the particles.
+/// \param weights Range containing the weights of the particles.
+/// \param clusters cluster ids of the particles.
+/// \return A vector of tuples, containing the weight, mean and covariance of each cluster, in no particular order.
+template <class Range, class Weights, class Clusters>
+[[nodiscard]] auto estimate_clusters(Range&& states, Weights&& weights, Clusters&& clusters) {
+  static constexpr auto weight = [](const auto& t) { return std::get<1>(t); };
+  static constexpr auto cluster = [](const auto& t) { return std::get<2>(t); };
 
-  /// Returns the estimate state of the particle filter.
-  /**
-   * \return The estimated 2D pose and its 3x3 covariance matrix.
-   */
-  [[nodiscard]] virtual std::pair<Sophus::SE2d, Sophus::Matrix3d> estimate() const = 0;
-};
+  auto particles = ranges::views::zip(states, weights, clusters);
 
-/// Primary template for a simple state estimator.
-template <class Mixin, class State>
-class SimpleStateEstimator;
+  const auto cluster_ids = clusters | ranges::to<std::unordered_set>;
 
-/// Partial template specialization for simple state estimator in 2D.
-/**
- * This class implements the EstimationInterface2d interface
- * and satisfies \ref StateEstimatorPage.
- *
- * It's an estimator that calculates the pose mean and covariance using all the particles.
- */
-template <class Mixin>
-class SimpleStateEstimator<Mixin, Sophus::SE2d> : public Mixin {
- public:
-  /// Constructs a SimpleStateEstimator instance.
-  /**
-   * \tparam ...Args Arguments types for the remaining mixin constructors.
-   * \param ...args Arguments that are not used by this part of the mixin, but by others.
-   */
-  template <class... Args>
-  explicit SimpleStateEstimator(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
+  // for each cluster found, estimate the mean and covariance of the states that belong to it
+  using StateType = std::decay_t<decltype(std::get<0>(beluga::estimate(states, weights)))>;
+  using CovarianceType = std::decay_t<decltype(std::get<1>(beluga::estimate(states, weights)))>;
+  std::vector<std::tuple<double, StateType, CovarianceType>> cluster_estimates;
 
-  /// \copydoc EstimationInterface2d::estimate()
-  [[nodiscard]] std::pair<Sophus::SE2d, Eigen::Matrix3d> estimate() const final {
-    return beluga::estimate(this->self().states());
+  for (const auto id : cluster_ids) {
+    auto filtered_particles =
+        particles | ranges::views::cache1 | ranges::views::filter([id](const auto& p) { return cluster(p) == id; });
+
+    const auto particle_count = ranges::distance(filtered_particles);
+    if (particle_count < 2) {
+      // if there's only one sample in the cluster we can't estimate the covariance
+      continue;
+    }
+
+    const auto total_weight = ranges::accumulate(filtered_particles, 0.0, std::plus{}, weight);
+    auto filtered_states = filtered_particles | beluga::views::elements<0>;
+    auto filtered_weights = filtered_particles | beluga::views::elements<1>;
+    const auto [mean, covariance] = estimate(filtered_states, filtered_weights);
+    cluster_estimates.emplace_back(total_weight, std::move(mean), std::move(covariance));
   }
-};
 
-/// An alias template for the simple state estimator in 2D.
-template <class Mixin>
-using SimpleStateEstimator2d = SimpleStateEstimator<Mixin, Sophus::SE2d>;
-
-/// Primary template for a weighted state estimator.
-template <class Mixin, class State>
-class WeightedStateEstimator;
-
-/// Partial template specialization for weighted state estimator in 2D.
-/**
- * This class implements the EstimationInterface2d interface
- * and satisfies \ref StateEstimatorPage.
- *
- * It's an estimator that calculates the pose mean and covariance using all the particles.
- */
-template <class Mixin>
-class WeightedStateEstimator<Mixin, Sophus::SE2d> : public Mixin {
- public:
-  /// Constructs a WeightedStateEstimator instance.
-  /**
-   * \tparam ...Args Arguments types for the remaining mixin constructors.
-   * \param ...args Arguments that are not used by this part of the mixin, but by others.
-   */
-  template <class... Args>
-  explicit WeightedStateEstimator(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
-
-  /// \copydoc EstimationInterface2d::estimate()
-  [[nodiscard]] std::pair<Sophus::SE2d, Eigen::Matrix3d> estimate() const final {
-    return beluga::estimate(this->self().states(), this->self().weights());
-  }
-};
-
-/// An alias template for the weighted state estimator in 2D.
-template <class Mixin>
-using WeightedStateEstimator2d = WeightedStateEstimator<Mixin, Sophus::SE2d>;
+  return cluster_estimates;
+}
 
 }  // namespace beluga
 
