@@ -156,7 +156,7 @@ class NDTMap:
         """
         Create an NDTMap instance from a path to a hdf5 file.
 
-        See 'serialize_to' docstring for details on the hdf5 format.
+        See 'to_hdf5' docstring for details on the hdf5 format.
         """
         with h5py.File(hdf5_file.absolute(), "r") as fp:
             resolution: float = fp["resolution"][()]

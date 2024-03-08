@@ -25,8 +25,6 @@ find_package(tf2_geometry_msgs REQUIRED)
 ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR
                              ${PROJECT_SOURCE_DIR}/tools)
 
-install(DIRECTORY tools USE_SOURCE_PERMISSIONS DESTINATION lib/${PROJECT_NAME})
-
 add_library(beluga_ros INTERFACE)
 target_include_directories(
   beluga_ros INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -63,6 +61,8 @@ install(
   RUNTIME DESTINATION bin)
 
 install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
+
+install(DIRECTORY tools USE_SOURCE_PERMISSIONS DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   enable_testing()
