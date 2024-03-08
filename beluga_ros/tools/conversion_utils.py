@@ -204,13 +204,15 @@ class OccupancyGrid:
             data = yaml.safe_load(fp)
 
         pgm_path: Path = yaml_path.parent / data["image"]
+        origin = np.asarray(data["origin"])
+        assert np.allclose(origin[2], 0), "This tool doesn't support rotated maps."
         assert pgm_path.is_file(), f".pgm file at {pgm_path} does not exist"
 
         with open(yaml_path.parent / data["image"], "rb") as pgmf:
             grid = plt.imread(pgmf)
 
         return OccupancyGrid(
-            resolution=data["resolution"], origin=np.asarray(data["origin"]), grid=grid
+            resolution=data["resolution"], origin=origin, grid=grid
         )
 
 

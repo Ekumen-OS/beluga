@@ -89,7 +89,7 @@ def main():
 
     print(f"Saved output artifacts to {out_dir.absolute()}\n\n")
     print(
-        f"Loading the map from its serialized form ({output_hdf5_name})"
+        f"Loading the map from its serialized form ({output_hdf5_name}) "
         "and verifying its integrity...\n"
     )
     assert ndt.is_close(
