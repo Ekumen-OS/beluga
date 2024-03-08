@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import conversion_utils, occupancy_grid_to_ndt, serialization_utils
+from . import conversion_utils, occupancy_grid_to_ndt
 
-__all__ = ['occupancy_grid_to_ndt', 'serialization_utils', 'conversion_utils']
+__all__ = ['occupancy_grid_to_ndt', 'conversion_utils']
