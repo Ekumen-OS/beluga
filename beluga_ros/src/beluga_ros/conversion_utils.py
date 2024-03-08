@@ -17,10 +17,18 @@ import h5py
 import yaml
 from typing import Dict, Optional
 from pathlib import Path
-import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
 
 from dataclasses import dataclass
+
+# Remove annoying matplotlib on import warnings.
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message="Unable to import Axes3D. This may be due to multiple " "versions of",
+)
+import matplotlib.pyplot as plt  # noqa: E402: Disable import not at top level.
 
 
 @dataclass(frozen=True)
