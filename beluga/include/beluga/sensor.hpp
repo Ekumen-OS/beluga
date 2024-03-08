@@ -55,8 +55,8 @@
  * \section SensorModelLinks See also
  * - beluga::LikelihoodFieldModel
  * - beluga::BeamSensorModel
- * - beluga::LandmarkSensorModel2d
- * - beluga::BearingSensorModel2d
+ * - beluga::LandmarkSensorModel
+ * - beluga::BearingSensorModel
  */
 
 #include <beluga/sensor/beam_model.hpp>
