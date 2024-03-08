@@ -22,7 +22,10 @@ import argparse
 from pathlib import Path
 
 # Remove annoying matplotlib on import warnings.
-warnings.filterwarnings("ignore")
+warnings.filterwarnings(
+    "ignore",
+    message="Unable to import Axes3D. This may be due to multiple " "versions of",
+)
 from conversion_utils import (  # noqa: E402: Disable import not at top level.
     grid_to_point_cloud,
     OccupancyGrid,
@@ -86,11 +89,11 @@ def main():
 
     print(f"Saved output artifacts to {out_dir.absolute()}\n\n")
     print(
-        f"Loading the map from its serialized form ({output_hdf5_name})\
-              and verifying its integrity...\n"
+        f"Loading the map from its serialized form ({output_hdf5_name})"
+        "and verifying its integrity...\n"
     )
-    assert ndt == NDTMap.from_hdf5(
-        output_hdf5_name
+    assert ndt.is_close(
+        NDTMap.from_hdf5(output_hdf5_name)
     ), "Reading the NDT map from disk produced a different map from the serialized one,\
           this is a bug."
 
