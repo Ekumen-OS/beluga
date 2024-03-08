@@ -21,7 +21,6 @@ namespace {
 
 using beluga::testing::SE2Near;
 using beluga::testing::Vector3Near;
-using testing::ReturnRef;
 
 using Constants = Sophus::Constants<double>;
 using Eigen::Vector2d;
