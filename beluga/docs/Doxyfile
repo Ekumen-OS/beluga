@@ -10,3 +10,4 @@ GENERATE_LATEX         = NO
 HTML_EXTRA_STYLESHEET  = $(DOXYGEN_HTML_STYLESHEET)
 CITE_BIB_FILES         = ./doxygen_cites.bib
 WARN_AS_ERROR          = YES
+PROJECT_LOGO	       = ./img/logo_200x200.png
