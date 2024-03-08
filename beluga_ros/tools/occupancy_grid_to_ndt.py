@@ -76,7 +76,7 @@ def main():
         f"Constructed a NDT representation of the point cloud with {len(ndt._grid)} cells.\n"
     )
 
-    ndt.plot(True)
+    ndt.plot()
     output_plot_name = out_dir / f"{yaml_file.stem}.png"
     plt.savefig(output_plot_name.absolute())
     output_hdf5_name = out_dir / f"{yaml_file.stem}.hdf5"
