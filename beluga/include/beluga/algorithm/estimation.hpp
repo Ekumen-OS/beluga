@@ -31,23 +31,6 @@
  *  a particle filter.
  */
 
-/**
- * \page StateEstimatorPage Beluga named requirements: StateEstimator
- * The requirements that a state estimator must satisfy.
- *
- * \section StateEstimationRequirements Requirements
- * `T` is a `StateEstimator` if given a (possibly const) instance `p` of `T`, the following is satisfied:
- * - `p.estimate()` is a valid expression.
- * - `std::get<0>(p.estimate())` is valid.
- *   `decltype(std::get<0>(p.estimate()))` represents the type of the estimated state.
- * - `std::get<1>(p.estimate())` is valid.
- *   `decltype(std::get<1>(p.estimate()))` represents the type of the covariance of the estimation.
- *
- * \section StateEstimationLinks See also
- * - beluga::SimpleStateEstimator<Mixin, Sophus::SE2d>
- * - beluga::WeightedStateEstimator<Mixin, Sophus::SE2d>
- */
-
 namespace beluga {
 
 /// Calculates the covariance of a range given its mean and the weights of each element.
@@ -209,82 +192,6 @@ template <
 std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses) {
   return beluga::estimate(poses, ranges::views::repeat_n(1.0, static_cast<std::ptrdiff_t>(poses.size())));
 }
-
-/// Pure abstract class representing the estimation interface.
-struct EstimationInterface2d {
-  /// Virtual destructor.
-  virtual ~EstimationInterface2d() = default;
-
-  /// Returns the estimate state of the particle filter.
-  /**
-   * \return The estimated 2D pose and its 3x3 covariance matrix.
-   */
-  [[nodiscard]] virtual std::pair<Sophus::SE2d, Sophus::Matrix3d> estimate() const = 0;
-};
-
-/// Primary template for a simple state estimator.
-template <class Mixin, class State>
-class SimpleStateEstimator;
-
-/// Partial template specialization for simple state estimator in 2D.
-/**
- * This class implements the EstimationInterface2d interface
- * and satisfies \ref StateEstimatorPage.
- *
- * It's an estimator that calculates the pose mean and covariance using all the particles.
- */
-template <class Mixin>
-class SimpleStateEstimator<Mixin, Sophus::SE2d> : public Mixin {
- public:
-  /// Constructs a SimpleStateEstimator instance.
-  /**
-   * \tparam ...Args Arguments types for the remaining mixin constructors.
-   * \param ...args Arguments that are not used by this part of the mixin, but by others.
-   */
-  template <class... Args>
-  explicit SimpleStateEstimator(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
-
-  /// \copydoc EstimationInterface2d::estimate()
-  [[nodiscard]] std::pair<Sophus::SE2d, Eigen::Matrix3d> estimate() const final {
-    return beluga::estimate(this->self().states());
-  }
-};
-
-/// An alias template for the simple state estimator in 2D.
-template <class Mixin>
-using SimpleStateEstimator2d = SimpleStateEstimator<Mixin, Sophus::SE2d>;
-
-/// Primary template for a weighted state estimator.
-template <class Mixin, class State>
-class WeightedStateEstimator;
-
-/// Partial template specialization for weighted state estimator in 2D.
-/**
- * This class implements the EstimationInterface2d interface
- * and satisfies \ref StateEstimatorPage.
- *
- * It's an estimator that calculates the pose mean and covariance using all the particles.
- */
-template <class Mixin>
-class WeightedStateEstimator<Mixin, Sophus::SE2d> : public Mixin {
- public:
-  /// Constructs a WeightedStateEstimator instance.
-  /**
-   * \tparam ...Args Arguments types for the remaining mixin constructors.
-   * \param ...args Arguments that are not used by this part of the mixin, but by others.
-   */
-  template <class... Args>
-  explicit WeightedStateEstimator(Args&&... args) : Mixin(std::forward<Args>(args)...) {}
-
-  /// \copydoc EstimationInterface2d::estimate()
-  [[nodiscard]] std::pair<Sophus::SE2d, Eigen::Matrix3d> estimate() const final {
-    return beluga::estimate(this->self().states(), this->self().weights());
-  }
-};
-
-/// An alias template for the weighted state estimator in 2D.
-template <class Mixin>
-using WeightedStateEstimator2d = WeightedStateEstimator<Mixin, Sophus::SE2d>;
 
 }  // namespace beluga
 

@@ -16,7 +16,6 @@
 
 #include <beluga/algorithm/estimation.hpp>
 #include <beluga/testing.hpp>
-#include <ciabatta/ciabatta.hpp>
 
 namespace {
 
@@ -218,53 +217,6 @@ TEST_F(PoseCovarianceEstimation, RandomWalkWithSmoothRotationAndNonUniformWeight
   ASSERT_THAT(covariance.col(0).eval(), Vector3Near({0.5946, 0.0743, 0.0000}, kTolerance));
   ASSERT_THAT(covariance.col(1).eval(), Vector3Near({0.0743, 1.8764, 0.0000}, kTolerance));
   ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.0000, 0.0000, 0.0855}, kTolerance));
-}
-
-template <class Mixin>
-class MockMixin : public Mixin {
- public:
-  MOCK_METHOD(const std::vector<Sophus::SE2d>&, states, (), (const));
-  MOCK_METHOD(const std::vector<double>&, weights, (), (const));
-};
-
-TEST(SimpleStateEstimator, SimpleStateEstimatorUsesUniformWeights) {
-  // test that the simple state estimator uses uniform weights for mean and covariance estimation
-  using UUT = ciabatta::mixin<
-      beluga::SimpleStateEstimator2d, MockMixin, ciabatta::provides<beluga::EstimationInterface2d>::mixin>;
-  const auto mixin = UUT{};
-  const auto states = std::vector{
-      SE2d{SO2d{Constants::pi() / 6}, Vector2d{0.0, -3.0}}, SE2d{SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}},
-      SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, -1.0}}, SE2d{SO2d{0.0}, Vector2d{3.0, 0.0}}};
-  const auto weights = std::vector(states.size(), 1.0);
-  constexpr double kTolerance = 0.001;
-  EXPECT_CALL(mixin, states).WillRepeatedly(ReturnRef(states));
-  EXPECT_CALL(mixin, weights).Times(0);
-  const auto [pose, covariance] = mixin.estimate();
-  const auto [expected_pose, expected_covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(expected_pose, kTolerance));
-  ASSERT_THAT(covariance.col(0).eval(), Vector3Near(expected_covariance.col(0).eval(), kTolerance));
-  ASSERT_THAT(covariance.col(1).eval(), Vector3Near(expected_covariance.col(1).eval(), kTolerance));
-  ASSERT_THAT(covariance.col(2).eval(), Vector3Near(expected_covariance.col(2).eval(), kTolerance));
-}
-
-TEST(WeightedStateEstimator, WeightedStateEstimatorDoesWeightedEstimation) {
-  // test that the weighted state estimator uses the provided weights for mean and covariance estimation
-  using UUT = ciabatta::mixin<
-      beluga::WeightedStateEstimator2d, MockMixin, ciabatta::provides<beluga::EstimationInterface2d>::mixin>;
-  const auto mixin = UUT{};
-  const auto states = std::vector{
-      SE2d{SO2d{Constants::pi() / 6}, Vector2d{0.0, -3.0}}, SE2d{SO2d{Constants::pi() / 2}, Vector2d{1.0, -2.0}},
-      SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, -1.0}}, SE2d{SO2d{0.0}, Vector2d{3.0, 0.0}}};
-  const auto weights = std::vector{0.1, 0.5, 0.5, 0.1};
-  constexpr double kTolerance = 0.001;
-  EXPECT_CALL(mixin, states).WillRepeatedly(ReturnRef(states));
-  EXPECT_CALL(mixin, weights).WillRepeatedly(ReturnRef(weights));
-  const auto [pose, covariance] = mixin.estimate();
-  const auto [expected_pose, expected_covariance] = beluga::estimate(states, weights);
-  ASSERT_THAT(pose, SE2Near(expected_pose, kTolerance));
-  ASSERT_THAT(covariance.col(0).eval(), Vector3Near(expected_covariance.col(0).eval(), kTolerance));
-  ASSERT_THAT(covariance.col(1).eval(), Vector3Near(expected_covariance.col(1).eval(), kTolerance));
-  ASSERT_THAT(covariance.col(2).eval(), Vector3Near(expected_covariance.col(2).eval(), kTolerance));
 }
 
 }  // namespace
