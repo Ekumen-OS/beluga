@@ -211,9 +211,7 @@ class OccupancyGrid:
         with open(yaml_path.parent / data["image"], "rb") as pgmf:
             grid = plt.imread(pgmf)
 
-        return OccupancyGrid(
-            resolution=data["resolution"], origin=origin, grid=grid
-        )
+        return OccupancyGrid(resolution=data["resolution"], origin=origin, grid=grid)
 
 
 def grid_to_point_cloud(occupancy_grid: OccupancyGrid) -> np.ndarray:
