@@ -31,6 +31,12 @@ class DiscreteCell:
 
 @dataclass(frozen=True)
 class NormalDistribution:
+    """
+    Wrapper around scipy's multivariate normal distribution implementation.
+
+    Allows for equality checks and typing hints.
+    """
+
     mean: np.ndarray
     covariance: np.ndarray
 
@@ -70,9 +76,6 @@ class NDTMap:
             min_y = min(min_y, y)
             max_y = max(max_y, y)
 
-        step_x = (max_x - min_x) / 100.0
-        step_y = (max_y - min_y) / 100.0
-
         PADDING = 1  # [m]
 
         min_x -= PADDING
@@ -80,12 +83,18 @@ class NDTMap:
         min_y -= PADDING
         max_y += PADDING
 
-        xx, yy = np.mgrid[min_x:max_x:step_x, min_y:step_y]
+        step_x = (max_x - min_x) / 100.0
+        step_y = (max_y - min_y) / 100.0
+
+        xx, yy = np.mgrid[min_x:max_x:step_x, min_y:max_y:step_y]
         return (xx, yy, np.dstack((xx, yy)))
 
     def __eq__(self, other: "NDTMap") -> bool:
         """Equality for two NDT maps."""
-        return self._grid == other._grid
+        return (
+            np.allclose(self._resolution, other._resolution)
+            and self._grid == other._grid
+        )
 
     def plot(self, show: bool = False) -> plt.figure:
         """
@@ -109,7 +118,7 @@ class NDTMap:
             plt.show()
         return plt.gcf()
 
-    def serialize_to(self, output_file_path: Path):
+    def to_hdf5(self, output_file_path: Path):
         """
         Serialize the NDT map into an HDF5 format.
 
@@ -225,6 +234,9 @@ def fit_normal_distribution(points: np.ndarray) -> Optional[NormalDistribution]:
     """Fit a normal distribution to a set of 2D points."""
     assert points.shape[0] == 2
     # Literature suggests doing this check to avoid singularities.
+    # See The Three-Dimensional Normal-Distributions Transform– an Efficient
+    # Representation for Registration, Surface Analysis, and Loop Detection
+    # by Martin Magnusson, 2009 chapter 6.
     if points.shape[1] <= 5:
         return None
     mean = points.mean(axis=1)

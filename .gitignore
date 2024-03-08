@@ -6,7 +6,7 @@ logs/
 
 
 # Python related
-**/__pycache__/**/*
+__pycache__/
 
 # Development environments
 .vscode/

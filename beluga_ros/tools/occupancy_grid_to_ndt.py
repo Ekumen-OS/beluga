@@ -80,7 +80,7 @@ def main():
     output_plot_name = out_dir / f"{yaml_file.stem}.png"
     plt.savefig(output_plot_name.absolute())
     output_hdf5_name = out_dir / f"{yaml_file.stem}.hdf5"
-    ndt.serialize_to(output_hdf5_name)
+    ndt.to_hdf5(output_hdf5_name)
 
     print(f"Saved output artifacts to {out_dir.absolute()}\n\n")
     print(

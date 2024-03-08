@@ -14,13 +14,6 @@
 
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
-
-ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR
-                             ${PROJECT_SOURCE_DIR}/tools)
-
-install(DIRECTORY tools USE_SOURCE_PERMISSIONS DESTINATION lib/${PROJECT_NAME})
-
-find_package(ament_cmake REQUIRED)
 find_package(beluga REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
@@ -28,6 +21,11 @@ find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+
+ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR
+                             ${PROJECT_SOURCE_DIR}/tools)
+
+install(DIRECTORY tools USE_SOURCE_PERMISSIONS DESTINATION lib/${PROJECT_NAME})
 
 add_library(beluga_ros INTERFACE)
 target_include_directories(
