@@ -15,25 +15,17 @@
 # limitations under the License.
 
 """This script allows conversions from ROS occupancy grid maps to NDT maps."""
-import warnings
-
-
 import argparse
 from pathlib import Path
 
-# Remove annoying matplotlib on import warnings.
-warnings.filterwarnings(
-    "ignore",
-    message="Unable to import Axes3D. This may be due to multiple " "versions of",
-)
-from conversion_utils import (  # noqa: E402: Disable import not at top level.
+from beluga_ros.conversion_utils import (
     grid_to_point_cloud,
     OccupancyGrid,
     point_cloud_to_ndt,
     NDTMap,
 )
 
-import matplotlib.pyplot as plt  # noqa: E402: Disable import not at top level.
+import matplotlib.pyplot as plt
 
 
 def _parse_args() -> argparse.Namespace:
