@@ -66,10 +66,23 @@ while [[ "$1" != "" ]]; do
     esac
 done
 
+DEV_CONTAINER_NAME=beluga_dev
+
 # Note: The `--build` flag was added to docker compose run after
 # https://github.com/docker/compose/releases/tag/v2.13.0.
 # We have this for convenience and compatibility with previous versions.
 # Otherwise, we could just forward the script arguments to the run verb.
-[[ "$BUILD" = true ]] && docker compose build dev
 
-PRIVILEGED_CONTAINER=$PRIVILEGED_CONTAINER USERID=$(id -u) GROUPID=$(id -g) docker compose run --rm dev
+# Kill the container JIC it already exists, if building, to ensure we don't attach to an old container.
+[[ "$BUILD" = true ]] && docker compose build dev && docker rm -f $DEV_CONTAINER_NAME  2>/dev/null
+
+# Check if the container exists
+if docker ps -a --format '{{.Names}}' | grep -q $DEV_CONTAINER_NAME; then
+    # Attach to the container if it is running
+    echo "Found dev container running, attaching to it..."
+    docker exec -it "$DEV_CONTAINER_NAME" /bin/bash
+else
+    echo "Container '$DEV_CONTAINER_NAME' does not exist or is not running, proceeding to run it."
+    PRIVILEGED_CONTAINER=$PRIVILEGED_CONTAINER USERID=$(id -u) GROUPID=$(id -g) docker compose run --rm --detach --name $DEV_CONTAINER_NAME  dev
+    docker exec -it "$DEV_CONTAINER_NAME" /bin/bash
+fi
