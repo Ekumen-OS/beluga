@@ -40,14 +40,14 @@ class NormalDistribution:
     mean: np.ndarray
     covariance: np.ndarray
 
-    def get_scipy_representation(self):
+    def to_scipy(self):
         """Get its scipy representation."""
         return multivariate_normal(mean=self.mean, cov=self.covariance)
 
-    def __eq__(self, other: "NormalDistribution") -> bool:
-        """Element-wise equality."""
-        return np.allclose(self.mean, other.mean) and np.allclose(
-            self.covariance, other.covariance
+    def is_close(self, other: "NormalDistribution", abs_tol: float = 1e-8) -> bool:
+        """Element-wise equality with tolerance."""
+        return np.allclose(self.mean, other.mean, atol=abs_tol) and np.allclose(
+            self.covariance, other.covariance, atol=abs_tol
         )
 
 
@@ -55,11 +55,11 @@ class NDTMap:
     def __init__(self, resolution: float) -> None:
         """Create a new NDT map with cell size of 'resolution'."""
         self._resolution = resolution
-        self._grid: Dict[DiscreteCell, NormalDistribution] = {}
+        self.grid: Dict[DiscreteCell, NormalDistribution] = {}
 
     def add_distribution(self, cell: DiscreteCell, ndt: NormalDistribution):
         """Add a new cell with its distribution."""
-        self._grid[cell] = ndt
+        self.grid[cell] = ndt
 
     def _get_plot_bounds(self):
         min_x = float("inf")
@@ -67,7 +67,7 @@ class NDTMap:
 
         max_x = -float("inf")
         max_y = -float("inf")
-        for discrete_cell in self._grid.keys():
+        for discrete_cell in self.grid.keys():
             x = discrete_cell.x * self._resolution + self._resolution / 2
             y = discrete_cell.y * self._resolution + self._resolution / 2
             min_x = min(min_x, x)
@@ -89,12 +89,21 @@ class NDTMap:
         xx, yy = np.mgrid[min_x:max_x:step_x, min_y:max_y:step_y]
         return (xx, yy, np.dstack((xx, yy)))
 
-    def __eq__(self, other: "NDTMap") -> bool:
-        """Equality for two NDT maps."""
-        return (
-            np.allclose(self._resolution, other._resolution)
-            and self._grid == other._grid
+    def is_close(self, other: "NDTMap", abs_tol: float = 1e-8) -> bool:
+        """Equality with tolerance between two NDT maps."""
+        is_resolution_close = np.allclose(
+            self._resolution, other._resolution, atol=abs_tol
         )
+        if not is_resolution_close:
+            return False
+        if len(self.grid) != len(other.grid):
+            return False
+        for cell, distribution in self.grid.items():
+            if cell not in other.grid:
+                return False
+            if not distribution.is_close(other=other.grid[cell], abs_tol=abs_tol):
+                return False
+        return True
 
     def plot(self, show: bool = False) -> plt.figure:
         """
@@ -104,11 +113,11 @@ class NDTMap:
         """
         xx, yy, pos = self._get_plot_bounds()
 
-        for ndt in self._grid.values():
+        for ndt in self.grid.values():
             plt.contour(
                 xx,
                 yy,
-                ndt.get_scipy_representation().pdf(pos),
+                ndt.to_scipy().pdf(pos),
                 [0.1, 0.5],
                 alpha=0.2,
                 linewidths=3,
@@ -126,7 +135,7 @@ class NDTMap:
         It'll create 4 datasets:
             - "resolution": () resolution for the discrete grid (cells are resolution x
               resolution m^2 squares).
-            - "discrete_cells": (NUM_CELLS, 2) that contains the discrete cell coordinates.
+            - "cells": (NUM_CELLS, 2) that contains the cell coordinates.
             - "means": (NUM_CELLS, 2) that contains the 2d mean of the normal distribution
               of the cell.
             - "covariances": (NUM_CELLS, 2, 2) Contains the covariance for each cell.
@@ -134,19 +143,17 @@ class NDTMap:
         assert output_file_path.suffix in (".hdf5", ".h5")
         output_file_path.parent.mkdir(parents=True, exist_ok=True)
 
-        num_cells = len(self._grid.keys())
+        num_cells = len(self.grid.keys())
 
         with h5py.File(output_file_path.absolute(), "w") as fp:
-            discrete_cells_dataset = fp.create_dataset(
-                "discrete_cells", (num_cells, 2), chunks=True
-            )
-            for idx, cell in enumerate(self._grid.keys()):
-                discrete_cells_dataset[idx] = np.asarray([cell.x, cell.y])
+            cells_dataset = fp.create_dataset("cells", (num_cells, 2), chunks=True)
+            for idx, cell in enumerate(self.grid.keys()):
+                cells_dataset[idx] = np.asarray([cell.x, cell.y])
 
             means_dataset = fp.create_dataset("means", (num_cells, 2), chunks=True)
             covariances_dataset = fp.create_dataset("covariances", (num_cells, 2, 2))
 
-            for idx, distribution in enumerate(self._grid.values()):
+            for idx, distribution in enumerate(self.grid.values()):
                 means_dataset[idx] = distribution.mean
                 covariances_dataset[idx] = distribution.covariance
             fp.create_dataset("resolution", data=np.asarray(self._resolution))
@@ -161,24 +168,22 @@ class NDTMap:
         with h5py.File(hdf5_file.absolute(), "r") as fp:
             resolution: float = fp["resolution"][()]
             means: np.ndarray = fp["means"]
-            discrete_cells: np.ndarray = fp["discrete_cells"]
+            cells: np.ndarray = fp["cells"]
             covs: np.ndarray = fp["covariances"]
             total_cells = covs.shape[0]
 
             assert covs.shape[1] == 2
             assert covs.shape[2] == 2
             assert means.shape[1] == 2
-            assert discrete_cells.shape[0] == total_cells
-            assert discrete_cells.shape[1] == 2
+            assert cells.shape[0] == total_cells
+            assert cells.shape[1] == 2
             assert means.shape[0] == total_cells
 
             ret = NDTMap(resolution=resolution)
-            for cell_num in range(total_cells):
-                cell = DiscreteCell(*discrete_cells[cell_num].tolist())
-                mean = means[cell_num]
-                cov = covs[cell_num]
+            for cell, mean, cov in zip(cells, means, covs):
                 ret.add_distribution(
-                    cell=cell, ndt=NormalDistribution(mean=mean, covariance=cov)
+                    cell=DiscreteCell(*cell),
+                    ndt=NormalDistribution(mean=mean, covariance=cov),
                 )
             return ret
 
@@ -221,17 +226,21 @@ def grid_to_point_cloud(occupancy_grid: OccupancyGrid) -> np.ndarray:
     res = occupancy_grid.resolution
 
     # Discretized occupied cells using the center of the cell.
-    points = occupied_cells_indices * res + np.ones_like(occupied_cells_indices) * (
-        res / 2
-    )
+    points = occupied_cells_indices * res + (res / 2)
     # Compensate for origin
     points[0] += occupancy_grid.origin[0]
     points[1] += occupancy_grid.origin[1]
     return points
 
 
-def fit_normal_distribution(points: np.ndarray) -> Optional[NormalDistribution]:
-    """Fit a normal distribution to a set of 2D points."""
+def fit_normal_distribution(
+    points: np.ndarray, min_variance: float = 5e-3
+) -> Optional[NormalDistribution]:
+    """
+    Fit a normal distribution to a set of 2D points.
+
+    A minimum variance in each dimension will be enforced to avoid singularities.
+    """
     assert points.shape[0] == 2
     # Literature suggests doing this check to avoid singularities.
     # See The Three-Dimensional Normal-Distributions Transform– an Efficient
@@ -243,8 +252,8 @@ def fit_normal_distribution(points: np.ndarray) -> Optional[NormalDistribution]:
     covariance = np.cov(points)
 
     # avoid singularities by enforcing a minimum variance in both dimensions.
-    covariance[0, 0] = max(covariance[0, 0], 5e-3)
-    covariance[1, 1] = max(covariance[1, 1], 5e-3)
+    covariance[0, 0] = max(covariance[0, 0], min_variance)
+    covariance[1, 1] = max(covariance[1, 1], min_variance)
 
     return NormalDistribution(mean=mean, covariance=covariance)
 
@@ -268,6 +277,7 @@ def point_cloud_to_ndt(pc: np.ndarray, cell_size=1.0) -> NDTMap:
     ret = NDTMap(resolution=cell_size)
 
     for cell, points in points_clusters.items():
-        if (dist := fit_normal_distribution(points)) is not None:
+        dist = fit_normal_distribution(points)
+        if dist is not None:
             ret.add_distribution(cell=cell, ndt=dist)
     return ret

@@ -70,10 +70,12 @@ def main():
     grid = OccupancyGrid.load_from_file(args.input)
     pc = grid_to_point_cloud(grid)
 
-    print(f"Extracted a pointcloud of {pc.shape[1]} from the occupancy grid... \n")
+    print(
+        f"Extracted a pointcloud of {pc.shape[1]} points from the occupancy grid... \n"
+    )
     ndt = point_cloud_to_ndt(pc, args.cell_size)
     print(
-        f"Constructed a NDT representation of the point cloud with {len(ndt._grid)} cells.\n"
+        f"Constructed a NDT representation of the point cloud with {len(ndt.grid)} cells.\n"
     )
 
     ndt.plot()
