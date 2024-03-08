@@ -80,9 +80,9 @@ DEV_CONTAINER_NAME=beluga_dev
 if docker ps -a --format '{{.Names}}' | grep -q $DEV_CONTAINER_NAME; then
     # Attach to the container if it is running
     echo "Found dev container running, attaching to it..."
-    docker exec -it "$DEV_CONTAINER_NAME" /bin/bash
 else
     echo "Container '$DEV_CONTAINER_NAME' does not exist or is not running, proceeding to run it."
     PRIVILEGED_CONTAINER=$PRIVILEGED_CONTAINER USERID=$(id -u) GROUPID=$(id -g) docker compose run --rm --detach --name $DEV_CONTAINER_NAME  dev
-    docker exec -it "$DEV_CONTAINER_NAME" /bin/bash
 fi
+
+docker exec -it "$DEV_CONTAINER_NAME" /bin/bash
