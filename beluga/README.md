@@ -9,7 +9,7 @@ The current set of features includes:
 
 - Particle containers:
   - Support for [Array-of-Structures and Structure-of-Arrays][aos_soa] tuple containers
-- Composable randge adaptor views, actions, and algorithms:
+- Composable range adaptor views, actions, and algorithms:
   - Multivariate normal distributions in SE(2) and SE(3) space
   - Multivariate uniform distributions in SE(2) compatible with occupancy grids
   - Multinomial resampling from a particle range
