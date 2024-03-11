@@ -1,5 +1,7 @@
 # Beluga
 
+[TOC]
+
 ## Introduction
 
 Beluga is a ROS-agnostic C++17 library that provides implementations for Monte Carlo-based localization algorithms widely used in robotics applications.
@@ -13,8 +15,8 @@ Explore the library's components organized by concept:
 
 ### Sensor models
 
-Probabilistic sensor models that describe the likelihood of obtaining a certain measurement given a specific state of the system. \n
-They satisfy \ref SensorModelPage.
+Probabilistic sensor models that describe the likelihood of obtaining a certain measurement given a specific state of the system.
+They satisfy the [sensor model named requirements](@ref SensorModelPage).
 
 | | |
 |-|-|
@@ -25,8 +27,8 @@ They satisfy \ref SensorModelPage.
 
 ### Motion models
 
-Probabilistic motion models that describe how the state of the system evolves over time. \n
-They satisfy \ref MotionModelPage.
+Probabilistic motion models that describe how the state of the system evolves over time.
+They satisfy the [motion model named requirements](@ref MotionModelPage).
 
 | | |
 |-|-|
@@ -40,14 +42,14 @@ They are lazily evaluated range adaptor objects compatible with the Range-v3 lib
 
 | | |
 |-|-|
-| \link views/elements.hpp beluga::views::elements \endlink | Takes a view of tuple-like values and a number N and produces a view of Nth element of each tuple |
-| \link views/random_intersperse.hpp beluga::views::random_intersperse \endlink | Inserts values from a generator function between contiguous elements based on a given probability |
-| \link views/sample.hpp beluga::views::sample \endlink | Implements multinomial resampling for a given range of particles or distribution |
-| \link views/particles.hpp beluga::views::states \endlink | Produces a view of the states of a range of particles |
-| \link views/take_evenly.hpp beluga::views::take_evenly \endlink | Returns a range consisting of `count` elements evenly spaced over the source range |
-| \link views/take_while_kld.hpp beluga::views::take_while_kld \endlink | Take elements from a range while the KLD condition is statisfied |
-| \link views/particles.hpp beluga::views::weights \endlink | Produces a view of the weights of a range of particles |
-| \link views/zip.hpp beluga::views::zip \endlink | Given N ranges, return a new range where the Mth element is a tuple of the Mth elements of all N ranges |
+| [beluga::views::elements](@ref views/elements.hpp) | Takes a view of tuple-like values and a number N and produces a view of Nth element of each tuple |
+| [beluga::views::random_intersperse](@ref views/random_intersperse.hpp) | Inserts values from a generator function between contiguous elements based on a given probability |
+| [beluga::views::sample](@ref views/sample.hpp) | Implements multinomial resampling for a given range of particles or distribution |
+| [beluga::views::states](@ref views/particles.hpp) | Produces a view of the states of a range of particles |
+| [beluga::views::take_evenly](@ref views/take_evenly.hpp) | Returns a range consisting of `count` elements evenly spaced over the source range |
+| [beluga::views::take_while_kld](@ref views/take_while_kld.hpp) | Take elements from a range while the KLD condition is statisfied |
+| [beluga::views::weights](@ref views/particles.hpp) | Produces a view of the weights of a range of particles |
+| [beluga::views::zip](@ref views/zip.hpp) | Given N ranges, return a new range where the Mth element is a tuple of the Mth elements of all N ranges |
 
 ### Range actions
 
@@ -56,10 +58,10 @@ They are eagerly evaluated range adaptor objects compatible with the Range-v3 li
 
 | | |
 |-|-|
-| \link actions/assign.hpp beluga::actions::assign \endlink | Converts a view closure into an eagerly applied action closure |
-| \link actions/normalize.hpp beluga::actions::normalize \endlink | Divides each value or weight (of ranges of particles) by a specified normalization factor |
-| \link actions/propagate.hpp beluga::actions::propagate \endlink | Updates particle states based on their current value and a state transition (or sampling) function |
-| \link actions/reweight.hpp beluga::actions::reweight \endlink | Updates particle weights based on a given measurement likelihood function |
+| [beluga::actions::assign](@ref actions/assign.hpp) | Converts a view closure into an eagerly applied action closure |
+| [beluga::actions::normalize](@ref actions/normalize.hpp) | Divides each value or weight (of ranges of particles) by a specified normalization factor |
+| [beluga::actions::propagate](@ref actions/propagate.hpp) | Updates particle states based on their current value and a state transition (or sampling) function |
+| [beluga::actions::reweight](@ref actions/reweight.hpp) | Updates particle weights based on a given measurement likelihood function |
 
 ### Policies
 
@@ -68,9 +70,9 @@ They are lazily-evaluated possibly stateful predicate that can be composed with 
 
 | | |
 |-|-|
-| \link policies/every_n.hpp beluga::policies::every_n \endlink | Triggers every N calls |
-| \link policies/on_effective_size_drop.hpp beluga::policies::on_effective_size_drop \endlink | Triggers when the Effective Sample Size (ESS) drops below a certain threshold |
-| \link policies/on_motion.hpp beluga::policies::on_motion \endlink | Triggers on the detected motion |
+| [beluga::policies::every_n](@ref policies/every_n.hpp) | Triggers every N calls |
+| [beluga::policies::on_effective_size_drop](@ref policies/on_effective_size_drop.hpp) | Triggers when the Effective Sample Size (ESS) drops below a certain threshold |
+| [beluga::policies::on_motion](@ref policies/on_motion.hpp) | Triggers on the detected motion |
 
 ### Containers
 
