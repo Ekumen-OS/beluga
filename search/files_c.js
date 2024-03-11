@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['take_5fevenly_2ehpp_619',['take_evenly.hpp',['../take__evenly_8hpp.html',1,'']]],
-  ['take_5fwhile_5fkld_2ehpp_620',['take_while_kld.hpp',['../take__while__kld_8hpp.html',1,'']]],
-  ['testing_2ehpp_621',['testing.hpp',['../testing_8hpp.html',1,'']]],
-  ['tuple_5ftraits_2ehpp_622',['tuple_traits.hpp',['../tuple__traits_8hpp.html',1,'']]],
-  ['tuple_5fvector_2ehpp_623',['tuple_vector.hpp',['../tuple__vector_8hpp.html',1,'']]],
-  ['type_5ftraits_2ehpp_624',['type_traits.hpp',['../type__traits_8hpp.html',1,'']]]
+  ['sample_2ehpp_506',['sample.hpp',['../sample_8hpp.html',1,'']]],
+  ['sensor_2ehpp_507',['sensor.hpp',['../sensor_8hpp.html',1,'']]],
+  ['sophus_5fmatchers_2ehpp_508',['sophus_matchers.hpp',['../sophus__matchers_8hpp.html',1,'']]],
+  ['sophus_5fprinters_2ehpp_509',['sophus_printers.hpp',['../sophus__printers_8hpp.html',1,'']]],
+  ['spatial_5fhash_2ehpp_510',['spatial_hash.hpp',['../spatial__hash_8hpp.html',1,'']]],
+  ['stationary_5fmodel_2ehpp_511',['stationary_model.hpp',['../stationary__model_8hpp.html',1,'']]],
+  ['strongly_5ftyped_5fnumeric_2ehpp_512',['strongly_typed_numeric.hpp',['../strongly__typed__numeric_8hpp.html',1,'']]]
 ];

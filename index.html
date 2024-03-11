@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: Main Page</title>
+<title>Beluga: Beluga</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,6 +21,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo_200x200.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Beluga
    </div>
@@ -64,21 +65,127 @@ $(function() {
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Beluga Documentation</div>  </div>
+<div class="title">Beluga </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> This library provides implementations for Monte Carlo based localization algorithms. The existing implementations are:</p>
-<ul>
-<li>MCL: Monte Carlo Localization using a fixed number of particles.</li>
-<li>AMCL: Adaptive Monte Carlo Localization, the number of particles is defined using the KLD criteria.</li>
+<div class="toc"><h3>Table of Contents</h3>
+<ul><li class="level1"><a href="#autotoc_md1">Introduction</a></li>
+<li class="level1"><a href="#autotoc_md2">Components</a><ul><li class="level2"><a href="#autotoc_md3">Sensor models</a></li>
+<li class="level2"><a href="#autotoc_md4">Motion models</a></li>
+<li class="level2"><a href="#autotoc_md5">Range views</a></li>
+<li class="level2"><a href="#autotoc_md6">Range actions</a></li>
+<li class="level2"><a href="#autotoc_md7">Policies</a></li>
+<li class="level2"><a href="#autotoc_md8">Containers</a></li>
+<li class="level2"><a href="#autotoc_md9">Distributions</a></li>
 </ul>
-<p>The library is extensible, allowing to:</p><ul>
-<li>Provide different <a class="el" href="SensorModelPage.html">sensor</a> or <a class="el" href="MotionModelPage.html">motion</a> models.</li>
-<li>Provide a way of getting the <a class="el" href="StateEstimatorPage.html">estimated pose</a> based on the particles.</li>
-<li>Provide a way of <a class="el" href="StateGeneratorPage.html">generating the initial particles</a>.</li>
-<li>Provide a way of <a class="el" href="SamplerPage.html">sampling</a> from the previous particle set.</li>
-<li>Provide a way to <a class="el" href="LimiterPage.html">limiting</a> the amount of particles. </li>
+</li>
 </ul>
+</div>
+<div class="textblock"><p><a class="anchor" id="md_README"></a></p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Introduction</h1>
+<p>Beluga is a ROS-agnostic C++17 library that provides implementations for Monte Carlo-based localization algorithms widely used in robotics applications. Its modularity allows users to compose solutions from reusable modules and to combine them with new ones to configure the MCL algorithm that best suits their needs.</p>
+<p>The API extends concepts from the STL, emphasizing support for ranges of particles.</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Components</h1>
+<p>Explore the library's components organized by concept:</p>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Sensor models</h2>
+<p>Probabilistic sensor models that describe the likelihood of obtaining a certain measurement given a specific state of the system. They satisfy the <a class="el" href="SensorModelPage.html">sensor model named requirements</a>.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1BeamSensorModel.html" title="Beam sensor model for range finders.">beluga::BeamSensorModel</a>   </td><td class="markdownTableBodyNone">Beam sensor model for range finders    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html" title="Likelihood field sensor model for range finders.">beluga::LikelihoodFieldModel</a>   </td><td class="markdownTableBodyNone">Likelihood field sensor model for range finders    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1LandmarkSensorModel.html" title="Generic landmark model for discrete detection sensors (both 2D and 3D).">beluga::LandmarkSensorModel</a>   </td><td class="markdownTableBodyNone">Generic landmark model for discrete detection sensors (both 2D and 3D)    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1BearingSensorModel.html" title="Generic bearing sensor model, for both 2D and 3D state types.">beluga::BearingSensorModel</a>   </td><td class="markdownTableBodyNone">Generic bearing sensor model for discrete detection sensors (both 2D and 3D)   </td></tr>
+</table>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Motion models</h2>
+<p>Probabilistic motion models that describe how the state of the system evolves over time. They satisfy the <a class="el" href="MotionModelPage.html">motion model named requirements</a>.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html" title="Sampled odometry model for a differential drive.">beluga::DifferentialDriveModel</a>   </td><td class="markdownTableBodyNone">Sampled odometry model for a differential drive    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html" title="Sampled odometry model for an omnidirectional drive.">beluga::OmnidirectionalDriveModel</a>   </td><td class="markdownTableBodyNone">Sampled odometry model for an omnidirectional drive   </td></tr>
+</table>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Range views</h2>
+<p>Useful views for working with ranges of particles. They are lazily evaluated range adaptor objects compatible with the Range-v3 library.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="elements_8hpp.html">beluga::views::elements</a>   </td><td class="markdownTableBodyNone">Takes a view of tuple-like values and a number N and produces a view of Nth element of each tuple    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="random__intersperse_8hpp.html">beluga::views::random_intersperse</a>   </td><td class="markdownTableBodyNone">Inserts values from a generator function between contiguous elements based on a given probability    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="sample_8hpp.html">beluga::views::sample</a>   </td><td class="markdownTableBodyNone">Implements multinomial resampling for a given range of particles or distribution    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="particles_8hpp.html">beluga::views::states</a>   </td><td class="markdownTableBodyNone">Produces a view of the states of a range of particles    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="take__evenly_8hpp.html">beluga::views::take_evenly</a>   </td><td class="markdownTableBodyNone">Returns a range consisting of <code>count</code> elements evenly spaced over the source range    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="take__while__kld_8hpp.html">beluga::views::take_while_kld</a>   </td><td class="markdownTableBodyNone">Take elements from a range while the KLD condition is statisfied    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="particles_8hpp.html">beluga::views::weights</a>   </td><td class="markdownTableBodyNone">Produces a view of the weights of a range of particles    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="zip_8hpp.html">beluga::views::zip</a>   </td><td class="markdownTableBodyNone">Given N ranges, return a new range where the Mth element is a tuple of the Mth elements of all N ranges   </td></tr>
+</table>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Range actions</h2>
+<p>Useful actions for working with ranges of particles. They are eagerly evaluated range adaptor objects compatible with the Range-v3 library.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="assign_8hpp.html">beluga::actions::assign</a>   </td><td class="markdownTableBodyNone">Converts a view closure into an eagerly applied action closure    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="normalize_8hpp.html">beluga::actions::normalize</a>   </td><td class="markdownTableBodyNone">Divides each value or weight (of ranges of particles) by a specified normalization factor    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="propagate_8hpp.html">beluga::actions::propagate</a>   </td><td class="markdownTableBodyNone">Updates particle states based on their current value and a state transition (or sampling) function    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="reweight_8hpp.html">beluga::actions::reweight</a>   </td><td class="markdownTableBodyNone">Updates particle weights based on a given measurement likelihood function   </td></tr>
+</table>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Policies</h2>
+<p>Policies that can be used to decide when to update the particle filter or resample the current set of particles. They are lazily-evaluated possibly stateful predicate that can be composed with others using overloaded boolean operators.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="every__n_8hpp.html">beluga::policies::every_n</a>   </td><td class="markdownTableBodyNone">Triggers every N calls    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="on__effective__size__drop_8hpp.html">beluga::policies::on_effective_size_drop</a>   </td><td class="markdownTableBodyNone">Triggers when the Effective Sample Size (ESS) drops below a certain threshold    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="on__motion_8hpp.html">beluga::policies::on_motion</a>   </td><td class="markdownTableBodyNone">Triggers on the detected motion   </td></tr>
+</table>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Containers</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1CircularArray.html" title="An implementation of generic, non-threadsafe circular array.">beluga::CircularArray</a>   </td><td class="markdownTableBodyNone">An implementation of generic circular array modeled after <code>std::array</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1TupleVector.html" title="Shorthand for a tuple of vectors with the default allocator.">beluga::TupleVector</a>   </td><td class="markdownTableBodyNone">An implementation of a tuple of containers with an interface that looks like a container of tuples   </td></tr>
+</table>
+<h2><a class="anchor" id="autotoc_md9"></a>
+Distributions</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html" title="Multivariate normal distribution.">beluga::MultivariateNormalDistribution</a>   </td><td class="markdownTableBodyNone">A multivariate normal distribution modeled after <code>std::normal_distribution</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1MultivariateUniformDistribution.html" title="Primary template for a multivariate uniform distribution.">beluga::MultivariateUniformDistribution</a>   </td><td class="markdownTableBodyNone">A multivariate uniform distribution modeled after <code>std::uniform_distribution</code>   </td></tr>
+</table>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->

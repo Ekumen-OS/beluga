@@ -21,6 +21,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo_200x200.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Beluga
    </div>
@@ -71,7 +72,7 @@ $(function() {
 <div class="title">propagate.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2024 Ekumen, Inc.</span></div>
+<a href="propagate_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2024 Ekumen, Inc.</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">// you may not use this file except in compliance with the License.</span></div>
@@ -99,96 +100,97 @@ $(function() {
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;range/v3/utility/random.hpp&gt;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/common.hpp&gt;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>beluga::actions {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>detail {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">   34</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">propagate_base_fn</a> {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keyword">class </span>Range,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keyword">class </span>StateSamplingFunction,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;std::decay_t&lt;ExecutionPolicy&gt;&gt;, <span class="keywordtype">int</span>&gt; = 0,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a3a8dcfb7d1636a782ba953e6469a1f65">   52</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a3a8dcfb7d1636a782ba953e6469a1f65">operator()</a>(ExecutionPolicy&amp;&amp; <a class="code" href="structbeluga_1_1policy.html">policy</a>, Range&amp; range, StateSamplingFunction fn) <span class="keyword">const</span> -&gt; Range&amp; {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    static_assert(beluga::is_particle_range_v&lt;Range&gt;);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">auto</span> states = range | beluga::views::states | ranges::views::common;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">auto</span> unary_fn = [&amp;]() {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      <span class="keyword">using</span> States = decltype(states);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      <span class="keyword">using</span> State = ranges::range_value_t&lt;States&gt;;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      <span class="keyword">using</span> Generator = decltype(ranges::detail::get_random_engine());</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <span class="keywordflow">if</span> constexpr (std::is_invocable_v&lt;StateSamplingFunction, State, Generator&gt;) {</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> [fn = std::move(fn)](<span class="keyword">const</span> State&amp; <a class="code" href="primitives_8hpp.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>) { <span class="keywordflow">return</span> fn(<a class="code" href="primitives_8hpp.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>, ranges::detail::get_random_engine()); };</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordflow">return</span> std::move(fn);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    std::transform(</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="structbeluga_1_1policy.html">policy</a>,              <span class="comment">// rvalue policies are not supported in some STL implementations</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        std::begin(states),  <span class="comment">//</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        std::end(states),    <span class="comment">//</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        std::begin(states),  <span class="comment">//</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        std::move(unary_fn));</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">return</span> range;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keyword">class </span>Range,</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <span class="keyword">class </span>StateSamplingFunction,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;ExecutionPolicy&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#ad78190769fd9419a64bd9ad160a5b8c9">   83</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#ad78190769fd9419a64bd9ad160a5b8c9">operator()</a>(Range&amp;&amp; range, StateSamplingFunction fn, ExecutionPolicy <a class="code" href="structbeluga_1_1policy.html">policy</a>) <span class="keyword">const</span> -&gt; Range&amp; {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(std::move(<a class="code" href="structbeluga_1_1policy.html">policy</a>), std::forward&lt;Range&gt;(range), std::move(fn));</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,        <span class="comment">//</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      <span class="keyword">class </span>StateSamplingFunction,  <span class="comment">//</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;ExecutionPolicy&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#afc32aff26e909c054b0ab2ed19b1ecb3">   92</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#afc32aff26e909c054b0ab2ed19b1ecb3">operator()</a>(ExecutionPolicy <a class="code" href="structbeluga_1_1policy.html">policy</a>, StateSamplingFunction fn)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">return</span> ranges::make_action_closure(ranges::bind_back(<a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">propagate_base_fn</a>{}, std::move(fn), std::move(<a class="code" href="structbeluga_1_1policy.html">policy</a>)));</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;};</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html">   98</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html">propagate_fn</a> : <span class="keyword">public</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">propagate_base_fn</a> {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  <span class="keyword">using</span> propagate_base_fn::operator();</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;      <span class="keyword">class </span>Range,                  <span class="comment">//</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;      <span class="keyword">class </span>StateSamplingFunction,  <span class="comment">//</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#a297db113c2f59365452ea8f445eb5acc">  106</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#a297db113c2f59365452ea8f445eb5acc">operator()</a>(Range&amp;&amp; range, StateSamplingFunction fn) <span class="keyword">const</span> -&gt; Range&amp; {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(std::execution::seq, std::forward&lt;Range&gt;(range), std::move(fn));</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> StateSamplingFunction&gt;</div>
-<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#aa9357be67779d416171b1a3fe23083fe">  112</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#aa9357be67779d416171b1a3fe23083fe">operator()</a>(StateSamplingFunction fn)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">return</span> ranges::make_action_closure(ranges::bind_back(<a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html">propagate_fn</a>{}, std::move(fn)));</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  }</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;};</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;}  <span class="comment">// namespace detail</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>beluga::actions {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">   39</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">propagate_base_fn</a> {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="keyword">class </span>Range,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      <span class="keyword">class </span>StateSamplingFunction,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;std::decay_t&lt;ExecutionPolicy&gt;&gt;, <span class="keywordtype">int</span>&gt; = 0,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a3a8dcfb7d1636a782ba953e6469a1f65">   57</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a3a8dcfb7d1636a782ba953e6469a1f65">operator()</a>(ExecutionPolicy&amp;&amp; <a class="code" href="structbeluga_1_1policy.html">policy</a>, Range&amp; range, StateSamplingFunction fn) <span class="keyword">const</span> -&gt; Range&amp; {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    static_assert(beluga::is_particle_range_v&lt;Range&gt;);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">auto</span> states = range | beluga::views::states | ranges::views::common;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">auto</span> unary_fn = [&amp;]() {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      <span class="keyword">using</span> States = decltype(states);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <span class="keyword">using</span> State = ranges::range_value_t&lt;States&gt;;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      <span class="keyword">using</span> Generator = decltype(ranges::detail::get_random_engine());</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keywordflow">if</span> constexpr (std::is_invocable_v&lt;StateSamplingFunction, State, Generator&gt;) {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> [fn = std::move(fn)](<span class="keyword">const</span> State&amp; <a class="code" href="primitives_8hpp.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>) { <span class="keywordflow">return</span> fn(<a class="code" href="primitives_8hpp.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>, ranges::detail::get_random_engine()); };</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> std::move(fn);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    std::transform(</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="structbeluga_1_1policy.html">policy</a>,              <span class="comment">// rvalue policies are not supported in some STL implementations</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        std::begin(states),  <span class="comment">//</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        std::end(states),    <span class="comment">//</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        std::begin(states),  <span class="comment">//</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        std::move(unary_fn));</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">return</span> range;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      <span class="keyword">class </span>Range,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      <span class="keyword">class </span>StateSamplingFunction,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0,</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;ExecutionPolicy&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#ad78190769fd9419a64bd9ad160a5b8c9">   88</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#ad78190769fd9419a64bd9ad160a5b8c9">operator()</a>(Range&amp;&amp; range, StateSamplingFunction fn, ExecutionPolicy <a class="code" href="structbeluga_1_1policy.html">policy</a>) <span class="keyword">const</span> -&gt; Range&amp; {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(std::move(<a class="code" href="structbeluga_1_1policy.html">policy</a>), std::forward&lt;Range&gt;(range), std::move(fn));</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,        <span class="comment">//</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <span class="keyword">class </span>StateSamplingFunction,  <span class="comment">//</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;ExecutionPolicy&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#afc32aff26e909c054b0ab2ed19b1ecb3">   97</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#afc32aff26e909c054b0ab2ed19b1ecb3">operator()</a>(ExecutionPolicy <a class="code" href="structbeluga_1_1policy.html">policy</a>, StateSamplingFunction fn)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">return</span> ranges::make_action_closure(ranges::bind_back(<a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">propagate_base_fn</a>{}, std::move(fn), std::move(<a class="code" href="structbeluga_1_1policy.html">policy</a>)));</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;};</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html">  103</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html">propagate_fn</a> : <span class="keyword">public</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">propagate_base_fn</a> {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keyword">using</span> propagate_base_fn::operator();</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      <span class="keyword">class </span>Range,                  <span class="comment">//</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      <span class="keyword">class </span>StateSamplingFunction,  <span class="comment">//</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#a297db113c2f59365452ea8f445eb5acc">  111</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#a297db113c2f59365452ea8f445eb5acc">operator()</a>(Range&amp;&amp; range, StateSamplingFunction fn) <span class="keyword">const</span> -&gt; Range&amp; {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(std::execution::seq, std::forward&lt;Range&gt;(range), std::move(fn));</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  }</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> StateSamplingFunction&gt;</div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#aa9357be67779d416171b1a3fe23083fe">  117</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#aa9357be67779d416171b1a3fe23083fe">operator()</a>(StateSamplingFunction fn)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">return</span> ranges::make_action_closure(ranges::bind_back(<a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html">propagate_fn</a>{}, std::move(fn)));</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  }</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;};</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="keyword">inline</span> constexpr detail::propagate_fn propagate;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}  <span class="comment">// namespace beluga::actions</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="propagate_8hpp.html#acc034095160d10d40c61d0c748e08d31">  131</a></span>&#160;<span class="keyword">inline</span> constexpr <a class="code" href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html">detail::propagate_fn</a> <a class="code" href="propagate_8hpp.html#acc034095160d10d40c61d0c748e08d31">propagate</a>;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}  <span class="comment">// namespace beluga::actions</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aparticle__traits_8hpp_html"><div class="ttname"><a href="particle__traits_8hpp.html">particle_traits.hpp</a></div><div class="ttdoc">Implementation of traits for particle types, see the Particle named requirements.</div></div>
 <div class="ttc" id="aparticles_8hpp_html"><div class="ttname"><a href="particles_8hpp.html">particles.hpp</a></div><div class="ttdoc">Implementation of views related to particle ranges.</div></div>
 <div class="ttc" id="aprimitives_8hpp_html_a706431bba3d6cfb1ee0690221f3a9af9"><div class="ttname"><a href="primitives_8hpp.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a></div><div class="ttdeci">constexpr state_detail::state_fn state</div><div class="ttdoc">Customization point object for accessing the state of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:163</div></div>
-<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__base__fn_html"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">beluga::actions::detail::propagate_base_fn</a></div><div class="ttdoc">Implementation detail for a propagate range adaptor object.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:34</div></div>
-<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__base__fn_html_a3a8dcfb7d1636a782ba953e6469a1f65"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a3a8dcfb7d1636a782ba953e6469a1f65">beluga::actions::detail::propagate_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(ExecutionPolicy &amp;&amp;policy, Range &amp;range, StateSamplingFunction fn) const -&gt; Range &amp;</div><div class="ttdoc">Overload that implements the propagate algorithm.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:52</div></div>
-<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__base__fn_html_ad78190769fd9419a64bd9ad160a5b8c9"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#ad78190769fd9419a64bd9ad160a5b8c9">beluga::actions::detail::propagate_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range, StateSamplingFunction fn, ExecutionPolicy policy) const -&gt; Range &amp;</div><div class="ttdoc">Overload that re-orders arguments from a view closure.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:83</div></div>
-<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__base__fn_html_afc32aff26e909c054b0ab2ed19b1ecb3"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#afc32aff26e909c054b0ab2ed19b1ecb3">beluga::actions::detail::propagate_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(ExecutionPolicy policy, StateSamplingFunction fn) const</div><div class="ttdoc">Overload that returns a view closure to compose with other views.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:92</div></div>
-<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__fn_html"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html">beluga::actions::detail::propagate_fn</a></div><div class="ttdoc">Implementation detail for a propagate range adaptor object with a default execution policy.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:98</div></div>
-<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__fn_html_a297db113c2f59365452ea8f445eb5acc"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#a297db113c2f59365452ea8f445eb5acc">beluga::actions::detail::propagate_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range, StateSamplingFunction fn) const -&gt; Range &amp;</div><div class="ttdoc">Overload that defines a default execution policy.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:106</div></div>
-<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__fn_html_aa9357be67779d416171b1a3fe23083fe"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#aa9357be67779d416171b1a3fe23083fe">beluga::actions::detail::propagate_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(StateSamplingFunction fn) const</div><div class="ttdoc">Overload that returns a view closure to compose with other views.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:112</div></div>
+<div class="ttc" id="apropagate_8hpp_html_acc034095160d10d40c61d0c748e08d31"><div class="ttname"><a href="propagate_8hpp.html#acc034095160d10d40c61d0c748e08d31">beluga::actions::propagate</a></div><div class="ttdeci">constexpr detail::propagate_fn propagate</div><div class="ttdef"><b>Definition:</b> propagate.hpp:131</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__base__fn_html"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html">beluga::actions::detail::propagate_base_fn</a></div><div class="ttdoc">Implementation detail for a propagate range adaptor object.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:39</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__base__fn_html_a3a8dcfb7d1636a782ba953e6469a1f65"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#a3a8dcfb7d1636a782ba953e6469a1f65">beluga::actions::detail::propagate_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(ExecutionPolicy &amp;&amp;policy, Range &amp;range, StateSamplingFunction fn) const -&gt; Range &amp;</div><div class="ttdoc">Overload that implements the propagate algorithm.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:57</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__base__fn_html_ad78190769fd9419a64bd9ad160a5b8c9"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#ad78190769fd9419a64bd9ad160a5b8c9">beluga::actions::detail::propagate_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range, StateSamplingFunction fn, ExecutionPolicy policy) const -&gt; Range &amp;</div><div class="ttdoc">Overload that re-orders arguments from a view closure.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:88</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__base__fn_html_afc32aff26e909c054b0ab2ed19b1ecb3"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html#afc32aff26e909c054b0ab2ed19b1ecb3">beluga::actions::detail::propagate_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(ExecutionPolicy policy, StateSamplingFunction fn) const</div><div class="ttdoc">Overload that returns a view closure to compose with other views.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:97</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__fn_html"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html">beluga::actions::detail::propagate_fn</a></div><div class="ttdoc">Implementation detail for a propagate range adaptor object with a default execution policy.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:103</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__fn_html_a297db113c2f59365452ea8f445eb5acc"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#a297db113c2f59365452ea8f445eb5acc">beluga::actions::detail::propagate_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range, StateSamplingFunction fn) const -&gt; Range &amp;</div><div class="ttdoc">Overload that defines a default execution policy.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:111</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1propagate__fn_html_aa9357be67779d416171b1a3fe23083fe"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html#aa9357be67779d416171b1a3fe23083fe">beluga::actions::detail::propagate_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(StateSamplingFunction fn) const</div><div class="ttdoc">Overload that returns a view closure to compose with other views.</div><div class="ttdef"><b>Definition:</b> propagate.hpp:117</div></div>
 <div class="ttc" id="astructbeluga_1_1policy_html"><div class="ttname"><a href="structbeluga_1_1policy.html">beluga::policy</a></div><div class="ttdoc">Forward declaration of policy.</div><div class="ttdef"><b>Definition:</b> policy.hpp:102</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

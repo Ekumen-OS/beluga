@@ -1,7 +1,6 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/utility/indexing_iterator.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/utility/indexing_iterator.hpp">
-<area shape="rect" id="node1" title="Implementation of a random access iterator for indexable containers." alt="" coords="113,5,305,76"/>
-<area shape="rect" id="node2" href="$circular__array_8hpp.html" title="Implementation of a generic circular array container." alt="" coords="112,124,307,195"/>
-<area shape="rect" id="node3" href="$containers_8hpp.html" title="Implementation of efficient containers." alt="" coords="5,243,197,299"/>
-<area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,243,413,299"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,347,197,403"/>
+<area shape="rect" id="node1" title="Implementation of a random access iterator for indexable containers." alt="" coords="7,5,199,76"/>
+<area shape="rect" id="node2" href="$circular__array_8hpp.html" title="Implementation of a generic circular array container." alt="" coords="5,124,200,195"/>
+<area shape="rect" id="node3" href="$containers_8hpp.html" title="Implementation of efficient containers." alt="" coords="7,243,199,299"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="7,347,199,403"/>
 </map>

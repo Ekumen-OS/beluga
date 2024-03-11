@@ -1,8 +1,0 @@
-<map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/interfaces/landmark_sensor_model_interface.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/interfaces/landmark_sensor_model_interface.hpp">
-<area shape="rect" id="node1" title="Includes the interface for generic landmark sensor models." alt="" coords="5,5,219,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="51,213,117,240"/>
-<area shape="rect" id="node3" title=" " alt="" coords="81,131,143,158"/>
-<area shape="rect" id="node4" href="$landmark__detection__types_8hpp.html" title="Auxiliar types for landmark models." alt="" coords="167,124,339,165"/>
-<area shape="rect" id="node5" title=" " alt="" coords="162,213,302,240"/>
-<area shape="rect" id="node6" title=" " alt="" coords="326,213,501,240"/>
-</map>

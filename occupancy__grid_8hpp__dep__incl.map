@@ -1,11 +1,8 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/sensor/data/occupancy_grid.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/sensor/data/occupancy_grid.hpp">
-<area shape="rect" id="node1" title="Concepts and abstract implementations of occupancy grids." alt="" coords="310,5,533,76"/>
-<area shape="rect" id="node2" href="$multivariate__uniform__distribution_8hpp.html" title="Implementation of a multivariate uniform distribution for SE(2) and SE(3) spaces." alt="" coords="205,124,413,195"/>
-<area shape="rect" id="node8" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="437,124,629,195"/>
-<area shape="rect" id="node3" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="212,243,415,299"/>
-<area shape="rect" id="node7" href="$random_8hpp.html" title="Includes all Beluga random distributions." alt="" coords="5,347,197,403"/>
-<area shape="rect" id="node4" href="$mixin_8hpp.html" title="Implementation of mixin utilities and extensions." alt="" coords="221,347,413,403"/>
-<area shape="rect" id="node5" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="221,451,413,507"/>
-<area shape="rect" id="node6" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="437,451,629,507"/>
-<area shape="rect" id="node9" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="437,347,629,403"/>
+<area shape="rect" id="node1" title="Concepts and abstract implementations of occupancy grids." alt="" coords="110,5,333,76"/>
+<area shape="rect" id="node2" href="$multivariate__uniform__distribution_8hpp.html" title="Implementation of a multivariate uniform distribution for SE(2) and SE(3) spaces." alt="" coords="5,124,213,195"/>
+<area shape="rect" id="node5" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="237,124,429,195"/>
+<area shape="rect" id="node3" href="$random_8hpp.html" title="Includes all Beluga random distributions." alt="" coords="15,243,207,299"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="124,347,316,403"/>
+<area shape="rect" id="node6" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="235,243,427,299"/>
 </map>

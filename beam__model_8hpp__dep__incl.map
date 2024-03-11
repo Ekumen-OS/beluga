@@ -1,6 +1,5 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/sensor/beam_model.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/sensor/beam_model.hpp">
-<area shape="rect" id="node1" title="Implementation of a beam sensor model for range finders." alt="" coords="92,5,327,61"/>
-<area shape="rect" id="node2" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="113,109,305,165"/>
-<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,213,197,269"/>
-<area shape="rect" id="node4" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,213,413,269"/>
+<area shape="rect" id="node1" title="Implementation of a beam sensor model for range finders." alt="" coords="5,5,240,61"/>
+<area shape="rect" id="node2" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="27,109,219,165"/>
+<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="27,213,219,269"/>
 </map>

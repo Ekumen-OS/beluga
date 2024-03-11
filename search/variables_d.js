@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['take_5fevenly_828',['take_evenly',['../take__evenly_8hpp.html#a3a1974ebc32182c400cf9d9db40af4a4',1,'beluga::views']]],
-  ['take_5fwhile_5fkld_829',['take_while_kld',['../take__while__kld_8hpp.html#a569941bf8794e93ee5b816e851b6f80c',1,'beluga::views']]],
-  ['translation_5fnoise_5ffrom_5frotation_830',['translation_noise_from_rotation',['../structbeluga_1_1DifferentialDriveModelParam.html#a1aa831f00bffc8392783a680aea17d69',1,'beluga::DifferentialDriveModelParam::translation_noise_from_rotation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a29a2b89158609e2028f85f49e26c4767',1,'beluga::OmnidirectionalDriveModelParam::translation_noise_from_rotation()']]],
-  ['translation_5fnoise_5ffrom_5ftranslation_831',['translation_noise_from_translation',['../structbeluga_1_1DifferentialDriveModelParam.html#acd54f76dfe05df2525d386c7c6640e27',1,'beluga::DifferentialDriveModelParam::translation_noise_from_translation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a3cb5f8edc206b5cac0cf71b4dbf6c438',1,'beluga::OmnidirectionalDriveModelParam::translation_noise_from_translation()']]],
-  ['tuple_5findex_5fv_832',['tuple_index_v',['../tuple__traits_8hpp.html#a528b7d8d6f614c786f40275567ff5127',1,'beluga']]]
+  ['random_5fintersperse_669',['random_intersperse',['../random__intersperse_8hpp.html#a2de78c6440972b09ccf41b69fe692833',1,'beluga::views']]],
+  ['reweight_670',['reweight',['../reweight_8hpp.html#a42af165059caeadb6539b08e80a7c480',1,'beluga::actions']]],
+  ['rotation_5fnoise_5ffrom_5frotation_671',['rotation_noise_from_rotation',['../structbeluga_1_1DifferentialDriveModelParam.html#a01eab931f32b7ae92f2d4f0b1175e30c',1,'beluga::DifferentialDriveModelParam::rotation_noise_from_rotation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#ad954995b2de1b3ebaa2839635a6d2eff',1,'beluga::OmnidirectionalDriveModelParam::rotation_noise_from_rotation()']]],
+  ['rotation_5fnoise_5ffrom_5ftranslation_672',['rotation_noise_from_translation',['../structbeluga_1_1DifferentialDriveModelParam.html#a14d0476d23005e9c2bfbc7d8f3de4b55',1,'beluga::DifferentialDriveModelParam::rotation_noise_from_translation()'],['../structbeluga_1_1OmnidirectionalDriveModelParam.html#a7933e668b81ddf041ea9f8747a8b7dc6',1,'beluga::OmnidirectionalDriveModelParam::rotation_noise_from_translation()']]]
 ];

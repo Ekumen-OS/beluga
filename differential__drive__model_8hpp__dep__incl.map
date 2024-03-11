@@ -1,6 +1,5 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/motion/differential_drive_model.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/motion/differential_drive_model.hpp">
-<area shape="rect" id="node1" title="Implementation of a differential drive odometry motion model." alt="" coords="112,5,307,76"/>
-<area shape="rect" id="node2" href="$motion_8hpp.html" title="Includes all Beluga motion models." alt="" coords="113,124,305,180"/>
-<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,228,197,284"/>
-<area shape="rect" id="node4" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="221,228,413,284"/>
+<area shape="rect" id="node1" title="Implementation of a differential drive odometry motion model." alt="" coords="5,5,200,76"/>
+<area shape="rect" id="node2" href="$motion_8hpp.html" title="Includes all Beluga motion models." alt="" coords="7,124,199,180"/>
+<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="7,228,199,284"/>
 </map>

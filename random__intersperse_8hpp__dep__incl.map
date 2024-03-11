@@ -1,8 +1,5 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/random_intersperse.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/random_intersperse.hpp">
-<area shape="rect" id="node1" title="Implementation of a random_intersperse range adaptor object." alt="" coords="71,5,345,61"/>
-<area shape="rect" id="node2" href="$sampling_8hpp.html" title="Implementation of algorithms related to generation, sampling and resampling of particles." alt="" coords="19,109,221,165"/>
-<area shape="rect" id="node6" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="221,213,413,269"/>
-<area shape="rect" id="node3" href="$mixin_8hpp.html" title="Implementation of mixin utilities and extensions." alt="" coords="5,213,197,269"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="221,317,413,373"/>
-<area shape="rect" id="node5" href="$localization_8hpp.html" title="Implementation of localization algorithms." alt="" coords="5,317,197,373"/>
+<area shape="rect" id="node1" title="Implementation of a random_intersperse range adaptor object." alt="" coords="5,5,280,61"/>
+<area shape="rect" id="node2" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="47,109,239,165"/>
+<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="47,213,239,269"/>
 </map>

@@ -1,13 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,307,64,334"/>
-<area shape="rect" id="node2" href="$classbeluga_1_1AdaptiveSampler.html" title="Generation of samples from input particles with a recovery strategy." alt="" coords="135,5,321,47"/>
-<area shape="rect" id="node3" href="$classbeluga_1_1BootstrapParticleFilter.html" title="Base implementation of a particle filter." alt="" coords="135,71,321,112"/>
-<area shape="rect" id="node4" href="$classbeluga_1_1FixedLimiter.html" title="Limiter policy that takes a fixed number of particles." alt="" coords="151,136,305,177"/>
-<area shape="rect" id="node5" href="$classbeluga_1_1KldLimiter.html" title="Limiter policy that takes a number of particles defined by the KLD criteria." alt="" coords="157,201,299,243"/>
-<area shape="rect" id="node6" href="$classbeluga_1_1NaiveSampler.html" title="Generation of samples from input particles." alt="" coords="145,267,311,308"/>
-<area shape="rect" id="node7" href="$classbeluga_1_1NullMixin.html" title="A null mixin that does nothing. Meant to be the default value for an optional customization point." alt="" coords="155,332,301,373"/>
-<area shape="rect" id="node8" href="$classbeluga_1_1RandomStateGenerator.html" title="A random state generator." alt="" coords="115,397,341,439"/>
-<area shape="rect" id="node9" href="$classbeluga_1_1SimpleStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html" title="Partial template specialization for simple state estimator in 2D." alt="" coords="120,463,336,504"/>
-<area shape="rect" id="node10" href="$classbeluga_1_1StoragePolicy.html" title="Configurable storage policy." alt="" coords="126,529,330,585"/>
-<area shape="rect" id="node11" href="$classbeluga_1_1WeightedStateEstimator_3_01Mixin_00_01Sophus_1_1SE2d_01_4.html" title="Partial template specialization for weighted state estimator in 2D." alt="" coords="112,609,344,651"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,46,169,73"/>
+<area shape="rect" id="node2" href="$classbeluga_1_1BaseLaserScan.html" title="Laser scan 2D base type." alt="" coords="227,5,399,47"/>
+<area shape="rect" id="node3" href="$classbeluga_1_1BaseRegularGrid2.html" title="Regularly spaced 2D grid base type." alt="" coords="217,71,408,112"/>
+<area shape="rect" id="node4" href="$classbeluga_1_1BaseDenseGrid2.html" title="Dense 2D grid base type." alt="" coords="456,71,639,112"/>
+<area shape="rect" id="node5" href="$classbeluga_1_1BaseLinearGrid2.html" title=" " alt="" coords="687,37,868,79"/>
+<area shape="rect" id="node7" href="$classbeluga_1_1BaseLinearGrid2.html" title="Linear 2D grid base type." alt="" coords="687,103,868,144"/>
+<area shape="rect" id="node6" href="$classbeluga_1_1ValueGrid2.html" title="Generic 2D linear value grid." alt="" coords="931,45,1113,71"/>
+<area shape="rect" id="node8" href="$classbeluga_1_1ValueGrid2.html" title=" " alt="" coords="949,99,1095,140"/>
+<area shape="rect" id="node9" href="$classbeluga_1_1BaseOccupancyGrid2.html" title="Occupancy 2D grid base type." alt="" coords="916,164,1128,205"/>
 </map>
