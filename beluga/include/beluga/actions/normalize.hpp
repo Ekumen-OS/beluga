@@ -25,6 +25,11 @@
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/view/common.hpp>
 
+/**
+ * \file
+ * \brief Implementation of the normalize range adaptor object.
+ */
+
 namespace beluga::actions {
 
 namespace detail {

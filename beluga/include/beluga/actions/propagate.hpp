@@ -26,6 +26,11 @@
 #include <range/v3/utility/random.hpp>
 #include <range/v3/view/common.hpp>
 
+/**
+ * \file
+ * \brief Implementation of the propagate range adaptor object.
+ */
+
 namespace beluga::actions {
 
 namespace detail {

@@ -63,28 +63,4 @@
  * - beluga::StationaryModel
  */
 
-namespace beluga {
-
-/// Pure abstract class representing the odometry motion model mixin interface.
-struct OdometryMotionModelInterface2d {
-  /// Update type of the motion model.
-  using update_type = Sophus::SE2d;
-
-  /// Virtual destructor.
-  virtual ~OdometryMotionModelInterface2d() = default;
-
-  /// Updates the motion model with the latest odometry data.
-  /**
-   * This method updates the motion model with the information
-   * it needs to apply the motion to each particle.
-   * The motion is applied by subsequent calls to the `apply_motion()`
-   * method provided by the same mixin component.
-   *
-   * \param pose Latest odometry update.
-   */
-  virtual void update_motion(const update_type& pose) = 0;
-};
-
-}  // namespace beluga
-
 #endif

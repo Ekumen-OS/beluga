@@ -20,6 +20,11 @@
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/view.hpp>
 
+/**
+ * \file
+ * \brief Implementation of the assign range adaptor object.
+ */
+
 namespace beluga::actions {
 
 /// \cond

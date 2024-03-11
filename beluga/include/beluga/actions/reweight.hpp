@@ -25,6 +25,11 @@
 #include <range/v3/algorithm/max_element.hpp>
 #include <range/v3/view/common.hpp>
 
+/**
+ * \file
+ * \brief Implementation of the reweight range adaptor object.
+ */
+
 namespace beluga::actions {
 
 namespace detail {
