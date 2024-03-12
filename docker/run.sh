@@ -80,4 +80,4 @@ else
     PRIVILEGED_CONTAINER=$PRIVILEGED_CONTAINER USERID=$(id -u) GROUPID=$(id -g) docker compose run --rm --detach --name $DEV_CONTAINER_NAME  dev
 fi
 
-USERID=$(id -u) GROUPID=$(id -g) docker exec -it $DEV_CONTAINER_NAME /bin/bash -c 'source /ros_entrypoint.sh && /bin/bash'
+docker exec -it $DEV_CONTAINER_NAME /ros_entrypoint.sh /bin/bash
