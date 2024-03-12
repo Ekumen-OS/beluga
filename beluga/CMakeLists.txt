@@ -39,7 +39,6 @@ endif()
 
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(HDF5 COMPONENTS CXX HL)
-
 find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
