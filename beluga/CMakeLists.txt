@@ -38,6 +38,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(Eigen3 REQUIRED NO_MODULE)
+find_package(HDF5 COMPONENTS CXX HL)
+
 find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
@@ -46,10 +48,12 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
   ${PROJECT_NAME}
   INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-            "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+            "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+            "${HDF5_INCLUDE_DIRS}")
 target_link_libraries(
   ${PROJECT_NAME}
   INTERFACE Eigen3::Eigen
+            hdf5::hdf5_hl_cpp
             Sophus::Sophus
             TBB::tbb
             range-v3::range-v3)

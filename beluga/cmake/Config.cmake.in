@@ -3,6 +3,7 @@
 include(CMakeFindDependencyMacro)
 find_dependency(Eigen3 REQUIRED NO_MODULE)
 find_dependency(range-v3 REQUIRED)
+find_dependency(HDF5 COMPONENTS CXX HL)
 find_dependency(Sophus REQUIRED)
 find_dependency(TBB REQUIRED)
 
