@@ -68,11 +68,6 @@ done
 
 DEV_CONTAINER_NAME=beluga_dev
 
-# Note: The `--build` flag was added to docker compose run after
-# https://github.com/docker/compose/releases/tag/v2.13.0.
-# We have this for convenience and compatibility with previous versions.
-# Otherwise, we could just forward the script arguments to the run verb.
-
 # Kill the container JIC it already exists, if building, to ensure we don't attach to an old container.
 [[ "$BUILD" = true ]] && docker compose build dev && docker rm -f $DEV_CONTAINER_NAME  2>/dev/null
 
