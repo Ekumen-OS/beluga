@@ -15,6 +15,7 @@
   <buildtool_depend>cmake</buildtool_depend>
 
   <depend>eigen</depend>
+  <depend>libhdf5-dev</depend>
   <depend>range-v3</depend>
   <depend>sophus</depend>
   <depend>tbb</depend>
