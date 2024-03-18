@@ -32,12 +32,12 @@ namespace beluga {
  *    Associative container representing a mapping from a Eigen::Vector2i to a value of type MapType::mapped_type.
  *    It should implement a subset of standard library's associative containers public API.
  *    In particular, given 'm' a possibly const instance of MapType:
-          - MapType::key_type must be Eigen::Vector2i.
-          - MapType::mapped_type should be the value type of the associative container entries.
-          - 'm.at(const Eigen::Vector2i& cell_index) const' should return a const reference to 'MapType::value_type'
- representing the value at that index, or throw 'std::out_of_range' if it doesn't exist.
-          - 'm.find(const Eigen::Vector2i&)' should follow the same API as
- [std::map](https://en.cppreference.com/w/cpp/container/map/find).
+ *         - MapType::key_type must be Eigen::Vector2i.
+ *         - MapType::mapped_type should be the value type of the associative container entries.
+ *         - 'm.at(const Eigen::Vector2i& cell_index) const' should return a const reference to 'MapType::value_type'
+ * representing the value at that index, or throw 'std::out_of_range' if it doesn't exist.
+ *        - 'm.find(const Eigen::Vector2i&)' should follow the same API as
+ * [std::map](https://en.cppreference.com/w/cpp/container/map/find).
  */
 template <typename MapType>
 class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
