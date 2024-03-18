@@ -1,0 +1,103 @@
+// Copyright 2023 Ekumen, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <gmock/gmock.h>
+#include <gtest/gtest-typed-test.h>
+#include <gtest/gtest.h>
+#include <Eigen/Core>
+#include <beluga/sensor/data/sparse_value_grid.hpp>
+#include <map>
+#include <unordered_map>
+
+namespace beluga {
+
+template <class T>
+class SparseGridTests : public testing::Test {};
+
+struct Less {
+  // awful
+  bool operator()(const Eigen::Vector2i& lhs, const Eigen::Vector2i& rhs) const {
+    return (lhs.x() < rhs.x()) || (lhs.y() < rhs.y());
+  }
+};
+
+struct Hasher {
+  // Collisions everywhere!
+  size_t operator()(const Eigen::Vector2i&) const { return 1; }
+};
+
+using SparseGridTestCases =
+    testing::Types<std::unordered_map<Eigen::Vector2i, int, Hasher>, std::map<Eigen::Vector2i, int, Less>>;
+
+TYPED_TEST_SUITE(SparseGridTests, SparseGridTestCases, );
+
+TYPED_TEST(SparseGridTests, CanBeConstructedEmpty) {
+  TypeParam data;
+  [[maybe_unused]] beluga::SparseValueGrid grid{data, 0.5};
+}
+
+TYPED_TEST(SparseGridTests, Size) {
+  TypeParam data{
+      {Eigen::Vector2i{1, 2}, 1},
+      {Eigen::Vector2i{4, 2}, 1},
+      {Eigen::Vector2i{2, 2}, 1},
+      {Eigen::Vector2i{3, 2}, 1},
+  };
+
+  beluga::SparseValueGrid grid{data, 0.5};
+  ASSERT_EQ(grid.size(), 4);
+}
+
+TYPED_TEST(SparseGridTests, DataAccessing) {
+  TypeParam data{
+      {Eigen::Vector2i{1, 2}, 1},
+      {Eigen::Vector2i{4, 2}, 2},
+      {Eigen::Vector2i{3, 2}, 3},
+      {Eigen::Vector2i{2, 2}, 4},
+  };
+  {
+    // trivial case where resolution == 1.0
+    beluga::SparseValueGrid grid{data, 1.0};
+    ASSERT_EQ(grid.data_at(Eigen::Vector2d{1.0, 2.0}), 1);
+    ASSERT_EQ(grid.data_at(Eigen::Vector2d{4.0, 2.0}), 2);
+    ASSERT_EQ(grid.data_at(Eigen::Vector2d{3.9, 2.00001}), 3);
+  }
+
+  {
+    beluga::SparseValueGrid grid{data, 0.5};
+    ASSERT_EQ(grid.data_at(Eigen::Vector2d{1.0, 2.0} * 0.5), 1);
+    ASSERT_EQ(grid.data_at(Eigen::Vector2d{4.0, 2.0} * 0.5), 2);
+    ASSERT_EQ(grid.data_at(Eigen::Vector2d{3.9, 2.00001} * 0.5), 3);
+  }
+}
+
+TYPED_TEST(SparseGridTests, AllAccessorMethodsAre) {
+  TypeParam data{
+      {Eigen::Vector2i{1, 2}, 1}, {Eigen::Vector2i{4, 2}, 2}, {Eigen::Vector2i{3, 2}, 3}, {Eigen::Vector2i{2, 2}, 4}};
+
+  for (const auto resolution : {0.1, 0.5, 1.2, 1.5}) {
+    beluga::SparseValueGrid grid{data, resolution};
+    for (const auto& [coordinates, value] : data) {
+      Eigen::Vector2d double_coords = coordinates.template cast<double>() * resolution;
+      ASSERT_TRUE(grid.cell_near(double_coords).isApprox(coordinates));
+      ASSERT_TRUE(grid.contains_index(coordinates));
+      ASSERT_TRUE(grid.contains_index(coordinates.x(), coordinates.y()));
+      ASSERT_EQ(grid.data_at(double_coords), value) << "1";
+      ASSERT_EQ(grid.data_at_index(grid.cell_near(double_coords)), value) << "2";
+      ASSERT_EQ(grid.data_at(double_coords.x(), double_coords.y()), value) << "3";
+    }
+  }
+}
+
+}  // namespace beluga
