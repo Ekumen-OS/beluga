@@ -42,9 +42,13 @@ namespace beluga {
 template <typename MapType>
 class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
  public:
+  // Construct without data and with a 1 cell/meter resolution.
   SparseValueGrid() = default;
+  // Underlying associative container.
   using map_type = MapType;
+  // Value type of the key-value pairs stored in the data.
   using mapped_type = typename map_type::mapped_type;
+  // Key type for the key-value pairs.
   using key_type = typename map_type::key_type;
   static_assert(std::is_same_v<key_type, Eigen::Vector2i>);
   /// Constructs the grid.
