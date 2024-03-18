@@ -26,14 +26,12 @@ template <class T>
 class SparseGridTests : public testing::Test {};
 
 struct Less {
-  // awful
   bool operator()(const Eigen::Vector2i& lhs, const Eigen::Vector2i& rhs) const {
     return (lhs.x() < rhs.x()) || (lhs.y() < rhs.y());
   }
 };
 
 struct Hasher {
-  // Collisions everywhere!
   size_t operator()(const Eigen::Vector2i&) const { return 1; }
 };
 
