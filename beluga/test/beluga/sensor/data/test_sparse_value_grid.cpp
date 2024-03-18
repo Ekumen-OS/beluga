@@ -59,6 +59,17 @@ TYPED_TEST(SparseGridTests, Size) {
   ASSERT_EQ(grid.size(), 4);
 }
 
+TYPED_TEST(SparseGridTests, Resolution) {
+  {
+    beluga::SparseValueGrid grid{TypeParam{}, 0.5};
+    ASSERT_DOUBLE_EQ(grid.resolution(), 0.5);
+  }
+  {
+    beluga::SparseValueGrid grid{TypeParam{}, 0.8};
+    ASSERT_DOUBLE_EQ(grid.resolution(), 0.8);
+  }
+}
+
 TYPED_TEST(SparseGridTests, DataAccessing) {
   TypeParam data{
       {Eigen::Vector2i{1, 2}, 1},

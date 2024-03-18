@@ -28,8 +28,16 @@ namespace beluga {
 
 /// Generic 2D sparse value grid.
 /**
- * \tparam T Any copyable type.
- * \tparam map_type TODO: complete docstring
+ * \tparam MapType:
+ *    Associative container representing a mapping from a Eigen::Vector2i to a value of type MapType::mapped_type.
+ *    It should implement a subset of standard library's associative containers public API.
+ *    In particular, given 'm' a possibly const instance of MapType:
+          - MapType::key_type must be Eigen::Vector2i.
+          - MapType::mapped_type should be the value type of the associative container entries.
+          - 'm.at(const Eigen::Vector2i& cell_index) const' should return a const reference to 'MapType::value_type'
+ representing the value at that index, or throw 'std::out_of_range' if it doesn't exist.
+          - 'm.find(const Eigen::Vector2i&)' should follow the same API as
+ [std::map](https://en.cppreference.com/w/cpp/container/map/find).
  */
 template <typename MapType>
 class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
@@ -62,12 +70,12 @@ class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
     return data_.at(cell_index);
   }
 
-  /// Gets grid data at {cell_corodinates}.
-  [[nodiscard]] const mapped_type& data_at(const Eigen::Vector2d& cell_coordinates) const {
-    return data_.at(this->self().cell_near(cell_coordinates));
+  /// Gets grid data at 'cell_index'.
+  [[nodiscard]] const mapped_type& data_at(const Eigen::Vector2d& cell_index) const {
+    return data_.at(this->self().cell_near(cell_index));
   }
 
-  /// Gets grid data at {x, y}.
+  /// Gets grid data at 'x, y'.
   [[nodiscard]] const mapped_type& data_at(const double x, const double y) const {
     return data_.at(this->self().cell_near(x, y));
   }
