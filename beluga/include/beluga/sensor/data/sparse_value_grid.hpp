@@ -16,17 +16,18 @@
 #define BELUGA_SENSOR_DATA_SPARSE_VALUE_GRID_HPP
 
 #include <Eigen/Core>
+#include <optional>
 #include <type_traits>
 
 #include <beluga/sensor/data/regular_grid.hpp>
 /**
  * \file
- * \brief Implementation of generic dense value grid.
+ * \brief Implementation of generic sparse value regular grid.
  */
 
 namespace beluga {
 
-/// Generic 2D sparse value grid.
+/// Generic 2D sparse value regular grid.
 /**
  * \tparam MapType:
  *    Associative container representing a mapping from a Eigen::Vector2i to a value of type MapType::mapped_type.
@@ -69,27 +70,23 @@ class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
   /// Gets grid data.
   [[nodiscard]] const map_type& data() const { return data_; }
 
-  /// Gets grid data at cell_index.
-  [[nodiscard]] const mapped_type& data_at_index(const Eigen::Vector2i& cell_index) const {
-    return data_.at(cell_index);
+  /// Gets grid data at cell_index or std::nullopt if it's not present.
+  [[nodiscard]] std::optional<mapped_type> data_at(const Eigen::Vector2i& cell_index) const {
+    auto itr = data_.find(cell_index);
+    if (itr == data_.end()) {
+      return std::nullopt;
+    }
+    return itr->second;
   }
 
-  /// Gets grid data at 'cell_index'.
-  [[nodiscard]] const mapped_type& data_at(const Eigen::Vector2d& cell_index) const {
-    return data_.at(this->self().cell_near(cell_index));
+  /// Gets grid data at real coordinates 'coordinates' or std::nullopt if it's not present.
+  [[nodiscard]] std::optional<mapped_type> data_near(const Eigen::Vector2d& coordinates) const {
+    return data_at(this->self().cell_near(coordinates));
   }
 
-  /// Gets grid data at 'x, y'.
-  [[nodiscard]] const mapped_type& data_at(const double x, const double y) const {
-    return data_.at(this->self().cell_near(x, y));
-  }
-
-  /// Returns whether the cell index {x, y} exists in the grid or not.
-  [[nodiscard]] bool contains_index(const int x, const int y) const { return contains_index(Eigen::Vector2i{x, y}); }
-
-  /// Returns whether 'cell_index' exists in the grid or not.
-  [[nodiscard]] bool contains_index(const Eigen::Vector2i& cell_index) const {
-    return data_.find(cell_index) != data_.end();
+  /// Gets grid data at real coordinates '{x, y}' or std::nullopt if it's not present.
+  [[nodiscard]] std::optional<mapped_type> data_near(const double x, const double y) const {
+    return data_at(this->self().cell_near(x, y));
   }
 
  private:

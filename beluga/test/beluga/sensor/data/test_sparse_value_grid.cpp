@@ -18,6 +18,7 @@
 #include <Eigen/Core>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 #include <map>
+#include <optional>
 #include <unordered_map>
 
 namespace beluga {
@@ -57,6 +58,16 @@ TYPED_TEST(SparseGridTests, Size) {
   ASSERT_EQ(grid.size(), 4);
 }
 
+TYPED_TEST(SparseGridTests, NotPresent) {
+  TypeParam data{};
+
+  beluga::SparseValueGrid grid{data, 0.5};
+
+  ASSERT_EQ(grid.data_at(Eigen::Vector2i(2, 1)), std::nullopt);
+  ASSERT_EQ(grid.data_near(Eigen::Vector2d(5, 3)), std::nullopt);
+  ASSERT_EQ(grid.data_near(5, 1), std::nullopt);
+}
+
 TYPED_TEST(SparseGridTests, Resolution) {
   {
     beluga::SparseValueGrid grid{TypeParam{}, 0.5};
@@ -75,23 +86,28 @@ TYPED_TEST(SparseGridTests, DataAccessing) {
       {Eigen::Vector2i{3, 2}, 3},
       {Eigen::Vector2i{2, 2}, 4},
   };
+  // trivial case where resolution == 1.0
   {
-    // trivial case where resolution == 1.0
     beluga::SparseValueGrid grid{data, 1.0};
-    ASSERT_EQ(grid.data_at(Eigen::Vector2d{1.0, 2.0}), 1);
-    ASSERT_EQ(grid.data_at(Eigen::Vector2d{4.0, 2.0}), 2);
-    ASSERT_EQ(grid.data_at(Eigen::Vector2d{3.9, 2.00001}), 3);
+    auto data = grid.data_near(Eigen::Vector2d{1.0, 2.0});
+    ASSERT_TRUE(data.has_value());
+    ASSERT_EQ(data, 1);
   }
-
+  {
+    beluga::SparseValueGrid grid{data, 1.0};
+    auto data = grid.data_near(Eigen::Vector2d{4.0, 2.0});
+    ASSERT_TRUE(data.has_value());
+    ASSERT_EQ(data, 2);
+  }
   {
     beluga::SparseValueGrid grid{data, 0.5};
-    ASSERT_EQ(grid.data_at(Eigen::Vector2d{1.0, 2.0} * 0.5), 1);
-    ASSERT_EQ(grid.data_at(Eigen::Vector2d{4.0, 2.0} * 0.5), 2);
-    ASSERT_EQ(grid.data_at(Eigen::Vector2d{3.9, 2.00001} * 0.5), 3);
+    auto data = grid.data_near(Eigen::Vector2d{1.0, 2.0} * 0.5);
+    ASSERT_TRUE(data.has_value());
+    ASSERT_EQ(data, 1);
   }
 }
 
-TYPED_TEST(SparseGridTests, AllAccessorMethodsAre) {
+TYPED_TEST(SparseGridTests, AllAccessorMethodsAreEquivalent) {
   TypeParam data{
       {Eigen::Vector2i{1, 2}, 1}, {Eigen::Vector2i{4, 2}, 2}, {Eigen::Vector2i{3, 2}, 3}, {Eigen::Vector2i{2, 2}, 4}};
 
@@ -100,11 +116,9 @@ TYPED_TEST(SparseGridTests, AllAccessorMethodsAre) {
     for (const auto& [coordinates, value] : data) {
       Eigen::Vector2d double_coords = coordinates.template cast<double>() * resolution;
       ASSERT_TRUE(grid.cell_near(double_coords).isApprox(coordinates));
-      ASSERT_TRUE(grid.contains_index(coordinates));
-      ASSERT_TRUE(grid.contains_index(coordinates.x(), coordinates.y()));
-      ASSERT_EQ(grid.data_at(double_coords), value) << "1";
-      ASSERT_EQ(grid.data_at_index(grid.cell_near(double_coords)), value) << "2";
-      ASSERT_EQ(grid.data_at(double_coords.x(), double_coords.y()), value) << "3";
+      ASSERT_EQ(grid.data_near(double_coords), std::make_optional<int>(value));
+      ASSERT_EQ(grid.data_at(grid.cell_near(double_coords)), std::make_optional<int>(value));
+      ASSERT_EQ(grid.data_near(double_coords.x(), double_coords.y()), std::make_optional<int>(value));
     }
   }
 }
