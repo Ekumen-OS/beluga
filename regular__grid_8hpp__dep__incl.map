@@ -1,6 +1,7 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/sensor/data/regular_grid.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/sensor/data/regular_grid.hpp">
-<area shape="rect" id="node1" title="Concepts and abstract implementations of regular grids." alt="" coords="133,5,333,76"/>
+<area shape="rect" id="node1" title="Concepts and abstract implementations of regular grids." alt="" coords="242,5,442,76"/>
 <area shape="rect" id="node2" href="$dense__grid_8hpp.html" title="Concepts and abstract implementations of dense grids." alt="" coords="136,124,329,195"/>
+<area shape="rect" id="node11" href="$sparse__value__grid_8hpp.html" title="Implementation of generic sparse value regular grid." alt="" coords="354,124,551,195"/>
 <area shape="rect" id="node3" href="$linear__grid_8hpp.html" title="Concepts and abstract implementations of linear (ie. contiguous storage) grids." alt="" coords="137,243,329,313"/>
 <area shape="rect" id="node4" href="$occupancy__grid_8hpp.html" title="Concepts and abstract implementations of occupancy grids." alt="" coords="5,361,228,432"/>
 <area shape="rect" id="node10" href="$value__grid_8hpp.html" title="Implementation of generic value grid." alt="" coords="253,361,445,432"/>

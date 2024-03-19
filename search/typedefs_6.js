@@ -1,6 +1,10 @@
 var searchData=
 [
-  ['map_5ftype_716',['map_type',['../classbeluga_1_1BeamSensorModel.html#ac82ae747926b0471bd2ad5e7eaa26712',1,'beluga::BeamSensorModel::map_type()'],['../classbeluga_1_1BearingSensorModel.html#aafc3f714632996b40ddad886e9acb840',1,'beluga::BearingSensorModel::map_type()'],['../classbeluga_1_1LandmarkSensorModel.html#aa54af8be385ca83eeb2f8ad32b513ec8',1,'beluga::LandmarkSensorModel::map_type()'],['../classbeluga_1_1LikelihoodFieldModel.html#a4c9a3e4f644ddec25557c4fa7c294539',1,'beluga::LikelihoodFieldModel::map_type()']]],
-  ['matrix_5ftype_717',['matrix_type',['../classbeluga_1_1MultivariateNormalDistributionParam.html#ae3e0f2f56d5a59737f51df7246074beb',1,'beluga::MultivariateNormalDistributionParam']]],
-  ['measurement_5ftype_718',['measurement_type',['../classbeluga_1_1BeamSensorModel.html#a482382f1b371924d04e4c34f4789ad1e',1,'beluga::BeamSensorModel::measurement_type()'],['../classbeluga_1_1BearingSensorModel.html#a8386712ce119ac9cd799945514c8879c',1,'beluga::BearingSensorModel::measurement_type()'],['../classbeluga_1_1LandmarkSensorModel.html#aacdb98d34fa7554be9946f8e1858dc78',1,'beluga::LandmarkSensorModel::measurement_type()'],['../classbeluga_1_1LikelihoodFieldModel.html#aa497e6673cb94c6204fc4f7ff3ac6da9',1,'beluga::LikelihoodFieldModel::measurement_type()']]]
+  ['landmarkbearing3_719',['LandmarkBearing3',['../landmark__detection__types_8hpp.html#a2db80e6730e2ace4a3d2536de5f90883',1,'beluga']]],
+  ['landmarkcategory_720',['LandmarkCategory',['../landmark__detection__types_8hpp.html#a3f3fd6c08450af2a226fbb4f87d19736',1,'beluga']]],
+  ['landmarkmapboundaries_721',['LandmarkMapBoundaries',['../landmark__detection__types_8hpp.html#aef2cc9d22f63d2e373431b4560a7761d',1,'beluga']]],
+  ['landmarkposition3_722',['LandmarkPosition3',['../landmark__detection__types_8hpp.html#aba152cf80db0f1b6d33cf85ecaa77513',1,'beluga']]],
+  ['landmarks_5fset_5fposition_5fdata_723',['landmarks_set_position_data',['../classbeluga_1_1LandmarkMap.html#a55d49849dce8a3801f9e84c7ea24c0ec',1,'beluga::LandmarkMap']]],
+  ['landmarksensormodel2d_724',['LandmarkSensorModel2d',['../landmark__sensor__model_8hpp.html#abdb1a8b8eea1cc0042f8a6af18dae88b',1,'beluga']]],
+  ['landmarksensormodel3d_725',['LandmarkSensorModel3d',['../landmark__sensor__model_8hpp.html#acda37046f0ae0f34cc32d4375a305b39',1,'beluga']]]
 ];
