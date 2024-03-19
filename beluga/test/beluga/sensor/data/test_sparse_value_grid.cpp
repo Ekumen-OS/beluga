@@ -50,6 +50,18 @@ TYPED_TEST(SparseGridTests, CanBeConstructedEmpty) {
   [[maybe_unused]] beluga::SparseValueGrid grid{data, 0.5};
 }
 
+TYPED_TEST(SparseGridTests, CanCopy) {
+  TypeParam data;
+  beluga::SparseValueGrid grid{data, 0.5};
+  beluga::SparseValueGrid copy{grid};
+}
+
+TYPED_TEST(SparseGridTests, CanMove) {
+  TypeParam data;
+  beluga::SparseValueGrid grid{data, 0.5};
+  beluga::SparseValueGrid moved{std::move(grid)};
+}
+
 TYPED_TEST(SparseGridTests, Size) {
   TypeParam data{
       {Eigen::Vector2i{1, 2}, 1},

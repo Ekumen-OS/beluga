@@ -90,8 +90,8 @@ class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
   }
 
  private:
-  const map_type data_;
-  const double resolution_ = 1.0;
+  map_type data_;
+  double resolution_ = 1.0;
 };
 
 }  // namespace beluga
