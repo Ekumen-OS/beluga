@@ -15,11 +15,11 @@
 // TODO(https://github.com/Ekumen-OS/beluga/issues/337): clang-format orders these includes differently depending on the
 // version.
 // clang-format off
+#include <beluga/sensor/data/sparse_value_grid.hpp>
 #include <Eigen/Core>
 #include <gmock/gmock.h>
 #include <gtest/gtest-typed-test.h>
 #include <gtest/gtest.h>
-#include <beluga/sensor/data/sparse_value_grid.hpp>
 #include <map>
 #include <optional>
 #include <unordered_map>
