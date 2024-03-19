@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// TODO(https://github.com/Ekumen-OS/beluga/issues/337): clang-format orders these includes differently depending on the
+// version.
+// clang-format off
+#include <Eigen/Core>
 #include <gmock/gmock.h>
 #include <gtest/gtest-typed-test.h>
 #include <gtest/gtest.h>
-#include <Eigen/Core>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 #include <map>
 #include <optional>
 #include <unordered_map>
+// clang-format on
 
 namespace beluga {
 
