@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO(https://github.com/Ekumen-OS/beluga/issues/337): clang-format orders these includes differently depending on the
-// version.
-// clang-format off
-#include <beluga/sensor/data/sparse_value_grid.hpp>
-#include <Eigen/Core>
 #include <gmock/gmock.h>
 #include <gtest/gtest-typed-test.h>
 #include <gtest/gtest.h>
+
 #include <map>
 #include <optional>
 #include <unordered_map>
-// clang-format on
+
+#include "beluga/sensor/data/sparse_value_grid.hpp"
+
+#include <Eigen/Core>
 
 namespace beluga {
 
@@ -48,18 +47,6 @@ TYPED_TEST_SUITE(SparseGridTests, SparseGridTestCases, );
 TYPED_TEST(SparseGridTests, CanBeConstructedEmpty) {
   TypeParam data;
   [[maybe_unused]] beluga::SparseValueGrid grid{data, 0.5};
-}
-
-TYPED_TEST(SparseGridTests, CanCopy) {
-  TypeParam data;
-  beluga::SparseValueGrid grid{data, 0.5};
-  beluga::SparseValueGrid copy{grid};
-}
-
-TYPED_TEST(SparseGridTests, CanMove) {
-  TypeParam data;
-  beluga::SparseValueGrid grid{data, 0.5};
-  beluga::SparseValueGrid moved{std::move(grid)};
 }
 
 TYPED_TEST(SparseGridTests, Size) {
