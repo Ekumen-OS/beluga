@@ -68,7 +68,7 @@ struct NDTCell {
   [[nodiscard]] double likelihood_at(const NDTCell& measurement, double d1 = 1.0, double d2 = 1.0) const {
     const Eigen::Vector2d error = measurement.mean - mean;
     const double rhs =
-        std::exp((-d2 / 2.0) * error.transpose() * (measurement.covariance + covariance.inverse()) * error);
+        std::exp((-d2 / 2.0) * error.transpose() * (measurement.covariance + covariance).inverse() * error);
     return d1 * rhs;
   }
 };
