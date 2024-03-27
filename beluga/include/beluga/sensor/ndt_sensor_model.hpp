@@ -16,14 +16,17 @@
 
 #include <Eigen/Core>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
+#include <cstdint>
 #include <filesystem>
+#include <ostream>
 #include <range/v3/view/zip.hpp>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
+#include <sophus/se3.hpp>
 #include <sophus/so2.hpp>
-#include <sstream>
 #include <stdexcept>
 #include <type_traits>
+#include <unordered_map>
 #include "H5Cpp.h"
 
 namespace beluga {
@@ -60,14 +63,67 @@ struct NDTCell {
   /// Covariance of the 2D normal distribution.
   Eigen::Matrix<double, 2, 2> covariance;
 
-  /// Get the L2 likelihood at measurement, scaled by d1 and d2.
-  [[nodiscard]] double likelihood_at(const Eigen::Vector2d& measurement, double d1 = 1.0, double d2 = 1.0) const {
-    const double constant = d1 / (2.0 * Sophus::Constants<double>::pi() * std::sqrt(covariance.determinant()));
-    const Eigen::Vector2d error = measurement - mean;
-    const double rhs = std::exp((-d2 / 2.0) * error.transpose() * covariance.inverse() * error);
-    return constant * rhs;
+  /// Get the L2 likelihood at measurement, scaled by d1 and d2. It assumes the measurement is pre-transformed
+  /// into the same frame as this cell instance.
+  [[nodiscard]] double likelihood_at(const NDTCell& measurement, double d1 = 1.0, double d2 = 1.0) const {
+    const Eigen::Vector2d error = measurement.mean - mean;
+    const double rhs =
+        std::exp((-d2 / 2.0) * error.transpose() * (measurement.covariance + covariance.inverse()) * error);
+    return d1 * rhs;
   }
 };
+
+/// Transform the NDT according to tf, both mean and covariance.
+inline NDTCell operator*(const Sophus::SE2d& tf, const NDTCell& ndt_cell) {
+  const Eigen::Vector2d uij = tf * ndt_cell.mean;
+  const Eigen::Matrix2Xd cov = tf.so2().matrix() * ndt_cell.covariance * tf.so2().matrix().transpose();
+  return NDTCell{uij, cov};
+}
+
+/// Fit a vector of points to an NDT cell, by computing its mean and covariance.
+inline NDTCell fit_points(const std::vector<Eigen::Vector2d>& points) {
+  static constexpr double kMinVariance = 1e-5;
+  Eigen::Map<const Eigen::Matrix2Xd> points_view(
+      reinterpret_cast<const double*>(points.data()), 2, static_cast<int64_t>(points.size()));
+  Eigen::Vector2d mean = points_view.rowwise().mean();
+  Eigen::Matrix2Xd centered = points_view.colwise() - mean;
+  // Use sample covariance.
+  Eigen::Matrix2Xd cov = (centered * centered.transpose()) / static_cast<double>(points_view.cols() - 1);
+  cov(0, 0) = std::max(cov(0, 0), kMinVariance);
+  cov(1, 1) = std::max(cov(1, 1), kMinVariance);
+  return NDTCell{mean, cov};
+}
+
+/// Ostream overload mostly for debugging purposes.
+inline std::ostream& operator<<(std::ostream& os, const NDTCell& cell) {
+  os << "Mean \n" << cell.mean.transpose() << " \n\n Covariance: \n" << cell.covariance;
+  return os;
+}
+
+/// Given a number of 2D points and a resolution, constructs a vector of NDT cells. TODO(Ramiro) fill this out.
+inline std::vector<NDTCell> to_cells(const std::vector<Eigen::Vector2d>& points, const double resolution) {
+  static constexpr int kMinPointsPerCell = 5;
+
+  Eigen::Map<const Eigen::Matrix2Xd> points_view(
+      reinterpret_cast<const double*>(points.data()), 2, static_cast<int64_t>(points.size()));
+
+  std::vector<NDTCell> ret;
+  ret.reserve(static_cast<size_t>(points_view.cols()) / kMinPointsPerCell);
+
+  std::unordered_map<Eigen::Vector2i, std::vector<Eigen::Vector2d>, CellHasher> cell_grid;
+  for (const Eigen::Vector2d& col : points) {
+    cell_grid[(col / resolution).cast<int>()].emplace_back(col);
+  }
+
+  for (const auto& [cell, points_in_cell] : cell_grid) {
+    if (points_in_cell.size() < kMinPointsPerCell) {
+      continue;
+    }
+    ret.push_back(fit_points(points_in_cell));
+  }
+
+  return ret;
+}
 
 /// NDT sensor model for range finders.
 /**
@@ -85,7 +141,7 @@ class NDTSensorModel {
   /// Weight type of the particle.
   using weight_type = double;
   /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<std::pair<double, double>>;
+  using measurement_type = std::vector<Eigen::Vector2d>;
   /// Map representation type.
   using map_type = SparseGridT;
   /// Parameter type that the constructor uses to configure the NDT sensor model.
@@ -108,28 +164,17 @@ class NDTSensorModel {
    *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
   [[nodiscard]] auto operator()(measurement_type&& points) const {
-    return [this, points = std::move(points)](const state_type& state) -> weight_type {
-      const auto x_offset = state.translation().x();
-      const auto y_offset = state.translation().y();
-      const auto cos_theta = state.so2().unit_complex().x();
-      const auto sin_theta = state.so2().unit_complex().y();
+    return [this, cells = to_cells(points, cells_data_.resolution())](const state_type& state) -> weight_type {
       return std::transform_reduce(
-          points.cbegin(), points.cend(), 1.0, std::plus{},
-          [this, x_offset, y_offset, cos_theta, sin_theta](const auto& point) {
-            // Transform the end point of the laser to the grid local coordinate system.
-            // Not using Eigen/Sophus because they make the routine x10 slower.
-            // See `benchmark_likelihood_field_model.cpp` for reference.
-            const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
-            const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
-            return likelihood_at({x, y});
-          });
+          cells.cbegin(), cells.cend(), 1.0, std::plus{},
+          [this, state](const NDTCell& ndt_cell) { return likelihood_at(state * ndt_cell); });
     };
   }
 
   /// Returns the L2 likelihood scaled by 'd1' and 'd2' set in the parameters for this instance for 'measurement, or
   /// 'params_.min_likelihood' if the cell corresponding to 'measurement' doesn't exist in the map.
-  [[nodiscard]] double likelihood_at(const Eigen::Vector2d& measurement) const {
-    const auto maybe_cell = cells_data_.data_near(measurement);
+  [[nodiscard]] double likelihood_at(const NDTCell& measurement) const {
+    const auto maybe_cell = cells_data_.data_near(measurement.mean);
     if (!maybe_cell.has_value()) {
       return params_.minimum_likelihood;
     }

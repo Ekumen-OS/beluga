@@ -17,11 +17,17 @@
 #include <gtest/gtest.h>
 #include <Eigen/Core>
 #include <beluga/sensor/ndt_sensor_model.hpp>
+#include <cstdint>
+#include <sophus/se2.hpp>
 #include <unordered_map>
 #include "beluga/sensor/data/sparse_value_grid.hpp"
 namespace beluga {
 
 using sparse_grid_t = SparseValueGrid<std::unordered_map<Eigen::Vector2i, NDTCell, CellHasher>>;
+
+Eigen::Matrix2Xd get_diagonal_covariance(double x_var = 0.5, double y_var = 0.5) {
+  return Eigen::Vector2d{x_var, y_var}.asDiagonal();
+}
 
 TEST(NDTSensorModelTests, CanConstruct) {
   NDTSensorModel{{}, sparse_grid_t{}};
@@ -44,7 +50,7 @@ TEST(NDTSensorModelTests, MinLikelihood) {
            Eigen::Vector2d{0.75, 0.75},
 
        }) {
-    ASSERT_DOUBLE_EQ(model.likelihood_at(val), minimum_likelihood);
+    ASSERT_DOUBLE_EQ(model.likelihood_at({val, get_diagonal_covariance()}), minimum_likelihood);
   }
 }
 
@@ -74,48 +80,60 @@ TEST(NDTSensorModelTests, Likelihoood) {
   NDTModelParam param{minimum_likelihood};
   NDTSensorModel model{param, std::move(grid)};
 
-  EXPECT_DOUBLE_EQ(model.likelihood_at({0.5, 0.5}), 0.41093629604099985);
-  EXPECT_DOUBLE_EQ(model.likelihood_at({0.8, 0.5}), 0.3755674961117193);
-  EXPECT_DOUBLE_EQ(model.likelihood_at({0.5, 0.8}), 0.35369614780505748);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.5}, get_diagonal_covariance()}), 1);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{0.8, 0.5}, get_diagonal_covariance()}), 0.89359734710851568);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.8}, get_diagonal_covariance()}), 0.84155828881177319);
 
-  EXPECT_DOUBLE_EQ(model.likelihood_at({1.5, 1.5}), 0.31830988618379069);
-  EXPECT_DOUBLE_EQ(model.likelihood_at({1.8, 1.5}), 0.29091333156350158);
-  EXPECT_DOUBLE_EQ(model.likelihood_at({1.5, 1.8}), 0.29091333156350158);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{1.5, 1.5}, get_diagonal_covariance()}), 1);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{1.8, 1.5}, get_diagonal_covariance()}), 0.89359734710851568);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{1.5, 1.8}, get_diagonal_covariance()}), 0.89359734710851568);
 }
 
-TEST(NDTCellTest, D1Scaling) {
-  Eigen::Array<double, 2, 2> cov;
-  // clang-format off
-  cov << 0.5, 0.0,
-          0.0, 0.5;
-  // clang-format on
-  Eigen::Vector2d mean{0.5, 0.5};
-  NDTCell cell{mean, cov};
-
-  const double d1 = 0.8;
-  for (const auto& measurement : {
-           Eigen::Vector2d{1.5, 1.2},
-           Eigen::Vector2d{1.1, 1.2},
-           Eigen::Vector2d{0.1, 0.7},
-       }) {
-    const auto unscaled_likelihood = cell.likelihood_at(measurement);
-    const auto scaled_likelihood = cell.likelihood_at(measurement, d1);
-    EXPECT_DOUBLE_EQ(unscaled_likelihood * d1, scaled_likelihood);
+TEST(NDTSensorModelTests, FitPoints) {
+  {
+    std::vector meas{
+        Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
+        Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
+    };
+    auto cell = fit_points(meas);
+    ASSERT_TRUE(cell.mean.isApprox(Eigen::Vector2d{0.1, 0.2}));
+    // We introduce a minimum variance to avoid numeric errors down the line.
+    ASSERT_FALSE(cell.covariance.isZero());
+  }
+  {
+    std::vector meas{
+        Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.9}, Eigen::Vector2d{0.1, 0.2},
+        Eigen::Vector2d{0.1, 0.9}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
+    };
+    auto cell = fit_points(meas);
+    std::cerr << cell;
+    ASSERT_TRUE(cell.mean.isApprox(Eigen::Vector2d{0.1, 0.433333}, 1e-6));
+    ASSERT_FALSE(cell.covariance.isZero());
+    ASSERT_GE(cell.covariance(1, 1), cell.covariance(0, 0));
   }
 }
 
-TEST(NDTCellTest, D2Scaling) {
-  Eigen::Array<double, 2, 2> cov;
-  // clang-format off
-  cov << 0.5, 0.0,
-          0.0, 0.5;
-  // clang-format on
-  Eigen::Vector2d mean{0.5, 0.5};
-  NDTCell cell{mean, cov};
+TEST(NDTSensorModelTests, SensorModel) {
+  double map_res = 0.5;
+  std::vector map_data{
+      Eigen::Vector2d{0.1, 0.2},  Eigen::Vector2d{0.112, 0.22}, Eigen::Vector2d{0.15, 0.23},
+      Eigen::Vector2d{0.1, 0.24}, Eigen::Vector2d{0.16, 0.25},  Eigen::Vector2d{0.1, 0.26},
+  };
+  auto cells = to_cells(map_data, map_res);
 
-  const double d2 = 0.8;
-  EXPECT_DOUBLE_EQ(cell.likelihood_at(Eigen::Vector2d{1.5, 1.2}, 1.0, d2), 0.096643156212102871);
-  EXPECT_DOUBLE_EQ(cell.likelihood_at(Eigen::Vector2d{0.12, 1.2}, 1.0, d2), 0.19161830396164195);
+  typename sparse_grid_t::map_type map_cells_data;
+  for (const auto& cell : cells) {
+    map_cells_data[(cell.mean.array() / map_res).cast<int>()] = cell;
+    std::cerr << cell;
+  }
+  std::vector perfect_measurement = map_data;
+  NDTSensorModel model{{}, sparse_grid_t{map_cells_data, map_res}};
+  auto state_weighing_fn = model(std::move(perfect_measurement));
+  // This is a perfect hit, so we should expect weight to be 1 + num_cells == 2.
+  ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE2d{}), 2);
+
+  // This is a perfect miss, so we should expect weight to be 1.
+  ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{-10, -10}}), 1.0);
 }
 
 }  // namespace beluga
