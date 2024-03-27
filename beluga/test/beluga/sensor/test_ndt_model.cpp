@@ -109,7 +109,7 @@ TEST(NDTSensorModelTests, FitPoints) {
     std::cerr << cell;
     ASSERT_TRUE(cell.mean.isApprox(Eigen::Vector2d{0.1, 0.433333}, 1e-6));
     ASSERT_FALSE(cell.covariance.isZero());
-    ASSERT_GE(cell.covariance(1, 1), cell.covariance(0, 0));
+    ASSERT_GT(cell.covariance(1, 1), cell.covariance(0, 0));
   }
 }
 
@@ -131,6 +131,9 @@ TEST(NDTSensorModelTests, SensorModel) {
   auto state_weighing_fn = model(std::move(perfect_measurement));
   // This is a perfect hit, so we should expect weight to be 1 + num_cells == 2.
   ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE2d{}), 2);
+
+  // Subtle miss, this value should be close to 1 but not quite.
+  ASSERT_GT(state_weighing_fn(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{0.1, 0.1}}), 1.0);
 
   // This is a perfect miss, so we should expect weight to be 1.
   ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{-10, -10}}), 1.0);
