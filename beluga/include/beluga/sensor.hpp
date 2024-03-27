@@ -63,5 +63,6 @@
 #include <beluga/sensor/bearing_sensor_model.hpp>
 #include <beluga/sensor/landmark_sensor_model.hpp>
 #include <beluga/sensor/likelihood_field_model.hpp>
+#include <beluga/sensor/ndt_sensor_model.hpp>
 
 #endif
