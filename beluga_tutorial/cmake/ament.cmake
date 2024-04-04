@@ -12,10 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+find_package(beluga REQUIRED)
+
 set(executable_name ${PROJECT_NAME}_main)
 
 add_executable(${executable_name}
   src/main.cpp
+)
+
+target_link_libraries(${executable_name}
+  beluga::beluga
 )
 
 install(TARGETS ${executable_name}
