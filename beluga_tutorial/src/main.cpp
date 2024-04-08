@@ -1,5 +1,6 @@
 // https://github.com/Ekumen-OS/beluga/issues/279#issuecomment-1903914387
 
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <random>
@@ -11,6 +12,8 @@
 #include <range/v3/view/take_exactly.hpp>
 
 #include <beluga/beluga.hpp>
+
+#define NUM_OF_PARTICLES 200
 
 // TODO: use template to use only one random function.
 bool generateRandomMeasurement(double mean, double sd) {
@@ -32,62 +35,52 @@ int main()
 {
     std::cout << "beluga tutorial - main.cpp start!!" << std::endl;
 
+    // Type of map: 1D map composed by walls or doors
     struct Landmark {
-        double x_position;
+        double pose;
         bool feature; // 0 = wall; 1 = Door
     };
 
-    //TODO: generate landmarks randomly in the map given a numbers of landmarks to generate.
-    std::vector<Landmark> landmark_map = {
-        {0.0, 0},
-        {1.0, 0},
-        {2.0, 0},
-        {3.0, 1},
-        {4.0, 0},
-        {5.0, 1},
-        {6.0, 0},
-        {7.0, 0},
-        {8.0, 0},
-        {9.0, 1},
-        {10.0, 0}
-    };
-
-    std::uniform_int_distribution initial_distribution{0, static_cast<int>(landmark_map.size())};
-
-    std::cout << "landmark_map size: " << static_cast<int>(landmark_map.size()) << std::endl;
-
-    using Particle = std::tuple<double, beluga::Weight>;
-
-    auto particles = beluga::views::sample(initial_distribution) |
-                 ranges::views::transform(beluga::make_from_state<Particle>) |
-                 ranges::views::take_exactly(50) |
-                 ranges::to<beluga::TupleVector>;
-
-    struct Dataset {
-        double odom;
-        bool measurement;  
-    };
-
-    // Add noise to odom and measurement
-    std::vector<Dataset> data_set;
-    for (const auto& l : landmark_map) {
-        double odom = generateRandomOdom(l.x_position, 0.1);
-        bool measurement = generateRandomMeasurement(l.feature, 0.35);
-        data_set.push_back({odom, measurement});
+    // Generate a random map
+    const size_t map_size = 100;
+    std::vector<Landmark> landmark_map;
+    for(size_t i = 0; i < map_size; i++)
+    {
+        Landmark l;
+        l.pose = static_cast<double>(i);
+        l.feature = generateRandomMeasurement(0, 0.5);
+        landmark_map.push_back(l);
     }
 
-    // Display the resulted dataset
-    // std::cout << "Dataset:" << std::endl;
-    // for (const auto& d : data_set) {
-    //     std::cout << "Odom: " << d.odom << ", Measurement: " << d.measurement << std::endl;
-    // }
+    // Save the map in a csv file
+    std::string filename{"map.csv"};
+    std::fstream fout {filename, fout.trunc | fout.out};
+    fout << "pose,feature" << std::endl;
+    for(const auto& l: landmark_map)
+    {
+        fout << l.pose << ","
+             << l.feature    << std::endl;
+    }
 
-    double last_x_position = landmark_map[0].x_position;
-    for (const auto& d : data_set) {
+    // Generate particles
+    std::uniform_int_distribution initial_distribution{0, static_cast<int>(landmark_map.size())};
+    using Particle = std::tuple<double, beluga::Weight>;
+    auto particles = beluga::views::sample(initial_distribution) |
+                 ranges::views::transform(beluga::make_from_state<Particle>) |
+                 ranges::views::take_exactly(NUM_OF_PARTICLES) |
+                 ranges::to<beluga::TupleVector>;
+
+    // Execute the particle filter using beluga
+    double prev_pose = landmark_map[0].pose;
+    for (const auto& l : landmark_map) {
         
+        // Generate noisy odom and measurement
+        double odom = generateRandomOdom(l.pose, 0.1);
+        bool measurement = generateRandomMeasurement(l.feature, 0.35);
+
         auto motion_model = [&](double state) {
-            double distance = d.odom - last_x_position;
-            last_x_position = d.odom;
+            double distance = odom - prev_pose;
+            prev_pose = odom;
             double translaton_param = generateRandomOdom(0, 0.3);
             return state + distance - translaton_param;
         };
@@ -102,7 +95,7 @@ int main()
             {
                 if(l.feature == 1)
                 {
-                    double temp = exp( -1 * pow(l.x_position - state, 2));
+                    double temp = exp( -1 * pow(l.pose - state, 2));
                     factor += temp;
                     probability_landmark.push_back(temp);
                     probability_no_landmark *= (1 - temp);
@@ -119,7 +112,7 @@ int main()
                 probability_landmark_normalize_sum += (pl/factor);
             }
 
-            if(d.measurement == 1)
+            if(measurement == 1)
             {
                 return probability_landmark_normalize_sum;
             }
@@ -133,7 +126,7 @@ int main()
                      beluga::actions::normalize;
 
         // Resample
-        particles |= beluga::views::sample | ranges::views::take_exactly(50)|
+        particles |= beluga::views::sample | ranges::views::take_exactly(NUM_OF_PARTICLES)|
                     beluga::actions::assign;
 
         // TODO: It is throwing me a compiling error when I'm trying to use the estimate function.
