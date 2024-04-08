@@ -37,6 +37,7 @@ int main()
         bool feature; // 0 = wall; 1 = Door
     };
 
+    //TODO: generate landmarks randomly in the map given a numbers of landmarks to generate.
     std::vector<Landmark> landmark_map = {
         {0.0, 0},
         {1.0, 0},
@@ -89,24 +90,38 @@ int main()
             return odom;
         };
 
-        // TODO: ask here about the sensor model. It is correct to use the formula w = w - 1?
-        // w = exp(x), x = -(d^2)/(2*sigma), d = distance between coincidence reading
         auto sensor_model = [&](const double& state) {
+            
+            double probability_no_landmark = 1;
+            std::vector<double> probability_landmark;
+            double factor = 0;
 
-            // Calculate w
-            double w = 0;
             for(const auto& l : landmark_map)
             {
-                if(l.feature == d.measurement)
+                if(l.feature == 1)
                 {
-                    w += exp( -1 * ((pow(l.x_position - state, 2)) / (2 * 0.2)) ) ;
+                    double temp = exp( -1 * pow(norm(l.x_position - state), 2));
+                    factor += temp;
+                    probability_landmark.push_back(temp);
+                    probability_no_landmark *= (1 - temp);
                 }
             }
-            if(d.measurement == 0)
+
+            factor += probability_no_landmark;
+
+            // Normalize and sum
+            probability_no_landmark /= factor;
+            double probability_landmark_normalize_sum = 0;
+            for(const auto& pl : probability_landmark)
             {
-                w = 1 - w;
+                probability_landmark_normalize_sum += (pl/factor);
             }
-            return w;
+
+            if(d.measurement == 1)
+            {
+                return probability_landmark_normalize_sum;
+            }
+            return probability_no_landmark;
         };
 
         // TODO: To showcase the example, it may be useful to apply each range adaptor separately and save the particles
