@@ -38,7 +38,7 @@ int main()
     // Type of map: 1D map composed by walls or doors
     struct Landmark {
         double pose;
-        bool feature; // 0 = wall; 1 = Door
+        bool mark; // 0 = wall; 1 = Door
     };
 
     // Generate a random map
@@ -48,18 +48,18 @@ int main()
     {
         Landmark l;
         l.pose = static_cast<double>(i);
-        l.feature = generateRandomMeasurement(0, 0.5);
+        l.mark = generateRandomMeasurement(0, 0.5);
         landmark_map.push_back(l);
     }
 
     // Save the map in a csv file
     std::string filename{"map.csv"};
     std::fstream fout {filename, fout.trunc | fout.out};
-    fout << "pose,feature" << std::endl;
+    fout << "pose,mark" << std::endl;
     for(const auto& l: landmark_map)
     {
         fout << l.pose << ","
-             << l.feature    << std::endl;
+             << l.mark    << std::endl;
     }
 
     // Generate particles
@@ -76,7 +76,7 @@ int main()
         
         // Generate noisy odom and measurement
         double odom = generateRandomOdom(l.pose, 0.1);
-        bool measurement = generateRandomMeasurement(l.feature, 0.35);
+        bool measurement = generateRandomMeasurement(l.mark, 0.35);
 
         auto motion_model = [&](double state) {
             double distance = odom - prev_pose;
@@ -87,27 +87,27 @@ int main()
 
         auto sensor_model = [&](const double& state) {
             
-            double probability_no_landmark = 1;
-            std::vector<double> probability_landmark;
+            double no_landmark_probability = 1;
+            std::vector<double> landmark_probability;
             double factor = 0;
 
             for(const auto& l : landmark_map)
             {
-                if(l.feature == 1)
+                if(l.mark == 1)
                 {
-                    double temp = exp( -1 * pow(l.pose - state, 2));
-                    factor += temp;
-                    probability_landmark.push_back(temp);
-                    probability_no_landmark *= (1 - temp);
+                    double probability = exp( -1 * pow(l.pose - state, 2));
+                    factor += probability;
+                    landmark_probability.push_back(probability);
+                    no_landmark_probability *= (1 - probability);
                 }
             }
 
-            factor += probability_no_landmark;
+            factor += no_landmark_probability;
 
             // Normalize and sum
-            probability_no_landmark /= factor;
+            no_landmark_probability /= factor;
             double probability_landmark_normalize_sum = 0;
-            for(const auto& pl : probability_landmark)
+            for(const auto& pl : landmark_probability)
             {
                 probability_landmark_normalize_sum += (pl/factor);
             }
@@ -116,7 +116,7 @@ int main()
             {
                 return probability_landmark_normalize_sum;
             }
-            return probability_no_landmark;
+            return no_landmark_probability;
         };
 
         // TODO: To showcase the example, it may be useful to apply each range adaptor separately and save the particles
