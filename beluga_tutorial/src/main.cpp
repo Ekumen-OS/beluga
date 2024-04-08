@@ -82,12 +82,14 @@ int main()
     //     std::cout << "Odom: " << d.odom << ", Measurement: " << d.measurement << std::endl;
     // }
 
+    double last_x_position = landmark_map[0].x_position;
     for (const auto& d : data_set) {
         
-        //TODO: save the last position, calculate the traslation and return it
-        auto motion_model = [&](double odom) {
-            odom = d.odom + 1;
-            return odom;
+        auto motion_model = [&](double state) {
+            double distance = d.odom - last_x_position;
+            last_x_position = d.odom;
+            double translaton_param = generateRandomOdom(0, 0.3);
+            return state + distance - translaton_param;
         };
 
         auto sensor_model = [&](const double& state) {
@@ -100,7 +102,7 @@ int main()
             {
                 if(l.feature == 1)
                 {
-                    double temp = exp( -1 * pow(norm(l.x_position - state), 2));
+                    double temp = exp( -1 * pow(l.x_position - state, 2));
                     factor += temp;
                     probability_landmark.push_back(temp);
                     probability_no_landmark *= (1 - temp);
@@ -131,9 +133,6 @@ int main()
                      beluga::actions::normalize;
 
         // Resample
-        // TODO: It is throwing me a compiling error when I'm trying to resample the particles.
-        // TODO: which distribution use for the resample?
-        std::uniform_int_distribution resample_distribution{0, static_cast<int>(landmark_map.size())};
         particles |= beluga::views::sample | ranges::views::take_exactly(50)|
                     beluga::actions::assign;
 
