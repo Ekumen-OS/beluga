@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <stdexcept>
+#include <unordered_map>
+
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 #include <beluga/sensor/ndt_sensor_model.hpp>
+
+#include <Eigen/Core>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest-typed-test.h>
 #include <gtest/gtest.h>
-#include <Eigen/Core>
 #include <sophus/se2.hpp>
-
-#include <stdexcept>
-#include <unordered_map>
 
 namespace beluga {
 

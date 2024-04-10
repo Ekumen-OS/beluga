@@ -18,14 +18,13 @@
 #include <beluga/sensor/data/ndt_cell.hpp>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 
-#include <Eigen/Core>
-#include <Eigen/src/Core/util/Constants.h>
-#include <Eigen/src/Core/util/Meta.h>
 #include <H5Cpp.h>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 #include <sophus/so2.hpp>
+
+#include <Eigen/Core>
 
 #include <cstdint>
 #include <filesystem>
@@ -231,7 +230,8 @@ NDTMapRepresentationT load_from_hdf5_2d(const std::filesystem::path& path_to_hdf
 
   // Note: Ranges::zip_view doesn't seem to work in old Eigen.
   for (size_t i = 0; i < covariances.size(); ++i) {
-    map[cells_matrix.col(i)] = NDTCell2d{means_matrix.col(i), covariances.at(i)};
+    map[cells_matrix.col(static_cast<Eigen::Index>(i))] =
+        NDTCell2d{means_matrix.col(static_cast<Eigen::Index>(i)), covariances.at(i)};
   }
 
   return NDTMapRepresentationT{std::move(map), resolution};

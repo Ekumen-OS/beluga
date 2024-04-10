@@ -16,18 +16,19 @@
 #ifndef BELUGA_SENSOR_DATA_NDT_CELL_HPP
 #define BELUGA_SENSOR_DATA_NDT_CELL_HPP
 
+#include <ostream>
+#include <type_traits>
+
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 
 #include <Eigen/Core>
+
 #include <Eigen/src/Core/util/Constants.h>
 #include <range/v3/view/zip.hpp>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 #include <sophus/so2.hpp>
-
-#include <ostream>
-#include <type_traits>
 
 namespace beluga {
 
