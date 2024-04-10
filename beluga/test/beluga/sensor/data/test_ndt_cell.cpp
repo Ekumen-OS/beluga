@@ -20,6 +20,7 @@
 #include <Eigen/Core>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
+#include <sstream>
 
 namespace beluga {
 
@@ -58,6 +59,13 @@ TEST(NDTCellTests, Product) {
     EXPECT_TRUE(transformed.covariance.isApprox(expected_transformed_cov));
     EXPECT_TRUE(transformed.mean.isApprox(Eigen::Vector2d{-2, 1})) << transformed;
   }
+}
+
+TEST(NDTCellTests, Ostream) {
+  const NDTCell2d cell{Eigen::Vector2d{1, 2}, get_diagonal_covariance()};
+  std::stringstream ss;
+  ss << cell;
+  ASSERT_GT(ss.str().size(), 0);
 }
 
 }  // namespace beluga

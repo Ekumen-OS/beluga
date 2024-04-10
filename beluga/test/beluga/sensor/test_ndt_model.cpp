@@ -21,6 +21,7 @@
 #include <Eigen/Core>
 #include <sophus/se2.hpp>
 
+#include <stdexcept>
 #include <unordered_map>
 
 namespace beluga {
@@ -141,9 +142,13 @@ TEST(NDTSensorModelTests, SensorModel) {
   ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{-10, -10}}), 1.0);
 }
 
-TEST(NDTSensorModelTests, LoadFromHDF5) {
+TEST(NDTSensorModelTests, LoadFromHDF5HappyPath) {
   const auto ndt_map_representation = io::load_from_hdf5_2d<sparse_grid_2d_t>("./test_data/turtlebot3_world.hdf5");
   ASSERT_EQ(ndt_map_representation.size(), 30UL);
+}
+
+TEST(NDTSensorModelTests, LoadFromHDF5NonExistingFile) {
+  ASSERT_THROW(io::load_from_hdf5_2d<sparse_grid_2d_t>("bad_file.hdf5"), std::invalid_argument);
 }
 
 }  // namespace beluga
