@@ -20,6 +20,7 @@
 #include <Eigen/Core>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
+
 #include <sstream>
 
 namespace beluga {

@@ -230,7 +230,7 @@ NDTMapRepresentationT load_from_hdf5_2d(const std::filesystem::path& path_to_hdf
   typename NDTMapRepresentationT::map_type map{};
 
   // Note: Ranges::zip_view doesn't seem to work in old Eigen.
-  for (Eigen::Index i = 0; i < covariances.size(); ++i) {
+  for (size_t i = 0; i < covariances.size(); ++i) {
     map[cells_matrix.col(i)] = NDTCell2d{means_matrix.col(i), covariances.at(i)};
   }
 
