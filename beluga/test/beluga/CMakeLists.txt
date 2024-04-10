@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+file(COPY test_data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 add_executable(
   test_beluga
   actions/test_assign.cpp
@@ -39,6 +41,7 @@ add_executable(
   sensor/data/test_landmark_map.cpp
   sensor/data/test_laser_scan.cpp
   sensor/data/test_linear_grid.cpp
+  sensor/data/test_ndt_cell.cpp
   sensor/data/test_occupancy_grid.cpp
   sensor/data/test_regular_grid.cpp
   sensor/data/test_sparse_value_grid.cpp
@@ -46,6 +49,7 @@ add_executable(
   sensor/test_bearing_sensor_model.cpp
   sensor/test_landmark_sensor_model.cpp
   sensor/test_likelihood_field_model.cpp
+  sensor/test_ndt_model.cpp
   test_primitives.cpp
   test_spatial_hash.cpp
   testing/test_sophus_matchers.cpp
