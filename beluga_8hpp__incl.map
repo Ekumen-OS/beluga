@@ -1,52 +1,52 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/beluga.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/beluga.hpp">
-<area shape="rect" id="node1" title="Includes all the Beluga API." alt="" coords="2170,5,2362,61"/>
-<area shape="rect" id="node2" href="$actions_8hpp.html" title="Implementation of useful range actions." alt="" coords="1205,191,1350,218"/>
-<area shape="rect" id="node6" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="2441,474,2605,501"/>
-<area shape="rect" id="node15" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="2246,191,2408,218"/>
-<area shape="rect" id="node23" href="$containers_8hpp.html" title="Implementation of efficient containers." alt="" coords="2122,109,2289,136"/>
-<area shape="rect" id="node26" href="$type__traits_8hpp.html" title="Includes all Beluga type traits." alt="" coords="3530,288,3698,315"/>
-<area shape="rect" id="node28" href="$motion_8hpp.html" title="Includes all Beluga motion models." alt="" coords="3442,385,3586,411"/>
-<area shape="rect" id="node32" href="$policies_8hpp.html" title="Implementation of useful policies." alt="" coords="201,109,349,136"/>
-<area shape="rect" id="node37" href="$random_8hpp.html" title="Includes all Beluga random distributions." alt="" coords="4086,109,4234,136"/>
-<area shape="rect" id="node40" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="1777,109,1917,136"/>
-<area shape="rect" id="node45" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="3042,191,3178,218"/>
-<area shape="rect" id="node3" href="$assign_8hpp.html" title="Implementation of the assign range adaptor object." alt="" coords="541,288,732,315"/>
-<area shape="rect" id="node4" href="$normalize_8hpp.html" title="Implementation of the normalize range adaptor object." alt="" coords="1266,288,1481,315"/>
-<area shape="rect" id="node13" href="$propagate_8hpp.html" title="Implementation of the propagate range adaptor object." alt="" coords="808,288,1022,315"/>
-<area shape="rect" id="node14" href="$reweight_8hpp.html" title="Implementation of the reweight range adaptor object." alt="" coords="1505,288,1712,315"/>
-<area shape="rect" id="node5" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="2464,377,2608,419"/>
-<area shape="rect" id="node12" href="$particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="1909,385,2105,411"/>
-<area shape="rect" id="node10" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="3217,556,3357,597"/>
-<area shape="rect" id="node7" title=" " alt="" coords="3469,645,3524,672"/>
-<area shape="rect" id="node8" title=" " alt="" coords="2758,645,2850,672"/>
-<area shape="rect" id="node9" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="2488,556,2699,597"/>
-<area shape="rect" id="node11" href="$forward__like_8hpp_source.html" title=" " alt="" coords="2251,556,2414,597"/>
-<area shape="rect" id="node16" href="$distance__map_8hpp.html" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="1994,281,2186,322"/>
-<area shape="rect" id="node17" href="$effective__sample__size_8hpp.html" title="Implementation of an algorithm to calculate the effective sample size (ESS)." alt="" coords="1047,281,1242,322"/>
-<area shape="rect" id="node18" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="2210,288,2444,315"/>
-<area shape="rect" id="node19" href="$exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="2750,377,2965,419"/>
-<area shape="rect" id="node20" href="$raycasting_8hpp.html" title="Implementation of raycasting algorithms." alt="" coords="1736,288,1969,315"/>
-<area shape="rect" id="node21" href="$spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="3011,556,3192,597"/>
-<area shape="rect" id="node22" href="$thrun__recovery__probability__estimator_8hpp_source.html" title=" " alt="" coords="2732,273,2903,329"/>
-<area shape="rect" id="node24" href="$circular__array_8hpp.html" title="Implementation of a generic circular array container." alt="" coords="674,467,865,508"/>
-<area shape="rect" id="node25" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="3645,184,3820,225"/>
-<area shape="rect" id="node27" href="$zip_8hpp.html" title="Implementation of a zip range adaptor object." alt="" coords="3773,288,3932,315"/>
-<area shape="rect" id="node29" href="$differential__drive__model_8hpp.html" title="Implementation of a differential drive odometry motion model." alt="" coords="3394,467,3585,508"/>
-<area shape="rect" id="node30" href="$omnidirectional__drive__model_8hpp.html" title="Implementation of an omnidirectional drive odometry motion model." alt="" coords="3609,467,3832,508"/>
-<area shape="rect" id="node31" href="$stationary__model_8hpp.html" title="Implementation of a stationary motion model." alt="" coords="3183,467,3370,508"/>
-<area shape="rect" id="node33" href="$every__n_8hpp.html" title="Defines a policy for triggering an action every N calls." alt="" coords="194,184,356,225"/>
-<area shape="rect" id="node34" href="$policy_8hpp_source.html" title=" " alt="" coords="180,288,370,315"/>
-<area shape="rect" id="node35" href="$on__effective__size__drop_8hpp.html" title="Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric." alt="" coords="380,184,562,225"/>
-<area shape="rect" id="node36" href="$on__motion_8hpp.html" title="Defines a policy for triggering an action based on motion." alt="" coords="30,184,170,225"/>
-<area shape="rect" id="node38" href="$multivariate__normal__distribution_8hpp.html" title="Implementation of a multivariate normal distribution." alt="" coords="4058,184,4262,225"/>
-<area shape="rect" id="node39" href="$multivariate__uniform__distribution_8hpp.html" title="Implementation of a multivariate uniform distribution for SE(2) and SE(3) spaces." alt="" coords="4286,184,4490,225"/>
-<area shape="rect" id="node41" href="$beam__model_8hpp.html" title="Implementation of a beam sensor model for range finders." alt="" coords="1770,184,1924,225"/>
-<area shape="rect" id="node42" href="$bearing__sensor__model_8hpp.html" title="Implementation of a discrete landmark bearing sensor model." alt="" coords="1578,184,1745,225"/>
-<area shape="rect" id="node43" href="$landmark__sensor__model_8hpp.html" title="Implementation of a discrete landmark sensor model." alt="" coords="1375,184,1554,225"/>
-<area shape="rect" id="node44" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="2000,184,2180,225"/>
-<area shape="rect" id="node46" href="$elements_8hpp.html" title="Implementation of the C++20&#39;s std::views::elements view." alt="" coords="3634,385,3836,411"/>
-<area shape="rect" id="node47" href="$random__intersperse_8hpp.html" title="Implementation of a random_intersperse range adaptor object." alt="" coords="2723,556,2886,597"/>
-<area shape="rect" id="node48" href="$sample_8hpp.html" title="Implementation of a sample (with replacement) range adaptor object." alt="" coords="2520,288,2708,315"/>
-<area shape="rect" id="node49" href="$take__evenly_8hpp.html" title="Implementation of a take_evenly range adaptor object." alt="" coords="3288,288,3505,315"/>
-<area shape="rect" id="node50" href="$take__while__kld_8hpp.html" title="Implementation of a take_while_kld range adaptor object." alt="" coords="2928,281,3110,322"/>
+<area shape="rect" id="node1" title="Includes all the Beluga API." alt="" coords="2898,5,3090,61"/>
+<area shape="rect" id="node2" href="$actions_8hpp.html" title="Implementation of useful range actions." alt="" coords="1204,191,1349,218"/>
+<area shape="rect" id="node6" href="$primitives_8hpp.html" title="Implementation of library primitives to abstract member access." alt="" coords="2543,474,2707,501"/>
+<area shape="rect" id="node15" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="2468,191,2629,218"/>
+<area shape="rect" id="node23" href="$containers_8hpp.html" title="Implementation of efficient containers." alt="" coords="3512,109,3679,136"/>
+<area shape="rect" id="node26" href="$type__traits_8hpp.html" title="Includes all Beluga type traits." alt="" coords="3754,288,3922,315"/>
+<area shape="rect" id="node27" href="$motion_8hpp.html" title="Includes all Beluga motion models." alt="" coords="3707,385,3851,411"/>
+<area shape="rect" id="node31" href="$policies_8hpp.html" title="Implementation of useful policies." alt="" coords="239,109,387,136"/>
+<area shape="rect" id="node36" href="$random_8hpp.html" title="Includes all Beluga random distributions." alt="" coords="4025,109,4173,136"/>
+<area shape="rect" id="node39" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="1823,109,1963,136"/>
+<area shape="rect" id="node45" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="3175,191,3311,218"/>
+<area shape="rect" id="node3" href="$assign_8hpp.html" title="Implementation of the assign range adaptor object." alt="" coords="716,288,907,315"/>
+<area shape="rect" id="node4" href="$normalize_8hpp.html" title="Implementation of the normalize range adaptor object." alt="" coords="1169,288,1384,315"/>
+<area shape="rect" id="node13" href="$propagate_8hpp.html" title="Implementation of the propagate range adaptor object." alt="" coords="931,288,1145,315"/>
+<area shape="rect" id="node14" href="$reweight_8hpp.html" title="Implementation of the reweight range adaptor object." alt="" coords="1408,288,1615,315"/>
+<area shape="rect" id="node5" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="2622,377,2766,419"/>
+<area shape="rect" id="node12" href="$particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="2041,385,2237,411"/>
+<area shape="rect" id="node10" href="$tuple__traits_8hpp.html" title="Implementation of traits for tuple&#45;like types." alt="" coords="3509,556,3649,597"/>
+<area shape="rect" id="node7" title=" " alt="" coords="3736,645,3791,672"/>
+<area shape="rect" id="node8" title=" " alt="" coords="3017,645,3109,672"/>
+<area shape="rect" id="node9" href="$strongly__typed__numeric_8hpp.html" title="Implementation of a strongly typed numeric helper." alt="" coords="2701,556,2911,597"/>
+<area shape="rect" id="node11" href="$forward__like_8hpp_source.html" title=" " alt="" coords="2514,556,2677,597"/>
+<area shape="rect" id="node16" href="$distance__map_8hpp.html" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="2117,281,2309,322"/>
+<area shape="rect" id="node17" href="$effective__sample__size_8hpp.html" title="Implementation of an algorithm to calculate the effective sample size (ESS)." alt="" coords="1639,281,1834,322"/>
+<area shape="rect" id="node18" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="2333,288,2567,315"/>
+<area shape="rect" id="node19" href="$exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="2847,377,3061,419"/>
+<area shape="rect" id="node20" href="$raycasting_8hpp.html" title="Implementation of raycasting algorithms." alt="" coords="1859,288,2092,315"/>
+<area shape="rect" id="node21" href="$spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="3037,556,3218,597"/>
+<area shape="rect" id="node22" href="$thrun__recovery__probability__estimator_8hpp_source.html" title=" " alt="" coords="2855,273,3026,329"/>
+<area shape="rect" id="node24" href="$circular__array_8hpp.html" title="Implementation of a generic circular array container." alt="" coords="3243,556,3433,597"/>
+<area shape="rect" id="node25" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="3747,184,3921,225"/>
+<area shape="rect" id="node28" href="$differential__drive__model_8hpp.html" title="Implementation of a differential drive odometry motion model." alt="" coords="3897,467,4088,508"/>
+<area shape="rect" id="node29" href="$omnidirectional__drive__model_8hpp.html" title="Implementation of an omnidirectional drive odometry motion model." alt="" coords="3439,467,3661,508"/>
+<area shape="rect" id="node30" href="$stationary__model_8hpp.html" title="Implementation of a stationary motion model." alt="" coords="3686,467,3873,508"/>
+<area shape="rect" id="node32" href="$every__n_8hpp.html" title="Defines a policy for triggering an action every N calls." alt="" coords="5,184,167,225"/>
+<area shape="rect" id="node33" href="$policy_8hpp_source.html" title=" " alt="" coords="218,288,407,315"/>
+<area shape="rect" id="node34" href="$on__effective__size__drop_8hpp.html" title="Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric." alt="" coords="407,184,589,225"/>
+<area shape="rect" id="node35" href="$on__motion_8hpp.html" title="Defines a policy for triggering an action based on motion." alt="" coords="243,184,383,225"/>
+<area shape="rect" id="node37" href="$multivariate__normal__distribution_8hpp.html" title="Implementation of a multivariate normal distribution." alt="" coords="3997,184,4201,225"/>
+<area shape="rect" id="node38" href="$multivariate__uniform__distribution_8hpp.html" title="Implementation of a multivariate uniform distribution for SE(2) and SE(3) spaces." alt="" coords="4225,184,4429,225"/>
+<area shape="rect" id="node40" href="$beam__model_8hpp.html" title="Implementation of a beam sensor model for range finders." alt="" coords="1910,184,2065,225"/>
+<area shape="rect" id="node41" href="$bearing__sensor__model_8hpp.html" title="Implementation of a discrete landmark bearing sensor model." alt="" coords="1516,184,1683,225"/>
+<area shape="rect" id="node42" href="$landmark__sensor__model_8hpp.html" title="Implementation of a discrete landmark sensor model." alt="" coords="1707,184,1886,225"/>
+<area shape="rect" id="node43" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="2112,184,2292,225"/>
+<area shape="rect" id="node44" href="$ndt__sensor__model_8hpp_source.html" title=" " alt="" coords="533,467,721,508"/>
+<area shape="rect" id="node46" href="$elements_8hpp.html" title="Implementation of the C++20&#39;s std::views::elements view." alt="" coords="3876,385,4077,411"/>
+<area shape="rect" id="node47" href="$random__intersperse_8hpp.html" title="Implementation of a random_intersperse range adaptor object." alt="" coords="3151,377,3314,419"/>
+<area shape="rect" id="node48" href="$sample_8hpp.html" title="Implementation of a sample (with replacement) range adaptor object." alt="" coords="2643,288,2831,315"/>
+<area shape="rect" id="node49" href="$take__evenly_8hpp.html" title="Implementation of a take_evenly range adaptor object." alt="" coords="3512,288,3729,315"/>
+<area shape="rect" id="node50" href="$take__while__kld_8hpp.html" title="Implementation of a take_while_kld range adaptor object." alt="" coords="3152,281,3335,322"/>
 </map>
