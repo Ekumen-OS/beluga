@@ -12,24 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_SENSOR_NDT_SENSOR_MODEL_HPP
+#define BELUGA_SENSOR_NDT_SENSOR_MODEL_HPP
 
-#include <Eigen/src/Core/util/Constants.h>
-#include <Eigen/Core>
 #include <beluga/sensor/data/ndt_cell.hpp>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
-#include <cstdint>
-#include <filesystem>
-#include <iostream>
-#include <range/v3/view/zip.hpp>
+
+#include <Eigen/src/Core/util/Constants.h>
+#include <Eigen/src/Core/util/Meta.h>
+#include <H5Cpp.h>
+#include <Eigen/Core>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 #include <sophus/so2.hpp>
+
+#include <cstdint>
+#include <filesystem>
 #include <stdexcept>
 #include <type_traits>
 #include <unordered_map>
-#include "H5Cpp.h"
 
 namespace beluga {
 
@@ -37,10 +39,10 @@ namespace detail {
 /// Hash function for N dimensional Eigen::Vectors of int.
 /// The code is from `hash_combine` function of the Boost library. See
 /// http://www.boost.org/doc/libs/1_55_0/doc/html/hash/reference.html#boost.hash_combine .
-template <size_t N>
+template <int N>
 struct CellHasher {
   /// Hashes an integer N dimensional integer vector.
-  size_t operator()(const Eigen::Vector<int, N> vector) const {
+  size_t operator()(const Eigen::Matrix<int, N, 1> vector) const {
     size_t seed = 0;
     for (auto i = 0L; i < vector.size(); ++i) {
       auto elem = *(vector.data() + i);
@@ -51,12 +53,12 @@ struct CellHasher {
 };
 
 /// Fit a vector of points to an NDT cell, by computing its mean and covariance.
-template <size_t NDim, typename Scalar = double>
-inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Vector<Scalar, NDim>>& points) {
+template <int NDim, typename Scalar = double>
+inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Matrix<Scalar, NDim, 1>>& points) {
   static constexpr double kMinVariance = 1e-5;
   Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic>> points_view(
       reinterpret_cast<const Scalar*>(points.data()), 2, static_cast<int64_t>(points.size()));
-  const Eigen::Vector<Scalar, NDim> mean = points_view.rowwise().mean();
+  const Eigen::Matrix<Scalar, NDim, 1> mean = points_view.rowwise().mean();
   const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic> centered = points_view.colwise() - mean;
   // Use sample covariance.
   Eigen::Matrix<Scalar, NDim, Eigen::Dynamic> cov =
@@ -72,9 +74,9 @@ inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Vector<Scalar, 
 /// Given a number of N dimensional points and a resolution, constructs a vector of NDT cells, by clusterizing the
 /// points using 'resolution' and fitting a normal distribution to each of the resulting clusters if they contain a
 /// minimum number of points in them.
-template <size_t NDim, typename Scalar = double>
+template <int NDim, typename Scalar = double>
 inline std::vector<NDTCell<NDim, Scalar>> to_cells(
-    const std::vector<Eigen::Vector<Scalar, NDim>>& points,
+    const std::vector<Eigen::Matrix<Scalar, NDim, 1>>& points,
     const double resolution) {
   static constexpr int kMinPointsPerCell = 5;
 
@@ -84,9 +86,10 @@ inline std::vector<NDTCell<NDim, Scalar>> to_cells(
   std::vector<NDTCell<NDim, Scalar>> ret;
   ret.reserve(static_cast<size_t>(points_view.cols()) / kMinPointsPerCell);
 
-  std::unordered_map<Eigen::Vector<int, NDim>, std::vector<Eigen::Vector<Scalar, NDim>>, CellHasher<NDim>> cell_grid;
-  for (const Eigen::Vector2d& col : points) {
-    cell_grid[(col / resolution).cast<int>()].emplace_back(col);
+  std::unordered_map<Eigen::Matrix<int, NDim, 1>, std::vector<Eigen::Matrix<Scalar, NDim, 1>>, CellHasher<NDim>>
+      cell_grid;
+  for (const Eigen::Matrix<Scalar, NDim, 1>& col : points) {
+    cell_grid[(col / resolution).template cast<int>()].emplace_back(col);
   }
 
   for (const auto& [cell, points_in_cell] : cell_grid) {
@@ -134,7 +137,7 @@ class NDTSensorModel {
   /// Weight type of the particle.
   using weight_type = double;
   /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<Eigen::Vector<typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim>>;
+  using measurement_type = std::vector<Eigen::Matrix<typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim, 1>>;
   /// Map representation type.
   using map_type = SparseGridT;
   /// Parameter type that the constructor uses to configure the NDT sensor model.
@@ -226,13 +229,16 @@ NDTMapRepresentationT load_from_hdf5_2d(const std::filesystem::path& path_to_hdf
 
   typename NDTMapRepresentationT::map_type map{};
 
-  for (const auto& [cell, mean, covariance] :
-       ranges::zip_view(cells_matrix.colwise(), means_matrix.colwise(), covariances)) {
-    map[cell] = NDTCell2d{mean, covariance};
+  // Note: Ranges::zip_view doesn't seem to work in old Eigen.
+  for (Eigen::Index i = 0; i < covariances.size(); ++i) {
+    map[cells_matrix.col(i)] = NDTCell2d{means_matrix.col(i), covariances.at(i)};
   }
+
   return NDTMapRepresentationT{std::move(map), resolution};
 }
 
 }  // namespace io
 
 }  // namespace beluga
+
+#endif

@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <beluga/sensor/data/ndt_cell.hpp>
+
 #include <gmock/gmock.h>
 #include <gtest/gtest-typed-test.h>
 #include <gtest/gtest.h>
 #include <Eigen/Core>
-#include <beluga/sensor/data/ndt_cell.hpp>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
+
 namespace beluga {
 
 namespace {
