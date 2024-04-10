@@ -18,8 +18,8 @@
 
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 
-#include <Eigen/src/Core/util/Constants.h>
 #include <Eigen/Core>
+#include <Eigen/src/Core/util/Constants.h>
 #include <range/v3/view/zip.hpp>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>

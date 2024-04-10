@@ -18,10 +18,10 @@
 #include <beluga/sensor/data/ndt_cell.hpp>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 
+#include <Eigen/Core>
 #include <Eigen/src/Core/util/Constants.h>
 #include <Eigen/src/Core/util/Meta.h>
 #include <H5Cpp.h>
-#include <Eigen/Core>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
