@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@
 namespace beluga {
 
 namespace {
+
 Eigen::Matrix2Xd get_diagonal_covariance(double x_var = 0.5, double y_var = 0.8) {
   return Eigen::Vector2d{x_var, y_var}.asDiagonal();
 }

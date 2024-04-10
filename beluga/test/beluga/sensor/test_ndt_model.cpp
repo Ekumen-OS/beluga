@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2024 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -116,6 +116,17 @@ TEST(NDTSensorModelTests, FitPoints) {
     ASSERT_FALSE(cell.covariance.isZero());
     ASSERT_GT(cell.covariance(1, 1), cell.covariance(0, 0));
   }
+}
+
+TEST(NDTSensorModelTests, ToCellsNotEnoughPointsInCell) {
+  const double map_res = 0.5;
+  std::vector map_data{
+      Eigen::Vector2d{0.1, 0.2},
+      Eigen::Vector2d{0.112, 0.22},
+      Eigen::Vector2d{0.15, 0.23},
+  };
+  const auto cells = detail::to_cells<2UL>(map_data, map_res);
+  ASSERT_EQ(cells.size(), 0UL);
 }
 
 TEST(NDTSensorModelTests, SensorModel) {

@@ -125,9 +125,7 @@ class NDTSensorModel {
   static_assert(std::is_same_v<SparseValueGrid<typename SparseGridT::map_type>, SparseGridT>);
   /// NDT Cell type.
   using ndt_cell_type = typename SparseGridT::mapped_type;
-  static_assert(
-      ndt_cell_type::num_dim == 2 || ndt_cell_type::num_dim == 3,
-      "NDT sensor model is only implemented for 2D or 3D problems.");
+  static_assert(ndt_cell_type::num_dim == 2, "NDT sensor model is only implemented for 2D problems.");
   /// State type of a particle.
   using state_type = std::conditional_t<
       ndt_cell_type::num_dim == 2,
