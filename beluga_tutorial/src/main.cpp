@@ -24,10 +24,14 @@
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
+#include <range/v3/action.hpp>
 
 #include <beluga/beluga.hpp>
 
-static constexpr int kNumParticles = 200; 
+// Tutorial parameters
+static constexpr int mapSize = 100;
+static constexpr int numDoors = mapSize / 3; 
+static constexpr int kNumParticles = 200;
 
 // TODO: use template to use only one random function.
 bool generateRandomMeasurement(double mean, double sd) {
@@ -49,41 +53,41 @@ int main()
 {
     std::cout << "beluga tutorial - main.cpp start!!" << std::endl;
 
-    // Type of map: 1D map composed by walls or doors
-    struct Landmark {
-        double pose;
-        bool mark; // 0 = wall; 1 = Door
-    };
-
     // Generate a random map
-    const size_t map_size = 100;
-    std::vector<Landmark> landmark_map;
-    for(size_t i = 0; i < map_size; i++)
+    std::uniform_int_distribution landmark_distribution{0, mapSize};
+    auto landmark_map = beluga::views::sample(landmark_distribution) |
+                        ranges::views::take_exactly(numDoors)        |
+                        ranges::to<std::vector<int>>;
+    // TODO(alon): the map has to be sort and unique or not necessarily? for now it helps for testing purpose.
+    landmark_map |= ranges::actions::sort | ranges::actions::unique;
+    std::cout << "landamrk_map" << std::endl;
+    for(const auto& lm : landmark_map)
     {
-        Landmark l;
-        l.pose = static_cast<double>(i);
-        l.mark = generateRandomMeasurement(0, 0.5);
-        landmark_map.push_back(l);
+        std::cout << lm << ",";
     }
+    std::cout << std::endl;
+    std::cout << std::endl;
 
     // Save the map in a csv file
-    std::string filename{"map.csv"};
-    std::fstream fout {filename, fout.trunc | fout.out};
-    fout << "pose,mark" << std::endl;
-    for(const auto& l: landmark_map)
     {
-        fout << l.pose << ","
-             << l.mark    << std::endl;
+        std::string filename{"map.csv"};
+        std::fstream fout {filename, fout.trunc | fout.out};
+        fout << "mark_pose" << std::endl;
+        for(const auto& l: landmark_map)
+        {
+            fout << l << std::endl;
+        }
     }
 
     // Generate particles
-    std::uniform_int_distribution initial_distribution{0, static_cast<int>(landmark_map.size())};
-    using Particle = std::tuple<double, beluga::Weight>;
-    auto particles = beluga::views::sample(initial_distribution) |
-                 ranges::views::transform(beluga::make_from_state<Particle>) |
-                 ranges::views::take_exactly(kNumParticles) |
-                 ranges::to<beluga::TupleVector>;
-
+    std::uniform_int_distribution initial_distribution{0, mapSize};
+    using Particle = std::tuple<int, beluga::Weight>;
+    auto particles = beluga::views::sample(initial_distribution)                 |
+                     ranges::views::transform(beluga::make_from_state<Particle>) |
+                     ranges::views::take_exactly(kNumParticles)                  |
+                     ranges::to<beluga::TupleVector>;
+    
+    // TODO(alon): code doesn't compile. landmark_map structure was changed.
     // Execute the particle filter using beluga
     double prev_pose = landmark_map[0].pose;
     for (const auto& l : landmark_map) {
