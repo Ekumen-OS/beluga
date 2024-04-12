@@ -15,6 +15,8 @@
 #ifndef BELUGA_ROS_AMCL_HPP
 #define BELUGA_ROS_AMCL_HPP
 
+#include <beluga/sensor/beam_model.hpp>
+#include <beluga/sensor/likelihood_field_model.hpp>
 #include <optional>
 #include <utility>
 #include <variant>
@@ -26,6 +28,17 @@
 #include <range/v3/view/take_exactly.hpp>
 
 namespace beluga_ros {
+
+using sensor_model_variant = std::variant<
+    beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>,  //
+    beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>;
+
+using motion_model_variant = std::variant<
+    beluga::DifferentialDriveModel,     //
+    beluga::OmnidirectionalDriveModel,  //
+    beluga::StationaryModel>;
+
+using execution_policy_variant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 
 /// Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.
 struct AmclParams {
@@ -45,33 +58,32 @@ struct AmclParams {
 };
 
 /// Implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm.
+/**
+ * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.2.
+ *
+ * \tparam SensorModel Type representing a sensor model. Must satisfy \ref SensorModelPage.
+ **/
+template <typename SensorModel>
 class Amcl {
  public:
   using particle_type = std::tuple<Sophus::SE2d, beluga::Weight>;
 
-  using motion_model_variant = std::variant<
-      beluga::DifferentialDriveModel,     //
-      beluga::OmnidirectionalDriveModel,  //
-      beluga::StationaryModel>;
+  using sensor_model_type = SensorModel;
 
-  using sensor_model_variant = std::variant<
-      beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>,  //
-      beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>;
-
-  using execution_policy_variant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
+  using map_type = typename sensor_model_type::map_type;
 
   /// Constructor.
   /**
-   * \param map Occupancy grid map.
+   * \param map Map suited for the sensor model.
    * \param motion_model Variant of motion model.
-   * \param sensor_model Variant of sensor model.
+   * \param sensor_model An instance of the sensor model.
    * \param params Parameters for AMCL implementation.
    * \param execution_policy Variant of execution policy.
    */
   Amcl(
-      beluga_ros::OccupancyGrid map,
+      map_type map,
       motion_model_variant motion_model,
-      sensor_model_variant sensor_model,
+      sensor_model_type sensor_model,
       const AmclParams& params = AmclParams{},
       execution_policy_variant execution_policy = std::execution::seq)
       : params_{params},
@@ -113,9 +125,9 @@ class Amcl {
   void initialize_from_map() { initialize(std::ref(map_distribution_)); }
 
   /// Update the map used for localization.
-  void update_map(beluga_ros::OccupancyGrid map) {
+  void update_map(map_type map) {
     map_distribution_ = beluga::MultivariateUniformDistribution{map};
-    std::visit([&](auto& sensor_model) { sensor_model.update_map(std::move(map)); }, sensor_model_);
+    sensor_model_.update_map(std::move(map));
   }
 
   /// Update particles based on motion and sensor information.
@@ -150,13 +162,13 @@ class Amcl {
                        ranges::to<std::vector>;
 
     std::visit(
-        [&, this](auto& policy, auto& motion_model, auto& sensor_model) {
+        [&, this](auto& policy, auto& motion_model) {
           particles_ |=
               beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_in_odom)) |  //
-              beluga::actions::reweight(policy, sensor_model(std::move(measurement))) |                        //
+              beluga::actions::reweight(policy, sensor_model_(std::move(measurement))) |                       //
               beluga::actions::normalize(policy);
         },
-        execution_policy_, motion_model_, sensor_model_);
+        execution_policy_, motion_model_);
 
     const double random_state_probability = random_probability_estimator_(particles_);
 
@@ -189,9 +201,9 @@ class Amcl {
   beluga::TupleVector<particle_type> particles_;
 
   AmclParams params_;
-  beluga::MultivariateUniformDistribution<Sophus::SE2d, beluga_ros::OccupancyGrid> map_distribution_;
+  beluga::MultivariateUniformDistribution<Sophus::SE2d, map_type> map_distribution_;
   motion_model_variant motion_model_;
-  sensor_model_variant sensor_model_;
+  sensor_model_type sensor_model_;
   execution_policy_variant execution_policy_;
 
   beluga::spatial_hash<Sophus::SE2d> spatial_hasher_;
@@ -203,6 +215,10 @@ class Amcl {
 
   bool force_update_{true};
 };
+
+using AnyAMCL = std::variant<
+    Amcl<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>,
+    Amcl<beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>>;
 
 }  // namespace beluga_ros
 

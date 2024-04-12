@@ -76,7 +76,7 @@ class AmclNodeUnderTest : public beluga_amcl::AmclNode {
   const auto& particle_filter() { return particle_filter_; }
 
   /// Return true if the particle filter has been initialized.
-  bool is_initialized() const { return particle_filter_ != nullptr; }
+  bool is_initialized() const { return particle_filter_.has_value(); }
 
   /// Return the last known estimate. Throws if there is no estimate.
   const auto& estimate() { return last_known_estimate_.value(); }
@@ -447,9 +447,14 @@ TEST_P(TestInitializationWithModel, ParticleCount) {
   amcl_node_->activate();
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
+  ASSERT_TRUE(amcl_node_->particle_filter().has_value());
 
-  ASSERT_GE(amcl_node_->particle_filter()->particles().size(), 10UL);
-  ASSERT_LE(amcl_node_->particle_filter()->particles().size(), 30UL);
+  std::visit(
+      [](auto& pf) {
+        ASSERT_GE(pf.particles().size(), 10UL);
+        ASSERT_LE(pf.particles().size(), 30UL);
+      },
+      amcl_node_->particle_filter().value());
 }
 
 class TestNode : public BaseNodeFixture<::testing::Test> {};
@@ -695,7 +700,7 @@ TEST_F(TestNode, KeepCurrentEstimateAfterCleanup) {
 
   amcl_node_->configure();
   amcl_node_->activate();
-  ASSERT_EQ(amcl_node_->particle_filter().get(), nullptr);
+  ASSERT_EQ(amcl_node_->particle_filter(), std::nullopt);
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   const auto [pose, _] = amcl_node_->estimate();
