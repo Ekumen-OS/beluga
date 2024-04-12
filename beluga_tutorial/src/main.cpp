@@ -27,7 +27,7 @@
 
 #include <beluga/beluga.hpp>
 
-#define NUM_OF_PARTICLES 200
+static constexpr int kNumParticles = 200; 
 
 // TODO: use template to use only one random function.
 bool generateRandomMeasurement(double mean, double sd) {
@@ -81,7 +81,7 @@ int main()
     using Particle = std::tuple<double, beluga::Weight>;
     auto particles = beluga::views::sample(initial_distribution) |
                  ranges::views::transform(beluga::make_from_state<Particle>) |
-                 ranges::views::take_exactly(NUM_OF_PARTICLES) |
+                 ranges::views::take_exactly(kNumParticles) |
                  ranges::to<beluga::TupleVector>;
 
     // Execute the particle filter using beluga
@@ -140,7 +140,7 @@ int main()
                      beluga::actions::normalize;
 
         // Resample
-        particles |= beluga::views::sample | ranges::views::take_exactly(NUM_OF_PARTICLES)|
+        particles |= beluga::views::sample | ranges::views::take_exactly(kNumParticles)|
                     beluga::actions::assign;
 
         // TODO: It is throwing me a compiling error when I'm trying to use the estimate function.
