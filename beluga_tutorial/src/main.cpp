@@ -25,6 +25,8 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/action.hpp>
+#include <range/v3/all.hpp> // get everything
+#include <meta/meta.hpp>
 
 #include <beluga/beluga.hpp>
 
@@ -32,14 +34,18 @@
 static constexpr int mapSize = 100;
 static constexpr int numDoors = mapSize / 3; 
 static constexpr int kNumParticles = 200;
+static constexpr int kSimNumCycles = 100;
+static constexpr int kSimDt = 1;
+static constexpr int kVelocity = 1;
+static constexpr int kSimInitialPose = 0;
+static constexpr int kMeasurementDist = 2;
+static constexpr int kSensorModelSigma = 3;
 
-// TODO: use template to use only one random function.
-bool generateRandomMeasurement(double mean, double sd) {
+
+bool generateRandomMeasurement(double p) {
     static auto generator = std::mt19937{std::random_device()()};
-    std::normal_distribution<double> distribution(mean, sd);
-
-    // Generate a random number and check if it's greater than 0.5
-    return distribution(generator) > 0.5;
+    std::bernoulli_distribution distribution(p);
+    return distribution(generator);
 }
 
 double generateRandomOdom(double mean, double sd) {
@@ -87,16 +93,20 @@ int main()
                      ranges::views::take_exactly(kNumParticles)                  |
                      ranges::to<beluga::TupleVector>;
     
-    // TODO(alon): code doesn't compile. landmark_map structure was changed.
     // Execute the particle filter using beluga
-    double prev_pose = landmark_map[0].pose;
-    for (const auto& l : landmark_map) {
-        
-        // Generate noisy odom and measurement
-        double odom = generateRandomOdom(l.pose, 0.1);
-        bool measurement = generateRandomMeasurement(l.mark, 0.35);
+    int prev_pose {kSimInitialPose};
+    for(auto n = 0; n < kSimNumCycles; n++)
+    {
+        // Check if the simulation is out of bounds
+        if(n > mapSize)
+        {
+            break;
+        }
 
+        // Motion model
+        int odom {n};
         auto motion_model = [&](double state) {
+            // TODO(alon): modify distance to: distance = kVelocity * kSimDt
             double distance = odom - prev_pose;
             prev_pose = odom;
             double translaton_param = generateRandomOdom(0, 0.3);
@@ -104,37 +114,30 @@ int main()
         };
 
         auto sensor_model = [&](const double& state) {
-            
-            double no_landmark_probability = 1;
-            std::vector<double> landmark_probability;
-            double factor = 0;
+            bool measurement = 
+                ranges::any_of(landmark_map, [&](int lm){
+                    return std::abs(static_cast<int>(state) - lm) <= kMeasurementDist;
+                });
 
-            for(const auto& l : landmark_map)
+            auto landmark_probability = landmark_map |
+                ranges::view::transform([&](int lm) {
+                    return exp(-1 * pow(static_cast<int>(state) - lm, 2) / (2 * kSensorModelSigma));
+                });
+
+            auto no_landmark_probability = 
+                ranges::accumulate(
+                    landmark_probability, 1.0, [](double init, double probability) {
+                    return init * (1 - probability);
+                });
+
+            auto landmark_probability_sum = ranges::accumulate(landmark_probability, 0.0);
+            auto factor = landmark_probability_sum + no_landmark_probability;
+
+            if(measurement)
             {
-                if(l.mark == 1)
-                {
-                    double probability = exp( -1 * pow(l.pose - state, 2));
-                    factor += probability;
-                    landmark_probability.push_back(probability);
-                    no_landmark_probability *= (1 - probability);
-                }
+                return landmark_probability_sum / factor;
             }
-
-            factor += no_landmark_probability;
-
-            // Normalize and sum
-            no_landmark_probability /= factor;
-            double probability_landmark_normalize_sum = 0;
-            for(const auto& pl : landmark_probability)
-            {
-                probability_landmark_normalize_sum += (pl/factor);
-            }
-
-            if(measurement == 1)
-            {
-                return probability_landmark_normalize_sum;
-            }
-            return no_landmark_probability;
+            return no_landmark_probability / factor;
         };
 
         // TODO: To showcase the example, it may be useful to apply each range adaptor separately and save the particles
