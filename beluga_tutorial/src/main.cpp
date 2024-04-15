@@ -31,8 +31,8 @@
 #include <beluga/beluga.hpp>
 
 // Tutorial parameters
-static constexpr int mapSize = 100;
-static constexpr int numDoors = mapSize / 3; 
+static constexpr int kMapSize = 100;
+static constexpr int kNumDoors = kMapSize / 3; 
 static constexpr int kNumParticles = 200;
 static constexpr int kSimNumCycles = 100;
 static constexpr int kSimDt = 1;
@@ -60,9 +60,9 @@ int main()
     std::cout << "beluga tutorial - main.cpp start!!" << std::endl;
 
     // Generate a random map
-    std::uniform_int_distribution landmark_distribution{0, mapSize};
+    std::uniform_int_distribution landmark_distribution{0, kMapSize};
     auto landmark_map = beluga::views::sample(landmark_distribution) |
-                        ranges::views::take_exactly(numDoors)        |
+                        ranges::views::take_exactly(kNumDoors)        |
                         ranges::to<std::vector<int>>;
     // TODO(alon): the map has to be sort and unique or not necessarily? for now it helps for testing purpose.
     landmark_map |= ranges::actions::sort | ranges::actions::unique;
@@ -86,7 +86,7 @@ int main()
     }
 
     // Generate particles
-    std::uniform_int_distribution initial_distribution{0, mapSize};
+    std::uniform_int_distribution initial_distribution{0, kMapSize};
     using Particle = std::tuple<int, beluga::Weight>;
     auto particles = beluga::views::sample(initial_distribution)                 |
                      ranges::views::transform(beluga::make_from_state<Particle>) |
@@ -97,7 +97,7 @@ int main()
     for(auto n = 0; n < kSimNumCycles; n++)
     {
         // Check if the simulation is out of bounds
-        if(n > mapSize)
+        if(n > kMapSize)
         {
             break;
         }
