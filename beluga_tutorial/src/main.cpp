@@ -144,10 +144,17 @@ int main()
         // Resample
         particles |= beluga::views::sample | ranges::views::take_exactly(kNumParticles)|
                     beluga::actions::assign;
+        
+        // Calculate mean and standar deviation
+        auto states = particles | beluga::views::states | ranges::views::common;
+        auto accum_state = ranges::accumulate(states, 0.0);
+        int mean = static_cast<int>(accum_state/(static_cast<int>(particles.size())));
+        auto variance = ranges::accumulate(states, 0.0, [&mean](double init, double state){
+            return init + pow(state - mean, 2);
+        });
+        double sd = sqrt(variance/(static_cast<double>(particles.size() - 1)));
 
-        // TODO: It is throwing me a compiling error when I'm trying to use the estimate function.
-        // const auto [mean, covariance] = beluga::estimate(particles);
-        // std::cout << "mena: " << mean << ", covariance: " << covariance << std::endl;
+        std::cout << "mean: " << mean << ", sd: " << sd << std::endl; 
     }
 
     return 0;
