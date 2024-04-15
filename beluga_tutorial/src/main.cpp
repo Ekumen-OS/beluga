@@ -25,7 +25,7 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/action.hpp>
-#include <range/v3/all.hpp> // get everything
+#include <range/v3/all.hpp> // TODO(alon): get only the necessary headers
 #include <meta/meta.hpp>
 
 #include <beluga/beluga.hpp>
@@ -37,22 +37,22 @@ static constexpr int kNumParticles = 200;
 static constexpr int kSimNumCycles = 100;
 static constexpr int kSimDt = 1;
 static constexpr int kVelocity = 1;
-static constexpr int kSimInitialPose = 0;
 static constexpr int kMeasurementDist = 2;
 static constexpr int kSensorModelSigma = 3;
 
+static constexpr double kTranslationSigma = 1.0; 
 
-bool generateRandomMeasurement(double p) {
+bool generateRandomBool(double p) {
     static auto generator = std::mt19937{std::random_device()()};
     std::bernoulli_distribution distribution(p);
     return distribution(generator);
 }
 
-double generateRandomOdom(double mean, double sd) {
+int generateRandomInt(double mean, double sd) {
     static auto generator = std::mt19937{std::random_device()()};
     std::normal_distribution<double> distribution(mean, sd);
 
-    return (distribution(generator));
+    return static_cast<int>(distribution(generator));
 }
 
 int main()
@@ -94,7 +94,6 @@ int main()
                      ranges::to<beluga::TupleVector>;
     
     // Execute the particle filter using beluga
-    int prev_pose {kSimInitialPose};
     for(auto n = 0; n < kSimNumCycles; n++)
     {
         // Check if the simulation is out of bounds
@@ -104,13 +103,9 @@ int main()
         }
 
         // Motion model
-        int odom {n};
         auto motion_model = [&](double state) {
-            // TODO(alon): modify distance to: distance = kVelocity * kSimDt
-            double distance = odom - prev_pose;
-            prev_pose = odom;
-            double translaton_param = generateRandomOdom(0, 0.3);
-            return state + distance - translaton_param;
+            int translatoin_param = generateRandomInt(0, kTranslationSigma);
+            return state + (kVelocity * kSimDt) - translatoin_param;
         };
 
         auto sensor_model = [&](const double& state) {
