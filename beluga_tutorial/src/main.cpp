@@ -75,7 +75,7 @@ int main() {
   // Save the map in a csv file
   {
     std::string filename{"map.csv"};
-    std::fstream fout{filename, fout.trunc | fout.out};
+    std::fstream fout{filename, std::fstream::trunc | std::fstream::out};
     fout << "mark_pose" << std::endl;
     for (const auto& l : landmark_map) {
       fout << l << std::endl;
@@ -110,7 +110,7 @@ int main() {
       bool measurement = ranges::any_of(
           landmark_map, [&](int lm) { return std::abs(static_cast<int>(state) - lm) <= kMeasurementDist; });
 
-      auto landmark_probability = landmark_map | ranges::view::transform([&](int lm) {
+      auto landmark_probability = landmark_map | ranges::views::transform([&](int lm) {
                                     return exp(-1 * pow(static_cast<int>(state) - lm, 2) / (2 * kSensorModelSigma));
                                   });
 
@@ -126,7 +126,7 @@ int main() {
       return no_landmark_probability / factor;
     };
 
-    // TODO: To showcase the example, it may be useful to apply each range adaptor separately and save the particles
+    // TODO(alon): To showcase the example, it may be useful to apply each range adaptor separately and save the particles
     // in a file for display them using some plot lib.
     particles |= beluga::actions::propagate(std::execution::seq, motion_model) |
                  beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
