@@ -44,6 +44,7 @@ constexpr std::string_view kDifferentialModelName = "differential_drive";
 constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
 constexpr std::string_view kStationaryModelName = "stationary";
 
+// TODO(alon): add ndt sensor model constant
 constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
 constexpr std::string_view kBeamSensorModelName = "beam";
 
@@ -52,7 +53,8 @@ constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotio
 
 }  // namespace
 
-NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::LifecycleNode{"amcl", "", options} {
+NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
+    : rclcpp_lifecycle::LifecycleNode{"ndt_amcl", "", options} {
   RCLCPP_INFO(get_logger(), "Creating");
 
   {
@@ -74,6 +76,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // TODO(alon): the map changes to hdf5 files
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Topic to subscribe to in order to receive the map to localize on.";
     declare_parameter("map_topic", rclcpp::ParameterValue("map"), descriptor);
@@ -112,6 +115,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Exponential decay rate for the slow average weight filter, used in deciding when to recover "
@@ -124,6 +128,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Exponential decay rate for the fast average weight filter, used in deciding when to recover "
@@ -136,6 +141,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Maximum particle filter population error between the true distribution "
@@ -149,6 +155,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Upper standard normal quantile for P, where P is the probability "
@@ -158,6 +165,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Resolution in meters for the X axis used to divide the space in buckets for KLD resampling.";
@@ -169,6 +177,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Resolution in meters for the Y axis used to divide the space in buckets for KLD resampling.";
@@ -180,6 +189,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Resolution in radians for the theta axis to divide the space in buckets for KLD resampling.";
@@ -192,6 +202,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Number of filter updates required before resampling. ";
     descriptor.integer_range.resize(1);
@@ -202,6 +213,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "When set to true, will reduce the resampling rate when not needed and help "
@@ -309,12 +321,14 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // TODO(alon): is the sensor model?
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Which observation model to use [beam, likelihood_field].";
     declare_parameter("laser_model_type", rclcpp::ParameterValue(std::string(kLikelihoodFieldModelName)), descriptor);
   }
 
   {
+    // TODO(alon): this is needed for ndt sensor model?
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Maximum distance to do obstacle inflation on map, used in likelihood field model.";
     descriptor.floating_point_range.resize(1);
@@ -415,12 +429,14 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "If false, AMCL will use the last known pose to initialize when a new map is received.";
     declare_parameter("always_reset_initial_pose", false, descriptor);
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Set this to true when you want to load only the first published map from map_server "
@@ -429,24 +445,28 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Set the initial pose from the initial_pose parameters.";
     declare_parameter("set_initial_pose", false, descriptor);
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose x axis coordinate.";
     declare_parameter("initial_pose.x", 0.0, descriptor);
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose y axis coordinate.";
     declare_parameter("initial_pose.y", 0.0, descriptor);
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose yaw rotation.";
     declare_parameter("initial_pose.yaw", 0.0, descriptor);
@@ -489,6 +509,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle:
   }
 
   {
+    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Execution policy used to process particles [seq, par].";
     declare_parameter("execution_policy", "seq", descriptor);
@@ -529,10 +550,12 @@ NdtAmclNode::CallbackReturn NdtAmclNode::on_activate(const rclcpp_lifecycle::Sta
 
   {
     using namespace std::chrono_literals;
+    // TODO(alon): create a parameter for the timer rate?
     timer_ = create_wall_timer(200ms, std::bind(&NdtAmclNode::timer_callback, this), common_callback_group);
   }
 
   {
+    // TODO(alon): map type changed to hdf5
     map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
         get_parameter("map_topic").as_string(), rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
         std::bind(&NdtAmclNode::map_callback, this, std::placeholders::_1), common_subscription_options);
@@ -603,6 +626,7 @@ NdtAmclNode::CallbackReturn NdtAmclNode::on_deactivate(const rclcpp_lifecycle::S
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
   pose_pub_->on_deactivate();
+  // TODO(alon): map was changed to hdf5
   map_sub_.reset();
   initial_pose_sub_.reset();
   laser_scan_connection_.disconnect();
@@ -688,6 +712,7 @@ auto NdtAmclNode::get_motion_model(std::string_view name) const -> beluga_ros::A
   throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
 }
 
+// TODO(alon): sensor model changed to ndt
 auto NdtAmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyGrid::SharedPtr map) const
     -> beluga_ros::Amcl::sensor_model_variant {
   if (name == kLikelihoodFieldModelName) {
@@ -723,6 +748,7 @@ auto NdtAmclNode::get_execution_policy(std::string_view name) -> beluga_ros::Amc
   throw std::invalid_argument("Execution policy must be seq or par.");
 }
 
+// TODO(alon): change to NdtAmcl particle filter
 auto NdtAmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map) const
     -> std::unique_ptr<beluga_ros::Amcl> {
   auto params = beluga_ros::AmclParams{};
@@ -748,6 +774,7 @@ auto NdtAmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr m
       get_execution_policy(get_parameter("execution_policy").as_string()));
 }
 
+// TODO(alon): map was changed to hdf5. Create a service to load a new map from a hdf5 file.
 void NdtAmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
   RCLCPP_INFO(get_logger(), "A new map was received");
 
@@ -867,6 +894,8 @@ void NdtAmclNode::timer_callback() {
   particle_cloud_pub_->publish(message);
 }
 
+// TODO(alon): Wouldn't it be better in the callback of each message to simply receive
+// it and define another timer or thread to do the work of calculation and publication?
 void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
   if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
