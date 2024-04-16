@@ -39,12 +39,12 @@
 
 namespace beluga_amcl {
 
-class AmclNode : public rclcpp_lifecycle::LifecycleNode {
+class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
  public:
   using rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
-  explicit AmclNode(const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
-  ~AmclNode() override;
+  explicit NdtAmclNode(const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
+  ~NdtAmclNode() override;
 
  protected:
   CallbackReturn on_configure(const rclcpp_lifecycle::State&) override;

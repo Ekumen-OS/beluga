@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <beluga_amcl/amcl_node.hpp>
+#include <beluga_amcl/ndt_amcl_node.hpp>
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
@@ -52,7 +52,7 @@ constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotio
 
 }  // namespace
 
-AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::LifecycleNode{"amcl", "", options} {
+NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::LifecycleNode{"amcl", "", options} {
   RCLCPP_INFO(get_logger(), "Creating");
 
   {
@@ -495,20 +495,20 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : rclcpp_lifecycle::Lifec
   }
 }
 
-AmclNode::~AmclNode() {
+NdtAmclNode::~NdtAmclNode() {
   RCLCPP_INFO(get_logger(), "Destroying");
   // In case this lifecycle node wasn't properly shut down, do it here
   on_shutdown(get_current_state());
 }
 
-AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State&) {
+NdtAmclNode::CallbackReturn NdtAmclNode::on_configure(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Configuring");
   particle_cloud_pub_ = create_publisher<nav2_msgs::msg::ParticleCloud>("particle_cloud", rclcpp::SensorDataQoS());
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("pose", rclcpp::SystemDefaultsQoS());
   return CallbackReturn::SUCCESS;
 }
 
-AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
+NdtAmclNode::CallbackReturn NdtAmclNode::on_activate(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Activating");
   particle_cloud_pub_->on_activate();
   pose_pub_->on_activate();
@@ -529,20 +529,20 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
 
   {
     using namespace std::chrono_literals;
-    timer_ = create_wall_timer(200ms, std::bind(&AmclNode::timer_callback, this), common_callback_group);
+    timer_ = create_wall_timer(200ms, std::bind(&NdtAmclNode::timer_callback, this), common_callback_group);
   }
 
   {
     map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
         get_parameter("map_topic").as_string(), rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
-        std::bind(&AmclNode::map_callback, this, std::placeholders::_1), common_subscription_options);
+        std::bind(&NdtAmclNode::map_callback, this, std::placeholders::_1), common_subscription_options);
     RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
   }
 
   {
     initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
         get_parameter("initial_pose_topic").as_string(), rclcpp::SystemDefaultsQoS(),
-        std::bind(&AmclNode::initial_pose_callback, this, std::placeholders::_1), common_subscription_options);
+        std::bind(&NdtAmclNode::initial_pose_callback, this, std::placeholders::_1), common_subscription_options);
     RCLCPP_INFO(get_logger(), "Subscribed to initial_pose_topic: %s", initial_pose_sub_->get_topic_name());
   }
 
@@ -568,7 +568,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
         get_node_clock_interface(), tf2::durationFromSec(get_parameter("transform_tolerance").as_double()));
 
     laser_scan_connection_ =
-        laser_scan_filter_->registerCallback(std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
+        laser_scan_filter_->registerCallback(std::bind(&NdtAmclNode::laser_callback, this, std::placeholders::_1));
     RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
   }
 
@@ -580,7 +580,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
     global_localization_server_ = create_service<std_srvs::srv::Empty>(
         "reinitialize_global_localization",
         std::bind(
-            &AmclNode::global_localization_callback, this, std::placeholders::_1, std::placeholders::_2,
+            &NdtAmclNode::global_localization_callback, this, std::placeholders::_1, std::placeholders::_2,
             std::placeholders::_3),
         rmw_qos_profile_services_default, common_callback_group);
     RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
@@ -588,7 +588,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
     nomotion_update_server_ = create_service<std_srvs::srv::Empty>(
         "request_nomotion_update",
         std::bind(
-            &AmclNode::nomotion_update_callback, this, std::placeholders::_1, std::placeholders::_2,
+            &NdtAmclNode::nomotion_update_callback, this, std::placeholders::_1, std::placeholders::_2,
             std::placeholders::_3),
         rmw_qos_profile_services_default, common_callback_group);
     RCLCPP_INFO(get_logger(), "Created request_nomotion_update service");
@@ -599,7 +599,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
   return CallbackReturn::SUCCESS;
 }
 
-AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State&) {
+NdtAmclNode::CallbackReturn NdtAmclNode::on_deactivate(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
   pose_pub_->on_deactivate();
@@ -616,7 +616,7 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State&)
   return CallbackReturn::SUCCESS;
 }
 
-AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State&) {
+NdtAmclNode::CallbackReturn NdtAmclNode::on_cleanup(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   pose_pub_.reset();
@@ -625,7 +625,7 @@ AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State&) {
   return CallbackReturn::SUCCESS;
 }
 
-AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State& state) {
+NdtAmclNode::CallbackReturn NdtAmclNode::on_shutdown(const rclcpp_lifecycle::State& state) {
   RCLCPP_INFO(get_logger(), "Shutting down");
   if (state.id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
     on_deactivate(state);
@@ -637,7 +637,7 @@ AmclNode::CallbackReturn AmclNode::on_shutdown(const rclcpp_lifecycle::State& st
   return CallbackReturn::SUCCESS;
 }
 
-auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
+auto NdtAmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
   if (!get_parameter("set_initial_pose").as_bool()) {
     return std::nullopt;
   }
@@ -664,7 +664,7 @@ auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::S
   return std::make_pair(pose, covariance);
 }
 
-auto AmclNode::get_motion_model(std::string_view name) const -> beluga_ros::Amcl::motion_model_variant {
+auto NdtAmclNode::get_motion_model(std::string_view name) const -> beluga_ros::Amcl::motion_model_variant {
   if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
     auto params = beluga::DifferentialDriveModelParam{};
     params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
@@ -688,7 +688,7 @@ auto AmclNode::get_motion_model(std::string_view name) const -> beluga_ros::Amcl
   throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
 }
 
-auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyGrid::SharedPtr map) const
+auto NdtAmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyGrid::SharedPtr map) const
     -> beluga_ros::Amcl::sensor_model_variant {
   if (name == kLikelihoodFieldModelName) {
     auto params = beluga::LikelihoodFieldModelParam{};
@@ -713,7 +713,7 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
   throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
 }
 
-auto AmclNode::get_execution_policy(std::string_view name) -> beluga_ros::Amcl::execution_policy_variant {
+auto NdtAmclNode::get_execution_policy(std::string_view name) -> beluga_ros::Amcl::execution_policy_variant {
   if (name == "seq") {
     return std::execution::seq;
   }
@@ -723,7 +723,7 @@ auto AmclNode::get_execution_policy(std::string_view name) -> beluga_ros::Amcl::
   throw std::invalid_argument("Execution policy must be seq or par.");
 }
 
-auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map) const
+auto NdtAmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map) const
     -> std::unique_ptr<beluga_ros::Amcl> {
   auto params = beluga_ros::AmclParams{};
   params.update_min_d = get_parameter("update_min_d").as_double();
@@ -748,7 +748,7 @@ auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map)
       get_execution_policy(get_parameter("execution_policy").as_string()));
 }
 
-void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
+void NdtAmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
   RCLCPP_INFO(get_logger(), "A new map was received");
 
   if (particle_filter_ && get_parameter("first_map_only").as_bool()) {
@@ -795,7 +795,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
   enable_tf_broadcast_ = false;
 }
 
-void AmclNode::timer_callback() {
+void NdtAmclNode::timer_callback() {
   if (!particle_filter_) {
     return;
   }
@@ -867,7 +867,7 @@ void AmclNode::timer_callback() {
   particle_cloud_pub_->publish(message);
 }
 
-void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
   if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 2000, "Ignoring laser data because the particle filter has not been initialized");
@@ -958,7 +958,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   }
 }
 
-void AmclNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
+void NdtAmclNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
   const auto global_frame_id = get_parameter("global_frame_id").as_string();
   if (message->header.frame_id != global_frame_id) {
     RCLCPP_WARN(
@@ -977,14 +977,14 @@ void AmclNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamp
   initialize_from_estimate(last_known_estimate_.value());
 }
 
-void AmclNode::global_localization_callback(
+void NdtAmclNode::global_localization_callback(
     [[maybe_unused]] std::shared_ptr<rmw_request_id_t> request_header,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Request> req,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res) {
   initialize_from_map();
 }
 
-void AmclNode::nomotion_update_callback(
+void NdtAmclNode::nomotion_update_callback(
     [[maybe_unused]] std::shared_ptr<rmw_request_id_t> request_header,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Request> req,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res) {
@@ -997,7 +997,7 @@ void AmclNode::nomotion_update_callback(
   RCLCPP_INFO(get_logger(), "No-motion update requested");
 }
 
-bool AmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Matrix3d>& estimate) {
+bool NdtAmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Matrix3d>& estimate) {
   RCLCPP_INFO(get_logger(), "Initializing particles from estimated pose and covariance");
 
   if (!particle_filter_) {
@@ -1023,7 +1023,7 @@ bool AmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Mat
   return true;
 }
 
-bool AmclNode::initialize_from_map() {
+bool NdtAmclNode::initialize_from_map() {
   RCLCPP_INFO(get_logger(), "Initializing particles from map");
 
   if (!particle_filter_) {
@@ -1043,4 +1043,4 @@ bool AmclNode::initialize_from_map() {
 
 }  // namespace beluga_amcl
 
-RCLCPP_COMPONENTS_REGISTER_NODE(beluga_amcl::AmclNode)
+RCLCPP_COMPONENTS_REGISTER_NODE(beluga_amcl::NdtAmclNode)
