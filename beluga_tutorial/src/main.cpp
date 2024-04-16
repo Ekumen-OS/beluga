@@ -35,6 +35,7 @@ static constexpr int kMapSize = 100;
 static constexpr int kNumDoors = kMapSize / 3;
 static constexpr int kNumParticles = 200;
 static constexpr int kSimNumCycles = 100;
+static constexpr int kInitialPose = 0;
 static constexpr int kSimDt = 1;
 static constexpr int kVelocity = 1;
 static constexpr int kMeasurementDist = 2;
@@ -89,16 +90,20 @@ int main() {
                    ranges::views::take_exactly(kNumParticles) | ranges::to<beluga::TupleVector>;
 
   // Execute the particle filter using beluga
+  int current_pose{kInitialPose};
+
   for (auto n = 0; n < kSimNumCycles; n++) {
     // Check if the simulation is out of bounds
-    if (n > kMapSize) {
+    if (current_pose > kMapSize) {
       break;
     }
 
     // Motion model
+    current_pose += (kVelocity * kSimDt);
     auto motion_model = [&](double state) {
-      int translatoin_param = generateRandomInt(0, kTranslationSigma);
-      return state + (kVelocity * kSimDt) - translatoin_param;
+      int distance = (kVelocity * kSimDt);
+      int translation_param = generateRandomInt(0, kTranslationSigma);
+      return state + distance - translation_param;
     };
 
     auto sensor_model = [&](const double& state) {
@@ -129,7 +134,7 @@ int main() {
     // Resample
     particles |= beluga::views::sample | ranges::views::take_exactly(kNumParticles) | beluga::actions::assign;
 
-    // Calculate mean and standar deviation
+    // Calculate mean and standard deviation
     auto states = particles | beluga::views::states | ranges::views::common;
     auto accum_state = ranges::accumulate(states, 0.0);
     int mean = static_cast<int>(accum_state / (static_cast<int>(particles.size())));
