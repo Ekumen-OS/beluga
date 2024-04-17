@@ -35,7 +35,8 @@
 #include <std_srvs/srv/empty.hpp>
 
 #include <beluga/beluga.hpp>
-#include <beluga_ros/amcl.hpp>
+// TODO(alon): modify to use ndt_amcl.hpp
+// #include <beluga_ros/amcl.hpp>
 
 namespace beluga_amcl {
 
@@ -59,18 +60,19 @@ class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
 
   auto get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>>;
 
-  auto get_motion_model(std::string_view) const -> beluga_ros::Amcl::motion_model_variant;
+  // TODO(alon): use beluga_ros::NdtAmcl::motion_model_variant
+  //   auto get_motion_model(std::string_view) const -> beluga_ros::Amcl::motion_model_variant;
   // TODO(alon): use H5Cpp map file instead of occupancyGrid
-  auto get_sensor_model(std::string_view, nav_msgs::msg::OccupancyGrid::SharedPtr) const
-      -> beluga_ros::Amcl::sensor_model_variant;
+  //   auto get_sensor_model(std::string_view, nav_msgs::msg::OccupancyGrid::SharedPtr) const
+  //       -> beluga_ros::Amcl::sensor_model_variant;
 
-  static auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
-
-  // TODO(alon): use H5Cpp map file instead of occupancyGrid
-  auto make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr) const -> std::unique_ptr<beluga_ros::Amcl>;
+  //   static auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
 
   // TODO(alon): use H5Cpp map file instead of occupancyGrid
-  void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
+  //   auto make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr) const -> std::unique_ptr<beluga_ros::Amcl>;
+
+  // TODO(alon): use H5Cpp map file instead of occupancyGrid
+  //   void map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr);
 
   void timer_callback();
 
@@ -119,7 +121,7 @@ class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
   // Subscribers
   rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
   // TODO(alon): use H5Cpp map file instead of occupancyGrid
-  rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
+  //   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
   std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode>>
       laser_scan_sub_;
 
@@ -134,7 +136,7 @@ class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
   message_filters::Connection laser_scan_connection_;
 
   // TODO(alon): use ndt_amcl
-  std::unique_ptr<beluga_ros::Amcl> particle_filter_;
+  //   std::unique_ptr<beluga_ros::Amcl> particle_filter_;
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_;
   bool enable_tf_broadcast_{false};
 };
