@@ -30,16 +30,27 @@
 namespace beluga {
 
 /// Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.
+
 struct AmclParams {
+  /// Min distance in meters between updates.
   double update_min_d = 0.25;
+  /// Min angular distance in radians between updates.
   double update_min_a = 0.2;
+  /// Filter iterations interval at which a resampling will happen, unitless.
   std::size_t resample_interval = 1UL;
+  /// Whether to use selective resampling or not.
   bool selective_resampling = false;
+  /// Minimum number of particles in the filter at any point in time.
   std::size_t min_particles = 500UL;
+  /// Maximum number of particles in the filter at any point in time.
   std::size_t max_particles = 2000UL;
+  /// Used as part of the recovery mechanism when considering how many random particles to insert.
   double alpha_slow = 0.001;
+  /// Used as part of the recovery mechanism when considering how many random particles to insert.
   double alpha_fast = 0.1;
+  /// Used as part of the kld sampling mechanism.
   double kld_epsilon = 0.05;
+  /// Used as part of the kld sampling mechanism.
   double kld_z = 3.0;
 };
 
@@ -73,7 +84,6 @@ class Amcl {
       std::is_same_v<ExecutionPolicy, std::execution::parallel_policy> or
       std::is_same_v<ExecutionPolicy, std::execution::sequenced_policy>);
 
- public:
   using particle_type = ParticleType;
   using measurement_type = typename SensorModel::measurement_type;
   using state_type = typename SensorModel::state_type;
@@ -82,6 +92,8 @@ class Amcl {
   using random_state_generator_type = RandomStateGenerator;
   using estimation_type =
       std::invoke_result_t<decltype(beluga::estimate<std::vector<state_type>>), std::vector<state_type>>;
+
+ public:
   /// Construct a AMCL instance.
   /**
    * \param motion_model Motion model instance.
@@ -89,8 +101,7 @@ class Amcl {
    * \param random_state_generator A callable able to produce random states, optionally based on the current particles
    * state.
    * \param spatial_hasher A spatial hasher instance capable of computing a hash out of a particle state.
-   * \param params Parameters for AMCL implementation. \param execution_policy Execution policy for particles
-   * processing.
+   * \param params Parameters for AMCL implementation.
    * \param execution_policy Policy to use when processing particles.
    */
   Amcl(
