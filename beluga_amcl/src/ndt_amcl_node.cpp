@@ -41,12 +41,10 @@ namespace beluga_amcl {
 namespace {
 
 constexpr std::string_view kDifferentialModelName = "differential_drive";
-// constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
-// constexpr std::string_view kStationaryModelName = "stationary";
+constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
+constexpr std::string_view kStationaryModelName = "stationary";
 
-// TODO(alon): add ndt sensor model constant
-constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
-// constexpr std::string_view kBeamSensorModelName = "beam";
+constexpr std::string_view kNdtSensorModelName = "ndt";
 
 // constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::DifferentialMotionModel";
 // constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
@@ -75,11 +73,17 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
     declare_parameter("base_frame_id", rclcpp::ParameterValue("base_footprint"), descriptor);
   }
 
+  // TODO(alon): no more needs for a maps topic? maybe replace this with a service to load
+  // a map from a different path.
+  // {
+  //   auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+  //   descriptor.description = "Topic to subscribe to in order to receive the map to localize on.";
+  //   declare_parameter("map_topic", rclcpp::ParameterValue("map"), descriptor);
+  // }
   {
-    // TODO(alon): the map changes to hdf5 files
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Topic to subscribe to in order to receive the map to localize on.";
-    declare_parameter("map_topic", rclcpp::ParameterValue("map"), descriptor);
+    descriptor.description = "Path to load the map from an hdf5 file.";
+    declare_parameter("map_path", rclcpp::ParameterValue("map_path"), descriptor);
   }
 
   {
@@ -115,7 +119,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Exponential decay rate for the slow average weight filter, used in deciding when to recover "
@@ -128,7 +131,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Exponential decay rate for the fast average weight filter, used in deciding when to recover "
@@ -141,7 +143,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Maximum particle filter population error between the true distribution "
@@ -155,7 +156,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Upper standard normal quantile for P, where P is the probability "
@@ -165,7 +165,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Resolution in meters for the X axis used to divide the space in buckets for KLD resampling.";
@@ -177,7 +176,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Resolution in meters for the Y axis used to divide the space in buckets for KLD resampling.";
@@ -189,7 +187,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Resolution in radians for the theta axis to divide the space in buckets for KLD resampling.";
@@ -202,7 +199,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Number of filter updates required before resampling. ";
     descriptor.integer_range.resize(1);
@@ -213,7 +209,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "When set to true, will reduce the resampling rate when not needed and help "
@@ -321,21 +316,43 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // TODO(alon): is the sensor model?
+    // TODO(alon): modify the name of the parameter to sensor model or observation mode maybe is better?
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Which observation model to use [beam, likelihood_field].";
-    declare_parameter("laser_model_type", rclcpp::ParameterValue(std::string(kLikelihoodFieldModelName)), descriptor);
+    descriptor.description = "Which observation model to use [ndt].";
+    declare_parameter("laser_model_type", rclcpp::ParameterValue(std::string(kNdtSensorModelName)), descriptor);
   }
 
   {
-    // TODO(alon): this is needed for ndt sensor model?
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Maximum distance to do obstacle inflation on map, used in likelihood field model.";
+    descriptor.description = "Likelihood for measurements that lie inside cells that are not present in the map.";
+    // TODO(alon): check if the description values are fine.
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].to_value = 1;
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("laser_likelihood_max_dist", rclcpp::ParameterValue(2.0), descriptor);
+    declare_parameter("minimum_likelihood", rclcpp::ParameterValue(0.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Scaling parameter d1 in literature, used for scaling 2D likelihoods.";
+    // TODO(alon): check if the description values are fine.
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("d1", rclcpp::ParameterValue(1.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Scaling parameter d2 in literature, used for scaling 2D likelihoods.";
+    // TODO(alon): check if the description values are fine.
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("d2", rclcpp::ParameterValue(1.0), descriptor);
   }
 
   {
@@ -370,73 +387,11 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Mixture weight for the probability of hitting an obstacle.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
-    descriptor.floating_point_range[0].step = 0;
-    declare_parameter("z_hit", rclcpp::ParameterValue(0.5), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Mixture weight for the probability of getting random measurements.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
-    descriptor.floating_point_range[0].step = 0;
-    declare_parameter("z_rand", rclcpp::ParameterValue(0.5), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Mixture weight for the probability of getting max range measurements.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
-    descriptor.floating_point_range[0].step = 0;
-    declare_parameter("z_max", rclcpp::ParameterValue(0.05), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Mixture weight for the probability of getting short measurements.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
-    descriptor.floating_point_range[0].step = 0;
-    declare_parameter("z_short", rclcpp::ParameterValue(0.05), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Short readings' exponential distribution parameter.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
-    descriptor.floating_point_range[0].step = 0;
-    declare_parameter("lambda_short", rclcpp::ParameterValue(0.1), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Standard deviation of the hit distribution.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
-    descriptor.floating_point_range[0].step = 0;
-    declare_parameter("sigma_hit", rclcpp::ParameterValue(0.2), descriptor);
-  }
-
-  {
-    // amcl common parameter
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "If false, AMCL will use the last known pose to initialize when a new map is received.";
     declare_parameter("always_reset_initial_pose", false, descriptor);
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Set this to true when you want to load only the first published map from map_server "
@@ -445,28 +400,24 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Set the initial pose from the initial_pose parameters.";
     declare_parameter("set_initial_pose", false, descriptor);
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose x axis coordinate.";
     declare_parameter("initial_pose.x", 0.0, descriptor);
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose y axis coordinate.";
     declare_parameter("initial_pose.y", 0.0, descriptor);
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose yaw rotation.";
     declare_parameter("initial_pose.yaw", 0.0, descriptor);
@@ -509,7 +460,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // amcl common parameter
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Execution policy used to process particles [seq, par].";
     declare_parameter("execution_policy", "seq", descriptor);
