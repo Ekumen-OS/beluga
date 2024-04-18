@@ -44,12 +44,6 @@ static constexpr double kSensorModelSigma = 1.0;
 static constexpr double kInitialPoseSd = 1.0;
 static constexpr double kTranslationSigma = 1.0;
 
-bool generateRandomBool(double p) {
-  static auto generator = std::mt19937{std::random_device()()};
-  std::bernoulli_distribution distribution(p);
-  return distribution(generator);
-}
-
 int generateRandomInt(double mean, double sd) {
   static auto generator = std::mt19937{std::random_device()()};
   std::normal_distribution<double> distribution(mean, sd);
@@ -64,7 +58,6 @@ int main() {
   std::uniform_int_distribution landmark_distribution{0, kMapSize};
   auto landmark_map = beluga::views::sample(landmark_distribution) | ranges::views::take_exactly(kNumDoors) |
                       ranges::to<std::vector<int>>;
-  // TODO(alon): the map has to be sort and unique or not necessarily? for now it helps for testing purpose.
   landmark_map |= ranges::actions::unique;
   std::cout << "landamrk_map" << std::endl;
   for (const auto& lm : landmark_map) {
@@ -84,8 +77,6 @@ int main() {
   }
 
   // Generate particles
-  // TODO(alon): define a normal distribution to initialize the filter in some point
-  // std::uniform_int_distribution initial_distribution{0, kMapSize};
   std::normal_distribution<double> initial_distribution(kInitialPose, kInitialPoseSd);
   using Particle = std::tuple<int, beluga::Weight>;
   auto particles = beluga::views::sample(initial_distribution) |
