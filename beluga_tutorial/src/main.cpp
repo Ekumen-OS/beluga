@@ -39,8 +39,9 @@ static constexpr int kInitialPose = 0;
 static constexpr int kSimDt = 1;
 static constexpr int kVelocity = 1;
 static constexpr int kMeasurementDist = 2;
-static constexpr int kSensorModelSigma = 3;
 
+static constexpr double kSensorModelSigma = 1.0;
+static constexpr double kInitialPoseSd = 1.0;
 static constexpr double kTranslationSigma = 1.0;
 
 bool generateRandomBool(double p) {
@@ -64,7 +65,7 @@ int main() {
   auto landmark_map = beluga::views::sample(landmark_distribution) | ranges::views::take_exactly(kNumDoors) |
                       ranges::to<std::vector<int>>;
   // TODO(alon): the map has to be sort and unique or not necessarily? for now it helps for testing purpose.
-  landmark_map |= ranges::actions::sort | ranges::actions::unique;
+  landmark_map |= ranges::actions::unique;
   std::cout << "landamrk_map" << std::endl;
   for (const auto& lm : landmark_map) {
     std::cout << lm << ",";
@@ -83,7 +84,9 @@ int main() {
   }
 
   // Generate particles
-  std::uniform_int_distribution initial_distribution{0, kMapSize};
+  // TODO(alon): define a normal distribution to initialize the filter in some point
+  // std::uniform_int_distribution initial_distribution{0, kMapSize};
+  std::normal_distribution<double> initial_distribution(kInitialPose, kInitialPoseSd);
   using Particle = std::tuple<int, beluga::Weight>;
   auto particles = beluga::views::sample(initial_distribution) |
                    ranges::views::transform(beluga::make_from_state<Particle>) |
@@ -126,8 +129,9 @@ int main() {
       return no_landmark_probability / factor;
     };
 
-    // TODO(alon): To showcase the example, it may be useful to apply each range adaptor separately and save the particles
-    // in a file for display them using some plot lib.
+    // TODO(alon): To showcase the example, it may be useful to apply each range adaptor separately and save the
+    // particles in a file for display them using some plot lib.
+    // TODO(alon): pygame for the visualization
     particles |= beluga::actions::propagate(std::execution::seq, motion_model) |
                  beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
 
@@ -135,14 +139,11 @@ int main() {
     particles |= beluga::views::sample | ranges::views::take_exactly(kNumParticles) | beluga::actions::assign;
 
     // Calculate mean and standard deviation
-    auto states = particles | beluga::views::states | ranges::views::common;
-    auto accum_state = ranges::accumulate(states, 0.0);
-    int mean = static_cast<int>(accum_state / (static_cast<int>(particles.size())));
-    auto variance =
-        ranges::accumulate(states, 0.0, [&mean](double init, double state) { return init + pow(state - mean, 2); });
-    double sd = sqrt(variance / (static_cast<double>(particles.size() - 1)));
+    const auto [mean, sd] = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
 
-    std::cout << "mean: " << mean << ", sd: " << sd << std::endl;
+    std::cout << "current_pose: " << current_pose << ", mean: " << mean << ", sd: " << sd << std::endl;
+    // TODO(alon): current_pose = ground_truth, mean = estimated_pose
+    // TODO(alon): play with the initial position in the tutorial
   }
 
   return 0;
