@@ -28,8 +28,6 @@ install(TARGETS ${executable_name}
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
-
 if(BUILD_TESTING)
   # enable_testing()
   # add_subdirectory(test)
