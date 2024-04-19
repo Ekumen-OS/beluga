@@ -30,6 +30,11 @@
 
 #include <beluga/beluga.hpp>
 
+#include <H5Cpp.h>
+#include <H5DataSet.h>
+#include <H5DataType.h>
+#include <H5Tpublic.h>
+
 // Tutorial parameters
 static constexpr int kMapSize = 100;
 static constexpr int kNumDoors = kMapSize / 3;
@@ -44,6 +49,8 @@ static constexpr double kSensorModelSigma = 1.0;
 static constexpr double kInitialPoseSd = 1.0;
 static constexpr double kTranslationSigma = 1.0;
 
+static const std::string kFileName = "tutorial_dataset.hdf5";
+
 int generateRandomInt(double mean, double sd) {
   static auto generator = std::mt19937{std::random_device()()};
   std::normal_distribution<double> distribution(mean, sd);
@@ -54,11 +61,36 @@ int generateRandomInt(double mean, double sd) {
 int main() {
   std::cout << "beluga tutorial - main.cpp start!!" << std::endl;
 
+  // TODO(alon):
+  // 1) Create an HDF5 file called tutorial_dataset.hdf5
+  // 2) Save the landmark_map under the key "landmark_map". Also save the map size and the numbers of doors in the map.
+  // 3) Save the particles as follow:
+  //    * particles_set [
+  //        [p1, p2, ..., pn]1 (n = num of particles, p = {pose, weight})
+  //        [p1, p2, ..., pn]2
+  //        ...
+  //        ...
+  //        ...
+  //        [p1, p2, ..., pn]m (m = number of simulation cycles)
+  //      ]
+  // 4) Save all the parameters in the file (dt, vel, numParticles)
+  // https://docs.hdfgroup.org/hdf5/develop/_intro_h_d_f5.html
+  // * The datatype will be a compound datatype with a struct with all the parameters, an array of size mapSize with the
+  // landmark_map, a numOfCycles+1 x numOfParticles matrix, and an array of size numOfCycles for the ground_truth
+  // * Each simulation will generate one dataset of 1x1 dataspace. But for example if I have a datapsace of 5x3 the rank
+  // will be 2.
+
+  // Create HDF5 file
+  H5::H5File file_handler(kFileName, H5F_ACC_TRUNC);
+  std::array<hsize_t, 1> dim;
+  dim[0] = 1;
+  int rank = 1;
+
   // Generate a random map
   std::uniform_int_distribution landmark_distribution{0, kMapSize};
   auto landmark_map = beluga::views::sample(landmark_distribution) | ranges::views::take_exactly(kNumDoors) |
                       ranges::to<std::vector<int>>;
-  landmark_map |= ranges::actions::unique;
+  landmark_map |= ranges::actions::sort | ranges::actions::unique;
   std::cout << "landamrk_map" << std::endl;
   for (const auto& lm : landmark_map) {
     std::cout << lm << ",";
@@ -66,14 +98,29 @@ int main() {
   std::cout << std::endl;
   std::cout << std::endl;
 
-  // Save the map in a csv file
+  // Save the map in the HDF5 file
   {
-    std::string filename{"map.csv"};
-    std::fstream fout{filename, std::fstream::trunc | std::fstream::out};
-    fout << "mark_pose" << std::endl;
-    for (const auto& l : landmark_map) {
-      fout << l << std::endl;
+    std::array<hsize_t, 1> dim{landmark_map.size()};
+    H5::DataSpace dataspace(rank, dim.data());
+    // H5::ArrayType arrfltype(H5::PredType::NATIVE_INT, static_cast<int>(landmark_map.size()), dim.data());
+    H5::IntType datatype(H5::PredType::NATIVE_INT);
+    datatype.setOrder(H5T_ORDER_LE);
+    H5::DataSet dataset(file_handler.createDataSet("landmark_map", datatype, dataspace));
+    dataset.write(landmark_map.data(), datatype);
+    file_handler.close();
+  }
+  {
+    file_handler.openFile(kFileName, H5F_ACC_RDONLY);
+    H5::DataSet landmark_map_dataset = file_handler.openDataSet("landmark_map");
+    std::array<hsize_t, 1> dims_out;
+    landmark_map_dataset.getSpace().getSimpleExtentDims(dims_out.data(), nullptr);
+    std::vector<int> lmp(landmark_map.size());
+    landmark_map_dataset.read(lmp.data(), H5::PredType::NATIVE_INT);
+    for (const auto& l : lmp) {
+      std::cout << l << ",";
     }
+    std::cout << "\n";
+    std::cout << "\n";
   }
 
   // Generate particles
