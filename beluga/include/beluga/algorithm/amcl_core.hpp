@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef AMCL_CORE_HPP
-#define AMCL_CORE_HPP
+#ifndef BELUGA_ALGORITHM_AMCL_CORE_HPP
+#define BELUGA_ALGORITHM_AMCL_CORE_HPP
 
 #include <execution>
 #include <optional>
@@ -30,7 +30,6 @@
 namespace beluga {
 
 /// Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.
-
 struct AmclParams {
   /// Min distance in meters between updates.
   double update_min_d = 0.25;
@@ -78,7 +77,6 @@ template <
     typename WeightT = beluga::Weight,
     class ParticleType = std::tuple<typename SensorModel::state_type, WeightT>,
     class ExecutionPolicy = std::execution::sequenced_policy>
-
 class Amcl {
   static_assert(
       std::is_same_v<ExecutionPolicy, std::execution::parallel_policy> or
@@ -159,29 +157,29 @@ class Amcl {
    * weights are adjusted accordingly. Also, according to the configured resampling policy, the particles
    * are resampled to maintain diversity and prevent degeneracy.
    *
-   * \param state_at_measurement State at the measurement time.
+   * \param control_action Control action.
    * \param measurement Measurement data.
    * \return An optional pair containing the estimated pose and covariance after the update,
    *         or std::nullopt if no update was performed.
    */
-  auto update(state_type state_at_measurement, measurement_type measurement) -> std::optional<estimation_type> {
+  auto update(state_type control_action, measurement_type measurement) -> std::optional<estimation_type> {
     if (particles_.empty()) {
       return std::nullopt;
     }
 
-    if (!update_policy_(state_at_measurement) && !force_update_) {
+    if (!update_policy_(control_action) && !force_update_) {
       return std::nullopt;
     }
 
-    particles_ |= beluga::actions::propagate(
-                      execution_policy_, motion_model_(control_action_window_ << state_at_measurement)) |  //
-                  beluga::actions::reweight(execution_policy_, sensor_model_(std::move(measurement))) |    //
-                  beluga::actions::normalize(execution_policy_);
+    particles_ |=
+        beluga::actions::propagate(execution_policy_, motion_model_(control_action_window_ << control_action)) |  //
+        beluga::actions::reweight(execution_policy_, sensor_model_(std::move(measurement))) |                     //
+        beluga::actions::normalize(execution_policy_);
 
     const double random_state_probability = random_probability_estimator_(particles_);
 
     if (resample_policy_(particles_)) {
-      auto random_state = ranges::compose(beluga::make_from_state<particle_type>, get_random_state_fn());
+      auto random_state = ranges::compose(beluga::make_from_state<particle_type>, get_random_state_generator());
 
       if (random_state_probability > 0.0) {
         random_probability_estimator_.reset();
@@ -205,16 +203,15 @@ class Amcl {
   /// Force a manual update of the particles on the next iteration of the filter.
   void force_update() { force_update_ = true; }
 
+ private:
   /// Gets a callable that will produce a random state.
-  decltype(auto) get_random_state_fn() const {
+  decltype(auto) get_random_state_generator() const {
     if constexpr (std::is_invocable_v<random_state_generator_type>) {
       return random_state_generator_;
     } else {
       return random_state_generator_(particles_);
     }
   }
-
- private:
   beluga::TupleVector<particle_type> particles_;
 
   AmclParams params_;
@@ -237,4 +234,4 @@ class Amcl {
 
 }  // namespace beluga
 
-#endif  // AMCL_CORE_HPP
+#endif  // BELUGA_ALGORITHM_AMCL_CORE_HPP
