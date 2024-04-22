@@ -1,15 +1,16 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/particles.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/particles.hpp">
 <area shape="rect" id="node1" title="Implementation of views related to particle ranges." alt="" coords="755,5,955,61"/>
 <area shape="rect" id="node2" href="$normalize_8hpp.html" title="Implementation of the normalize range adaptor object." alt="" coords="5,117,224,173"/>
-<area shape="rect" id="node5" href="$propagate_8hpp.html" title="Implementation of the propagate range adaptor object." alt="" coords="248,117,467,173"/>
-<area shape="rect" id="node6" href="$reweight_8hpp.html" title="Implementation of the reweight range adaptor object." alt="" coords="491,117,701,173"/>
-<area shape="rect" id="node7" href="$effective__sample__size_8hpp.html" title="Implementation of an algorithm to calculate the effective sample size (ESS)." alt="" coords="1009,109,1207,180"/>
-<area shape="rect" id="node11" href="$thrun__recovery__probability__estimator_8hpp_source.html" title=" " alt="" coords="725,109,985,180"/>
-<area shape="rect" id="node12" href="$sample_8hpp.html" title="Implementation of a sample (with replacement) range adaptor object." alt="" coords="1232,117,1424,173"/>
-<area shape="rect" id="node13" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="1233,235,1425,291"/>
+<area shape="rect" id="node6" href="$propagate_8hpp.html" title="Implementation of the propagate range adaptor object." alt="" coords="248,117,467,173"/>
+<area shape="rect" id="node7" href="$reweight_8hpp.html" title="Implementation of the reweight range adaptor object." alt="" coords="491,117,701,173"/>
+<area shape="rect" id="node8" href="$effective__sample__size_8hpp.html" title="Implementation of an algorithm to calculate the effective sample size (ESS)." alt="" coords="1009,109,1207,180"/>
+<area shape="rect" id="node12" href="$thrun__recovery__probability__estimator_8hpp_source.html" title=" " alt="" coords="725,109,985,180"/>
+<area shape="rect" id="node13" href="$sample_8hpp.html" title="Implementation of a sample (with replacement) range adaptor object." alt="" coords="1232,117,1424,173"/>
+<area shape="rect" id="node14" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="1233,235,1425,291"/>
 <area shape="rect" id="node3" href="$actions_8hpp.html" title="Implementation of useful range actions." alt="" coords="381,235,573,291"/>
 <area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="875,451,1067,507"/>
-<area shape="rect" id="node8" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="785,235,977,291"/>
-<area shape="rect" id="node9" href="$on__effective__size__drop_8hpp.html" title="Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric." alt="" coords="1001,228,1209,299"/>
-<area shape="rect" id="node10" href="$policies_8hpp.html" title="Implementation of useful policies." alt="" coords="987,347,1179,403"/>
+<area shape="rect" id="node5" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="853,555,1089,611"/>
+<area shape="rect" id="node9" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="785,235,977,291"/>
+<area shape="rect" id="node10" href="$on__effective__size__drop_8hpp.html" title="Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric." alt="" coords="1001,228,1209,299"/>
+<area shape="rect" id="node11" href="$policies_8hpp.html" title="Implementation of useful policies." alt="" coords="987,347,1179,403"/>
 </map>

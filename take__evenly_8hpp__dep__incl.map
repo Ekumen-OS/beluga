@@ -1,5 +1,6 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/take_evenly.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/views/take_evenly.hpp">
-<area shape="rect" id="node1" title="Implementation of a take_evenly range adaptor object." alt="" coords="5,5,227,61"/>
-<area shape="rect" id="node2" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="20,109,212,165"/>
-<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="20,213,212,269"/>
+<area shape="rect" id="node1" title="Implementation of a take_evenly range adaptor object." alt="" coords="13,5,234,61"/>
+<area shape="rect" id="node2" href="$views_8hpp.html" title="Implementation of useful container views." alt="" coords="27,109,219,165"/>
+<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="27,213,219,269"/>
+<area shape="rect" id="node4" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="5,317,241,373"/>
 </map>

@@ -1,4 +1,6 @@
 <map id="beluga::policy_base" name="beluga::policy_base">
-<area shape="rect" id="node1" title="Implementation detail for a policy base object." alt="" coords="29,5,180,32"/>
-<area shape="rect" id="node2" href="$structbeluga_1_1policy.html" title="Forward declaration of policy." alt="" coords="5,80,204,107"/>
+<area shape="rect" id="node1" title="Implementation detail for a policy base object." alt="" coords="5,78,156,105"/>
+<area shape="rect" id="node2" href="$structbeluga_1_1policy.html" title=" " alt="" coords="223,5,384,47"/>
+<area shape="rect" id="node3" href="$structbeluga_1_1policy.html" title=" " alt="" coords="211,71,395,112"/>
+<area shape="rect" id="node4" href="$structbeluga_1_1policy.html" title="Forward declaration of policy." alt="" coords="204,137,403,163"/>
 </map>

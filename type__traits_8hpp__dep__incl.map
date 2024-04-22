@@ -1,6 +1,7 @@
 <map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/type_traits.hpp">
-<area shape="rect" id="node1" title="Includes all Beluga type traits." alt="" coords="5,5,197,61"/>
-<area shape="rect" id="node2" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="5,332,197,388"/>
-<area shape="rect" id="node3" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="72,109,264,180"/>
-<area shape="rect" id="node4" href="$containers_8hpp.html" title="Implementation of efficient containers." alt="" coords="72,228,264,284"/>
+<area shape="rect" id="node1" title="Includes all Beluga type traits." alt="" coords="27,5,219,61"/>
+<area shape="rect" id="node2" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="27,332,219,388"/>
+<area shape="rect" id="node4" href="$tuple__vector_8hpp.html" title="Implementation of a tuple of containers." alt="" coords="94,109,286,180"/>
+<area shape="rect" id="node3" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="5,436,241,492"/>
+<area shape="rect" id="node5" href="$containers_8hpp.html" title="Implementation of efficient containers." alt="" coords="94,228,286,284"/>
 </map>
