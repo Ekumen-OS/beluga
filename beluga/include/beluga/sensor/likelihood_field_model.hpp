@@ -46,18 +46,18 @@ struct LikelihoodFieldModelParam {
    * When creating a distance map, if the distance to an obstacle is higher than the value specified here,
    * then this value will be used.
    */
-  double max_obstacle_distance;
+  double max_obstacle_distance = 100.0;
   /// Maximum range of a laser ray.
-  double max_laser_distance;
+  double max_laser_distance = 2.0;
   /// Weight used to combine the probability of hitting an obstacle.
-  double z_hit;
+  double z_hit = 0.5;
   /// Weight used to combine the probability of random noise in perception.
-  double z_random;
+  double z_random = 0.5;
   /// Standard deviation of a gaussian centered arounds obstacles.
   /**
    * Used to calculate the probability of the obstacle being hit.
    */
-  double sigma_hit;
+  double sigma_hit = 0.2;
 };
 
 /// Likelihood field sensor model for range finders.
@@ -163,6 +163,8 @@ class LikelihoodFieldModel {
                                     params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi())),
                                 two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit,
                                 offset = params.z_random / params.max_laser_distance](double squared_distance) {
+      assert(two_squared_sigma > 0.0);
+      assert(amplitude > 0.0);
       return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
     };
 
