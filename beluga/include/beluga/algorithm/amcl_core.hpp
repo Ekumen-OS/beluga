@@ -153,9 +153,9 @@ class Amcl {
   /**
    * This method performs a particle filter update step using motion and sensor data. It evaluates whether
    * an update is necessary based on the configured update policy and the force_update flag. If an update
-   * is required, the motion model and sensor model updates are applied to the particles, and the particle
-   * weights are adjusted accordingly. Also, according to the configured resampling policy, the particles
-   * are resampled to maintain diversity and prevent degeneracy.
+   * is required, or if it was forced  via `force_update()`, the motion model and sensor model updates are applied to
+   * the particles, and the particle weights are adjusted accordingly. Also, according to the configured resampling
+   * policy, the particles are resampled to maintain diversity and prevent degeneracy.
    *
    * \param control_action Control action.
    * \param measurement Measurement data.
@@ -171,10 +171,10 @@ class Amcl {
       return std::nullopt;
     }
 
-    particles_ |=
-        beluga::actions::propagate(execution_policy_, motion_model_(control_action_window_ << control_action)) |  //
-        beluga::actions::reweight(execution_policy_, sensor_model_(std::move(measurement))) |                     //
-        beluga::actions::normalize(execution_policy_);
+    particles_ |= beluga::actions::propagate(
+                      execution_policy_, motion_model_(control_action_window_ << std::move(control_action))) |  //
+                  beluga::actions::reweight(execution_policy_, sensor_model_(std::move(measurement))) |         //
+                  beluga::actions::normalize(execution_policy_);
 
     const double random_state_probability = random_probability_estimator_(particles_);
 
@@ -205,7 +205,7 @@ class Amcl {
 
  private:
   /// Gets a callable that will produce a random state.
-  decltype(auto) get_random_state_generator() const {
+  [[nodiscard]] decltype(auto) get_random_state_generator() const {
     if constexpr (std::is_invocable_v<random_state_generator_type>) {
       return random_state_generator_;
     } else {

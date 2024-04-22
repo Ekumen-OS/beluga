@@ -23,8 +23,7 @@
 #include <range/v3/view/take_last.hpp>
 #include <sophus/se2.hpp>
 
-using beluga::testing::StaticOccupancyGrid;
-namespace beluga {
+namespace {
 
 const auto kDummyControl = Sophus::SE2d{};
 const std::vector kDummyMeasurement = {
@@ -36,32 +35,34 @@ const std::vector kDummyMeasurement = {
 auto make_amcl(const beluga::AmclParams& params = {}) {
   constexpr double kResolution = 1.0;
   // clang-format off
-  const auto map = StaticOccupancyGrid<5, 5>{{
+  const auto map = beluga::testing::StaticOccupancyGrid<5, 5>{{
     false, false, false, false, false ,
     false, false, false, false , false,
     false, false, true , false, false,
     false, false , false, false, false,
     false , false, false, false, false},
     kResolution};
-    beluga::BeamModelParam param{};
+  // clang-format on
+  beluga::BeamModelParam param{};
 
-    auto random_state_maker = [](){
-        return Sophus::SE2d{};
-    };
+  auto random_state_maker = []() { return Sophus::SE2d{}; };
 
-    beluga::spatial_hash<Sophus::SE2d> hasher{0.1, 0.1, 0.1};
+  beluga::spatial_hash<Sophus::SE2d> hasher{0.1, 0.1, 0.1};
 
-    beluga::Amcl amcl{
-      beluga::DifferentialDriveModel{beluga::DifferentialDriveModelParam{}},   //
-      beluga::BeamSensorModel{param, map},  //
+  beluga::Amcl amcl{
+      beluga::DifferentialDriveModel{beluga::DifferentialDriveModelParam{}},  //
+      beluga::BeamSensorModel{param, map},                                    //
       std::move(random_state_maker),
       std::move(hasher),
-      std::move(params),                                                                  //
+      std::move(params),  //
       std::execution::seq,
   };
   return amcl;
 }
+}  // namespace
 
+namespace beluga {
+using beluga::testing::StaticOccupancyGrid;
 TEST(TestAmclCore, InitializeWithNoParticles) {
   auto amcl = make_amcl();
   ASSERT_EQ(amcl.particles().size(), 0);
@@ -116,47 +117,46 @@ TEST(TestAmclCore, UpdateWithParticlesForced) {
   ASSERT_TRUE(estimate.has_value());
 }
 
-
 TEST(TestAmclCore, ParticlesDependentRandomStateGenerator) {
   auto params = beluga::AmclParams{};
   params.max_particles = AmclParams{}.max_particles;
 
   constexpr double kResolution = 0.5;
   // clang-format off
-  const auto map = StaticOccupancyGrid<5, 5>{{
+  const auto map = beluga::testing::StaticOccupancyGrid<5, 5>{{
     false, false, false, false, false ,
     false, false, false, false , false,
     false, false, false , false, false,
     false, false , false, false, false,
     false , false, false, false, false},
     kResolution};
+  // clang-format on
 
-    // Demonstrate how we can provide a generator that depends on the current filter state.
-    auto random_state_maker = [](const auto& particles){
-        const auto last_particle_state = beluga::views::states(particles).back();
-        return [last_particle_state](){return last_particle_state;};
-    };
+  // Demonstrate how we can provide a generator that depends on the current filter state.
+  auto random_state_maker = [](const auto& particles) {
+    const auto last_particle_state = beluga::views::states(particles).back();
+    return [last_particle_state]() { return last_particle_state; };
+  };
 
-    beluga::spatial_hash<Sophus::SE2d> hasher{0.5, 0.5, 0.5};
+  beluga::spatial_hash<Sophus::SE2d> hasher{0.5, 0.5, 0.5};
 
-    beluga::Amcl amcl{
+  beluga::Amcl amcl{
       beluga::DifferentialDriveModel{beluga::DifferentialDriveModelParam{}},   //
       beluga::LikelihoodFieldModel{beluga::LikelihoodFieldModelParam{}, map},  //
       std::move(random_state_maker),
       std::move(hasher),
-      std::move(params),                                                                  //
+      std::move(params),  //
       std::execution::seq,
-    };
-    amcl.initialize(Sophus::SE2d{}, Eigen::Vector3d::Ones().asDiagonal());
-    ASSERT_EQ(amcl.particles().size(), AmclParams{}.max_particles);
-    auto estimate = amcl.update(kDummyControl, kDummyMeasurement);
-    ASSERT_TRUE(estimate.has_value());
+  };
+  amcl.initialize(Sophus::SE2d{}, Eigen::Vector3d::Ones().asDiagonal());
+  ASSERT_EQ(amcl.particles().size(), AmclParams{}.max_particles);
+  auto estimate = amcl.update(kDummyControl, kDummyMeasurement);
+  ASSERT_TRUE(estimate.has_value());
 }
-
 
 TEST(TestAmclCore, SelectiveResampleCanBeConstructed) {
   auto params = beluga::AmclParams{};
-  params.selective_resampling = false;
+  params.selective_resampling = true;
   auto amcl = make_amcl(params);
   amcl.initialize(Sophus::SE2d{}, Eigen::Vector3d::Ones().asDiagonal());
   ASSERT_EQ(amcl.particles().size(), AmclParams{}.max_particles);
@@ -165,16 +165,16 @@ TEST(TestAmclCore, SelectiveResampleCanBeConstructed) {
 }
 
 TEST(TestAmclCore, TestRandomParticlesInserting) {
-    auto params = beluga::AmclParams{};
-    params.min_particles = 2;
-    params.max_particles = 100;
-    auto amcl = make_amcl(params);
-    amcl.initialize(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1,1} }, (Eigen::Vector3d::Ones()).asDiagonal());
-    // This exercises the random state generation.
-    for(int i=0; i<30; ++i){
-      amcl.force_update();
-      amcl.update(kDummyControl, kDummyMeasurement);
-    }
+  auto params = beluga::AmclParams{};
+  params.min_particles = 2;
+  params.max_particles = 100;
+  auto amcl = make_amcl(params);
+  amcl.initialize(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1, 1}}, (Eigen::Vector3d::Ones()).asDiagonal());
+  // This exercises the random state generation.
+  for (int i = 0; i < 30; ++i) {
+    amcl.force_update();
+    amcl.update(kDummyControl, kDummyMeasurement);
+  }
 }
 
 }  // namespace beluga
