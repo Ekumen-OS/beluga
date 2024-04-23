@@ -477,6 +477,7 @@ NdtAmclNode::CallbackReturn NdtAmclNode::on_configure(const rclcpp_lifecycle::St
 
 NdtAmclNode::CallbackReturn NdtAmclNode::on_activate(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Activating");
+  particle_filter_ = make_particle_filter();
   particle_cloud_pub_->on_activate();
   pose_pub_->on_activate();
 
