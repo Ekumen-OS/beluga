@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <beluga/algorithm/spatial_hash.hpp>
+#include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/sensor/ndt_sensor_model.hpp>
 #include <beluga_amcl/ndt_amcl_node.hpp>
 
@@ -19,9 +21,11 @@
 #include <tf2/utils.h>
 #include <tf2_ros/create_timer_ros.h>
 
+#include <beluga_ros/amcl.hpp>
 #include <chrono>
 #include <limits>
 #include <memory>
+#include <sophus/se2.hpp>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -44,8 +48,6 @@ namespace {
 constexpr std::string_view kDifferentialModelName = "differential_drive";
 constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
 constexpr std::string_view kStationaryModelName = "stationary";
-
-constexpr std::string_view kNdtSensorModelName = "ndt";
 
 constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::DifferentialMotionModel";
 constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
@@ -317,13 +319,6 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
   }
 
   {
-    // TODO(alon): modify the name of the parameter to sensor model or observation mode maybe is better?
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Which observation model to use [ndt].";
-    declare_parameter("laser_model_type", rclcpp::ParameterValue(std::string(kNdtSensorModelName)), descriptor);
-  }
-
-  {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Likelihood for measurements that lie inside cells that are not present in the map.";
     // TODO(alon): check if the description values are fine.
@@ -505,14 +500,6 @@ NdtAmclNode::CallbackReturn NdtAmclNode::on_activate(const rclcpp_lifecycle::Sta
     timer_ = create_wall_timer(200ms, std::bind(&NdtAmclNode::timer_callback, this), common_callback_group);
   }
 
-  // TODO(alon): map type changed to hdf5
-  // {
-  //   map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
-  //       get_parameter("map_topic").as_string(), rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
-  //       std::bind(&NdtAmclNode::map_callback, this, std::placeholders::_1), common_subscription_options);
-  //   RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
-  // }
-
   {
     initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
         get_parameter("initial_pose_topic").as_string(), rclcpp::SystemDefaultsQoS(),
@@ -549,16 +536,6 @@ NdtAmclNode::CallbackReturn NdtAmclNode::on_activate(const rclcpp_lifecycle::Sta
   {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    // Ignore deprecated declaration warning to support Humble.
-    // Message: use rclcpp::QoS instead of rmw_qos_profile_t
-    global_localization_server_ = create_service<std_srvs::srv::Empty>(
-        "reinitialize_global_localization",
-        std::bind(
-            &NdtAmclNode::global_localization_callback, this, std::placeholders::_1, std::placeholders::_2,
-            std::placeholders::_3),
-        rmw_qos_profile_services_default, common_callback_group);
-    RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
-
     nomotion_update_server_ = create_service<std_srvs::srv::Empty>(
         "request_nomotion_update",
         std::bind(
@@ -577,8 +554,6 @@ NdtAmclNode::CallbackReturn NdtAmclNode::on_deactivate(const rclcpp_lifecycle::S
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
   pose_pub_->on_deactivate();
-  // TODO(alon): map was changed to hdf5
-  // map_sub_.reset();
   initial_pose_sub_.reset();
   laser_scan_connection_.disconnect();
   laser_scan_filter_.reset();
@@ -586,7 +561,6 @@ NdtAmclNode::CallbackReturn NdtAmclNode::on_deactivate(const rclcpp_lifecycle::S
   tf_listener_.reset();
   tf_broadcaster_.reset();
   tf_buffer_.reset();
-  global_localization_server_.reset();
   bond_.reset();
   return CallbackReturn::SUCCESS;
 }
@@ -595,8 +569,7 @@ NdtAmclNode::CallbackReturn NdtAmclNode::on_cleanup(const rclcpp_lifecycle::Stat
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   pose_pub_.reset();
-  // TODO(alon): use ndt_amcl
-  // particle_filter_.reset();
+  particle_filter_.reset();
   enable_tf_broadcast_ = false;
   return CallbackReturn::SUCCESS;
 }
@@ -640,60 +613,26 @@ auto NdtAmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus
   return std::make_pair(pose, covariance);
 }
 
-// TODO(alon): use ndt_amcl
-auto NdtAmclNode::get_motion_model(std::string_view name) const -> beluga_ros::NdtAmcl::motion_model_variant {
-  if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
-    auto params = beluga::DifferentialDriveModelParam{};
-    params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
-    params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
-    params.translation_noise_from_translation = get_parameter("alpha3").as_double();
-    params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
-    return beluga::DifferentialDriveModel{params};
-  }
-  if (name == kOmnidirectionalModelName || name == kNav2OmnidirectionalModelName) {
-    auto params = beluga::OmnidirectionalDriveModelParam{};
-    params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
-    params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
-    params.translation_noise_from_translation = get_parameter("alpha3").as_double();
-    params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
-    params.strafe_noise_from_translation = get_parameter("alpha5").as_double();
-    return beluga::OmnidirectionalDriveModel{params};
-  }
-  if (name == kStationaryModelName) {
-    return beluga::StationaryModel{};
-  }
-  throw std::invalid_argument(std::string("Invalid motion model: ") + std::string(name));
+// TODO(Ramiro) : Add runtime selection for motion models
+auto NdtAmclNode::get_motion_model() const -> beluga::DifferentialDriveModel {
+  auto params = beluga::DifferentialDriveModelParam{};
+  params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
+  params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
+  params.translation_noise_from_translation = get_parameter("alpha3").as_double();
+  params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
+  return beluga::DifferentialDriveModel{params};
+}
+beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode::get_sensor_model() const {
+  auto params = beluga::NDTModelParam{};
+  params.minimum_likelihood = get_parameter("minimum_likelihood").as_double();
+  params.d1 = get_parameter("d1").as_double();
+  params.d2 = get_parameter("d2").as_double();
+  return beluga::NDTSensorModel<NDTMapRepresentation>{
+      params, beluga::io::load_from_hdf5_2d<NDTMapRepresentation>(get_parameter("map_path").as_string())};
 }
 
-// TODO(alon): sensor model changed to ndt
-// TODO(alon): use ndt_amcl
-auto NdtAmclNode::get_sensor_model(std::string_view name, beluga_ros::NdtAmcl::sparse_grid_2d_t map) const
-    -> beluga_ros::NdtAmcl::sensor_model_variant {
-  if (name == kNdtSensorModelName) {
-    auto params = beluga::NDTModelParam{};
-    params.minimum_likelihood = get_parameter("minimum_likelihood").as_double();
-    params.d1 = get_parameter("d1").as_double();
-    params.d2 = get_parameter("d2").as_double();
-    return beluga::NDTSensorModel<beluga_ros::NdtAmcl::sparse_grid_2d_t>{params, map};
-  }
-  throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
-}
-
-// TODO(alon): use ndt_amcl
-auto NdtAmclNode::get_execution_policy(std::string_view name) -> beluga_ros::NdtAmcl::execution_policy_variant {
-  if (name == "seq") {
-    return std::execution::seq;
-  }
-  if (name == "par") {
-    return std::execution::par;
-  }
-  throw std::invalid_argument("Execution policy must be seq or par.");
-}
-
-// TODO(alon): use ndt_amcl
-auto NdtAmclNode::make_particle_filter(beluga_ros::NdtAmcl::sparse_grid_2d_t map) const
-    -> std::unique_ptr<beluga_ros::NdtAmcl> {
-  auto params = beluga_ros::NdtAmclParams{};
+std::unique_ptr<NdtAmcl> NdtAmclNode::make_particle_filter() const {
+  auto params = beluga::AmclParams{};
   params.update_min_d = get_parameter("update_min_d").as_double();
   params.update_min_a = get_parameter("update_min_a").as_double();
   params.resample_interval = static_cast<std::size_t>(get_parameter("resample_interval").as_int());
@@ -704,68 +643,25 @@ auto NdtAmclNode::make_particle_filter(beluga_ros::NdtAmcl::sparse_grid_2d_t map
   params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
   params.kld_epsilon = get_parameter("pf_err").as_double();
   params.kld_z = get_parameter("pf_z").as_double();
-  params.spatial_resolution_x = get_parameter("spatial_resolution_x").as_double();
-  params.spatial_resolution_y = get_parameter("spatial_resolution_y").as_double();
-  params.spatial_resolution_theta = get_parameter("spatial_resolution_theta").as_double();
 
-  return std::make_unique<beluga_ros::NdtAmcl>(
-      beluga_ros::NdtAmcl::sparse_grid_2d_t{map},                            //
-      get_motion_model(get_parameter("robot_model_type").as_string()),       //
-      get_sensor_model(get_parameter("laser_model_type").as_string(), map),  //
-      params,                                                                //
-      get_execution_policy(get_parameter("execution_policy").as_string()));
+  auto hasher = beluga::spatial_hash<Sophus::SE2d>(
+      get_parameter("spatial_resolution_x").as_double(), get_parameter("spatial_resolution_y").as_double(),
+      get_parameter("spatial_resolution_theta").as_double());
+
+  // TODO(Ramiro) : Do this right.
+  auto random_state_maker = []() { return Sophus::SE2d{}; };
+
+  // TODO(Ramiro) : Add runtime selection for execution policies. and probably random state generation
+  return std::make_unique<NdtAmcl>(
+      get_motion_model(),
+      get_sensor_model(),             //
+      std::move(random_state_maker),  //
+      std::move(hasher),              //
+      params,                         //
+      std::execution::seq);
 }
 
-// TODO(alon): map was changed to hdf5. Create a service to load a new map from a hdf5 file.
-// void NdtAmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
-//   RCLCPP_INFO(get_logger(), "A new map was received");
-
-//   if (particle_filter_ && get_parameter("first_map_only").as_bool()) {
-//     RCLCPP_WARN(get_logger(), "Ignoring new map because the particle filter has already been initialized");
-//     return;
-//   }
-
-//   const auto global_frame_id = get_parameter("global_frame_id").as_string();
-//   if (map->header.frame_id != global_frame_id) {
-//     RCLCPP_WARN_THROTTLE(
-//         get_logger(), *get_clock(), 2000, "Map frame \"%s\" doesn't match global frame \"%s\"",
-//         map->header.frame_id.c_str(), global_frame_id.c_str());
-//   }
-
-//   const bool should_reset_initial_pose = get_parameter("always_reset_initial_pose").as_bool() ||  //
-//                                          (!particle_filter_ && !last_known_estimate_.has_value());
-
-//   if (!particle_filter_) {
-//     try {
-//       particle_filter_ = make_particle_filter(std::move(map));
-//     } catch (const std::invalid_argument& error) {
-//       RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());
-//       return;
-//     }
-//   } else {
-//     particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
-//   }
-
-//   if (should_reset_initial_pose) {
-//     const auto initial_estimate = get_initial_estimate();
-//     if (initial_estimate.has_value()) {
-//       last_known_estimate_ = initial_estimate;
-//     }
-//   }
-
-//   if (last_known_estimate_.has_value() && initialize_from_estimate(last_known_estimate_.value())) {
-//     return;  // Success!
-//   }
-
-//   initialize_from_map();
-
-//   // TF broadcasting should be enabled only if we initialize from an estimate or in response
-//   // to external global localization requests, and not during the initial setup of the filter.
-//   enable_tf_broadcast_ = false;
-// }
-
 void NdtAmclNode::timer_callback() {
-  // TODO(alon): use ndt_amcl
   if (!particle_filter_) {
     return;
   }
@@ -878,16 +774,20 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
   }
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
-  // TODO(alon): use ndt_amcl
+
+  // TODO(nahuel, Ramiro): Remove this once we update the measurement type.
+  auto scan = beluga_ros::LaserScan{
+      laser_scan, laser_pose_in_base, static_cast<std::size_t>(get_parameter("max_beams").as_int()),
+      get_parameter("laser_min_range").as_double(), get_parameter("laser_max_range").as_double()};
+  auto measurement = scan.points_in_cartesian_coordinates() |  //
+                     ranges::views::transform([&scan](const auto& p) {
+                       return Eigen::Vector2d((scan.origin() * Sophus::Vector3d{p.x(), p.y(), 0}).head<2>());
+                     }) |
+                     ranges::to<std::vector>;
   const auto new_estimate = particle_filter_->update(
       base_pose_in_odom,  //
-      beluga_ros::LaserScan{
-          laser_scan,
-          laser_pose_in_base,
-          static_cast<std::size_t>(get_parameter("max_beams").as_int()),
-          get_parameter("laser_min_range").as_double(),
-          get_parameter("laser_max_range").as_double(),
-      });
+      std::move(measurement));
+
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 
@@ -951,70 +851,44 @@ void NdtAmclNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceSt
   initialize_from_estimate(last_known_estimate_.value());
 }
 
-void NdtAmclNode::global_localization_callback(
-    [[maybe_unused]] std::shared_ptr<rmw_request_id_t> request_header,
-    [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Request> req,
-    [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res) {
-  initialize_from_map();
-}
-
 void NdtAmclNode::nomotion_update_callback(
     [[maybe_unused]] std::shared_ptr<rmw_request_id_t> request_header,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Request> req,
     [[maybe_unused]] std::shared_ptr<std_srvs::srv::Empty::Response> res) {
-  //   if (!particle_filter_) {
-  //     RCLCPP_WARN(get_logger(), "Ignoring no-motion update request because the particle filter has not been
-  //     initialized"); return;
-  //   }
+  if (!particle_filter_) {
+    RCLCPP_WARN(get_logger(), "Ignoring no-motion update request because the particle filter has not been initialized");
+    return;
+  }
 
-  //   particle_filter_->force_update();
-  //   RCLCPP_INFO(get_logger(), "No-motion update requested");
-  // }
-
-  // bool NdtAmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Matrix3d>& estimate) {
-  //   RCLCPP_INFO(get_logger(), "Initializing particles from estimated pose and covariance");
-
-  //   if (!particle_filter_) {
-  //     RCLCPP_ERROR(get_logger(), "Could not initialize particles: The particle filter has not been initialized");
-  //     return false;
-  //   }
-
-  //   const auto& [pose, covariance] = estimate;
-
-  //   try {
-  //     particle_filter_->initialize(pose, covariance);
-  //   } catch (const std::runtime_error& error) {
-  //     RCLCPP_ERROR(get_logger(), "Could not initialize particles: %s", error.what());
-  //     return false;
-  //   }
-
-  //   enable_tf_broadcast_ = true;
-
-  //   RCLCPP_INFO(
-  //       get_logger(), "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, yaw=%g",
-  //       particle_filter_->particles().size(), pose.translation().x(), pose.translation().y(), pose.so2().log());
-
-  //   return true;
-  // }
-
-  // bool NdtAmclNode::initialize_from_map() {
-  //   RCLCPP_INFO(get_logger(), "Initializing particles from map");
-
-  //   if (!particle_filter_) {
-  //     RCLCPP_ERROR(get_logger(), "Could not initialize particles: The particle filter has not been initialized");
-  //     return false;
-  //   }
-
-  //   particle_filter_->initialize_from_map();
-  //   enable_tf_broadcast_ = true;
-
-  //   RCLCPP_INFO(
-  //       get_logger(), "Particle filter initialized with %ld particles distributed across the map",
-  //       particle_filter_->particles().size());
-
-  // return true;
+  particle_filter_->force_update();
+  RCLCPP_INFO(get_logger(), "No-motion update requested");
 }
 
+bool NdtAmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Matrix3d>& estimate) {
+  RCLCPP_INFO(get_logger(), "Initializing particles from estimated pose and covariance");
+
+  if (!particle_filter_) {
+    RCLCPP_ERROR(get_logger(), "Could not initialize particles: The particle filter has not been initialized");
+    return false;
+  }
+
+  const auto& [pose, covariance] = estimate;
+
+  try {
+    particle_filter_->initialize(pose, covariance);
+  } catch (const std::runtime_error& error) {
+    RCLCPP_ERROR(get_logger(), "Could not initialize particles: %s", error.what());
+    return false;
+  }
+
+  enable_tf_broadcast_ = true;
+
+  RCLCPP_INFO(
+      get_logger(), "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, yaw=%g",
+      particle_filter_->particles().size(), pose.translation().x(), pose.translation().y(), pose.so2().log());
+
+  return true;
+}
 }  // namespace beluga_amcl
 
 RCLCPP_COMPONENTS_REGISTER_NODE(beluga_amcl::NdtAmclNode)
