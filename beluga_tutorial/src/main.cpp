@@ -19,21 +19,14 @@
 #include <string>
 #include <vector>
 
-#include <meta/meta.hpp>
 #include <range/v3/action.hpp>
-#include <range/v3/all.hpp>  // TODO(alon): get only the necessary headers
+#include <range/v3/algorithm/any_of.hpp>
+#include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
 #include <beluga/beluga.hpp>
-
-#include <H5Cpp.h>
-#include <H5DataSet.h>
-#include <H5DataType.h>
-#include <H5Tpublic.h>
-#include <Eigen/Core>
-
 #include <beluga_tutorial/tutorial_dataset.hpp>
 
 // Tutorial parameters
