@@ -14,6 +14,10 @@
 
 find_package(beluga REQUIRED)
 
+include_directories(
+  include
+)
+
 set(executable_name ${PROJECT_NAME}_main)
 
 add_executable(${executable_name}
@@ -23,6 +27,8 @@ add_executable(${executable_name}
 target_link_libraries(${executable_name}
   beluga::beluga
 )
+
+install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 
 install(TARGETS ${executable_name}
   RUNTIME DESTINATION lib/${PROJECT_NAME}
