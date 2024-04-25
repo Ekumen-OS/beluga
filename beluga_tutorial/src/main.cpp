@@ -15,8 +15,8 @@
 // https://github.com/Ekumen-OS/beluga/issues/279#issuecomment-1903914387
 
 #include <cmath>
-#include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <random>
 #include <string>
 #include <vector>
@@ -30,7 +30,6 @@
 
 #include <yaml-cpp/yaml.h>
 #include <beluga/beluga.hpp>
-#include <beluga_tutorial/tutorial_dataset.hpp>
 
 // TODO(alon): Explain each parameter.
 struct TutorialParams {
@@ -50,7 +49,22 @@ struct TutorialParams {
 
 using Particle = std::tuple<int, beluga::Weight>;
 using LandmarkMapVector = std::vector<int>;
-// using ParticlesDataset = std::vector<std::vector<Particle>>;
+using GroundTruth = int;
+using Estimate = std::pair<int, int>;
+
+struct TutorialSimData {
+  GroundTruth ground_truth;
+  beluga::TupleVector<Particle> current;
+  beluga::TupleVector<Particle> propagate;
+  beluga::TupleVector<Particle> reweight;
+  beluga::TupleVector<Particle> resample;
+  Estimate estimation;
+};
+
+struct TutorialDataset {
+  LandmarkMapVector landmark_map;
+  std::vector<TutorialSimData> sim_data;
+};
 
 int generateRandomInt(double mean, double sd) {
   static auto generator = std::mt19937{std::random_device()()};
@@ -79,61 +93,45 @@ void load_params_from_yaml(TutorialParams& tutorial_params) {
   }
 }
 
-void save_landmark_map_to_yaml(const std::string& file_name, const LandmarkMapVector& landmark_map) {
+void save_tutorial_dataset_to_yaml(const std::string& file_name, const TutorialDataset& tutorial_dataset) {
   YAML::Node node;
-  if (std::filesystem::exists("./src/beluga/beluga_tutorial/bags/" + file_name)) {
-    try {
-      node = YAML::LoadFile("./src/beluga/beluga_tutorial/bags/" + file_name);
-    } catch (YAML::BadFile& e) {
-      std::cout << e.what() << "\n";
-    }
-  }
 
-  for (const auto& lmp : landmark_map) {
+  for (const auto& lmp : tutorial_dataset.landmark_map) {
     node["landamrk_map"].push_back(lmp);
   }
-  std::ofstream fout("./src/beluga/beluga_tutorial/bags/" + file_name);
-  fout << node;
-}
 
-void save_particles_to_yaml(
-    const std::string& file_name,
-    int cycle,
-    const std::string& stage,
-    const beluga::TupleVector<Particle>& particles) {
-  YAML::Node node;
-  if (std::filesystem::exists("./src/beluga/beluga_tutorial/bags/" + file_name)) {
-    try {
-      node = YAML::LoadFile("./src/beluga/beluga_tutorial/bags/" + file_name);
-    } catch (YAML::BadFile& e) {
-      std::cout << e.what() << "\n";
+  for (auto&& [cycle, data] : tutorial_dataset.sim_data | ranges::views::enumerate) {
+    node["simulation_dataset"][cycle]["ground_truth"] = data.ground_truth;
+
+    for (const auto& current : data.current) {
+      node["simulation_dataset"][cycle]["particles"]["current"]["states"].push_back(std::get<0>(current));
+      node["simulation_dataset"][cycle]["particles"]["current"]["weights"].push_back(
+          static_cast<double>(std::get<1>(current)));
     }
-  }
 
-  for (const auto& particle : particles) {
-    node["simulation_dataset"][cycle]["particles"][stage]["states"].push_back(std::get<0>(particle));
-    node["simulation_dataset"][cycle]["particles"][stage]["weights"].push_back(
-        static_cast<double>(std::get<1>(particle)));
-  }
-
-  std::ofstream fout("./src/beluga/beluga_tutorial/bags/" + file_name);
-  fout << node;
-}
-
-void save_estimation_to_yaml(const std::string& file_name, int cycle, const std::pair<int, int>& estimation) {
-  YAML::Node node;
-  if (std::filesystem::exists("./src/beluga/beluga_tutorial/bags/" + file_name)) {
-    try {
-      node = YAML::LoadFile("./src/beluga/beluga_tutorial/bags/" + file_name);
-    } catch (YAML::BadFile& e) {
-      std::cout << e.what() << "\n";
+    for (const auto& propagate : data.propagate) {
+      node["simulation_dataset"][cycle]["particles"]["propagate"]["states"].push_back(std::get<0>(propagate));
+      node["simulation_dataset"][cycle]["particles"]["propagate"]["weights"].push_back(
+          static_cast<double>(std::get<1>(propagate)));
     }
+
+    for (const auto& reweight : data.reweight) {
+      node["simulation_dataset"][cycle]["particles"]["reweight"]["states"].push_back(std::get<0>(reweight));
+      node["simulation_dataset"][cycle]["particles"]["reweight"]["weights"].push_back(
+          static_cast<double>(std::get<1>(reweight)));
+    }
+
+    for (const auto& resample : data.resample) {
+      node["simulation_dataset"][cycle]["particles"]["resample"]["states"].push_back(std::get<0>(resample));
+      node["simulation_dataset"][cycle]["particles"]["resample"]["weights"].push_back(
+          static_cast<double>(std::get<1>(resample)));
+    }
+
+    node["simulation_dataset"][cycle]["estimation"]["mean"] = std::get<0>(data.estimation);
+    node["simulation_dataset"][cycle]["estimation"]["sd"] = std::get<1>(data.estimation);
   }
 
-  node["simulation_dataset"][cycle]["estimation"]["mean"] = estimation.first;
-  node["simulation_dataset"][cycle]["estimation"]["sd"] = estimation.second;
-
-  std::ofstream fout("./src/beluga/beluga_tutorial/bags/" + file_name);
+  std::ofstream fout("./src/beluga/beluga_tutorial/bags/" + file_name, std::ios::trunc);
   fout << node;
 }
 
@@ -142,14 +140,16 @@ int main() {
   TutorialParams tutorial_params;
   load_params_from_yaml(tutorial_params);
 
+  // Create the TutorialDataset object for record the simulation data
+  TutorialDataset tutorial_dataset;
+
   // Generate a random map
   std::uniform_int_distribution landmark_distribution{0, tutorial_params.map_size};
   auto landmark_map = beluga::views::sample(landmark_distribution) |
                       ranges::views::take_exactly(tutorial_params.number_of_doors) | ranges::to<LandmarkMapVector>;
   landmark_map |= ranges::actions::sort | ranges::actions::unique;
 
-  // Save the landmark map in a yaml file
-  save_landmark_map_to_yaml(tutorial_params.dataset_file_name, landmark_map);
+  tutorial_dataset.landmark_map = landmark_map;
 
   // Generate particles
   std::normal_distribution<double> initial_distribution(
@@ -166,8 +166,14 @@ int main() {
       break;
     }
 
-    // Motion model
+    // Prepare the data to be saved
+    TutorialSimData tutorial_sim_data;
+
+    // Save ground truth
     current_pose += (tutorial_params.sim_velocity * tutorial_params.sim_dt);
+    tutorial_sim_data.ground_truth = current_pose;
+
+    // Motion model
     auto motion_model = [&](double state) {
       int distance = (tutorial_params.sim_velocity * tutorial_params.sim_dt);
       int translation_param = generateRandomInt(0, tutorial_params.translation_sigma);
@@ -196,30 +202,36 @@ int main() {
       return no_landmark_probability / factor;
     };
 
-    save_particles_to_yaml(tutorial_params.dataset_file_name, n, "current", particles);
+    // In general the particles can be modified using pipe operators.
     // particles |= beluga::actions::propagate(std::execution::seq, motion_model) |
     //              beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
 
+    // For the propose of the tutorial, we split the process in the following stages:
+    // Current stage
+    tutorial_sim_data.current = particles;
+
+    // Propagate stage
     particles |= beluga::actions::propagate(std::execution::seq, motion_model);
-    save_particles_to_yaml(tutorial_params.dataset_file_name, n, "propagate", particles);
+    tutorial_sim_data.propagate = particles;
 
-    particles |= beluga::actions::reweight(std::execution::seq, sensor_model);
-    save_particles_to_yaml(tutorial_params.dataset_file_name, n, "reweight", particles);
-
-    particles |= beluga::actions::normalize;
+    // Reweight stage
+    particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
+    tutorial_sim_data.reweight = particles;
 
     // Resample
     particles |= beluga::views::sample | ranges::views::take_exactly(tutorial_params.number_of_particles) |
                  beluga::actions::assign;
-    save_particles_to_yaml(tutorial_params.dataset_file_name, n, "resample", particles);
+    tutorial_sim_data.resample = particles;
 
     // Calculate mean and standard deviation
-    // TODO(alon): save the mean and standard deviation in the hdf5 file
     const auto estimation = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
-    save_estimation_to_yaml(tutorial_params.dataset_file_name, n, estimation);
-    // std::cout << "current_pose: " << current_pose << ", mean: " << mean << ", sd: " << sd << std::endl;
-    // TODO(alon): current_pose = ground_truth, mean = estimated_pose
-    // TODO(alon): play with the initial position in the tutorial
+    tutorial_sim_data.estimation = estimation;
+
+    // Save the sim data
+    tutorial_dataset.sim_data.push_back(tutorial_sim_data);
   }
+
+  save_tutorial_dataset_to_yaml(tutorial_params.dataset_file_name, tutorial_dataset);
+
   return 0;
 }

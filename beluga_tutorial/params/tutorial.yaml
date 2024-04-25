@@ -1,8 +1,8 @@
-dataset_file_name: "bag_1.yaml"
+dataset_file_name: "bag_2.yaml"
 map_size: 100
 number_of_doors: 35
-number_of_particles: 20
-sim_number_of_cycles: 10
+number_of_particles: 200
+sim_number_of_cycles: 100
 sim_initial_pose: 0 #[cell]
 sim_dt: 1 #[s]
 sim_velocity: 1 #[cell/s]
