@@ -34,4 +34,38 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     -Wpedantic)
 endif()
 
-include(cmake/ament.cmake)
+find_package(beluga REQUIRED)
+find_package(yaml_cpp_vendor REQUIRED)
+
+include_directories(
+  include
+)
+
+set(executable_name ${PROJECT_NAME}_main)
+
+add_executable(${executable_name}
+  src/main.cpp
+)
+
+target_include_directories(${executable_name} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  ${yaml_cpp_vendor_INCLUDE_DIRS})
+
+target_link_libraries(${executable_name}
+  beluga::beluga
+  yaml-cpp
+)
+
+install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
+
+install(TARGETS ${executable_name}
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
+
+if(BUILD_TESTING)
+  # enable_testing()
+  # add_subdirectory(test)
+endif()
+
+# include(cmake/ament.cmake)
