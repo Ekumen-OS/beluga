@@ -29,6 +29,7 @@
 #error BELUGA_ROS_VERSION is not defined or invalid
 #endif
 
+/// Compatibility layer for ROS 1 and ROS 2 messages.
 namespace beluga_ros::msg {
 
 #if BELUGA_ROS_VERSION == 2

@@ -28,7 +28,7 @@ The compatibility between `beluga_amcl` and its longstanding counterparts in the
 ### Parameters
 
 Beluga AMCL currently supports the majority of ROS parameters used in [Navigation 2 AMCL][nav2_amcl].<br/>
-See [Beluga AMCL parameter reference](docs/PARAMETERS.md) for detailed information.
+See [Beluga AMCL documentation](https://ekumen-os.github.io/beluga/packages/beluga_amcl/docs) for further reference.
 
 ### Subscribed Topics
 

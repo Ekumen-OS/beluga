@@ -54,7 +54,6 @@ colcon build \
         coverage-pytest \
         debug \
     --cmake-force-configure \
-    --cmake-args -DBUILD_DOCS=ON
 echo ::endgroup::
 
 echo ::group::Test

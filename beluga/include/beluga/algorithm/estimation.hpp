@@ -169,13 +169,16 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, 
   return std::pair{estimated_pose, covariance_matrix};
 }
 
-/// Returns a pair consisting of the estimated mean pose and its covariance.
+/// Computes mean and covariance Returns a pair consisting of the estimated mean pose and its covariance.
 /**
- * Given a range of poses, computes the estimated pose by averaging the translation
+ * Given a range of 2D poses, computes the estimated pose by averaging the translation
  * and rotation parts, assuming all poses are equally weighted.
  * Computes the covariance matrix of the translation parts and the circular variance
  * of the rotation angles to create a 3x3 covariance matrix.
- * It does not take into account the particle weights.
+ * It does not take into account the particle weights. This is appropriate for use with
+ * filter update cycles that resample the particle set at every iteration, since
+ * in that case the belief is fully represented by the spatial distribution of the
+ * particles, and the particle weights provide no additional information.
  *
  * \tparam Poses A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
  *  value type is `Sophus::SE2<Scalar>`.

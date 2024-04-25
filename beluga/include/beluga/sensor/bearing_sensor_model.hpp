@@ -46,7 +46,13 @@ struct BearingModelParam {
 
 /// Generic bearing sensor model, for both 2D and 3D state types.
 /**
- * This class satisfies \ref SensorModelPage.
+ * The model only relies on the bearing of a landmark detection relative to the
+ * sensor when calculating the updated importance weight. This can be used to
+ * support bearing-only measurements, such as feature detections in monocular
+ * images.
+ *
+ * \note This class satisfies \ref SensorModelPage.
+ *
  * \tparam LandmarkMap class managing the list of known landmarks.
  * \tparam StateType type of the state of the particle.
  */

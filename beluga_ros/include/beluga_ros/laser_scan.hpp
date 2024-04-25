@@ -23,15 +23,32 @@
 
 #include <sophus/se3.hpp>
 
+/**
+ * \file
+ * \brief Implementation of `sensor_msgs/LaserScan` wrapper type.
+ */
+
 namespace beluga_ros {
 
+/// Thin wrapper type for 2D `sensor_msgs/LaserScan` messages.
 class LaserScan : public beluga::BaseLaserScan<LaserScan> {
  public:
+  /// Range type.
   using Scalar = double;
 
+  /// Constructor.
+  ///
+  /// \param scan Laser scan message.
+  /// \param origin Laser scan frame origin in the filter frame.
+  /// Note it is a transform in 3D because the frame lidars typically
+  /// report data in is in general not coplanar with the plane on which
+  /// 2D localization operates.
+  /// \param max_beams Maximum number of beams to consider.
+  /// \param min_range Minimum allowed range value (in meters).
+  /// \param max_range Maximum allowed range value (in meters).
   explicit LaserScan(
       beluga_ros::msg::LaserScanConstSharedPtr scan,
-      Sophus::SE3d origin = Sophus::SE3d{},
+      Sophus::SE3d origin = Sophus::SE3d(),
       std::size_t max_beams = std::numeric_limits<std::size_t>::max(),
       Scalar min_range = std::numeric_limits<Scalar>::min(),
       Scalar max_range = std::numeric_limits<Scalar>::max())
@@ -43,8 +60,10 @@ class LaserScan : public beluga::BaseLaserScan<LaserScan> {
     assert(scan_ != nullptr);
   }
 
+  /// Get the laser scan frame origin in the filter frame.
   [[nodiscard]] const auto& origin() const { return origin_; }
 
+  /// Get laser scan measurement angles as a range.
   [[nodiscard]] auto angles() const {
     return ranges::views::iota(0, static_cast<int>(scan_->ranges.size())) | beluga::views::take_evenly(max_beams_) |
            ranges::views::transform([this](int i) {
@@ -52,13 +71,16 @@ class LaserScan : public beluga::BaseLaserScan<LaserScan> {
            });
   }
 
+  /// Get laser scan range measurements as a range.
   [[nodiscard]] auto ranges() const {
     return scan_->ranges | beluga::views::take_evenly(max_beams_) |
            ranges::views::transform([](auto value) { return static_cast<Scalar>(value); });
   }
 
+  /// Get the minimum range measurement.
   [[nodiscard]] auto min_range() const { return min_range_; }
 
+  /// Get the maximum range measurement.
   [[nodiscard]] auto max_range() const { return max_range_; }
 
  private:

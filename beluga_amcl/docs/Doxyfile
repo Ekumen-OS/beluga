@@ -1,0 +1,10 @@
+PROJECT_NAME           = "Beluga AMCL"
+INPUT                  = ../include ./_doxygen/main.md
+EXAMPLE_PATH           = ../test
+RECURSIVE              = YES
+USE_MDFILE_AS_MAINPAGE = ./_doxygen/main.md
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+WARN_AS_ERROR          = YES
+SHOW_NAMESPACES        = YES
+USE_MATHJAX            = YES

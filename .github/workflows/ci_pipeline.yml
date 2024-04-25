@@ -89,13 +89,9 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: ./src/beluga/tools/build-and-test.sh
 
-      - name: Upload documentation artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: docs
-          path: ./build/beluga/docs/html/
-          retention-days: 7
-        if: ${{ matrix.upload_artifacts }}
+      - name: Perform static analysis
+        working-directory: ${{ github.workspace }}
+        run: ./src/beluga/tools/run-clang-tidy.sh
 
       - name: Upload code coverage report
         uses: codecov/codecov-action@v3
@@ -107,14 +103,35 @@ jobs:
           verbose: true
         if: ${{ matrix.upload_artifacts }}
 
-      - name: Static analysis
-        working-directory: ${{ github.workspace }}
-        run: ./src/beluga/tools/run-clang-tidy.sh
-
-  deploy-docs:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+  build-docs:
     needs: build-test
     runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          cache: pip
+
+      - name: Install tooling dependencies
+        run: pip install -r docs/requirements.txt
+
+      - name: Build documentation
+        run: make -C docs html
+
+      - name: Upload documentation artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: ./docs/_build/html/
+          retention-days: 7
+
+  deploy-docs:
+    needs: build-docs
+    runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     steps:
       - name: Checkout documentation branch
         uses: actions/checkout@v3

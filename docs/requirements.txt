@@ -1,0 +1,11 @@
+sphinx>=7.0
+sphinxcontrib-bibtex>=2.6.2
+sphinxcontrib-doxylink>=1.12.2
+sphinx-theme>=1.0
+sphinx-copybutton>=0.5.2
+sphinx-book-theme>=1.1.2
+myst-parser>=2.0.0
+sphinx-design>=0.5.0
+sphinx-toolbox>=3.5.0
+sphinx-mdinclude>=0.6.0
+git+https://github.com/Ekumen-OS/sphinx-babel.git
