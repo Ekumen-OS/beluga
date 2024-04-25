@@ -41,6 +41,7 @@ def generate_launch_description():
                     {'show_viz': False},
                     {'viz_pub_rate': 30.0},
                     {'use_sim_time': True},
+                    {'pose': [0, 2, 0]},
                 ],
             ),
         ]

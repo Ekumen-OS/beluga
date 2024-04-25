@@ -335,7 +335,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
     // TODO(alon): check if the description values are fine.
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].to_value = 1000;
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("d1", rclcpp::ParameterValue(1.0), descriptor);
   }
@@ -346,7 +346,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
     // TODO(alon): check if the description values are fine.
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].to_value = 1000;
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("d2", rclcpp::ParameterValue(1.0), descriptor);
   }
@@ -628,6 +628,9 @@ beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode::get_sensor_model() con
   params.minimum_likelihood = get_parameter("minimum_likelihood").as_double();
   params.d1 = get_parameter("d1").as_double();
   params.d2 = get_parameter("d2").as_double();
+  const auto map_path = get_parameter("map_path").as_string();
+  RCLCPP_ERROR(get_logger(), map_path.c_str());
+  
   return beluga::NDTSensorModel<NDTMapRepresentation>{
       params, beluga::io::load_from_hdf5_2d<NDTMapRepresentation>(get_parameter("map_path").as_string())};
 }

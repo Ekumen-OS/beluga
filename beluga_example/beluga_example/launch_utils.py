@@ -117,6 +117,8 @@ def get_node_with_arguments_declared_from_params_file(
                 ),
             )
         )
+    if name == "ndt_amcl_node":
+        print(parameters, flush=True)
     actions.append(
         Node(name=name, namespace=namespace, parameters=parameters, **kwargs)
     )
