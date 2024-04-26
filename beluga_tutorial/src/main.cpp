@@ -15,6 +15,7 @@
 // https://github.com/Ekumen-OS/beluga/issues/279#issuecomment-1903914387
 
 #include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -131,7 +132,9 @@ void save_tutorial_dataset_to_yaml(const std::string& file_name, const TutorialD
     node["simulation_dataset"][cycle]["estimation"]["sd"] = std::get<1>(data.estimation);
   }
 
-  std::ofstream fout("./src/beluga/beluga_tutorial/bags/" + file_name, std::ios::trunc);
+  const std::string bags_path{"./src/beluga/beluga_tutorial/bags/"};
+  std::filesystem::create_directory(bags_path);
+  std::ofstream fout(bags_path + file_name, std::ios::trunc);
   fout << node;
 }
 
