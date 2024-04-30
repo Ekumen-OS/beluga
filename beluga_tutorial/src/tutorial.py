@@ -83,7 +83,7 @@ def on_click(event, yaml_data, axs, current_frame_container, num_frames):
     plot_stages(yaml_data, axs, current_frame_container[0])
 
 if __name__ == "__main__":
-    filename = './src/beluga/beluga_tutorial/bags/bag_3.yaml'
+    filename = './src/beluga/beluga_tutorial/bags/bag.yaml'
     yaml_data = read_yaml_file(filename)
     
     if yaml_data:

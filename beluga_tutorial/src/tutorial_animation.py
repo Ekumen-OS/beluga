@@ -68,7 +68,7 @@ def plot_stages(yaml_data, axs, index):
     plt.draw()
 
 if __name__ == "__main__":
-    filename = './src/beluga/beluga_tutorial/bags/bag_3.yaml'
+    filename = './src/beluga/beluga_tutorial/bags/bag.yaml'
     yaml_data = read_yaml_file(filename)
     
     if yaml_data:
