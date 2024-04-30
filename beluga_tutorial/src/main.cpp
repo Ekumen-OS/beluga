@@ -38,20 +38,20 @@ struct TutorialParams {
   int number_of_doors{33};
   int number_of_particles{200};
   int sim_number_of_cycles{100};
-  int sim_initial_pose{0};
-  int sim_dt{1};
-  int sim_velocity{1};
-  int measurement_distance{2};
+  double sim_initial_pose{0.0};
+  double sim_dt{1.0};
+  double sim_velocity{1.0};
+  double measurement_distance{2.0};
   double sensor_model_sigam{1.0};
   double initial_pose_sd{1.0};
   double translation_sigma{1.0};
   std::string dataset_file_name{"dataset.yaml"};
 };
 
-using Particle = std::tuple<int, beluga::Weight>;
-using LandmarkMapVector = std::vector<int>;
-using GroundTruth = int;
-using Estimate = std::pair<int, int>;
+using Particle = std::tuple<double, beluga::Weight>;
+using LandmarkMapVector = std::vector<double>;
+using GroundTruth = double;
+using Estimate = std::pair<double, double>;
 
 struct TutorialSimData {
   GroundTruth ground_truth;
@@ -67,11 +67,11 @@ struct TutorialDataset {
   std::vector<TutorialSimData> sim_data;
 };
 
-int generateRandomInt(double mean, double sd) {
+double generateRandom(double mean, double sd) {
   static auto generator = std::mt19937{std::random_device()()};
   std::normal_distribution<double> distribution(mean, sd);
 
-  return static_cast<int>(distribution(generator));
+  return distribution(generator);
 }
 
 void load_params_from_yaml(TutorialParams& tutorial_params) {
@@ -82,10 +82,10 @@ void load_params_from_yaml(TutorialParams& tutorial_params) {
     tutorial_params.number_of_doors = params["number_of_doors"].as<int>();
     tutorial_params.number_of_particles = params["number_of_particles"].as<int>();
     tutorial_params.sim_number_of_cycles = params["sim_number_of_cycles"].as<int>();
-    tutorial_params.sim_initial_pose = params["sim_initial_pose"].as<int>();
-    tutorial_params.sim_dt = params["sim_dt"].as<int>();
-    tutorial_params.sim_velocity = params["sim_velocity"].as<int>();
-    tutorial_params.measurement_distance = params["measurement_distance"].as<int>();
+    tutorial_params.sim_initial_pose = params["sim_initial_pose"].as<double>();
+    tutorial_params.sim_dt = params["sim_dt"].as<double>();
+    tutorial_params.sim_velocity = params["sim_velocity"].as<double>();
+    tutorial_params.measurement_distance = params["measurement_distance"].as<double>();
     tutorial_params.sensor_model_sigam = params["sensor_model_sigam"].as<double>();
     tutorial_params.initial_pose_sd = params["initial_pose_sd"].as<double>();
     tutorial_params.translation_sigma = params["translation_sigma"].as<double>();
@@ -162,7 +162,7 @@ int main() {
                    ranges::views::take_exactly(tutorial_params.number_of_particles) | ranges::to<beluga::TupleVector>;
 
   // Execute the particle filter using beluga
-  int current_pose{tutorial_params.sim_initial_pose};
+  double current_pose{tutorial_params.sim_initial_pose};
   for (auto n = 0; n < tutorial_params.sim_number_of_cycles; n++) {
     // Check if the simulation is out of bounds
     if (current_pose > tutorial_params.map_size) {
@@ -178,20 +178,18 @@ int main() {
 
     // Motion model
     auto motion_model = [&](double state) {
-      int distance = (tutorial_params.sim_velocity * tutorial_params.sim_dt);
-      int translation_param = generateRandomInt(0, tutorial_params.translation_sigma);
+      double distance = (tutorial_params.sim_velocity * tutorial_params.sim_dt);
+      double translation_param = generateRandom(0.0, tutorial_params.translation_sigma);
       return state + distance - translation_param;
     };
 
     auto sensor_model = [&](const double& state) {
-      bool measurement = ranges::any_of(landmark_map, [&](int lm) {
-        return std::abs(static_cast<int>(state) - lm) <= tutorial_params.measurement_distance;
-      });
+      bool measurement = ranges::any_of(
+          landmark_map, [&](double lm) { return std::abs(state - lm) <= tutorial_params.measurement_distance; });
 
-      auto landmark_probability =
-          landmark_map | ranges::views::transform([&](int lm) {
-            return exp(-1 * pow(static_cast<int>(state) - lm, 2) / (2 * tutorial_params.sensor_model_sigam));
-          });
+      auto landmark_probability = landmark_map | ranges::views::transform([&](double lm) {
+                                    return exp((-1 * pow(state - lm, 2)) / (2 * tutorial_params.sensor_model_sigam));
+                                  });
 
       auto no_landmark_probability = ranges::accumulate(
           landmark_probability, 1.0, [](double init, double probability) { return init * (1 - probability); });
