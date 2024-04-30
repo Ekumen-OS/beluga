@@ -22,8 +22,7 @@ def plot_stages(yaml_data, axs, index):
         weights = particles[stage]['weights']
         ax = axs[j]
         ax.clear()  # Clear previous plot on this axis
-        # ax.bar(states, weights, label=stage.capitalize())
-        ax.bar(states, weights)
+        ax.plot(states, weights, 'o')
         ax.set_title(f"{stage} - Sim Cycle {index+1}")
         ax.set_xlabel("States")
         ax.set_ylabel("Weights")
