@@ -11,3 +11,6 @@ __pycache__/
 # Development environments
 .vscode/
 .idea/
+
+# Beluga tutorial
+beluga_tutorial/bags/*
