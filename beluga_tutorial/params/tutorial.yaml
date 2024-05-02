@@ -1,4 +1,5 @@
 dataset_file_name: "bag.yaml"
+load_landmark_map_from_file: true
 map_size: 100 # Size of the map in [m]
 number_of_doors: 15
 number_of_particles: 300 # Fixed number of particles
@@ -6,7 +7,7 @@ number_of_cycles: 100
 initial_pose: 0.0 #[m]
 initial_pose_sd: 3.0
 dt: 1.0 #[s]
-velocity: 2.0 #[m/s]
+velocity: 1.0 #[m/s]
 translation_sigma: 1.0
 sensor_range: 2.0 # Sensor range of view in [m]
 sensor_model_sigam: 1.0

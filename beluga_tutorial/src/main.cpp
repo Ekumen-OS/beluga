@@ -35,6 +35,7 @@
 
 // TODO(alon): Explain each parameter.
 struct TutorialParams {
+  bool load_landmark_map_from_file{false};
   int map_size{100};
   int number_of_doors{33};
   int number_of_particles{200};
@@ -79,6 +80,7 @@ double generateRandom(double mean, double sd) {
 void load_params_from_yaml(TutorialParams& tutorial_params) {
   try {
     YAML::Node params = YAML::LoadFile("./src/beluga/beluga_tutorial/params/tutorial.yaml");
+    tutorial_params.load_landmark_map_from_file = params["load_landmark_map_from_file"].as<bool>();
     tutorial_params.dataset_file_name = params["dataset_file_name"].as<std::string>();
     tutorial_params.map_size = params["map_size"].as<int>();
     tutorial_params.number_of_doors = params["number_of_doors"].as<int>();
@@ -91,6 +93,15 @@ void load_params_from_yaml(TutorialParams& tutorial_params) {
     tutorial_params.translation_sigma = params["translation_sigma"].as<double>();
     tutorial_params.sensor_range = params["sensor_range"].as<double>();
     tutorial_params.sensor_model_sigam = params["sensor_model_sigam"].as<double>();
+  } catch (YAML::BadFile& e) {
+    std::cout << e.what() << "\n";
+  }
+}
+
+void load_landmark_map_from_yaml(LandmarkMapVector& landamrk_map) {
+  try {
+    YAML::Node node = YAML::LoadFile("./src/beluga/beluga_tutorial/params/landmark_map.yaml");
+    landamrk_map = node["landamrk_map"].as<LandmarkMapVector>();
   } catch (YAML::BadFile& e) {
     std::cout << e.what() << "\n";
   }
@@ -149,11 +160,16 @@ int main() {
   // Create the TutorialDataset object for record the simulation data
   TutorialDataset tutorial_dataset;
 
-  // Generate a random map
-  std::uniform_int_distribution landmark_distribution{0, tutorial_params.map_size};
-  auto landmark_map = beluga::views::sample(landmark_distribution) |
-                      ranges::views::take_exactly(tutorial_params.number_of_doors) | ranges::to<LandmarkMapVector>;
-  landmark_map |= ranges::actions::sort | ranges::actions::unique;
+  // Load map from file or generate a random map
+  LandmarkMapVector landmark_map;
+  if (tutorial_params.load_landmark_map_from_file) {
+    load_landmark_map_from_yaml(landmark_map);
+  } else {
+    std::uniform_int_distribution landmark_distribution{0, tutorial_params.map_size};
+    landmark_map = beluga::views::sample(landmark_distribution) |
+                   ranges::views::take_exactly(tutorial_params.number_of_doors) | ranges::to<LandmarkMapVector>;
+    landmark_map |= ranges::actions::sort | ranges::actions::unique;
+  }
 
   tutorial_dataset.landmark_map = landmark_map;
 
@@ -166,17 +182,17 @@ int main() {
   // Execute the particle filter using beluga
   double current_pose{tutorial_params.initial_pose};
   for (auto n = 0; n < tutorial_params.number_of_cycles; n++) {
-    // Check if the simulation is out of bounds
-    if (current_pose > tutorial_params.map_size) {
-      break;
-    }
-
     // Prepare the data to be saved
     TutorialSimData tutorial_sim_data;
 
     // Save ground truth
     current_pose += (tutorial_params.velocity * tutorial_params.dt);
     tutorial_sim_data.ground_truth = current_pose;
+
+    // Check if the simulation is out of bounds
+    if (current_pose > tutorial_params.map_size) {
+      break;
+    }
 
     // Motion model
     auto motion_model = [&](double state) {
