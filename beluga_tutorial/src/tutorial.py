@@ -23,12 +23,13 @@ def plot_stages(yaml_data, axs, index):
         weights = particles[stage]['weights']
         ax = axs[j]
         ax.clear()  # Clear previous plot on this axis
-        ax.plot(states, weights, 'o')
+        # ax.plot(states, weights, 'o', s=1)
+        ax.bar(states, weights, width=0.03,edgecolor='None',color='k',align='center')
         ax.set_title(f"{stage} - Sim Cycle {index+1}")
         ax.set_xlabel("States")
         ax.set_ylabel("Weights")
         # ax.legend()
-        ax.set_xlim(-5, 100)
+        ax.set_xlim(-5, 115)
         if stage != "reweight":
             ax.set_ylim(0, 2)
         else:
@@ -50,7 +51,7 @@ def plot_stages(yaml_data, axs, index):
     ax_landmark.set_title("Landmark Map")
     ax_landmark.set_xlabel("States")
     ax_landmark.set_ylabel("Height (1)")
-    ax_landmark.set_xlim(-5, 100)
+    ax_landmark.set_xlim(-5, 115)
     ax_landmark.set_ylim(0, 2)
 
     # Plot ground truth
@@ -61,7 +62,7 @@ def plot_stages(yaml_data, axs, index):
     ax_ground_truth.set_title(f"Ground Truth: {ground_truth}")
     ax_ground_truth.set_xlabel("States")
     ax_ground_truth.set_ylabel("Height (1)")
-    ax_ground_truth.set_xlim(-5, 100)
+    ax_ground_truth.set_xlim(-5, 115)
     ax_ground_truth.set_ylim(0, 2)
     
     plt.tight_layout()
@@ -74,12 +75,12 @@ def on_key(event, yaml_data, axs, current_frame_container, num_frames):
         current_frame_container[0] = (current_frame_container[0] - 1) % num_frames
     plot_stages(yaml_data, axs, current_frame_container[0])
 
-def on_click(event, yaml_data, axs, current_frame_container, num_frames):
-    if event.button is MouseButton.LEFT:
-        current_frame_container[0] = (current_frame_container[0] + 1) % num_frames
-    elif event.button is MouseButton.RIGHT:
-        current_frame_container[0] = (current_frame_container[0] - 1) % num_frames
-    plot_stages(yaml_data, axs, current_frame_container[0])
+# def on_click(event, yaml_data, axs, current_frame_container, num_frames):
+#     if event.button is MouseButton.LEFT:
+#         current_frame_container[0] = (current_frame_container[0] + 1) % num_frames
+#     elif event.button is MouseButton.RIGHT:
+#         current_frame_container[0] = (current_frame_container[0] - 1) % num_frames
+#     plot_stages(yaml_data, axs, current_frame_container[0])
 
 if __name__ == "__main__":
     filename = './src/beluga/beluga_tutorial/bags/bag.yaml'
@@ -91,5 +92,5 @@ if __name__ == "__main__":
         plot_stages(yaml_data, axs, current_frame_container[0])
         num_frames = len(yaml_data['simulation_dataset'])
         fig.canvas.mpl_connect('key_press_event', lambda event: on_key(event, yaml_data, axs, current_frame_container, num_frames))
-        fig.canvas.mpl_connect('button_press_event', lambda event: on_click(event, yaml_data, axs, current_frame_container, num_frames))
+        # fig.canvas.mpl_connect('button_press_event', lambda event: on_click(event, yaml_data, axs, current_frame_container, num_frames))
         plt.show()
