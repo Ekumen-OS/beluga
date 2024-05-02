@@ -24,6 +24,7 @@
 
 #include <range/v3/action.hpp>
 #include <range/v3/algorithm/any_of.hpp>
+#include <range/v3/algorithm/min_element.hpp>
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/generate.hpp>
@@ -41,7 +42,7 @@ struct TutorialParams {
   double sim_initial_pose{0.0};
   double sim_dt{1.0};
   double sim_velocity{1.0};
-  double measurement_distance{2.0};
+  double sim_sensor_range{2.0};
   double sensor_model_sigam{1.0};
   double initial_pose_sd{1.0};
   double translation_sigma{1.0};
@@ -50,6 +51,7 @@ struct TutorialParams {
 
 using Particle = std::tuple<double, beluga::Weight>;
 using LandmarkMapVector = std::vector<double>;
+using SensorData = std::vector<double>;
 using GroundTruth = double;
 using Estimate = std::pair<double, double>;
 
@@ -85,7 +87,7 @@ void load_params_from_yaml(TutorialParams& tutorial_params) {
     tutorial_params.sim_initial_pose = params["sim_initial_pose"].as<double>();
     tutorial_params.sim_dt = params["sim_dt"].as<double>();
     tutorial_params.sim_velocity = params["sim_velocity"].as<double>();
-    tutorial_params.measurement_distance = params["measurement_distance"].as<double>();
+    tutorial_params.sim_sensor_range = params["sim_sensor_range"].as<double>();
     tutorial_params.sensor_model_sigam = params["sensor_model_sigam"].as<double>();
     tutorial_params.initial_pose_sd = params["initial_pose_sd"].as<double>();
     tutorial_params.translation_sigma = params["translation_sigma"].as<double>();
@@ -183,24 +185,35 @@ int main() {
       return state + distance - translation_param;
     };
 
+    // Generate simulated sensor data
+    auto sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) {
+                         return std::abs(lm - current_pose) > tutorial_params.sim_sensor_range;
+                       }) |
+                       ranges::views::transform([&](const double lm) { return lm - current_pose; }) |
+                       ranges::to<SensorData>;
+    // Sensor model
     auto sensor_model = [&](const double& state) {
-      bool measurement = ranges::any_of(
-          landmark_map, [&](double lm) { return std::abs(state - lm) <= tutorial_params.measurement_distance; });
+      auto particle_sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) {
+                                    return std::abs(lm - state) > tutorial_params.sim_sensor_range;
+                                  }) |
+                                  ranges::views::transform([&](const double lm) { return lm - state; }) |
+                                  ranges::to<SensorData>;
 
-      auto landmark_probability = landmark_map | ranges::views::transform([&](double lm) {
-                                    return exp((-1 * pow(state - lm, 2)) / (2 * tutorial_params.sensor_model_sigam));
-                                  });
-
-      auto no_landmark_probability = ranges::accumulate(
-          landmark_probability, 1.0, [](double init, double probability) { return init * (1 - probability); });
-
-      auto landmark_probability_sum = ranges::accumulate(landmark_probability, 0.0);
-      auto factor = landmark_probability_sum + no_landmark_probability;
-
-      if (measurement) {
-        return landmark_probability_sum / factor;
+      // If there are no landmarks around the sensor or the partcile return a fixed value
+      if (!sensor_data.size() || !particle_sensor_data.size()) {
+        return 0.08;
       }
-      return no_landmark_probability / factor;
+
+      LandmarkMapVector landmark_probability;
+      for (const auto& sensor : sensor_data) {
+        auto min_dist = ranges::min(particle_sensor_data | ranges::views::transform([&](auto& particle_sensor) {
+                                      auto dist = std::abs(sensor - particle_sensor);
+                                      auto default_min = 2 * tutorial_params.sim_sensor_range;
+                                      return dist < default_min ? dist : default_min;
+                                    }));
+        landmark_probability.push_back(exp((-1 * pow(min_dist, 2)) / (2 * tutorial_params.sensor_model_sigam)));
+      }
+      return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{});
     };
 
     // In general the particles can be modified using pipe operators.
