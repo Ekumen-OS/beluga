@@ -34,6 +34,7 @@ def plot_stages(yaml_data, axs, index):
             ax.set_ylim(0, 2)
         else:
             ax.set_ylim(0,0.02)
+        ax.set_xticks(np.arange(-5, 101, 5))  # Set ticks at multiples of 5
     
     # Plot for landmark map
     landmark_map = yaml_data["landamrk_map"]
@@ -53,6 +54,7 @@ def plot_stages(yaml_data, axs, index):
     ax_landmark.set_ylabel("Height (1)")
     ax_landmark.set_xlim(-5, 115)
     ax_landmark.set_ylim(0, 2)
+    ax_landmark.set_xticks(np.arange(-5, 101, 5))  # Set ticks at multiples of 5
 
     # Plot ground truth
     ground_truth = yaml_data['simulation_dataset'][index]["ground_truth"]
@@ -64,6 +66,12 @@ def plot_stages(yaml_data, axs, index):
     ax_ground_truth.set_ylabel("Height (1)")
     ax_ground_truth.set_xlim(-5, 115)
     ax_ground_truth.set_ylim(0, 2)
+    ax_ground_truth.set_xticks(np.arange(-5, 101, 5))  # Set ticks at multiples of 5
+
+    # Plot mean and standard deviation
+    mean = "{:.3f}".format(yaml_data['simulation_dataset'][index]["estimation"]["mean"])
+    sd = "{:.3f}".format(yaml_data['simulation_dataset'][index]["estimation"]["sd"])
+    plt.text(0.5, 0.5, f"Mean: {mean}\nSD: {sd}", ha='center', va='center', transform=axs[5].transAxes, bbox=dict(facecolor='white', alpha=0.5))
     
     plt.tight_layout()
     plt.draw()
@@ -75,13 +83,6 @@ def on_key(event, yaml_data, axs, current_frame_container, num_frames):
         current_frame_container[0] = (current_frame_container[0] - 1) % num_frames
     plot_stages(yaml_data, axs, current_frame_container[0])
 
-# def on_click(event, yaml_data, axs, current_frame_container, num_frames):
-#     if event.button is MouseButton.LEFT:
-#         current_frame_container[0] = (current_frame_container[0] + 1) % num_frames
-#     elif event.button is MouseButton.RIGHT:
-#         current_frame_container[0] = (current_frame_container[0] - 1) % num_frames
-#     plot_stages(yaml_data, axs, current_frame_container[0])
-
 if __name__ == "__main__":
     filename = './src/beluga/beluga_tutorial/bags/bag.yaml'
     yaml_data = read_yaml_file(filename)
@@ -92,5 +93,4 @@ if __name__ == "__main__":
         plot_stages(yaml_data, axs, current_frame_container[0])
         num_frames = len(yaml_data['simulation_dataset'])
         fig.canvas.mpl_connect('key_press_event', lambda event: on_key(event, yaml_data, axs, current_frame_container, num_frames))
-        # fig.canvas.mpl_connect('button_press_event', lambda event: on_click(event, yaml_data, axs, current_frame_container, num_frames))
         plt.show()

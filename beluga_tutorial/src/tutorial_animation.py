@@ -2,6 +2,7 @@ import os
 import yaml
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import numpy as np
 
 def read_yaml_file(filename):
     current_dir = os.getcwd()
@@ -33,6 +34,7 @@ def plot_stages(yaml_data, axs, index):
             ax.set_ylim(0, 2)
         else:
             ax.set_ylim(0,0.02)
+        ax.set_xticks(np.arange(-5, 101, 5))  # Set ticks at multiples of 5
     
     # Plot for landmark map
     landmark_map = yaml_data["landamrk_map"]
@@ -52,6 +54,7 @@ def plot_stages(yaml_data, axs, index):
     ax_landmark.set_ylabel("Height (1)")
     ax_landmark.set_xlim(-5, 100)
     ax_landmark.set_ylim(0, 2)
+    ax_landmark.set_xticks(np.arange(-5, 101, 5))  # Set ticks at multiples of 5
 
     # Plot ground truth
     ground_truth = yaml_data['simulation_dataset'][index]["ground_truth"]
@@ -63,7 +66,13 @@ def plot_stages(yaml_data, axs, index):
     ax_ground_truth.set_ylabel("Height (1)")
     ax_ground_truth.set_xlim(-5, 100)
     ax_ground_truth.set_ylim(0, 2)
+    ax_ground_truth.set_xticks(np.arange(-5, 101, 5))  # Set ticks at multiples of 5
     
+    # Plot mean and standard deviation
+    mean = "{:.3f}".format(yaml_data['simulation_dataset'][index]["estimation"]["mean"])
+    sd = "{:.3f}".format(yaml_data['simulation_dataset'][index]["estimation"]["sd"])
+    plt.text(0.5, 0.5, f"Mean: {mean}\nSD: {sd}", ha='center', va='center', transform=axs[5].transAxes, bbox=dict(facecolor='white', alpha=0.5))
+
     plt.tight_layout()
     plt.draw()
 
