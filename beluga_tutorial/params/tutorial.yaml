@@ -1,12 +1,12 @@
 dataset_file_name: "bag.yaml"
-map_size: 100
+map_size: 100 # Size of the map in [m]
 number_of_doors: 15
-number_of_particles: 400
-sim_number_of_cycles: 100
-sim_initial_pose: 0.0 #[cell]
-sim_dt: 1.0 #[s]
-sim_velocity: 1.0 #[cell/s]
-measurement_distance: 2.0 # Distance from a cell to considere the measurement as true or as a door
-sensor_model_sigam: 1.0
-initial_pose_sd: 1.0
+number_of_particles: 300 # Fixed number of particles
+number_of_cycles: 100
+initial_pose: 0.0 #[m]
+initial_pose_sd: 3.0
+dt: 1.0 #[s]
+velocity: 2.0 #[m/s]
 translation_sigma: 1.0
+sensor_range: 2.0 # Sensor range of view in [m]
+sensor_model_sigam: 1.0

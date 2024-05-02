@@ -38,14 +38,14 @@ struct TutorialParams {
   int map_size{100};
   int number_of_doors{33};
   int number_of_particles{200};
-  int sim_number_of_cycles{100};
-  double sim_initial_pose{0.0};
-  double sim_dt{1.0};
-  double sim_velocity{1.0};
-  double sim_sensor_range{2.0};
-  double sensor_model_sigam{1.0};
+  int number_of_cycles{100};
+  double initial_pose{0.0};
   double initial_pose_sd{1.0};
+  double dt{1.0};
+  double velocity{1.0};
   double translation_sigma{1.0};
+  double sensor_range{2.0};
+  double sensor_model_sigam{1.0};
   std::string dataset_file_name{"dataset.yaml"};
 };
 
@@ -83,14 +83,14 @@ void load_params_from_yaml(TutorialParams& tutorial_params) {
     tutorial_params.map_size = params["map_size"].as<int>();
     tutorial_params.number_of_doors = params["number_of_doors"].as<int>();
     tutorial_params.number_of_particles = params["number_of_particles"].as<int>();
-    tutorial_params.sim_number_of_cycles = params["sim_number_of_cycles"].as<int>();
-    tutorial_params.sim_initial_pose = params["sim_initial_pose"].as<double>();
-    tutorial_params.sim_dt = params["sim_dt"].as<double>();
-    tutorial_params.sim_velocity = params["sim_velocity"].as<double>();
-    tutorial_params.sim_sensor_range = params["sim_sensor_range"].as<double>();
-    tutorial_params.sensor_model_sigam = params["sensor_model_sigam"].as<double>();
+    tutorial_params.number_of_cycles = params["number_of_cycles"].as<int>();
+    tutorial_params.initial_pose = params["initial_pose"].as<double>();
     tutorial_params.initial_pose_sd = params["initial_pose_sd"].as<double>();
+    tutorial_params.dt = params["dt"].as<double>();
+    tutorial_params.velocity = params["velocity"].as<double>();
     tutorial_params.translation_sigma = params["translation_sigma"].as<double>();
+    tutorial_params.sensor_range = params["sensor_range"].as<double>();
+    tutorial_params.sensor_model_sigam = params["sensor_model_sigam"].as<double>();
   } catch (YAML::BadFile& e) {
     std::cout << e.what() << "\n";
   }
@@ -138,6 +138,7 @@ void save_tutorial_dataset_to_yaml(const std::string& file_name, const TutorialD
   std::filesystem::create_directory(bags_path);
   std::ofstream fout(bags_path + file_name, std::ios::trunc);
   fout << node;
+  fout.close();
 }
 
 int main() {
@@ -157,15 +158,14 @@ int main() {
   tutorial_dataset.landmark_map = landmark_map;
 
   // Generate particles
-  std::normal_distribution<double> initial_distribution(
-      tutorial_params.sim_initial_pose, tutorial_params.initial_pose_sd);
+  std::normal_distribution<double> initial_distribution(tutorial_params.initial_pose, tutorial_params.initial_pose_sd);
   auto particles = beluga::views::sample(initial_distribution) |
                    ranges::views::transform(beluga::make_from_state<Particle>) |
                    ranges::views::take_exactly(tutorial_params.number_of_particles) | ranges::to<beluga::TupleVector>;
 
   // Execute the particle filter using beluga
-  double current_pose{tutorial_params.sim_initial_pose};
-  for (auto n = 0; n < tutorial_params.sim_number_of_cycles; n++) {
+  double current_pose{tutorial_params.initial_pose};
+  for (auto n = 0; n < tutorial_params.number_of_cycles; n++) {
     // Check if the simulation is out of bounds
     if (current_pose > tutorial_params.map_size) {
       break;
@@ -175,26 +175,26 @@ int main() {
     TutorialSimData tutorial_sim_data;
 
     // Save ground truth
-    current_pose += (tutorial_params.sim_velocity * tutorial_params.sim_dt);
+    current_pose += (tutorial_params.velocity * tutorial_params.dt);
     tutorial_sim_data.ground_truth = current_pose;
 
     // Motion model
     auto motion_model = [&](double state) {
-      double distance = (tutorial_params.sim_velocity * tutorial_params.sim_dt);
+      double distance = (tutorial_params.velocity * tutorial_params.dt);
       double translation_param = generateRandom(0.0, tutorial_params.translation_sigma);
       return state + distance - translation_param;
     };
 
     // Generate simulated sensor data
     auto sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) {
-                         return std::abs(lm - current_pose) > tutorial_params.sim_sensor_range;
+                         return std::abs(lm - current_pose) > tutorial_params.sensor_range;
                        }) |
                        ranges::views::transform([&](const double lm) { return lm - current_pose; }) |
                        ranges::to<SensorData>;
     // Sensor model
     auto sensor_model = [&](const double& state) {
       auto particle_sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) {
-                                    return std::abs(lm - state) > tutorial_params.sim_sensor_range;
+                                    return std::abs(lm - state) > tutorial_params.sensor_range;
                                   }) |
                                   ranges::views::transform([&](const double lm) { return lm - state; }) |
                                   ranges::to<SensorData>;
@@ -208,17 +208,13 @@ int main() {
       for (const auto& sensor : sensor_data) {
         auto min_dist = ranges::min(particle_sensor_data | ranges::views::transform([&](auto& particle_sensor) {
                                       auto dist = std::abs(sensor - particle_sensor);
-                                      auto default_min = 2 * tutorial_params.sim_sensor_range;
-                                      return dist < default_min ? dist : default_min;
+                                      auto default_min_dist = 2 * tutorial_params.sensor_range;
+                                      return dist < default_min_dist ? dist : default_min_dist;
                                     }));
         landmark_probability.push_back(exp((-1 * pow(min_dist, 2)) / (2 * tutorial_params.sensor_model_sigam)));
       }
       return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{});
     };
-
-    // In general the particles can be modified using pipe operators.
-    // particles |= beluga::actions::propagate(std::execution::seq, motion_model) |
-    //              beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
 
     // For the propose of the tutorial, we split the process in the following stages:
     // Current stage
