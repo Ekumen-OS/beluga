@@ -209,27 +209,20 @@ int main() {
                        ranges::to<SensorData>;
     // Sensor model
     auto sensor_model = [&](const double& state) {
-      auto particle_sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) {
-                                    return std::abs(lm - state) > tutorial_params.sensor_range;
-                                  }) |
-                                  ranges::views::transform([&](const double lm) { return lm - state; }) |
-                                  ranges::to<SensorData>;
-
-      // If there are no landmarks around the sensor or the partcile return a fixed value
-      if (!sensor_data.size() || !particle_sensor_data.size()) {
-        return 0.08;
-      }
+      auto particle_sensor_data =
+          landmark_map | ranges::views::transform([&](const double lm) { return lm - state; }) | ranges::to<SensorData>;
 
       LandmarkMapVector landmark_probability;
       for (const auto& sensor : sensor_data) {
-        auto min_dist = ranges::min(particle_sensor_data | ranges::views::transform([&](auto& particle_sensor) {
-                                      auto dist = std::abs(sensor - particle_sensor);
-                                      auto default_min_dist = 2 * tutorial_params.sensor_range;
-                                      return dist < default_min_dist ? dist : default_min_dist;
-                                    }));
+        auto particle_dist = particle_sensor_data | ranges::views::transform([&](auto& particle_sensor) {
+                               return std::abs(sensor - particle_sensor);
+                             });
+
+        auto min_dist = ranges::min(particle_dist);
         landmark_probability.push_back(exp((-1 * pow(min_dist, 2)) / (2 * tutorial_params.sensor_model_sigam)));
       }
-      return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{});
+      // TODO(alon): create a parameter for the 0.08.
+      return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{}) + 0.08;
     };
 
     // For the propose of the tutorial, we split the process in the following stages:
