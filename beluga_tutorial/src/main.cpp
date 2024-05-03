@@ -57,7 +57,7 @@ using SensorData = std::vector<double>;
 using GroundTruth = double;
 using Estimate = std::pair<double, double>;
 
-struct TutorialSimData {
+struct TutorialData {
   GroundTruth ground_truth;
   beluga::TupleVector<Particle> current;
   beluga::TupleVector<Particle> propagate;
@@ -68,7 +68,7 @@ struct TutorialSimData {
 
 struct TutorialDataset {
   LandmarkMapVector landmark_map;
-  std::vector<TutorialSimData> sim_data;
+  std::vector<TutorialData> sim_data;
 };
 
 double generateRandom(double mean, double sd) {
@@ -185,11 +185,11 @@ int main() {
   double current_pose{tutorial_params.initial_pose};
   for (auto n = 0; n < tutorial_params.number_of_cycles; n++) {
     // Prepare the data to be saved
-    TutorialSimData tutorial_sim_data;
+    TutorialData tutorial_data;
 
     // Save ground truth
     current_pose += (tutorial_params.velocity * tutorial_params.dt);
-    tutorial_sim_data.ground_truth = current_pose;
+    tutorial_data.ground_truth = current_pose;
 
     // Check if the simulation is out of bounds
     if (current_pose > tutorial_params.map_size) {
@@ -215,13 +215,13 @@ int main() {
           landmark_map | ranges::views::transform([&](const double lm) { return lm - state; }) | ranges::to<SensorData>;
 
       LandmarkMapVector landmark_probability;
-      for (const auto& sensor : sensor_data) {
-        auto particle_dist = particle_sensor_data | ranges::views::transform([&](auto& particle_sensor) {
-                               return std::abs(sensor - particle_sensor);
-                             });
+      for (const auto& sensor_datum : sensor_data) {
+        auto distances = particle_sensor_data | ranges::views::transform([&](auto& particle_sensor_datum) {
+                           return std::abs(sensor_datum - particle_sensor_datum);
+                         });
 
-        auto min_dist = ranges::min(particle_dist);
-        landmark_probability.push_back(exp((-1 * pow(min_dist, 2)) / (2 * tutorial_params.sensor_model_sigam)));
+        auto min_distance = ranges::min(distances);
+        landmark_probability.push_back(exp((-1 * pow(min_distance, 2)) / (2 * tutorial_params.sensor_model_sigam)));
       }
 
       return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{}) + tutorial_params.min_particle_weight;
@@ -229,27 +229,27 @@ int main() {
 
     // For the propose of the tutorial, we split the process in the following stages:
     // Current stage
-    tutorial_sim_data.current = particles;
+    tutorial_data.current = particles;
 
     // Propagate stage
     particles |= beluga::actions::propagate(std::execution::seq, motion_model);
-    tutorial_sim_data.propagate = particles;
+    tutorial_data.propagate = particles;
 
     // Reweight stage
     particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
-    tutorial_sim_data.reweight = particles;
+    tutorial_data.reweight = particles;
 
     // Resample
     particles |= beluga::views::sample | ranges::views::take_exactly(tutorial_params.number_of_particles) |
                  beluga::actions::assign;
-    tutorial_sim_data.resample = particles;
+    tutorial_data.resample = particles;
 
     // Calculate mean and standard deviation
     const auto estimation = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
-    tutorial_sim_data.estimation = estimation;
+    tutorial_data.estimation = estimation;
 
     // Save the sim data
-    tutorial_dataset.sim_data.push_back(tutorial_sim_data);
+    tutorial_dataset.sim_data.push_back(tutorial_data);
   }
 
   save_tutorial_dataset_to_yaml(tutorial_params.dataset_file_name, tutorial_dataset);
