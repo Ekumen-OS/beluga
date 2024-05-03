@@ -47,6 +47,7 @@ struct TutorialParams {
   double translation_sigma{1.0};
   double sensor_range{2.0};
   double sensor_model_sigam{1.0};
+  double min_particle_weight{0.08};
   std::string dataset_file_name{"dataset.yaml"};
 };
 
@@ -93,6 +94,7 @@ void load_params_from_yaml(TutorialParams& tutorial_params) {
     tutorial_params.translation_sigma = params["translation_sigma"].as<double>();
     tutorial_params.sensor_range = params["sensor_range"].as<double>();
     tutorial_params.sensor_model_sigam = params["sensor_model_sigam"].as<double>();
+    tutorial_params.min_particle_weight = params["min_particle_weight"].as<double>();
   } catch (YAML::BadFile& e) {
     std::cout << e.what() << "\n";
   }
@@ -221,8 +223,8 @@ int main() {
         auto min_dist = ranges::min(particle_dist);
         landmark_probability.push_back(exp((-1 * pow(min_dist, 2)) / (2 * tutorial_params.sensor_model_sigam)));
       }
-      // TODO(alon): create a parameter for the 0.08.
-      return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{}) + 0.08;
+
+      return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{}) + tutorial_params.min_particle_weight;
     };
 
     // For the propose of the tutorial, we split the process in the following stages:
