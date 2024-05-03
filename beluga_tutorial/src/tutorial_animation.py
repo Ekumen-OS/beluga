@@ -23,7 +23,7 @@ def plot_stages(yaml_data, axs, index):
         # weights = particles[stage]['weights']
         ax = axs[j]
         ax.clear()  # Clear previous plot on this axis
-        ax.hist(states, bins=np.arange(min(states), max(states) + 0.2, 0.2), color='skyblue', edgecolor='black')
+        ax.hist(states, bins=np.arange(min(states), max(states) + 0.5, 0.5), color='skyblue', edgecolor='black')
         ax.set_title(f"{stage} - Sim Cycle {index+1}")
         ax.set_xlabel("States")
         ax.set_ylabel("NP")
