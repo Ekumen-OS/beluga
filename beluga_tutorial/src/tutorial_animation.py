@@ -20,20 +20,14 @@ def plot_stages(yaml_data, axs, index):
     particles = yaml_data['simulation_dataset'][index]["particles"]
     for j, stage in enumerate(['current', 'propagate', 'reweight', 'resample']):
         states = particles[stage]['states']
-        weights = particles[stage]['weights']
+        # weights = particles[stage]['weights']
         ax = axs[j]
         ax.clear()  # Clear previous plot on this axis
-        # ax.plot(states, weights, 'o')
-        ax.bar(states, weights, width=0.03,edgecolor='None',color='k',align='center')
+        ax.hist(states, bins=np.arange(min(states), max(states) + 0.2, 0.2), color='skyblue', edgecolor='black')
         ax.set_title(f"{stage} - Sim Cycle {index+1}")
         ax.set_xlabel("States")
-        ax.set_ylabel("Weights")
-        # ax.legend()
+        ax.set_ylabel("NP")
         ax.set_xlim(-5, 100)
-        if stage != "reweight":
-            ax.set_ylim(0, 2)
-        else:
-            ax.set_ylim(0,0.02)
         ax.set_xticks(np.arange(-5, 101, 5))  # Set ticks at multiples of 5
     
     # Plot for landmark map
@@ -51,7 +45,6 @@ def plot_stages(yaml_data, axs, index):
     
     ax_landmark.set_title("Landmark Map")
     ax_landmark.set_xlabel("States")
-    ax_landmark.set_ylabel("Height (1)")
     ax_landmark.set_xlim(-5, 100)
     ax_landmark.set_ylim(0, 2)
     ax_landmark.set_xticks(np.arange(-5, 101, 5))  # Set ticks at multiples of 5
@@ -63,7 +56,6 @@ def plot_stages(yaml_data, axs, index):
     ax_ground_truth.bar(ground_truth, 1, color='green')  # Plot bars of height 1
     ax_ground_truth.set_title(f"Ground Truth: {ground_truth}")
     ax_ground_truth.set_xlabel("States")
-    ax_ground_truth.set_ylabel("Height (1)")
     ax_ground_truth.set_xlim(-5, 100)
     ax_ground_truth.set_ylim(0, 2)
     ax_ground_truth.set_xticks(np.arange(-5, 101, 5))  # Set ticks at multiples of 5
@@ -89,6 +81,6 @@ if __name__ == "__main__":
             plot_stages(yaml_data, axs, frame)
 
         # Create the animation
-        ani = animation.FuncAnimation(fig, update, frames=num_frames, blit=False, interval=100, repeat=False)
+        ani = animation.FuncAnimation(fig, update, frames=num_frames, blit=False, interval=250, repeat=False)
 
         plt.show()
