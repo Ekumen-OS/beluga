@@ -14,6 +14,16 @@
 
 find_package(ament_cmake_gmock REQUIRED)
 
+file(COPY test_data DESTINATION ${CMAKE_CURRENT_LIST_DIR})
+
 ament_add_gmock(test_amcl_node test_amcl_node.cpp)
 target_compile_options(test_amcl_node PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_amcl_node amcl_node_component)
+
+ament_add_gmock(
+  test_ndt_amcl_node
+  test_ndt_amcl_node.cpp
+  WORKING_DIRECTORY
+  ${CMAKE_CURRENT_LIST_DIR})
+target_compile_options(test_ndt_amcl_node PRIVATE -Wno-deprecated-copy)
+target_link_libraries(test_ndt_amcl_node ndt_amcl_node_component)
