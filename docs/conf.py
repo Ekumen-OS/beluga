@@ -91,6 +91,9 @@ autodox_projects = {
 exclude_patterns = [
     "README.md",
     "**/README.md",
+    "venv",
+    "**/venv",
+    "_build",
     "**/_build",
     "**/_doxygen/*.md",
 ]
