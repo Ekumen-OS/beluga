@@ -1,8 +1,8 @@
 PROJECT_NAME           = "Beluga ROS"
-INPUT                  = ../include ./_doxygen/main.md
+INPUT                  = ../include ./_doxygen/beluga_ros-main.md
 EXAMPLE_PATH           = ../test
 RECURSIVE              = YES
-USE_MDFILE_AS_MAINPAGE = ./_doxygen/main.md
+USE_MDFILE_AS_MAINPAGE = ./_doxygen/beluga_ros-main.md
 CITE_BIB_FILES         = ./references.bib
 INHERIT_DOCS           = YES
 GENERATE_HTML          = YES
