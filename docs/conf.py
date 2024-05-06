@@ -43,7 +43,6 @@ extensions = [
     "sphinx.ext.inheritance_diagram",
     "sphinx_babel.autodox",
     "sphinxcontrib.bibtex",
-    "sphinxcontrib.pseudocode",
     "sphinx_design",
 ]
 
