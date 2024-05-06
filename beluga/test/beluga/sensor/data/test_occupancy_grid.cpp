@@ -83,8 +83,13 @@ TEST(OccupancyGrid2, AllFreeCells) {
 TEST(OccupancyGrid2, ObstacleData) {
   const auto grid = StaticOccupancyGrid<5, 2>{{false, false, false, false, true, false, false, false, true, false}};
 
+// See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=111118
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
   // Data and obstacle data are equivalent in this case
   ASSERT_THAT(grid.obstacle_data() | ranges::to<std::vector>, testing::Pointwise(testing::Eq(), grid.data()));
+#pragma GCC diagnost pop
 }
 
 TEST(OccupancyGrid2, GlobalCoordinatesForCells) {
