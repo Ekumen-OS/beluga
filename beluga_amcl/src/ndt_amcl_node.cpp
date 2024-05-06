@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
+#include <beluga/containers/tuple_vector.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
+#include <beluga/primitives.hpp>
+#include <beluga/random/multivariate_normal_distribution.hpp>
 #include <beluga/sensor/ndt_sensor_model.hpp>
 #include <beluga/views/particles.hpp>
 #include <beluga_amcl/ndt_amcl_node.hpp>
@@ -33,6 +37,7 @@
 #include <string>
 #include <string_view>
 #include <tuple>
+#include <type_traits>
 #include <unordered_map>
 #include <utility>
 
@@ -655,7 +660,12 @@ auto NdtAmclNode::make_particle_filter() const -> std::unique_ptr<NdtAmclVariant
             get_parameter("spatial_resolution_x").as_double(), get_parameter("spatial_resolution_y").as_double(),
             get_parameter("spatial_resolution_theta").as_double());
 
-        std::function<Sophus::SE2d()> random_state_maker = []() { return Sophus::SE2d{}; };
+        RandomStateGenerator random_state_maker = [](const auto& particles) {
+          static thread_local auto generator = std::mt19937{std::random_device()()};
+          const auto [pose, covariance] =
+              beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
+          return [pose, covariance]() { return beluga::MultivariateNormalDistribution{pose, covariance}(generator); };
+        };
 
         return beluga::Amcl(
             std::move(motion_model),

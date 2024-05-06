@@ -54,12 +54,16 @@ namespace beluga_amcl {
 using NDTMapRepresentation =
     beluga::SparseValueGrid<std::unordered_map<Eigen::Vector2i, beluga::NDTCell2d, beluga::detail::CellHasher<2>>>;
 
+// Type of a particle-dependent random state generator.
+using RandomStateGenerator = std::function<std::function<beluga::NDTSensorModel<NDTMapRepresentation>::state_type()>(
+    const beluga::TupleVector<std::tuple<beluga::NDTSensorModel<NDTMapRepresentation>::state_type, beluga::Weight>>)>;
+
 // Partial specialization of the core AMCL pipeline for convinience.
 template <class MotionModel, class ExecutionPolicy>
 using NdtAmcl = beluga::Amcl<
     MotionModel,
     beluga::NDTSensorModel<NDTMapRepresentation>,
-    std::function<beluga::NDTSensorModel<NDTMapRepresentation>::state_type()>,
+    RandomStateGenerator,
     beluga::Weight,
     std::tuple<typename beluga::NDTSensorModel<NDTMapRepresentation>::state_type, beluga::Weight>,
     ExecutionPolicy>;
