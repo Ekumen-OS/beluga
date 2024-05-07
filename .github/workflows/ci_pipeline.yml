@@ -116,7 +116,10 @@ jobs:
           cache: pip
 
       - name: Install tooling dependencies
-        run: pip install -r docs/requirements.txt
+        run: >-
+          sudo apt-get update && \
+          sudo apt-get install -y doxygen git make && \
+          pip install -r docs/requirements.txt
 
       - name: Build documentation
         run: make -C docs html

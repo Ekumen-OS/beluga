@@ -5,7 +5,7 @@
 First, install base system dependencies (e.g. Doxygen). On Ubuntu:
 
 ``` sh
-sudo apt install doxygen python3-pip
+sudo apt install doxygen git make python3-pip
 ```
 
 Then, satisfy Python requirements:
