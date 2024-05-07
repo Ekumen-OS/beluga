@@ -89,7 +89,7 @@ TEST(OccupancyGrid2, ObstacleData) {
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
   // Data and obstacle data are equivalent in this case
   ASSERT_THAT(grid.obstacle_data() | ranges::to<std::vector>, testing::Pointwise(testing::Eq(), grid.data()));
-#pragma GCC diagnost pop
+#pragma GCC diagnostic pop
 }
 
 TEST(OccupancyGrid2, GlobalCoordinatesForCells) {
