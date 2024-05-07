@@ -46,7 +46,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard  # for teleoperation!
 roslaunch beluga_example simulation.launch
 ```
 ```bash
-rosrun teleop_twist_keyboard teleop_twist_keyboard  # for teleoperation!
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py  # for teleoperation!
 ```
 :::
 

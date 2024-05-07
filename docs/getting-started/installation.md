@@ -26,7 +26,7 @@ source /opt/ros/${ROS_DISTRO}/setup.bash
 
 ::::
 
-If in doubt as to which ROS distribution to use, check the list of [supported distributions](../packages/beluga_ros/docs/index).
+If in doubt as to which ROS distribution to use, check the list of [supported distributions](../index.md#support).
 
 ### Clone Beluga repository
 

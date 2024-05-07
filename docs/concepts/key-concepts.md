@@ -16,7 +16,7 @@ where $x_t$ is the state of the system at time $t$, and $z_{1:t}$ and $u_{1:t}$ 
 It can be shown that the posterior belief can be recursively computed using the prior belief, the current sensor readings, and the current control inputs using the following update rule:
 
 $$
-    bel(x_t) = η p(z_t|x_t) \int p(x_t|x_{t-1}, u_t) bel(x_{t-1}) dx_{t-1}
+    bel(x_t) = η\ p(z_t|x_t) \int p(x_t|x_{t-1}, u_t) bel(x_{t-1}) dx_{t-1}
 $$
 
 where η is a normalization factor.
@@ -28,10 +28,10 @@ $$
     q(x_t|x_{t-1}, u_t) = p(x_t|x_{t-1}, u_t) bel(x_{t-1})
 $$
 
-After this step the resulting particle set distribution does not match the updated belief (target distribution), since the proposal distribution does not match the target distribution in general. The resampling step is used to correct this mismatch. In this step each particle is assigned an importance weight which is calculated from the sensor readings and the particle state updated by the prediction step.
+After this step the resulting particle set distribution does not match the updated belief (target distribution), since the proposal distribution does not match the target distribution in general. The update step is used to correct this mismatch. In this step each particle is assigned an importance weight which is calculated from the sensor readings and the particle state updated by the prediction step.
 
 $$
-    w^{[i]}_t = p(z_t|x^{[i]}_t
+    w^{[i]}_t = p(z_t|x^{[i]}_t)
 $$
 
 The updated belief is prefigured by the spatial distribution of the particles in the set and their importance weights. A few of the particles will have migrated to state regions with low probability, however, and their importance weights will therefore be low. To correct this, the update step is completed by performing a resampling process, which consist of drawing a new set of particles from the current set, with replacement, using importance weights as unnormalized probabilities. This process causes particles with low weights to be discarded and particles with high weights to be propagated multiple times into the new particle set. In this algorithm, the $p(x_t|x_{t-1}, u_t)$ distribution is the motion model, while $p(z_t|x_t)$ is the sensor model. It can be shown that this algorithm is a good approximation of above's marginalization when the number of particles in the set is large enough.
