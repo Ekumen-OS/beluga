@@ -18,9 +18,9 @@
 
 #include <gmock/gmock.h>
 
-#include <tf2_ros/create_timer_ros.h>
 #include <ament_index_cpp/get_package_prefix.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
+#include <tf2_ros/create_timer_ros.h>
 
 #include <cstdlib>
 

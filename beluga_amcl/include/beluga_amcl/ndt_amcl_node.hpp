@@ -28,6 +28,7 @@
 #include <beluga/sensor/data/ndt_cell.hpp>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 #include <beluga/sensor/ndt_sensor_model.hpp>
+
 #include <execution>
 #include <functional>
 #include <optional>
@@ -35,7 +36,9 @@
 #include <tuple>
 #include <variant>
 
+#include <Eigen/src/Core/Matrix.h>
 #include <H5Cpp.h>
+
 #include <beluga/algorithm/amcl_core.hpp>
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
@@ -44,9 +47,8 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 
-#include <Eigen/src/Core/Matrix.h>
-#include <message_filters/subscriber.h>
 #include <beluga_ros/laser_scan.hpp>
+#include <message_filters/subscriber.h>
 
 namespace beluga_amcl {
 
