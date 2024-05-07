@@ -117,8 +117,8 @@ jobs:
 
       - name: Install tooling dependencies
         run: >-
-          sudo apt-get update && \
-          sudo apt-get install -y doxygen git make && \
+          sudo apt-get update &&
+          sudo apt-get install -y doxygen git make &&
           pip install -r docs/requirements.txt
 
       - name: Build documentation
