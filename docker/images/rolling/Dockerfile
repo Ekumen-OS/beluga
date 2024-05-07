@@ -1,4 +1,4 @@
-FROM ros:rolling-ros-base-jammy AS cacher
+FROM ros:rolling-ros-base AS cacher
 
 WORKDIR /ws/src
 
@@ -12,7 +12,7 @@ RUN mkdir -p /tmp/ws/src \
   && find ./ -name "COLCON_IGNORE" | xargs cp --parents -t /tmp/ws/src \
   || true
 
-FROM ros:rolling-ros-base-jammy AS timem-builder
+FROM ros:rolling-ros-base AS timem-builder
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -32,7 +32,7 @@ RUN git clone -b develop https://github.com/NERSC/timemory.git \
     . \
   && cmake --build ./build --target timem
 
-FROM ros:rolling-ros-base-jammy AS builder
+FROM ros:rolling-ros-base AS builder
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -52,6 +52,7 @@ RUN apt-get update \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
+ENV PIP_BREAK_SYSTEM_PACKAGES 1
 RUN pip install \
   evo==1.21.0 \
   pre-commit==2.20.0
@@ -67,8 +68,8 @@ RUN perf help || ( \
 ARG USER=developer
 ARG GROUP=ekumen
 
-RUN addgroup --gid 1000 $GROUP \
-  && adduser --uid 1000 --ingroup $GROUP --home /home/$USER --shell /bin/sh --disabled-password --gecos "" $USER \
+RUN addgroup --gid 1001 $GROUP \
+  && adduser --uid 1001 --ingroup $GROUP --home /home/$USER --shell /bin/sh --disabled-password --gecos "" $USER \
   && adduser $USER sudo \
   && echo "$USER ALL=NOPASSWD: ALL" >> /etc/sudoers.d/$USER
 
@@ -98,7 +99,7 @@ RUN sudo apt-get update \
   && sudo apt-get -y dist-upgrade \
   && . /opt/ros/rolling/setup.sh \
   && rosdep update \
-  && rosdep install -i -y --from-path src --skip-keys 'slam_toolbox' \
+  && rosdep install -i -y --from-path src --skip-keys 'turtlebot3_gazebo gazebo_ros_pkgs slam_toolbox' \
   && rosdep install -i -y --from-path src -t doc \
   && sudo rm -rf /var/lib/apt/lists/*
 
