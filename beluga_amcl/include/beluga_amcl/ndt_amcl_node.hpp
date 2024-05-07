@@ -48,6 +48,7 @@
 #include <std_srvs/srv/empty.hpp>
 
 #include <beluga_ros/laser_scan.hpp>
+
 #include <message_filters/subscriber.h>
 
 namespace beluga_amcl {
