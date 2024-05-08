@@ -41,6 +41,17 @@ component_management:
       name: beluga_ros
       paths:
         - beluga_ros/**
+      statuses:
+        # Beluga ROS has its own statutes since it currently has lower coverage.
+        # See `default_rules` for details.
+        - type: project
+          target: 90%
+          removed_code_behavior: fully_coverred_patch
+
+        - type: patch
+          target: auto
+          threshold: 1%
+          only_pulls: true
 
 coverage:
   # Disable project and patch level coverage status check in favor of
