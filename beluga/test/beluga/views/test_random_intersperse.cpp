@@ -21,6 +21,7 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take.hpp>
+#include <range/v3/view/take_exactly.hpp>
 
 namespace {
 
@@ -101,7 +102,7 @@ TEST(RandomIntersperseView, GuaranteedIntersperseWithNullaryFunction) {
   auto input = std::array{10, 20, 30};
   auto output = input |                                                               //
                 beluga::views::random_intersperse([]() { return 4; }, probability) |  //
-                ranges::views::take(5) |                                              //
+                ranges::views::take_exactly(5) |                                      //
                 ranges::to<std::vector>;
   ASSERT_EQ(ranges::size(output), 5);
   ASSERT_THAT(output, testing::ElementsAre(10, 4, 4, 4, 4));
@@ -112,7 +113,7 @@ TEST(RandomIntersperseView, GuaranteedIntersperseWithUnaryFunction) {
   auto input = std::array{10, 20, 30};
   auto output = input |                                                                     //
                 beluga::views::random_intersperse([](auto&) { return 42; }, probability) |  //
-                ranges::views::take(2) |                                                    //
+                ranges::views::take_exactly(2) |                                            //
                 ranges::to<std::vector>;
   ASSERT_EQ(ranges::size(output), 2);
   ASSERT_THAT(output, testing::ElementsAre(10, 42));
