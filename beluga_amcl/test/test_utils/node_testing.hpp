@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WS_SRC_BELUGA_BELUGA_AMCL_TEST_TEST_UTILS_NODE_TESTING_HPP
-#define WS_SRC_BELUGA_BELUGA_AMCL_TEST_TEST_UTILS_NODE_TESTING_HPP
+#ifndef BELUGA_AMCL_TEST_TEST_UTILS_NODE_TESTING_HPP  // NOLINT(llvm-header-guard,-warnings-as-errors)
+#define BELUGA_AMCL_TEST_TEST_UTILS_NODE_TESTING_HPP  // NOLINT(llvm-header-guard,-warnings-as-errors)
 
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
