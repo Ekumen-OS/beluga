@@ -7,7 +7,6 @@ Checks: >
   bugprone-*,
   google-*,
   llvm-header-guard,
-  llvm-include-order,
   misc-*,
   modernize-*,
   performance-*,
