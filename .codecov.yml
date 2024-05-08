@@ -11,8 +11,7 @@ component_management:
   default_rules:
     statuses:
       - type: project  # Measure overall project coverage.
-        # The minimum coverage ratio to send a success status is the base
-        # commit coverage (pull request base or parent commit).
+        # The minimum coverage ratio to send a success status.
         target: 95%
         # If the patch coverage is 100% and there are no unexpected changes,
         # pass the project status.
