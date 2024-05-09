@@ -4,10 +4,14 @@ install/
 lcov/
 logs/
 
-
 # Python related
 __pycache__/
+**/venv/
 
 # Development environments
 .vscode/
 .idea/
+
+# Sphinx / Doxygen related
+_build
+generated

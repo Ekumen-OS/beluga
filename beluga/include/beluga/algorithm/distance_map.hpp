@@ -27,6 +27,8 @@
  * \brief Implementation of algorithm to calculate distance from obstacles.
  */
 
+namespace beluga {
+
 /// Returns a map where the value of each cell is the distance to the nearest obstacle.
 /**
  * The algorithm uses O(N) time and memory, where `N=ranges::size(obstacle_map)`.
@@ -89,5 +91,7 @@ auto nearest_obstacle_distance_map(
 
   return distance_map;
 }
+
+}  // namespace beluga
 
 #endif

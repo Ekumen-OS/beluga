@@ -42,7 +42,5 @@ This repository contains the following packages:
 
 ## ⚙️ First Steps
 
-- Get hands-on experience with the [getting started](GETTING_STARTED.md) tutorial.
-- Check the [installation guide](INSTALLING.md) to test this on a robot.
-- Check the [API documentation](https://ekumen-os.github.io/beluga/) for information on how to use the library in your project.
+- Go check the [project documentation](https://ekumen-os.github.io/beluga).
 - Read the [contributing guidelines](CONTRIBUTING.md).

@@ -1,0 +1,43 @@
+/* make sphinx book scale over the complete width:*/
+@media(min-width: 960px) {
+    .bd-page-width {
+        max-width: 100% !important;
+        width: 100%
+    }
+}
+
+@media (min-width: 992px) {
+    .bd-sidebar-primary {
+        flex-basis: 20%;
+        max-width: 25em;
+    }
+}
+
+@media (min-width: 1000px) {
+    .doxygen-content #doc-content > div > div.contents,
+    .doxygen-content .PageDoc > div.contents {
+        flex-direction: row !important;
+    }
+}
+
+body div.bd-container {
+    justify-content: left;
+}
+
+footer.bd-footer-content .bd-footer-content__inner {
+    margin-left: 0;
+}
+
+div.bd-article-container {
+    max-width: 100% !important;
+}
+
+.bd-main .bd-content .bd-article-container {
+    max-width: 100%;
+    /* default is 60em */
+}
+
+.bd-page-width {
+    max-width: 100%;
+    /* default is 88rem */
+}

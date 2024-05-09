@@ -58,9 +58,15 @@ struct BeamModelParam {
 
 /// Beam sensor model for range finders.
 /**
- * This class satisfies \ref SensorModelPage.
+ * This model closely matches the physical behavior of a lidar, but it is
+ * computationally expensive because a ray-tracing operation needs to be
+ * performed for each particle and individual range reading. Also, this
+ * model can experience degraded performance in cluttered environments
+ * due the inherent lack of smoothness of the sensor readings in such
+ * settings. See Probabilistic Robotics \cite thrun2005probabilistic
+ * Chapter 6.2 for further reference.
  *
- * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.2.
+ * \note This class satisfies \ref SensorModelPage.
  *
  * \tparam OccupancyGrid Type representing an occupancy grid.
  *  It must satisfy \ref OccupancyGrid2Page.

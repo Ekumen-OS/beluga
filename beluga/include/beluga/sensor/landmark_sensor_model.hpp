@@ -48,10 +48,13 @@ struct LandmarkModelParam {
 
 /// Generic landmark model for discrete detection sensors (both 2D and 3D).
 /**
- * This class satisfies \ref SensorModelPage.
+ * This sensor model is a generalization of the Sensor Model with Known Correspondences
+ * described in Probabilistic Robotics \cite thrun2005probabilistic, Chapter 6.6. This version
+ * has been extended to support landmark detection in 3D even when the robot is constrained to
+ * 2D motion. The importance weight function models detections as having two components that
+ * can be independently measured: range and bearing.
  *
- * This sensor model is a generalization of the model described in Probabilistic
- * Robotics \cite thrun2005probabilistic Chapter 6.6 .
+ * \note This class satisfies \ref SensorModelPage.
  *
  * \tparam LandmarkMap class managing the list of known landmarks.
  * \tparam StateType type of the state of the particle.

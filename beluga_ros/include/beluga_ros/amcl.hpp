@@ -25,39 +25,83 @@
 
 #include <range/v3/view/take_exactly.hpp>
 
+/**
+ * \file
+ * \brief Generic two-dimensional implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm in 2D.
+ */
+
 namespace beluga_ros {
 
 /// Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.
 struct AmclParams {
+  /// \brief Translational movement required from last resample for resampling to happen again.
   double update_min_d = 0.25;
+
+  /// \brief Rotational movement required from last resample for resampling to happen again.
   double update_min_a = 0.2;
+
+  /// \brief Number of filter updates required before resampling.
   std::size_t resample_interval = 1UL;
+
+  /// \brief Whether to enable selective resampling \cite grisetti2007selectiveresampling
+  /// to help avoid loss of diversity in the particle population. The resampling
+  /// step will only happen if the effective number of particles
+  /// (\f$N_{eff} = 1/ {\sum w_i^2}\f$) is lower than half the current number of
+  /// particles, where \f$w_i\f$ refers to the normalized weight of each particle.
   bool selective_resampling = false;
+
+  /// \brief Minimum allowed number of particles.
   std::size_t min_particles = 500UL;
+
+  /// \brief Maximum allowed number of particles.
   std::size_t max_particles = 2000UL;
+
+  /// \brief Exponential decay rate for the slow average weight filter, used in deciding when to
+  /// recover from a bad approximation by adding random poses \cite thrun2005probabilistic .
   double alpha_slow = 0.001;
+
+  /// \brief Exponential decay rate for the fast average weight filter, used in deciding when to
+  /// recover from a bad approximation by adding random poses \cite thrun2005probabilistic .
   double alpha_fast = 0.1;
+
+  /// \brief Maximum particle filter population error between the true distribution and the
+  /// estimated distribution. It is used in KLD resampling \cite fox2001adaptivekldsampling
+  /// to limit the allowed number of particles to the minimum necessary.
   double kld_epsilon = 0.05;
+
+  /// \brief Upper standard normal quantile for \f$P\f$, where \f$P\f$ is the probability that the error in
+  /// the estimated distribution will be less than `kld_epsilon` in KLD resampling \cite fox2001adaptivekldsampling .
   double kld_z = 3.0;
+
+  /// \brief Spatial resolution along the x-axis to create buckets for KLD resampling.
   double spatial_resolution_x = 0.5;
+
+  /// \brief Spatial resolution along the y-axis to create buckets for KLD resampling.
   double spatial_resolution_y = 0.5;
+
+  /// \brief Spatial resolution around the z-axis to create buckets for KLD resampling.
   double spatial_resolution_theta = 10 * Sophus::Constants<double>::pi() / 180;
 };
 
-/// Implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm.
+/// Implementation of the 2D Adaptive Monte Carlo Localization (AMCL) algorithm.
+/// Generic two-dimensional implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm in 2D.
 class Amcl {
  public:
+  /// Weighted SE(2) state particle type.
   using particle_type = std::tuple<Sophus::SE2d, beluga::Weight>;
 
+  /// Motion model variant type for runtime selection support.
   using motion_model_variant = std::variant<
       beluga::DifferentialDriveModel,     //
       beluga::OmnidirectionalDriveModel,  //
       beluga::StationaryModel>;
 
+  /// Sensor model variant type for runtime selection support.
   using sensor_model_variant = std::variant<
       beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>,  //
       beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>;
 
+  /// Execution policy variant type for runtime selection support.
   using execution_policy_variant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 
   /// Constructor.
@@ -72,7 +116,7 @@ class Amcl {
       beluga_ros::OccupancyGrid map,
       motion_model_variant motion_model,
       sensor_model_variant sensor_model,
-      const AmclParams& params = AmclParams{},
+      const AmclParams& params = AmclParams(),
       execution_policy_variant execution_policy = std::execution::seq)
       : params_{params},
         map_distribution_{map},

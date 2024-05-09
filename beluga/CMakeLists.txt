@@ -75,12 +75,6 @@ if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
-option(BUILD_DOCS "Build API documentation." OFF)
-if(BUILD_DOCS)
-  message(STATUS "Build API documentation enabled.")
-  add_subdirectory(docs)
-endif()
-
 set(INSTALL_CMAKEDIR ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/cmake)
 
 install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})

@@ -20,6 +20,11 @@
  * \brief Includes all the Beluga API.
  */
 
+/**
+ * \namespace beluga
+ * \brief The main Beluga namespace
+ */
+
 #include <beluga/actions.hpp>
 #include <beluga/algorithm.hpp>
 #include <beluga/containers.hpp>
