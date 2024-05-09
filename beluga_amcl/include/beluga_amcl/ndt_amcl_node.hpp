@@ -51,6 +51,11 @@
 
 #include <message_filters/subscriber.h>
 
+/**
+ * \file
+ * \brief ROS 2 integration of the 2D NDT-AMCL algorithm.
+ */
+
 namespace beluga_amcl {
 
 // Underlying map representation for the NDT sensor model.
@@ -88,10 +93,12 @@ using MotionModelVariant =
 // Supported execution policies.
 using ExecutionPolicyVariant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 
+/// 2D NDT AMCL as a ROS 2 composable lifecycle node.
 class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
  public:
   using rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
+  /// Constructor.
   explicit NdtAmclNode(const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
   ~NdtAmclNode() override;
 
