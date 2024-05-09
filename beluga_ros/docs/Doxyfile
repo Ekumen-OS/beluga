@@ -1,0 +1,12 @@
+PROJECT_NAME           = "Beluga ROS"
+INPUT                  = ../include ./_doxygen/beluga_ros-main.md
+EXAMPLE_PATH           = ../test
+RECURSIVE              = YES
+USE_MDFILE_AS_MAINPAGE = ./_doxygen/beluga_ros-main.md
+CITE_BIB_FILES         = ./references.bib
+INHERIT_DOCS           = YES
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+WARN_AS_ERROR          = YES
+SHOW_NAMESPACES        = YES
+USE_MATHJAX            = YES

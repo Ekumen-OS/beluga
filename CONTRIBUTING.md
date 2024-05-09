@@ -107,18 +107,22 @@ This projects adopts a [feature branch workflow](https://about.gitlab.com/topics
 
 #### How Do I Submit a Good Code Contribution?
 
-1. **Fork [the Beluga repository](https://github.com/Ekumen-OS/beluga/) to your GitHub account**.
-1. **Clone the repository fork locally**.
+1. **Fork the [Beluga repository](https://github.com/Ekumen-OS/beluga/) to your GitHub account**.
+1. **Clone the repository fork locally**. You will need `git`.
    ```bash
    git clone --recursive git@github.com:<your_username>/beluga.git
+   ```
+1. **Install pre-commit hooks**. You will need [`pre-commit`](https://pre-commit.com).
+   ```bash
    cd beluga
+   pre-commit install
    ```
 1. **Create a new branch where your work will go**.
    ```bash
    git checkout -b <your_username>/fix-issue-12345 main
    ```
 1. **Work on your contribution**. See [instructions](GETTING_STARTED.md) on how to get started with Beluga development.
-1. **Lint and test your changes**. For bug fixes, make sure regression tests are included.
+1. **Test your changes**. For bug fixes, make sure regression tests are included.
 1. **Document your changes as needed**. For new features, make sure added functionality is clearly documented.
 1. **Push the branch to your fork on GitHub**.
 1. **Open a pull request**. Make sure all tests and linters pass on your branch before opening.

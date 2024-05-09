@@ -62,9 +62,14 @@ struct LikelihoodFieldModelParam {
 
 /// Likelihood field sensor model for range finders.
 /**
- * This class satisfies \ref SensorModelPage.
+ * This model relies on a pre-computed likelihood map of the environment.
+ * It is less computationally intensive than the beluga::BeamSensorModel
+ * because no ray-tracing is required, and it can also provide better
+ * performance in environments with non-smooth occupation maps. See
+ * Probabilistic Robotics \cite thrun2005probabilistic, Chapter 6.4,
+ * for further reference.
  *
- * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4.
+ * \note This class satisfies \ref SensorModelPage.
  *
  * \tparam OccupancyGrid Type representing an occupancy grid.
  *  It must satisfy \ref OccupancyGrid2Page.
