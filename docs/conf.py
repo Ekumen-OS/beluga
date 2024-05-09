@@ -41,6 +41,7 @@ extensions = [
     "sphinx.ext.graphviz",
     "sphinx_copybutton",
     "sphinx.ext.inheritance_diagram",
+    "sphinx.ext.githubpages",
     "sphinx_babel.autodox",
     "sphinxcontrib.bibtex",
     "sphinx_design",
