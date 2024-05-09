@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga ROS: beluga_ros::AmclParams Struct Reference &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga_ros/docs/_doxygen/generated/reference/html/structbeluga__ros_1_1AmclParams';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga/docs/index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_amcl/docs/index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga_ros/docs/_doxygen/generated/reference/html/structbeluga__ros_1_1AmclParams.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>AmclParams Struct Reference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="amclparams-struct-reference">
+<h1>AmclParams Struct Reference<a class="headerlink" href="#amclparams-struct-reference" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga ROS: beluga_ros::AmclParams Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga ROS
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacebeluga__ros.html">beluga_ros</a></li><li class="navelem"><a class="el" href="structbeluga__ros_1_1AmclParams.html">AmclParams</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structbeluga__ros_1_1AmclParams-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">beluga_ros::AmclParams Struct Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.  
+ <a href="structbeluga__ros_1_1AmclParams.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="amcl_8hpp_source.html">amcl.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:afcfc77d7b83b71a6172f7c3e55eb0d28"><td class="memItemLeft" align="right" valign="top"><a id="afcfc77d7b83b71a6172f7c3e55eb0d28"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#afcfc77d7b83b71a6172f7c3e55eb0d28">update_min_d</a> = 0.25</td></tr>
+<tr class="memdesc:afcfc77d7b83b71a6172f7c3e55eb0d28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translational movement required from last resample for resampling to happen again. <br /></td></tr>
+<tr class="separator:afcfc77d7b83b71a6172f7c3e55eb0d28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a589009cac691426b727807a536c85095"><td class="memItemLeft" align="right" valign="top"><a id="a589009cac691426b727807a536c85095"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#a589009cac691426b727807a536c85095">update_min_a</a> = 0.2</td></tr>
+<tr class="memdesc:a589009cac691426b727807a536c85095"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotational movement required from last resample for resampling to happen again. <br /></td></tr>
+<tr class="separator:a589009cac691426b727807a536c85095"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0581733bc4199938f7f0069ef9e21417"><td class="memItemLeft" align="right" valign="top"><a id="a0581733bc4199938f7f0069ef9e21417"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#a0581733bc4199938f7f0069ef9e21417">resample_interval</a> = 1UL</td></tr>
+<tr class="memdesc:a0581733bc4199938f7f0069ef9e21417"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of filter updates required before resampling. <br /></td></tr>
+<tr class="separator:a0581733bc4199938f7f0069ef9e21417"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae70b06fe289b933af0de8d0556624225"><td class="memItemLeft" align="right" valign="top"><a id="ae70b06fe289b933af0de8d0556624225"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#ae70b06fe289b933af0de8d0556624225">selective_resampling</a> = false</td></tr>
+<tr class="memdesc:ae70b06fe289b933af0de8d0556624225"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether to enable selective resampling <a class="el" href="citelist.html#CITEREF_grisetti2007selectiveresampling">[2]</a> to help avoid loss of diversity in the particle population. The resampling step will only happen if the effective number of particles ( \(N_{eff} = 1/ {\sum w_i^2}\)) is lower than half the current number of particles, where \(w_i\) refers to the normalized weight of each particle. <br /></td></tr>
+<tr class="separator:ae70b06fe289b933af0de8d0556624225"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2d939d5e72c4babd8d38fe00839c658"><td class="memItemLeft" align="right" valign="top"><a id="aa2d939d5e72c4babd8d38fe00839c658"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#aa2d939d5e72c4babd8d38fe00839c658">min_particles</a> = 500UL</td></tr>
+<tr class="memdesc:aa2d939d5e72c4babd8d38fe00839c658"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum allowed number of particles. <br /></td></tr>
+<tr class="separator:aa2d939d5e72c4babd8d38fe00839c658"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00dd3e7054b46e2501a9e912a9c0bfaa"><td class="memItemLeft" align="right" valign="top"><a id="a00dd3e7054b46e2501a9e912a9c0bfaa"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#a00dd3e7054b46e2501a9e912a9c0bfaa">max_particles</a> = 2000UL</td></tr>
+<tr class="memdesc:a00dd3e7054b46e2501a9e912a9c0bfaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum allowed number of particles. <br /></td></tr>
+<tr class="separator:a00dd3e7054b46e2501a9e912a9c0bfaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ac3c9df576531e7df10705a7d0746fd"><td class="memItemLeft" align="right" valign="top"><a id="a5ac3c9df576531e7df10705a7d0746fd"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#a5ac3c9df576531e7df10705a7d0746fd">alpha_slow</a> = 0.001</td></tr>
+<tr class="memdesc:a5ac3c9df576531e7df10705a7d0746fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exponential decay rate for the slow average weight filter, used in deciding when to recover from a bad approximation by adding random poses <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[3]</a> . <br /></td></tr>
+<tr class="separator:a5ac3c9df576531e7df10705a7d0746fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52d6bb972c89eb831111bd310a479d24"><td class="memItemLeft" align="right" valign="top"><a id="a52d6bb972c89eb831111bd310a479d24"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#a52d6bb972c89eb831111bd310a479d24">alpha_fast</a> = 0.1</td></tr>
+<tr class="memdesc:a52d6bb972c89eb831111bd310a479d24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exponential decay rate for the fast average weight filter, used in deciding when to recover from a bad approximation by adding random poses <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[3]</a> . <br /></td></tr>
+<tr class="separator:a52d6bb972c89eb831111bd310a479d24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a7ab2bb1d2527e39a4a25fae5cafb78"><td class="memItemLeft" align="right" valign="top"><a id="a4a7ab2bb1d2527e39a4a25fae5cafb78"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#a4a7ab2bb1d2527e39a4a25fae5cafb78">kld_epsilon</a> = 0.05</td></tr>
+<tr class="memdesc:a4a7ab2bb1d2527e39a4a25fae5cafb78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum particle filter population error between the true distribution and the estimated distribution. It is used in KLD resampling <a class="el" href="citelist.html#CITEREF_fox2001adaptivekldsampling">[1]</a> to limit the allowed number of particles to the minimum necessary. <br /></td></tr>
+<tr class="separator:a4a7ab2bb1d2527e39a4a25fae5cafb78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f6c34f8c8041ca92cdf182f90a426ac"><td class="memItemLeft" align="right" valign="top"><a id="a4f6c34f8c8041ca92cdf182f90a426ac"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#a4f6c34f8c8041ca92cdf182f90a426ac">kld_z</a> = 3.0</td></tr>
+<tr class="memdesc:a4f6c34f8c8041ca92cdf182f90a426ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upper standard normal quantile for \(P\), where \(P\) is the probability that the error in the estimated distribution will be less than <code>kld_epsilon</code> in KLD resampling <a class="el" href="citelist.html#CITEREF_fox2001adaptivekldsampling">[1]</a> . <br /></td></tr>
+<tr class="separator:a4f6c34f8c8041ca92cdf182f90a426ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a880a03d7693ce3cd4ea7a537b3d4e978"><td class="memItemLeft" align="right" valign="top"><a id="a880a03d7693ce3cd4ea7a537b3d4e978"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#a880a03d7693ce3cd4ea7a537b3d4e978">spatial_resolution_x</a> = 0.5</td></tr>
+<tr class="memdesc:a880a03d7693ce3cd4ea7a537b3d4e978"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spatial resolution along the x-axis to create buckets for KLD resampling. <br /></td></tr>
+<tr class="separator:a880a03d7693ce3cd4ea7a537b3d4e978"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8a05818beb176595f66ee1aef72ac40"><td class="memItemLeft" align="right" valign="top"><a id="ab8a05818beb176595f66ee1aef72ac40"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#ab8a05818beb176595f66ee1aef72ac40">spatial_resolution_y</a> = 0.5</td></tr>
+<tr class="memdesc:ab8a05818beb176595f66ee1aef72ac40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spatial resolution along the y-axis to create buckets for KLD resampling. <br /></td></tr>
+<tr class="separator:ab8a05818beb176595f66ee1aef72ac40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a866a60c3222ac0ab5c8d08d5f2282c61"><td class="memItemLeft" align="right" valign="top"><a id="a866a60c3222ac0ab5c8d08d5f2282c61"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga__ros_1_1AmclParams.html#a866a60c3222ac0ab5c8d08d5f2282c61">spatial_resolution_theta</a> = 10 * Sophus::Constants&lt;double&gt;::pi() / 180</td></tr>
+<tr class="memdesc:a866a60c3222ac0ab5c8d08d5f2282c61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spatial resolution around the z-axis to create buckets for KLD resampling. <br /></td></tr>
+<tr class="separator:a866a60c3222ac0ab5c8d08d5f2282c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/<a class="el" href="amcl_8hpp_source.html">amcl.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,698 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga: beluga::NDTSensorModel&amp;lt; SparseGridT &amp;gt; Class Template Reference &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_ros/docs/index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_amcl/docs/index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>NDTSensorModel&lt; SparseGridT &gt; Class Template Reference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="ndtsensormodel-lt-sparsegridt-gt-class-template-reference">
+<h1>NDTSensorModel&amp;lt; SparseGridT &amp;gt; Class Template Reference<a class="headerlink" href="#ndtsensormodel-lt-sparsegridt-gt-class-template-reference" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga: beluga::NDTSensorModel&lt; SparseGridT &gt; Class Template Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacebeluga.html">beluga</a></li><li class="navelem"><a class="el" href="classbeluga_1_1NDTSensorModel.html">NDTSensorModel</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classbeluga_1_1NDTSensorModel-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">beluga::NDTSensorModel&lt; SparseGridT &gt; Class Template Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>NDT sensor model for range finders.  
+ <a href="classbeluga_1_1NDTSensorModel.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="ndt__sensor__model_8hpp_source.html">ndt_sensor_model.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:af6c1226a83cb402751669187e08a9c77"><td class="memItemLeft" align="right" valign="top"><a id="af6c1226a83cb402751669187e08a9c77"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">ndt_cell_type</a> = typename SparseGridT::mapped_type</td></tr>
+<tr class="memdesc:af6c1226a83cb402751669187e08a9c77"><td class="mdescLeft">&#160;</td><td class="mdescRight">NDT Cell type. <br /></td></tr>
+<tr class="separator:af6c1226a83cb402751669187e08a9c77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb32c32e4342f012e9a98be93bd0c018"><td class="memItemLeft" align="right" valign="top"><a id="adb32c32e4342f012e9a98be93bd0c018"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">state_type</a> = std::conditional_t&lt; ndt_cell_type::num_dim==2, Sophus::SE2&lt; typename ndt_cell_type::scalar_type &gt;, Sophus::SE3&lt; typename ndt_cell_type::scalar_type &gt; &gt;</td></tr>
+<tr class="memdesc:adb32c32e4342f012e9a98be93bd0c018"><td class="mdescLeft">&#160;</td><td class="mdescRight">State type of a particle. <br /></td></tr>
+<tr class="separator:adb32c32e4342f012e9a98be93bd0c018"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5683322173461d6892a2f2caef48b05d"><td class="memItemLeft" align="right" valign="top"><a id="a5683322173461d6892a2f2caef48b05d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NDTSensorModel.html#a5683322173461d6892a2f2caef48b05d">weight_type</a> = double</td></tr>
+<tr class="memdesc:a5683322173461d6892a2f2caef48b05d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Weight type of the particle. <br /></td></tr>
+<tr class="separator:a5683322173461d6892a2f2caef48b05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f11afe2f49ca0782b70ab8dbf69aa89"><td class="memItemLeft" align="right" valign="top"><a id="a1f11afe2f49ca0782b70ab8dbf69aa89"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">measurement_type</a> = std::vector&lt; Eigen::Matrix&lt; typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim, 1 &gt; &gt;</td></tr>
+<tr class="memdesc:a1f11afe2f49ca0782b70ab8dbf69aa89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement type of the sensor: a point cloud for the range finder. <br /></td></tr>
+<tr class="separator:a1f11afe2f49ca0782b70ab8dbf69aa89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7999a7ca4b8a951248ea984b6d53e795"><td class="memItemLeft" align="right" valign="top"><a id="a7999a7ca4b8a951248ea984b6d53e795"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NDTSensorModel.html#a7999a7ca4b8a951248ea984b6d53e795">map_type</a> = SparseGridT</td></tr>
+<tr class="memdesc:a7999a7ca4b8a951248ea984b6d53e795"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map representation type. <br /></td></tr>
+<tr class="separator:a7999a7ca4b8a951248ea984b6d53e795"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1ec9a42b3c28ae1467f3da7e43259f9"><td class="memItemLeft" align="right" valign="top"><a id="ae1ec9a42b3c28ae1467f3da7e43259f9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NDTSensorModel.html#ae1ec9a42b3c28ae1467f3da7e43259f9">param_type</a> = <a class="el" href="structbeluga_1_1NDTModelParam.html">NDTModelParam</a></td></tr>
+<tr class="memdesc:ae1ec9a42b3c28ae1467f3da7e43259f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter type that the constructor uses to configure the NDT sensor model. <br /></td></tr>
+<tr class="separator:ae1ec9a42b3c28ae1467f3da7e43259f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a32c0489df61614535aa51d7b110ef886"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NDTSensorModel.html#a32c0489df61614535aa51d7b110ef886">NDTSensorModel</a> (<a class="el" href="classbeluga_1_1NDTSensorModel.html#ae1ec9a42b3c28ae1467f3da7e43259f9">param_type</a> params, SparseGridT cells_data)</td></tr>
+<tr class="memdesc:a32c0489df61614535aa51d7b110ef886"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1NDTSensorModel.html" title="NDT sensor model for range finders.">NDTSensorModel</a> instance.  <a href="classbeluga_1_1NDTSensorModel.html#a32c0489df61614535aa51d7b110ef886">More...</a><br /></td></tr>
+<tr class="separator:a32c0489df61614535aa51d7b110ef886"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96f46d36ee863edf393de48ae1d86953"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NDTSensorModel.html#a96f46d36ee863edf393de48ae1d86953">operator()</a> (<a class="el" href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">measurement_type</a> &amp;&amp;points) const</td></tr>
+<tr class="memdesc:a96f46d36ee863edf393de48ae1d86953"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a state weighting function conditioned on 2D / 3D lidar hits.  <a href="classbeluga_1_1NDTSensorModel.html#a96f46d36ee863edf393de48ae1d86953">More...</a><br /></td></tr>
+<tr class="separator:a96f46d36ee863edf393de48ae1d86953"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd59e24040fbcd5cf6c78c771d1cf26c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1NDTSensorModel.html#abd59e24040fbcd5cf6c78c771d1cf26c">likelihood_at</a> (const <a class="el" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">ndt_cell_type</a> &amp;measurement) const</td></tr>
+<tr class="separator:abd59e24040fbcd5cf6c78c771d1cf26c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename SparseGridT&gt;<br />
+class beluga::NDTSensorModel&lt; SparseGridT &gt;</h3>
+
+<p>NDT sensor model for range finders. </p>
+<p>This class satisfies <a class="el" href="SensorModelPage.html">Beluga named requirements: SensorModel</a>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">SparseGridT</td><td>Type representing a sparse NDT grid, as a specialization of '<a class="el" href="classbeluga_1_1SparseValueGrid.html" title="Generic 2D sparse value regular grid.">beluga::SparseValueGrid</a>'. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a32c0489df61614535aa51d7b110ef886"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32c0489df61614535aa51d7b110ef886">&#9670;&nbsp;</a></span>NDTSensorModel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SparseGridT &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; SparseGridT &gt;::<a class="el" href="classbeluga_1_1NDTSensorModel.html">NDTSensorModel</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1NDTSensorModel.html#ae1ec9a42b3c28ae1467f3da7e43259f9">param_type</a>&#160;</td>
+          <td class="paramname"><em>params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SparseGridT&#160;</td>
+          <td class="paramname"><em>cells_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs a <a class="el" href="classbeluga_1_1NDTSensorModel.html" title="NDT sensor model for range finders.">NDTSensorModel</a> instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">params</td><td>Parameters to configure this instance. See <a class="el" href="structbeluga_1_1NDTModelParam.html" title="Parameters used to construct a NDTSensorModel instance.">beluga::NDTModelParam</a> for details. </td></tr>
+    <tr><td class="paramname">cells_data</td><td>Sparse grid representing an NDT map, used for calculating importance weights for the different particles. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="abd59e24040fbcd5cf6c78c771d1cf26c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd59e24040fbcd5cf6c78c771d1cf26c">&#9670;&nbsp;</a></span>likelihood_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SparseGridT &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double <a class="el" href="classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; SparseGridT &gt;::likelihood_at </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">ndt_cell_type</a> &amp;&#160;</td>
+          <td class="paramname"><em>measurement</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Returns the L2 likelihood scaled by 'd1' and 'd2' set in the parameters for this instance for 'measurement, or 'params_.min_likelihood' if the cell corresponding to 'measurement' doesn't exist in the map. </p>
+
+</div>
+</div>
+<a id="a96f46d36ee863edf393de48ae1d86953"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96f46d36ee863edf393de48ae1d86953">&#9670;&nbsp;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SparseGridT &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; SparseGridT &gt;::operator() </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">measurement_type</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>points</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a state weighting function conditioned on 2D / 3D lidar hits. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">points</td><td>2D lidar hit points in the reference frame of particle states. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a state weighting function satisfying <a class="el" href="SensorModelPage.html#StateWeightingFunctionPage">Beluga named requirements: StateWeightingFunction</a> and borrowing a reference to this sensor model (and thus their lifetime are bound). </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/<a class="el" href="ndt__sensor__model_8hpp_source.html">ndt_sensor_model.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

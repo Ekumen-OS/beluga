@@ -1,0 +1,14 @@
+.. meta::f7d2e7540a116d36e2382018ca228a1eb2dd3b990d258de36fbfa098d55c33f938600d870a01cfd77ba408b143c54bcb73291ea0ed27cdbc6651511e5454a635
+
+:orphan:
+
+.. title:: Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga/actions Directory Reference
+
+/home/runner/work/beluga/beluga/beluga/include/beluga/actions Directory Reference
+=================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: dir_8c67632ad66eb9bf379bf849f1aad5d2.html

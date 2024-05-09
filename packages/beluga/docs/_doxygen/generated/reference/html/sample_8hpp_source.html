@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga/views/sample.hpp Source File &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/sample_8hpp_source';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_ros/docs/index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_amcl/docs/index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga/docs/_doxygen/generated/reference/html/sample_8hpp_source.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>/home/runner/work/beluga/beluga/beluga/include/beluga/views/sample.hpp Source File</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="home-runner-work-beluga-beluga-beluga-include-beluga-views-sample-hpp-source-file">
+<h1>/home/runner/work/beluga/beluga/beluga/include/beluga/views/sample.hpp Source File<a class="headerlink" href="#home-runner-work-beluga-beluga-beluga-include-beluga-views-sample-hpp-source-file" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga/views/sample.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1ad523cfdb7a3d7d09cddf672d6cd478.html">beluga</a></li><li class="navelem"><a class="el" href="dir_0ae0216c5b903435324487dd13dfdff9.html">views</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">sample.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="sample_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2024 Ekumen, Inc.</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// limitations under the License.</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_VIEWS_SAMPLE_HPP</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_VIEWS_SAMPLE_HPP</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;random&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;range/v3/utility/random.hpp&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/common.hpp&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/generate.hpp&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="particle__traits_8hpp.html">beluga/type_traits/particle_traits.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="particles_8hpp.html">beluga/views/particles.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>beluga::views {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, <span class="keyword">class</span> Distribution, <span class="keyword">class</span> URNG = <span class="keyword">typename</span> ranges::detail::default_random_engine&gt;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__view.html">   47</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__view.html">sample_view</a> : <span class="keyword">public</span> ranges::view_facade&lt;sample_view&lt;Range, Distribution, URNG&gt;, ranges::infinite&gt; {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__view.html#aeef79eb5754c5bb4c4a52732f6b5dc30">   50</a></span>&#160;  <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__view.html#aeef79eb5754c5bb4c4a52732f6b5dc30">sample_view</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__view.html#acdc4bf0cdb1f17df1d8edfdf0078e75c">   58</a></span>&#160;  constexpr <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__view.html#acdc4bf0cdb1f17df1d8edfdf0078e75c">sample_view</a>(Range range, Distribution distribution, URNG&amp; engine = ranges::detail::get_random_engine())</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      : range_{std::move(range)}, distribution_{std::move(distribution)}, engine_{std::addressof(engine)} {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    assert(ranges::size(range) &gt; 0);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    assert(distribution_.min() == 0);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    assert(distribution_.max() == <span class="keyword">static_cast&lt;</span>typename Distribution::result_type<span class="keyword">&gt;</span>(ranges::size(range_)) - 1);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="comment">// `ranges::range_access` needs access to the cursor members.</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">friend</span> ranges::range_access;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  static_assert(ranges::sized_range&lt;Range&gt;);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  static_assert(ranges::random_access_range&lt;Range&gt;);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  static_assert(std::is_same_v&lt;<span class="keyword">typename</span> Distribution::result_type, ranges::range_difference_t&lt;Range&gt;&gt;);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keyword">struct </span>cursor {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;   <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    cursor() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    constexpr <span class="keyword">explicit</span> cursor(<a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__view.html">sample_view</a>* view)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        : view_(view), first_{ranges::begin(view_-&gt;range_)}, it_{first_ + view_-&gt;compute_offset()} {}</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    [[nodiscard]] constexpr decltype(<span class="keyword">auto</span>) read() const noexcept(noexcept(*this-&gt;it_)) { <span class="keywordflow">return</span> *it_; }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    constexpr <span class="keywordtype">void</span> next() { it_ = first_ + view_-&gt;compute_offset(); }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;   <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__view.html#aeef79eb5754c5bb4c4a52732f6b5dc30">sample_view</a>* view_;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    ranges::iterator_t&lt;Range&gt; first_;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    ranges::iterator_t&lt;Range&gt; it_;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  };</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  [[nodiscard]] constexpr <span class="keyword">auto</span> begin_cursor() { <span class="keywordflow">return</span> cursor{<span class="keyword">this</span>}; }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  [[nodiscard]] constexpr <span class="keyword">auto</span> end_cursor() const noexcept { <span class="keywordflow">return</span> ranges::unreachable_sentinel_t{}; }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  [[nodiscard]] constexpr <span class="keyword">auto</span> compute_offset() { <span class="keywordflow">return</span> distribution_(*engine_); }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  Range range_;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  Distribution distribution_;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  URNG* engine_;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;};</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> Enable = <span class="keywordtype">void</span>&gt;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">struct </span>is_random_distribution : <span class="keyword">public</span> std::false_type {};</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keyword">struct </span>is_random_distribution&lt;T, std::void_t&lt;decltype(std::declval&lt;T&amp;&gt;()(std::declval&lt;std::mt19937&amp;&gt;()))&gt;&gt;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    : std::true_type {};</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> is_random_distribution_v = is_random_distribution&lt;T&gt;::value;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html">  124</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html">sample_base_fn</a> {</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, <span class="keyword">class</span> Weights, <span class="keyword">class</span> URNG&gt;</div>
+<div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#ad743a3cc09b3175f5d3d68bbf28065c8">  128</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#ad743a3cc09b3175f5d3d68bbf28065c8">sample_from_range</a>(Range&amp;&amp; range, Weights&amp;&amp; weights, URNG&amp; engine)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    static_assert(ranges::sized_range&lt;Range&gt;);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    static_assert(ranges::random_access_range&lt;Range&gt;);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    static_assert(ranges::input_range&lt;Weights&gt;);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keyword">using</span> result_type = ranges::range_difference_t&lt;Range&gt;;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keyword">auto</span> w = ranges::views::common(<a class="code" href="particles_8hpp.html#a77f6a442f88b44e322efa2f32eb184b5">weights</a>);</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keyword">auto</span> distribution = std::discrete_distribution&lt;result_type&gt;{ranges::begin(w), ranges::end(w)};</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__view.html">sample_view</a>{ranges::views::all(std::forward&lt;Range&gt;(range)), std::move(distribution), engine};</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;  }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, <span class="keyword">class</span> URNG&gt;</div>
+<div class="line"><a name="l00147"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#af6cb82b52780221610b40eff9789a717">  147</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#af6cb82b52780221610b40eff9789a717">sample_from_range</a>(Range&amp;&amp; range, URNG&amp; engine)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    static_assert(ranges::sized_range&lt;Range&gt;);</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    static_assert(ranges::random_access_range&lt;Range&gt;);</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">if</span> constexpr (beluga::is_particle_range_v&lt;Range&gt;) {</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#ad743a3cc09b3175f5d3d68bbf28065c8">sample_from_range</a>(<a class="code" href="particles_8hpp.html#a0ef04e7d6ee3b982c96629ca0c8ab670">beluga::views::states</a>(range), <a class="code" href="particles_8hpp.html#a77f6a442f88b44e322efa2f32eb184b5">beluga::views::weights</a>(range), engine) |</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;             ranges::views::transform(<a class="code" href="namespacebeluga.html#a8aa8df97f1cdadba1ae6dfadd1ce486a">beluga::make_from_state</a>&lt;ranges::range_value_t&lt;Range&gt;&gt;);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;      <span class="keyword">using</span> result_type = ranges::range_difference_t&lt;Range&gt;;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;      <span class="keyword">auto</span> distribution =</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;          std::uniform_int_distribution&lt;result_type&gt;{0, <span class="keyword">static_cast&lt;</span>result_type<span class="keyword">&gt;</span>(ranges::size(range) - 1)};</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__view.html">sample_view</a>{ranges::views::all(std::forward&lt;Range&gt;(range)), std::move(distribution), engine};</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    }</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;  }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Distribution, <span class="keyword">class</span> URNG&gt;</div>
+<div class="line"><a name="l00163"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#a36759fe524aa799cc8e86fad5ce73064">  163</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#a36759fe524aa799cc8e86fad5ce73064">sample_from_distribution</a>(Distribution distribution, URNG&amp; engine)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordflow">return</span> ranges::views::generate(</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        [distribution = std::move(distribution), &amp;engine]() <span class="keyword">mutable</span> { <span class="keywordflow">return</span> distribution(engine); });</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  }</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;};</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
+<div class="line"><a name="l00170"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html">  170</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html">sample_fn</a> : <span class="keyword">public</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html">sample_base_fn</a> {</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U, <span class="keyword">class</span> V&gt;</div>
+<div class="line"><a name="l00173"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a9375c2e21a7cedc6c285e926882fbcf2">  173</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a9375c2e21a7cedc6c285e926882fbcf2">operator()</a>(T&amp;&amp; t, U&amp;&amp; u, V&amp; v)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    static_assert(ranges::range&lt;T&gt;);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    static_assert(ranges::range&lt;U&gt;);</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#ad743a3cc09b3175f5d3d68bbf28065c8">sample_from_range</a>(std::forward&lt;T&gt;(t), std::forward&lt;U&gt;(u), v);  <span class="comment">// Assume V is a URNG</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;  }</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt;</div>
+<div class="line"><a name="l00181"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a5537bc0da069b2fdd64aca8c885dd52b">  181</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a5537bc0da069b2fdd64aca8c885dd52b">operator()</a>(T&amp;&amp; t, U&amp;&amp; u)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordflow">if</span> constexpr (ranges::range&lt;T&gt; &amp;&amp; ranges::range&lt;U&gt;) {</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;      <span class="keyword">auto</span>&amp; engine = ranges::detail::get_random_engine();</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#ad743a3cc09b3175f5d3d68bbf28065c8">sample_from_range</a>(std::forward&lt;T&gt;(t), std::forward&lt;U&gt;(u), engine);</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (is_random_distribution_v&lt;T&gt;) {</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;      static_assert(std::is_lvalue_reference_v&lt;U&amp;&amp;&gt;);  <span class="comment">// Assume U is a URNG</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#a36759fe524aa799cc8e86fad5ce73064">sample_from_distribution</a>(std::forward&lt;T&gt;(t), u);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;      static_assert(ranges::range&lt;T&gt;);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;      static_assert(std::is_lvalue_reference_v&lt;U&amp;&amp;&gt;);  <span class="comment">// Assume U is a URNG</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#ad743a3cc09b3175f5d3d68bbf28065c8">sample_from_range</a>(std::forward&lt;T&gt;(t), u);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    }</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;  }</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00197"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#aa7a1d4864949cd86cc59be19d4ce248d">  197</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#aa7a1d4864949cd86cc59be19d4ce248d">operator()</a>(T&amp;&amp; t)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keywordflow">if</span> constexpr (ranges::range&lt;T&gt;) {</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;      <span class="keyword">auto</span>&amp; engine = ranges::detail::get_random_engine();</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#ad743a3cc09b3175f5d3d68bbf28065c8">sample_from_range</a>(std::forward&lt;T&gt;(t), engine);</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (is_random_distribution_v&lt;T&gt;) {</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;      <span class="keyword">auto</span>&amp; engine = ranges::detail::get_random_engine();</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#a36759fe524aa799cc8e86fad5ce73064">sample_from_distribution</a>(std::forward&lt;T&gt;(t), engine);</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;      static_assert(std::is_lvalue_reference_v&lt;T&amp;&amp;&gt;);  <span class="comment">// Assume T is a URNG</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;      <span class="keywordflow">return</span> ranges::make_view_closure(ranges::bind_back(<a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html">sample_fn</a>{}, std::ref(t)));</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    }</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  }</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, <span class="keyword">class</span> URNG&gt;</div>
+<div class="line"><a name="l00212"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#ac4ebfeb4955615da586b46ca4d2c2ac6">  212</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#ac4ebfeb4955615da586b46ca4d2c2ac6">operator()</a>(Range&amp;&amp; range, std::reference_wrapper&lt;URNG&gt; engine)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    static_assert(ranges::range&lt;Range&gt;);</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#ad743a3cc09b3175f5d3d68bbf28065c8">sample_from_range</a>(std::forward&lt;Range&gt;(range), engine.get());</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;  }</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;};</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
+<div class="line"><a name="l00240"></a><span class="lineno"><a class="line" href="sample_8hpp.html#ae310f2a179ad1f2f1ffdce1df33d84d3">  240</a></span>&#160;<span class="keyword">inline</span> constexpr ranges::views::view_closure&lt;detail::sample_fn&gt; <a class="code" href="sample_8hpp.html#ae310f2a179ad1f2f1ffdce1df33d84d3">sample</a>;</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;}  <span class="comment">// namespace beluga::views</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="anamespacebeluga_html_a8aa8df97f1cdadba1ae6dfadd1ce486a"><div class="ttname"><a href="namespacebeluga.html#a8aa8df97f1cdadba1ae6dfadd1ce486a">beluga::make_from_state</a></div><div class="ttdeci">constexpr auto make_from_state(T value)</div><div class="ttdoc">Returns a new particle from the given state.</div><div class="ttdef"><b>Definition:</b> particle_traits.hpp:90</div></div>
+<div class="ttc" id="aparticle__traits_8hpp_html"><div class="ttname"><a href="particle__traits_8hpp.html">particle_traits.hpp</a></div><div class="ttdoc">Implementation of traits for particle types, see the Particle named requirements.</div></div>
+<div class="ttc" id="aparticles_8hpp_html"><div class="ttname"><a href="particles_8hpp.html">particles.hpp</a></div><div class="ttdoc">Implementation of views related to particle ranges.</div></div>
+<div class="ttc" id="aparticles_8hpp_html_a0ef04e7d6ee3b982c96629ca0c8ab670"><div class="ttname"><a href="particles_8hpp.html#a0ef04e7d6ee3b982c96629ca0c8ab670">beluga::views::states</a></div><div class="ttdeci">constexpr auto states</div><div class="ttdef"><b>Definition:</b> particles.hpp:30</div></div>
+<div class="ttc" id="aparticles_8hpp_html_a77f6a442f88b44e322efa2f32eb184b5"><div class="ttname"><a href="particles_8hpp.html#a77f6a442f88b44e322efa2f32eb184b5">beluga::views::weights</a></div><div class="ttdeci">constexpr auto weights</div><div class="ttdef"><b>Definition:</b> particles.hpp:34</div></div>
+<div class="ttc" id="asample_8hpp_html_ae310f2a179ad1f2f1ffdce1df33d84d3"><div class="ttname"><a href="sample_8hpp.html#ae310f2a179ad1f2f1ffdce1df33d84d3">beluga::views::sample</a></div><div class="ttdeci">constexpr ranges::views::view_closure&lt; detail::sample_fn &gt; sample</div><div class="ttdef"><b>Definition:</b> sample.hpp:240</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__base__fn_html"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html">beluga::views::detail::sample_base_fn</a></div><div class="ttdoc">Implementation detail for a sample algorithm.</div><div class="ttdef"><b>Definition:</b> sample.hpp:124</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__base__fn_html_a36759fe524aa799cc8e86fad5ce73064"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#a36759fe524aa799cc8e86fad5ce73064">beluga::views::detail::sample_base_fn::sample_from_distribution</a></div><div class="ttdeci">constexpr auto sample_from_distribution(Distribution distribution, URNG &amp;engine) const</div><div class="ttdoc">Sample from random distributions.</div><div class="ttdef"><b>Definition:</b> sample.hpp:163</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__base__fn_html_ad743a3cc09b3175f5d3d68bbf28065c8"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#ad743a3cc09b3175f5d3d68bbf28065c8">beluga::views::detail::sample_base_fn::sample_from_range</a></div><div class="ttdeci">constexpr auto sample_from_range(Range &amp;&amp;range, Weights &amp;&amp;weights, URNG &amp;engine) const</div><div class="ttdoc">Sample from weighted ranges.</div><div class="ttdef"><b>Definition:</b> sample.hpp:128</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__base__fn_html_af6cb82b52780221610b40eff9789a717"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__base__fn.html#af6cb82b52780221610b40eff9789a717">beluga::views::detail::sample_base_fn::sample_from_range</a></div><div class="ttdeci">constexpr auto sample_from_range(Range &amp;&amp;range, URNG &amp;engine) const</div><div class="ttdoc">Sample from any range.</div><div class="ttdef"><b>Definition:</b> sample.hpp:147</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__fn_html"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__fn.html">beluga::views::detail::sample_fn</a></div><div class="ttdoc">Implementation detail for a sample range adaptor object.</div><div class="ttdef"><b>Definition:</b> sample.hpp:170</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__fn_html_a5537bc0da069b2fdd64aca8c885dd52b"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a5537bc0da069b2fdd64aca8c885dd52b">beluga::views::detail::sample_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(T &amp;&amp;t, U &amp;&amp;u) const</div><div class="ttdoc">Overload that takes two arguments.</div><div class="ttdef"><b>Definition:</b> sample.hpp:181</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__fn_html_a9375c2e21a7cedc6c285e926882fbcf2"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#a9375c2e21a7cedc6c285e926882fbcf2">beluga::views::detail::sample_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(T &amp;&amp;t, U &amp;&amp;u, V &amp;v) const</div><div class="ttdoc">Overload that takes three arguments.</div><div class="ttdef"><b>Definition:</b> sample.hpp:173</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__fn_html_aa7a1d4864949cd86cc59be19d4ce248d"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#aa7a1d4864949cd86cc59be19d4ce248d">beluga::views::detail::sample_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(T &amp;&amp;t) const</div><div class="ttdoc">Overload that takes one argument.</div><div class="ttdef"><b>Definition:</b> sample.hpp:197</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__fn_html_ac4ebfeb4955615da586b46ca4d2c2ac6"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__fn.html#ac4ebfeb4955615da586b46ca4d2c2ac6">beluga::views::detail::sample_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range, std::reference_wrapper&lt; URNG &gt; engine) const</div><div class="ttdoc">Overload that unwraps the engine reference from a view closure.</div><div class="ttdef"><b>Definition:</b> sample.hpp:212</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__view_html"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__view.html">beluga::views::detail::sample_view</a></div><div class="ttdoc">Implementation of the sample view.</div><div class="ttdef"><b>Definition:</b> sample.hpp:47</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__view_html_acdc4bf0cdb1f17df1d8edfdf0078e75c"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__view.html#acdc4bf0cdb1f17df1d8edfdf0078e75c">beluga::views::detail::sample_view::sample_view</a></div><div class="ttdeci">constexpr sample_view(Range range, Distribution distribution, URNG &amp;engine=ranges::detail::get_random_engine())</div><div class="ttdoc">Construct the view from an existing range.</div><div class="ttdef"><b>Definition:</b> sample.hpp:58</div></div>
+<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1sample__view_html_aeef79eb5754c5bb4c4a52732f6b5dc30"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1sample__view.html#aeef79eb5754c5bb4c4a52732f6b5dc30">beluga::views::detail::sample_view::sample_view</a></div><div class="ttdeci">sample_view()=default</div><div class="ttdoc">Default constructor.</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

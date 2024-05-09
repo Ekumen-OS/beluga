@@ -1,0 +1,5 @@
+<map id="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/occupancy_grid.hpp" name="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/occupancy_grid.hpp">
+<area shape="rect" id="node1" title="Implementation of nav_msgs/OccupancyGrid wrapper type." alt="" coords="56,5,287,61"/>
+<area shape="rect" id="node2" href="$amcl_8hpp.html" title="Generic two&#45;dimensional implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm in 2..." alt="" coords="5,109,201,165"/>
+<area shape="rect" id="node3" href="$beluga__ros_8hpp.html" title="Includes all the Beluga ROS API." alt="" coords="71,213,271,269"/>
+</map>

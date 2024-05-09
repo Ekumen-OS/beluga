@@ -1,0 +1,9 @@
+<map id="/home/runner/work/beluga/beluga/beluga/include/beluga/types/landmark_detection_types.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/types/landmark_detection_types.hpp">
+<area shape="rect" id="node1" title="Auxiliar types for landmark models." alt="" coords="236,5,480,76"/>
+<area shape="rect" id="node2" href="$bearing__sensor__model_8hpp.html" title="Implementation of a discrete landmark bearing sensor model." alt="" coords="5,124,225,195"/>
+<area shape="rect" id="node6" href="$landmark__map_8hpp.html" title="Landmark map datatype." alt="" coords="250,124,466,195"/>
+<area shape="rect" id="node7" href="$landmark__sensor__model_8hpp.html" title="Implementation of a discrete landmark sensor model." alt="" coords="491,124,684,195"/>
+<area shape="rect" id="node3" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="255,243,448,299"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="255,347,448,403"/>
+<area shape="rect" id="node5" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="233,451,469,507"/>
+</map>

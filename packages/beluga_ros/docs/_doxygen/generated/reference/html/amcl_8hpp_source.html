@@ -1,0 +1,763 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga ROS: /home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/amcl.hpp Source File &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga_ros/docs/_doxygen/generated/reference/html/amcl_8hpp_source';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga/docs/index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_amcl/docs/index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga_ros/docs/_doxygen/generated/reference/html/amcl_8hpp_source.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/amcl.hpp Source File</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="home-runner-work-beluga-beluga-beluga-ros-include-beluga-ros-amcl-hpp-source-file">
+<h1>/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/amcl.hpp Source File<a class="headerlink" href="#home-runner-work-beluga-beluga-beluga-ros-include-beluga-ros-amcl-hpp-source-file" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga ROS: /home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/amcl.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga ROS
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_724afa0a6cc96469a92ffa22ab208279.html">beluga_ros</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">amcl.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="amcl_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2024 Ekumen, Inc.</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// limitations under the License.</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_ROS_AMCL_HPP</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ROS_AMCL_HPP</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;variant&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/beluga_8hpp.html">beluga/beluga.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="laser__scan_8hpp.html">beluga_ros/laser_scan.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="occupancy__grid_8hpp.html">beluga_ros/occupancy_grid.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/take_exactly.hpp&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html">   33</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga__ros.html">beluga_ros</a> {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html">   36</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga__ros_1_1AmclParams.html">AmclParams</a> {</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#afcfc77d7b83b71a6172f7c3e55eb0d28">   38</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#afcfc77d7b83b71a6172f7c3e55eb0d28">update_min_d</a> = 0.25;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#a589009cac691426b727807a536c85095">   41</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#a589009cac691426b727807a536c85095">update_min_a</a> = 0.2;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#a0581733bc4199938f7f0069ef9e21417">   44</a></span>&#160;  std::size_t <a class="code" href="structbeluga__ros_1_1AmclParams.html#a0581733bc4199938f7f0069ef9e21417">resample_interval</a> = 1UL;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#ae70b06fe289b933af0de8d0556624225">   51</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#ae70b06fe289b933af0de8d0556624225">selective_resampling</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#aa2d939d5e72c4babd8d38fe00839c658">   54</a></span>&#160;  std::size_t <a class="code" href="structbeluga__ros_1_1AmclParams.html#aa2d939d5e72c4babd8d38fe00839c658">min_particles</a> = 500UL;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#a00dd3e7054b46e2501a9e912a9c0bfaa">   57</a></span>&#160;  std::size_t <a class="code" href="structbeluga__ros_1_1AmclParams.html#a00dd3e7054b46e2501a9e912a9c0bfaa">max_particles</a> = 2000UL;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#a5ac3c9df576531e7df10705a7d0746fd">   61</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#a5ac3c9df576531e7df10705a7d0746fd">alpha_slow</a> = 0.001;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#a52d6bb972c89eb831111bd310a479d24">   65</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#a52d6bb972c89eb831111bd310a479d24">alpha_fast</a> = 0.1;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#a4a7ab2bb1d2527e39a4a25fae5cafb78">   70</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#a4a7ab2bb1d2527e39a4a25fae5cafb78">kld_epsilon</a> = 0.05;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#a4f6c34f8c8041ca92cdf182f90a426ac">   74</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#a4f6c34f8c8041ca92cdf182f90a426ac">kld_z</a> = 3.0;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#a880a03d7693ce3cd4ea7a537b3d4e978">   77</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#a880a03d7693ce3cd4ea7a537b3d4e978">spatial_resolution_x</a> = 0.5;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#ab8a05818beb176595f66ee1aef72ac40">   80</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#ab8a05818beb176595f66ee1aef72ac40">spatial_resolution_y</a> = 0.5;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1AmclParams.html#a866a60c3222ac0ab5c8d08d5f2282c61">   83</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html#a866a60c3222ac0ab5c8d08d5f2282c61">spatial_resolution_theta</a> = 10 * Sophus::Constants&lt;double&gt;::pi() / 180;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;};</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html">   88</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga__ros_1_1Amcl.html">Amcl</a> {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#aa586ffdda4cddc4d4f030618e05fc227">   91</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#aa586ffdda4cddc4d4f030618e05fc227">particle_type</a> = std::tuple&lt;Sophus::SE2d, beluga::Weight&gt;;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">   94</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">motion_model_variant</a> = std::variant&lt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1DifferentialDriveModel.html">beluga::DifferentialDriveModel</a>,     <span class="comment">//</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a>,  <span class="comment">//</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>&gt;;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#aaa2f9ea60afb2d085a4e0db60676c73f">  100</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#aaa2f9ea60afb2d085a4e0db60676c73f">sensor_model_variant</a> = std::variant&lt;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1LikelihoodFieldModel.html">beluga::LikelihoodFieldModel&lt;beluga_ros::OccupancyGrid&gt;</a>,  <span class="comment">//</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel&lt;beluga_ros::OccupancyGrid&gt;</a>&gt;;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">  105</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">execution_policy_variant</a> = std::variant&lt;std::execution::sequenced_policy, std::execution::parallel_policy&gt;;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#afa212077f1c1f8a75fccb2f706741628">  115</a></span>&#160;  <a class="code" href="classbeluga__ros_1_1Amcl.html#afa212077f1c1f8a75fccb2f706741628">Amcl</a>(</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;      <a class="code" href="classbeluga__ros_1_1OccupancyGrid.html">beluga_ros::OccupancyGrid</a> map,</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      <a class="code" href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">motion_model_variant</a> motion_model,</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;      <a class="code" href="classbeluga__ros_1_1Amcl.html#aaa2f9ea60afb2d085a4e0db60676c73f">sensor_model_variant</a> sensor_model,</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      <span class="keyword">const</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html">AmclParams</a>&amp; params = <a class="code" href="structbeluga__ros_1_1AmclParams.html">AmclParams</a>(),</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;      <a class="code" href="classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">execution_policy_variant</a> execution_policy = std::execution::seq)</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      : params_{params},</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        map_distribution_{map},</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        motion_model_{<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::move(motion_model)},</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        sensor_model_{<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::move(sensor_model)},</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        execution_policy_{<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::move(execution_policy)},</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        spatial_hasher_{params_.spatial_resolution_x, params_.spatial_resolution_y, params_.spatial_resolution_theta},</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        random_probability_estimator_{params_.alpha_slow, params_.alpha_fast},</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        update_policy_{<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a>::policies::<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/on__motion_8hpp.html#a54bb57da3afb678567632c2c8362afb8">on_motion</a>(params_.update_min_d, params_.update_min_a)},</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        resample_policy_{<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a>::policies::<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/every__n_8hpp.html#afefa5c41804340c02566a357b4beb933">every_n</a>(params_.resample_interval)} {</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">if</span> (params_.<a class="code" href="structbeluga__ros_1_1AmclParams.html#ae70b06fe289b933af0de8d0556624225">selective_resampling</a>) {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;      resample_policy_ = resample_policy_ &amp;&amp; beluga::policies::on_effective_size_drop;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  }</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#a978000a10d56de7f709ecd526dbc61f2">  136</a></span>&#160;  [[nodiscard]] <span class="keyword">const</span> <span class="keyword">auto</span>&amp; <a class="code" href="classbeluga__ros_1_1Amcl.html#a978000a10d56de7f709ecd526dbc61f2">particles</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> particles_; }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Distribution&gt;</div>
+<div class="line"><a name="l00140"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#acddd3fde9c76db51abc0639adee47257">  140</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#acddd3fde9c76db51abc0639adee47257">initialize</a>(Distribution distribution) {</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    particles_ = beluga::views::sample(std::move(distribution)) |                    <span class="comment">//</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                 ranges::views::transform(beluga::make_from_state&lt;particle_type&gt;) |  <span class="comment">//</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                 ranges::views::take_exactly(params_.<a class="code" href="structbeluga__ros_1_1AmclParams.html#a00dd3e7054b46e2501a9e912a9c0bfaa">max_particles</a>) |                <span class="comment">//</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                 ranges::to&lt;beluga::TupleVector&gt;;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    force_update_ = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;  }</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
+<div class="line"><a name="l00152"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#ab3663a01101317d97b1cc7a86c9c8bc0">  152</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#ab3663a01101317d97b1cc7a86c9c8bc0">initialize</a>(Sophus::SE2d pose, Sophus::Matrix3d covariance) {</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <a class="code" href="classbeluga__ros_1_1Amcl.html#acddd3fde9c76db51abc0639adee47257">initialize</a>(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1MultivariateNormalDistribution.html">beluga::MultivariateNormalDistribution</a>{pose, covariance});</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;  }</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#a3cb115f47859bbcb7253ef5341adb23e">  157</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#a3cb115f47859bbcb7253ef5341adb23e">initialize_from_map</a>() { <a class="code" href="classbeluga__ros_1_1Amcl.html#acddd3fde9c76db51abc0639adee47257">initialize</a>(std::ref(map_distribution_)); }</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#a7d8c6b65cf6cc0d0b958c8290d46c378">  160</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#a7d8c6b65cf6cc0d0b958c8290d46c378">update_map</a>(<a class="code" href="classbeluga__ros_1_1OccupancyGrid.html">beluga_ros::OccupancyGrid</a> map) {</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    map_distribution_ = <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1MultivariateUniformDistribution.html">beluga::MultivariateUniformDistribution</a>{map};</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    std::visit([&amp;](<span class="keyword">auto</span>&amp; sensor_model) { sensor_model.update_map(std::move(map)); }, sensor_model_);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;  }</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#af2c63feaade169e2aed88f46bd493c15">  178</a></span>&#160;  <span class="keyword">auto</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#af2c63feaade169e2aed88f46bd493c15">update</a>(Sophus::SE2d base_pose_in_odom, <a class="code" href="classbeluga__ros_1_1LaserScan.html">beluga_ros::LaserScan</a> laser_scan)</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;      -&gt; std::optional&lt;std::pair&lt;Sophus::SE2d, Sophus::Matrix3d&gt;&gt; {</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keywordflow">if</span> (particles_.empty()) {</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;      <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    }</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordflow">if</span> (!update_policy_(base_pose_in_odom) &amp;&amp; !force_update_) {</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;      <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    }</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="comment">// TODO(nahuel): Remove this once we update the measurement type.</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keyword">auto</span> measurement = laser_scan.points_in_cartesian_coordinates() |  <span class="comment">//</span></div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                       ranges::views::transform([&amp;laser_scan](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; p) {</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;                         <span class="keyword">const</span> <span class="keyword">auto</span> result = laser_scan.origin() * Sophus::Vector3d{p.x(), p.y(), 0};</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;                         <span class="keywordflow">return</span> std::make_pair(result.x(), result.y());</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                       }) |</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;                       ranges::to&lt;std::vector&gt;;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    std::visit(</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        [&amp;, <span class="keyword">this</span>](<span class="keyword">auto</span>&amp; policy, <span class="keyword">auto</span>&amp; motion_model, <span class="keyword">auto</span>&amp; sensor_model) {</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;          particles_ |=</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;              beluga::actions::propagate(policy, motion_model(control_action_window_ &lt;&lt; base_pose_in_odom)) |  <span class="comment">//</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;              beluga::actions::reweight(policy, sensor_model(std::move(measurement))) |                        <span class="comment">//</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;              beluga::actions::normalize(policy);</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        },</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        execution_policy_, motion_model_, sensor_model_);</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> random_state_probability = random_probability_estimator_(particles_);</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keywordflow">if</span> (resample_policy_(particles_)) {</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;      <span class="keyword">auto</span> random_state = ranges::compose(beluga::make_from_state&lt;particle_type&gt;, std::ref(map_distribution_));</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;      <span class="keywordflow">if</span> (random_state_probability &gt; 0.0) {</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        random_probability_estimator_.<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">reset</a>();</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;      }</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;      particles_ |= beluga::views::sample |</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;                    beluga::views::random_intersperse(std::move(random_state), random_state_probability) |</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;                    beluga::views::take_while_kld(</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;                        spatial_hasher_,        <span class="comment">//</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;                        params_.<a class="code" href="structbeluga__ros_1_1AmclParams.html#aa2d939d5e72c4babd8d38fe00839c658">min_particles</a>,  <span class="comment">//</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;                        params_.<a class="code" href="structbeluga__ros_1_1AmclParams.html#a00dd3e7054b46e2501a9e912a9c0bfaa">max_particles</a>,  <span class="comment">//</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;                        params_.<a class="code" href="structbeluga__ros_1_1AmclParams.html#a4a7ab2bb1d2527e39a4a25fae5cafb78">kld_epsilon</a>,    <span class="comment">//</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;                        params_.<a class="code" href="structbeluga__ros_1_1AmclParams.html#a4f6c34f8c8041ca92cdf182f90a426ac">kld_z</a>) |</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;                    beluga::actions::assign;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    }</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    force_update_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <span class="keywordflow">return</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a3f8114604160ec3d3fd272f183f621f3">beluga::estimate</a>(beluga::views::states(particles_), beluga::views::weights(particles_));</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;  }</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
+<div class="line"><a name="l00230"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#affa59f4a974b8d047bda4463a92c8d46">  230</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#affa59f4a974b8d047bda4463a92c8d46">force_update</a>() { force_update_ = <span class="keyword">true</span>; }</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1TupleVector.html">beluga::TupleVector&lt;particle_type&gt;</a> particles_;</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;  <a class="code" href="structbeluga__ros_1_1AmclParams.html">AmclParams</a> params_;</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1MultivariateUniformDistribution.html">beluga::MultivariateUniformDistribution&lt;Sophus::SE2d, beluga_ros::OccupancyGrid&gt;</a> map_distribution_;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;  <a class="code" href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">motion_model_variant</a> motion_model_;</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;  <a class="code" href="classbeluga__ros_1_1Amcl.html#aaa2f9ea60afb2d085a4e0db60676c73f">sensor_model_variant</a> sensor_model_;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;  <a class="code" href="classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">execution_policy_variant</a> execution_policy_;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1spatial__hash.html">beluga::spatial_hash&lt;Sophus::SE2d&gt;</a> spatial_hasher_;</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1ThrunRecoveryProbabilityEstimator.html">beluga::ThrunRecoveryProbabilityEstimator</a> random_probability_estimator_;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1policy.html">beluga::any_policy&lt;Sophus::SE2d&gt;</a> update_policy_;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1policy.html">beluga::any_policy</a>&lt;decltype(particles_)&gt; resample_policy_;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160; </div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1CircularArray.html">beluga::RollingWindow&lt;Sophus::SE2d, 2&gt;</a> control_action_window_;</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;  <span class="keywordtype">bool</span> force_update_{<span class="keyword">true</span>};</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;};</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;}  <span class="comment">// namespace beluga_ros</span></div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_ROS_AMCL_HPP</span></div>
+<div class="ttc" id="abeluga_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/beluga_8hpp.html">beluga.hpp</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1BeamSensorModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1CircularArray_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1CircularArray.html">beluga::CircularArray</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1DifferentialDriveModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1DifferentialDriveModel.html">beluga::DifferentialDriveModel</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1LikelihoodFieldModel.html">beluga::LikelihoodFieldModel</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1MultivariateNormalDistribution_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1MultivariateNormalDistribution.html">beluga::MultivariateNormalDistribution</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1MultivariateUniformDistribution_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1MultivariateUniformDistribution.html">beluga::MultivariateUniformDistribution</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1OmnidirectionalDriveModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1StationaryModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1ThrunRecoveryProbabilityEstimator.html">beluga::ThrunRecoveryProbabilityEstimator</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html_a3a5f7b123f1a2065e4f50e0ea46126ea"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">beluga::ThrunRecoveryProbabilityEstimator::reset</a></div><div class="ttdeci">constexpr void reset() noexcept</div></div>
+<div class="ttc" id="aclassbeluga_1_1TupleVector_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1TupleVector.html">beluga::TupleVector</a></div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></div><div class="ttdef"><b>Definition:</b> amcl.hpp:88</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a21d35994c9082f5e7c44759bad1b5058"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">beluga_ros::Amcl::motion_model_variant</a></div><div class="ttdeci">std::variant&lt; beluga::DifferentialDriveModel, beluga::OmnidirectionalDriveModel, beluga::StationaryModel &gt; motion_model_variant</div><div class="ttdoc">Motion model variant type for runtime selection support.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:97</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a3cb115f47859bbcb7253ef5341adb23e"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a3cb115f47859bbcb7253ef5341adb23e">beluga_ros::Amcl::initialize_from_map</a></div><div class="ttdeci">void initialize_from_map()</div><div class="ttdoc">Initialize particles using the default map distribution.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:157</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a57cc8a88b38595c3f9dbaf7c89ddd0cc"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">beluga_ros::Amcl::execution_policy_variant</a></div><div class="ttdeci">std::variant&lt; std::execution::sequenced_policy, std::execution::parallel_policy &gt; execution_policy_variant</div><div class="ttdoc">Execution policy variant type for runtime selection support.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:105</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a7d8c6b65cf6cc0d0b958c8290d46c378"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a7d8c6b65cf6cc0d0b958c8290d46c378">beluga_ros::Amcl::update_map</a></div><div class="ttdeci">void update_map(beluga_ros::OccupancyGrid map)</div><div class="ttdoc">Update the map used for localization.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:160</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a978000a10d56de7f709ecd526dbc61f2"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a978000a10d56de7f709ecd526dbc61f2">beluga_ros::Amcl::particles</a></div><div class="ttdeci">const auto &amp; particles() const</div><div class="ttdoc">Returns a reference to the current set of particles.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:136</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_aa586ffdda4cddc4d4f030618e05fc227"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#aa586ffdda4cddc4d4f030618e05fc227">beluga_ros::Amcl::particle_type</a></div><div class="ttdeci">std::tuple&lt; Sophus::SE2d, beluga::Weight &gt; particle_type</div><div class="ttdoc">Weighted SE(2) state particle type.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:91</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_aaa2f9ea60afb2d085a4e0db60676c73f"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#aaa2f9ea60afb2d085a4e0db60676c73f">beluga_ros::Amcl::sensor_model_variant</a></div><div class="ttdeci">std::variant&lt; beluga::LikelihoodFieldModel&lt; beluga_ros::OccupancyGrid &gt;, beluga::BeamSensorModel&lt; beluga_ros::OccupancyGrid &gt; &gt; sensor_model_variant</div><div class="ttdoc">Sensor model variant type for runtime selection support.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:102</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_ab3663a01101317d97b1cc7a86c9c8bc0"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#ab3663a01101317d97b1cc7a86c9c8bc0">beluga_ros::Amcl::initialize</a></div><div class="ttdeci">void initialize(Sophus::SE2d pose, Sophus::Matrix3d covariance)</div><div class="ttdoc">Initialize particles with a given pose and covariance.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:152</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_acddd3fde9c76db51abc0639adee47257"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#acddd3fde9c76db51abc0639adee47257">beluga_ros::Amcl::initialize</a></div><div class="ttdeci">void initialize(Distribution distribution)</div><div class="ttdoc">Initialize particles using a custom distribution.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:140</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_af2c63feaade169e2aed88f46bd493c15"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#af2c63feaade169e2aed88f46bd493c15">beluga_ros::Amcl::update</a></div><div class="ttdeci">auto update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan) -&gt; std::optional&lt; std::pair&lt; Sophus::SE2d, Sophus::Matrix3d &gt;&gt;</div><div class="ttdoc">Update particles based on motion and sensor information.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:178</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_afa212077f1c1f8a75fccb2f706741628"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#afa212077f1c1f8a75fccb2f706741628">beluga_ros::Amcl::Amcl</a></div><div class="ttdeci">Amcl(beluga_ros::OccupancyGrid map, motion_model_variant motion_model, sensor_model_variant sensor_model, const AmclParams &amp;params=AmclParams(), execution_policy_variant execution_policy=std::execution::seq)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:115</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_affa59f4a974b8d047bda4463a92c8d46"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#affa59f4a974b8d047bda4463a92c8d46">beluga_ros::Amcl::force_update</a></div><div class="ttdeci">void force_update()</div><div class="ttdoc">Force a manual update of the particles on the next iteration of the filter.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:230</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1LaserScan_html"><div class="ttname"><a href="classbeluga__ros_1_1LaserScan.html">beluga_ros::LaserScan</a></div><div class="ttdoc">Thin wrapper type for 2D sensor_msgs/LaserScan messages.</div><div class="ttdef"><b>Definition:</b> laser_scan.hpp:34</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1OccupancyGrid_html"><div class="ttname"><a href="classbeluga__ros_1_1OccupancyGrid.html">beluga_ros::OccupancyGrid</a></div><div class="ttdoc">Thin wrapper type for 2D nav_msgs/OccupancyGrid messages.</div><div class="ttdef"><b>Definition:</b> occupancy_grid.hpp:47</div></div>
+<div class="ttc" id="aevery__n_8hpp_html_afefa5c41804340c02566a357b4beb933"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/every__n_8hpp.html#afefa5c41804340c02566a357b4beb933">every_n</a></div><div class="ttdeci">constexpr detail::every_n_fn every_n</div></div>
+<div class="ttc" id="alaser__scan_8hpp_html"><div class="ttname"><a href="laser__scan_8hpp.html">laser_scan.hpp</a></div><div class="ttdoc">Implementation of sensor_msgs/LaserScan wrapper type.</div></div>
+<div class="ttc" id="anamespacebeluga__ros_html"><div class="ttname"><a href="namespacebeluga__ros.html">beluga_ros</a></div><div class="ttdoc">The main Beluga ROS namespace.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:33</div></div>
+<div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a></div></div>
+<div class="ttc" id="anamespacebeluga_html_a3f8114604160ec3d3fd272f183f621f3"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a3f8114604160ec3d3fd272f183f621f3">beluga::estimate</a></div><div class="ttdeci">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Sophus::Matrix3&lt; Scalar &gt; &gt; estimate(Poses &amp;&amp;poses, Weights &amp;&amp;weights)</div></div>
+<div class="ttc" id="aoccupancy__grid_8hpp_html"><div class="ttname"><a href="occupancy__grid_8hpp.html">occupancy_grid.hpp</a></div><div class="ttdoc">Implementation of nav_msgs/OccupancyGrid wrapper type.</div></div>
+<div class="ttc" id="aon__motion_8hpp_html_a54bb57da3afb678567632c2c8362afb8"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/on__motion_8hpp.html#a54bb57da3afb678567632c2c8362afb8">on_motion</a></div><div class="ttdeci">constexpr detail::on_motion_fn on_motion</div></div>
+<div class="ttc" id="astructbeluga_1_1policy_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1policy.html">beluga::policy</a></div></div>
+<div class="ttc" id="astructbeluga_1_1spatial__hash_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1spatial__hash.html">beluga::spatial_hash&lt; Sophus::SE2d &gt;</a></div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html">beluga_ros::AmclParams</a></div><div class="ttdoc">Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:36</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_a00dd3e7054b46e2501a9e912a9c0bfaa"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#a00dd3e7054b46e2501a9e912a9c0bfaa">beluga_ros::AmclParams::max_particles</a></div><div class="ttdeci">std::size_t max_particles</div><div class="ttdoc">Maximum allowed number of particles.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:57</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_a0581733bc4199938f7f0069ef9e21417"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#a0581733bc4199938f7f0069ef9e21417">beluga_ros::AmclParams::resample_interval</a></div><div class="ttdeci">std::size_t resample_interval</div><div class="ttdoc">Number of filter updates required before resampling.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:44</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_a4a7ab2bb1d2527e39a4a25fae5cafb78"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#a4a7ab2bb1d2527e39a4a25fae5cafb78">beluga_ros::AmclParams::kld_epsilon</a></div><div class="ttdeci">double kld_epsilon</div><div class="ttdoc">Maximum particle filter population error between the true distribution and the estimated distribution...</div><div class="ttdef"><b>Definition:</b> amcl.hpp:70</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_a4f6c34f8c8041ca92cdf182f90a426ac"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#a4f6c34f8c8041ca92cdf182f90a426ac">beluga_ros::AmclParams::kld_z</a></div><div class="ttdeci">double kld_z</div><div class="ttdoc">Upper standard normal quantile for , where  is the probability that the error in the estimated distri...</div><div class="ttdef"><b>Definition:</b> amcl.hpp:74</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_a52d6bb972c89eb831111bd310a479d24"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#a52d6bb972c89eb831111bd310a479d24">beluga_ros::AmclParams::alpha_fast</a></div><div class="ttdeci">double alpha_fast</div><div class="ttdoc">Exponential decay rate for the fast average weight filter, used in deciding when to recover from a ba...</div><div class="ttdef"><b>Definition:</b> amcl.hpp:65</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_a589009cac691426b727807a536c85095"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#a589009cac691426b727807a536c85095">beluga_ros::AmclParams::update_min_a</a></div><div class="ttdeci">double update_min_a</div><div class="ttdoc">Rotational movement required from last resample for resampling to happen again.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:41</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_a5ac3c9df576531e7df10705a7d0746fd"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#a5ac3c9df576531e7df10705a7d0746fd">beluga_ros::AmclParams::alpha_slow</a></div><div class="ttdeci">double alpha_slow</div><div class="ttdoc">Exponential decay rate for the slow average weight filter, used in deciding when to recover from a ba...</div><div class="ttdef"><b>Definition:</b> amcl.hpp:61</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_a866a60c3222ac0ab5c8d08d5f2282c61"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#a866a60c3222ac0ab5c8d08d5f2282c61">beluga_ros::AmclParams::spatial_resolution_theta</a></div><div class="ttdeci">double spatial_resolution_theta</div><div class="ttdoc">Spatial resolution around the z-axis to create buckets for KLD resampling.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:83</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_a880a03d7693ce3cd4ea7a537b3d4e978"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#a880a03d7693ce3cd4ea7a537b3d4e978">beluga_ros::AmclParams::spatial_resolution_x</a></div><div class="ttdeci">double spatial_resolution_x</div><div class="ttdoc">Spatial resolution along the x-axis to create buckets for KLD resampling.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:77</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_aa2d939d5e72c4babd8d38fe00839c658"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#aa2d939d5e72c4babd8d38fe00839c658">beluga_ros::AmclParams::min_particles</a></div><div class="ttdeci">std::size_t min_particles</div><div class="ttdoc">Minimum allowed number of particles.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:54</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_ab8a05818beb176595f66ee1aef72ac40"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#ab8a05818beb176595f66ee1aef72ac40">beluga_ros::AmclParams::spatial_resolution_y</a></div><div class="ttdeci">double spatial_resolution_y</div><div class="ttdoc">Spatial resolution along the y-axis to create buckets for KLD resampling.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:80</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_ae70b06fe289b933af0de8d0556624225"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#ae70b06fe289b933af0de8d0556624225">beluga_ros::AmclParams::selective_resampling</a></div><div class="ttdeci">bool selective_resampling</div><div class="ttdoc">Whether to enable selective resampling  to help avoid loss of diversity in the particle population....</div><div class="ttdef"><b>Definition:</b> amcl.hpp:51</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1AmclParams_html_afcfc77d7b83b71a6172f7c3e55eb0d28"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html#afcfc77d7b83b71a6172f7c3e55eb0d28">beluga_ros::AmclParams::update_min_d</a></div><div class="ttdeci">double update_min_d</div><div class="ttdoc">Translational movement required from last resample for resampling to happen again.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:38</div></div>
+<div class="ttc" id="astructstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

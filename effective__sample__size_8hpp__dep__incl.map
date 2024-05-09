@@ -1,8 +1,0 @@
-<map id="/__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm/effective_sample_size.hpp" name="/__w/beluga/beluga/src/beluga/beluga/include/beluga/algorithm/effective_sample_size.hpp">
-<area shape="rect" id="node1" title="Implementation of an algorithm to calculate the effective sample size (ESS)." alt="" coords="110,5,309,76"/>
-<area shape="rect" id="node2" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,243,197,299"/>
-<area shape="rect" id="node5" href="$on__effective__size__drop_8hpp.html" title="Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric." alt="" coords="195,124,403,195"/>
-<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="113,347,305,403"/>
-<area shape="rect" id="node4" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="91,451,327,507"/>
-<area shape="rect" id="node6" href="$policies_8hpp.html" title="Implementation of useful policies." alt="" coords="221,243,413,299"/>
-</map>

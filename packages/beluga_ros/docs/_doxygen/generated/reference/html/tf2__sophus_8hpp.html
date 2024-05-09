@@ -1,0 +1,631 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga ROS: /home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp File Reference &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga_ros/docs/_doxygen/generated/reference/html/tf2__sophus_8hpp';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga/docs/index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_amcl/docs/index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga_ros/docs/_doxygen/generated/reference/html/tf2__sophus_8hpp.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp File Reference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="home-runner-work-beluga-beluga-beluga-ros-include-beluga-ros-tf2-sophus-hpp-file-reference">
+<h1>/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp File Reference<a class="headerlink" href="#home-runner-work-beluga-beluga-beluga-ros-include-beluga-ros-tf2-sophus-hpp-file-reference" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga ROS: /home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga ROS
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_724afa0a6cc96469a92ffa22ab208279.html">beluga_ros</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle">
+<div class="title">tf2_sophus.hpp File Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Message conversion API overloads for <code><a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a></code> types.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;tf2/convert.h&gt;</code><br />
+<code>#include &lt;tf2/utils.h&gt;</code><br />
+<code>#include &lt;beluga_ros/messages.hpp&gt;</code><br />
+<code>#include &lt;sophus/se2.hpp&gt;</code><br />
+<code>#include &lt;sophus/se3.hpp&gt;</code><br />
+<code>#include &lt;sophus/types.hpp&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for tf2_sophus.hpp:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="tf2__sophus_8hpp__incl.svg" width="100%" height="406"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="tf2__sophus_8hpp__dep__incl.svg" width="211" height="171"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</div>
+<p><a href="tf2__sophus_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacetf2"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetf2.html">tf2</a></td></tr>
+<tr class="memdesc:namespacetf2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="namespacetf2.html" title="tf2 namespace extension for message conversion overload resolution.">tf2</a></code> namespace extension for message conversion overload resolution. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceSophus"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSophus.html">Sophus</a></td></tr>
+<tr class="memdesc:namespaceSophus"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a></code> namespace extension for message conversion function overload resolution (ADL enabled). <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Pose &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">tf2::toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</td></tr>
+<tr class="memdesc:a0a74cb89468798ba6738c62f3fdca4cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Pose message.  <a href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">More...</a><br /></td></tr>
+<tr class="separator:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4511f028283bafd60e8fe142ca2bee2e"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a4511f028283bafd60e8fe142ca2bee2e"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Pose &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a4511f028283bafd60e8fe142ca2bee2e">tf2::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</td></tr>
+<tr class="memdesc:a4511f028283bafd60e8fe142ca2bee2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Pose message.  <a href="namespacetf2.html#a4511f028283bafd60e8fe142ca2bee2e">More...</a><br /></td></tr>
+<tr class="separator:a4511f028283bafd60e8fe142ca2bee2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4165e54c2868393e7d80cc82809ce366"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a4165e54c2868393e7d80cc82809ce366"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a4165e54c2868393e7d80cc82809ce366">tf2::toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;in)</td></tr>
+<tr class="memdesc:a4165e54c2868393e7d80cc82809ce366"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Transform message.  <a href="namespacetf2.html#a4165e54c2868393e7d80cc82809ce366">More...</a><br /></td></tr>
+<tr class="separator:a4165e54c2868393e7d80cc82809ce366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a48396a86427eec876d6d2959411ffa"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a0a48396a86427eec876d6d2959411ffa"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a0a48396a86427eec876d6d2959411ffa">tf2::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in)</td></tr>
+<tr class="memdesc:a0a48396a86427eec876d6d2959411ffa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Transform message.  <a href="namespacetf2.html#a0a48396a86427eec876d6d2959411ffa">More...</a><br /></td></tr>
+<tr class="separator:a0a48396a86427eec876d6d2959411ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5b19c7fe5425ac099422ea142b7b459"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:ab5b19c7fe5425ac099422ea142b7b459"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#ab5b19c7fe5425ac099422ea142b7b459">tf2::fromMsg</a> (const beluga_ros::msg::Transform &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:ab5b19c7fe5425ac099422ea142b7b459"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type.  <a href="namespacetf2.html#ab5b19c7fe5425ac099422ea142b7b459">More...</a><br /></td></tr>
+<tr class="separator:ab5b19c7fe5425ac099422ea142b7b459"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a9fc7b4c5334421b9c6d5fdaa9448ff12">tf2::fromMsg</a> (const beluga_ros::msg::Transform &amp;msg, Sophus::SE3&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type.  <a href="namespacetf2.html#a9fc7b4c5334421b9c6d5fdaa9448ff12">More...</a><br /></td></tr>
+<tr class="separator:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a2b9d8356dac0b2bc7266ecf5d338dc9c">tf2::fromMsg</a> (const beluga_ros::msg::Pose &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type.  <a href="namespacetf2.html#a2b9d8356dac0b2bc7266ecf5d338dc9c">More...</a><br /></td></tr>
+<tr class="separator:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a057c5840ca308e4f2f38beaa02ba293e"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a057c5840ca308e4f2f38beaa02ba293e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a057c5840ca308e4f2f38beaa02ba293e">tf2::fromMsg</a> (const beluga_ros::msg::Pose &amp;msg, Sophus::SE3&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:a057c5840ca308e4f2f38beaa02ba293e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type.  <a href="namespacetf2.html#a057c5840ca308e4f2f38beaa02ba293e">More...</a><br /></td></tr>
+<tr class="separator:a057c5840ca308e4f2f38beaa02ba293e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afce89eb3573108e41ac4c57448e2fab5"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename, std::size_t &gt; class Array, typename Scalar &gt; </td></tr>
+<tr class="memitem:afce89eb3573108e41ac4c57448e2fab5"><td class="memTemplItemLeft" align="right" valign="top">Array&lt; Scalar, 36 &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#afce89eb3573108e41ac4c57448e2fab5">tf2::covarianceEigenToRowMajor</a> (const Sophus::Matrix3&lt; Scalar &gt; &amp;in, Array&lt; Scalar, 36 &gt; &amp;out)</td></tr>
+<tr class="memdesc:afce89eb3573108e41ac4c57448e2fab5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> (ie. Eigen) 3x3 covariance matrix to a 6x6 row-major array.  <a href="namespacetf2.html#afce89eb3573108e41ac4c57448e2fab5">More...</a><br /></td></tr>
+<tr class="separator:afce89eb3573108e41ac4c57448e2fab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb1233c4d542bb7a5e8a1497b37813d0"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename, std::size_t &gt; class Array, typename Scalar &gt; </td></tr>
+<tr class="memitem:adb1233c4d542bb7a5e8a1497b37813d0"><td class="memTemplItemLeft" align="right" valign="top">Sophus::Matrix3&lt; Scalar &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#adb1233c4d542bb7a5e8a1497b37813d0">tf2::covarianceRowMajorToEigen</a> (const Array&lt; Scalar, 36 &gt; &amp;in, Sophus::Matrix3&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:adb1233c4d542bb7a5e8a1497b37813d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 6x6 row-major array to an Eigen 3x3 covariance matrix.  <a href="namespacetf2.html#adb1233c4d542bb7a5e8a1497b37813d0">More...</a><br /></td></tr>
+<tr class="separator:adb1233c4d542bb7a5e8a1497b37813d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a8cd23b674364e3312d842e8ecc9c15"><td class="memTemplParams" colspan="2"><a id="a3a8cd23b674364e3312d842e8ecc9c15"></a>
+template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a3a8cd23b674364e3312d842e8ecc9c15"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a3a8cd23b674364e3312d842e8ecc9c15">Sophus::toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:a3a8cd23b674364e3312d842e8ecc9c15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an SE2 <code>pose</code> to a <code>geometry_msgs/Transform</code> message. <br /></td></tr>
+<tr class="separator:a3a8cd23b674364e3312d842e8ecc9c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a736860469ddeff215b25af5d506a0071"><td class="memTemplParams" colspan="2"><a id="a736860469ddeff215b25af5d506a0071"></a>
+template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a736860469ddeff215b25af5d506a0071"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a736860469ddeff215b25af5d506a0071">Sophus::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in)</td></tr>
+<tr class="memdesc:a736860469ddeff215b25af5d506a0071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an SE3 <code>pose</code> to a <code>geometry_msgs/Transform</code> message. <br /></td></tr>
+<tr class="separator:a736860469ddeff215b25af5d506a0071"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c54d773fcaa635dc4c00ff079521c69"><td class="memTemplParams" colspan="2"><a id="a7c54d773fcaa635dc4c00ff079521c69"></a>
+template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a7c54d773fcaa635dc4c00ff079521c69"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a7c54d773fcaa635dc4c00ff079521c69">Sophus::fromMsg</a> (const beluga_ros::msg::Transform &amp;message, Sophus::SE2&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:a7c54d773fcaa635dc4c00ff079521c69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE2 <code>pose</code> from a <code>geometry_msgs/Transform</code> <code>message</code>. <br /></td></tr>
+<tr class="separator:a7c54d773fcaa635dc4c00ff079521c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b8567c3776fb02ce938f657c6f4d41d"><td class="memTemplParams" colspan="2"><a id="a2b8567c3776fb02ce938f657c6f4d41d"></a>
+template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a2b8567c3776fb02ce938f657c6f4d41d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a2b8567c3776fb02ce938f657c6f4d41d">Sophus::fromMsg</a> (const beluga_ros::msg::Transform &amp;message, Sophus::SE3&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:a2b8567c3776fb02ce938f657c6f4d41d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE3 <code>pose</code> from a <code>geometry_msgs/Transform</code> <code>message</code>. <br /></td></tr>
+<tr class="separator:a2b8567c3776fb02ce938f657c6f4d41d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19b5cbaf126d6d81a8075a5428fcc52c"><td class="memTemplParams" colspan="2"><a id="a19b5cbaf126d6d81a8075a5428fcc52c"></a>
+template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a19b5cbaf126d6d81a8075a5428fcc52c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a19b5cbaf126d6d81a8075a5428fcc52c">Sophus::fromMsg</a> (const beluga_ros::msg::Pose &amp;message, Sophus::SE2&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:a19b5cbaf126d6d81a8075a5428fcc52c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE2 <code>pose</code> from a <code>geometry_msgs/Pose</code> <code>message</code>. <br /></td></tr>
+<tr class="separator:a19b5cbaf126d6d81a8075a5428fcc52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98875ce46c31bbba5aa6cfddf0701e8e"><td class="memTemplParams" colspan="2"><a id="a98875ce46c31bbba5aa6cfddf0701e8e"></a>
+template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a98875ce46c31bbba5aa6cfddf0701e8e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a98875ce46c31bbba5aa6cfddf0701e8e">Sophus::fromMsg</a> (const beluga_ros::msg::Pose &amp;message, Sophus::SE3&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:a98875ce46c31bbba5aa6cfddf0701e8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE3 <code>pose</code> from a <code>geometry_msgs/Pose</code> <code>message</code>. <br /></td></tr>
+<tr class="separator:a98875ce46c31bbba5aa6cfddf0701e8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Message conversion API overloads for <code><a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a></code> types. </p>
+</div></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

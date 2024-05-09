@@ -1,0 +1,844 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ROS Reference &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga_amcl/docs/ros-reference';</script>
+    <script src="../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ROS 2 Reference" href="ros2-reference.html" />
+    <link rel="prev" title="Overview" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../beluga/docs/index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../beluga_ros/docs/index.html">beluga_ros</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">beluga_amcl</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">ROS Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ros2-reference.html">ROS 2 Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_doxygen/generated/reference/html/index.html">API Reference</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/packages/beluga_amcl/docs/ros-reference.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>ROS Reference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nodelets">Nodelets</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beluga-amcl-amclnodelet">beluga_amcl/AmclNodelet</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#interface-parameters">Interface Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-pose-and-transform-broadcast-parameters">Initial Pose and Transform Broadcast Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-filter-parameters">Particle Filter Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motion-model-parameters">Motion Model Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-model-parameters">Observation Model Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#misc-parameters">Misc Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#published-topics">Published topics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subscribed-topics">Subscribed topics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subscribed-transforms">Subscribed transforms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#broadcasted-transforms">Broadcasted transforms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advertised-services">Advertised services</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#called-services">Called services</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility-notes">Compatibility Notes</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ros-reference">
+<h1>ROS Reference<a class="headerlink" href="#ros-reference" title="Link to this heading">#</a></h1>
+<section id="nodelets">
+<h2>Nodelets<a class="headerlink" href="#nodelets" title="Link to this heading">#</a></h2>
+<section id="beluga-amcl-amclnodelet">
+<h3>beluga_amcl/AmclNodelet<a class="headerlink" href="#beluga-amcl-amclnodelet" title="Link to this heading">#</a></h3>
+<p>2D AMCL as a nodelet. The nodelet is implemented as a thin wrapper, in charge of managing ROS communication, configuration, data conversion,
+and ROS node initialization and shutdown, built around a single ROS agnostic Beluga particle filter.</p>
+<p>Also available as a standalone <code class="docutils literal notranslate"><span class="pre">amcl_node</span></code> executable.</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
+<section id="interface-parameters">
+<h5>Interface Parameters<a class="headerlink" href="#interface-parameters" title="Link to this heading">#</a></h5>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">base_frame_id</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>Robot base frame name rigidly attached to the mobile robot base.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">base_footprint</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">odom_frame_id</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>Odometry frame name. The pose of a mobile platform relative to this frame can drift over time but it must be continuous (without discrete jumps).</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">odom</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">global_frame_id</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>Map frame name. This node can estimate and publish the transform between global and odometry frames. Pose and map messages should use this coordinate frame.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">map</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">scan_topic</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>The name of the topic where laser scans will be published. A transform must exist between the coordinate frame used in the scan messages and the base frame of the robot.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">scan</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">map_topic</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>The name of the topic to subscribe to for map updates. Typically published by the <a class="reference external" href="https://github.com/ros-planning/navigation2/tree/main/nav2_map_server">map server</a>.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">map</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">map_service</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>The name of the service to request map updates to.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">static_map</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">use_map_topic</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>Whether to use a map topic or a map service for filter (re)initialization.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">initial_pose_topic</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>The name of the topic where an initial pose can be published.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">initialpose</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="initial-pose-and-transform-broadcast-parameters">
+<h5>Initial Pose and Transform Broadcast Parameters<a class="headerlink" href="#initial-pose-and-transform-broadcast-parameters" title="Link to this heading">#</a></h5>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">set_initial_pose</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>Whether to set initial pose from the <code class="docutils literal notranslate"><span class="pre">initial_pose*</span></code> parameters or wait for an initial pose message.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">initial_pose_[x,</span> <span class="pre">y,</span> <span class="pre">a]</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>X, Y and yaw coordinates of initial pose of robot base frame in global frame.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">initial_cov_[xx,</span> <span class="pre">yy,</span> <span class="pre">aa,</span> <span class="pre">xy,</span> <span class="pre">xa,</span> <span class="pre">ya]</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Covariance to use with the initial pose when initializing the particle filter.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">always_reset_initial_pose</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>Whether to wait for an initial pose provided either via topic or <code class="docutils literal notranslate"><span class="pre">initial_pose*</span></code> parameter when reset or use the last known pose to initialize.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">save_pose_rate</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>Rate at which to store the last estimated pose and covariance to the parameter server.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">first_map_only</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>Whether to ignore any other map messages on the <code class="docutils literal notranslate"><span class="pre">map</span></code> topic after the first one.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tf_broadcast</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>Whether to publish the transform between the global frame and the odometry frame. The transform will be published only if an initial pose was set via topic or parameters, or if global localization was requested via the provided service.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">transform_tolerance</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Time lapse, in seconds, by which to post-date the global to odom transform to indicate that it is valid in the future.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="particle-filter-parameters">
+<h5>Particle Filter Parameters<a class="headerlink" href="#particle-filter-parameters" title="Link to this heading">#</a></h5>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">max_particles</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">integer</span></code>)</em></dt><dd><p>Maximum allowed number of particles.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">5000</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">min_particles</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">integer</span></code>)</em></dt><dd><p>Minimum allowed number of particles.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pf_z</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Upper standard normal quantile for <span class="math notranslate nohighlight">\(P\)</span>, where <span class="math notranslate nohighlight">\(P\)</span> is the probability that the error in the estimated distribution will be less than <code class="docutils literal notranslate"><span class="pre">pf_err</span></code> in KLD resampling <span id="id1">[<a class="reference internal" href="../../../resources/bibliography.html#id6" title="Dieter Fox. Kld-sampling: adaptive particle filters. In Proceedings of the 14th International Conference on Neural Information Processing Systems: Natural and Synthetic, NIPS'01, 713-720. Cambridge, MA, USA, 2001. MIT Press. doi:10.5555/2980539.2980632.">Fox01</a>]</span>.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.99</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pf_err</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Maximum particle filter population error between the true distribution and the estimated distribution. It is used in KLD resampling <span id="id2">[<a class="reference internal" href="../../../resources/bibliography.html#id6" title="Dieter Fox. Kld-sampling: adaptive particle filters. In Proceedings of the 14th International Conference on Neural Information Processing Systems: Natural and Synthetic, NIPS'01, 713-720. Cambridge, MA, USA, 2001. MIT Press. doi:10.5555/2980539.2980632.">Fox01</a>]</span> to limit the allowed number of particles to the minimum necessary.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">spatial_resolution_[x,</span> <span class="pre">y,</span> <span class="pre">theta]</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Spatial resolution to create buckets for KLD resampling <span id="id3">[<a class="reference internal" href="../../../resources/bibliography.html#id6" title="Dieter Fox. Kld-sampling: adaptive particle filters. In Proceedings of the 14th International Conference on Neural Information Processing Systems: Natural and Synthetic, NIPS'01, 713-720. Cambridge, MA, USA, 2001. MIT Press. doi:10.5555/2980539.2980632.">Fox01</a>]</span>.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.5</span></code> for translation and <code class="docutils literal notranslate"><span class="pre">10°</span></code> for rotation.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">recovery_alpha_fast</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Exponential decay rate for the fast average weight filter, used in deciding when to recover from a bad approximation by adding random poses <span id="id4">[<a class="reference internal" href="../../../resources/bibliography.html#id2" title="S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. ISBN 9780262201629. URL: https://books.google.com.ar/books?id=jtSMEAAAQBAJ.">TBF05</a>]</span>.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.001</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">recovery_alpha_slow</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Exponential decay rate for the slow average weight filter, used in deciding when to recover from a bad approximation by adding random poses <span id="id5">[<a class="reference internal" href="../../../resources/bibliography.html#id2" title="S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. ISBN 9780262201629. URL: https://books.google.com.ar/books?id=jtSMEAAAQBAJ.">TBF05</a>]</span>.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">resample_interval</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">integer</span></code>)</em></dt><dd><p>Number of filter updates required before resampling.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selective_resampling</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>, read-only)</em></dt><dd><p>Whether to enable selective resampling <span id="id6">[<a class="reference internal" href="../../../resources/bibliography.html#id4" title="Giorgio Grisetti, Cyrill Stachniss, and Wolfram Burgard. Improved techniques for grid mapping with rao-blackwellized particle filters. IEEE Transactions on Robotics, 23(1):34-46, 2007. doi:10.1109/TRO.2006.889486.">GSB07</a>]</span> to help avoid loss of diversity in the particle population. The resampling step will only happen if the effective number of particles <span class="math notranslate nohighlight">\((N_{eff} = 1/ {\sum w_i^2})\)</span> is lower than half the current number of particles, where <span class="math notranslate nohighlight">\(w_i\)</span> refers to the normalized weight of each particle.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">update_min_a</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Minimum rotation required from last resample for resampling to happen again. Must be in the <span class="math notranslate nohighlight">\([0, 2\pi]\)</span> interval.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">update_min_d</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Minimum translation required from last resample for resampling to happen again. Must be nonnegative.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.523598</span></code> (<span class="math notranslate nohighlight">\(\pi / 6\)</span>).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">execution_policy</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>Execution policy used to apply the motion update and importance weight steps to each particle. <code class="docutils literal notranslate"><span class="pre">seq</span></code> for sequential execution and <code class="docutils literal notranslate"><span class="pre">par</span></code> for parallel execution.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">seq</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="motion-model-parameters">
+<h5>Motion Model Parameters<a class="headerlink" href="#motion-model-parameters" title="Link to this heading">#</a></h5>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">robot_model_type</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>Which odometry motion model to use. Supported models are <code class="docutils literal notranslate"><span class="pre">differential_drive</span></code> <span id="id7">[<a class="reference internal" href="../../../resources/bibliography.html#id2" title="S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. ISBN 9780262201629. URL: https://books.google.com.ar/books?id=jtSMEAAAQBAJ.">TBF05</a>]</span>, <code class="docutils literal notranslate"><span class="pre">omnidirectional_drive</span></code> and <code class="docutils literal notranslate"><span class="pre">stationary</span></code>.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">differential_drive</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">odom_alpha1</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Expected process noise in odometry’s rotation estimate from rotation for the <code class="docutils literal notranslate"><span class="pre">differential_drive</span></code> and <code class="docutils literal notranslate"><span class="pre">omnidirectional_drive</span></code> models. Must be nonnegative.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">odom_alpha2</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Expected process noise in odometry’s rotation estimate from translation for the <code class="docutils literal notranslate"><span class="pre">differential_drive</span></code> and <code class="docutils literal notranslate"><span class="pre">omnidirectional_drive</span></code> models. Must be nonnegative.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">odom_alpha3</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Expected process noise in odometry’s translation estimate from translation for the <code class="docutils literal notranslate"><span class="pre">differential_drive</span></code> and <code class="docutils literal notranslate"><span class="pre">omnidirectional_drive</span></code> models. Must be nonnegative.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">odom_alpha4</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Expected process noise in odometry’s translation estimate from rotation for the <code class="docutils literal notranslate"><span class="pre">differential_drive</span></code> and <code class="docutils literal notranslate"><span class="pre">omnidirectional_drive</span></code> models. Must be nonnegative.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">odom_alpha5</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Expected process noise in odometry’s strafe estimate from translation for the <code class="docutils literal notranslate"><span class="pre">omnidirectional_drive</span></code> model. Must be nonnegative.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="observation-model-parameters">
+<h5>Observation Model Parameters<a class="headerlink" href="#observation-model-parameters" title="Link to this heading">#</a></h5>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">laser_model_type</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>Which observation model to use. Supported models are <code class="docutils literal notranslate"><span class="pre">beam</span></code> and <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> as described in <span id="id8">[<a class="reference internal" href="../../../resources/bibliography.html#id2" title="S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. ISBN 9780262201629. URL: https://books.google.com.ar/books?id=jtSMEAAAQBAJ.">TBF05</a>]</span> with the same aggregation formula used in Nav2 AMCL.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_max_range</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Maximum scan range to be considered. Must be nonnegative.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">100.0</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_min_range</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Minimum scan range to be considered. Must be nonnegative.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">max_beams</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">integer</span></code>)</em></dt><dd><p>How many evenly spaced beams in each scan will be used when updating the filter.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_sigma_hit</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Standard deviation of the hit distribution used in <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> and <code class="docutils literal notranslate"><span class="pre">beam</span></code> models.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_z_hit</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Mixture weight for the probability of hitting an obstacle used in <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> and <code class="docutils literal notranslate"><span class="pre">beam</span></code> models.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_z_rand</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Mixture weight for the probability of getting random measurements used in <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> and <code class="docutils literal notranslate"><span class="pre">beam</span></code> models.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_z_max</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Mixture weight for the probability of getting max range measurements used in the <code class="docutils literal notranslate"><span class="pre">beam</span></code> model.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_z_short</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Mixture weight for the probability of getting short measurements used in the <code class="docutils literal notranslate"><span class="pre">beam</span></code> model.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_lambda_short</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Short readings’ exponential distribution parameter used in the <code class="docutils literal notranslate"><span class="pre">beam</span></code> model.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_likelihood_max_dist</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Maximum distance, in meters, to do obstacle inflation on map used in the <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> model.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="misc-parameters">
+<h5>Misc Parameters<a class="headerlink" href="#misc-parameters" title="Link to this heading">#</a></h5>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">std_warn_level_[x,</span> <span class="pre">y,</span> <span class="pre">yaw]</span></code></dt><dd><p>Threshold on the standard deviation of the x, y, and yaw coordinates of the pose estimate before emitting warnings.\</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">restore_defaults</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>Flag to restore parameter defaults. Reset (to <code class="docutils literal notranslate"><span class="pre">false</span></code>) upon restoration.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+<section id="published-topics">
+<h3>Published topics<a class="headerlink" href="#published-topics" title="Link to this heading">#</a></h3>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">particlecloud</span></code></dt><dd><p>Estimated pose distribution published as <code class="docutils literal notranslate"><span class="pre">geometry_msgs/PoseArray</span></code> messages. It will only be published if subscribers are found.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">amcl_pose</span></code></dt><dd><p>Mean and covariance of the estimated pose distribution published as <code class="docutils literal notranslate"><span class="pre">geometry_msgs/PoseWithCovarianceStamped</span></code> messages (assumed Gaussian).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">/diagnostics</span></code></dt><dd><p>Filter <a class="reference external" href="https://wiki.ros.org/diagnostics">diagnostics</a> published as <code class="docutils literal notranslate"><span class="pre">diagnostics_msgs/DiagnosticArray</span></code> messages.</p>
+</dd>
+</dl>
+</section>
+<section id="subscribed-topics">
+<h3>Subscribed topics<a class="headerlink" href="#subscribed-topics" title="Link to this heading">#</a></h3>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;map_topic&gt;</span></code></dt><dd><p>Occupancy grid map updates subscribed as <code class="docutils literal notranslate"><span class="pre">nav_msgs/OccupancyGrid</span></code> messages. Actual topic name is dictated by the <code class="docutils literal notranslate"><span class="pre">map_topic</span></code> parameter.</p>
+</dd>
+<dd><p>Only subscribed if  <code class="docutils literal notranslate"><span class="pre">use_map_topic</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;initial_pose_topic&gt;</span></code></dt><dd><p>Gaussian pose distribution subscribed as <code class="docutils literal notranslate"><span class="pre">geometry_msgs/PoseWithCovarianceStamped</span></code> messages for filter (re)initialization. Actual topic name is dictated by the <code class="docutils literal notranslate"><span class="pre">initial_pose_topic</span></code> parameter.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;scan_topic&gt;</span></code></dt><dd><p>Lidar scan updates subscribed as <code class="docutils literal notranslate"><span class="pre">sensor_msgs/LaserScan</span></code> messages. Actual topic name is dictated by the <code class="docutils literal notranslate"><span class="pre">scan_topic</span></code> parameter.</p>
+</dd>
+</dl>
+</section>
+<section id="subscribed-transforms">
+<h3>Subscribed transforms<a class="headerlink" href="#subscribed-transforms" title="Link to this heading">#</a></h3>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;odom_frame_id&gt;</span></code> → <code class="docutils literal notranslate"><span class="pre">&lt;base_frame_id&gt;</span></code></dt><dd><p>Odometry estimates as transforms from the configured odometry frame to the configured base frame. Used by motion models and resampling policies. Actual frame IDs are dictated by <code class="docutils literal notranslate"><span class="pre">odom_frame_id</span></code> and <code class="docutils literal notranslate"><span class="pre">base_frame_id</span></code> parameters.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;base_frame_id&gt;</span></code> → <code class="docutils literal notranslate"><span class="pre">scan_frame_id</span></code></dt><dd><p>Lidar extrinsics as transforms from the configured base frame to the lidar scan frame. Actual frame IDs are dictated by the <code class="docutils literal notranslate"><span class="pre">base_frame_id</span></code> parameter and <code class="docutils literal notranslate"><span class="pre">header.frame_id</span></code> member in <code class="docutils literal notranslate"><span class="pre">scan_topic</span></code> messages.</p>
+</dd>
+</dl>
+</section>
+<section id="broadcasted-transforms">
+<h3>Broadcasted transforms<a class="headerlink" href="#broadcasted-transforms" title="Link to this heading">#</a></h3>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;global_frame_id&gt;</span></code> → <code class="docutils literal notranslate"><span class="pre">&lt;odom_frame_id&gt;</span></code></dt><dd><p>Transforms from the configured global frame to the configured odometry frame, calculated such that when composed with the corresponding odometry estimate, the mean of the estimated pose distribution in the global frame results. Actual frame IDs are dictated by <code class="docutils literal notranslate"><span class="pre">global_frame_id</span></code> and <code class="docutils literal notranslate"><span class="pre">odom_frame_id</span></code> parameters.</p>
+</dd>
+<dd><p>Only broadcasted if <code class="docutils literal notranslate"><span class="pre">tf_broadcast</span></code> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="advertised-services">
+<h3>Advertised services<a class="headerlink" href="#advertised-services" title="Link to this heading">#</a></h3>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">global_localization</span></code></dt><dd><p>An <code class="docutils literal notranslate"><span class="pre">std_srvs/Empty</span></code> service to force a filter (re)initialization by sampling a uniform pose distribution over the last known map.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">request_nomotion_update</span></code></dt><dd><p>An <code class="docutils literal notranslate"><span class="pre">std_srvs/Empty</span></code> service to force a filter update upon request.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">set_map</span></code></dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">nav_msgs/SetMap</span></code> service to force a map update.</p>
+</dd>
+</dl>
+</section>
+<section id="called-services">
+<h3>Called services<a class="headerlink" href="#called-services" title="Link to this heading">#</a></h3>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;map_service&gt;</span></code></dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">nav_msgs/GetMap</span></code> service to get the first map from. Actual service name is dictated by the <code class="docutils literal notranslate"><span class="pre">map_service</span></code> parameter.</p>
+</dd>
+<dd><p>Only called if <code class="docutils literal notranslate"><span class="pre">use_map_topic</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="compatibility-notes">
+<h3>Compatibility Notes<a class="headerlink" href="#compatibility-notes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Beluga AMCL supports <code class="docutils literal notranslate"><span class="pre">diff-corrected</span></code> and <code class="docutils literal notranslate"><span class="pre">omni-corrected</span></code> motion models. Older <code class="docutils literal notranslate"><span class="pre">diff</span></code> and <code class="docutils literal notranslate"><span class="pre">omni</span></code> models from Navigation AMCL were not implemented.</p></li>
+<li><p>Unlike Navigation AMCL, Beluga AMCL needs both <code class="docutils literal notranslate"><span class="pre">laser_max_range</span></code> and <code class="docutils literal notranslate"><span class="pre">laser_min_range</span></code> to be specified (ie. -1.0 is not a valid value).</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Overview</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ros2-reference.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ROS 2 Reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nodelets">Nodelets</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beluga-amcl-amclnodelet">beluga_amcl/AmclNodelet</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#interface-parameters">Interface Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-pose-and-transform-broadcast-parameters">Initial Pose and Transform Broadcast Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-filter-parameters">Particle Filter Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motion-model-parameters">Motion Model Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-model-parameters">Observation Model Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#misc-parameters">Misc Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#published-topics">Published topics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subscribed-topics">Subscribed topics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subscribed-transforms">Subscribed transforms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#broadcasted-transforms">Broadcasted transforms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advertised-services">Advertised services</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#called-services">Called services</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility-notes">Compatibility Notes</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

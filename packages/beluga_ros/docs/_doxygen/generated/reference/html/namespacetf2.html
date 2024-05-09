@@ -1,0 +1,1030 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga ROS: tf2 Namespace Reference &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga_ros/docs/_doxygen/generated/reference/html/namespacetf2';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga/docs/index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_amcl/docs/index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga_ros/docs/_doxygen/generated/reference/html/namespacetf2.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>tf2 Namespace Reference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="tf2-namespace-reference">
+<h1>tf2 Namespace Reference<a class="headerlink" href="#tf2-namespace-reference" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga ROS: tf2 Namespace Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga ROS
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle">
+<div class="title">tf2 Namespace Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p><code><a class="el" href="namespacetf2.html" title="tf2 namespace extension for message conversion overload resolution.">tf2</a></code> namespace extension for message conversion overload resolution.  
+<a href="namespacetf2.html#details">More...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Pose &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</td></tr>
+<tr class="memdesc:a0a74cb89468798ba6738c62f3fdca4cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Pose message.  <a href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">More...</a><br /></td></tr>
+<tr class="separator:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4511f028283bafd60e8fe142ca2bee2e"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a4511f028283bafd60e8fe142ca2bee2e"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Pose &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a4511f028283bafd60e8fe142ca2bee2e">toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</td></tr>
+<tr class="memdesc:a4511f028283bafd60e8fe142ca2bee2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Pose message.  <a href="namespacetf2.html#a4511f028283bafd60e8fe142ca2bee2e">More...</a><br /></td></tr>
+<tr class="separator:a4511f028283bafd60e8fe142ca2bee2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4165e54c2868393e7d80cc82809ce366"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a4165e54c2868393e7d80cc82809ce366"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a4165e54c2868393e7d80cc82809ce366">toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;in)</td></tr>
+<tr class="memdesc:a4165e54c2868393e7d80cc82809ce366"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Transform message.  <a href="namespacetf2.html#a4165e54c2868393e7d80cc82809ce366">More...</a><br /></td></tr>
+<tr class="separator:a4165e54c2868393e7d80cc82809ce366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a48396a86427eec876d6d2959411ffa"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a0a48396a86427eec876d6d2959411ffa"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a0a48396a86427eec876d6d2959411ffa">toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in)</td></tr>
+<tr class="memdesc:a0a48396a86427eec876d6d2959411ffa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Transform message.  <a href="namespacetf2.html#a0a48396a86427eec876d6d2959411ffa">More...</a><br /></td></tr>
+<tr class="separator:a0a48396a86427eec876d6d2959411ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5b19c7fe5425ac099422ea142b7b459"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:ab5b19c7fe5425ac099422ea142b7b459"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#ab5b19c7fe5425ac099422ea142b7b459">fromMsg</a> (const beluga_ros::msg::Transform &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:ab5b19c7fe5425ac099422ea142b7b459"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type.  <a href="namespacetf2.html#ab5b19c7fe5425ac099422ea142b7b459">More...</a><br /></td></tr>
+<tr class="separator:ab5b19c7fe5425ac099422ea142b7b459"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a9fc7b4c5334421b9c6d5fdaa9448ff12">fromMsg</a> (const beluga_ros::msg::Transform &amp;msg, Sophus::SE3&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type.  <a href="namespacetf2.html#a9fc7b4c5334421b9c6d5fdaa9448ff12">More...</a><br /></td></tr>
+<tr class="separator:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a2b9d8356dac0b2bc7266ecf5d338dc9c">fromMsg</a> (const beluga_ros::msg::Pose &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type.  <a href="namespacetf2.html#a2b9d8356dac0b2bc7266ecf5d338dc9c">More...</a><br /></td></tr>
+<tr class="separator:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a057c5840ca308e4f2f38beaa02ba293e"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a057c5840ca308e4f2f38beaa02ba293e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a057c5840ca308e4f2f38beaa02ba293e">fromMsg</a> (const beluga_ros::msg::Pose &amp;msg, Sophus::SE3&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:a057c5840ca308e4f2f38beaa02ba293e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type.  <a href="namespacetf2.html#a057c5840ca308e4f2f38beaa02ba293e">More...</a><br /></td></tr>
+<tr class="separator:a057c5840ca308e4f2f38beaa02ba293e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afce89eb3573108e41ac4c57448e2fab5"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename, std::size_t &gt; class Array, typename Scalar &gt; </td></tr>
+<tr class="memitem:afce89eb3573108e41ac4c57448e2fab5"><td class="memTemplItemLeft" align="right" valign="top">Array&lt; Scalar, 36 &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#afce89eb3573108e41ac4c57448e2fab5">covarianceEigenToRowMajor</a> (const Sophus::Matrix3&lt; Scalar &gt; &amp;in, Array&lt; Scalar, 36 &gt; &amp;out)</td></tr>
+<tr class="memdesc:afce89eb3573108e41ac4c57448e2fab5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> (ie. Eigen) 3x3 covariance matrix to a 6x6 row-major array.  <a href="namespacetf2.html#afce89eb3573108e41ac4c57448e2fab5">More...</a><br /></td></tr>
+<tr class="separator:afce89eb3573108e41ac4c57448e2fab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb1233c4d542bb7a5e8a1497b37813d0"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename, std::size_t &gt; class Array, typename Scalar &gt; </td></tr>
+<tr class="memitem:adb1233c4d542bb7a5e8a1497b37813d0"><td class="memTemplItemLeft" align="right" valign="top">Sophus::Matrix3&lt; Scalar &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#adb1233c4d542bb7a5e8a1497b37813d0">covarianceRowMajorToEigen</a> (const Array&lt; Scalar, 36 &gt; &amp;in, Sophus::Matrix3&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:adb1233c4d542bb7a5e8a1497b37813d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 6x6 row-major array to an Eigen 3x3 covariance matrix.  <a href="namespacetf2.html#adb1233c4d542bb7a5e8a1497b37813d0">More...</a><br /></td></tr>
+<tr class="separator:adb1233c4d542bb7a5e8a1497b37813d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><code><a class="el" href="namespacetf2.html" title="tf2 namespace extension for message conversion overload resolution.">tf2</a></code> namespace extension for message conversion overload resolution. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="afce89eb3573108e41ac4c57448e2fab5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afce89eb3573108e41ac4c57448e2fab5">&#9670;&nbsp;</a></span>covarianceEigenToRowMajor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;template&lt; typename, std::size_t &gt; class Array, typename Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Array&lt;Scalar, 36&gt;&amp; tf2::covarianceEigenToRowMajor </td>
+          <td>(</td>
+          <td class="paramtype">const Sophus::Matrix3&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Array&lt; Scalar, 36 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> (ie. Eigen) 3x3 covariance matrix to a 6x6 row-major array. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>A <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> (ie. Eigen) 3x3 covariance matrix of a 2D pose (x, y, yaw). </td></tr>
+    <tr><td class="paramname">out</td><td>A row-major array of 36 covariance values of a 3D pose. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a reference to <code>out</code>. </dd></dl>
+
+</div>
+</div>
+<a id="adb1233c4d542bb7a5e8a1497b37813d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb1233c4d542bb7a5e8a1497b37813d0">&#9670;&nbsp;</a></span>covarianceRowMajorToEigen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;template&lt; typename, std::size_t &gt; class Array, typename Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Sophus::Matrix3&lt;Scalar&gt;&amp; tf2::covarianceRowMajorToEigen </td>
+          <td>(</td>
+          <td class="paramtype">const Array&lt; Scalar, 36 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Sophus::Matrix3&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a 6x6 row-major array to an Eigen 3x3 covariance matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>A row-major array of 36 covariance values of a 3D pose. </td></tr>
+    <tr><td class="paramname">out</td><td>A <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> (ie. Eigen) 3x3 covariance matrix of a 2D pose (x, y, yaw). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> (ie. Eigen) 3x3 covariance matrix of a 2D pose (x, y, yaw). </dd></dl>
+
+</div>
+</div>
+<a id="a2b9d8356dac0b2bc7266ecf5d338dc9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b9d8356dac0b2bc7266ecf5d338dc9c">&#9670;&nbsp;</a></span>fromMsg() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tf2::fromMsg </td>
+          <td>(</td>
+          <td class="paramtype">const beluga_ros::msg::Pose &amp;&#160;</td>
+          <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Sophus::SE2&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type. </p>
+<p>This function is a specialization of the fromMsg template defined in tf2/convert.h.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msg</td><td>The pose message to convert. </td></tr>
+    <tr><td class="paramname">out</td><td>The pose converted to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 element. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a057c5840ca308e4f2f38beaa02ba293e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a057c5840ca308e4f2f38beaa02ba293e">&#9670;&nbsp;</a></span>fromMsg() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tf2::fromMsg </td>
+          <td>(</td>
+          <td class="paramtype">const beluga_ros::msg::Pose &amp;&#160;</td>
+          <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Sophus::SE3&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type. </p>
+<p>This function is a specialization of the fromMsg template defined in tf2/convert.h.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msg</td><td>The pose message to convert. </td></tr>
+    <tr><td class="paramname">out</td><td>The pose converted to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 element. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab5b19c7fe5425ac099422ea142b7b459"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5b19c7fe5425ac099422ea142b7b459">&#9670;&nbsp;</a></span>fromMsg() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tf2::fromMsg </td>
+          <td>(</td>
+          <td class="paramtype">const beluga_ros::msg::Transform &amp;&#160;</td>
+          <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Sophus::SE2&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type. </p>
+<p>This function is a specialization of the fromMsg template defined in tf2/convert.h.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msg</td><td>The transform message to convert. </td></tr>
+    <tr><td class="paramname">out</td><td>The transform converted to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 element. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9fc7b4c5334421b9c6d5fdaa9448ff12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fc7b4c5334421b9c6d5fdaa9448ff12">&#9670;&nbsp;</a></span>fromMsg() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tf2::fromMsg </td>
+          <td>(</td>
+          <td class="paramtype">const beluga_ros::msg::Transform &amp;&#160;</td>
+          <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Sophus::SE3&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type. </p>
+<p>This function is a specialization of the fromMsg template defined in tf2/convert.h.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msg</td><td>The transform message to convert. </td></tr>
+    <tr><td class="paramname">out</td><td>The transform converted to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 element. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4165e54c2868393e7d80cc82809ce366"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4165e54c2868393e7d80cc82809ce366">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">beluga_ros::msg::Transform tf2::toMsg </td>
+          <td>(</td>
+          <td class="paramtype">const Sophus::SE2&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Transform message. </p>
+<p>This function is a specialization of the toMsg template defined in tf2/convert.h.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>The <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 element to convert. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The transform converted to a Transform message. </dd></dl>
+
+</div>
+</div>
+<a id="a0a74cb89468798ba6738c62f3fdca4cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a74cb89468798ba6738c62f3fdca4cb">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">beluga_ros::msg::Pose&amp; tf2::toMsg </td>
+          <td>(</td>
+          <td class="paramtype">const Sophus::SE2&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">beluga_ros::msg::Pose &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Pose message. </p>
+<p>The canonical message for an SE2 instance is Transform. If a Pose message is needed, this function must be called directly using <code><a class="el" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb" title="Converts a Sophus SE2 type to a Pose message.">tf2::toMsg</a></code>, not through the <code>tf2::convert</code> customization function.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>The <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 element to convert. </td></tr>
+    <tr><td class="paramname">out</td><td>The pose converted to a Pose message. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The pose converted to a Pose message. </dd></dl>
+
+</div>
+</div>
+<a id="a0a48396a86427eec876d6d2959411ffa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a48396a86427eec876d6d2959411ffa">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">beluga_ros::msg::Transform tf2::toMsg </td>
+          <td>(</td>
+          <td class="paramtype">const Sophus::SE3&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Transform message. </p>
+<p>This function is a specialization of the toMsg template defined in tf2/convert.h.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>The <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 element to convert. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The transform converted to a Transform message. </dd></dl>
+
+</div>
+</div>
+<a id="a4511f028283bafd60e8fe142ca2bee2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4511f028283bafd60e8fe142ca2bee2e">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">beluga_ros::msg::Pose&amp; tf2::toMsg </td>
+          <td>(</td>
+          <td class="paramtype">const Sophus::SE3&lt; Scalar &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">beluga_ros::msg::Pose &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Pose message. </p>
+<p>The canonical message for an SE3 instance is Transform. If a Pose message is needed, this function must be called directly using <code><a class="el" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb" title="Converts a Sophus SE2 type to a Pose message.">tf2::toMsg</a></code>, not through the <code>tf2::convert</code> customization function.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>The <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 element to convert. </td></tr>
+    <tr><td class="paramname">out</td><td>The pose converted to a Pose message. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The pose converted to a Pose message. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

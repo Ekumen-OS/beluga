@@ -1,0 +1,696 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga/utility/indexing_iterator.hpp Source File &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/indexing__iterator_8hpp_source';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_ros/docs/index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_amcl/docs/index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga/docs/_doxygen/generated/reference/html/indexing__iterator_8hpp_source.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>/home/runner/work/beluga/beluga/beluga/include/beluga/utility/indexing_iterator.hpp Source File</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="home-runner-work-beluga-beluga-beluga-include-beluga-utility-indexing-iterator-hpp-source-file">
+<h1>/home/runner/work/beluga/beluga/beluga/include/beluga/utility/indexing_iterator.hpp Source File<a class="headerlink" href="#home-runner-work-beluga-beluga-beluga-include-beluga-utility-indexing-iterator-hpp-source-file" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga/utility/indexing_iterator.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1ad523cfdb7a3d7d09cddf672d6cd478.html">beluga</a></li><li class="navelem"><a class="el" href="dir_500caef060b471cfdd05b62a42e3142c.html">utility</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">indexing_iterator.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="indexing__iterator_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2024 Ekumen, Inc.</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// limitations under the License.</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_UTILITY_INDEXING_ITERATOR_HPP</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_UTILITY_INDEXING_ITERATOR_HPP</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;iterator&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Indexable, <span class="keyword">class</span> Index = <span class="keyword">typename</span> Indexable::<span class="keywordtype">size_t</span>ype&gt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html">   38</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a3b3a8b967fd150254c88daa609d5c5bd">   41</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a3b3a8b967fd150254c88daa609d5c5bd">value_type</a> =</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      std::remove_cv_t&lt;std::remove_reference_t&lt;decltype(std::declval&lt;Indexable&gt;()[std::declval&lt;Index&gt;()])&gt;&gt;;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#af68b5861ff3d696d29af4b57b35cecae">   44</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#af68b5861ff3d696d29af4b57b35cecae">reference</a> = decltype(std::declval&lt;Indexable&gt;()[std::declval&lt;Index&gt;()]);</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a85b8ae6e8d61000b32c60faf451546b8">   46</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a85b8ae6e8d61000b32c60faf451546b8">pointer</a> = decltype(std::addressof(std::declval&lt;Indexable&gt;()[std::declval&lt;Index&gt;()]));</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">   48</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a> = std::make_signed_t&lt;decltype(std::declval&lt;Index&gt;() - std::declval&lt;Index&gt;())&gt;;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a5931157f53710f9bbd4d4d226dd75ab7">   50</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a5931157f53710f9bbd4d4d226dd75ab7">iterator_category</a> = std::random_access_iterator_tag;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#ad9c3f79bd25860965bb33676868f21d2">   53</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#ad9c3f79bd25860965bb33676868f21d2">IndexingIterator</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a68e2fa83454df4de5019b4b7f201d919">   56</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a68e2fa83454df4de5019b4b7f201d919">IndexingIterator</a>(Indexable* indexable, Index cursor = Index{})</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      : indexable_{indexable}, cursor_{std::move(cursor)} {}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a7a10ce806d15ec16ae30896ad6dd02b4">   60</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a7a10ce806d15ec16ae30896ad6dd02b4">IndexingIterator</a>(Indexable&amp; indexable, Index cursor = Index{})</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      : <a class="code" href="classbeluga_1_1IndexingIterator.html#ad9c3f79bd25860965bb33676868f21d2">IndexingIterator</a>(std::addressof(indexable), std::move(cursor)) {}</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a6ef9cd1e6ba0f945808cb96a90192b75">   64</a></span>&#160;  <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> <a class="code" href="classbeluga_1_1IndexingIterator.html#a6ef9cd1e6ba0f945808cb96a90192b75">operator++</a>(<span class="keywordtype">int</span>) noexcept {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> other = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    ++(*this);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> other;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a16d07f92f6351f294074a235996a6c5b">   71</a></span>&#160;  <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; <a class="code" href="classbeluga_1_1IndexingIterator.html#a16d07f92f6351f294074a235996a6c5b">operator++</a>() noexcept {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    ++cursor_;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#ad11722378da4aacb22a340925b3fbd18">   77</a></span>&#160;  <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> <a class="code" href="classbeluga_1_1IndexingIterator.html#ad11722378da4aacb22a340925b3fbd18">operator--</a>(<span class="keywordtype">int</span>) noexcept {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> other = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    --(*this);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">return</span> other;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  }</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a37c34f18d5a0e256b0ea97f4cb1ac7e1">   84</a></span>&#160;  <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; <a class="code" href="classbeluga_1_1IndexingIterator.html#a37c34f18d5a0e256b0ea97f4cb1ac7e1">operator--</a>() noexcept {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    --cursor_;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#ac0314400b4228606f85e4f2effed12e3">   90</a></span>&#160;  <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; <a class="code" href="classbeluga_1_1IndexingIterator.html#ac0314400b4228606f85e4f2effed12e3">operator+=</a>(<a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a> offset) noexcept {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">using</span> raw_difference_type = decltype(cursor_ - cursor_);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">if</span> (offset &lt; 0) {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      cursor_ -= <span class="keyword">static_cast&lt;</span>raw_difference_type<span class="keyword">&gt;</span>(-offset);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      cursor_ += <span class="keyword">static_cast&lt;</span>raw_difference_type<span class="keyword">&gt;</span>(offset);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#acc8f84b110d60a548b42213ab4b19ce6">  101</a></span>&#160;  [[nodiscard]] <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> <a class="code" href="classbeluga_1_1IndexingIterator.html#acc8f84b110d60a548b42213ab4b19ce6">operator+</a>(<a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a> offset) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> other = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    other += offset;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">return</span> other;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a29bb4b80e6008dac2cdf609687066142">  108</a></span>&#160;  [[nodiscard]] <span class="keyword">friend</span> <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> <a class="code" href="classbeluga_1_1IndexingIterator.html#a29bb4b80e6008dac2cdf609687066142">operator+</a>(<a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a> offset, <span class="keyword">const</span> <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; iterator) {</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">return</span> iterator + offset;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a8e9a9f9352947832f310ba6a7e1c0412">  113</a></span>&#160;  <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; <a class="code" href="classbeluga_1_1IndexingIterator.html#a8e9a9f9352947832f310ba6a7e1c0412">operator-=</a>(<a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a> offset) noexcept {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keyword">using</span> raw_difference_type = decltype(cursor_ - cursor_);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordflow">if</span> (offset &lt; 0) {</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;      cursor_ += <span class="keyword">static_cast&lt;</span>raw_difference_type<span class="keyword">&gt;</span>(-offset);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;      cursor_ -= <span class="keyword">static_cast&lt;</span>raw_difference_type<span class="keyword">&gt;</span>(offset);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a36e3be1ae530492dc527226b37d37dcb">  124</a></span>&#160;  [[nodiscard]] <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> <a class="code" href="classbeluga_1_1IndexingIterator.html#a36e3be1ae530492dc527226b37d37dcb">operator-</a>(<a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a> offset) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a> other = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    other -= offset;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">return</span> other;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  }</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a64ae4c975cbf377ba59a7802a7632c7a">  131</a></span>&#160;  [[nodiscard]] <a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a> <a class="code" href="classbeluga_1_1IndexingIterator.html#a64ae4c975cbf377ba59a7802a7632c7a">operator-</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; other) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">if</span> (cursor_ &lt; other.cursor_) {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;      <span class="keywordflow">return</span> -<span class="keyword">static_cast&lt;</span><a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a><span class="keyword">&gt;</span>(other.cursor_ - cursor_);</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    }</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a><span class="keyword">&gt;</span>(cursor_ - other.cursor_);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;  }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#af142dff791d27e63d31bb6f3d2a0653e">  142</a></span>&#160;  [[nodiscard]] <a class="code" href="classbeluga_1_1IndexingIterator.html#af68b5861ff3d696d29af4b57b35cecae">reference</a> <a class="code" href="classbeluga_1_1IndexingIterator.html#af142dff791d27e63d31bb6f3d2a0653e">operator[]</a>(<a class="code" href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">difference_type</a> offset) <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> (*indexable_)[cursor_ + offset]; }</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
+<div class="line"><a name="l00148"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a028cfc5665149358c6ded2a22da0aa2d">  148</a></span>&#160;  [[nodiscard]] <a class="code" href="classbeluga_1_1IndexingIterator.html#af68b5861ff3d696d29af4b57b35cecae">reference</a> <a class="code" href="classbeluga_1_1IndexingIterator.html#a028cfc5665149358c6ded2a22da0aa2d">operator*</a>() const noexcept { <span class="keywordflow">return</span> (*indexable_)[cursor_]; }</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
+<div class="line"><a name="l00154"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a1946eb47b16c017a5d93cdd5bbb9c3da">  154</a></span>&#160;  [[nodiscard]] <a class="code" href="classbeluga_1_1IndexingIterator.html#a85b8ae6e8d61000b32c60faf451546b8">pointer</a> <a class="code" href="classbeluga_1_1IndexingIterator.html#a1946eb47b16c017a5d93cdd5bbb9c3da">operator-&gt;</a>() const noexcept { <span class="keywordflow">return</span> std::addressof((*indexable_)[cursor_]); }</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a97ec9be7bd5fb0f2a41c7c444fae4adf">  160</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a97ec9be7bd5fb0f2a41c7c444fae4adf">operator&lt;</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; other) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordflow">return</span> indexable_ == other.indexable_ &amp;&amp; cursor_ &lt; other.cursor_;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  }</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a08bdb8e1239dd186b37b0cf01d40b9b7">  168</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a08bdb8e1239dd186b37b0cf01d40b9b7">operator&lt;=</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; other) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">return</span> indexable_ == other.indexable_ &amp;&amp; cursor_ &lt;= other.cursor_;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  }</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00176"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a7754da2d8ba6b49c36766e57a6506a24">  176</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a7754da2d8ba6b49c36766e57a6506a24">operator&gt;</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; other) <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> !((*this) &lt;= other); }</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
+<div class="line"><a name="l00182"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a414dde3476668f56182648573eced2e5">  182</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a414dde3476668f56182648573eced2e5">operator&gt;=</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; other) <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> !((*this) &lt; other); }</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
+<div class="line"><a name="l00188"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#a5ac9be9353e24340de5ee8f70ac92ac9">  188</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#a5ac9be9353e24340de5ee8f70ac92ac9">operator==</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; other) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordflow">return</span> indexable_ == other.indexable_ &amp;&amp; cursor_ == other.cursor_;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;  }</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno"><a class="line" href="classbeluga_1_1IndexingIterator.html#ac118e248792505af56e69bbd1619fa85">  193</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbeluga_1_1IndexingIterator.html#ac118e248792505af56e69bbd1619fa85">operator!=</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&amp; other) <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == other); }</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;  Indexable* indexable_{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;  Index cursor_{};</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;};</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160; </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html">beluga::IndexingIterator</a></div><div class="ttdoc">A random access iterator for any indexable container.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:38</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a028cfc5665149358c6ded2a22da0aa2d"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a028cfc5665149358c6ded2a22da0aa2d">beluga::IndexingIterator::operator*</a></div><div class="ttdeci">reference operator*() const noexcept</div><div class="ttdoc">Dereferences iterator at its current position.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:148</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a08bdb8e1239dd186b37b0cf01d40b9b7"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a08bdb8e1239dd186b37b0cf01d40b9b7">beluga::IndexingIterator::operator&lt;=</a></div><div class="ttdeci">bool operator&lt;=(const IndexingIterator &amp;other) const noexcept</div><div class="ttdoc">Checks if iterator position is before or equal to that of another.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:168</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a16d07f92f6351f294074a235996a6c5b"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a16d07f92f6351f294074a235996a6c5b">beluga::IndexingIterator::operator++</a></div><div class="ttdeci">IndexingIterator &amp; operator++() noexcept</div><div class="ttdoc">Pre-increments iterator position in the target container.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:71</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a1946eb47b16c017a5d93cdd5bbb9c3da"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a1946eb47b16c017a5d93cdd5bbb9c3da">beluga::IndexingIterator::operator-&gt;</a></div><div class="ttdeci">pointer operator-&gt;() const noexcept</div><div class="ttdoc">Dereferences iterator at its current position and yields a pointer to it.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:154</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a29bb4b80e6008dac2cdf609687066142"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a29bb4b80e6008dac2cdf609687066142">beluga::IndexingIterator::operator+</a></div><div class="ttdeci">friend IndexingIterator operator+(difference_type offset, const IndexingIterator &amp;iterator)</div><div class="ttdoc">Forwards iterator a given offset, yielding a modified copy.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:108</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a36e3be1ae530492dc527226b37d37dcb"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a36e3be1ae530492dc527226b37d37dcb">beluga::IndexingIterator::operator-</a></div><div class="ttdeci">IndexingIterator operator-(difference_type offset) const noexcept</div><div class="ttdoc">Rewinds iterator position a given offset, yielding a modified copy.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:124</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a37c34f18d5a0e256b0ea97f4cb1ac7e1"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a37c34f18d5a0e256b0ea97f4cb1ac7e1">beluga::IndexingIterator::operator--</a></div><div class="ttdeci">IndexingIterator &amp; operator--() noexcept</div><div class="ttdoc">Pre-decrements iterator position in the target container.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:84</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a3b3a8b967fd150254c88daa609d5c5bd"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a3b3a8b967fd150254c88daa609d5c5bd">beluga::IndexingIterator::value_type</a></div><div class="ttdeci">std::remove_cv_t&lt; std::remove_reference_t&lt; decltype(std::declval&lt; Indexable &gt;()[std::declval&lt; Index &gt;()])&gt; &gt; value_type</div><div class="ttdoc">Value type of the iterator.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:42</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a414dde3476668f56182648573eced2e5"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a414dde3476668f56182648573eced2e5">beluga::IndexingIterator::operator&gt;=</a></div><div class="ttdeci">bool operator&gt;=(const IndexingIterator &amp;other) const noexcept</div><div class="ttdoc">Checks if iterator position is after or equal to that of another.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:182</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a5931157f53710f9bbd4d4d226dd75ab7"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a5931157f53710f9bbd4d4d226dd75ab7">beluga::IndexingIterator::iterator_category</a></div><div class="ttdeci">std::random_access_iterator_tag iterator_category</div><div class="ttdoc">Category of the iterator.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:50</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a5ac9be9353e24340de5ee8f70ac92ac9"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a5ac9be9353e24340de5ee8f70ac92ac9">beluga::IndexingIterator::operator==</a></div><div class="ttdeci">bool operator==(const IndexingIterator &amp;other) const noexcept</div><div class="ttdoc">Checks if iterator position is equal to that of another.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:188</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a606efe9dc64310e1e890f1b5902fe92b"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a606efe9dc64310e1e890f1b5902fe92b">beluga::IndexingIterator::difference_type</a></div><div class="ttdeci">std::make_signed_t&lt; decltype(std::declval&lt; Index &gt;() - std::declval&lt; Index &gt;())&gt; difference_type</div><div class="ttdoc">Signed difference type of the iterator.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:48</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a64ae4c975cbf377ba59a7802a7632c7a"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a64ae4c975cbf377ba59a7802a7632c7a">beluga::IndexingIterator::operator-</a></div><div class="ttdeci">difference_type operator-(const IndexingIterator &amp;other) const noexcept</div><div class="ttdoc">Computes the difference (i.e. the distance) between the positions of this iterator and another.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:131</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a68e2fa83454df4de5019b4b7f201d919"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a68e2fa83454df4de5019b4b7f201d919">beluga::IndexingIterator::IndexingIterator</a></div><div class="ttdeci">IndexingIterator(Indexable *indexable, Index cursor=Index{})</div><div class="ttdoc">Constructs iterator given a pointer to an indexable container and a cursor index on it.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:56</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a6ef9cd1e6ba0f945808cb96a90192b75"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a6ef9cd1e6ba0f945808cb96a90192b75">beluga::IndexingIterator::operator++</a></div><div class="ttdeci">IndexingIterator operator++(int) noexcept</div><div class="ttdoc">Post-increments iterator position in the target container.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:64</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a7754da2d8ba6b49c36766e57a6506a24"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a7754da2d8ba6b49c36766e57a6506a24">beluga::IndexingIterator::operator&gt;</a></div><div class="ttdeci">bool operator&gt;(const IndexingIterator &amp;other) const noexcept</div><div class="ttdoc">Checks if iterator position is strictly after that of another.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:176</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a7a10ce806d15ec16ae30896ad6dd02b4"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a7a10ce806d15ec16ae30896ad6dd02b4">beluga::IndexingIterator::IndexingIterator</a></div><div class="ttdeci">IndexingIterator(Indexable &amp;indexable, Index cursor=Index{})</div><div class="ttdoc">Constructs iterator given a reference to an indexable container and a cursor index on it.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:60</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a85b8ae6e8d61000b32c60faf451546b8"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a85b8ae6e8d61000b32c60faf451546b8">beluga::IndexingIterator::pointer</a></div><div class="ttdeci">decltype(std::addressof(std::declval&lt; Indexable &gt;()[std::declval&lt; Index &gt;()])) pointer</div><div class="ttdoc">Value pointer type of the iterator.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:46</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a8e9a9f9352947832f310ba6a7e1c0412"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a8e9a9f9352947832f310ba6a7e1c0412">beluga::IndexingIterator::operator-=</a></div><div class="ttdeci">IndexingIterator &amp; operator-=(difference_type offset) noexcept</div><div class="ttdoc">Rewinds iterator position a given offset, in-place.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:113</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_a97ec9be7bd5fb0f2a41c7c444fae4adf"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#a97ec9be7bd5fb0f2a41c7c444fae4adf">beluga::IndexingIterator::operator&lt;</a></div><div class="ttdeci">bool operator&lt;(const IndexingIterator &amp;other) const noexcept</div><div class="ttdoc">Checks if iterator position is strictly before that of another.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:160</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_ac0314400b4228606f85e4f2effed12e3"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#ac0314400b4228606f85e4f2effed12e3">beluga::IndexingIterator::operator+=</a></div><div class="ttdeci">IndexingIterator &amp; operator+=(difference_type offset) noexcept</div><div class="ttdoc">Forwards iterator position a given offset, in-place.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:90</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_ac118e248792505af56e69bbd1619fa85"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#ac118e248792505af56e69bbd1619fa85">beluga::IndexingIterator::operator!=</a></div><div class="ttdeci">bool operator!=(const IndexingIterator &amp;other) const noexcept</div><div class="ttdoc">Checks if iterator position is not equal to that of another.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:193</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_acc8f84b110d60a548b42213ab4b19ce6"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#acc8f84b110d60a548b42213ab4b19ce6">beluga::IndexingIterator::operator+</a></div><div class="ttdeci">IndexingIterator operator+(difference_type offset) const noexcept</div><div class="ttdoc">Forwards iterator position a given offset, yielding a modified copy.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:101</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_ad11722378da4aacb22a340925b3fbd18"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#ad11722378da4aacb22a340925b3fbd18">beluga::IndexingIterator::operator--</a></div><div class="ttdeci">IndexingIterator operator--(int) noexcept</div><div class="ttdoc">Post-decrements iterator position in the target container.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:77</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_ad9c3f79bd25860965bb33676868f21d2"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#ad9c3f79bd25860965bb33676868f21d2">beluga::IndexingIterator::IndexingIterator</a></div><div class="ttdeci">IndexingIterator()=default</div><div class="ttdoc">Default constructor. Iterator will point nowhere.</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_af142dff791d27e63d31bb6f3d2a0653e"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#af142dff791d27e63d31bb6f3d2a0653e">beluga::IndexingIterator::operator[]</a></div><div class="ttdeci">reference operator[](difference_type offset) const noexcept</div><div class="ttdoc">Dereferences iterator at a given offset from its current position.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:142</div></div>
+<div class="ttc" id="aclassbeluga_1_1IndexingIterator_html_af68b5861ff3d696d29af4b57b35cecae"><div class="ttname"><a href="classbeluga_1_1IndexingIterator.html#af68b5861ff3d696d29af4b57b35cecae">beluga::IndexingIterator::reference</a></div><div class="ttdeci">decltype(std::declval&lt; Indexable &gt;()[std::declval&lt; Index &gt;()]) reference</div><div class="ttdoc">Value reference type of the iterator.</div><div class="ttdef"><b>Definition:</b> indexing_iterator.hpp:44</div></div>
+<div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> assign.hpp:28</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

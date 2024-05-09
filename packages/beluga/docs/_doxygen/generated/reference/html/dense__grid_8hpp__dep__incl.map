@@ -1,0 +1,12 @@
+<map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/dense_grid.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/dense_grid.hpp">
+<area shape="rect" id="node1" title="Concepts and abstract implementations of dense grids." alt="" coords="136,5,329,76"/>
+<area shape="rect" id="node2" href="$linear__grid_8hpp.html" title="Concepts and abstract implementations of linear (ie. contiguous storage) grids." alt="" coords="136,124,329,195"/>
+<area shape="rect" id="node3" href="$occupancy__grid_8hpp.html" title="Concepts and abstract implementations of occupancy grids." alt="" coords="5,243,228,313"/>
+<area shape="rect" id="node10" href="$value__grid_8hpp.html" title="Implementation of generic value grid." alt="" coords="252,243,445,313"/>
+<area shape="rect" id="node4" href="$multivariate__uniform__distribution_8hpp.html" title="Implementation of a multivariate uniform distribution for SE(2) and SE(3) spaces." alt="" coords="13,361,221,432"/>
+<area shape="rect" id="node8" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="245,361,439,432"/>
+<area shape="rect" id="node5" href="$random_8hpp.html" title="Includes all Beluga random distributions." alt="" coords="24,480,217,536"/>
+<area shape="rect" id="node6" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="132,584,325,640"/>
+<area shape="rect" id="node7" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="111,688,347,744"/>
+<area shape="rect" id="node9" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="243,480,436,536"/>
+</map>

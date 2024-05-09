@@ -1,0 +1,669 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga/actions/normalize.hpp Source File &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/normalize_8hpp_source';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_ros/docs/index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_amcl/docs/index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga/docs/_doxygen/generated/reference/html/normalize_8hpp_source.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>/home/runner/work/beluga/beluga/beluga/include/beluga/actions/normalize.hpp Source File</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="home-runner-work-beluga-beluga-beluga-include-beluga-actions-normalize-hpp-source-file">
+<h1>/home/runner/work/beluga/beluga/beluga/include/beluga/actions/normalize.hpp Source File<a class="headerlink" href="#home-runner-work-beluga-beluga-beluga-include-beluga-actions-normalize-hpp-source-file" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga/actions/normalize.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1ad523cfdb7a3d7d09cddf672d6cd478.html">beluga</a></li><li class="navelem"><a class="el" href="dir_8c67632ad66eb9bf379bf849f1aad5d2.html">actions</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">normalize.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="normalize_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2024 Ekumen, Inc.</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// limitations under the License.</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_ACTIONS_NORMALIZE_HPP</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ACTIONS_NORMALIZE_HPP</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;execution&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="particle__traits_8hpp.html">beluga/type_traits/particle_traits.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="particles_8hpp.html">beluga/views/particles.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;range/v3/action/action.hpp&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;range/v3/numeric/accumulate.hpp&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/common.hpp&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>beluga::actions {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html">   38</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html">normalize_base_fn</a> {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keyword">class </span>Range,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;std::decay_t&lt;ExecutionPolicy&gt;&gt;, <span class="keywordtype">int</span>&gt; = 0,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#aa4d20afb1841025a4b40380df61aa9ae">   52</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#aa4d20afb1841025a4b40380df61aa9ae">operator()</a>(ExecutionPolicy&amp;&amp; <a class="code" href="structbeluga_1_1policy.html">policy</a>, Range&amp; range, <span class="keywordtype">double</span> factor) <span class="keyword">const</span> -&gt; Range&amp; {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">if</span> (std::abs(factor - 1.0) &lt; std::numeric_limits&lt;double&gt;::epsilon()) {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      <span class="keywordflow">return</span> range;  <span class="comment">// No change.</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">auto</span> weights = [&amp;range]() {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      <span class="keywordflow">if</span> constexpr (beluga::is_particle_range_v&lt;Range&gt;) {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordflow">return</span> range | beluga::views::weights | ranges::views::common;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> range | ranges::views::common;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    std::transform(</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="structbeluga_1_1policy.html">policy</a>,               <span class="comment">//</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        std::begin(weights),  <span class="comment">//</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        std::end(weights),    <span class="comment">//</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        std::begin(weights),  <span class="comment">//</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        [factor](<span class="keyword">const</span> <span class="keyword">auto</span> w) { <span class="keywordflow">return</span> w / factor; });</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">return</span> range;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  }</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      <span class="keyword">class </span>Range,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;std::decay_t&lt;ExecutionPolicy&gt;&gt;, <span class="keywordtype">int</span>&gt; = 0,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a2f7247e7e6e8329c3db1455995e86392">   83</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a2f7247e7e6e8329c3db1455995e86392">operator()</a>(ExecutionPolicy&amp;&amp; <a class="code" href="structbeluga_1_1policy.html">policy</a>, Range&amp; range) <span class="keyword">const</span> -&gt; Range&amp; {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">auto</span> weights = [&amp;range]() {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keywordflow">if</span> constexpr (beluga::is_particle_range_v&lt;Range&gt;) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordflow">return</span> range | beluga::views::weights | ranges::views::common;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordflow">return</span> range | ranges::views::common;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> total_weight = ranges::accumulate(weights, 0.0);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(std::forward&lt;ExecutionPolicy&gt;(<a class="code" href="structbeluga_1_1policy.html">policy</a>), range, total_weight);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  }</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      <span class="keyword">class </span>Range,</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0,</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;ExecutionPolicy&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#aee32c482b7e6e02fa02a2f2b30328aaf">  102</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#aee32c482b7e6e02fa02a2f2b30328aaf">operator()</a>(Range&amp;&amp; range, <span class="keywordtype">double</span> factor, ExecutionPolicy <a class="code" href="structbeluga_1_1policy.html">policy</a>) <span class="keyword">const</span> -&gt; Range&amp; {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(std::move(<a class="code" href="structbeluga_1_1policy.html">policy</a>), std::forward&lt;Range&gt;(range), factor);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      <span class="keyword">class </span>Range,</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      <span class="keyword">class </span>ExecutionPolicy,</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;      std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0,</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;      std::enable_if_t&lt;std::is_execution_policy_v&lt;ExecutionPolicy&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a9f6f0486b09ed93992e15e524e6aa4cc">  112</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a9f6f0486b09ed93992e15e524e6aa4cc">operator()</a>(Range&amp;&amp; range, ExecutionPolicy <a class="code" href="structbeluga_1_1policy.html">policy</a>) <span class="keyword">const</span> -&gt; Range&amp; {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(std::move(<a class="code" href="structbeluga_1_1policy.html">policy</a>), std::forward&lt;Range&gt;(range));</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> ExecutionPolicy, std::enable_if_t&lt;std::is_execution_policy_v&lt;ExecutionPolicy&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a570bb70a0f1df98eab2e89e6accc46cc">  118</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a570bb70a0f1df98eab2e89e6accc46cc">operator()</a>(ExecutionPolicy <a class="code" href="structbeluga_1_1policy.html">policy</a>, <span class="keywordtype">double</span> factor)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">return</span> ranges::make_action_closure(ranges::bind_back(<a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html">normalize_base_fn</a>{}, factor, std::move(<a class="code" href="structbeluga_1_1policy.html">policy</a>)));</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> ExecutionPolicy, std::enable_if_t&lt;std::is_execution_policy_v&lt;ExecutionPolicy&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a9367b7ff79d4b731c8c24383da09bca7">  124</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a9367b7ff79d4b731c8c24383da09bca7">operator()</a>(ExecutionPolicy <a class="code" href="structbeluga_1_1policy.html">policy</a>)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">return</span> ranges::make_action_closure(ranges::bind_back(<a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html">normalize_base_fn</a>{}, std::move(<a class="code" href="structbeluga_1_1policy.html">policy</a>)));</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  }</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;};</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html">  130</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html">normalize_fn</a> : <span class="keyword">public</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html">normalize_base_fn</a> {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  <span class="keyword">using</span> normalize_base_fn::operator();</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00135"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html#a4c8aa606ec2bae8200b6e3a3b4fd3957">  135</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html#a4c8aa606ec2bae8200b6e3a3b4fd3957">operator()</a>(Range&amp;&amp; range, <span class="keywordtype">double</span> factor) <span class="keyword">const</span> -&gt; Range&amp; {</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(std::execution::seq, std::forward&lt;Range&gt;(range), factor);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, std::enable_if_t&lt;ranges::range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html#ac0c3c3aa67d33773a6cd3c1b2cd18af5">  141</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html#ac0c3c3aa67d33773a6cd3c1b2cd18af5">operator()</a>(Range&amp;&amp; range) <span class="keyword">const</span> -&gt; Range&amp; {</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(std::execution::seq, std::forward&lt;Range&gt;(range));</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;  }</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno"><a class="line" href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html#a326ea82f1d371b6eadafc1afe6bd00ff">  146</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html#a326ea82f1d371b6eadafc1afe6bd00ff">operator()</a>(<span class="keywordtype">double</span> factor)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">return</span> ranges::make_action_closure(ranges::bind_back(<a class="code" href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html">normalize_fn</a>{}, factor));</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  }</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;};</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
+<div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="normalize_8hpp.html#ae871753e76e86a00daafecff61da6e37">  162</a></span>&#160;<span class="keyword">inline</span> constexpr ranges::actions::action_closure&lt;detail::normalize_fn&gt; <a class="code" href="normalize_8hpp.html#ae871753e76e86a00daafecff61da6e37">normalize</a>;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;}  <span class="comment">// namespace beluga::actions</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="anormalize_8hpp_html_ae871753e76e86a00daafecff61da6e37"><div class="ttname"><a href="normalize_8hpp.html#ae871753e76e86a00daafecff61da6e37">beluga::actions::normalize</a></div><div class="ttdeci">constexpr ranges::actions::action_closure&lt; detail::normalize_fn &gt; normalize</div><div class="ttdef"><b>Definition:</b> normalize.hpp:162</div></div>
+<div class="ttc" id="aparticle__traits_8hpp_html"><div class="ttname"><a href="particle__traits_8hpp.html">particle_traits.hpp</a></div><div class="ttdoc">Implementation of traits for particle types, see the Particle named requirements.</div></div>
+<div class="ttc" id="aparticles_8hpp_html"><div class="ttname"><a href="particles_8hpp.html">particles.hpp</a></div><div class="ttdoc">Implementation of views related to particle ranges.</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__base__fn_html"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html">beluga::actions::detail::normalize_base_fn</a></div><div class="ttdoc">Implementation detail for a normalize range adaptor object.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:38</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__base__fn_html_a2f7247e7e6e8329c3db1455995e86392"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a2f7247e7e6e8329c3db1455995e86392">beluga::actions::detail::normalize_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(ExecutionPolicy &amp;&amp;policy, Range &amp;range) const -&gt; Range &amp;</div><div class="ttdoc">Overload that uses a default normalization factor.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:83</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__base__fn_html_a570bb70a0f1df98eab2e89e6accc46cc"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a570bb70a0f1df98eab2e89e6accc46cc">beluga::actions::detail::normalize_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(ExecutionPolicy policy, double factor) const</div><div class="ttdoc">Overload that returns an action closure to compose with other actions.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:118</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__base__fn_html_a9367b7ff79d4b731c8c24383da09bca7"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a9367b7ff79d4b731c8c24383da09bca7">beluga::actions::detail::normalize_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(ExecutionPolicy policy) const</div><div class="ttdoc">Overload that returns an action closure to compose with other actions.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:124</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__base__fn_html_a9f6f0486b09ed93992e15e524e6aa4cc"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#a9f6f0486b09ed93992e15e524e6aa4cc">beluga::actions::detail::normalize_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range, ExecutionPolicy policy) const -&gt; Range &amp;</div><div class="ttdoc">Overload that re-orders arguments from an action closure.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:112</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__base__fn_html_aa4d20afb1841025a4b40380df61aa9ae"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#aa4d20afb1841025a4b40380df61aa9ae">beluga::actions::detail::normalize_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(ExecutionPolicy &amp;&amp;policy, Range &amp;range, double factor) const -&gt; Range &amp;</div><div class="ttdoc">Overload that implements the normalize algorithm.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:52</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__base__fn_html_aee32c482b7e6e02fa02a2f2b30328aaf"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__base__fn.html#aee32c482b7e6e02fa02a2f2b30328aaf">beluga::actions::detail::normalize_base_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range, double factor, ExecutionPolicy policy) const -&gt; Range &amp;</div><div class="ttdoc">Overload that re-orders arguments from an action closure.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:102</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__fn_html"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html">beluga::actions::detail::normalize_fn</a></div><div class="ttdoc">Implementation detail for a normalize range adaptor object with a default execution policy.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:130</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__fn_html_a326ea82f1d371b6eadafc1afe6bd00ff"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html#a326ea82f1d371b6eadafc1afe6bd00ff">beluga::actions::detail::normalize_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(double factor) const</div><div class="ttdoc">Overload that returns an action closure to compose with other actions.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:146</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__fn_html_a4c8aa606ec2bae8200b6e3a3b4fd3957"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html#a4c8aa606ec2bae8200b6e3a3b4fd3957">beluga::actions::detail::normalize_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range, double factor) const -&gt; Range &amp;</div><div class="ttdoc">Overload that defines a default execution policy.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:135</div></div>
+<div class="ttc" id="astructbeluga_1_1actions_1_1detail_1_1normalize__fn_html_ac0c3c3aa67d33773a6cd3c1b2cd18af5"><div class="ttname"><a href="structbeluga_1_1actions_1_1detail_1_1normalize__fn.html#ac0c3c3aa67d33773a6cd3c1b2cd18af5">beluga::actions::detail::normalize_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range) const -&gt; Range &amp;</div><div class="ttdoc">Overload that defines a default execution policy.</div><div class="ttdef"><b>Definition:</b> normalize.hpp:141</div></div>
+<div class="ttc" id="astructbeluga_1_1policy_html"><div class="ttname"><a href="structbeluga_1_1policy.html">beluga::policy</a></div><div class="ttdoc">Forward declaration of policy.</div><div class="ttdef"><b>Definition:</b> policy.hpp:102</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

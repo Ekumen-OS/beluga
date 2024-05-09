@@ -1,0 +1,8 @@
+<map id="/home/runner/work/beluga/beluga/beluga/include/beluga/algorithm/distance_map.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/algorithm/distance_map.hpp">
+<area shape="rect" id="node1" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="112,5,308,76"/>
+<area shape="rect" id="node2" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,243,199,299"/>
+<area shape="rect" id="node5" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="201,124,395,195"/>
+<area shape="rect" id="node3" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="113,347,307,403"/>
+<area shape="rect" id="node4" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="92,451,328,507"/>
+<area shape="rect" id="node6" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="223,243,416,299"/>
+</map>

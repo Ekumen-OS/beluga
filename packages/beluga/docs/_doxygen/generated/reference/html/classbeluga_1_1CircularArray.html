@@ -1,0 +1,1442 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga: beluga::CircularArray&amp;lt; T, N, F &amp;gt; Class Template Reference &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1CircularArray';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_ros/docs/index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_amcl/docs/index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1CircularArray.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>CircularArray&lt; T, N, F &gt; Class Template Reference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="circulararray-lt-t-n-f-gt-class-template-reference">
+<h1>CircularArray&amp;lt; T, N, F &amp;gt; Class Template Reference<a class="headerlink" href="#circulararray-lt-t-n-f-gt-class-template-reference" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga: beluga::CircularArray&lt; T, N, F &gt; Class Template Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacebeluga.html">beluga</a></li><li class="navelem"><a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classbeluga_1_1CircularArray-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">beluga::CircularArray&lt; T, N, F &gt; Class Template Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>An implementation of generic, non-threadsafe circular array.  
+ <a href="classbeluga_1_1CircularArray.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="circular__array_8hpp_source.html">circular_array.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ae456ba858d540f8980c7ea1020c4c4f2"><td class="memItemLeft" align="right" valign="top"><a id="ae456ba858d540f8980c7ea1020c4c4f2"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#ae456ba858d540f8980c7ea1020c4c4f2">value_type</a> = T</td></tr>
+<tr class="memdesc:ae456ba858d540f8980c7ea1020c4c4f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value type of the array. <br /></td></tr>
+<tr class="separator:ae456ba858d540f8980c7ea1020c4c4f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7c9da4f2c2c25b513b4892f44b3c213"><td class="memItemLeft" align="right" valign="top"><a id="aa7c9da4f2c2c25b513b4892f44b3c213"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a> = std::size_t</td></tr>
+<tr class="memdesc:aa7c9da4f2c2c25b513b4892f44b3c213"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size type of the array. <br /></td></tr>
+<tr class="separator:aa7c9da4f2c2c25b513b4892f44b3c213"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a746f24ecf315d7f59ff5e4463054efd8"><td class="memItemLeft" align="right" valign="top"><a id="a746f24ecf315d7f59ff5e4463054efd8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a746f24ecf315d7f59ff5e4463054efd8">difference_type</a> = std::ptrdiff_t</td></tr>
+<tr class="memdesc:a746f24ecf315d7f59ff5e4463054efd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size difference type of the array. <br /></td></tr>
+<tr class="separator:a746f24ecf315d7f59ff5e4463054efd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dbe651f4d66de32ab762965c37b983f"><td class="memItemLeft" align="right" valign="top"><a id="a1dbe651f4d66de32ab762965c37b983f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a1dbe651f4d66de32ab762965c37b983f">reference</a> = <a class="el" href="classbeluga_1_1CircularArray.html#ae456ba858d540f8980c7ea1020c4c4f2">value_type</a> &amp;</td></tr>
+<tr class="memdesc:a1dbe651f4d66de32ab762965c37b983f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value reference type of the array. <br /></td></tr>
+<tr class="separator:a1dbe651f4d66de32ab762965c37b983f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb5c47a515d975340cf290fa40842ce7"><td class="memItemLeft" align="right" valign="top"><a id="aeb5c47a515d975340cf290fa40842ce7"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#aeb5c47a515d975340cf290fa40842ce7">const_reference</a> = const <a class="el" href="classbeluga_1_1CircularArray.html#ae456ba858d540f8980c7ea1020c4c4f2">value_type</a> &amp;</td></tr>
+<tr class="memdesc:aeb5c47a515d975340cf290fa40842ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant value reference type of the array. <br /></td></tr>
+<tr class="separator:aeb5c47a515d975340cf290fa40842ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44c25883e21864e75e87ad42983ae0c6"><td class="memItemLeft" align="right" valign="top"><a id="a44c25883e21864e75e87ad42983ae0c6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a44c25883e21864e75e87ad42983ae0c6">pointer</a> = <a class="el" href="classbeluga_1_1CircularArray.html#ae456ba858d540f8980c7ea1020c4c4f2">value_type</a> *</td></tr>
+<tr class="memdesc:a44c25883e21864e75e87ad42983ae0c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value pointer type of the array. <br /></td></tr>
+<tr class="separator:a44c25883e21864e75e87ad42983ae0c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a316811b765e261040290a81da3b6f60a"><td class="memItemLeft" align="right" valign="top"><a id="a316811b765e261040290a81da3b6f60a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a316811b765e261040290a81da3b6f60a">const_pointer</a> = const <a class="el" href="classbeluga_1_1CircularArray.html#ae456ba858d540f8980c7ea1020c4c4f2">value_type</a> *</td></tr>
+<tr class="memdesc:a316811b765e261040290a81da3b6f60a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant value pointer type of the arra.y. <br /></td></tr>
+<tr class="separator:a316811b765e261040290a81da3b6f60a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad703b48ba9a8a345514efbdb80cf51ae"><td class="memItemLeft" align="right" valign="top"><a id="ad703b48ba9a8a345514efbdb80cf51ae"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#ad703b48ba9a8a345514efbdb80cf51ae">allocator_type</a> = void</td></tr>
+<tr class="memdesc:ad703b48ba9a8a345514efbdb80cf51ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocator type of the array (required in range-v3 10.0). <br /></td></tr>
+<tr class="separator:ad703b48ba9a8a345514efbdb80cf51ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bdef2d3fa1726e84ced398bd354ccdc"><td class="memItemLeft" align="right" valign="top"><a id="a4bdef2d3fa1726e84ced398bd354ccdc"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a4bdef2d3fa1726e84ced398bd354ccdc">iterator</a> = <a class="el" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&lt; <a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a>&lt; T, N, F &gt; &gt;</td></tr>
+<tr class="memdesc:a4bdef2d3fa1726e84ced398bd354ccdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterator type of the array. <br /></td></tr>
+<tr class="separator:a4bdef2d3fa1726e84ced398bd354ccdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad08f81451b4e29a05d4e180343903cf8"><td class="memItemLeft" align="right" valign="top"><a id="ad08f81451b4e29a05d4e180343903cf8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#ad08f81451b4e29a05d4e180343903cf8">const_iterator</a> = <a class="el" href="classbeluga_1_1IndexingIterator.html">IndexingIterator</a>&lt; const <a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a>&lt; T, N, F &gt; &gt;</td></tr>
+<tr class="memdesc:ad08f81451b4e29a05d4e180343903cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant iterator type of the array. <br /></td></tr>
+<tr class="separator:ad08f81451b4e29a05d4e180343903cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad65e83dddab29fef839afcf43e6ed86e"><td class="memItemLeft" align="right" valign="top"><a id="ad65e83dddab29fef839afcf43e6ed86e"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#ad65e83dddab29fef839afcf43e6ed86e">reverse_iterator</a> = std::reverse_iterator&lt; <a class="el" href="classbeluga_1_1CircularArray.html#a4bdef2d3fa1726e84ced398bd354ccdc">iterator</a> &gt;</td></tr>
+<tr class="memdesc:ad65e83dddab29fef839afcf43e6ed86e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse iterator type of the array. <br /></td></tr>
+<tr class="separator:ad65e83dddab29fef839afcf43e6ed86e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c73bfc192166caa6d9d7872a46bbcde"><td class="memItemLeft" align="right" valign="top"><a id="a9c73bfc192166caa6d9d7872a46bbcde"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a9c73bfc192166caa6d9d7872a46bbcde">const_reverse_iterator</a> = std::reverse_iterator&lt; <a class="el" href="classbeluga_1_1CircularArray.html#ad08f81451b4e29a05d4e180343903cf8">const_iterator</a> &gt;</td></tr>
+<tr class="memdesc:a9c73bfc192166caa6d9d7872a46bbcde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant reverse iterator type of the array. <br /></td></tr>
+<tr class="separator:a9c73bfc192166caa6d9d7872a46bbcde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a7676414d3f61dc234b903703557fa269"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a7676414d3f61dc234b903703557fa269">CircularArray</a> ()=default</td></tr>
+<tr class="memdesc:a7676414d3f61dc234b903703557fa269"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <a href="classbeluga_1_1CircularArray.html#a7676414d3f61dc234b903703557fa269">More...</a><br /></td></tr>
+<tr class="separator:a7676414d3f61dc234b903703557fa269"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0574eaaf0e68df3ce372bbd7b1af76eb"><td class="memTemplParams" colspan="2">template&lt;typename Iterator , typename Sentinel , typename  = std::enable_if_t&lt;std::is_same_v&lt;T, typename std::iterator_traits&lt;Iterator&gt;::value_type&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a0574eaaf0e68df3ce372bbd7b1af76eb"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a0574eaaf0e68df3ce372bbd7b1af76eb">CircularArray</a> (Iterator first, Sentinel last)</td></tr>
+<tr class="memdesc:a0574eaaf0e68df3ce372bbd7b1af76eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs array from a pair of iterators.  <a href="classbeluga_1_1CircularArray.html#a0574eaaf0e68df3ce372bbd7b1af76eb">More...</a><br /></td></tr>
+<tr class="separator:a0574eaaf0e68df3ce372bbd7b1af76eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d5e31a711903600206ebebfe33aaf4a"><td class="memTemplParams" colspan="2">template&lt;std::size_t M&gt; </td></tr>
+<tr class="memitem:a9d5e31a711903600206ebebfe33aaf4a"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a9d5e31a711903600206ebebfe33aaf4a">CircularArray</a> (T(&amp;&amp;<a class="el" href="classbeluga_1_1CircularArray.html#aac265f9734c4968b8c7193145139737b">data</a>)[M])</td></tr>
+<tr class="memdesc:a9d5e31a711903600206ebebfe33aaf4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs array from an aggregate.  <a href="classbeluga_1_1CircularArray.html#a9d5e31a711903600206ebebfe33aaf4a">More...</a><br /></td></tr>
+<tr class="separator:a9d5e31a711903600206ebebfe33aaf4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbfcf871b39af4bcb0cdeca56aca1c67"><td class="memItemLeft" align="right" valign="top"><a id="adbfcf871b39af4bcb0cdeca56aca1c67"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a4bdef2d3fa1726e84ced398bd354ccdc">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#adbfcf871b39af4bcb0cdeca56aca1c67">begin</a> () noexcept</td></tr>
+<tr class="memdesc:adbfcf871b39af4bcb0cdeca56aca1c67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator pointing to the front of the array. <br /></td></tr>
+<tr class="separator:adbfcf871b39af4bcb0cdeca56aca1c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3077ad5bfc4c94254046f6b07d45b6fc"><td class="memItemLeft" align="right" valign="top"><a id="a3077ad5bfc4c94254046f6b07d45b6fc"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#ad08f81451b4e29a05d4e180343903cf8">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a3077ad5bfc4c94254046f6b07d45b6fc">begin</a> () const noexcept</td></tr>
+<tr class="memdesc:a3077ad5bfc4c94254046f6b07d45b6fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant iterator pointing to the front of the array. <br /></td></tr>
+<tr class="separator:a3077ad5bfc4c94254046f6b07d45b6fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcbbb300792e6e7a59400b875b269b11"><td class="memItemLeft" align="right" valign="top"><a id="afcbbb300792e6e7a59400b875b269b11"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#ad08f81451b4e29a05d4e180343903cf8">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#afcbbb300792e6e7a59400b875b269b11">cbegin</a> () const noexcept</td></tr>
+<tr class="memdesc:afcbbb300792e6e7a59400b875b269b11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant iterator pointing to the front of the array. <br /></td></tr>
+<tr class="separator:afcbbb300792e6e7a59400b875b269b11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6076476ea2f095c1072f37e108b6ee98"><td class="memItemLeft" align="right" valign="top"><a id="a6076476ea2f095c1072f37e108b6ee98"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a4bdef2d3fa1726e84ced398bd354ccdc">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a6076476ea2f095c1072f37e108b6ee98">end</a> () noexcept</td></tr>
+<tr class="memdesc:a6076476ea2f095c1072f37e108b6ee98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator pointing past the back of the array. <br /></td></tr>
+<tr class="separator:a6076476ea2f095c1072f37e108b6ee98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae798fd486128a6fa07a2d3fad4d52e4e"><td class="memItemLeft" align="right" valign="top"><a id="ae798fd486128a6fa07a2d3fad4d52e4e"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#ad08f81451b4e29a05d4e180343903cf8">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#ae798fd486128a6fa07a2d3fad4d52e4e">end</a> () const noexcept</td></tr>
+<tr class="memdesc:ae798fd486128a6fa07a2d3fad4d52e4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant iterator pointing past the back of the array. <br /></td></tr>
+<tr class="separator:ae798fd486128a6fa07a2d3fad4d52e4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ca41b76c01de3c6429478f79de66344"><td class="memItemLeft" align="right" valign="top"><a id="a1ca41b76c01de3c6429478f79de66344"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#ad08f81451b4e29a05d4e180343903cf8">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a1ca41b76c01de3c6429478f79de66344">cend</a> () const noexcept</td></tr>
+<tr class="memdesc:a1ca41b76c01de3c6429478f79de66344"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant iterator pointing past the back of the array. <br /></td></tr>
+<tr class="separator:a1ca41b76c01de3c6429478f79de66344"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa637aa50cf036bc0d41d413f118ac189"><td class="memItemLeft" align="right" valign="top"><a id="aa637aa50cf036bc0d41d413f118ac189"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#ad65e83dddab29fef839afcf43e6ed86e">reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#aa637aa50cf036bc0d41d413f118ac189">rbegin</a> () noexcept</td></tr>
+<tr class="memdesc:aa637aa50cf036bc0d41d413f118ac189"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reverse iterator pointing to the back of the array. <br /></td></tr>
+<tr class="separator:aa637aa50cf036bc0d41d413f118ac189"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a412c1c05da93099f2aed514bd7c5c8df"><td class="memItemLeft" align="right" valign="top"><a id="a412c1c05da93099f2aed514bd7c5c8df"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a9c73bfc192166caa6d9d7872a46bbcde">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a412c1c05da93099f2aed514bd7c5c8df">rbegin</a> () const noexcept</td></tr>
+<tr class="memdesc:a412c1c05da93099f2aed514bd7c5c8df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant reverse iterator pointing to the back of the array. <br /></td></tr>
+<tr class="separator:a412c1c05da93099f2aed514bd7c5c8df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61acdfb0da569ba8c7020f566f91f049"><td class="memItemLeft" align="right" valign="top"><a id="a61acdfb0da569ba8c7020f566f91f049"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a9c73bfc192166caa6d9d7872a46bbcde">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a61acdfb0da569ba8c7020f566f91f049">crbegin</a> () const noexcept</td></tr>
+<tr class="memdesc:a61acdfb0da569ba8c7020f566f91f049"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant reverse iterator pointing to the back of the array. <br /></td></tr>
+<tr class="separator:a61acdfb0da569ba8c7020f566f91f049"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af39f5cebcb1b94e4f26b26babe262ee8"><td class="memItemLeft" align="right" valign="top"><a id="af39f5cebcb1b94e4f26b26babe262ee8"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#ad65e83dddab29fef839afcf43e6ed86e">reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#af39f5cebcb1b94e4f26b26babe262ee8">rend</a> () noexcept</td></tr>
+<tr class="memdesc:af39f5cebcb1b94e4f26b26babe262ee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reverse iterator pointing past the front of the array. <br /></td></tr>
+<tr class="separator:af39f5cebcb1b94e4f26b26babe262ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82b7c7b893e35163f4312292cac0524d"><td class="memItemLeft" align="right" valign="top"><a id="a82b7c7b893e35163f4312292cac0524d"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a9c73bfc192166caa6d9d7872a46bbcde">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a82b7c7b893e35163f4312292cac0524d">rend</a> () const noexcept</td></tr>
+<tr class="memdesc:a82b7c7b893e35163f4312292cac0524d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant reverse iterator pointing past the front of the array. <br /></td></tr>
+<tr class="separator:a82b7c7b893e35163f4312292cac0524d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48d5a70f6a91f4616d2b64c512f6ccdb"><td class="memItemLeft" align="right" valign="top"><a id="a48d5a70f6a91f4616d2b64c512f6ccdb"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a9c73bfc192166caa6d9d7872a46bbcde">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a48d5a70f6a91f4616d2b64c512f6ccdb">crend</a> () const noexcept</td></tr>
+<tr class="memdesc:a48d5a70f6a91f4616d2b64c512f6ccdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant reverse iterator pointing past the front of the array. <br /></td></tr>
+<tr class="separator:a48d5a70f6a91f4616d2b64c512f6ccdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52be806055ec3fd25eaa82dd08d260e4"><td class="memTemplParams" colspan="2">template&lt;bool Enabled = !(F &amp; CircularArrayFeatureFlags::kLayoutReversal)&gt; </td></tr>
+<tr class="memitem:a52be806055ec3fd25eaa82dd08d260e4"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; Enabled &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a52be806055ec3fd25eaa82dd08d260e4">push_back</a> (<a class="el" href="classbeluga_1_1CircularArray.html#ae456ba858d540f8980c7ea1020c4c4f2">value_type</a> value)</td></tr>
+<tr class="memdesc:a52be806055ec3fd25eaa82dd08d260e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes a <code>value</code> to the back of the array.  <a href="classbeluga_1_1CircularArray.html#a52be806055ec3fd25eaa82dd08d260e4">More...</a><br /></td></tr>
+<tr class="separator:a52be806055ec3fd25eaa82dd08d260e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3c14a36d750f07acff1121182ffae67"><td class="memTemplParams" colspan="2">template&lt;bool Enabled = F&amp; CircularArrayFeatureFlags::kLayoutReversal&gt; </td></tr>
+<tr class="memitem:ac3c14a36d750f07acff1121182ffae67"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; Enabled &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#ac3c14a36d750f07acff1121182ffae67">push_front</a> (<a class="el" href="classbeluga_1_1CircularArray.html#ae456ba858d540f8980c7ea1020c4c4f2">value_type</a> value)</td></tr>
+<tr class="memdesc:ac3c14a36d750f07acff1121182ffae67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes a <code>value</code> at the front of the array.  <a href="classbeluga_1_1CircularArray.html#ac3c14a36d750f07acff1121182ffae67">More...</a><br /></td></tr>
+<tr class="separator:ac3c14a36d750f07acff1121182ffae67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31ff219bfeaa7104b1b0ef5c6294ed6a"><td class="memTemplParams" colspan="2">template&lt;bool Enabled = F&amp; CircularArrayFeatureFlags::kLayoutReversal&gt; </td></tr>
+<tr class="memitem:a31ff219bfeaa7104b1b0ef5c6294ed6a"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; Enabled &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a31ff219bfeaa7104b1b0ef5c6294ed6a">pop_back</a> () noexcept</td></tr>
+<tr class="memdesc:a31ff219bfeaa7104b1b0ef5c6294ed6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pops a <code>value</code> from the back of the array.  <a href="classbeluga_1_1CircularArray.html#a31ff219bfeaa7104b1b0ef5c6294ed6a">More...</a><br /></td></tr>
+<tr class="separator:a31ff219bfeaa7104b1b0ef5c6294ed6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4414981eb158957b6ade7a2c752bb2bc"><td class="memTemplParams" colspan="2">template&lt;bool Enabled = !(F &amp; CircularArrayFeatureFlags::kLayoutReversal)&gt; </td></tr>
+<tr class="memitem:a4414981eb158957b6ade7a2c752bb2bc"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; Enabled &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a4414981eb158957b6ade7a2c752bb2bc">pop_front</a> () noexcept</td></tr>
+<tr class="memdesc:a4414981eb158957b6ade7a2c752bb2bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pops a <code>value</code> from the front of the array.  <a href="classbeluga_1_1CircularArray.html#a4414981eb158957b6ade7a2c752bb2bc">More...</a><br /></td></tr>
+<tr class="separator:a4414981eb158957b6ade7a2c752bb2bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d7c0abeeb6cb93e43c9964a90f7a0ca"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a1dbe651f4d66de32ab762965c37b983f">reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a3d7c0abeeb6cb93e43c9964a90f7a0ca">back</a> () noexcept</td></tr>
+<tr class="memdesc:a3d7c0abeeb6cb93e43c9964a90f7a0ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the value at the back of the array.  <a href="classbeluga_1_1CircularArray.html#a3d7c0abeeb6cb93e43c9964a90f7a0ca">More...</a><br /></td></tr>
+<tr class="separator:a3d7c0abeeb6cb93e43c9964a90f7a0ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fb8ccaa871d64cf753ff38fbed491c2"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aeb5c47a515d975340cf290fa40842ce7">const_reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a8fb8ccaa871d64cf753ff38fbed491c2">back</a> () const noexcept</td></tr>
+<tr class="memdesc:a8fb8ccaa871d64cf753ff38fbed491c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant reference to the value at the back of the array.  <a href="classbeluga_1_1CircularArray.html#a8fb8ccaa871d64cf753ff38fbed491c2">More...</a><br /></td></tr>
+<tr class="separator:a8fb8ccaa871d64cf753ff38fbed491c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4f7423e71346746609d7aab3a3ced78"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a1dbe651f4d66de32ab762965c37b983f">reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#ad4f7423e71346746609d7aab3a3ced78">front</a> () noexcept</td></tr>
+<tr class="memdesc:ad4f7423e71346746609d7aab3a3ced78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the value at the front of the array.  <a href="classbeluga_1_1CircularArray.html#ad4f7423e71346746609d7aab3a3ced78">More...</a><br /></td></tr>
+<tr class="separator:ad4f7423e71346746609d7aab3a3ced78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8359e58a55e0a6ec22e6b4e5a46a3d9c"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aeb5c47a515d975340cf290fa40842ce7">const_reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a8359e58a55e0a6ec22e6b4e5a46a3d9c">front</a> () const noexcept</td></tr>
+<tr class="memdesc:a8359e58a55e0a6ec22e6b4e5a46a3d9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant reference to the value at the front of the array.  <a href="classbeluga_1_1CircularArray.html#a8359e58a55e0a6ec22e6b4e5a46a3d9c">More...</a><br /></td></tr>
+<tr class="separator:a8359e58a55e0a6ec22e6b4e5a46a3d9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e65ecfa0c40c88e7fff881bc5c9cc91"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a1dbe651f4d66de32ab762965c37b983f">reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a2e65ecfa0c40c88e7fff881bc5c9cc91">at</a> (<a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a> index)</td></tr>
+<tr class="memdesc:a2e65ecfa0c40c88e7fff881bc5c9cc91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the array value at the given <code>index</code>.  <a href="classbeluga_1_1CircularArray.html#a2e65ecfa0c40c88e7fff881bc5c9cc91">More...</a><br /></td></tr>
+<tr class="separator:a2e65ecfa0c40c88e7fff881bc5c9cc91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2db9c466b8377d08c16bf2b4f0d1daa6"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aeb5c47a515d975340cf290fa40842ce7">const_reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a2db9c466b8377d08c16bf2b4f0d1daa6">at</a> (<a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a> index) const</td></tr>
+<tr class="memdesc:a2db9c466b8377d08c16bf2b4f0d1daa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant reference to the array value at the given <code>index</code>.  <a href="classbeluga_1_1CircularArray.html#a2db9c466b8377d08c16bf2b4f0d1daa6">More...</a><br /></td></tr>
+<tr class="separator:a2db9c466b8377d08c16bf2b4f0d1daa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a869a356d1350318541cf929d201efeef"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a1dbe651f4d66de32ab762965c37b983f">reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a869a356d1350318541cf929d201efeef">operator[]</a> (<a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a> index) noexcept</td></tr>
+<tr class="memdesc:a869a356d1350318541cf929d201efeef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the array value at the given <code>index</code>.  <a href="classbeluga_1_1CircularArray.html#a869a356d1350318541cf929d201efeef">More...</a><br /></td></tr>
+<tr class="separator:a869a356d1350318541cf929d201efeef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4bc9840be028c83d4d2661ee9d1c79a"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aeb5c47a515d975340cf290fa40842ce7">const_reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#ae4bc9840be028c83d4d2661ee9d1c79a">operator[]</a> (<a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a> index) const noexcept</td></tr>
+<tr class="memdesc:ae4bc9840be028c83d4d2661ee9d1c79a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant reference to the array value at the given <code>index</code>.  <a href="classbeluga_1_1CircularArray.html#ae4bc9840be028c83d4d2661ee9d1c79a">More...</a><br /></td></tr>
+<tr class="separator:ae4bc9840be028c83d4d2661ee9d1c79a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab728ebf5fd665f6661359f246d0e1127"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#ab728ebf5fd665f6661359f246d0e1127">fill</a> (const T &amp;value)</td></tr>
+<tr class="memdesc:ab728ebf5fd665f6661359f246d0e1127"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills array to its maximum size with a given <code>value</code>.  <a href="classbeluga_1_1CircularArray.html#ab728ebf5fd665f6661359f246d0e1127">More...</a><br /></td></tr>
+<tr class="separator:ab728ebf5fd665f6661359f246d0e1127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d589d845b35bb2d6d92985347140fdb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a3d589d845b35bb2d6d92985347140fdb">clear</a> () noexcept</td></tr>
+<tr class="memdesc:a3d589d845b35bb2d6d92985347140fdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears array.  <a href="classbeluga_1_1CircularArray.html#a3d589d845b35bb2d6d92985347140fdb">More...</a><br /></td></tr>
+<tr class="separator:a3d589d845b35bb2d6d92985347140fdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0225e3be4de6efcfa23622b1561b136d"><td class="memTemplParams" colspan="2">template&lt;CircularArrayFeatureFlags G&gt; </td></tr>
+<tr class="memitem:a0225e3be4de6efcfa23622b1561b136d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a0225e3be4de6efcfa23622b1561b136d">swap</a> (<a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a>&lt; T, N, G &gt; &amp;other) noexcept(std::is_nothrow_swappable_v&lt; T &gt;)</td></tr>
+<tr class="memdesc:a0225e3be4de6efcfa23622b1561b136d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swaps array with another.  <a href="classbeluga_1_1CircularArray.html#a0225e3be4de6efcfa23622b1561b136d">More...</a><br /></td></tr>
+<tr class="separator:a0225e3be4de6efcfa23622b1561b136d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac265f9734c4968b8c7193145139737b"><td class="memItemLeft" align="right" valign="top">constexpr T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#aac265f9734c4968b8c7193145139737b">data</a> () noexcept</td></tr>
+<tr class="memdesc:aac265f9734c4968b8c7193145139737b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the underlying array data.  <a href="classbeluga_1_1CircularArray.html#aac265f9734c4968b8c7193145139737b">More...</a><br /></td></tr>
+<tr class="separator:aac265f9734c4968b8c7193145139737b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64a0ca6c0881b5d282a5cc14b861cb92"><td class="memItemLeft" align="right" valign="top">constexpr const T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a64a0ca6c0881b5d282a5cc14b861cb92">data</a> () const noexcept</td></tr>
+<tr class="memdesc:a64a0ca6c0881b5d282a5cc14b861cb92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a constant pointer to the underlying array data.  <a href="classbeluga_1_1CircularArray.html#a64a0ca6c0881b5d282a5cc14b861cb92">More...</a><br /></td></tr>
+<tr class="separator:a64a0ca6c0881b5d282a5cc14b861cb92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a658107e2c1b3b07734f01a66753f5306"><td class="memItemLeft" align="right" valign="top"><a id="a658107e2c1b3b07734f01a66753f5306"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a658107e2c1b3b07734f01a66753f5306">full</a> () const noexcept</td></tr>
+<tr class="memdesc:a658107e2c1b3b07734f01a66753f5306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the array is full, false otherwise. <br /></td></tr>
+<tr class="separator:a658107e2c1b3b07734f01a66753f5306"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76fff451f35472091c55e284dd3b485d"><td class="memItemLeft" align="right" valign="top"><a id="a76fff451f35472091c55e284dd3b485d"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a76fff451f35472091c55e284dd3b485d">empty</a> () const noexcept</td></tr>
+<tr class="memdesc:a76fff451f35472091c55e284dd3b485d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the array is empty, false otherwise. <br /></td></tr>
+<tr class="separator:a76fff451f35472091c55e284dd3b485d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa199b7a7e0daf131a8000271ba2b7b48"><td class="memItemLeft" align="right" valign="top"><a id="aa199b7a7e0daf131a8000271ba2b7b48"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#aa199b7a7e0daf131a8000271ba2b7b48">size</a> () const noexcept</td></tr>
+<tr class="memdesc:aa199b7a7e0daf131a8000271ba2b7b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current array size. <br /></td></tr>
+<tr class="separator:aa199b7a7e0daf131a8000271ba2b7b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37c25f570411ea1eabf08be2aa679d9b"><td class="memItemLeft" align="right" valign="top"><a id="a37c25f570411ea1eabf08be2aa679d9b"></a>
+constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a37c25f570411ea1eabf08be2aa679d9b">max_size</a> () const noexcept</td></tr>
+<tr class="memdesc:a37c25f570411ea1eabf08be2aa679d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum array size. <br /></td></tr>
+<tr class="separator:a37c25f570411ea1eabf08be2aa679d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fa13dd63b584ade76892a673dd6f039"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1CircularArray.html#a2fa13dd63b584ade76892a673dd6f039">effective_size</a> () const noexcept</td></tr>
+<tr class="memdesc:a2fa13dd63b584ade76892a673dd6f039"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the effective array size.  <a href="classbeluga_1_1CircularArray.html#a2fa13dd63b584ade76892a673dd6f039">More...</a><br /></td></tr>
+<tr class="separator:a2fa13dd63b584ade76892a673dd6f039"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename T, std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt;<br />
+class beluga::CircularArray&lt; T, N, F &gt;</h3>
+
+<p>An implementation of generic, non-threadsafe circular array. </p>
+<p>Modelled after <code>std::array</code>. Its maximum size is fixed at compile-time. Most operations are O(1) but for a few that exhibit worse case O(N) (not considering the complexity of move-construction and move-assignment of array elements of type T). Additionally, it features optional indexing reversal (making it a LIFO rather than a FIFO data structure), optional back value extrapolation for constant read accesses, and optional rollover on write accesses (i.e. overwriting the oldest value when pushing to an array instance that is full).</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Element type. It must be <a href="https://en.cppreference.com/w/cpp/named_req/DefaultConstructible">default constructible</a>, <a href="https://en.cppreference.com/w/cpp/named_req/MoveConstructible">move constructible</a>, and <a href="https://en.cppreference.com/w/cpp/named_req/MoveAssignable">move assignable</a>. </td></tr>
+    <tr><td class="paramname">N</td><td>Maximum size. It must be a positive integer. </td></tr>
+    <tr><td class="paramname">F</td><td>Array feature flags, to enable optional functionality. It defaults to none. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a7676414d3f61dc234b903703557fa269"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7676414d3f61dc234b903703557fa269">&#9670;&nbsp;</a></span>CircularArray() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::<a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default constructor. </p>
+<p>Array will be functionally empty but storage will be default initialized. </p>
+
+</div>
+</div>
+<a id="a0574eaaf0e68df3ce372bbd7b1af76eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0574eaaf0e68df3ce372bbd7b1af76eb">&#9670;&nbsp;</a></span>CircularArray() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<div class="memtemplate">
+template&lt;typename Iterator , typename Sentinel , typename  = std::enable_if_t&lt;std::is_same_v&lt;T, typename std::iterator_traits&lt;Iterator&gt;::value_type&gt;&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::<a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a> </td>
+          <td>(</td>
+          <td class="paramtype">Iterator&#160;</td>
+          <td class="paramname"><em>first</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Sentinel&#160;</td>
+          <td class="paramname"><em>last</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs array from a pair of iterators. </p>
+<p>Functionally equivalent to repeated <a class="el" href="classbeluga_1_1CircularArray.html#a52be806055ec3fd25eaa82dd08d260e4" title="Pushes a value to the back of the array.">push_back()</a> operations or <a class="el" href="classbeluga_1_1CircularArray.html#ac3c14a36d750f07acff1121182ffae67" title="Pushes a value at the front of the array.">push_front()</a> operations in reverse if the layout reversal feature is enabled. That is, both range and array layouts match.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterator to the beginning of a range. </td></tr>
+    <tr><td class="paramname">last</td><td>Sentinel for the end of a range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::length_error</td><td>If the range does not fit in the array (and the rollover on write feature is not enabled). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9d5e31a711903600206ebebfe33aaf4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d5e31a711903600206ebebfe33aaf4a">&#9670;&nbsp;</a></span>CircularArray() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<div class="memtemplate">
+template&lt;std::size_t M&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::<a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a> </td>
+          <td>(</td>
+          <td class="paramtype">T(&amp;&amp;)&#160;</td>
+          <td class="paramname"><em>data</em>[M]</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs array from an aggregate. </p>
+<p>Functionally equivalent to repeated <a class="el" href="classbeluga_1_1CircularArray.html#a52be806055ec3fd25eaa82dd08d260e4" title="Pushes a value to the back of the array.">push_back()</a> operations or <a class="el" href="classbeluga_1_1CircularArray.html#ac3c14a36d750f07acff1121182ffae67" title="Pushes a value at the front of the array.">push_front()</a> operations in reverse if the layout reversal feature is enabled. That is, both aggregate and array layouts match.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Aggregate data to initialize the array with. Its size must be in the [1, N] interval. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2e65ecfa0c40c88e7fff881bc5c9cc91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e65ecfa0c40c88e7fff881bc5c9cc91">&#9670;&nbsp;</a></span>at() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a1dbe651f4d66de32ab762965c37b983f">reference</a> <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::at </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a>&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a reference to the array value at the given <code>index</code>. </p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::out_of_range</td><td>If <code>index</code> is past the array's effective size. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2db9c466b8377d08c16bf2b4f0d1daa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2db9c466b8377d08c16bf2b4f0d1daa6">&#9670;&nbsp;</a></span>at() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aeb5c47a515d975340cf290fa40842ce7">const_reference</a> <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::at </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a>&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a constant reference to the array value at the given <code>index</code>. </p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::out_of_range</td><td>If <code>index</code> is past the array effective size. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8fb8ccaa871d64cf753ff38fbed491c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fb8ccaa871d64cf753ff38fbed491c2">&#9670;&nbsp;</a></span>back() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aeb5c47a515d975340cf290fa40842ce7">const_reference</a> <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::back </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a constant reference to the value at the back of the array. </p>
+<p>Behavior is undefined when accessing the back of an empty array. </p>
+
+</div>
+</div>
+<a id="a3d7c0abeeb6cb93e43c9964a90f7a0ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d7c0abeeb6cb93e43c9964a90f7a0ca">&#9670;&nbsp;</a></span>back() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a1dbe651f4d66de32ab762965c37b983f">reference</a> <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::back </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a reference to the value at the back of the array. </p>
+<p>Behavior is undefined when accessing the back of an empty array. </p>
+
+</div>
+</div>
+<a id="a3d589d845b35bb2d6d92985347140fdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d589d845b35bb2d6d92985347140fdb">&#9670;&nbsp;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clears array. </p>
+<p>No value destructors are invoked. </p>
+
+</div>
+</div>
+<a id="a64a0ca6c0881b5d282a5cc14b861cb92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64a0ca6c0881b5d282a5cc14b861cb92">&#9670;&nbsp;</a></span>data() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const T* <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a constant pointer to the underlying array data. </p>
+<p>Note that a circular array does not feature a contiguous layout in memory. Indices and distances between them for the array do not map to its data. </p>
+
+</div>
+</div>
+<a id="aac265f9734c4968b8c7193145139737b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac265f9734c4968b8c7193145139737b">&#9670;&nbsp;</a></span>data() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr T* <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a pointer to the underlying array data. </p>
+<p>Note that a circular array does not feature a contiguous layout in memory. Indices and distances between them for the array do not map to its data. </p>
+
+</div>
+</div>
+<a id="a2fa13dd63b584ade76892a673dd6f039"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fa13dd63b584ade76892a673dd6f039">&#9670;&nbsp;</a></span>effective_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a> <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::effective_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the effective array size. </p>
+<p>Nominally, the effective array size is equal to the array size. If the last value extrapolation feature is enabled, however, the effective array size can only be 0 or N, when the array is empty and when the array is non-empty respectively. </p>
+
+</div>
+</div>
+<a id="ab728ebf5fd665f6661359f246d0e1127"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab728ebf5fd665f6661359f246d0e1127">&#9670;&nbsp;</a></span>fill()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::fill </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Fills array to its maximum size with a given <code>value</code>. </p>
+<p>Functionally equivalent to repeated <a class="el" href="classbeluga_1_1CircularArray.html#a52be806055ec3fd25eaa82dd08d260e4" title="Pushes a value to the back of the array.">push_back()</a> operations or <a class="el" href="classbeluga_1_1CircularArray.html#ac3c14a36d750f07acff1121182ffae67" title="Pushes a value at the front of the array.">push_front()</a> operations if the layout reversal feature is enabled until the array reaches its maximum size. Existing values are kept. Filling an array that is full is a no-op. </p>
+
+</div>
+</div>
+<a id="a8359e58a55e0a6ec22e6b4e5a46a3d9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8359e58a55e0a6ec22e6b4e5a46a3d9c">&#9670;&nbsp;</a></span>front() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aeb5c47a515d975340cf290fa40842ce7">const_reference</a> <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::front </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a constant reference to the value at the front of the array. </p>
+<p>Behavior is undefined when accessing the front of an empty array. </p>
+
+</div>
+</div>
+<a id="ad4f7423e71346746609d7aab3a3ced78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4f7423e71346746609d7aab3a3ced78">&#9670;&nbsp;</a></span>front() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a1dbe651f4d66de32ab762965c37b983f">reference</a> <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::front </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a reference to the value at the front of the array. </p>
+<p>Behavior is undefined when accessing the front of an empty array. </p>
+
+</div>
+</div>
+<a id="ae4bc9840be028c83d4d2661ee9d1c79a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4bc9840be028c83d4d2661ee9d1c79a">&#9670;&nbsp;</a></span>operator[]() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#aeb5c47a515d975340cf290fa40842ce7">const_reference</a> <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a>&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a constant reference to the array value at the given <code>index</code>. </p>
+<p>Behavior is undefined when <code>index</code> is greater than or equal to the array effective size. </p>
+
+</div>
+</div>
+<a id="a869a356d1350318541cf929d201efeef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a869a356d1350318541cf929d201efeef">&#9670;&nbsp;</a></span>operator[]() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeluga_1_1CircularArray.html#a1dbe651f4d66de32ab762965c37b983f">reference</a> <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1CircularArray.html#aa7c9da4f2c2c25b513b4892f44b3c213">size_type</a>&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a reference to the array value at the given <code>index</code>. </p>
+<p>Behavior is undefined when <code>index</code> is greater than or equal to the array size. </p>
+
+</div>
+</div>
+<a id="a31ff219bfeaa7104b1b0ef5c6294ed6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31ff219bfeaa7104b1b0ef5c6294ed6a">&#9670;&nbsp;</a></span>pop_back()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<div class="memtemplate">
+template&lt;bool Enabled = F&amp; CircularArrayFeatureFlags::kLayoutReversal&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if_t&lt;Enabled&gt; <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::pop_back </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pops a <code>value</code> from the back of the array. </p>
+<p>Only available when the layout reversal feature is enabled. Behavior is undefined when popping from the back of an empty array. No destructors are invoked on the value popped. </p>
+
+</div>
+</div>
+<a id="a4414981eb158957b6ade7a2c752bb2bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4414981eb158957b6ade7a2c752bb2bc">&#9670;&nbsp;</a></span>pop_front()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<div class="memtemplate">
+template&lt;bool Enabled = !(F &amp; CircularArrayFeatureFlags::kLayoutReversal)&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if_t&lt;Enabled&gt; <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::pop_front </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pops a <code>value</code> from the front of the array. </p>
+<p>Only available when the layout reversal feature is not enabled. Behavior is undefined when popping from the front of an empty array. No destructors are invoked on the value popped. </p>
+
+</div>
+</div>
+<a id="a52be806055ec3fd25eaa82dd08d260e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52be806055ec3fd25eaa82dd08d260e4">&#9670;&nbsp;</a></span>push_back()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<div class="memtemplate">
+template&lt;bool Enabled = !(F &amp; CircularArrayFeatureFlags::kLayoutReversal)&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if_t&lt;Enabled&gt; <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::push_back </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1CircularArray.html#ae456ba858d540f8980c7ea1020c4c4f2">value_type</a>&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pushes a <code>value</code> to the back of the array. </p>
+<p>Only available when the layout reversal feature is not enabled.</p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::length_error</td><td>If the array is full and the rollover on write feature is not enabled. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac3c14a36d750f07acff1121182ffae67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3c14a36d750f07acff1121182ffae67">&#9670;&nbsp;</a></span>push_front()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<div class="memtemplate">
+template&lt;bool Enabled = F&amp; CircularArrayFeatureFlags::kLayoutReversal&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if_t&lt;Enabled&gt; <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::push_front </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1CircularArray.html#ae456ba858d540f8980c7ea1020c4c4f2">value_type</a>&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pushes a <code>value</code> at the front of the array. </p>
+<p>Only available when the layout reversal feature is enabled.</p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::length_error</td><td>If the array is full and the rollover on write feature is not enabled. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0225e3be4de6efcfa23622b1561b136d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0225e3be4de6efcfa23622b1561b136d">&#9670;&nbsp;</a></span>swap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F = CircularArrayFeatureFlags::kNone&gt; </div>
+<div class="memtemplate">
+template&lt;CircularArrayFeatureFlags G&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classbeluga_1_1CircularArray.html">beluga::CircularArray</a>&lt; T, N, F &gt;::swap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a>&lt; T, N, G &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Swaps array with another. </p>
+<p>Arrays being swapped may not necessarily have the same features enabled. This is most relevant when arrays differ in layout direction, as swapping two such arrays effectively reverses their elements. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/runner/work/beluga/beluga/beluga/include/beluga/containers/<a class="el" href="circular__array_8hpp_source.html">circular_array.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Thu May 9 11:24:59 2024 -0300, 123ea96&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

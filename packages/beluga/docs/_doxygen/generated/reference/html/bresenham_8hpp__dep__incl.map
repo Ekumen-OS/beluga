@@ -1,0 +1,9 @@
+<map id="/home/runner/work/beluga/beluga/beluga/include/beluga/algorithm/raycasting/bresenham.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/algorithm/raycasting/bresenham.hpp">
+<area shape="rect" id="node1" title="Implementation of Bresenham&#45;like raytracing algorithms." alt="" coords="105,5,315,76"/>
+<area shape="rect" id="node2" href="$raycasting_8hpp.html" title="Implementation of raycasting algorithms." alt="" coords="91,124,329,180"/>
+<area shape="rect" id="node3" href="$algorithm_8hpp.html" title="Includes all beluga algorithms." alt="" coords="5,332,199,388"/>
+<area shape="rect" id="node6" href="$beam__model_8hpp.html" title="Implementation of a beam sensor model for range finders." alt="" coords="186,228,421,284"/>
+<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="113,436,307,492"/>
+<area shape="rect" id="node5" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="92,540,328,596"/>
+<area shape="rect" id="node7" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="223,332,416,388"/>
+</map>
