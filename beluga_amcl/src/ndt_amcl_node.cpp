@@ -327,33 +327,8 @@ void NdtAmclNode::timer_callback() {
   }
   std::visit(
       [this](const auto& particle_filter) {
-        std::unordered_map<Sophus::SE2d, RepresentativeData, RepresentativeBinHash, RepresentativeBinEqual>
-            representatives_map;
-        representatives_map.reserve(particle_filter.particles().size());
-
-        double max_weight = 1e-5;  // never risk dividing by zero
-
-        for (const auto& [state, weight] : particle_filter.particles()) {
-          auto& representative = representatives_map[state];  // if the element does not exist, create it
-          representative.state = state;
-          representative.weight += weight;
-          if (representative.weight > max_weight) {
-            max_weight = representative.weight;
-          }
-        }
-
-        auto message = nav2_msgs::msg::ParticleCloud{};
-        message.header.stamp = now();
-        message.header.frame_id = get_parameter("global_frame_id").as_string();
-        message.particles.reserve(particle_filter.particles().size());
-
-        for (const auto& [key, representative] : representatives_map) {
-          auto& particle = message.particles.emplace_back();
-          tf2::toMsg(representative.state, particle.pose);
-          particle.weight = representative.weight / max_weight;
-        }
-
-        particle_cloud_pub_->publish(message);
+        particle_cloud_pub_->publish(
+            make_representative_particle_cloud(particle_filter, get_parameter("global_frame_id").as_string(), now()));
       },
       *particle_filter_);
 }
