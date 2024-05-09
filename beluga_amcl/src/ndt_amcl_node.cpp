@@ -21,7 +21,7 @@
 #include <beluga/random/multivariate_normal_distribution.hpp>
 #include <beluga/sensor/ndt_sensor_model.hpp>
 #include <beluga/views/particles.hpp>
-#include <beluga_amcl/common.hpp>
+#include <beluga_amcl/ros2_common.hpp>
 #include <beluga_amcl/ndt_amcl_node.hpp>
 
 #include <tf2/convert.h>

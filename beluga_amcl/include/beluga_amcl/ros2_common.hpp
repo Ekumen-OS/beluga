@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL_COMMON_HPP
-#define BELUGA_AMCL_COMMON_HPP
+#ifndef BELUGA_AMCL_ROS2_COMMON_HPP
+#define BELUGA_AMCL_ROS2_COMMON_HPP
 
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>

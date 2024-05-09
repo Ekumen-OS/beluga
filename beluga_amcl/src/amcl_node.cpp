@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <beluga_amcl/amcl_node.hpp>
-#include <beluga_amcl/common.hpp>
+#include <beluga_amcl/ros2_common.hpp>
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
