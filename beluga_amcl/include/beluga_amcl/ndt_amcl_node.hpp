@@ -58,15 +58,15 @@
 
 namespace beluga_amcl {
 
-// Underlying map representation for the NDT sensor model.
+/// Underlying map representation for the NDT sensor model.
 using NDTMapRepresentation =
     beluga::SparseValueGrid<std::unordered_map<Eigen::Vector2i, beluga::NDTCell2d, beluga::detail::CellHasher<2>>>;
 
-// Type of a particle-dependent random state generator.
+/// Type of a particle-dependent random state generator.
 using RandomStateGenerator = std::function<std::function<beluga::NDTSensorModel<NDTMapRepresentation>::state_type()>(
     const beluga::TupleVector<std::tuple<beluga::NDTSensorModel<NDTMapRepresentation>::state_type, beluga::Weight>>)>;
 
-// Partial specialization of the core AMCL pipeline for convinience.
+/// Partial specialization of the core AMCL pipeline for convinience.
 template <class MotionModel, class ExecutionPolicy>
 using NdtAmcl = beluga::Amcl<
     MotionModel,
@@ -76,7 +76,7 @@ using NdtAmcl = beluga::Amcl<
     std::tuple<typename beluga::NDTSensorModel<NDTMapRepresentation>::state_type, beluga::Weight>,
     ExecutionPolicy>;
 
-// All combinations of supported NDT AMCL variants.
+/// All combinations of supported NDT AMCL variants.
 using NdtAmclVariant = std::variant<
     NdtAmcl<beluga::StationaryModel, std::execution::parallel_policy>,            //
     NdtAmcl<beluga::StationaryModel, std::execution::sequenced_policy>,           //
@@ -86,11 +86,11 @@ using NdtAmclVariant = std::variant<
     NdtAmcl<beluga::OmnidirectionalDriveModel, std::execution::sequenced_policy>  //
     >;
 
-// Supported motion models.
+/// Supported motion models.
 using MotionModelVariant =
     std::variant<beluga::DifferentialDriveModel, beluga::StationaryModel, beluga::OmnidirectionalDriveModel>;
 
-// Supported execution policies.
+/// Supported execution policies.
 using ExecutionPolicyVariant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 
 /// 2D NDT AMCL as a ROS 2 composable lifecycle node.
