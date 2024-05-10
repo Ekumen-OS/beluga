@@ -394,12 +394,17 @@ inline void declare_common_params(rclcpp_lifecycle::LifecycleNode& node) {
   }
 }
 
+/// Helper struct to hold a SE2 state and its weight.
 struct RepresentativeData {
+  /// SE2 state.
   Sophus::SE2d state;
+  /// Weight.
   double weight{0.};
 };
 
+/// Hash implementation for SE2 transforms.
 struct RepresentativeBinHash {
+  /// Computes a hash out of a SE2 transform.
   std::size_t operator()(const Sophus::SE2d& s) const noexcept {
     std::size_t h1 = std::hash<double>{}(s.translation().x());
     std::size_t h2 = std::hash<double>{}(s.translation().y());
@@ -408,6 +413,7 @@ struct RepresentativeBinHash {
   }
 };
 
+/// Equal comparison functor for SE2 transforms.
 struct RepresentativeBinEqual {
   bool operator()(const Sophus::SE2d& lhs, const Sophus::SE2d& rhs) const noexcept {
     // good enough, since copies of the same candidate are expected to be identical copies
@@ -427,7 +433,7 @@ struct RepresentativeBinEqual {
 //
 // Only the combination of both the state distribution and the candidate weights together
 // provide information about the probability density at each candidate.
-// To handle both cases, we group repeated candidates and compute the accumulated weight
+// To handle both cases, we group repeated candidates and compute the accumulated weight.
 template <class ParticleFilter>
 nav2_msgs::msg::ParticleCloud make_representative_particle_cloud(
     const ParticleFilter& particle_filter,
