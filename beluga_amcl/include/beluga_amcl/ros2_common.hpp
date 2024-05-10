@@ -31,15 +31,15 @@
 
 namespace beluga_amcl {
 
-// String identifier for a diff drive model.
+/// String identifier for a diff drive model.
 constexpr std::string_view kDifferentialModelName = "differential_drive";
-// String identifier for a omnidirectional drive model.
+/// String identifier for a omnidirectional drive model.
 constexpr std::string_view kOmnidirectionalModelName = "omnidirectional_drive";
-// String identifier for a stationary model.
+/// String identifier for a stationary model.
 constexpr std::string_view kStationaryModelName = "stationary";
-// String identifier for a diff drive model.
+/// String identifier for a diff drive model.
 constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::DifferentialMotionModel";
-// String identifier for a omnidirectional model name.
+/// String identifier for a omnidirectional model name.
 constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
 
 /// Declares common AMCL-related parameters to the node.
@@ -415,6 +415,7 @@ struct RepresentativeBinHash {
 
 /// Equal comparison functor for SE2 transforms.
 struct RepresentativeBinEqual {
+  /// Actual hash implementation.
   bool operator()(const Sophus::SE2d& lhs, const Sophus::SE2d& rhs) const noexcept {
     // good enough, since copies of the same candidate are expected to be identical copies
     return lhs.translation().x() == rhs.translation().x() &&  //

@@ -103,30 +103,43 @@ class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
   ~NdtAmclNode() override;
 
  protected:
+  /// Callback for lifecycle transitions from the UNCONFIGURED state to the INACTIVE state.
   CallbackReturn on_configure(const rclcpp_lifecycle::State&) override;
 
+  /// Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state.
   CallbackReturn on_activate(const rclcpp_lifecycle::State&) override;
 
+  /// Callback for lifecycle transitions from the ACTIVE state to the INACTIVE state.
   CallbackReturn on_deactivate(const rclcpp_lifecycle::State&) override;
 
+  /// Callback for lifecycle transitions from the INACTIVE state to the UNCONFIGURED state.
   CallbackReturn on_cleanup(const rclcpp_lifecycle::State&) override;
 
+  /// Callback for lifecycle transitions from most states to the FINALIZED state.
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State&) override;
 
+  /// Get initial pose estimate from parameters if set.
   auto get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>>;
 
+  /// Get motion model as per current parametrization.
   auto get_motion_model() const -> MotionModelVariant;
 
+  /// Get execution policy given its name.
   auto get_execution_policy() const -> ExecutionPolicyVariant;
 
+  /// Get sensor model as per current parametrization.
   beluga::NDTSensorModel<NDTMapRepresentation> get_sensor_model() const;
 
+  /// Instantiate particle filter given an initial occupancy grid map and the current parametrization.
   auto make_particle_filter() const -> std::unique_ptr<NdtAmclVariant>;
 
+  /// Callback for periodic particle cloud updates.
   void timer_callback();
 
+  /// Callback for laser scan updates.
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
 
+  /// Callback for pose (re)initialization.
   void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
 
   /// Initialize particles from an estimated pose and covariance.
@@ -140,26 +153,38 @@ class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
    */
   bool initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Matrix3d>& estimate);
 
+  /// Node bond with the lifecycle manager.
   std::unique_ptr<bond::Bond> bond_;
+  /// Timer for periodic particle cloud updates.
   rclcpp::TimerBase::SharedPtr timer_;
 
-  // Publishers
+  /// Particle cloud publisher.
   rclcpp_lifecycle::LifecyclePublisher<nav2_msgs::msg::ParticleCloud>::SharedPtr particle_cloud_pub_;
+  /// Estimated pose publisher.
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pose_pub_;
 
-  // Subscribers
+  /// Pose (re)initialization subscription.
   rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
+  /// Laser scan updates subscription.
   std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode>>
       laser_scan_sub_;
 
+  /// Transforms buffer.
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+  /// Transforms broadcaster.
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  /// Transforms listener.
   std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
+  /// Transform synchronization filter for laser scan updates.
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>> laser_scan_filter_;
+  /// Connection for laser scan updates filter and callback.
   message_filters::Connection laser_scan_connection_;
 
+  /// Particle filter instance.
   std::unique_ptr<NdtAmclVariant> particle_filter_ = nullptr;
+  /// Last known pose estimate, if any.
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_ = std::nullopt;
+  /// Whether to broadcast transforms or not.
   bool enable_tf_broadcast_{false};
 };
 
