@@ -12,8 +12,8 @@
     - [2.1.2 Landmark Map](#212-landmark-map)
     - [2.1.3 Generate Particles](#213-generate-particles)
     - [2.1.3 Simulation Loop](#213-simulation-loop)
-    - [2.1.4 Control Update and The Motion Model](#214-control-update-and-the-motion-model)
-    - [2.1.5 Measurement Update and The Sensor Model](#215-measurement-update-and-the-sensor-model)
+    - [2.1.4 Control Update - Motion Model](#214-control-update---motion-model)
+    - [2.1.5 Measurement Update - Sensor Model](#215-measurement-update---sensor-model)
     - [2.1.6 Resample](#216-resample)
     - [2.2 Compiling the code](#22-compiling-the-code)
 
@@ -34,9 +34,12 @@ where **η** is a normalization factor.
 
 A particle filter approximates this update rule by representing the belief as a set of discrete **samples**, each representing a possible state of the system. Collectively, these samples (or **particles**) represent the probability distribution over the state of the system at time $t$, condition on the prior state distribution, sensor readings, and control inputs.
 
+Compared to other variants of Bayesian state estimation algorithms, such as Kalman filters, particle filters have the advantage of being able
+to represent multimodal distributions and to easily incorporate complex dynamics and diverse sensor modalities.
+
 The purpose of this tutorial is to show a common implementation of the particle filter by performing the recursive update in three steps:
-* [Control Update](#214-control-update-and-the-motion-model)
-* [Measurement Update](#215-measurement-update-and-the-sensor-model)
+* [Control Update](#214-control-update---motion-model)
+* [Measurement Update](#215-measurement-update---sensor-model)
 * [Resample](#216-resample)
 
 ## Requirements
@@ -237,7 +240,7 @@ double min_particle_weight{0.08};
 ```
 ### 2.1.2 Landmark Map
 A map of the environment is a list of object in the environment and their locations `M = {M1, M2, ..., Mn}`.\
-A *landmark map* represent a *feature-based map*, where each feature in the map contain a property and its Cartesian location. In the tutorial, the landmark map represent the position of the doors, but all doors are equal. This means there are no distinguishing properties between them, such as an ID for each door. To generate a random map, we use the following code:
+A **landmark map** represent a **feature-based map**, where each feature in the map contain a property and its Cartesian location. In the tutorial, the landmark map represent the position of the doors, but all doors are equal. This means there are no distinguishing properties between them, such as an ID for each door. To generate a random map, we use the following code:
 ```cpp
 // Generate a random map
 std::uniform_int_distribution landmark_distribution{0, tutorial_params.map_size};
@@ -289,14 +292,14 @@ wehre $x(t)$, or in the code **current_pose**, is initialize with the parameter 
     // ...
   }
 ```
-### 2.1.4 Control Update and The Motion Model
+### 2.1.4 Control Update - Motion Model
 The motion model comprise the state transition probability $p(x_t | x_{t-1}, u_t)$ which plays an essential role in the prediction step (or control update step) of the Bayes filter. Probabilistic robotics generalizes kinematic equations to the fact that the outcome of a control is uncertain, due to control noise or unmodeled exogenous effects. Deterministic robot actuator models are “probilified” by adding noise variables that characterize the types of uncertainty that exist in robotic actuation. Here $x_t$ and $x_{t−1}$ are both robot poses (in our case the x position with a positive direction), and $u_t$ is a motion command. This model describes the posterior distribution over kinematics states that a robots assumes when executing the motion command $u_t$ when its pose is $x_{t−1}$.
 
 In this tutorial, we will be using an **Sample Motion Model Odometry** (pag. 111 of ProbRob). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
 
 At time $t$, the pose of the robot is a random variable $x(t)$. This model considers that within the time interval $(t-1, t]$, the registered movement from odometry is a reliable estimator of the true state movement, despite any potential drift and slippage that the robot may encounter during this interval.
 
-The **Sample Motion Model Odometry** receive as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x_t$. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles. It receives as arguments an execution policy (for more details link), and a function, that will apply the motion model (or transformation) for each particle in the range.
+The **Sample Motion Model Odometry** receives as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x_t$. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles. It accepts an execution policy (for more details, see link) and a function that applies the motion model (or transformation) to each particle in the range.
 ```cpp
 // Motion model
 auto motion_model = [&](double state) {
@@ -308,15 +311,90 @@ auto motion_model = [&](double state) {
 // Propagate stage
 particles |= beluga::actions::propagate(std::execution::seq, motion_model);
 ```
-* The argument `state` represent a single particle's (or pose) from the range $x_{t-1}$ before applying the control update step. 
-* Here, the equivalent of the odometry translation is the calculation of the `distance - translation_param`, where `translation_param` represent the noise due to drift and slippage, during the translation of the robot.
-* The motion model return a single particle's state corresponding to the new range $x_t$.
+* The argument `state` represent a single particle (or pose) from the range $x_{t-1}$ before applying the control update step. 
+* Here, the equivalent of the odometry translation is the calculation of the `distance - translation_param`, where `translation_param` represent the noise due to drift and slippage during the translation of the robot.
+* The motion model returns a single particle's state corresponding to the new range $x_t$.
 
->**Note:** The range $x_t$ represent the posterior $bel(x_t)$ before incorporating the measurement $z_t$.
+>**Note:** The range $x_t$ represent the posterior $bel'(x_t)$ before incorporating the measurement $z_t$. This posterior or particle set distribution
+does not match the updated belief $bel(x_t)$ explain in [MCL background](#monte-carlo-localization-mcl-background).
 
 >**Note:** The effect of the motion model is to increase the space occupied by the particles.
 
-### 2.1.5 Measurement Update and The Sensor Model
+### 2.1.5 Measurement Update - Sensor Model
+Measurement models describe the formation process by which sensor measurements are generated in the physical world. Probabilistic robotics explicitly models the noise in sensor measurements. Such models account for the inherent uncertainty in the robot’s sensors. Formally, the measurement model is defined as a conditional probability distribution $p(z_t | x_t , m)$, where $x_t$ is the robot pose, $z_t$ is the measurement at time $t$, and $m$ is the map of the environment.
+
+<!-- Developing an accurate sensor model can be extremely time-consuming, and an accurate model may require state variables that we 
+might not know (such as the surface material). Probabilistic robotics accommodates the inaccuracies of sensor models in the stochastic
+aspects: By modeling the measurement process as a conditional probability density, $p(z_t | x_t)$, instead of a deterministic function
+$z_t = f (x_t)$, the uncertainty in the sensor model can be accommodated in the non-deterministic aspects of the model. Herein lies a key advantage of probabilistic techniques over classical robotics: in practice, we can get away with extremely crude models. However, when devising a probabilistic model, care has to be taken to capture the different types of uncertainties that may affect a sensor measurement. -->
+
+The most common model for processing landmarks assumes that the sensor can measure the range and the bearing of the landmark relative to the robot’s
+local coordinate frame. In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (pag. 149 of ProbRob),
+since the doors do not have a signature that differentiates them from each other, but we can calculate the relative pose of each door to the robot. This sensor model, receives as inputs the landmark map, the sensor data and a particle (a state), and outputs the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
+
+In our case, we need to generate simulated sensor data. This data corresponds to the relative positions of landmarks around the robot's **current_pose** within a configurable range specified by the **sensor_range** parameter.
+```cpp
+// Generate simulated sensor data
+auto sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) {
+                      return std::abs(lm - current_pose) > tutorial_params.sensor_range;
+                    }) |
+                    ranges::views::transform([&](const double lm) { return lm - current_pose; }) |
+                    ranges::to<SensorData>;
+```
+* `landmark_map` is the map generated above.
+* `ranges::views::remove_if` will remove all landmarks grater than the range of view of the sensor.
+* `ranges::views::transform` transform them to relative poses from the robot's **current_pose**.
+* `ranges::to<SensorData>` convert the range to a SensorData type defined previously. 
+
+To calculate the weigth for each particle, we previously need to build the range `particle_sensor_data`. This range represent the relative distances of each landmark to the particle.
+
+```cpp
+// Sensor model
+auto sensor_model = [&](const double& state) {
+  auto particle_sensor_data =
+      landmark_map | ranges::views::transform([&](const double lm) { return lm - state; }) | ranges::to<SensorData>;
+  
+  // Rest of the code
+  // ...
+};
+```
+The number of features identified at each time step is variable. However, many probabilistic robotic algorithms assume conditional independence between features, it means, the noise in each individual measurement is independent of the noise in other measurements. Under the conditional independence assumption, we can process one feature at-a-time. That is:
+
+$$p(z_t | x_t, m) = \prod_i p(z_{t}^{i} | x_t, m)$$
+
+To calculate the probability $p(z_{t}^{i} | x_t, m)$ we use the equation of a simplified version of the normal distribution's PDF.
+
+**(review this paragraph)**
+In this context, each landmark lacks distinguishing features that uniquely differentiate it from others. Therefore, we employ an approximation method where the `min_distance` between the landmarks' position measure from the sensor and the landmark's position relative to the particle, is considered. This approximation assumes that the smallest distance observed in the comparison provides the most accurate correspondece between the observed landmarks.
+```cpp
+// Sensor model
+auto sensor_model = [&](const double& state) {
+  auto particle_sensor_data =
+      landmark_map | ranges::views::transform([&](const double lm) { return lm - state; }) | ranges::to<SensorData>;
+
+  LandmarkMapVector landmark_probability;
+  for (const auto& sensor_datum : sensor_data) {
+    auto distances = particle_sensor_data | ranges::views::transform([&](auto& particle_sensor_datum) {
+                        return std::abs(sensor_datum - particle_sensor_datum);
+                      });
+
+    auto min_distance = ranges::min(distances);
+    landmark_probability.push_back(exp((-1 * pow(min_distance, 2)) / (2 * tutorial_params.sensor_model_sigam)));
+  }
+
+  return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{}) + tutorial_params.min_particle_weight;
+};
+```
+* `landmark_probability` store each $p(z_{t}^{i} | x_t, m)$
+* `ranges::accumulate` calculate the $\prod_i p(z_{t}^{i} | x_t, m)$
+* `tutorial_params.min_particle_weight` is the minimun weight a particle can have. Is used to mantain the particle "alive" even though its probability is very low.
+* The sensor model returns the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
+
+Beluga uses the function `beluga::actions::reweight` to transform a range of particle, to a range of **weigthed** particles. It accepts an execution policy (for more details, see link) and a function that applies the sensor model (or transformation) to each particle in the range.
+```cpp
+// Reweight stage
+particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
+```
 
 ### 2.1.6 Resample
 
