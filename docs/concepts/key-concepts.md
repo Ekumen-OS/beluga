@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.js"></script>
+
 # Key concepts
 
 ## Monte Carlo Localization
@@ -37,9 +40,9 @@ The updated belief is prefigured by the spatial distribution of the particles in
     \begin{algorithm}
         \caption{Bootstrap particle filter}
         \begin{algorithmic}
-             \State $X_0 \gets \mathrm{initial\ set\ of\ particles}$
+             \State $X_0 \gets \mathrm{initial set of particles}$
              \For{$t = 1, 2, \dots$}
-             \State $X_t \gets \mathrm{empty\ set}$
+             \State $X_t \gets \mathrm{empty set}$
              \For{$i = 1, 2, \dots, N$}
              \State $x_t^{[i]} \gets
                  \mathrm{motion\_model}(x_{t-1}^{[i]}, u_t)$

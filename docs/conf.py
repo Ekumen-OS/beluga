@@ -44,7 +44,6 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx_babel.autodox",
     "sphinxcontrib.bibtex",
-    'sphinxcontrib.pseudocode',
     "sphinx_design",
 ]
 
