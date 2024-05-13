@@ -12,7 +12,9 @@
     - [2.1.2 Landmark Map](#212-landmark-map)
     - [2.1.3 Generate Particles](#213-generate-particles)
     - [2.1.3 Simulation Loop](#213-simulation-loop)
-    - [2.1.4 Control Update (Montion Model)](#214-control-update-montion-model)
+    - [2.1.4 Control Update and The Motion Model](#214-control-update-and-the-motion-model)
+    - [2.1.5 Measurement Update and The Sensor Model](#215-measurement-update-and-the-sensor-model)
+    - [2.1.6 Resample](#216-resample)
     - [2.2 Compiling the code](#22-compiling-the-code)
 
 ## Overview
@@ -24,16 +26,18 @@ This tutorial demonstrates how to implement an MCL particle filter for a robot m
 Monte Carlo Localization is part of the broader family of Bayesian state estimation methods. They are all based on the Bayes filter, which is a recursive algorithm that estimates the posterior probability distribution of the state of a system given a sequence of sensor measurements and control inputs.
 The estimation at any given time is represented using a probability distribution function, called **belief**, definded as:
 $$bel(x_t) = p(x_t|z_{1:t},u_{1:t})$$
-where $x_t$ is the state of the system at time $t$, and $z_{1:t}$ and $u_{1:t}$ are the sequence of sensor measurements and the sequence of control inputs up to time $t$ respectively.\
-A belief refelcts the robot's internal knowledge about the state of the environment. We therfore distinguish the **true state** from the robot's interal belief.
+where $x_t$ is the state of the system at time $t$, and $z_{1:t}$ and $u_{1:t}$ are the sequence of sensor measurements and the sequence of control inputs up to time $t$ respectively. A belief refelcts the robot's internal knowledge about the state of the environment. We therfore distinguish the **true state** from the robot's interal belief.
 
 It can be shown that the posterior belief can be recursively computed using the prior belief, the current sensor readings, and the current control inputs using the following update rule:
-$$bel(x_t)=ηp(z_t|x_t)\int p(x_t|x_{t-1}, u_t)bel(x_{t-1}) \, dx_{t-1}$$
-where η is a normalization factor.
+$$bel(x_t)=η * p(z_t|x_t) * \int p(x_t|x_{t-1}, u_t)bel(x_{t-1}) \, dx_{t-1}$$
+where **η** is a normalization factor.
 
 A particle filter approximates this update rule by representing the belief as a set of discrete **samples**, each representing a possible state of the system. Collectively, these samples (or **particles**) represent the probability distribution over the state of the system at time $t$, condition on the prior state distribution, sensor readings, and control inputs.
 
-This tutorial proposes is to show a common implementation of the particle filter by performing the recursive update in three steps: control update, measurement update and resample.
+The purpose of this tutorial is to show a common implementation of the particle filter by performing the recursive update in three steps:
+* [Control Update](#214-control-update-and-the-motion-model)
+* [Measurement Update](#215-measurement-update-and-the-sensor-model)
+* [Resample](#216-resample)
 
 ## Requirements
 This tutorial requires having the following dependencies installed:\
@@ -243,7 +247,7 @@ landmark_map |= ranges::actions::sort | ranges::actions::unique;
 ```
 * We use a `uniform_int_distribution` to randomly assign landmark to any position of the map defined by `[0, map_size]`.
 * `beluga::views::sample(landmark_distribution)` is in charge of, given a type of distribution, generate samples.
-* `ranges::views::take_exactly(tutorial_params.number_of_doors)` specify to **landmark_vector** how many samples (or doors in this case) to take.
+* `ranges::views::take_exactly(tutorial_params.number_of_doors)` define the number of doors to take, using the **number_of_doors** parameter.
 * `ranges::to<LandmarkMapVector>` convert the range to a LandmarkMapVector type defined previously.
 * `landmark_map |= ranges::actions::sort | ranges::actions::unique` will remove repeated landmarks in the same position, and arrange them from lowest to highest to facilitate debugging.
 >Note: read about [Range Adaptor Closure Object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorClosureObject) to understand the `|` operator.
@@ -285,48 +289,35 @@ wehre $x(t)$, or in the code **current_pose**, is initialize with the parameter 
     // ...
   }
 ```
-### 2.1.4 Control Update (Montion Model)
-The motion model comprise the state transitio probability $p(x_t | x_{t-1}, u_t)$ which plays an essential role in the prediction step of the Bayes filter. Probabilistic robotics generalizes kinematic equations to the fact that the outcome of a control is uncertain, due to control noise or unmodeled exogenous effects.Deterministic robot actuator models are “probilified” by adding noise variables that characterize the types of uncertainty that exist in robotic actuation.
-Kinematics is the calculus describing the effect of control actions on the configuration of a robot.
-The material presented in this tutorial is largely restricted to mobile robots operating in one-dimensional environments, whose
-kinematic state, or pose, is summarized by one variable (for the simplicity of the tutorial, the pose of the robot is in the x axis and with positive direction always).
+### 2.1.4 Control Update and The Motion Model
+The motion model comprise the state transition probability $p(x_t | x_{t-1}, u_t)$ which plays an essential role in the prediction step (or control update step) of the Bayes filter. Probabilistic robotics generalizes kinematic equations to the fact that the outcome of a control is uncertain, due to control noise or unmodeled exogenous effects. Deterministic robot actuator models are “probilified” by adding noise variables that characterize the types of uncertainty that exist in robotic actuation. Here $x_t$ and $x_{t−1}$ are both robot poses (in our case the x position with a positive direction), and $u_t$ is a motion command. This model describes the posterior distribution over kinematics states that a robots assumes when executing the motion command $u_t$ when its pose is $x_{t−1}$.
 
-The probabilistic kinematic model, or motion model plays the role of the state transition model in mobile robotics.
-This model is the familiar conditional density $p(x_t | x_{t-1}, u_t)$.
-Here xt and xt−1 are both robot poses (and not just its x-coordinates), and ut is a motion command. This model describes the posterior distribution over kinematics states that a robots assumes when executing the motion command ut when its pose is
-xt−1 . In implementations, ut is sometimes provided by a robot’s odometry. However, for conceptual reasons we will refer
-to ut as control.
+In this tutorial, we will be using an **Sample Motion Model Odometry** (pag. 111 of ProbRob). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
 
-In practice, odometry models tend to be more accurate than velocity models, for the
-simple reasons that most commercial robots do not execute velocity commands with
-the level of accuracy that can be obtained by measuring the revolution of the robot’s
-wheels. However odometry is only available post-the-fact. Hence it cannot be used for
-motion planning. Planning algorithms such as collision avoidance have to predict the
-effects of motion. Thus, odometry models are usually applied for estimation, whereas
-velocity models are used for probabilistic motion planning.
+At time $t$, the pose of the robot is a random variable $x(t)$. This model considers that within the time interval $(t-1, t]$, the registered movement from odometry is a reliable estimator of the true state movement, despite any potential drift and slippage that the robot may encounter during this interval.
 
+The **Sample Motion Model Odometry** receive as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x_t$. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles. It receives as arguments an execution policy (for more details link), and a function, that will apply the motion model (or transformation) for each particle in the range.
+```cpp
+// Motion model
+auto motion_model = [&](double state) {
+  double distance = (tutorial_params.velocity * tutorial_params.dt);
+  double translation_param = generateRandom(0.0, tutorial_params.translation_sigma);
+  return state + distance - translation_param;
+};
 
+// Propagate stage
+particles |= beluga::actions::propagate(std::execution::seq, motion_model);
+```
+* The argument `state` represent a single particle's (or pose) from the range $x_{t-1}$ before applying the control update step. 
+* Here, the equivalent of the odometry translation is the calculation of the `distance - translation_param`, where `translation_param` represent the noise due to drift and slippage, during the translation of the robot.
+* The motion model return a single particle's state corresponding to the new range $x_t$.
 
+>**Note:** The range $x_t$ represent the posterior $bel(x_t)$ before incorporating the measurement $z_t$.
 
+>**Note:** The effect of the motion model is to increase the space occupied by the particles.
 
-1. The **motion model** is designed for a robot with a single degree of freedom, and it moves in the positive direction. The equation representing the motion of the robot is `x(t) = x(t-1) + v * dt`. 
-    ```cpp
-    // Motion model
-    auto motion_model = [&](double state) {
-      double distance = (tutorial_params.velocity * tutorial_params.dt);
-      double translation_param = generateRandom(0.0, tutorial_params.translation_sigma);
-      return state + distance - translation_param;
-    };
-    ```
-    The code represent a **Sample Motion Model Algorithm** (pag. 111), which implement the sampling approach that a particles filter requires. It generates samples of *p(x(t) | u(t), x(t-1))*. The algorithm takes an initial pose *x(t-1)* (in our case a particle named `state`), and an odometry reading *u(t)* (or `velocity * dt`)  as inputs, and outputs a random pose *x(t)* distributed according *p(x(t) | u(t), x(t-1))*. The model adds  configurable noise, represented by `translation_param` to represent a possible drift or slippage of the robot.\
-    In summary, the motion model returns a **pose estimated** for a given **particle** and a **noisy traveling distance**.
+### 2.1.5 Measurement Update and The Sensor Model
 
-    * *x(t):* Random pose in time *t*.
-    * *u(t):* The control signal that can be represented by `velocity * dt` or `odom(t) - odom(t-1)`.
-    *  *x(t-1):* Random pose in time *t-1* (a random particle in that case).
-
-    >**Note:** The effect of the motion model is to increase the space occupied by the particles.
-  
-2. 
+### 2.1.6 Resample
 
 ### 2.2 Compiling the code
