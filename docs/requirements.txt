@@ -1,6 +1,7 @@
 sphinx>=7.0
 sphinxcontrib-bibtex>=2.6.2
 sphinxcontrib-doxylink>=1.12.2
+sphinxcontrib-pseudocode>=0.7.0
 sphinx-theme>=1.0
 sphinx-copybutton>=0.5.2
 sphinx-book-theme>=1.1.2
