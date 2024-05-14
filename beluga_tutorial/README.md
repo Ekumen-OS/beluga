@@ -365,7 +365,7 @@ $$p(z_t | x_t, m) = \prod_i p(z_{t}^{i} | x_t, m)$$
 To calculate the probability $p(z_{t}^{i} | x_t, m)$ we use the equation of a simplified version of the normal distribution's PDF.
 
 **(review this paragraph)**
-In this context, each landmark lacks distinguishing features that uniquely differentiate it from others. Therefore, we employ an approximation method where the `min_distance` between the landmarks' position measure from the sensor and the landmark's position relative to the particle, is considered. This approximation assumes that the smallest distance observed in the comparison provides the most accurate correspondece between the observed landmarks.
+In this context, each landmark lacks distinguishing features that uniquely differentiate it from others. Therefore, we employ an approximation method where the `min_distance` between the landmarks' position measured from the sensor and the landmark's position relative to the particle, is considered. This approximation assumes that the smallest distance observed in the comparison provides the most accurate correspondece between the observed landmarks.
 ```cpp
 // Sensor model
 auto sensor_model = [&](const double& state) {
@@ -395,6 +395,8 @@ Beluga uses the function `beluga::actions::reweight` to transform a range of par
 // Reweight stage
 particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
 ```
+
+The `beluga::actions::normalize` is a range adaptor that allows users to normalize the weights of a range (or a range of particles) by dividing each weight by a specified normalization factor. If none is specified, the default normalization factor corresponds to the total sum of weights in the given range.
 
 ### 2.1.6 Resample
 
