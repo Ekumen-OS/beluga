@@ -19,6 +19,7 @@
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 
 #include <H5Cpp.h>
+#include <cassert>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
@@ -148,7 +149,9 @@ class NDTSensorModel {
    * particles.
    */
   NDTSensorModel(param_type params, SparseGridT cells_data)
-      : params_{std::move(params)}, cells_data_{std::move(cells_data)} {}
+      : params_{std::move(params)}, cells_data_{std::move(cells_data)} {
+    assert(params_.minimum_likelihood >= 0);
+  }
 
   /// Returns a state weighting function conditioned on 2D / 3D lidar hits.
   /**
@@ -165,14 +168,23 @@ class NDTSensorModel {
     };
   }
 
-  /// Returns the L2 likelihood scaled by 'd1' and 'd2' set in the parameters for this instance for 'measurement, or
-  /// 'params_.min_likelihood' if the cell corresponding to 'measurement' doesn't exist in the map.
+  /// Returns the L2 likelihood scaled by 'd1' and 'd2' set in the parameters for this instance for 'measurement', for
+  /// the 3x3 cells around the measurement cell, or 'params_.min_likelihood', whichever is higher.
   [[nodiscard]] double likelihood_at(const ndt_cell_type& measurement) const {
-    const auto maybe_cell = cells_data_.data_near(measurement.mean);
-    if (!maybe_cell.has_value()) {
-      return params_.minimum_likelihood;
+    static const std::array kCellsToConsider{
+        Eigen::Vector2i{-1, -1}, Eigen::Vector2i{-1, -0}, Eigen::Vector2i{-1, 1},
+        Eigen::Vector2i{0, -1},  Eigen::Vector2i{0, 0},   Eigen::Vector2i{0, 1},
+        Eigen::Vector2i{1, -1},  Eigen::Vector2i{1, 0},   Eigen::Vector2i{1, 1},
+    };
+    double likelihood = 0;
+    const typename map_type::key_type measurement_cell = cells_data_.cell_near(measurement.mean);
+    for (const auto& offset : kCellsToConsider) {
+      const auto maybe_ndt = cells_data_.data_at(measurement_cell + offset);
+      if (maybe_ndt.has_value()) {
+        likelihood += maybe_ndt->likelihood_at(measurement, params_.d1, params_.d2);
+      }
     }
-    return maybe_cell->likelihood_at(measurement, params_.d1, params_.d2);
+    return std::max(likelihood, params_.minimum_likelihood);
   }
 
  private:

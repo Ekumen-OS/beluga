@@ -390,7 +390,6 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
             std::move(measurement));
       },
       *particle_filter_);
-  RCLCPP_INFO(get_logger(), "No-motion update requested");
 
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
