@@ -82,7 +82,7 @@ TEST(NDTSensorModelTests, Likelihoood) {
   }
   sparse_grid_2d_t grid{std::move(map), 1.0};
 
-  const double minimum_likelihood = -1.0;
+  const double minimum_likelihood = 1e-6;
   NDTModelParam param{minimum_likelihood};
   NDTSensorModel model{param, std::move(grid)};
 
