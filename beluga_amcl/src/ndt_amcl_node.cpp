@@ -256,12 +256,12 @@ auto NdtAmclNode::get_motion_model() const -> MotionModelVariant {
 }
 
 beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode::get_sensor_model() const {
-  auto params = beluga::NDTModelParam{};
+  auto params = beluga::NDTModelParam2d{};
   params.minimum_likelihood = get_parameter("minimum_likelihood").as_double();
   params.d1 = get_parameter("d1").as_double();
   params.d2 = get_parameter("d2").as_double();
   const auto map_path = get_parameter("map_path").as_string();
-  RCLCPP_ERROR(get_logger(), "Loading map from %s.", map_path.c_str());
+  RCLCPP_INFO(get_logger(), "Loading map from %s.", map_path.c_str());
 
   return beluga::NDTSensorModel<NDTMapRepresentation>{
       params, beluga::io::load_from_hdf5_2d<NDTMapRepresentation>(get_parameter("map_path").as_string())};

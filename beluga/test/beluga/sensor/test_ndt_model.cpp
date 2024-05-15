@@ -36,13 +36,13 @@ using sparse_grid_2d_t = SparseValueGrid<std::unordered_map<Eigen::Vector2i, NDT
 }  // namespace
 
 TEST(NDTSensorModelTests, CanConstruct) {
-  NDTSensorModel{{}, sparse_grid_2d_t{}};
+  NDTSensorModel{NDTModelParam2d{}, sparse_grid_2d_t{}};
 }
 
 TEST(NDTSensorModelTests, MinLikelihood) {
   const double minimum_likelihood = 1e-6;
 
-  NDTModelParam param{minimum_likelihood};
+  NDTModelParam2d param{minimum_likelihood};
   NDTSensorModel model{param, sparse_grid_2d_t{}};
 
   for (const auto& val : {
@@ -83,7 +83,7 @@ TEST(NDTSensorModelTests, Likelihoood) {
   sparse_grid_2d_t grid{std::move(map), 1.0};
 
   const double minimum_likelihood = 1e-6;
-  NDTModelParam param{minimum_likelihood};
+  NDTModelParam2d param{minimum_likelihood};
   NDTSensorModel model{param, std::move(grid)};
 
   EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.5}, get_diagonal_covariance()}), 1.3678794411714423);
