@@ -44,10 +44,9 @@ The following examples are easier to run in [Beluga development containers](../D
     rosrun teleop_twist_keyboard teleop_twist_keyboard
     ```
 
-    > [!IMPORTANT]
-    > Note that this example uses [Flatland](https://flatland-simulator.readthedocs.io) for simulation.
-    > A Flatland source installation is provisioned in development containers.
-    > You will have to provision one yourself to run this elsewhere.
+    Note that this example uses [Flatland](https://flatland-simulator.readthedocs.io) for simulation.
+    A Flatland source installation is provisioned in development containers.
+    You will have to provision one yourself to run this elsewhere.
 
 1. **Launch a localization node manually**.
 
