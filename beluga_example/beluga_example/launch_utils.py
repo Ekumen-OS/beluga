@@ -66,7 +66,7 @@ def with_launch_arguments(arguments_to_declare: List[DeclareLaunchArgument]):
 
 
 def get_node_with_arguments_declared_from_params_file(
-    *, params_file, name, namespace='/', **kwargs
+    *, params_file, name, namespace='/', extra_params={}, **kwargs
 ):
     """
     Declare arguments from param file.
@@ -100,6 +100,7 @@ def get_node_with_arguments_declared_from_params_file(
         )
         return [Node(name=name, namespace=namespace, **kwargs)]
     params_dict = entries_for_node['ros__parameters']
+    params_dict.update(extra_params)
     actions = []
     parameters = []
     for param_name, param_value in params_dict.items():

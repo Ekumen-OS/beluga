@@ -98,13 +98,13 @@ A picture is worth a thousand words. Probabilistic algorithms are no exception. 
 
 :::{tab-item} ROS 2
 ```bash
-rviz2 -d $(ros2 pkg prefix --share beluga_example)/rviz/rviz.ros2.rviz
+rviz2 -d $(ros2 pkg prefix --share beluga_example)/rviz/amcl.ros2.rviz
 ```
 :::
 
 :::{tab-item} ROS 1
 ```bash
-rviz -d $(rospack find beluga_example)/rviz/rviz.ros.rviz
+rviz -d $(rospack find beluga_example)/rviz/amcl.ros.rviz
 ```
 :::
 

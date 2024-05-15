@@ -18,7 +18,9 @@
 #include <beluga/sensor/data/ndt_cell.hpp>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
 
+#include <Eigen/src/Core/Matrix.h>
 #include <H5Cpp.h>
+#include <cassert>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
@@ -31,6 +33,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <unordered_map>
+#include <vector>
 
 namespace beluga {
 
@@ -100,18 +103,54 @@ inline std::vector<NDTCell<NDim, Scalar>> to_cells(
 
   return ret;
 }
+/// Default neighbor kernel for the 2D NDT sensor model.
+const std::vector<Eigen::Vector2i> kDefaultNeighborKernel2d = {
+    Eigen::Vector2i{-1, -1}, Eigen::Vector2i{-1, -0}, Eigen::Vector2i{-1, 1},
+    Eigen::Vector2i{0, -1},  Eigen::Vector2i{0, 0},   Eigen::Vector2i{0, 1},
+    Eigen::Vector2i{1, -1},  Eigen::Vector2i{1, 0},   Eigen::Vector2i{1, 1},
+};
+
+/// Default neighbor kernel for the 3D NDT sensor model.
+const std::vector<Eigen::Vector3i> kDefaultNeighborKernel3d = {
+    // TODO(Ramiro) revisit this kernel when we implement the 3D sensor model and extend this if it's computationally
+    // feasible.
+    Eigen::Vector3i{0, 0, 0},  Eigen::Vector3i{0, 0, 1},  Eigen::Vector3i{0, 0, -1}, Eigen::Vector3i{0, 1, 0},
+    Eigen::Vector3i{0, -1, 0}, Eigen::Vector3i{-1, 0, 0}, Eigen::Vector3i{1, 0, 0},
+};
+
+/// Helper to get the default neighbors kernel
+template <int NDim>
+constexpr std::conditional_t<NDim == 2, std::vector<Eigen::Vector2i>, std::vector<Eigen::Vector3i>>
+get_default_neighbors_kernel() {
+  if constexpr (NDim == 2) {
+    return kDefaultNeighborKernel2d;
+  } else {
+    return kDefaultNeighborKernel3d;
+  }
+}
 
 }  // namespace detail
 
 /// Parameters used to construct a NDTSensorModel instance.
+template <int NDim>
 struct NDTModelParam {
+  static_assert(NDim == 2 or NDim == 3, "Only 2D or 3D is supported for the NDT sensor model.");
   /// Likelihood for measurements that lie inside cells that are not present in the map.
   double minimum_likelihood = 0;
   /// Scaling parameter d1 in literature, used for scaling 2D likelihoods.
   double d1 = 1.0;
   /// Scaling parameter d2 in literature, used for scaling 2D likelihoods.
   double d2 = 1.0;
+  /// Neighbor kernel used for likelihood computation.
+  std::conditional_t<NDim == 2, std::vector<Eigen::Vector2i>, std::vector<Eigen::Vector3i>> neighbors_kernel =
+      detail::get_default_neighbors_kernel<NDim>();
 };
+
+/// Convenience alias for a 2d parameters struct for the NDT sensor model.
+using NDTModelParam2d = NDTModelParam<2>;
+
+/// Convenience alias for a 3d parameters struct for the NDT sensor model.
+using NDTModelParam3d = NDTModelParam<3>;
 
 /// NDT sensor model for range finders.
 /**
@@ -138,7 +177,7 @@ class NDTSensorModel {
   /// Map representation type.
   using map_type = SparseGridT;
   /// Parameter type that the constructor uses to configure the NDT sensor model.
-  using param_type = NDTModelParam;
+  using param_type = NDTModelParam<ndt_cell_type::num_dim>;
 
   /// Constructs a NDTSensorModel instance.
   /**
@@ -148,7 +187,9 @@ class NDTSensorModel {
    * particles.
    */
   NDTSensorModel(param_type params, SparseGridT cells_data)
-      : params_{std::move(params)}, cells_data_{std::move(cells_data)} {}
+      : params_{std::move(params)}, cells_data_{std::move(cells_data)} {
+    assert(params_.minimum_likelihood >= 0);
+  }
 
   /// Returns a state weighting function conditioned on 2D / 3D lidar hits.
   /**
@@ -165,14 +206,18 @@ class NDTSensorModel {
     };
   }
 
-  /// Returns the L2 likelihood scaled by 'd1' and 'd2' set in the parameters for this instance for 'measurement, or
-  /// 'params_.min_likelihood' if the cell corresponding to 'measurement' doesn't exist in the map.
+  /// Returns the L2 likelihood scaled by 'd1' and 'd2' set in the parameters for this instance for 'measurement', for
+  /// the 3x3 cells around the measurement cell, or 'params_.min_likelihood', whichever is higher.
   [[nodiscard]] double likelihood_at(const ndt_cell_type& measurement) const {
-    const auto maybe_cell = cells_data_.data_near(measurement.mean);
-    if (!maybe_cell.has_value()) {
-      return params_.minimum_likelihood;
+    double likelihood = 0;
+    const typename map_type::key_type measurement_cell = cells_data_.cell_near(measurement.mean);
+    for (const auto& offset : params_.neighbors_kernel) {
+      const auto maybe_ndt = cells_data_.data_at(measurement_cell + offset);
+      if (maybe_ndt.has_value()) {
+        likelihood += maybe_ndt->likelihood_at(measurement, params_.d1, params_.d2);
+      }
     }
-    return maybe_cell->likelihood_at(measurement, params_.d1, params_.d2);
+    return std::max(likelihood, params_.minimum_likelihood);
   }
 
  private:

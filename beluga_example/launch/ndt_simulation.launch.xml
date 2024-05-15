@@ -1,0 +1,17 @@
+<launch>
+  <arg name="localization_params_file" default="$(find-pkg-share beluga_example)/params/default_ndt.ros2.yaml" />
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/ndt_localization_launch.py">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="localization_params_file" value="$(var localization_params_file)"/>
+    <arg name="localization_map" value="$(find-pkg-share beluga_example)/maps/turtlebot3_world.yaml"/>
+    <arg name="localization_ndt_map" value="$(find-pkg-share beluga_example)/maps/turtlebot3_world.hdf5"/>
+  </include>
+
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/rviz_launch.py">
+    <arg name="display_config" value="$(find-pkg-share beluga_example)/rviz/ndt_amcl.ros2.rviz"/>
+  </include>
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/flatland_launch.py"/>
+</launch>

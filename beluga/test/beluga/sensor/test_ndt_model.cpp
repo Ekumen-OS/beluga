@@ -36,13 +36,13 @@ using sparse_grid_2d_t = SparseValueGrid<std::unordered_map<Eigen::Vector2i, NDT
 }  // namespace
 
 TEST(NDTSensorModelTests, CanConstruct) {
-  NDTSensorModel{{}, sparse_grid_2d_t{}};
+  NDTSensorModel{NDTModelParam2d{}, sparse_grid_2d_t{}};
 }
 
 TEST(NDTSensorModelTests, MinLikelihood) {
-  const double minimum_likelihood = -1.0;
+  const double minimum_likelihood = 1e-6;
 
-  NDTModelParam param{minimum_likelihood};
+  NDTModelParam2d param{minimum_likelihood};
   NDTSensorModel model{param, sparse_grid_2d_t{}};
 
   for (const auto& val : {
@@ -82,17 +82,17 @@ TEST(NDTSensorModelTests, Likelihoood) {
   }
   sparse_grid_2d_t grid{std::move(map), 1.0};
 
-  const double minimum_likelihood = -1.0;
-  NDTModelParam param{minimum_likelihood};
+  const double minimum_likelihood = 1e-6;
+  NDTModelParam2d param{minimum_likelihood};
   NDTSensorModel model{param, std::move(grid)};
 
-  EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.5}, get_diagonal_covariance()}), 1);
-  EXPECT_DOUBLE_EQ(model.likelihood_at({{0.8, 0.5}, get_diagonal_covariance()}), 0.95599748183309985);
-  EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.8}, get_diagonal_covariance()}), 0.94530278065205942);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.5}, get_diagonal_covariance()}), 1.3678794411714423);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{0.8, 0.5}, get_diagonal_covariance()}), 1.4307317817730123);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.8}, get_diagonal_covariance()}), 1.4200370805919718);
 
-  EXPECT_DOUBLE_EQ(model.likelihood_at({{1.5, 1.5}, get_diagonal_covariance()}), 1);
-  EXPECT_DOUBLE_EQ(model.likelihood_at({{1.8, 1.5}, get_diagonal_covariance()}), 0.95599748183309985);
-  EXPECT_DOUBLE_EQ(model.likelihood_at({{1.5, 1.8}, get_diagonal_covariance()}), 0.95599748183309985);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{1.5, 1.5}, get_diagonal_covariance()}), 1.3246524673583497);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{1.8, 1.5}, get_diagonal_covariance()}), 1.1859229670198237);
+  EXPECT_DOUBLE_EQ(model.likelihood_at({{1.5, 1.8}, get_diagonal_covariance()}), 1.1669230426687498);
 }
 
 TEST(NDTSensorModelTests, FitPoints) {

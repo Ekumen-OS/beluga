@@ -66,12 +66,12 @@ The following examples are easier to run in [Beluga development containers](../D
 
    For ROS 2 distributions, run:
    ```bash
-   rviz2 -d $(ros2 pkg prefix --share beluga_example)/rviz/rviz.ros2.rviz
+   rviz2 -d $(ros2 pkg prefix --share beluga_example)/rviz/amcl.ros2.rviz
    ```
 
    For ROS 1 distributions, run:
    ```bash
-   rviz -d $(rospack find beluga_example)/rviz/rviz.ros.rviz
+   rviz -d $(rospack find beluga_example)/rviz/amcl.ros.rviz
    ```
 
    **Quality of Service**
