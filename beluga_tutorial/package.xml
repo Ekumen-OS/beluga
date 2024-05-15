@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>beluga_tutorial</name>
+  <version>1.0.0</version>
+
+  <description>Tutorial to interface with Beluga.</description>
+
+  <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
+  <maintainer email="michel@ekumenlabs.com">Michel Hidalgo</maintainer>
+  <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
+  <maintainer email="alon.druck@ekumenlabs.com">Alon Druck</maintainer>
+
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>cmake</buildtool_depend>
+
+  <depend>beluga</depend>
+  <depend>yaml_cpp_vendor</depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
