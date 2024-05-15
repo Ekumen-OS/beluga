@@ -19,11 +19,11 @@
 from argparse import ArgumentParser
 from pathlib import Path
 
+from plyfile import PlyData
 import numpy as np
 import matplotlib.pyplot as plt
 
 from beluga_ros.conversion_utils import point_cloud_to_ndt, NDTMap
-from beluga_ros.ply_reader import read_ply
 
 
 def main():
@@ -49,13 +49,10 @@ def main():
 
     args = parser.parse_args()
 
-    with open(args.input, 'rb') as file:
-        for name, data in read_ply(file):
-            if name == "vertex":
-                point_cloud = np.vstack([data['x'], data['y']])
-                break
-        else:
-            raise RuntimeError('PLY file does not contain vertices.')
+    data = PlyData.read(args.input)
+
+    # Assumes that the PLY file contains a 2D point cloud.
+    point_cloud = np.vstack([data['vertex']['x'], data['vertex']['y']])
 
     print(f"Extracted a pointcloud of {point_cloud.shape[1]} points from PLY file...")
 
