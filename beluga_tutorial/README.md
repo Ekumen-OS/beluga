@@ -399,5 +399,23 @@ particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | belu
 The `beluga::actions::normalize` is a range adaptor that allows users to normalize the weights of a range (or a range of particles) by dividing each weight by a specified normalization factor. If none is specified, the default normalization factor corresponds to the total sum of weights in the given range.
 
 ### 2.1.6 Resample
+Is not adaptive, we use the same size for the set of particle alongside this Tutorial. Adaptive means modify the amount of particle based is some math 
+rules to improve the algorithm efficiency at run time.
+
+Before this step, the particles are distributed acording $x_{t-1}$ set of weigthed particles. After this step, the particles will be distributed according
+the $x_t$, and all the particles weight will be equally value 1.
+
+The updated belief is prefigured by the spatial distribution of the particles in the set and their importance weights.
+
+A few of the particles will have migrated to state regions with low probability, however, and their importance weights will therefore be low.
+To correct this, the update step is completed by performing a resampling process, which consist of drawing a new set of particles from the current set,
+with replacement, using importance weights as unnormalized probabilities. This process causes particles with low weights to be discarded and
+particles with high weights to be propagated multiple times into the new particle set.
+
+```cpp
+// Resample
+particles |= beluga::views::sample | ranges::views::take_exactly(tutorial_params.number_of_particles) |
+              beluga::actions::assign;
+```
 
 ### 2.2 Compiling the code
