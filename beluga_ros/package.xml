@@ -33,6 +33,7 @@
   <exec_depend condition="$ROS_VERSION == 2">python3-matplotlib</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">python3-numpy</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">python3-scipy</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python-plyfile-pip</exec_depend>
 
   <export>
     <build_type condition="$ROS_VERSION == 1">catkin</build_type>

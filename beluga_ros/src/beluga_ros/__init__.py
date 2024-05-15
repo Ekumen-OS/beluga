@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import conversion_utils, occupancy_grid_to_ndt
+from . import conversion_utils, occupancy_grid_to_ndt, ply_to_ndt
 
-__all__ = ['occupancy_grid_to_ndt', 'conversion_utils']
+__all__ = ['occupancy_grid_to_ndt', 'conversion_utils', 'ply_to_ndt']
