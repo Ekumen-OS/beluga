@@ -4,7 +4,9 @@ This package contains example launch files that demonstrate the use of Beluga-ba
 
 ## Examples
 
-1. **Run an example application using a ROS bag** (inside development container).
+The following examples are easier to run in [Beluga development containers](../DEVELOPING.md#environment).
+
+1. **Run an example application using a ROS bag**.
 
     For ROS 2 distributions, run:
     ```bash
@@ -20,7 +22,7 @@ This package contains example launch files that demonstrate the use of Beluga-ba
     roslaunch beluga_example perfect_odometry.launch
     ```
 
-1. **Run an example application using a simulation and teleop controls** (inside development container).
+1. **Run an example application using a simulation and teleop controls**.
 
     For ROS 2 distributions, in two separate terminals run:
     ```bash
@@ -41,6 +43,10 @@ This package contains example launch files that demonstrate the use of Beluga-ba
     ```bash
     rosrun teleop_twist_keyboard teleop_twist_keyboard
     ```
+
+    Note that this example uses [Flatland](https://flatland-simulator.readthedocs.io) for simulation.
+    A Flatland source installation is provisioned in development containers.
+    You will have to provision one yourself to run this elsewhere.
 
 1. **Launch a localization node manually**.
 
@@ -77,24 +83,3 @@ This package contains example launch files that demonstrate the use of Beluga-ba
    | `map`            | 5     | Keep last    | Reliable     | Transient local |
    | `particle_cloud` | 5     | Keep last    | Best effort  | Volatile        |
    | `pose`           | 5     | Keep last    | Reliable     | Volatile        |
-
-
-- Launch a pre-recorded ROS bag with perfect odometry and Beluga AMCL.
-  ```bash
-  ros2 launch beluga_example perfect_odometry.launch.xml
-  ```
-
-- Launch a pre-recorded ROS bag and Beluga AMCL as a composable node.
-  ```bash
-  ros2 launch beluga_example perfect_odometry.launch.xml use_composition:=True
-  ```
-
-- Launch a simulation that can be teleoperated together with Beluga AMCL.
-  ```bash
-  ros2 launch beluga_example simulation.launch.xml
-  ```
-
-- Launch Beluga AMCL, a map server, and a lifecycle manager. Useful for testing on real robots.
-  ```bash
-  ros2 launch beluga_example localization_launch.py use_composition:=True
-  ```
