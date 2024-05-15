@@ -56,7 +56,7 @@ def get_launch_arguments():
             description='Map YAML file to be used by the map server node.',
         ),
         DeclareLaunchArgument(
-            name='ndt_map',
+            name='localization_ndt_map',
             default_value=str(example_dir_path / 'maps' / 'turtlebot3_world.hdf5'),
             description='Map HDF5 file used by the localization node.',
         ),
@@ -79,7 +79,7 @@ def generate_launch_description(
     localization_prefix,
     localization_params_file,
     localization_map,
-    ndt_map,
+    localization_ndt_map,
     use_composition,
     use_sim_time,
 ):
@@ -89,15 +89,15 @@ def generate_launch_description(
     load_nodes = GroupAction(
         actions=[
             *get_node_with_arguments_declared_from_params_file(
-                package="beluga_amcl",
-                executable="ndt_amcl_node",
+                package='beluga_amcl',
+                executable='ndt_amcl_node',
                 namespace='',
                 name='ndt_amcl',
                 output='screen',
                 arguments=['--ros-args', '--log-level', 'info'],
                 prefix=localization_prefix,
                 params_file=localization_params_file,
-                extra_params={"map_path": ndt_map},
+                extra_params={'map_path': localization_ndt_map},
             ),
             # Only used for map visualization in RVIZ, since the NDT map is loaded
             # internally by the AMCL node.
@@ -138,7 +138,7 @@ def generate_launch_description(
                 name='amcl_component_container',
                 composable_node_descriptions=[
                     ComposableNode(
-                        package="beluga_amcl",
+                        package='beluga_amcl',
                         plugin=localization_plugin,
                         name='ndt_amcl',
                         parameters=[localization_params_file],

@@ -18,7 +18,7 @@
   </include>
 
   <include file="$(find beluga_example)/launch/utils/rviz.launch">
-    <arg name="display_config" value="$(find beluga_example)/rviz/rviz.ros.rviz"/>
+    <arg name="display_config" value="$(find beluga_example)/rviz/amcl.ros.rviz"/>
   </include>
 
   <include file="$(find beluga_example)/launch/utils/flatland.launch"/>
