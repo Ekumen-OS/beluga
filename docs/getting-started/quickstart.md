@@ -28,7 +28,17 @@ roslaunch beluga_example perfect_odometry.launch
 
 ## Run Beluga in simulation
 
-Simulation streamlines and speeds up robotics development workflows, even if purely functional like in this example using [Flatland](https://flatland-simulator.readthedocs.io/en/latest/). On two separate terminals run:
+Simulation streamlines and speeds up robotics development workflows, even if purely functional like in this example using [Flatland](https://flatland-simulator.readthedocs.io).
+
+:::{important}
+Flatland must be installed separately to run the following commands.
+:::
+
+:::{tip}
+You can use [Beluga development containers](https://github.com/Ekumen-OS/beluga/blob/main/DEVELOPING.md#environment), provisioned by default with a Flatland source installation, to run the following commands.
+:::
+
+On two separate terminals run:
 
 ::::{tab-set}
 

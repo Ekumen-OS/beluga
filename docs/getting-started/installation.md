@@ -58,14 +58,14 @@ sudo apt update && sudo apt upgrade
 
 ::::
 
-Then use `rosdep` to install all Beluga packages' dependencies:
+Then use `rosdep` to install Beluga packages' dependencies:
 
 ::::{tab-set}
 
 :::{tab-item} Ubuntu
 ```bash
 rosdep update
-rosdep install -r --from-paths ~/ws/src/beluga -y -i -t build -t exec --skip-keys 'flatland_server flatland_plugins'
+rosdep install -r --from-paths ~/ws/src/beluga -y -i -t build -t exec
 ```
 :::
 
