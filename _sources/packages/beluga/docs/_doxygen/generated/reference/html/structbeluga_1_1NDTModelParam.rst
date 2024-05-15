@@ -1,11 +1,11 @@
-.. meta::98efe22233b7b9044360b731c4fe0bec06d2bd850dc1cf898e66da737bee4ac67d23cee7873b152871fdb8e027835e000f8bac321447e3608d6203d2bd8f24a7
+.. meta::9fcd1cf29f90e352087348d0fe2de9068ebca4d27080e2e0f923863439eecf3c89887ee6a1c91ac622b94d2a876e870730f2ee833b1a7580c0e1d053eccdf0a6
 
 :orphan:
 
-.. title:: Beluga: beluga::NDTModelParam Struct Reference
+.. title:: Beluga: beluga::NDTModelParam&lt; NDim &gt; Struct Template Reference
 
-NDTModelParam Struct Reference
-==============================
+NDTModelParam&lt; NDim &gt; Struct Template Reference
+=====================================================
 
 .. container:: doxygen-content
 

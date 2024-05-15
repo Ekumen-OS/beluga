@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Beluga: beluga::NDTModelParam Struct Reference &#8212; Beluga  documentation</title>
+    <title>Beluga: beluga::NDTModelParam&amp;lt; NDim &amp;gt; Struct Template Reference &#8212; Beluga  documentation</title>
   
   
   
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed May 15 16:11:54 2024 -0300, 6938787&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed May 15 17:43:11 2024 -0300, 9f02ad3&#39;"/>
   </head>
   
   
@@ -362,7 +362,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>NDTModelParam Struct Reference</h1>
+    <h1>NDTModelParam&lt; NDim &gt; Struct Template Reference</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -376,8 +376,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ndtmodelparam-struct-reference">
-<h1>NDTModelParam Struct Reference<a class="headerlink" href="#ndtmodelparam-struct-reference" title="Link to this heading">#</a></h1>
+  <section id="ndtmodelparam-lt-ndim-gt-struct-template-reference">
+<h1>NDTModelParam&amp;lt; NDim &amp;gt; Struct Template Reference<a class="headerlink" href="#ndtmodelparam-lt-ndim-gt-struct-template-reference" title="Link to this heading">#</a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -386,7 +386,7 @@ document.write(`
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::NDTModelParam Struct Reference</title>
+<title>Beluga: beluga::NDTModelParam&lt; NDim &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -435,7 +435,7 @@ $(function() {
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structbeluga_1_1NDTModelParam-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::NDTModelParam Struct Reference</div>  </div>
+<div class="title">beluga::NDTModelParam&lt; NDim &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -446,22 +446,49 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aa3584c6b473c58e5e077491ae0d2e1e0"><td class="memItemLeft" align="right" valign="top"><a id="aa3584c6b473c58e5e077491ae0d2e1e0"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1NDTModelParam.html#aa3584c6b473c58e5e077491ae0d2e1e0">minimum_likelihood</a> = 0</td></tr>
-<tr class="memdesc:aa3584c6b473c58e5e077491ae0d2e1e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Likelihood for measurements that lie inside cells that are not present in the map. <br /></td></tr>
-<tr class="separator:aa3584c6b473c58e5e077491ae0d2e1e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a0b82a7c8cf313b9307d228dddf5614"><td class="memItemLeft" align="right" valign="top"><a id="a6a0b82a7c8cf313b9307d228dddf5614"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1NDTModelParam.html#a6a0b82a7c8cf313b9307d228dddf5614">d1</a> = 1.0</td></tr>
-<tr class="memdesc:a6a0b82a7c8cf313b9307d228dddf5614"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaling parameter d1 in literature, used for scaling 2D likelihoods. <br /></td></tr>
-<tr class="separator:a6a0b82a7c8cf313b9307d228dddf5614"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bf94c0a8610bfbd032deaf137b5f165"><td class="memItemLeft" align="right" valign="top"><a id="a7bf94c0a8610bfbd032deaf137b5f165"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1NDTModelParam.html#a7bf94c0a8610bfbd032deaf137b5f165">d2</a> = 1.0</td></tr>
-<tr class="memdesc:a7bf94c0a8610bfbd032deaf137b5f165"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaling parameter d2 in literature, used for scaling 2D likelihoods. <br /></td></tr>
-<tr class="separator:a7bf94c0a8610bfbd032deaf137b5f165"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d1733f124471a7698daf43ddf137c99"><td class="memItemLeft" align="right" valign="top"><a id="a7d1733f124471a7698daf43ddf137c99"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1NDTModelParam.html#a7d1733f124471a7698daf43ddf137c99">minimum_likelihood</a> = 0</td></tr>
+<tr class="memdesc:a7d1733f124471a7698daf43ddf137c99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Likelihood for measurements that lie inside cells that are not present in the map. <br /></td></tr>
+<tr class="separator:a7d1733f124471a7698daf43ddf137c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9166b1782daadf5dc47af2c0a5531052"><td class="memItemLeft" align="right" valign="top"><a id="a9166b1782daadf5dc47af2c0a5531052"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1NDTModelParam.html#a9166b1782daadf5dc47af2c0a5531052">d1</a> = 1.0</td></tr>
+<tr class="memdesc:a9166b1782daadf5dc47af2c0a5531052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaling parameter d1 in literature, used for scaling 2D likelihoods. <br /></td></tr>
+<tr class="separator:a9166b1782daadf5dc47af2c0a5531052"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af317950ed06e629d9054d12db8b0a6f3"><td class="memItemLeft" align="right" valign="top"><a id="af317950ed06e629d9054d12db8b0a6f3"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1NDTModelParam.html#af317950ed06e629d9054d12db8b0a6f3">d2</a> = 1.0</td></tr>
+<tr class="memdesc:af317950ed06e629d9054d12db8b0a6f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaling parameter d2 in literature, used for scaling 2D likelihoods. <br /></td></tr>
+<tr class="separator:af317950ed06e629d9054d12db8b0a6f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a447e28141d1ca9bdc909c2115409aa30"><td class="memItemLeft" align="right" valign="top">std::conditional_t&lt; NDim==2, std::vector&lt; Eigen::Vector2i &gt;, std::vector&lt; Eigen::Vector3i &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1NDTModelParam.html#a447e28141d1ca9bdc909c2115409aa30">neighbors_kernel</a></td></tr>
+<tr class="memdesc:a447e28141d1ca9bdc909c2115409aa30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Neighbor kernel used for likelihood computation.  <a href="structbeluga_1_1NDTModelParam.html#a447e28141d1ca9bdc909c2115409aa30">More...</a><br /></td></tr>
+<tr class="separator:a447e28141d1ca9bdc909c2115409aa30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Parameters used to construct a <a class="el" href="classbeluga_1_1NDTSensorModel.html" title="NDT sensor model for range finders.">NDTSensorModel</a> instance. </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<div class="textblock"><h3>template&lt;int NDim&gt;<br />
+struct beluga::NDTModelParam&lt; NDim &gt;</h3>
+
+<p>Parameters used to construct a <a class="el" href="classbeluga_1_1NDTSensorModel.html" title="NDT sensor model for range finders.">NDTSensorModel</a> instance. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a447e28141d1ca9bdc909c2115409aa30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a447e28141d1ca9bdc909c2115409aa30">&#9670;&nbsp;</a></span>neighbors_kernel</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int NDim&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::conditional_t&lt;NDim == 2, std::vector&lt;Eigen::Vector2i&gt;, std::vector&lt;Eigen::Vector3i&gt; &gt; <a class="el" href="structbeluga_1_1NDTModelParam.html">beluga::NDTModelParam</a>&lt; NDim &gt;::neighbors_kernel</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">      detail::get_default_neighbors_kernel&lt;NDim&gt;()</div>
+</div><!-- fragment -->
+<p>Neighbor kernel used for likelihood computation. </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/<a class="el" href="ndt__sensor__model_8hpp_source.html">ndt_sensor_model.hpp</a></li>
 </ul>
 </div><!-- contents -->
@@ -522,7 +549,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed May 15 16:11:54 2024 -0300, 6938787&#39;.
+  Last updated on &#39;Wed May 15 17:43:11 2024 -0300, 9f02ad3&#39;.
   <br/>
 </p>
   </div>
