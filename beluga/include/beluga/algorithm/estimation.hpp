@@ -198,11 +198,13 @@ std::pair<Scalar, Scalar> estimate(Scalars&& scalars, Weights&& weights) {
       scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{},
       [](const auto& scalar, const auto& weight) { return scalar * weight; });
 
-  const Scalar weighted_sd = std::transform_reduce(
+  const Scalar weighted_squared_deviations = std::transform_reduce(
       scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{},
-      [weigthed_mean](const auto& scalar, const auto& weight) { return weight * (scalar - weigthed_mean); });
+      [weigthed_mean](const auto& scalar, const auto& weight) {
+        return weight * (scalar - weigthed_mean) * (scalar - weigthed_mean);
+      });
 
-  return std::pair{weigthed_mean, weighted_sd};
+  return std::pair{weigthed_mean, std::sqrt(weighted_squared_deviations)};
 }
 
 /// Returns a pair consisting of the estimated mean pose and its covariance.
