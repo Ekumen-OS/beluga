@@ -170,31 +170,39 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, 
   return std::pair{estimated_pose, covariance_matrix};
 }
 
-/// Computes mean and covariance Returns a pair consisting of the estimated mean pose and its covariance.
+/// Computes mean and standard deviation of a range of weigthed scalars.
 /**
- * Given a range of poses, computes the estimated pose and the standard deviation by averaging the translation.
+ * Given a range of scalars, computes the scalar mean and standard deviation.
  *
- * \tparam Poses A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
- *  value type is `std::vecotr<Scalar>`.
+ * \tparam Scalars A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
+ *  value type is `std::vector<Scalar>`.
  * \tparam Weights A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
  *  value type is `Scalar`.
- * \tparam Pose The pose value type of the given range.
- * \param poses Range of 1D poses.
+ * \tparam Scalar The scalar value type of the given range of Scalars.
+ * \param scalars Range of scalars.
  * \param weights Range of weights.
- * \return The estimated pose and its standard deviation.
+ * \return The estimated mean and its standard deviation.
  */
 template <
-    class Poses,
+    class Scalars,
     class Weights,
-    class Pose = ranges::range_value_t<Poses>,
-    typename = std::enable_if_t<std::is_arithmetic_v<Pose>>>
-std::pair<Pose, Pose> estimate(Poses&& poses, [[maybe_unused]] Weights&& weights) {
-  // TODO(alon): use the weights to calculate the weighted average.
-  auto accum_poses = ranges::accumulate(poses, 0.0);
-  Pose mean = accum_poses / (static_cast<Pose>(poses.size()));
-  auto variance = ranges::accumulate(poses, 0.0, [&mean](Pose init, Pose pose) { return init + pow(pose - mean, 2); });
-  Pose sd = sqrt(variance / (static_cast<Pose>(poses.size() - 1)));
-  return std::pair{mean, sd};
+    class Scalar = ranges::range_value_t<Scalars>,
+    typename = std::enable_if_t<std::is_arithmetic_v<Scalar>>>
+std::pair<Scalar, Scalar> estimate(Scalars&& scalars, Weights&& weights) {
+  auto weights_view = weights | ranges::views::common;
+  const auto weights_sum = ranges::accumulate(weights, 0.0, std::plus<>{});
+  auto normalized_weights_view =
+      weights_view | ranges::views::transform([weights_sum](const auto& weight) { return weight / weights_sum; });
+
+  const Scalar weigthed_mean = std::transform_reduce(
+      scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{},
+      [](const auto& scalar, const auto& weight) { return scalar * weight; });
+
+  const Scalar weighted_sd = std::transform_reduce(
+      scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{},
+      [weigthed_mean](const auto& scalar, const auto& weight) { return weight * (scalar - weigthed_mean); });
+
+  return std::pair{weigthed_mean, weighted_sd};
 }
 
 /// Returns a pair consisting of the estimated mean pose and its covariance.
