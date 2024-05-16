@@ -1,5 +1,5 @@
-dataset_file_name: "bag_20.yaml"
-load_landmark_map_from_file: true
+load_landmark_map: true
+save_landmark_map: false
 map_size: 100 # Size of the map in [m]
 number_of_doors: 15
 number_of_particles: 300 # Fixed number of particles
@@ -8,7 +8,10 @@ initial_pose: 0.0 #[m]
 initial_pose_sd: 20.0
 dt: 1.0 #[s]
 velocity: 1.0 #[m/s]
-translation_sigma: 1.0
+translation_sd: 1.0
 sensor_range: 3.0 # Sensor range of view in [m]
 sensor_model_sigam: 1.0
 min_particle_weight: 0.08
+dataset_file_name: "bag6.yaml"
+landmark_map_file_name: "landmark_map.yaml"
+bags_folder_path: "./src/beluga/beluga_tutorial/bags/"

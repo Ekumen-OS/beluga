@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// https://github.com/Ekumen-OS/beluga/issues/279#issuecomment-1903914387
-
 #include <cmath>
 #include <filesystem>
 #include <fstream>
@@ -33,22 +31,80 @@
 #include <yaml-cpp/yaml.h>
 #include <beluga/beluga.hpp>
 
-// TODO(alon): Explain each parameter.
 struct TutorialParams {
-  bool load_landmark_map_from_file{false};
+  /// Load the landmark map from a file.
+  /**
+   * If true, the landmark map is loaded from a file;
+   * if false, a random map is generated.
+   */
+  bool load_landmark_map{false};
+
+  /// Save the landmark map to a file.
+  bool save_landmark_map{false};
+
+  /// Size of the 1D map in (m)
+  /**
+   * In the simulation, the 1D map is continuous,
+   * but the limit is defined as an integer to simplify data visualization.
+   */
   int map_size{100};
+
+  /// Maximum number of doors (or landmarks) in the map.
   int number_of_doors{33};
+
+  /// Fixed number of particles used by the algorithm.
   int number_of_particles{200};
+
+  /// Number of simulation cycles.
   int number_of_cycles{100};
+
+  /// Robot's initial pose in meters (m).
   double initial_pose{0.0};
+
+  /// Standard deviation of the robot's initial pose.
+  /**
+   * Represents the uncertainty of the robot's initial pose.
+   */
   double initial_pose_sd{1.0};
+
+  /// Delta time in seconds (s).
   double dt{1.0};
+
+  /// Translation velocity in meters per second (m/s) of the robot in 1D.
   double velocity{1.0};
-  double translation_sigma{1.0};
+
+  /// Translation standard deviation.
+  /**
+   * Represents the robot's translation noise due to drift and slippage.
+   */
+  double translation_sd{1.0};
+
+  /// Sensor range of view in meters (m)
   double sensor_range{2.0};
+
+  /// Sensor model sigma
+  /**
+   * Represents the precision of the modeled sensor.
+   */
   double sensor_model_sigam{1.0};
+
+  /// Minimum particle weight.
+  /**
+   * Used to keep all particles "alive" in the reweight step.
+   */
   double min_particle_weight{0.08};
+
+  /// Name of the dataset file.
+  /**
+   * The dataset file is used to save the data produced by the simulation for posterior analisys.
+   */
   std::string dataset_file_name{"dataset.yaml"};
+
+  // Name of the landmark_map to save or load from.
+  std::string landmark_map_file_name{"landmark_map.yaml"};
+
+  /// Bags folder path to save the simulation datasets.
+  std::string bags_folder_path{"./src/beluga/beluga_tutorial/bags/"};
 };
 
 using Particle = std::tuple<double, beluga::Weight>;
@@ -71,18 +127,11 @@ struct TutorialDataset {
   std::vector<TutorialData> sim_data;
 };
 
-double generateRandom(double mean, double sd) {
-  static auto generator = std::mt19937{std::random_device()()};
-  std::normal_distribution<double> distribution(mean, sd);
-
-  return distribution(generator);
-}
-
-void load_params_from_yaml(TutorialParams& tutorial_params) {
+void load_params_from_yaml(const std::filesystem::path& path, TutorialParams& tutorial_params) {
   try {
-    YAML::Node params = YAML::LoadFile("./src/beluga/beluga_tutorial/params/tutorial.yaml");
-    tutorial_params.load_landmark_map_from_file = params["load_landmark_map_from_file"].as<bool>();
-    tutorial_params.dataset_file_name = params["dataset_file_name"].as<std::string>();
+    YAML::Node params = YAML::LoadFile(path);
+    tutorial_params.load_landmark_map = params["load_landmark_map"].as<bool>();
+    tutorial_params.save_landmark_map = params["save_landmark_map"].as<bool>();
     tutorial_params.map_size = params["map_size"].as<int>();
     tutorial_params.number_of_doors = params["number_of_doors"].as<int>();
     tutorial_params.number_of_particles = params["number_of_particles"].as<int>();
@@ -91,29 +140,42 @@ void load_params_from_yaml(TutorialParams& tutorial_params) {
     tutorial_params.initial_pose_sd = params["initial_pose_sd"].as<double>();
     tutorial_params.dt = params["dt"].as<double>();
     tutorial_params.velocity = params["velocity"].as<double>();
-    tutorial_params.translation_sigma = params["translation_sigma"].as<double>();
+    tutorial_params.translation_sd = params["translation_sd"].as<double>();
     tutorial_params.sensor_range = params["sensor_range"].as<double>();
     tutorial_params.sensor_model_sigam = params["sensor_model_sigam"].as<double>();
     tutorial_params.min_particle_weight = params["min_particle_weight"].as<double>();
+    tutorial_params.dataset_file_name = params["dataset_file_name"].as<std::string>();
+    tutorial_params.landmark_map_file_name = params["landmark_map_file_name"].as<std::string>();
+    tutorial_params.bags_folder_path = params["bags_folder_path"].as<std::string>();
   } catch (YAML::BadFile& e) {
     std::cout << e.what() << "\n";
   }
 }
 
-void load_landmark_map_from_yaml(LandmarkMapVector& landamrk_map) {
+void load_landmark_map_from_yaml(const std::filesystem::path& path, LandmarkMapVector& landmark_map) {
   try {
-    YAML::Node node = YAML::LoadFile("./src/beluga/beluga_tutorial/params/landmark_map.yaml");
-    landamrk_map = node["landamrk_map"].as<LandmarkMapVector>();
+    YAML::Node node = YAML::LoadFile(path);
+    landmark_map = node["landmark_map"].as<LandmarkMapVector>();
   } catch (YAML::BadFile& e) {
     std::cout << e.what() << "\n";
   }
 }
 
-void save_tutorial_dataset_to_yaml(const std::string& file_name, const TutorialDataset& tutorial_dataset) {
+void save_landmark_map_to_yaml(const std::filesystem::path& path, LandmarkMapVector& landmark_map) {
+  YAML::Node node;
+  for (const auto& lmp : landmark_map) {
+    node["landmark_map"].push_back(lmp);
+  }
+  std::ofstream fout(path, std::ios::trunc);
+  fout << node;
+  fout.close();
+}
+
+void save_tutorial_dataset_to_yaml(const std::filesystem::path& path, const TutorialDataset& tutorial_dataset) {
   YAML::Node node;
 
   for (const auto& lmp : tutorial_dataset.landmark_map) {
-    node["landamrk_map"].push_back(lmp);
+    node["landmark_map"].push_back(lmp);
   }
 
   for (auto&& [cycle, data] : tutorial_dataset.sim_data | ranges::views::enumerate) {
@@ -147,30 +209,44 @@ void save_tutorial_dataset_to_yaml(const std::string& file_name, const TutorialD
     node["simulation_dataset"][cycle]["estimation"]["sd"] = std::get<1>(data.estimation);
   }
 
-  const std::string bags_path{"./src/beluga/beluga_tutorial/bags/"};
-  std::filesystem::create_directory(bags_path);
-  std::ofstream fout(bags_path + file_name, std::ios::trunc);
+  std::ofstream fout(path, std::ios::trunc);
   fout << node;
   fout.close();
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+  // The user must provide the path to the parameter file
+  if (argc < 3) {
+    std::cerr << "Usage: " << argv[0] << " std::cerr << Usage:  << argv[0] <<  <directory_path> <filename>\n";
+    return 1;
+  }
+
+  const std::string directory = argv[1];
+  const std::string filename = argv[2];
+  const auto parameters_file_path = std::filesystem::path{directory} / filename;
+
   // Load params from yaml file
   TutorialParams tutorial_params;
-  load_params_from_yaml(tutorial_params);
+  load_params_from_yaml(parameters_file_path, tutorial_params);
 
   // Create the TutorialDataset object for record the simulation data
   TutorialDataset tutorial_dataset;
 
   // Load map from file or generate a random map
   LandmarkMapVector landmark_map;
-  if (tutorial_params.load_landmark_map_from_file) {
-    load_landmark_map_from_yaml(landmark_map);
+  if (tutorial_params.load_landmark_map) {
+    load_landmark_map_from_yaml(
+        std::filesystem::path{directory} / tutorial_params.landmark_map_file_name, landmark_map);
   } else {
     std::uniform_int_distribution landmark_distribution{0, tutorial_params.map_size};
     landmark_map = beluga::views::sample(landmark_distribution) |
                    ranges::views::take_exactly(tutorial_params.number_of_doors) | ranges::to<LandmarkMapVector>;
     landmark_map |= ranges::actions::sort | ranges::actions::unique;
+  }
+
+  // Save landmark_map if required
+  if (tutorial_params.save_landmark_map) {
+    save_landmark_map_to_yaml(std::filesystem::path{directory} / tutorial_params.landmark_map_file_name, landmark_map);
   }
 
   tutorial_dataset.landmark_map = landmark_map;
@@ -188,7 +264,7 @@ int main() {
     TutorialData tutorial_data;
 
     // Save ground truth
-    current_pose += (tutorial_params.velocity * tutorial_params.dt);
+    current_pose += tutorial_params.velocity * tutorial_params.dt;
     tutorial_data.ground_truth = current_pose;
 
     // Check if the simulation is out of bounds
@@ -196,11 +272,10 @@ int main() {
       break;
     }
 
-    // Motion model
-    auto motion_model = [&](double state) {
-      double distance = (tutorial_params.velocity * tutorial_params.dt);
-      double translation_param = generateRandom(0.0, tutorial_params.translation_sigma);
-      return state + distance - translation_param;
+    auto motion_model = [&](double state, auto& gen) {
+      const double distance = (tutorial_params.velocity * tutorial_params.dt);
+      std::normal_distribution<double> distribution(distance, tutorial_params.translation_sd);
+      return state + distribution(gen);
     };
 
     // Generate simulated sensor data
@@ -252,7 +327,9 @@ int main() {
     tutorial_dataset.sim_data.push_back(tutorial_data);
   }
 
-  save_tutorial_dataset_to_yaml(tutorial_params.dataset_file_name, tutorial_dataset);
+  std::filesystem::create_directory(tutorial_params.bags_folder_path);
+  const auto file = std::filesystem::path{tutorial_params.bags_folder_path} / tutorial_params.dataset_file_name;
+  save_tutorial_dataset_to_yaml(file, tutorial_dataset);
 
   return 0;
 }
