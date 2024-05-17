@@ -170,7 +170,7 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, 
   return std::pair{estimated_pose, covariance_matrix};
 }
 
-/// Computes mean and standard deviation of a range of weigthed scalars.
+/// Computes mean and standard deviation of a range of weighted scalars.
 /**
  * Given a range of scalars, computes the scalar mean and standard deviation.
  *
@@ -194,17 +194,17 @@ std::pair<Scalar, Scalar> estimate(Scalars&& scalars, Weights&& weights) {
   auto normalized_weights_view =
       weights_view | ranges::views::transform([weights_sum](const auto& weight) { return weight / weights_sum; });
 
-  const Scalar weigthed_mean = std::transform_reduce(
+  const Scalar weighted_mean = std::transform_reduce(
       scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{},
       [](const auto& scalar, const auto& weight) { return scalar * weight; });
 
   const Scalar weighted_squared_deviations = std::transform_reduce(
       scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{},
-      [weigthed_mean](const auto& scalar, const auto& weight) {
-        return weight * (scalar - weigthed_mean) * (scalar - weigthed_mean);
+      [weighted_mean](const auto& scalar, const auto& weight) {
+        return weight * (scalar - weighted_mean) * (scalar - weighted_mean);
       });
 
-  return std::pair{weigthed_mean, std::sqrt(weighted_squared_deviations)};
+  return std::pair{weighted_mean, std::sqrt(weighted_squared_deviations)};
 }
 
 /// Returns a pair consisting of the estimated mean pose and its covariance.
