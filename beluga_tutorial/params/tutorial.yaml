@@ -1,5 +1,3 @@
-load_landmark_map: true
-save_landmark_map: false
 map_size: 100 # Size of the map in [m]
 number_of_doors: 15
 number_of_particles: 300 # Fixed number of particles
