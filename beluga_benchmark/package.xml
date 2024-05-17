@@ -21,6 +21,9 @@
   <exec_depend condition="$ROS_VERSION == 2">python3-pandas</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">python3-tk</exec_depend>
 
+  <test_depend condition="$ROS_VERSION == 2">ament_lint_auto</test_depend>
+  <test_depend condition="$ROS_VERSION == 2">ament_lint_common</test_depend>
+
   <export>
     <build_type condition="$ROS_VERSION == 1">cmake</build_type>
     <build_type condition="$ROS_VERSION == 2">ament_cmake</build_type>
