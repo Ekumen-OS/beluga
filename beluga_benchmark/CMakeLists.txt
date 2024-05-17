@@ -36,11 +36,6 @@ if(ROS_VERSION EQUAL 2)
   install(DIRECTORY scripts/profiling scripts/benchmarking
                     USE_SOURCE_PERMISSIONS DESTINATION lib/${PROJECT_NAME})
 
-  if(BUILD_TESTING)
-    find_package(ament_lint_auto REQUIRED)
-    ament_lint_auto_find_test_dependencies()
-  endif()
-
   ament_package()
 elseif(ROS_VERSION EQUAL 1)
   install(CODE "message(STATUS 'Nothing to be done')")
