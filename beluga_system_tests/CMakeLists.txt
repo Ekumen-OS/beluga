@@ -17,7 +17,16 @@ cmake_minimum_required(VERSION 3.16)
 project(beluga_system_tests VERSION 1.0)
 
 set(ROS_VERSION $ENV{ROS_VERSION})
-
+if(NOT ROS_VERSION)
+  if(CATKIN_DEVEL_PREFIX OR CATKIN_BUILD_BINARY_PACKAGE)
+    set(ROS_VERSION 1)
+  else()
+    find_package(ament_cmake QUIET)
+    if(ament_cmake_FOUND)
+      set(ROS_VERSION 2)
+    endif()
+  endif()
+endif()
 if(ROS_VERSION EQUAL 2)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
