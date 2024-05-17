@@ -60,7 +60,7 @@ To build the simulation step by step, we'll first explain the main functionality
 ### 2.1 Writing the code
 Create a `beluga_tutorial/src/main.cpp` file and put the following code in:
 
->Note: The following code only implement the filter and calculate the estimated state. For the complete code with the
+>**Note:** The following code only implement the filter and calculate the estimated state. For the complete code with the
 visualization step go to (link).
 
 ```cpp
@@ -250,7 +250,7 @@ landmark_map |= ranges::actions::sort | ranges::actions::unique;
 ```
 * We use a `uniform_int_distribution` to randomly assign landmark to any position of the map defined by `[0, map_size]`.
 * `beluga::views::sample(landmark_distribution)` is in charge of, given a type of distribution, generate samples.
-* `ranges::views::take_exactly(tutorial_params.number_of_doors)` define the number of doors to take, using the **number_of_doors** parameter.
+* `ranges::views::take_exactly(tutorial_params.number_of_doors)` defines the number of doors to take, using the **number_of_doors** parameter.
 * `ranges::to<LandmarkMapVector>` convert the range to a LandmarkMapVector type defined previously.
 * `landmark_map |= ranges::actions::sort | ranges::actions::unique` will remove repeated landmarks in the same position, and arrange them from lowest to highest to facilitate debugging.
 >Note: read about [Range Adaptor Closure Object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorClosureObject) to understand the `|` operator.
@@ -270,7 +270,7 @@ auto particles = beluga::views::sample(initial_distribution) |
 * We define a `std::normal_distribution<double>` to initialize the position of the robot with some uncertainty.
 * `beluga::views::sample(initial_distribution)` will spread the particles around the normal distribution.
 * `ranges::views::transform(beluga::make_from_state<Particle>)` convert each sample in a Particle data struct.
-* `ranges::views::take_exactly(tutorial_params.number_of_particles)` define the number of particles to take, using the **number_of_particles** parameter.
+* `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the **number_of_particles** parameter.
 * `ranges::to<beluga::TupleVector>` convert the range to a `beluga::TupleVector`, which is a shorthand for a tuple of vectors with the default allocator, see beluga code for more detail (link).
 
 ### 2.1.3 Simulation Loop
@@ -322,11 +322,6 @@ does not match the updated belief $bel(x_t)$ explain in [MCL background](#monte-
 
 ### 2.1.5 Measurement Update - Sensor Model
 Measurement models describe the formation process by which sensor measurements are generated in the physical world. Probabilistic robotics explicitly models the noise in sensor measurements. Such models account for the inherent uncertainty in the robot’s sensors. Formally, the measurement model is defined as a conditional probability distribution $p(z_t | x_t , m)$, where $x_t$ is the robot pose, $z_t$ is the measurement at time $t$, and $m$ is the map of the environment.
-
-<!-- Developing an accurate sensor model can be extremely time-consuming, and an accurate model may require state variables that we
-might not know (such as the surface material). Probabilistic robotics accommodates the inaccuracies of sensor models in the stochastic
-aspects: By modeling the measurement process as a conditional probability density, $p(z_t | x_t)$, instead of a deterministic function
-$z_t = f (x_t)$, the uncertainty in the sensor model can be accommodated in the non-deterministic aspects of the model. Herein lies a key advantage of probabilistic techniques over classical robotics: in practice, we can get away with extremely crude models. However, when devising a probabilistic model, care has to be taken to capture the different types of uncertainties that may affect a sensor measurement. -->
 
 The most common model for processing landmarks assumes that the sensor can measure the range and the bearing of the landmark relative to the robot’s
 local coordinate frame. In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (pag. 149 of ProbRob),
@@ -399,23 +394,18 @@ particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | belu
 The `beluga::actions::normalize` is a range adaptor that allows users to normalize the weights of a range (or a range of particles) by dividing each weight by a specified normalization factor. If none is specified, the default normalization factor corresponds to the total sum of weights in the given range.
 
 ### 2.1.6 Resample
-Is not adaptive, we use the same size for the set of particle alongside this Tutorial. Adaptive means modify the amount of particle based is some math
-rules to improve the algorithm efficiency at run time.
+The updated belief is prefigured by the spatial distribution of the particles $x_{t-1}$ in the set and their importance weights. A few of the particles will have migrated to state regions with low probability, however, and their importance weights will therefore be low.
+To correct this, the update step is completed by performing a **resampling process**, which consist of drawing a new set of particles $x_t$ from the current set, with replacement, using importance weights as unnormalized probabilities. This process causes particles with low weights to be discarded and particles with high weights to be propagated multiple times into the new particle set.
 
-Before this step, the particles are distributed acording $x_{t-1}$ set of weigthed particles. After this step, the particles will be distributed according
-the $x_t$, and all the particles weight will be equally value 1.
-
-The updated belief is prefigured by the spatial distribution of the particles in the set and their importance weights.
-
-A few of the particles will have migrated to state regions with low probability, however, and their importance weights will therefore be low.
-To correct this, the update step is completed by performing a resampling process, which consist of drawing a new set of particles from the current set,
-with replacement, using importance weights as unnormalized probabilities. This process causes particles with low weights to be discarded and
-particles with high weights to be propagated multiple times into the new particle set.
+Adaptive Monte Carlo Localization (AMCL) uses different sampling techniques to dynamically adjust the number of particles to match the complexity of the posterior distribution. For the simplicity of this tutorial, we'll keep a fixed number of particles, as the performance is adequate.
 
 ```cpp
 // Resample
 particles |= beluga::views::sample | ranges::views::take_exactly(tutorial_params.number_of_particles) |
               beluga::actions::assign;
 ```
+* `beluga::views::sample` implements a multinomial resampling on `particles`.
+* `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the **number_of_particles** parameter.
+* `beluga::actions::assign` effectively converts any view into an action and assigns the result to `particles`.
 
 ### 2.2 Compiling the code
