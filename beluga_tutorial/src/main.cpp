@@ -157,19 +157,19 @@ void save_tutorial_dataset_to_yaml(const std::filesystem::path& path, const Tuto
 
     auto current = node["simulation_dataset"][cycle]["particles"]["current"];
     current["states"] = beluga::views::states(data.current) | ranges::to<std::vector<double>>;
-    current["weights"] = beluga::views::states(data.current) | ranges::to<std::vector<double>>;
+    current["weights"] = beluga::views::weights(data.current) | ranges::to<std::vector<double>>;
 
     auto propagate = node["simulation_dataset"][cycle]["particles"]["propagate"];
     propagate["states"] = beluga::views::states(data.propagate) | ranges::to<std::vector<double>>;
-    propagate["weights"] = beluga::views::states(data.propagate) | ranges::to<std::vector<double>>;
+    propagate["weights"] = beluga::views::weights(data.propagate) | ranges::to<std::vector<double>>;
 
     auto reweight = node["simulation_dataset"][cycle]["particles"]["reweight"];
     reweight["states"] = beluga::views::states(data.reweight) | ranges::to<std::vector<double>>;
-    reweight["weights"] = beluga::views::states(data.reweight) | ranges::to<std::vector<double>>;
+    reweight["weights"] = beluga::views::weights(data.reweight) | ranges::to<std::vector<double>>;
 
     auto resample = node["simulation_dataset"][cycle]["particles"]["resample"];
     resample["states"] = beluga::views::states(data.resample) | ranges::to<std::vector<double>>;
-    resample["weights"] = beluga::views::states(data.resample) | ranges::to<std::vector<double>>;
+    resample["weights"] = beluga::views::weights(data.resample) | ranges::to<std::vector<double>>;
 
     auto estimation = node["simulation_dataset"][cycle]["estimation"];
     estimation["mean"] = std::get<0>(data.estimation);
@@ -211,7 +211,7 @@ int main(int argc, char* argv[]) {
 
   // Execute the particle filter using beluga
   double current_pose{tutorial_params.initial_pose};
-  for (auto n = 0; n < tutorial_params.number_of_cycles; n++) {
+  for (auto n = 0; n < tutorial_params.number_of_cycles; ++n) {
     TutorialData tutorial_data;
 
     // Save ground truth
@@ -241,16 +241,16 @@ int main(int argc, char* argv[]) {
                                   ranges::views::transform([&](const double lm) { return lm - state; }) |  //
                                   ranges::to<SensorData>;
 
-      return std::transform_reduce(
-                 sensor_data.begin(), sensor_data.end(), 1.0, std::multiplies<>{},
-                 [&](const auto& sensor_datum) {
-                   auto distances = particle_sensor_data | ranges::views::transform([&](auto& particle_sensor_datum) {
+      return tutorial_params.min_particle_weight +
+             std::transform_reduce(
+                 sensor_data.begin(), sensor_data.end(), 1.0, std::multiplies<>{}, [&](const auto& sensor_datum) {
+                   auto distances = particle_sensor_data |  //
+                                    ranges::views::transform([&](auto& particle_sensor_datum) {
                                       return std::abs(sensor_datum - particle_sensor_datum);
                                     });
-                   auto min_distance = ranges::min(distances);
+                   const auto min_distance = ranges::min(distances);
                    return exp((-1 * pow(min_distance, 2)) / (2 * tutorial_params.sensor_model_sigam));
-                 }) +
-             tutorial_params.min_particle_weight;
+                 });
     };
 
     tutorial_data.current = particles;
