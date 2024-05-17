@@ -12,6 +12,5 @@ translation_sd: 1.0
 sensor_range: 3.0 # Sensor range of view in [m]
 sensor_model_sigam: 1.0
 min_particle_weight: 0.08
-dataset_file_name: "bag6.yaml"
+dataset_path: "./src/beluga/beluga_tutorial/bags/dataset.yaml"
 landmark_map_file_name: "landmark_map.yaml"
-bags_folder_path: "./src/beluga/beluga_tutorial/bags/"
