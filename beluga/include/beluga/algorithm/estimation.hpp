@@ -15,6 +15,7 @@
 #ifndef BELUGA_ALGORITHM_ESTIMATION_HPP
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
+#include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
@@ -192,11 +193,10 @@ std::pair<Scalar, Scalar> estimate(Scalars&& scalars, Weights&& weights) {
   auto weights_view = weights | ranges::views::common;
   const auto weights_sum = ranges::accumulate(weights, 0.0, std::plus<>{});
   auto normalized_weights_view =
-      weights_view | ranges::views::transform([weights_sum](const auto& weight) { return weight / weights_sum; });
+      weights_view | ranges::views::transform([weights_sum](auto weight) { return weight / weights_sum; });
 
   const Scalar weighted_mean = std::transform_reduce(
-      scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{},
-      [](const auto& scalar, const auto& weight) { return scalar * weight; });
+      scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{}, std::multiplies<>{});
 
   const Scalar weighted_squared_deviations = std::transform_reduce(
       scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{},
@@ -204,7 +204,12 @@ std::pair<Scalar, Scalar> estimate(Scalars&& scalars, Weights&& weights) {
         return weight * (scalar - weighted_mean) * (scalar - weighted_mean);
       });
 
-  return std::pair{weighted_mean, std::sqrt(weighted_squared_deviations)};
+  const Scalar number_of_non_zero_weights = ranges::count_if(weights_view, [&](auto weight) { return weight > 0; });
+
+  const Scalar weighted_sd =
+      std::sqrt(weighted_squared_deviations * number_of_non_zero_weights / (number_of_non_zero_weights - 1));
+
+  return std::pair{weighted_mean, weighted_sd};
 }
 
 /// Returns a pair consisting of the estimated mean pose and its covariance.
