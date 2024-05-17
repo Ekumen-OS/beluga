@@ -168,9 +168,10 @@ TEST(TestAmclCore, TestRandomParticlesInserting) {
   auto params = beluga::AmclParams{};
   params.min_particles = 2;
   params.max_particles = 100;
+  params.alpha_slow = 0.0;
+  params.alpha_fast = 100.0;  // Ensure we exercise random state generation
   auto amcl = make_amcl(params);
   amcl.initialize(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1, 1}}, (Eigen::Vector3d::Ones()).asDiagonal());
-  // This exercises the random state generation.
   for (int i = 0; i < 30; ++i) {
     amcl.force_update();
     amcl.update(kDummyControl, kDummyMeasurement);
