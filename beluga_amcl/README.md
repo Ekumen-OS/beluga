@@ -44,7 +44,7 @@ The subscribed topic names can be changed with the parameters `map_topic`, `scan
 
 | Topic            | Type                                      | Description                                                              |
 |------------------|-------------------------------------------|--------------------------------------------------------------------------|
-| `particle_cloud` | `nav2_msgs/ParticleCloud`                 | Output topic for particle cloud published at a fixed frequency.          |
+| `particle_cloud` | `geometry_msgs/PoseArray`                 | Output topic for particle cloud published at a fixed frequency.          |
 | `pose`           | `geometry_msgs/PoseWithCovarianceStamped` | Output topic for estimated pose mean and covariance in map frame.        |
 
 ### Published Transforms

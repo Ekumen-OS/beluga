@@ -48,3 +48,10 @@ target_link_libraries(
   ${PROJECT_NAME}
   ${catkin_LIBRARIES}
   gmock_main)
+
+catkin_add_gmock(test_particle_cloud test_particle_cloud.cpp)
+target_link_libraries(
+  test_particle_cloud
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  gmock_main)

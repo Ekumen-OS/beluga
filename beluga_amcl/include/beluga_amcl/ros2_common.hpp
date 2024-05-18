@@ -17,7 +17,6 @@
 
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
-#include <nav2_msgs/msg/detail/particle_cloud__struct.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/time.hpp>
 #include <sophus/se2.hpp>
@@ -392,81 +391,6 @@ inline void declare_common_params(rclcpp_lifecycle::LifecycleNode& node) {
     descriptor.description = "Execution policy used to process particles [seq, par].";
     node.declare_parameter("execution_policy", "seq", descriptor);
   }
-}
-
-/// Helper struct to hold a SE2 state and its weight.
-struct RepresentativeData {
-  /// SE2 state.
-  Sophus::SE2d state;
-  /// Weight.
-  double weight{0.};
-};
-
-/// Hash implementation for SE2 transforms.
-struct RepresentativeBinHash {
-  /// Computes a hash out of a SE2 transform.
-  std::size_t operator()(const Sophus::SE2d& s) const noexcept {
-    std::size_t h1 = std::hash<double>{}(s.translation().x());
-    std::size_t h2 = std::hash<double>{}(s.translation().y());
-    std::size_t h3 = std::hash<double>{}(s.so2().log());
-    return h1 ^ (h2 << 1) ^ (h3 << 2);
-  }
-};
-
-/// Equal comparison functor for SE2 transforms.
-struct RepresentativeBinEqual {
-  /// Actual hash implementation.
-  bool operator()(const Sophus::SE2d& lhs, const Sophus::SE2d& rhs) const noexcept {
-    // good enough, since copies of the same candidate are expected to be identical copies
-    return lhs.translation().x() == rhs.translation().x() &&  //
-           lhs.translation().y() == rhs.translation().y() &&  //
-           lhs.so2().log() == rhs.so2().log();
-  }
-};
-
-// Particle weights from the filter may or may not be representative of the
-// true distribution. If we resampled, they are not, and there will be multiple copies
-// of the most likely candidates, all with unit weight. In this case the number of copies
-// is a proxy for the prob density at each candidate. If we did not resample before updating
-// the estimation and publishing this message (which can happen if the resample interval
-// is set to something other than 1), then all particles are expected to be different
-// and their weights are proportional to the prob density at each candidate.
-//
-// Only the combination of both the state distribution and the candidate weights together
-// provide information about the probability density at each candidate.
-// To handle both cases, we group repeated candidates and compute the accumulated weight.
-template <class ParticleFilter>
-nav2_msgs::msg::ParticleCloud make_representative_particle_cloud(
-    const ParticleFilter& particle_filter,
-    std::string_view global_frame,
-    rclcpp::Time now) {
-  std::unordered_map<Sophus::SE2d, RepresentativeData, RepresentativeBinHash, RepresentativeBinEqual>
-      representatives_map;
-  representatives_map.reserve(particle_filter.particles().size());
-
-  double max_weight = 1e-5;  // never risk dividing by zero
-
-  for (const auto& [state, weight] : particle_filter.particles()) {
-    auto& representative = representatives_map[state];  // if the element does not exist, create it
-    representative.state = state;
-    representative.weight += weight;
-    if (representative.weight > max_weight) {
-      max_weight = representative.weight;
-    }
-  }
-
-  auto message = nav2_msgs::msg::ParticleCloud{};
-  message.header.stamp = now;
-  message.header.frame_id = global_frame;
-  message.particles.reserve(particle_filter.particles().size());
-
-  for (const auto& [key, representative] : representatives_map) {
-    auto& particle = message.particles.emplace_back();
-    tf2::toMsg(representative.state, particle.pose);
-    particle.weight = representative.weight / max_weight;
-  }
-
-  return message;
 }
 
 }  // namespace beluga_amcl
