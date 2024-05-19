@@ -309,6 +309,7 @@ bool AmclNodelet::set_map_callback(nav_msgs::SetMap::Request& request, nav_msgs:
   tf2::covarianceRowMajorToEigen(request.initial_pose.pose.covariance, covariance);
 
   last_known_estimate_ = std::make_pair(pose, covariance);
+  last_known_odom_transform_in_map_.reset();
   const bool success = initialize_from_estimate(last_known_estimate_.value());
 
   response.success = static_cast<unsigned char>(success);
@@ -352,6 +353,7 @@ void AmclNodelet::handle_map_with_default_initial_pose(const nav_msgs::Occupancy
     const auto initial_estimate = get_initial_estimate();
     if (initial_estimate.has_value()) {
       last_known_estimate_ = initial_estimate;
+      last_known_odom_transform_in_map_.reset();
     }
   }
 
@@ -436,6 +438,8 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
   const auto update_duration = update_stop_time - update_start_time;
 
   if (new_estimate.has_value()) {
+    const auto& [base_pose_in_map, _] = new_estimate.value();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
     last_known_estimate_ = new_estimate;
 
     NODELET_INFO(
@@ -464,13 +468,12 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
 
   // Transforms are always published to keep them current
   if (enable_tf_broadcast_ && config_.tf_broadcast) {
-    const auto odom_transform_in_map = base_pose_in_map * base_pose_in_odom.inverse();
     auto message = geometry_msgs::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
     message.header.stamp = ros::Time::now() + ros::Duration(config_.transform_tolerance);
     message.header.frame_id = config_.global_frame_id;
     message.child_frame_id = config_.odom_frame_id;
-    message.transform = tf2::toMsg(odom_transform_in_map);
+    message.transform = tf2::toMsg(*last_known_odom_transform_in_map_);
     tf_broadcaster_->sendTransform(message);
   }
 
@@ -498,6 +501,7 @@ void AmclNodelet::initial_pose_callback(const geometry_msgs::PoseWithCovarianceS
   tf2::covarianceRowMajorToEigen(message->pose.covariance, covariance);
 
   last_known_estimate_ = std::make_pair(pose, covariance);
+  last_known_odom_transform_in_map_.reset();
   initialize_from_estimate(last_known_estimate_.value());
 }
 
