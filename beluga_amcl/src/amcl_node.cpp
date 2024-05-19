@@ -453,6 +453,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
     const auto initial_estimate = get_initial_estimate();
     if (initial_estimate.has_value()) {
       last_known_estimate_ = initial_estimate;
+      last_known_odom_transform_in_map_.reset();
     }
   }
 
@@ -531,6 +532,8 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   const auto update_duration = update_stop_time - update_start_time;
 
   if (new_estimate.has_value()) {
+    const auto& [base_pose_in_map, _] = new_estimate.value();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
     last_known_estimate_ = new_estimate;
 
     RCLCPP_INFO(
@@ -558,7 +561,6 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   // Transforms are always published to keep them current.
   if (enable_tf_broadcast_ && get_parameter("tf_broadcast").as_bool()) {
-    const auto odom_transform_in_map = base_pose_in_map * base_pose_in_odom.inverse();
     auto message = geometry_msgs::msg::TransformStamped{};
     // Sending a transform that is valid into the future so that odom can be used.
     const auto expiration_stamp = tf2_ros::fromMsg(laser_scan->header.stamp) +
@@ -566,7 +568,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     message.header.stamp = tf2_ros::toMsg(expiration_stamp);
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     message.child_frame_id = get_parameter("odom_frame_id").as_string();
-    message.transform = tf2::toMsg(odom_transform_in_map);
+    message.transform = tf2::toMsg(*last_known_odom_transform_in_map_);
     tf_broadcaster_->sendTransform(message);
   }
 }
@@ -587,6 +589,7 @@ void AmclNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamp
   tf2::covarianceRowMajorToEigen(message->pose.covariance, covariance);
 
   last_known_estimate_ = std::make_pair(pose, covariance);
+  last_known_odom_transform_in_map_.reset();
   initialize_from_estimate(last_known_estimate_.value());
 }
 

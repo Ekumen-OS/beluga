@@ -174,6 +174,8 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
   std::unique_ptr<beluga_ros::Amcl> particle_filter_;
   /// Last known pose estimate, if any.
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_;
+  /// Last known map to odom correction estimate, if any.
+  std::optional<Sophus::SE2d> last_known_odom_transform_in_map_;
   /// Whether to broadcast transforms or not.
   bool enable_tf_broadcast_{false};
 };
