@@ -5,5 +5,6 @@
     <param name="step_size" value="0.005"/>
     <param name="show_viz" value="false"/>
     <param name="viz_pub_rate" value="30.0"/>
+    <remap from="/turtlebot/scan" to="/scan"/>
   </node>
 </launch>
