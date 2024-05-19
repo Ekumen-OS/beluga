@@ -33,7 +33,7 @@ TEST(TestParticleCloud, Assign) {
       std::make_tuple(
           Sophus::SE2d{Sophus::SO2d{Constants::pi() / 2.0}, Eigen::Vector2d{0.0, -1.0}}, beluga::Weight(0.5)),
   };
-  constexpr std::size_t kSampleSize = 1000u;
+  constexpr std::size_t kSampleSize = 1000U;
   auto message = beluga_ros::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, kSampleSize, message);
   EXPECT_EQ(message.poses.size(), kSampleSize);
@@ -60,8 +60,8 @@ TEST(TestParticleCloud, AssignNone) {
       std::make_tuple(Sophus::SE2d{}, beluga::Weight(1.0)),
   };
   auto message = beluga_ros::msg::PoseArray{};
-  beluga_ros::assign_particle_cloud(particles, 0u, message);
-  EXPECT_EQ(message.poses.size(), 0u);
+  beluga_ros::assign_particle_cloud(particles, 0U, message);
+  EXPECT_EQ(message.poses.size(), 0U);
 }
 
 TEST(TestParticleCloud, AssignMatchingDistribution) {
@@ -77,7 +77,7 @@ TEST(TestParticleCloud, AssignMatchingEmpty) {
   const auto particles = std::vector<std::tuple<Sophus::SE2d, beluga::Weight>>{};
   auto message = beluga_ros::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, message);
-  EXPECT_EQ(message.poses.size(), 0u);
+  EXPECT_EQ(message.poses.size(), 0U);
 }
 
 }  // namespace
