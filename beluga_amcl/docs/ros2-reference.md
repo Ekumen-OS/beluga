@@ -190,6 +190,16 @@ Also available as a standalone `amcl_node` executable.
 : Maximum distance, in meters, to do obstacle inflation on map used in the `likelihood_field` model.
 : Defaults to `2.0`.
 
+##### Misc Parameters
+
+`autostart` _(`boolean`)_
+: Whether the node should configure and activate itself or not. Avoids the need for a lifecycle manager.
+: Defaults to `false`.
+
+`autostart_delay` _(`float`)_
+: Delay, in seconds, to wait before initiating an autostart sequence. Also the retry period when the sequence fails.
+: Defaults to `0.0`.
+
 ### Published topics
 
 `particle_cloud`

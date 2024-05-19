@@ -392,6 +392,18 @@ inline void declare_common_params(rclcpp_lifecycle::LifecycleNode& node) {
     descriptor.description = "Execution policy used to process particles [seq, par].";
     node.declare_parameter("execution_policy", "seq", descriptor);
   }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Whether the node should configure and activate itself or not.";
+    node.declare_parameter("autostart", false, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Delay, in seconds, before autostarting if autostarting.";
+    node.declare_parameter("autostart_delay", 0.0, descriptor);
+  }
 }
 
 /// Helper struct to hold a SE2 state and its weight.
