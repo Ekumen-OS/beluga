@@ -21,7 +21,7 @@ ndt_amcl:
     # The name of the topic where the map is published by the map server.
     map_topic: map
     # The name of the topic where scans are being published.
-    scan_topic: turtlebot/scan
+    scan_topic: scan
     # The name of the topic where an initial pose can be published.
     # The particle filter will be reset using the provided pose with covariance.
     initial_pose_topic: initialpose
