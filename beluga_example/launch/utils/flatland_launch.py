@@ -42,6 +42,7 @@ def generate_launch_description():
                     {'viz_pub_rate': 30.0},
                     {'use_sim_time': True},
                 ],
+                remappings=[('/turtlebot/scan', '/scan')],
             ),
         ]
     )
