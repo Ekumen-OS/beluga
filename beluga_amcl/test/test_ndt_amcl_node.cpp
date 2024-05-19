@@ -432,6 +432,7 @@ TEST_F(TestNode, CanUpdatePoseEstimate) {
 }
 
 TEST_F(TestNode, IsPublishingParticleCloud) {
+  ndt_amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   ndt_amcl_node_->configure();
   ndt_amcl_node_->activate();
   ASSERT_TRUE(wait_for_initialization());

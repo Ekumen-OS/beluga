@@ -42,7 +42,7 @@ namespace beluga_ros {
  * \param particles Pose distribution, as a particle cloud itself.
  * \param size Sample size of the particle cloud.
  * \param[out] message Particle cloud message to be assigned.
- * \tparam Particles A range type whose value type satisfies \ref ParticlePage "Particle" named requirements.
+ * \tparam Particles A sized range type whose value type satisfies \ref ParticlePage "Particle" named requirements.
  */
 template <
     class Particles,
@@ -53,11 +53,14 @@ template <
         std::is_same_v<State, typename Sophus::SE2<Scalar>> || std::is_same_v<State, typename Sophus::SE3<Scalar>>>>
 beluga_ros::msg::PoseArray&
 assign_particle_cloud(Particles&& particles, std::size_t size, beluga_ros::msg::PoseArray& message) {
+  static_assert(ranges::sized_range<decltype(particles)>);
   message.poses.clear();
-  message.poses.reserve(size);
-  for (const auto& particle : particles | beluga::views::sample | ranges::views::take_exactly(size)) {
-    auto& pose = message.poses.emplace_back();
-    tf2::toMsg(beluga::state(particle), pose);
+  if (ranges::size(particles) > 0) {
+    message.poses.reserve(size);
+    for (const auto& particle : particles | beluga::views::sample | ranges::views::take_exactly(size)) {
+      auto& pose = message.poses.emplace_back();
+      tf2::toMsg(beluga::state(particle), pose);
+    }
   }
   return message;
 }

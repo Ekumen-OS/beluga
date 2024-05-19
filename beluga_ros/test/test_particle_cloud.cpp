@@ -55,13 +55,29 @@ TEST(TestParticleCloud, Assign) {
   EXPECT_NEAR(upper_half_xy_plane_weight, 0.5, kSampleSize * 0.01);  // allow 1% deviations
 }
 
-TEST(TestParticleCloud, AssignMatchingSize) {
+TEST(TestParticleCloud, AssignNone) {
+  const auto particles = std::vector{
+      std::make_tuple(Sophus::SE2d{}, beluga::Weight(1.0)),
+  };
+  auto message = beluga_ros::msg::PoseArray{};
+  beluga_ros::assign_particle_cloud(particles, 0u, message);
+  EXPECT_EQ(message.poses.size(), 0u);
+}
+
+TEST(TestParticleCloud, AssignMatchingDistribution) {
   const auto particles = std::vector{
       std::make_tuple(Sophus::SE2d{}, beluga::Weight(1.0)),
   };
   auto message = beluga_ros::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, message);
   EXPECT_EQ(message.poses.size(), particles.size());
+}
+
+TEST(TestParticleCloud, AssignMatchingEmpty) {
+  const auto particles = std::vector<std::tuple<Sophus::SE2d, beluga::Weight>>{};
+  auto message = beluga_ros::msg::PoseArray{};
+  beluga_ros::assign_particle_cloud(particles, message);
+  EXPECT_EQ(message.poses.size(), 0u);
 }
 
 }  // namespace
