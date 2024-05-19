@@ -70,8 +70,7 @@ assign_particle_cloud(Particles&& particles, std::size_t size, beluga_ros::msg::
  * Particle cloud sample size will match that of the given distribution.
  *
  * \param particles Distribution to sample, as a particle cloud itself.
- * \param message Particle cloud message to be assigned.
- * \return A particle cloud message with a sample size that matches that of the given distribution.
+ * \param[out] message Particle cloud message to be assigned.
  * \tparam Particles A sized range type whose value type satisfies \ref ParticlePage "Particle" named requirements.
  */
 template <class Particles, class Message>

@@ -82,6 +82,13 @@ using Time = ros::Time;
 
 }  // namespace detail
 
+/// Stamp a message with a frame ID and timestamp.
+/**
+ * \param frame_id Frame ID to stamp the message with.
+ * \param timestamp Time to stamp the message at.
+ * \param[out] message Message to be assigned.
+ * \tparam Message A message type with a header.
+ */
 template <class Message>
 Message& stamp_message(std::string_view frame_id, detail::Time timestamp, Message& message) {
   message.header.frame_id = frame_id;
