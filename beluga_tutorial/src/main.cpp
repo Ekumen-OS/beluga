@@ -46,7 +46,7 @@ struct Parameters {
   int number_of_particles{200};
 
   /// Number of simulation cycles.
-  int number_of_cycles{100};
+  unsigned int number_of_cycles{100};
 
   /// Robot's initial position in meters (m).
   double initial_position{0.0};
@@ -88,7 +88,7 @@ struct Parameters {
   /**
    * The dataset file is used to save the data produced by the simulation for posterior analisys.
    */
-  std::filesystem::path dataset_path{"./"};
+  std::filesystem::path record_path{"./record.yaml"};
 };
 
 using Particle = std::tuple<double, beluga::Weight>;
@@ -117,7 +117,7 @@ void load_parameters(const std::filesystem::path& path, Parameters& parameters) 
     parameters.map_size = params["map_size"].as<int>();
     parameters.number_of_doors = params["number_of_doors"].as<int>();
     parameters.number_of_particles = params["number_of_particles"].as<int>();
-    parameters.number_of_cycles = params["number_of_cycles"].as<int>();
+    parameters.number_of_cycles = params["number_of_cycles"].as<unsigned int>();
     parameters.initial_position = params["initial_position"].as<double>();
     parameters.initial_position_sd = params["initial_position_sd"].as<double>();
     parameters.dt = params["dt"].as<double>();
@@ -126,7 +126,7 @@ void load_parameters(const std::filesystem::path& path, Parameters& parameters) 
     parameters.sensor_range = params["sensor_range"].as<double>();
     parameters.sensor_model_sigma = params["sensor_model_sigma"].as<double>();
     parameters.min_particle_weight = params["min_particle_weight"].as<double>();
-    parameters.dataset_path = params["dataset_path"].as<std::string>();
+    parameters.record_path = params["record_path"].as<std::string>();
   } catch (YAML::BadFile& e) {
     std::cout << e.what() << "\n";
   }
@@ -199,7 +199,7 @@ int main(int argc, char* argv[]) {
                    ranges::to<beluga::TupleVector>;
 
   double current_position{parameters.initial_position};
-  for (auto n = 0; n < parameters.number_of_cycles; ++n) {
+  for (unsigned int n = 0; n < parameters.number_of_cycles; ++n) {
     RobotRecord robot_record;
 
     current_position += parameters.velocity * parameters.dt;
@@ -210,32 +210,32 @@ int main(int argc, char* argv[]) {
     }
 
     auto motion_model = [&](double particle_position, auto& gen) {
-      const double distance = (parameters.velocity * parameters.dt);
+      const double distance = parameters.velocity * parameters.dt;
       std::normal_distribution<double> distribution(distance, parameters.translation_sd);
       return particle_position + distribution(gen);
     };
 
     auto detections =
         landmark_map |                                                                                       //
-        ranges::views::transform([&](const double& landmark) { return landmark - current_position; }) |      //
+        ranges::views::transform([&](double landmark) { return landmark - current_position; }) |             //
         ranges::views::remove_if([&](double range) { return std::abs(range) > parameters.sensor_range; }) |  //
         ranges::to<SensorData>;
 
-    auto sensor_model = [&](const double& particle_position) {
+    auto sensor_model = [&](double particle_position) {
       auto particle_detections =
-          landmark_map |                                                                                    //
-          ranges::views::transform([&](const double& landmark) { return landmark - particle_position; }) |  //
+          landmark_map |                                                                             //
+          ranges::views::transform([&](double landmark) { return landmark - particle_position; }) |  //
           ranges::to<SensorData>;
 
       return parameters.min_particle_weight +
              std::transform_reduce(
-                 detections.begin(), detections.end(), 1.0, std::multiplies<>{}, [&](const double& detection) {
+                 detections.begin(), detections.end(), 1.0, std::multiplies<>{}, [&](double detection) {
                    auto distances = particle_detections |  //
-                                    ranges::views::transform([&](const double& particle_detection) {
+                                    ranges::views::transform([&](double particle_detection) {
                                       return std::abs(detection - particle_detection);
                                     });
                    const auto min_distance = ranges::min(distances);
-                   return exp((-1 * pow(min_distance, 2)) / (2 * parameters.sensor_model_sigma));
+                   return std::exp((-1 * std::pow(min_distance, 2)) / (2 * parameters.sensor_model_sigma));
                  });
     };
 
@@ -258,7 +258,7 @@ int main(int argc, char* argv[]) {
     simulation_record.robot_record.push_back(std::move(robot_record));
   }
 
-  save_simulation_records(parameters.dataset_path, simulation_record);
+  save_simulation_records(parameters.record_path, simulation_record);
 
   return 0;
 }

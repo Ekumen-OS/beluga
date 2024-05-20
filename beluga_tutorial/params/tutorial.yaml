@@ -10,7 +10,7 @@ translation_sd: 1.0
 sensor_range: 3.0 # Sensor range of view in [m]
 sensor_model_sigma: 1.0
 min_particle_weight: 0.08
-dataset_path: "./dataset.yaml"
+record_path: "./record.yaml"
 
 landmark_map:
   - 5
