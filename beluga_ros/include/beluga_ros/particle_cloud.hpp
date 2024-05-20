@@ -49,17 +49,17 @@ namespace detail {
 /**
  * Assumes both saturation and value to be 1.
  */
-beluga_ros::msg::ColorRGBA alphaHueToRGBA(float hue, float alpha) {
+inline beluga_ros::msg::ColorRGBA alphaHueToRGBA(float hue, float alpha) {
   beluga_ros::msg::ColorRGBA message;
   // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB_alternative
   // specialized for V = S = 1 and using single precision floats because
   // that is what the color message expects.
-  const auto kr = std::fmod(5.0f + hue / 60.0f, 6.0f);
-  const auto kg = std::fmod(3.0f + hue / 60.0f, 6.0f);
-  const auto kb = std::fmod(1.0f + hue / 60.0f, 6.0f);
-  message.r = 1.0f - 1.0f * std::max(0.0f, std::min({kr, 4.0f - kr, 1.0f}));
-  message.g = 1.0f - 1.0f * std::max(0.0f, std::min({kg, 4.0f - kg, 1.0f}));
-  message.b = 1.0f - 1.0f * std::max(0.0f, std::min({kb, 4.0f - kb, 1.0f}));
+  const auto kr = std::fmod(5.0F + hue / 60.0F, 6.0F);
+  const auto kg = std::fmod(3.0F + hue / 60.0F, 6.0F);
+  const auto kb = std::fmod(1.0F + hue / 60.0F, 6.0F);
+  message.r = 1.0F - 1.0F * std::max(0.0F, std::min({kr, 4.0F - kr, 1.0F}));
+  message.g = 1.0F - 1.0F * std::max(0.0F, std::min({kg, 4.0F - kg, 1.0F}));
+  message.b = 1.0F - 1.0F * std::max(0.0F, std::min({kb, 4.0F - kb, 1.0F}));
   message.a = alpha;
   return message;
 }
@@ -189,18 +189,18 @@ beluga_ros::msg::MarkerArray& assign_particle_cloud(
   // There are no arrow list markers yet (https://github.com/ros2/rviz/pull/972)
   // so we replicate them using a line list for arrow bodies and a triangle list
   // for arrow heads.
-  const auto kArrowBodyLength = Scalar{0.5};
-  const auto kArrowHeadLength = Scalar{0.1};
-  const auto kArrowHeadWidth = kArrowHeadLength / Scalar{5.0};
-  const auto kArrowLength = kArrowBodyLength + kArrowHeadLength;
+  constexpr auto kArrowBodyLength = Scalar{0.5};
+  constexpr auto kArrowHeadLength = Scalar{0.1};
+  constexpr auto kArrowHeadWidth = kArrowHeadLength / Scalar{5.0};
+  constexpr auto kArrowLength = kArrowBodyLength + kArrowHeadLength;
 
   using Translation = typename State::TranslationType;
-  const auto kArrowBodyBase = Translation{};
-  const auto kArrowHeadTip = kArrowLength * Translation::UnitX();
-  const auto kArrowHeadBase = kArrowBodyLength * Translation::UnitX();
-  const auto kArrowHeadRightCorner =
+  const auto arrow_body_base = Translation{};
+  const auto arrow_head_tip = kArrowLength * Translation::UnitX();
+  const auto arrow_head_base = kArrowBodyLength * Translation::UnitX();
+  const auto arrow_head_right_corner =
       kArrowBodyLength * Translation::UnitX() - (kArrowHeadWidth / Scalar{2.0}) * Translation::UnitY();
-  const auto kArrowHeadLeftCorner =
+  const auto arrow_head_left_corner =
       kArrowBodyLength * Translation::UnitX() + (kArrowHeadWidth / Scalar{2.0}) * Translation::UnitY();
 
   message.markers.reserve(2);
@@ -244,13 +244,13 @@ beluga_ros::msg::MarkerArray& assign_particle_cloud(
         static_cast<float>((1.0 - scale_factor) * 270.0), static_cast<float>(0.25 + 0.75 * scale_factor));
 
     // linearly scale arrow sizes using particle weights too
-    arrow_bodies.points.push_back(tf2::toMsg(state * (scale_factor * kArrowBodyBase)));
-    arrow_bodies.points.push_back(tf2::toMsg(state * (scale_factor * kArrowHeadBase)));
+    arrow_bodies.points.push_back(tf2::toMsg(state * (scale_factor * arrow_body_base)));
+    arrow_bodies.points.push_back(tf2::toMsg(state * (scale_factor * arrow_head_base)));
     arrow_bodies.colors.insert(arrow_bodies.colors.end(), 2, vertex_color);
 
-    arrow_heads.points.push_back(tf2::toMsg(state * (scale_factor * kArrowHeadLeftCorner)));
-    arrow_heads.points.push_back(tf2::toMsg(state * (scale_factor * kArrowHeadRightCorner)));
-    arrow_heads.points.push_back(tf2::toMsg(state * (scale_factor * kArrowHeadTip)));
+    arrow_heads.points.push_back(tf2::toMsg(state * (scale_factor * arrow_head_left_corner)));
+    arrow_heads.points.push_back(tf2::toMsg(state * (scale_factor * arrow_head_right_corner)));
+    arrow_heads.points.push_back(tf2::toMsg(state * (scale_factor * arrow_head_tip)));
 
     arrow_heads.colors.insert(arrow_heads.colors.end(), 3, vertex_color);
   }

@@ -112,7 +112,7 @@ Message& stamp_message(std::string_view frame_id, detail::Time timestamp, Messag
   return message;
 }
 
-beluga_ros::msg::MarkerArray&
+inline beluga_ros::msg::MarkerArray&
 stamp_message(std::string_view frame_id, detail::Time timestamp, beluga_ros::msg::MarkerArray& message) {
   for (auto& marker : message.markers) {
     stamp_message(frame_id, timestamp, marker);
