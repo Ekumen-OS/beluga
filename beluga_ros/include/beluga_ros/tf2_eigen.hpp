@@ -43,7 +43,7 @@ namespace tf2 {
  * \return The converted Point message.
  */
 template <class Scalar>
-inline beluga_ros::msg::Point toMsg(const Eigen::Vector2<Scalar>& in) {
+inline beluga_ros::msg::Point toMsg(const Eigen::Matrix<Scalar, 2, 1>& in) {
   beluga_ros::msg::Point out;
   out.x = static_cast<double>(in.x());
   out.y = static_cast<double>(in.y());
