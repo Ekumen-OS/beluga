@@ -102,7 +102,7 @@ using Time = ros::Time;
 /**
  * \param frame_id Frame ID to stamp the message with.
  * \param timestamp Time to stamp the message at.
- * \param[out] message Message to be assigned.
+ * \param[out] message Message to be stamped.
  * \tparam Message A message type with a header.
  */
 template <class Message>
@@ -112,6 +112,12 @@ Message& stamp_message(std::string_view frame_id, detail::Time timestamp, Messag
   return message;
 }
 
+/// Stamp all markers in a marker array message with a frame ID and timestamp.
+/**
+ * \param frame_id Frame ID to stamp markers with.
+ * \param timestamp Time to stamp markers at.
+ * \param[out] message Message to be stamped.
+ */
 inline beluga_ros::msg::MarkerArray&
 stamp_message(std::string_view frame_id, detail::Time timestamp, beluga_ros::msg::MarkerArray& message) {
   for (auto& marker : message.markers) {

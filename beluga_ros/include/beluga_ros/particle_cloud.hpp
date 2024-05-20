@@ -87,8 +87,8 @@ struct almost_equal_to<Sophus::SE2<Scalar>> {
            (abs(atan(tan(a.so2().log() - b.so2().log()))) < angular_resolution);
   }
 
-  const Scalar linear_resolution;
-  const Scalar angular_resolution;
+  const Scalar linear_resolution;   ///< Resolution for translational coordinates, in meters.
+  const Scalar angular_resolution;  ///< Resolution for rotational coordinates, in radians.
 };
 
 }  // namespace detail
