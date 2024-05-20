@@ -15,9 +15,10 @@
     - [3.5 Control Update - Motion Model](#35-control-update---motion-model)
     - [3.6 Measurement Update - Sensor Model](#36-measurement-update---sensor-model)
     - [3.7 Resample](#37-resample)
-  - [4 Compiling the code](#4-compiling-the-code)
+  - [4 Compiling and run code](#4-compiling-and-run-code)
     - [4.1 package.xml](#41-packagexml)
     - [4.2 CMakeLists.txt](#42-cmakeliststxt)
+    - [4.2 Build and run](#42-build-and-run)
 
 ## Overview
 ![Simulation Video](./resources/simulation_video.mp4)
@@ -413,7 +414,7 @@ particles |= beluga::views::sample | ranges::views::take_exactly(tutorial_params
 * `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the **number_of_particles** parameter.
 * `beluga::actions::assign` effectively converts any view into an action and assigns the result to `particles`.
 
-## 4 Compiling the code
+## 4 Compiling and run code
 ### 4.1 package.xml
 Create a `package.xml` file and put the following inside:
 
@@ -485,4 +486,20 @@ install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib/${PROJECT_NAME})
 * `add_executable(${PROJECT_NAME} src/main.cpp)` create an executable called `beluga_tutorial`.
 * `target_include_directories()` is used to include the header fiels of `yaml-cpp` package.
 * `target_link_libraries(${PROJECT_NAME} beluga::beluga yaml-cpp)` link `beluga` and `yaml-cpp` in the compilation process.
-* `install(TARGETS...)` will intall the executable under the path `install/beluga_tutorial/lib/beluga_tutorial`.
+* `install(TARGETS...)` will intall the executable under the path `install/beluga_tutorial/lib/beluga_tutorial/`.
+
+### 4.2 Build and run
+Open a new terminal and build your new package:
+
+```bash
+source /opt/ros/humble/setup.bash
+cd beluga_ws/
+colcon build beluga_tutorial
+```
+
+In the same terminal run the code:
+```bash
+source install/local_setup.bash
+./install/beluga_tutorial/lib/beluga_tutorial/beluga_tutorial <parameters_path>
+```
+>**Note:** You must provide as argument in the command line the absolute path of the parameters file.
