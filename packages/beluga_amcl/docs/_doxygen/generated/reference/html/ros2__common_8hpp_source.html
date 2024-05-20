@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Sun May 19 20:15:37 2024 -0300, 69d0731&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Sun May 19 23:39:38 2024 -0300, e2c39a8&#39;"/>
   </head>
   
   
@@ -454,457 +454,378 @@ $(function() {
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;bondcpp/bond.hpp&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;geometry_msgs/msg/pose_stamped.hpp&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;nav2_msgs/msg/detail/particle_cloud__struct.hpp&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;rclcpp/rclcpp.hpp&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;rclcpp/time.hpp&gt;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;tf2/convert.h&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;tf2/utils.h&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/create_timer_ros.h&gt;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/tf2__sophus_8hpp.html">beluga_ros/tf2_sophus.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;string_view&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>beluga_amcl {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;constexpr std::string_view kDifferentialModelName = <span class="stringliteral">&quot;differential_drive&quot;</span>;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;constexpr std::string_view kOmnidirectionalModelName = <span class="stringliteral">&quot;omnidirectional_drive&quot;</span>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;constexpr std::string_view kStationaryModelName = <span class="stringliteral">&quot;stationary&quot;</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;constexpr std::string_view kNav2DifferentialModelName = <span class="stringliteral">&quot;nav2_amcl::DifferentialMotionModel&quot;</span>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;constexpr std::string_view kNav2OmnidirectionalModelName = <span class="stringliteral">&quot;nav2_amcl::OmniMotionModel&quot;</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> declare_common_params(rclcpp_lifecycle::LifecycleNode&amp; node) {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    descriptor.description = <span class="stringliteral">&quot;The name of the coordinate frame published by the localization system.&quot;</span>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;global_frame_id&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;map&quot;</span>), descriptor);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  }</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    descriptor.description = <span class="stringliteral">&quot;The name of the coordinate frame to use for odometry.&quot;</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;odom_frame_id&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;odom&quot;</span>), descriptor);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    descriptor.description = <span class="stringliteral">&quot;The name of the coordinate frame to use for the robot base.&quot;</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;base_frame_id&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;base_footprint&quot;</span>), descriptor);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Path to load the map from an hdf5 file.&quot;</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;map_path&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;map_path&quot;</span>), descriptor);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  {</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Topic to subscribe to in order to receive the initial pose of the robot.&quot;</span>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose_topic&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;initialpose&quot;</span>), descriptor);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Topic to subscribe to in order to receive the laser scan for localization.&quot;</span>;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;scan_topic&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;scan&quot;</span>), descriptor);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Minimum allowed number of particles.&quot;</span>;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    descriptor.integer_range.resize(1);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    descriptor.integer_range[0].from_value = 0;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    descriptor.integer_range[0].to_value = std::numeric_limits&lt;int&gt;::max();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    descriptor.integer_range[0].step = 1;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;min_particles&quot;</span>, rclcpp::ParameterValue(500), descriptor);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  }</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  {</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Maximum allowed number of particles.&quot;</span>;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    descriptor.integer_range.resize(1);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    descriptor.integer_range[0].from_value = 0;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    descriptor.integer_range[0].to_value = std::numeric_limits&lt;int&gt;::max();</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    descriptor.integer_range[0].step = 1;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;max_particles&quot;</span>, rclcpp::ParameterValue(2000), descriptor);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="stringliteral">&quot;Exponential decay rate for the slow average weight filter, used in deciding when to recover &quot;</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="stringliteral">&quot;by adding random poses.&quot;</span>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    descriptor.floating_point_range[0].to_value = 1;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;recovery_alpha_slow&quot;</span>, rclcpp::ParameterValue(0.0), descriptor);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  {</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="stringliteral">&quot;Exponential decay rate for the fast average weight filter, used in deciding when to recover &quot;</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="stringliteral">&quot;by adding random poses.&quot;</span>;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    descriptor.floating_point_range[0].to_value = 1;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;recovery_alpha_fast&quot;</span>, rclcpp::ParameterValue(0.0), descriptor);</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  }</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  {</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="stringliteral">&quot;Maximum particle filter population error between the true distribution &quot;</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="stringliteral">&quot;and the estimated distribution. It is used in KLD resampling to limit the &quot;</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="stringliteral">&quot;allowed number of particles to the minimum necessary.&quot;</span>;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    descriptor.floating_point_range[0].to_value = 1;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;pf_err&quot;</span>, rclcpp::ParameterValue(0.05), descriptor);</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;  }</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;  {</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="stringliteral">&quot;Upper standard normal quantile for P, where P is the probability &quot;</span></div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="stringliteral">&quot;that the error in the estimated distribution will be less than pf_err &quot;</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="stringliteral">&quot;in KLD resampling.&quot;</span>;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;pf_z&quot;</span>, rclcpp::ParameterValue(0.99), descriptor);</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;  }</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;  {</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="stringliteral">&quot;Resolution in meters for the X axis used to divide the space in buckets for KLD resampling.&quot;</span>;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;spatial_resolution_x&quot;</span>, rclcpp::ParameterValue(0.5), descriptor);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;  }</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;  {</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="stringliteral">&quot;Resolution in meters for the Y axis used to divide the space in buckets for KLD resampling.&quot;</span>;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;spatial_resolution_y&quot;</span>, rclcpp::ParameterValue(0.5), descriptor);</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  }</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  {</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="stringliteral">&quot;Resolution in radians for the theta axis to divide the space in buckets for KLD resampling.&quot;</span>;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    descriptor.floating_point_range[0].to_value = 2 * Sophus::Constants&lt;double&gt;::pi();</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    node.declare_parameter(</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="stringliteral">&quot;spatial_resolution_theta&quot;</span>, rclcpp::ParameterValue(10 * Sophus::Constants&lt;double&gt;::pi() / 180), descriptor);</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;  }</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;  {</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Number of filter updates required before resampling. &quot;</span>;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    descriptor.integer_range.resize(1);</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    descriptor.integer_range[0].from_value = 1;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    descriptor.integer_range[0].to_value = std::numeric_limits&lt;int&gt;::max();</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    descriptor.integer_range[0].step = 1;</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;resample_interval&quot;</span>, rclcpp::ParameterValue(1), descriptor);</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;  }</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;  {</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        <span class="stringliteral">&quot;When set to true, will reduce the resampling rate when not needed and help &quot;</span></div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        <span class="stringliteral">&quot;avoid particle deprivation. The resampling will only happen if the effective &quot;</span></div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        <span class="stringliteral">&quot;number of particles (N_eff = 1/(sum(k_i^2))) is lower than half the current &quot;</span></div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="stringliteral">&quot;number of particles.&quot;</span>;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    descriptor.read_only = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;selective_resampling&quot;</span>, <span class="keyword">false</span>, descriptor);</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;  }</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;  {</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        <span class="stringliteral">&quot;Set this to false to prevent amcl from publishing the transform &quot;</span></div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        <span class="stringliteral">&quot;between the global frame and the odometry frame.&quot;</span>;</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;tf_broadcast&quot;</span>, rclcpp::ParameterValue(<span class="keyword">true</span>), descriptor);</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;  }</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;  {</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    descriptor.description =</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;        <span class="stringliteral">&quot;Time with which to post-date the transform that is published, &quot;</span></div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        <span class="stringliteral">&quot;to indicate that this transform is valid into the future&quot;</span>;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;transform_tolerance&quot;</span>, rclcpp::ParameterValue(1.0), descriptor);</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;  }</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;  {</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Which motion model to use [differential_drive, omnidirectional_drive, stationary].&quot;</span>;</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;robot_model_type&quot;</span>, rclcpp::ParameterValue(std::string(kDifferentialModelName)), descriptor);</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;  }</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;  {</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Rotation noise from rotation for the differential drive model.&quot;</span>;</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha1&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;  }</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160; </div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;  {</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Rotation noise from translation for the differential drive model.&quot;</span>;</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha2&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;  }</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  {</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Translation noise from translation for the differential drive model.&quot;</span>;</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha3&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;  }</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;  {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Translation noise from rotation for the differential drive model.&quot;</span>;</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha4&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  {</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Strafe noise from translation for the omnidirectional drive model.&quot;</span>;</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha5&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  }</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  {</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Rotational movement required before performing a filter update.&quot;</span>;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    descriptor.floating_point_range[0].to_value = 2 * Sophus::Constants&lt;double&gt;::pi();</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;update_min_a&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;  }</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;  {</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Translational movement required before performing a filter update.&quot;</span>;</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;update_min_d&quot;</span>, rclcpp::ParameterValue(0.25), descriptor);</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;  }</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;  {</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Maximum scan range to be considered.&quot;</span>;</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;laser_max_range&quot;</span>, rclcpp::ParameterValue(100.0), descriptor);</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;  }</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;  {</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Minimum scan range to be considered.&quot;</span>;</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    descriptor.floating_point_range.resize(1);</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;laser_min_range&quot;</span>, rclcpp::ParameterValue(0.0), descriptor);</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;  }</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160; </div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;  {</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    descriptor.description = <span class="stringliteral">&quot;How many evenly-spaced beams in each scan will be used when updating the filter.&quot;</span>;</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    descriptor.integer_range.resize(1);</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    descriptor.integer_range[0].from_value = 2;</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    descriptor.integer_range[0].to_value = std::numeric_limits&lt;int&gt;::max();</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    descriptor.integer_range[0].step = 1;</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;max_beams&quot;</span>, rclcpp::ParameterValue(60), descriptor);</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;  }</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;  {</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Set the initial pose from the initial_pose parameters.&quot;</span>;</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;set_initial_pose&quot;</span>, <span class="keyword">false</span>, descriptor);</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;  }</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;  {</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose x axis coordinate.&quot;</span>;</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.x&quot;</span>, 0.0, descriptor);</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;  }</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;  {</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose y axis coordinate.&quot;</span>;</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.y&quot;</span>, 0.0, descriptor);</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;  }</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;  {</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose yaw rotation.&quot;</span>;</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.yaw&quot;</span>, 0.0, descriptor);</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;  }</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;  {</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose x axis covariance.&quot;</span>;</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_x&quot;</span>, 0.0, descriptor);</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;  }</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160; </div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;  {</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose y axis covariance.&quot;</span>;</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_y&quot;</span>, 0.0, descriptor);</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;  }</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160; </div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;  {</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose yaw covariance.&quot;</span>;</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_yaw&quot;</span>, 0.0, descriptor);</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;  }</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;  {</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose xy covariance.&quot;</span>;</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_xy&quot;</span>, 0.0, descriptor);</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;  }</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160; </div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;  {</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose xyaw covariance.&quot;</span>;</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_xyaw&quot;</span>, 0.0, descriptor);</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;  }</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160; </div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;  {</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose yyaw covariance.&quot;</span>;</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_yyaw&quot;</span>, 0.0, descriptor);</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;  }</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160; </div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;  {</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Execution policy used to process particles [seq, par].&quot;</span>;</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;execution_policy&quot;</span>, <span class="stringliteral">&quot;seq&quot;</span>, descriptor);</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;  }</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;}</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160; </div>
-<div class="line"><a name="l00398"></a><span class="lineno"><a class="line" href="structbeluga__amcl_1_1RepresentativeData.html">  398</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga__amcl_1_1RepresentativeData.html">RepresentativeData</a> {</div>
-<div class="line"><a name="l00400"></a><span class="lineno"><a class="line" href="structbeluga__amcl_1_1RepresentativeData.html#acbcaba0e7448c6d8ebb165184eb9a841">  400</a></span>&#160;  Sophus::SE2d <a class="code" href="structbeluga__amcl_1_1RepresentativeData.html#acbcaba0e7448c6d8ebb165184eb9a841">state</a>;</div>
-<div class="line"><a name="l00402"></a><span class="lineno"><a class="line" href="structbeluga__amcl_1_1RepresentativeData.html#a26310cbb7118c60fce7d4ee8a8b695c1">  402</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga__amcl_1_1RepresentativeData.html#a26310cbb7118c60fce7d4ee8a8b695c1">weight</a>{0.};</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;};</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160; </div>
-<div class="line"><a name="l00406"></a><span class="lineno"><a class="line" href="structbeluga__amcl_1_1RepresentativeBinHash.html">  406</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga__amcl_1_1RepresentativeBinHash.html">RepresentativeBinHash</a> {</div>
-<div class="line"><a name="l00408"></a><span class="lineno"><a class="line" href="structbeluga__amcl_1_1RepresentativeBinHash.html#a0ef676c7083eab7ada97e5faeae63b4c">  408</a></span>&#160;  std::size_t <a class="code" href="structbeluga__amcl_1_1RepresentativeBinHash.html#a0ef676c7083eab7ada97e5faeae63b4c">operator()</a>(<span class="keyword">const</span> Sophus::SE2d&amp; s) <span class="keyword">const</span> noexcept {</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    std::size_t h1 = std::hash&lt;double&gt;{}(s.translation().x());</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;    std::size_t h2 = std::hash&lt;double&gt;{}(s.translation().y());</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    std::size_t h3 = std::hash&lt;double&gt;{}(s.so2().log());</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    <span class="keywordflow">return</span> h1 ^ (h2 &lt;&lt; 1) ^ (h3 &lt;&lt; 2);</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;  }</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;};</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160; </div>
-<div class="line"><a name="l00417"></a><span class="lineno"><a class="line" href="structbeluga__amcl_1_1RepresentativeBinEqual.html">  417</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga__amcl_1_1RepresentativeBinEqual.html">RepresentativeBinEqual</a> {</div>
-<div class="line"><a name="l00419"></a><span class="lineno"><a class="line" href="structbeluga__amcl_1_1RepresentativeBinEqual.html#a44271ed6c154607e704f1cb468fa4d87">  419</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="structbeluga__amcl_1_1RepresentativeBinEqual.html#a44271ed6c154607e704f1cb468fa4d87">operator()</a>(<span class="keyword">const</span> Sophus::SE2d&amp; lhs, <span class="keyword">const</span> Sophus::SE2d&amp; rhs) <span class="keyword">const</span> noexcept {</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;    <span class="comment">// good enough, since copies of the same candidate are expected to be identical copies</span></div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;    <span class="keywordflow">return</span> lhs.translation().x() == rhs.translation().x() &amp;&amp;  <span class="comment">//</span></div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;           lhs.translation().y() == rhs.translation().y() &amp;&amp;  <span class="comment">//</span></div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;           lhs.so2().log() == rhs.so2().log();</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;  }</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;};</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160; </div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="comment">// Particle weights from the filter may or may not be representative of the</span></div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="comment">// true distribution. If we resampled, they are not, and there will be multiple copies</span></div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="comment">// of the most likely candidates, all with unit weight. In this case the number of copies</span></div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;<span class="comment">// is a proxy for the prob density at each candidate. If we did not resample before updating</span></div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;<span class="comment">// the estimation and publishing this message (which can happen if the resample interval</span></div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;<span class="comment">// is set to something other than 1), then all particles are expected to be different</span></div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;<span class="comment">// and their weights are proportional to the prob density at each candidate.</span></div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;<span class="comment">// Only the combination of both the state distribution and the candidate weights together</span></div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;<span class="comment">// provide information about the probability density at each candidate.</span></div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;<span class="comment">// To handle both cases, we group repeated candidates and compute the accumulated weight.</span></div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> ParticleFilter&gt;</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;nav2_msgs::msg::ParticleCloud make_representative_particle_cloud(</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;    <span class="keyword">const</span> ParticleFilter&amp; particle_filter,</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;    std::string_view global_frame,</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;    rclcpp::Time now) {</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;  std::unordered_map&lt;Sophus::SE2d, RepresentativeData, RepresentativeBinHash, RepresentativeBinEqual&gt;</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;      representatives_map;</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;  representatives_map.reserve(particle_filter.particles().size());</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160; </div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;  <span class="keywordtype">double</span> max_weight = 1e-5;  <span class="comment">// never risk dividing by zero</span></div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160; </div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [state, weight] : particle_filter.particles()) {</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    <span class="keyword">auto</span>&amp; representative = representatives_map[<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>];  <span class="comment">// if the element does not exist, create it</span></div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;    representative.state = <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>;</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    representative.weight += <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a>;</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    <span class="keywordflow">if</span> (representative.weight &gt; max_weight) {</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;      max_weight = representative.weight;</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    }</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;  }</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160; </div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;  <span class="keyword">auto</span> message = nav2_msgs::msg::ParticleCloud{};</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;  message.header.stamp = now;</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;  message.header.frame_id = global_frame;</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;  message.particles.reserve(particle_filter.particles().size());</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160; </div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [key, representative] : representatives_map) {</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    <span class="keyword">auto</span>&amp; particle = message.particles.emplace_back();</div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;    <a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">tf2::toMsg</a>(representative.state, particle.pose);</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;    particle.weight = representative.weight / max_weight;</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;  }</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160; </div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;  <span class="keywordflow">return</span> message;</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;}</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160; </div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;}  <span class="comment">// namespace beluga_amcl</span></div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespacebeluga_html_a706431bba3d6cfb1ee0690221f3a9af9"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a></div><div class="ttdeci">constexpr state_detail::state_fn state</div></div>
-<div class="ttc" id="anamespacebeluga_html_a80abdff6d85df8ef392ca252ed8588c1"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a></div><div class="ttdeci">constexpr weight_detail::weight_fn weight</div></div>
-<div class="ttc" id="anamespacetf2_html_a0a74cb89468798ba6738c62f3fdca4cb"><div class="ttname"><a href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">tf2::toMsg</a></div><div class="ttdeci">beluga_ros::msg::Pose &amp; toMsg(const Sophus::SE2&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</div></div>
-<div class="ttc" id="astructbeluga__amcl_1_1RepresentativeBinEqual_html"><div class="ttname"><a href="structbeluga__amcl_1_1RepresentativeBinEqual.html">beluga_amcl::RepresentativeBinEqual</a></div><div class="ttdoc">Equal comparison functor for SE2 transforms.</div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:417</div></div>
-<div class="ttc" id="astructbeluga__amcl_1_1RepresentativeBinEqual_html_a44271ed6c154607e704f1cb468fa4d87"><div class="ttname"><a href="structbeluga__amcl_1_1RepresentativeBinEqual.html#a44271ed6c154607e704f1cb468fa4d87">beluga_amcl::RepresentativeBinEqual::operator()</a></div><div class="ttdeci">bool operator()(const Sophus::SE2d &amp;lhs, const Sophus::SE2d &amp;rhs) const noexcept</div><div class="ttdoc">Actual hash implementation.</div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:419</div></div>
-<div class="ttc" id="astructbeluga__amcl_1_1RepresentativeBinHash_html"><div class="ttname"><a href="structbeluga__amcl_1_1RepresentativeBinHash.html">beluga_amcl::RepresentativeBinHash</a></div><div class="ttdoc">Hash implementation for SE2 transforms.</div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:406</div></div>
-<div class="ttc" id="astructbeluga__amcl_1_1RepresentativeBinHash_html_a0ef676c7083eab7ada97e5faeae63b4c"><div class="ttname"><a href="structbeluga__amcl_1_1RepresentativeBinHash.html#a0ef676c7083eab7ada97e5faeae63b4c">beluga_amcl::RepresentativeBinHash::operator()</a></div><div class="ttdeci">std::size_t operator()(const Sophus::SE2d &amp;s) const noexcept</div><div class="ttdoc">Computes a hash out of a SE2 transform.</div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:408</div></div>
-<div class="ttc" id="astructbeluga__amcl_1_1RepresentativeData_html"><div class="ttname"><a href="structbeluga__amcl_1_1RepresentativeData.html">beluga_amcl::RepresentativeData</a></div><div class="ttdoc">Helper struct to hold a SE2 state and its weight.</div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:398</div></div>
-<div class="ttc" id="astructbeluga__amcl_1_1RepresentativeData_html_a26310cbb7118c60fce7d4ee8a8b695c1"><div class="ttname"><a href="structbeluga__amcl_1_1RepresentativeData.html#a26310cbb7118c60fce7d4ee8a8b695c1">beluga_amcl::RepresentativeData::weight</a></div><div class="ttdeci">double weight</div><div class="ttdoc">Weight.</div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:402</div></div>
-<div class="ttc" id="astructbeluga__amcl_1_1RepresentativeData_html_acbcaba0e7448c6d8ebb165184eb9a841"><div class="ttname"><a href="structbeluga__amcl_1_1RepresentativeData.html#acbcaba0e7448c6d8ebb165184eb9a841">beluga_amcl::RepresentativeData::state</a></div><div class="ttdeci">Sophus::SE2d state</div><div class="ttdoc">SE2 state.</div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:400</div></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;rclcpp/rclcpp.hpp&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;rclcpp/time.hpp&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;tf2/convert.h&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;tf2/utils.h&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/create_timer_ros.h&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/tf2__sophus_8hpp.html">beluga_ros/tf2_sophus.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;string_view&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>beluga_amcl {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;constexpr std::string_view kDifferentialModelName = <span class="stringliteral">&quot;differential_drive&quot;</span>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;constexpr std::string_view kOmnidirectionalModelName = <span class="stringliteral">&quot;omnidirectional_drive&quot;</span>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;constexpr std::string_view kStationaryModelName = <span class="stringliteral">&quot;stationary&quot;</span>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;constexpr std::string_view kNav2DifferentialModelName = <span class="stringliteral">&quot;nav2_amcl::DifferentialMotionModel&quot;</span>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;constexpr std::string_view kNav2OmnidirectionalModelName = <span class="stringliteral">&quot;nav2_amcl::OmniMotionModel&quot;</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> declare_common_params(rclcpp_lifecycle::LifecycleNode&amp; node) {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    descriptor.description = <span class="stringliteral">&quot;The name of the coordinate frame published by the localization system.&quot;</span>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;global_frame_id&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;map&quot;</span>), descriptor);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    descriptor.description = <span class="stringliteral">&quot;The name of the coordinate frame to use for odometry.&quot;</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;odom_frame_id&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;odom&quot;</span>), descriptor);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    descriptor.description = <span class="stringliteral">&quot;The name of the coordinate frame to use for the robot base.&quot;</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;base_frame_id&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;base_footprint&quot;</span>), descriptor);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Path to load the map from an hdf5 file.&quot;</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;map_path&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;map_path&quot;</span>), descriptor);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Topic to subscribe to in order to receive the initial pose of the robot.&quot;</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose_topic&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;initialpose&quot;</span>), descriptor);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Topic to subscribe to in order to receive the laser scan for localization.&quot;</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;scan_topic&quot;</span>, rclcpp::ParameterValue(<span class="stringliteral">&quot;scan&quot;</span>), descriptor);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  }</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Minimum allowed number of particles.&quot;</span>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    descriptor.integer_range.resize(1);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    descriptor.integer_range[0].from_value = 0;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    descriptor.integer_range[0].to_value = std::numeric_limits&lt;int&gt;::max();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    descriptor.integer_range[0].step = 1;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;min_particles&quot;</span>, rclcpp::ParameterValue(500), descriptor);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Maximum allowed number of particles.&quot;</span>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    descriptor.integer_range.resize(1);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    descriptor.integer_range[0].from_value = 0;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    descriptor.integer_range[0].to_value = std::numeric_limits&lt;int&gt;::max();</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    descriptor.integer_range[0].step = 1;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;max_particles&quot;</span>, rclcpp::ParameterValue(2000), descriptor);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  }</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="stringliteral">&quot;Exponential decay rate for the slow average weight filter, used in deciding when to recover &quot;</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="stringliteral">&quot;by adding random poses.&quot;</span>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    descriptor.floating_point_range[0].to_value = 1;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;recovery_alpha_slow&quot;</span>, rclcpp::ParameterValue(0.0), descriptor);</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="stringliteral">&quot;Exponential decay rate for the fast average weight filter, used in deciding when to recover &quot;</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="stringliteral">&quot;by adding random poses.&quot;</span>;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    descriptor.floating_point_range[0].to_value = 1;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;recovery_alpha_fast&quot;</span>, rclcpp::ParameterValue(0.0), descriptor);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  }</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  {</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="stringliteral">&quot;Maximum particle filter population error between the true distribution &quot;</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="stringliteral">&quot;and the estimated distribution. It is used in KLD resampling to limit the &quot;</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="stringliteral">&quot;allowed number of particles to the minimum necessary.&quot;</span>;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    descriptor.floating_point_range[0].to_value = 1;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;pf_err&quot;</span>, rclcpp::ParameterValue(0.05), descriptor);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;  {</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="stringliteral">&quot;Upper standard normal quantile for P, where P is the probability &quot;</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="stringliteral">&quot;that the error in the estimated distribution will be less than pf_err &quot;</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="stringliteral">&quot;in KLD resampling.&quot;</span>;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;pf_z&quot;</span>, rclcpp::ParameterValue(0.99), descriptor);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;  }</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  {</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="stringliteral">&quot;Resolution in meters for the X axis used to divide the space in buckets for KLD resampling.&quot;</span>;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;spatial_resolution_x&quot;</span>, rclcpp::ParameterValue(0.5), descriptor);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;  }</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;  {</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <span class="stringliteral">&quot;Resolution in meters for the Y axis used to divide the space in buckets for KLD resampling.&quot;</span>;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;spatial_resolution_y&quot;</span>, rclcpp::ParameterValue(0.5), descriptor);</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  }</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  {</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="stringliteral">&quot;Resolution in radians for the theta axis to divide the space in buckets for KLD resampling.&quot;</span>;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    descriptor.floating_point_range[0].to_value = 2 * Sophus::Constants&lt;double&gt;::pi();</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    node.declare_parameter(</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        <span class="stringliteral">&quot;spatial_resolution_theta&quot;</span>, rclcpp::ParameterValue(10 * Sophus::Constants&lt;double&gt;::pi() / 180), descriptor);</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  }</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  {</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Number of filter updates required before resampling. &quot;</span>;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    descriptor.integer_range.resize(1);</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    descriptor.integer_range[0].from_value = 1;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    descriptor.integer_range[0].to_value = std::numeric_limits&lt;int&gt;::max();</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    descriptor.integer_range[0].step = 1;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;resample_interval&quot;</span>, rclcpp::ParameterValue(1), descriptor);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;  }</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;  {</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <span class="stringliteral">&quot;When set to true, will reduce the resampling rate when not needed and help &quot;</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        <span class="stringliteral">&quot;avoid particle deprivation. The resampling will only happen if the effective &quot;</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        <span class="stringliteral">&quot;number of particles (N_eff = 1/(sum(k_i^2))) is lower than half the current &quot;</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        <span class="stringliteral">&quot;number of particles.&quot;</span>;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    descriptor.read_only = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;selective_resampling&quot;</span>, <span class="keyword">false</span>, descriptor);</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;  }</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  {</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        <span class="stringliteral">&quot;Set this to false to prevent amcl from publishing the transform &quot;</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        <span class="stringliteral">&quot;between the global frame and the odometry frame.&quot;</span>;</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;tf_broadcast&quot;</span>, rclcpp::ParameterValue(<span class="keyword">true</span>), descriptor);</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;  }</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  {</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    descriptor.description =</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        <span class="stringliteral">&quot;Time with which to post-date the transform that is published, &quot;</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;        <span class="stringliteral">&quot;to indicate that this transform is valid into the future&quot;</span>;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;transform_tolerance&quot;</span>, rclcpp::ParameterValue(1.0), descriptor);</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  }</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;  {</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Which motion model to use [differential_drive, omnidirectional_drive, stationary].&quot;</span>;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;robot_model_type&quot;</span>, rclcpp::ParameterValue(std::string(kDifferentialModelName)), descriptor);</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;  }</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;  {</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Rotation noise from rotation for the differential drive model.&quot;</span>;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha1&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;  }</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;  {</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Rotation noise from translation for the differential drive model.&quot;</span>;</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha2&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;  }</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;  {</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Translation noise from translation for the differential drive model.&quot;</span>;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha3&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;  }</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  {</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Translation noise from rotation for the differential drive model.&quot;</span>;</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha4&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;  }</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;  {</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Strafe noise from translation for the omnidirectional drive model.&quot;</span>;</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;alpha5&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;  }</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;  {</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Rotational movement required before performing a filter update.&quot;</span>;</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    descriptor.floating_point_range[0].to_value = 2 * Sophus::Constants&lt;double&gt;::pi();</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;update_min_a&quot;</span>, rclcpp::ParameterValue(0.2), descriptor);</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;  }</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;  {</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Translational movement required before performing a filter update.&quot;</span>;</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;update_min_d&quot;</span>, rclcpp::ParameterValue(0.25), descriptor);</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;  }</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;  {</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Maximum scan range to be considered.&quot;</span>;</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;laser_max_range&quot;</span>, rclcpp::ParameterValue(100.0), descriptor);</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;  }</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;  {</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Minimum scan range to be considered.&quot;</span>;</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    descriptor.floating_point_range.resize(1);</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    descriptor.floating_point_range[0].from_value = 0;</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    descriptor.floating_point_range[0].to_value = std::numeric_limits&lt;double&gt;::max();</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    descriptor.floating_point_range[0].step = 0;</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;laser_min_range&quot;</span>, rclcpp::ParameterValue(0.0), descriptor);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;  }</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;  {</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    descriptor.description = <span class="stringliteral">&quot;How many evenly-spaced beams in each scan will be used when updating the filter.&quot;</span>;</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    descriptor.integer_range.resize(1);</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    descriptor.integer_range[0].from_value = 2;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    descriptor.integer_range[0].to_value = std::numeric_limits&lt;int&gt;::max();</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    descriptor.integer_range[0].step = 1;</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;max_beams&quot;</span>, rclcpp::ParameterValue(60), descriptor);</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;  }</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;  {</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Set the initial pose from the initial_pose parameters.&quot;</span>;</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;set_initial_pose&quot;</span>, <span class="keyword">false</span>, descriptor);</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;  }</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;  {</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose x axis coordinate.&quot;</span>;</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.x&quot;</span>, 0.0, descriptor);</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;  }</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;  {</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose y axis coordinate.&quot;</span>;</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.y&quot;</span>, 0.0, descriptor);</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;  }</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;  {</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose yaw rotation.&quot;</span>;</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.yaw&quot;</span>, 0.0, descriptor);</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;  }</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;  {</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose x axis covariance.&quot;</span>;</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_x&quot;</span>, 0.0, descriptor);</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;  }</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160; </div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;  {</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose y axis covariance.&quot;</span>;</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_y&quot;</span>, 0.0, descriptor);</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;  }</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160; </div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;  {</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose yaw covariance.&quot;</span>;</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_yaw&quot;</span>, 0.0, descriptor);</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;  }</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160; </div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;  {</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose xy covariance.&quot;</span>;</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_xy&quot;</span>, 0.0, descriptor);</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;  }</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160; </div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;  {</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose xyaw covariance.&quot;</span>;</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_xyaw&quot;</span>, 0.0, descriptor);</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;  }</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160; </div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;  {</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Initial pose yyaw covariance.&quot;</span>;</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;initial_pose.covariance_yyaw&quot;</span>, 0.0, descriptor);</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;  }</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;  {</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <span class="keyword">auto</span> descriptor = rcl_interfaces::msg::ParameterDescriptor();</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    descriptor.description = <span class="stringliteral">&quot;Execution policy used to process particles [seq, par].&quot;</span>;</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    node.declare_parameter(<span class="stringliteral">&quot;execution_policy&quot;</span>, <span class="stringliteral">&quot;seq&quot;</span>, descriptor);</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;  }</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;}</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160; </div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;}  <span class="comment">// namespace beluga_amcl</span></div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="atf2__sophus_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/tf2__sophus_8hpp.html">tf2_sophus.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
@@ -964,7 +885,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Sun May 19 20:15:37 2024 -0300, 69d0731&#39;.
+  Last updated on &#39;Sun May 19 23:39:38 2024 -0300, e2c39a8&#39;.
   <br/>
 </p>
   </div>
