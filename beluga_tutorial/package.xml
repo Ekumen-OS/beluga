@@ -4,7 +4,7 @@
   <name>beluga_tutorial</name>
   <version>1.0.0</version>
 
-  <description>Tutorial to interface with Beluga.</description>
+  <description>Primer on Particle Filtering with Beluga.</description>
 
   <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
   <maintainer email="michel@ekumenlabs.com">Michel Hidalgo</maintainer>
