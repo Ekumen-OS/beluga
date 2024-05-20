@@ -136,6 +136,9 @@ class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
   /// Callback for periodic particle cloud updates.
   void timer_callback();
 
+  /// Callback for node to configure and activate itself.
+  void autostart_callback();
+
   /// Callback for laser scan updates.
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
 
@@ -157,6 +160,8 @@ class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
   std::unique_ptr<bond::Bond> bond_;
   /// Timer for periodic particle cloud updates.
   rclcpp::TimerBase::SharedPtr timer_;
+  /// Timer for node to configure and activate itself.
+  rclcpp::TimerBase::SharedPtr autostart_timer_;
 
   /// Particle cloud publisher.
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseArray>::SharedPtr particle_cloud_pub_;

@@ -82,7 +82,12 @@ class BaseNodeFixture : public T {
   std::shared_ptr<beluga_amcl::testing::TesterNode> tester_node_;
 };
 
-class TestLifecycle : public BaseNodeFixture<::testing::Test> {};
+class TestLifecycle : public ::testing::Test {
+ public:
+  void SetUp() override { rclcpp::init(0, nullptr); }
+
+  void TearDown() override { rclcpp::shutdown(); }
+};
 
 TEST_F(TestLifecycle, FullSpin) {
   using lifecycle_msgs::msg::State;
@@ -159,6 +164,15 @@ TEST_F(TestLifecycle, DestroyWhenUnconfigured) {
   auto node = std::make_shared<beluga_amcl::NdtAmclNode>();
   node->set_parameter(rclcpp::Parameter("map_path", kTestMapPath));
   ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED);
+}
+
+TEST_F(TestLifecycle, AutoStart) {
+  using lifecycle_msgs::msg::State;
+  auto node = std::make_shared<beluga_amcl::NdtAmclNode>(rclcpp::NodeOptions{}
+                                                             .append_parameter_override("autostart", true)
+                                                             .append_parameter_override("map_path", kTestMapPath));
+  spin_until([&] { return node->get_current_state().id() == State::PRIMARY_STATE_ACTIVE; }, 100ms, node);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_ACTIVE);
 }
 
 class TestInitializationWithModel : public BaseNodeFixture<::testing::TestWithParam<const char*>> {};

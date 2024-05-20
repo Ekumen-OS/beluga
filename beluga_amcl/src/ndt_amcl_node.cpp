@@ -85,12 +85,34 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("d2", rclcpp::ParameterValue(1.0), descriptor);
   }
+
+  if (get_parameter("autostart").as_bool()) {
+    auto autostart_delay = std::chrono::duration<double>(get_parameter("autostart_delay").as_double());
+    autostart_timer_ = create_wall_timer(autostart_delay, std::bind(&NdtAmclNode::autostart_callback, this));
+  }
 }
 
 NdtAmclNode::~NdtAmclNode() {
   RCLCPP_INFO(get_logger(), "Destroying");
   // In case this lifecycle node wasn't properly shut down, do it here
   on_shutdown(get_current_state());
+}
+
+void NdtAmclNode::autostart_callback() {
+  using lifecycle_msgs::msg::State;
+  auto current_state = configure();
+  if (current_state.id() != State::PRIMARY_STATE_INACTIVE) {
+    RCLCPP_WARN(get_logger(), "Failed to auto configure, shutting down");
+    shutdown();
+  }
+  RCLCPP_WARN(get_logger(), "Auto configured successfully");
+  current_state = activate();
+  if (current_state.id() != State::PRIMARY_STATE_ACTIVE) {
+    RCLCPP_WARN(get_logger(), "Failed to auto activate, shutting down");
+    shutdown();
+  }
+  RCLCPP_INFO(get_logger(), "Auto activated successfully");
+  autostart_timer_->cancel();
 }
 
 NdtAmclNode::CallbackReturn NdtAmclNode::on_configure(const rclcpp_lifecycle::State&) {
