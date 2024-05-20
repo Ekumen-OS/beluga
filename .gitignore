@@ -15,6 +15,3 @@ __pycache__/
 # Sphinx / Doxygen related
 _build
 generated
-
-# Beluga tutorial
-beluga_tutorial/bags/*
