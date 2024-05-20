@@ -24,7 +24,6 @@
   <exec_depend condition="$ROS_VERSION == 2">nav2_amcl</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">nav2_lifecycle_manager</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">nav2_map_server</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">nav2_rviz_plugins</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">rviz2</exec_depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
 
