@@ -550,18 +550,6 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
-  const auto& [base_pose_in_map, base_pose_covariance] = last_known_estimate_.value();
-
-  // New pose messages are only published on updates to the filter.
-  if (new_estimate.has_value()) {
-    auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
-    message.header.stamp = laser_scan->header.stamp;
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
-    tf2::toMsg(base_pose_in_map, message.pose.pose);
-    tf2::covarianceEigenToRowMajor(base_pose_covariance, message.pose.covariance);
-    pose_pub_->publish(message);
-  }
-
   // Transforms are always published to keep them current.
   if (enable_tf_broadcast_ && get_parameter("tf_broadcast").as_bool()) {
     auto message = geometry_msgs::msg::TransformStamped{};
@@ -573,6 +561,17 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     message.child_frame_id = get_parameter("odom_frame_id").as_string();
     message.transform = tf2::toMsg(*last_known_odom_transform_in_map_);
     tf_broadcaster_->sendTransform(message);
+  }
+
+  // New pose messages are only published on updates to the filter.
+  if (new_estimate.has_value()) {
+    auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
+    message.header.stamp = laser_scan->header.stamp;
+    message.header.frame_id = get_parameter("global_frame_id").as_string();
+    const auto& [base_pose_in_map, base_pose_covariance] = new_estimate.value();
+    tf2::toMsg(base_pose_in_map, message.pose.pose);
+    tf2::covarianceEigenToRowMajor(base_pose_covariance, message.pose.covariance);
+    pose_pub_->publish(message);
   }
 }
 

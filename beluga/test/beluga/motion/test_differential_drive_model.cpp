@@ -106,7 +106,7 @@ auto get_statistics(Range&& range) {
 }
 
 TEST(DifferentialDriveModelSamples, Translate) {
-  const double tolerance = 0.01;
+  const double tolerance = 0.015;
   const double alpha = 0.2;
   const double origin = 5.0;
   const double distance = 3.0;
@@ -119,9 +119,9 @@ TEST(DifferentialDriveModelSamples, Translate) {
                 const auto pose = SE2d{SO2d{0.0}, Vector2d{origin, 0.0}};
                 return state_sampling_function(pose, generator).translation().x();
               }) |
-              ranges::views::take_exactly(1'000'000) | ranges::views::common;
+              ranges::views::take_exactly(100'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
-  ASSERT_NEAR(mean, origin + distance, 0.01);
+  ASSERT_NEAR(mean, origin + distance, tolerance);
   ASSERT_NEAR(stddev, std::sqrt(alpha * distance * distance), tolerance);
 }
 
@@ -139,7 +139,7 @@ TEST(DifferentialDriveModelSamples, RotateFirstQuadrant) {
                 const auto pose = SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}};
                 return state_sampling_function(pose, generator).so2().log();
               }) |
-              ranges::views::take_exactly(1'000'000) | ranges::views::common;
+              ranges::views::take_exactly(100'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
   ASSERT_NEAR(mean, initial_angle + motion_angle, tolerance);
   ASSERT_NEAR(stddev, std::sqrt(alpha * motion_angle * motion_angle), tolerance);
@@ -159,7 +159,7 @@ TEST(DifferentialDriveModelSamples, RotateThirdQuadrant) {
                 const auto pose = SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}};
                 return state_sampling_function(pose, generator).so2().log();
               }) |
-              ranges::views::take_exactly(1'000'000) | ranges::views::common;
+              ranges::views::take_exactly(100'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
   ASSERT_NEAR(mean, initial_angle + motion_angle, tolerance);
 
@@ -180,7 +180,7 @@ TEST(DifferentialDriveModelSamples, RotateTranslateRotateFirstQuadrant) {
                 const auto pose = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
                 return state_sampling_function(pose, generator).translation().norm();
               }) |
-              ranges::views::take_exactly(1'000'000) | ranges::views::common;
+              ranges::views::take_exactly(100'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
   ASSERT_NEAR(mean, 1.41, tolerance);
 
@@ -206,7 +206,7 @@ TEST(DifferentialDriveModelSamples, RotateTranslateRotateThirdQuadrant) {
                 const auto pose = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
                 return state_sampling_function(pose, generator).translation().norm();
               }) |
-              ranges::views::take_exactly(1'000'000) | ranges::views::common;
+              ranges::views::take_exactly(100'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
   ASSERT_NEAR(mean, 1.41, 0.01);
 

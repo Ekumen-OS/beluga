@@ -65,6 +65,11 @@ class BaseNodeFixture : public T {
     return spin_until([this] { return tester_node_->latest_pose().has_value(); }, 1000ms, amcl_node_, tester_node_);
   }
 
+  bool wait_for_transform(const std::string& target, const std::string& source) {
+    return spin_until(
+        [&, this] { return tester_node_->can_transform(target, source); }, 1000ms, amcl_node_, tester_node_);
+  }
+
   bool wait_for_particle_cloud() {
     tester_node_->create_particle_cloud_subscriber();
     return spin_until(
@@ -249,8 +254,7 @@ TEST_F(TestNode, BroadcastWhenInitialPoseSet) {
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
   tester_node_->publish_laser_scan();
-  ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
 }
 
 TEST_F(TestNode, NoBroadcastWhenNoInitialPose) {
@@ -261,7 +265,6 @@ TEST_F(TestNode, NoBroadcastWhenNoInitialPose) {
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
   tester_node_->publish_laser_scan();
-  ASSERT_TRUE(wait_for_pose_estimate());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
 }
 
@@ -274,8 +277,7 @@ TEST_F(TestNode, BroadcastWithGlobalLocalization) {
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
   ASSERT_TRUE(request_global_localization());
   tester_node_->publish_laser_scan();
-  ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
 }
 
 TEST_F(TestNode, IgnoreGlobalLocalizationBeforeInitialize) {
@@ -508,6 +510,7 @@ TEST_F(TestNode, InitialPoseBeforeInitialize) {
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_default_initial_pose();
+  spin_for(10ms, amcl_node_);  // ensure orderly processing
   tester_node_->publish_laser_scan();
   ASSERT_FALSE(wait_for_pose_estimate());
 }
@@ -520,9 +523,10 @@ TEST_F(TestNode, InitialPoseAfterInitialize) {
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
   tester_node_->publish_default_initial_pose();
+  spin_for(10ms, amcl_node_);  // ensure orderly processing
   tester_node_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
 }
 
 TEST_F(TestNode, InitialPoseWithWrongFrame) {
@@ -533,6 +537,7 @@ TEST_F(TestNode, InitialPoseWithWrongFrame) {
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
   tester_node_->publish_initial_pose_with_wrong_frame();
+  spin_for(10ms, amcl_node_);  // ensure orderly processing
   tester_node_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
@@ -546,9 +551,10 @@ TEST_F(TestNode, CanUpdatePoseEstimate) {
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
   tester_node_->publish_default_initial_pose();
+  spin_for(10ms, amcl_node_);  // ensure orderly processing
   tester_node_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
 
   {
     const auto [pose, _] = amcl_node_->estimate();
@@ -558,9 +564,10 @@ TEST_F(TestNode, CanUpdatePoseEstimate) {
   }
 
   tester_node_->publish_initial_pose(1., 1.);
+  spin_for(10ms, amcl_node_);  // ensure orderly processing
   tester_node_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
 
   {
     const auto [pose, _] = amcl_node_->estimate();
@@ -578,9 +585,10 @@ TEST_F(TestNode, CanForcePoseEstimate) {
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
   tester_node_->publish_default_initial_pose();
+  spin_for(10ms, amcl_node_);  // ensure orderly processing
   tester_node_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
 
   {
     const auto [pose, _] = amcl_node_->estimate();
@@ -592,7 +600,7 @@ TEST_F(TestNode, CanForcePoseEstimate) {
   ASSERT_TRUE(request_nomotion_update());
   tester_node_->publish_laser_scan();
   ASSERT_TRUE(wait_for_pose_estimate());
-  ASSERT_TRUE(tester_node_->can_transform("map", "odom"));
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
 
   {
     const auto [pose, _] = amcl_node_->estimate();
@@ -663,6 +671,7 @@ TEST_F(TestNode, TransformValue) {
   ASSERT_NEAR(pose.translation().y(), 2.0, 0.01);
   ASSERT_NEAR(pose.so2().log(), Sophus::Constants<double>::pi() / 3, 0.01);
 
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
   const auto transform = tester_node_->lookup_transform("map", "odom");
   EXPECT_NEAR(transform.translation().x(), -2.00, 0.01);
   EXPECT_NEAR(transform.translation().y(), -2.00, 0.01);
