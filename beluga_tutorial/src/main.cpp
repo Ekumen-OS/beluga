@@ -48,14 +48,14 @@ struct TutorialParams {
   /// Number of simulation cycles.
   int number_of_cycles{100};
 
-  /// Robot's initial pose in meters (m).
-  double initial_pose{0.0};
+  /// Robot's initial position in meters (m).
+  double initial_position{0.0};
 
-  /// Standard deviation of the robot's initial pose.
+  /// Standard deviation of the robot's initial position.
   /**
-   * Represents the uncertainty of the robot's initial pose.
+   * Represents the uncertainty of the robot's initial position.
    */
-  double initial_pose_sd{1.0};
+  double initial_position_sd{1.0};
 
   /// Delta time in seconds (s).
   double dt{1.0};
@@ -76,7 +76,7 @@ struct TutorialParams {
   /**
    * Represents the precision of the modeled sensor.
    */
-  double sensor_model_sigam{1.0};
+  double sensor_model_sigma{1.0};
 
   /// Minimum particle weight.
   /**
@@ -88,10 +88,7 @@ struct TutorialParams {
   /**
    * The dataset file is used to save the data produced by the simulation for posterior analisys.
    */
-  std::filesystem::path dataset_path{"./src/beluga/beluga_tutorial/bags/dataset.yaml"};
-
-  // Name of the landmark_map to save or load from.
-  std::string landmark_map_file_name{"landmark_map.yaml"};
+  std::filesystem::path dataset_path{"./"};
 };
 
 using Particle = std::tuple<double, beluga::Weight>;
@@ -121,16 +118,15 @@ void load_params_from_yaml(const std::filesystem::path& path, TutorialParams& tu
     tutorial_params.number_of_doors = params["number_of_doors"].as<int>();
     tutorial_params.number_of_particles = params["number_of_particles"].as<int>();
     tutorial_params.number_of_cycles = params["number_of_cycles"].as<int>();
-    tutorial_params.initial_pose = params["initial_pose"].as<double>();
-    tutorial_params.initial_pose_sd = params["initial_pose_sd"].as<double>();
+    tutorial_params.initial_position = params["initial_position"].as<double>();
+    tutorial_params.initial_position_sd = params["initial_position_sd"].as<double>();
     tutorial_params.dt = params["dt"].as<double>();
     tutorial_params.velocity = params["velocity"].as<double>();
     tutorial_params.translation_sd = params["translation_sd"].as<double>();
     tutorial_params.sensor_range = params["sensor_range"].as<double>();
-    tutorial_params.sensor_model_sigam = params["sensor_model_sigam"].as<double>();
+    tutorial_params.sensor_model_sigma = params["sensor_model_sigma"].as<double>();
     tutorial_params.min_particle_weight = params["min_particle_weight"].as<double>();
     tutorial_params.dataset_path = params["dataset_path"].as<std::string>();
-    tutorial_params.landmark_map_file_name = params["landmark_map_file_name"].as<std::string>();
   } catch (YAML::BadFile& e) {
     std::cout << e.what() << "\n";
   }
@@ -148,8 +144,8 @@ void load_landmark_map_from_yaml(const std::filesystem::path& path, LandmarkMapV
 void save_tutorial_dataset_to_yaml(const std::filesystem::path& path, const TutorialDataset& tutorial_dataset) {
   YAML::Node node;
 
-  for (const auto& lmp : tutorial_dataset.landmark_map) {
-    node["landmark_map"].push_back(lmp);
+  for (const auto& landmark : tutorial_dataset.landmark_map) {
+    node["landmark_map"].push_back(landmark);
   }
 
   for (auto&& [cycle, data] : tutorial_dataset.sim_data | ranges::views::enumerate) {
@@ -176,80 +172,78 @@ void save_tutorial_dataset_to_yaml(const std::filesystem::path& path, const Tuto
     estimation["sd"] = std::get<1>(data.estimation);
   }
 
-  std::filesystem::create_directory(path.parent_path());
   std::ofstream fout(path, std::ios::trunc);
   fout << node;
   fout.close();
 }
 
 int main(int argc, char* argv[]) {
-  if (argc < 3) {
-    std::cerr << "Usage: " << argv[0] << "<params_directory_path> <params_filename>\n";
+  if (argc < 2) {
+    std::cerr << "Usage: " << argv[0] << "<params_path>\n";
     return 1;
   }
-
-  const std::string directory = argv[1];
-  const std::string filename = argv[2];
-  const auto parameters_file_path = std::filesystem::path{directory} / filename;
+  const std::filesystem::path params_path{argv[1]};
 
   TutorialParams tutorial_params;
-  load_params_from_yaml(parameters_file_path, tutorial_params);
+  load_params_from_yaml(params_path, tutorial_params);
 
   // Create the TutorialDataset object for record the simulation data
   TutorialDataset tutorial_dataset;
 
   LandmarkMapVector landmark_map;
-  load_landmark_map_from_yaml(std::filesystem::path{directory} / tutorial_params.landmark_map_file_name, landmark_map);
+  load_landmark_map_from_yaml(params_path, landmark_map);
   tutorial_dataset.landmark_map = landmark_map;
 
   // Generate particles
-  std::normal_distribution<double> initial_distribution(tutorial_params.initial_pose, tutorial_params.initial_pose_sd);
+  std::normal_distribution<double> initial_distribution(
+      tutorial_params.initial_position, tutorial_params.initial_position_sd);
   auto particles = beluga::views::sample(initial_distribution) |                       //
                    ranges::views::transform(beluga::make_from_state<Particle>) |       //
                    ranges::views::take_exactly(tutorial_params.number_of_particles) |  //
                    ranges::to<beluga::TupleVector>;
 
   // Execute the particle filter using beluga
-  double current_pose{tutorial_params.initial_pose};
+  double current_position{tutorial_params.initial_position};
   for (auto n = 0; n < tutorial_params.number_of_cycles; ++n) {
     TutorialData tutorial_data;
 
     // Save ground truth
-    current_pose += tutorial_params.velocity * tutorial_params.dt;
-    tutorial_data.ground_truth = current_pose;
+    current_position += tutorial_params.velocity * tutorial_params.dt;
+    tutorial_data.ground_truth = current_position;
 
     // Check if the simulation is out of bounds
-    if (current_pose > tutorial_params.map_size) {
+    if (current_position > tutorial_params.map_size) {
       break;
     }
 
-    auto motion_model = [&](double state, auto& gen) {
+    auto motion_model = [&](double particle_position, auto& gen) {
       const double distance = (tutorial_params.velocity * tutorial_params.dt);
       std::normal_distribution<double> distribution(distance, tutorial_params.translation_sd);
-      return state + distribution(gen);
+      return particle_position + distribution(gen);
     };
 
     // Generate simulated sensor data
-    auto sensor_data =
+    auto detections =
         landmark_map |                                                                                            //
-        ranges::views::transform([&](double landmark) { return landmark - current_pose; }) |                      //
+        ranges::views::transform([&](const double& landmark) { return landmark - current_position; }) |           //
         ranges::views::remove_if([&](double range) { return std::abs(range) > tutorial_params.sensor_range; }) |  //
         ranges::to<SensorData>;
 
-    auto sensor_model = [&](const double& state) {
-      auto particle_sensor_data = landmark_map |                                                           //
-                                  ranges::views::transform([&](const double lm) { return lm - state; }) |  //
-                                  ranges::to<SensorData>;
+    auto sensor_model = [&](const double& particle_position) {
+      auto particle_detections =
+          landmark_map |                                                                                    //
+          ranges::views::transform([&](const double& landmark) { return landmark - particle_position; }) |  //
+          ranges::to<SensorData>;
 
       return tutorial_params.min_particle_weight +
              std::transform_reduce(
-                 sensor_data.begin(), sensor_data.end(), 1.0, std::multiplies<>{}, [&](const auto& sensor_datum) {
-                   auto distances = particle_sensor_data |  //
-                                    ranges::views::transform([&](auto& particle_sensor_datum) {
-                                      return std::abs(sensor_datum - particle_sensor_datum);
+                 detections.begin(), detections.end(), 1.0, std::multiplies<>{}, [&](const double& detection) {
+                   auto distances = particle_detections |  //
+                                    ranges::views::transform([&](const double& particle_detection) {
+                                      return std::abs(detection - particle_detection);
                                     });
                    const auto min_distance = ranges::min(distances);
-                   return exp((-1 * pow(min_distance, 2)) / (2 * tutorial_params.sensor_model_sigam));
+                   return exp((-1 * pow(min_distance, 2)) / (2 * tutorial_params.sensor_model_sigma));
                  });
     };
 
