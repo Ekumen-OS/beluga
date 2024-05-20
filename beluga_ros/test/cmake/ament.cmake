@@ -33,3 +33,7 @@ target_link_libraries(test_tf2_sophus beluga_ros)
 ament_add_gmock(test_laser_scan test_laser_scan.cpp)
 target_compile_options(test_laser_scan PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_laser_scan beluga_ros)
+
+ament_add_gmock(test_particle_cloud test_particle_cloud.cpp)
+target_compile_options(test_particle_cloud PRIVATE -Wno-deprecated-copy)
+target_link_libraries(test_particle_cloud beluga_ros)

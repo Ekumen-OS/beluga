@@ -35,6 +35,7 @@
 #include <range/v3/range/conversion.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 
+#include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
 
 namespace beluga_amcl {
@@ -153,7 +154,7 @@ AmclNode::~AmclNode() {
 
 AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Configuring");
-  particle_cloud_pub_ = create_publisher<nav2_msgs::msg::ParticleCloud>("particle_cloud", rclcpp::SensorDataQoS());
+  particle_cloud_pub_ = create_publisher<geometry_msgs::msg::PoseArray>("particle_cloud", rclcpp::SensorDataQoS());
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("pose", rclcpp::SystemDefaultsQoS());
   return CallbackReturn::SUCCESS;
 }
@@ -455,8 +456,10 @@ void AmclNode::timer_callback() {
     return;
   }
 
-  particle_cloud_pub_->publish(
-      make_representative_particle_cloud(*particle_filter_, get_parameter("global_frame_id").as_string(), now()));
+  auto message = beluga_ros::msg::PoseArray{};
+  beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
+  beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
+  particle_cloud_pub_->publish(message);
 }
 
 void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {

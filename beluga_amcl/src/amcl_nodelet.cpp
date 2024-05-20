@@ -31,6 +31,7 @@
 
 #include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
+#include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
 
 // LCOV_EXCL_BR_START: Disable branch coverage.
@@ -380,17 +381,9 @@ void AmclNodelet::particle_cloud_timer_callback(const ros::TimerEvent& ev) {
     return;
   }
 
-  auto message = geometry_msgs::PoseArray{};
-  message.header.stamp = ev.current_real;
-  message.header.frame_id = config_.global_frame_id;
-  message.poses.resize(particle_filter_->particles().size());
-  ranges::transform(
-      particle_filter_->particles() | beluga::views::states,  //
-      std::begin(message.poses), [](const auto& state) {
-        auto message = geometry_msgs::Pose{};
-        tf2::toMsg(state, message);
-        return message;
-      });
+  auto message = beluga_ros::msg::PoseArray{};
+  beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
+  beluga_ros::stamp_message(config_.global_frame_id, ev.current_real, message);
   particle_cloud_pub_.publish(message);
 }
 

@@ -193,7 +193,7 @@ Also available as a standalone `amcl_node` executable.
 ### Published topics
 
 `particle_cloud`
-: Estimated pose distribution published as `nav2_msgs/msg/ParticleCloud` messages, using a sensor data QoS policy. It will only be published if subscribers are found.
+: Estimated pose distribution published as `geometry_msgs/msg/PoseArray` messages, using a sensor data QoS policy. It will only be published if subscribers are found.
 
 `pose`
 : Mean and covariance of the estimated pose distribution published as `geometry_msgs/msg/PoseWithCovarianceStamped` messages (assumed Gaussian), using a system default QoS policy.

@@ -16,7 +16,6 @@ find_package(ament_cmake REQUIRED)
 find_package(beluga REQUIRED)
 find_package(beluga_ros REQUIRED)
 find_package(bondcpp REQUIRED)
-find_package(nav2_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
@@ -34,7 +33,6 @@ ament_target_dependencies(
   PUBLIC beluga
          beluga_ros
          bondcpp
-         nav2_msgs
          rclcpp
          rclcpp_components
          rclcpp_lifecycle
@@ -48,7 +46,6 @@ ament_export_dependencies(
   beluga
   beluga_ros
   bondcpp
-  nav2_msgs
   rclcpp
   rclcpp_components
   rclcpp_lifecycle
@@ -77,7 +74,6 @@ ament_target_dependencies(
   PUBLIC beluga
          beluga_ros
          bondcpp
-         nav2_msgs
          rclcpp
          rclcpp_components
          rclcpp_lifecycle
@@ -91,7 +87,6 @@ ament_export_dependencies(
   beluga
   beluga_ros
   bondcpp
-  nav2_msgs
   rclcpp
   rclcpp_components
   rclcpp_lifecycle

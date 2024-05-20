@@ -21,7 +21,15 @@ TEST(TestMessages, Instantiation) {
   [[maybe_unused]] auto msg1 = beluga_ros::msg::LaserScan{};
   [[maybe_unused]] auto msg2 = beluga_ros::msg::OccupancyGrid{};
   [[maybe_unused]] auto msg3 = beluga_ros::msg::Pose{};
-  [[maybe_unused]] auto msg4 = beluga_ros::msg::Transform{};
+  [[maybe_unused]] auto msg4 = beluga_ros::msg::PoseArray{};
+  [[maybe_unused]] auto msg5 = beluga_ros::msg::Transform{};
+}
+
+TEST(TestMessages, Stamping) {
+  auto message = beluga_ros::msg::PoseArray{};
+  beluga_ros::stamp_message("some_frame", {5, 0}, message);
+  EXPECT_EQ(message.header.frame_id, "some_frame");
+  EXPECT_EQ(message.header.stamp.sec, 5);
 }
 
 }  // namespace

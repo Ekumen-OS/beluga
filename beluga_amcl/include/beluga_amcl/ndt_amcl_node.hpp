@@ -41,8 +41,8 @@
 
 #include <beluga/algorithm/amcl_core.hpp>
 #include <bondcpp/bond.hpp>
+#include <geometry_msgs/msg/pose_array.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <nav2_msgs/msg/particle_cloud.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
@@ -159,7 +159,7 @@ class NdtAmclNode : public rclcpp_lifecycle::LifecycleNode {
   rclcpp::TimerBase::SharedPtr timer_;
 
   /// Particle cloud publisher.
-  rclcpp_lifecycle::LifecyclePublisher<nav2_msgs::msg::ParticleCloud>::SharedPtr particle_cloud_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseArray>::SharedPtr particle_cloud_pub_;
   /// Estimated pose publisher.
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pose_pub_;
 

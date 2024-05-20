@@ -28,8 +28,8 @@
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 
+#include <geometry_msgs/msg/pose_array.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
-#include <nav2_msgs/msg/particle_cloud.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 
@@ -77,12 +77,12 @@ class TesterNode : public rclcpp::Node {
   auto& latest_pose() { return latest_pose_; }
 
   void create_particle_cloud_subscriber() {
-    particle_cloud_subscriber_ = create_subscription<nav2_msgs::msg::ParticleCloud>(
+    particle_cloud_subscriber_ = create_subscription<geometry_msgs::msg::PoseArray>(
         "particle_cloud", rclcpp::SystemDefaultsQoS(),
         std::bind(&TesterNode::particle_cloud_callback, this, std::placeholders::_1));
   }
 
-  void particle_cloud_callback(nav2_msgs::msg::ParticleCloud::SharedPtr message) { latest_particle_cloud_ = *message; }
+  void particle_cloud_callback(geometry_msgs::msg::PoseArray::SharedPtr message) { latest_particle_cloud_ = *message; }
 
   const auto& latest_particle_cloud() const { return latest_particle_cloud_; }
 
@@ -234,10 +234,10 @@ class TesterNode : public rclcpp::Node {
   using SubscriberPtr = std::shared_ptr<rclcpp::Subscription<Message>>;
 
   SubscriberPtr<geometry_msgs::msg::PoseWithCovarianceStamped> pose_subscriber_;
-  SubscriberPtr<nav2_msgs::msg::ParticleCloud> particle_cloud_subscriber_;
+  SubscriberPtr<geometry_msgs::msg::PoseArray> particle_cloud_subscriber_;
 
   std::optional<geometry_msgs::msg::PoseWithCovarianceStamped> latest_pose_;
-  std::optional<nav2_msgs::msg::ParticleCloud> latest_particle_cloud_;
+  std::optional<geometry_msgs::msg::PoseArray> latest_particle_cloud_;
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
