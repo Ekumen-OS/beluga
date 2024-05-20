@@ -18,11 +18,15 @@
 namespace {
 
 TEST(TestMessages, Instantiation) {
-  [[maybe_unused]] auto msg1 = beluga_ros::msg::LaserScan{};
-  [[maybe_unused]] auto msg2 = beluga_ros::msg::OccupancyGrid{};
-  [[maybe_unused]] auto msg3 = beluga_ros::msg::Pose{};
-  [[maybe_unused]] auto msg4 = beluga_ros::msg::PoseArray{};
-  [[maybe_unused]] auto msg5 = beluga_ros::msg::Transform{};
+  [[maybe_unused]] auto msg1 = beluga_ros::msg::ColorRGBA{};
+  [[maybe_unused]] auto msg2 = beluga_ros::msg::LaserScan{};
+  [[maybe_unused]] auto msg3 = beluga_ros::msg::Marker{};
+  [[maybe_unused]] auto msg4 = beluga_ros::msg::MarkerArray{};
+  [[maybe_unused]] auto msg5 = beluga_ros::msg::OccupancyGrid{};
+  [[maybe_unused]] auto msg6 = beluga_ros::msg::Point{};
+  [[maybe_unused]] auto msg7 = beluga_ros::msg::Pose{};
+  [[maybe_unused]] auto msg8 = beluga_ros::msg::PoseArray{};
+  [[maybe_unused]] auto msg9 = beluga_ros::msg::Transform{};
 }
 
 TEST(TestMessages, Stamping) {
@@ -30,6 +34,16 @@ TEST(TestMessages, Stamping) {
   beluga_ros::stamp_message("some_frame", {5, 0}, message);
   EXPECT_EQ(message.header.frame_id, "some_frame");
   EXPECT_EQ(message.header.stamp.sec, 5);
+}
+
+TEST(TestMessages, StampingMany) {
+  auto message = beluga_ros::msg::MarkerArray{};
+  message.markers.insert(message.markers.end(), 5U, beluga_ros::msg::Marker{});
+  beluga_ros::stamp_message("some_frame", {5, 0}, message);
+  for (const auto& marker : message.markers) {
+    EXPECT_EQ(marker.header.frame_id, "some_frame");
+    EXPECT_EQ(marker.header.stamp.sec, 5);
+  }
 }
 
 }  // namespace

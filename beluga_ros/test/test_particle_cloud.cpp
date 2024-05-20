@@ -80,4 +80,25 @@ TEST(TestParticleCloud, AssignMatchingEmpty) {
   EXPECT_EQ(message.poses.size(), 0U);
 }
 
+TEST(TestParticleCloud, AssignMarkers) {
+  using Constants = Sophus::Constants<double>;
+  const auto particles = std::vector{
+      std::make_tuple(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.0, 0.0}}, beluga::Weight(0.25)),
+      std::make_tuple(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.0, 0.0}}, beluga::Weight(0.25)),
+      std::make_tuple(Sophus::SE2d{Sophus::SO2d{Constants::pi()}, Eigen::Vector2d{0.0, -1.0}}, beluga::Weight(0.5)),
+  };
+  auto message = beluga_ros::msg::MarkerArray{};
+  beluga_ros::assign_particle_cloud(particles, message);
+  ASSERT_EQ(message.markers.size(), 2U);
+  EXPECT_EQ(message.markers[0].points.size(), 2 * 2);  // 2 arrows, 2 vertices each
+  EXPECT_EQ(message.markers[1].points.size(), 3 * 2);  // 2 arrows, 3 vertices each
+}
+
+TEST(TestParticleCloud, AssignNoMarkers) {
+  const auto particles = std::vector<std::tuple<Sophus::SE2d, beluga::Weight>>{};
+  auto message = beluga_ros::msg::MarkerArray{};
+  beluga_ros::assign_particle_cloud(particles, message);
+  EXPECT_EQ(message.markers.size(), 0U);
+}
+
 }  // namespace

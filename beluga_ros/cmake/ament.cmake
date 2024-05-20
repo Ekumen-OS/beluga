@@ -18,9 +18,11 @@ find_package(beluga REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 
 ament_python_install_package(
   ${PROJECT_NAME}
@@ -41,9 +43,11 @@ ament_target_dependencies(
   INTERFACE geometry_msgs
             nav_msgs
             sensor_msgs
+            std_msgs
             tf2
             tf2_eigen
-            tf2_geometry_msgs)
+            tf2_geometry_msgs
+            visualization_msgs)
 target_compile_definitions(beluga_ros INTERFACE BELUGA_ROS_VERSION=2)
 target_compile_features(beluga_ros INTERFACE cxx_std_17)
 
@@ -52,9 +56,11 @@ ament_export_dependencies(
   geometry_msgs
   nav_msgs
   sensor_msgs
+  std_msgs
   tf2
   tf2_eigen
-  tf2_geometry_msgs)
+  tf2_geometry_msgs
+  visualization_msgs)
 ament_export_include_directories("include/${PROJECT_NAME}")
 ament_export_definitions(BELUGA_ROS_VERSION=2)
 ament_export_targets(beluga_ros HAS_LIBRARY_TARGET)

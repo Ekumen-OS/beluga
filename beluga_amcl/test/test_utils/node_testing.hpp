@@ -86,6 +86,18 @@ class TesterNode : public rclcpp::Node {
 
   const auto& latest_particle_cloud() const { return latest_particle_cloud_; }
 
+  void create_particle_markers_subscriber() {
+    particle_markers_subscriber_ = create_subscription<visualization_msgs::msg::MarkerArray>(
+        "particle_markers", rclcpp::SystemDefaultsQoS(),
+        std::bind(&TesterNode::particle_markers_callback, this, std::placeholders::_1));
+  }
+
+  void particle_markers_callback(visualization_msgs::msg::MarkerArray::SharedPtr message) {
+    latest_particle_markers_ = *message;
+  }
+
+  const auto& latest_particle_markers() const { return latest_particle_markers_; }
+
   static auto make_dummy_map() {
     auto map = nav_msgs::msg::OccupancyGrid{};
     map.header.frame_id = "map";
@@ -235,9 +247,11 @@ class TesterNode : public rclcpp::Node {
 
   SubscriberPtr<geometry_msgs::msg::PoseWithCovarianceStamped> pose_subscriber_;
   SubscriberPtr<geometry_msgs::msg::PoseArray> particle_cloud_subscriber_;
+  SubscriberPtr<visualization_msgs::msg::MarkerArray> particle_markers_subscriber_;
 
   std::optional<geometry_msgs::msg::PoseWithCovarianceStamped> latest_pose_;
   std::optional<geometry_msgs::msg::PoseArray> latest_particle_cloud_;
+  std::optional<visualization_msgs::msg::MarkerArray> latest_particle_markers_;
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;

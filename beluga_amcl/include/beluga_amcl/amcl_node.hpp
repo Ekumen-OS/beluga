@@ -32,6 +32,7 @@
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 #include <beluga/beluga.hpp>
 #include <beluga_ros/amcl.hpp>
@@ -137,6 +138,9 @@ class AmclNode : public rclcpp_lifecycle::LifecycleNode {
 
   /// Particle cloud publisher.
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseArray>::SharedPtr particle_cloud_pub_;
+  /// Particle markers publisher.
+  rclcpp_lifecycle::LifecyclePublisher<visualization_msgs::msg::MarkerArray>::SharedPtr particle_markers_pub_;
+
   /// Estimated pose publisher.
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pose_pub_;
 
