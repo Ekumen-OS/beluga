@@ -15,7 +15,7 @@
     - [3.5 Control Update - Motion Model](#35-control-update---motion-model)
     - [3.6 Measurement Update - Sensor Model](#36-measurement-update---sensor-model)
     - [3.7 Resample](#37-resample)
-  - [4 Compiling and run code](#4-compiling-and-run-code)
+  - [4 Compile and run code](#4-compile-and-run-code)
     - [4.1 package.xml](#41-packagexml)
     - [4.2 CMakeLists.txt](#42-cmakeliststxt)
     - [4.2 Build and run](#42-build-and-run)
@@ -51,20 +51,20 @@ The purpose of this tutorial is to show a common implementation of the particle 
 ## Tasks
 
 ## 1 Create the Workspace
-In this tutorial we are using the conventions of [ros2](https://docs.ros.org/en/humble/index.html), because that we need to create a worksapce directory. Open a new terminal and create the directory:
+In this tutorial we are using the conventions of [ROS2](https://docs.ros.org/en/humble/index.html), so we need to create a workspace directory. Open a new terminal and create the directory:
 
 ```bash
 mkdir -p beluga_ws/src
 ```
 
 ## 2 Create the Package
-In order to follow the [ros2](https://docs.ros.org/en/humble/index.html) we are going to create a package inside the `beluga_ws/src` path. Therefore, let start by createing the necessary directories. In a terminal run the following command:
+In order to follow the [ROS2](https://docs.ros.org/en/humble/index.html) guidelines, we are going to create a package inside the `beluga_ws/src` path. Therefore, let's start by creating the necessary directories. In a terminal, run the following command:
 
 ```bash
 mkdir -p beluga_ws/src/beluga_tutorial/src
 ```
 
-`beluga_tutorial` should has a `package.xml` and a `CmakeLists.txt` in order to be able to use `colcon` for the compilation process. These files we are going to create them later ([for more details](#4-compiling-the-code)).
+`beluga_tutorial` should have a `package.xml` and a `CmakeLists.txt` in order to be able to use `colcon` for the compilation process. We will create these files later ([for more details](#4-compile-and-run-code)).
 
 ## 3 Write the Simulation code
 To build the simulation step by step, we'll first explain the main functionality of the code, which is assembling the particle filter, and all the necessary resources around this. In a second step, we'll add the necessary functionalities for visualizing the simulation ([for more details]()).
@@ -414,7 +414,7 @@ particles |= beluga::views::sample | ranges::views::take_exactly(tutorial_params
 * `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the **number_of_particles** parameter.
 * `beluga::actions::assign` effectively converts any view into an action and assigns the result to `particles`.
 
-## 4 Compiling and run code
+## 4 Compile and run code
 ### 4.1 package.xml
 Create a `package.xml` file and put the following inside:
 
@@ -482,11 +482,11 @@ target_link_libraries(${PROJECT_NAME} beluga::beluga yaml-cpp)
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib/${PROJECT_NAME})
 ```
 
-* `find_package()` is used to import external dependecies.
-* `add_executable(${PROJECT_NAME} src/main.cpp)` create an executable called `beluga_tutorial`.
-* `target_include_directories()` is used to include the header fiels of `yaml-cpp` package.
+* `find_package()` is used to import external dependencies.
+* `add_executable(${PROJECT_NAME} src/main.cpp)` create the executable called `beluga_tutorial`.
+* `target_include_directories()` is used to include the header files of `yaml-cpp` package.
 * `target_link_libraries(${PROJECT_NAME} beluga::beluga yaml-cpp)` link `beluga` and `yaml-cpp` in the compilation process.
-* `install(TARGETS...)` will intall the executable under the path `install/beluga_tutorial/lib/beluga_tutorial/`.
+* `install(TARGETS...)` will install the executable under the path `install/beluga_tutorial/lib/beluga_tutorial/`.
 
 ### 4.2 Build and run
 Open a new terminal and build your new package:
