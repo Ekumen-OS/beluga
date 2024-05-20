@@ -58,7 +58,7 @@
     <link rel="prev" title="ROS Reference" href="ros-reference.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Sun May 19 23:39:38 2024 -0300, e2c39a8&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
   </head>
   
   
@@ -389,6 +389,7 @@ document.write(`
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-filter-parameters">Particle Filter Parameters</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motion-model-parameters">Motion Model Parameters</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-model-parameters">Observation Model Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#misc-parameters">Misc Parameters</a></li>
 </ul>
 </li>
 </ul>
@@ -614,6 +615,19 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 <dt><code class="docutils literal notranslate"><span class="pre">laser_likelihood_max_dist</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Maximum distance, in meters, to do obstacle inflation on map used in the <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> model.</p>
 </dd>
 <dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="misc-parameters">
+<h5>Misc Parameters<a class="headerlink" href="#misc-parameters" title="Link to this heading">#</a></h5>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">autostart</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>Whether the node should configure and activate itself or not. Avoids the need for a lifecycle manager.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">autostart_delay</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Delay, in seconds, to wait before initiating an autostart sequence. Also the retry period when the sequence fails.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
 </dd>
 </dl>
 </section>
@@ -1023,6 +1037,7 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-filter-parameters">Particle Filter Parameters</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#motion-model-parameters">Motion Model Parameters</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-model-parameters">Observation Model Parameters</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#misc-parameters">Misc Parameters</a></li>
 </ul>
 </li>
 </ul>
@@ -1068,7 +1083,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Sun May 19 23:39:38 2024 -0300, e2c39a8&#39;.
+  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
   <br/>
 </p>
   </div>
