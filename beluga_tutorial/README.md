@@ -2,31 +2,36 @@
 
 - [Simple MCL Implementation Using Beluga](#simple-mcl-implementation-using-beluga)
   - [Overview](#overview)
-  - [Monte Carlo Localization (MCL) Background](#monte-carlo-localization-mcl-background)
   - [Requirements](#requirements)
+  - [Monte Carlo Localization (MCL) Background](#monte-carlo-localization-mcl-background)
   - [Tasks](#tasks)
-  - [1 Creating the Beluga Tutorial package](#1-creating-the-beluga-tutorial-package)
-  - [2 Creating the simluation](#2-creating-the-simluation)
-    - [2.1 Writing the code](#21-writing-the-code)
-    - [2.1.1 Tutorial Parameters](#211-tutorial-parameters)
-    - [2.1.2 Landmark Map](#212-landmark-map)
-    - [2.1.3 Generate Particles](#213-generate-particles)
-    - [2.1.3 Simulation Loop](#213-simulation-loop)
-    - [2.1.4 Control Update - Motion Model](#214-control-update---motion-model)
-    - [2.1.5 Measurement Update - Sensor Model](#215-measurement-update---sensor-model)
-    - [2.1.6 Resample](#216-resample)
-    - [2.2 Compiling the code](#22-compiling-the-code)
+  - [1 Create the Workspace](#1-create-the-workspace)
+  - [2 Create the Package](#2-create-the-package)
+  - [3 Write the Simulation code](#3-write-the-simulation-code)
+    - [3.1 Tutorial Parameters](#31-tutorial-parameters)
+    - [3.2 Landmark Map](#32-landmark-map)
+    - [3.3 Generate Particles](#33-generate-particles)
+    - [3.4 Simulation Loop](#34-simulation-loop)
+    - [3.5 Control Update - Motion Model](#35-control-update---motion-model)
+    - [3.6 Measurement Update - Sensor Model](#36-measurement-update---sensor-model)
+    - [3.7 Resample](#37-resample)
+  - [4 Compiling the code](#4-compiling-the-code)
+    - [4.1 package.xml](#41-packagexml)
+    - [4.2 CMakeLists.txt](#42-cmakeliststxt)
 
 ## Overview
 ![Simulation Video](./resources/simulation_video.mp4)
 
 This tutorial demonstrates how to implement an MCL particle filter for a robot moving in a one-dimensional space and in a single direction, using Beluga. The code is written using C++17 with the ranges-v3 library for range handling along with its respective algorithms.
 
+## Requirements
+This tutorial requires to have installed beluga(link).
+
 ## Monte Carlo Localization (MCL) Background
 Monte Carlo Localization is part of the broader family of Bayesian state estimation methods. They are all based on the Bayes filter, which is a recursive algorithm that estimates the posterior probability distribution of the state of a system given a sequence of sensor measurements and control inputs.
-The estimation at any given time is represented using a probability distribution function, called **belief**, definded as:
+The estimation at any given time is represented using a probability distribution function, called **belief**, defined as:
 $$bel(x_t) = p(x_t|z_{1:t},u_{1:t})$$
-where $x_t$ is the state of the system at time $t$, and $z_{1:t}$ and $u_{1:t}$ are the sequence of sensor measurements and the sequence of control inputs up to time $t$ respectively. A belief refelcts the robot's internal knowledge about the state of the environment. We therfore distinguish the **true state** from the robot's interal belief.
+where $x_t$ is the state of the system at time $t$, and $z_{1:t}$ and $u_{1:t}$ are the sequence of sensor measurements and the sequence of control inputs up to time $t$ respectively. A belief reflects the robot's internal knowledge about the state of the environment. We therefore distinguish the **true state** from the robot's internal belief.
 
 It can be shown that the posterior belief can be recursively computed using the prior belief, the current sensor readings, and the current control inputs using the following update rule:
 $$bel(x_t)=η * p(z_t|x_t) * \int p(x_t|x_{t-1}, u_t)bel(x_{t-1}) \, dx_{t-1}$$
@@ -42,26 +47,28 @@ The purpose of this tutorial is to show a common implementation of the particle 
 * [Measurement Update](#215-measurement-update---sensor-model)
 * [Resample](#216-resample)
 
-## Requirements
-This tutorial requires having the following dependencies installed:\
-(Add list of dependencies)
-
-As another option, you can use the following Docker containers as a development environment:\
-(Add the options for Docker files)
-
 ## Tasks
 
-## 1 Creating the Beluga Tutorial package
+## 1 Create the Workspace
+In this tutorial we are using the conventions of [ros2](https://docs.ros.org/en/humble/index.html), because that we need to create a worksapce directory. Open a new terminal and create the directory:
 
+```bash
+mkdir -p beluga_ws/src
+```
 
-## 2 Creating the simluation
-To build the simulation step by step, we'll first explain the main functionality of the code, which is assembling the particle filter, and how to compile it. In the second step, we'll add the necessary functionalities for visualizing the simulation.
+## 2 Create the Package
+In order to follow the [ros2](https://docs.ros.org/en/humble/index.html) we are going to create a package inside the `beluga_ws/src` path. Therefore, let start by createing the necessary directories. In a terminal run the following command:
 
-### 2.1 Writing the code
+```bash
+mkdir -p beluga_ws/src/beluga_tutorial/src
+```
+
+`beluga_tutorial` should has a `package.xml` and a `CmakeLists.txt` in order to be able to use `colcon` for the compilation process. These files we are going to create them later ([for more details](#4-compiling-the-code)).
+
+## 3 Write the Simulation code
+To build the simulation step by step, we'll first explain the main functionality of the code, which is assembling the particle filter, and all the necessary resources around this. In a second step, we'll add the necessary functionalities for visualizing the simulation ([for more details]()).
+
 Create a `beluga_tutorial/src/main.cpp` file and put the following code in:
-
->**Note:** The following code only implement the filter and calculate the estimated state. For the complete code with the
-visualization step go to (link).
 
 ```cpp
 // Copyright 2022-2024 Ekumen, Inc.
@@ -208,19 +215,9 @@ using GroundTruth = double;
 using Estimate = std::pair<double, double>;
 ```
 
-A `generateRandom` function is used to simulate some normal distribution noise
-```cpp
-double generateRandom(double mean, double sd) {
-  static auto generator = std::mt19937{std::random_device()()};
-  std::normal_distribution<double> distribution(mean, sd);
+Lets examine the code by parts:
 
-  return distribution(generator);
-}
-```
-
-Lets look what is happening in the `main` function.
-
-### 2.1.1 Tutorial Parameters
+### 3.1 Tutorial Parameters
 A `TutorialParams tutorial_params` object is initialize with default values. `TutorialParams` is a struct that contain all the necessary parameter the code needs to conduct the simulation.
 ```cpp
 struct TutorialParams {
@@ -238,9 +235,10 @@ double sensor_model_sigam{1.0};
 double min_particle_weight{0.08};
 };
 ```
-### 2.1.2 Landmark Map
+### 3.2 Landmark Map
 A map of the environment is a list of object in the environment and their locations `M = {M1, M2, ..., Mn}`.\
 A **landmark map** represent a **feature-based map**, where each feature in the map contain a property and its Cartesian location. In the tutorial, the landmark map represent the position of the doors, but all doors are equal. This means there are no distinguishing properties between them, such as an ID for each door. To generate a random map, we use the following code:
+
 ```cpp
 // Generate a random map
 std::uniform_int_distribution landmark_distribution{0, tutorial_params.map_size};
@@ -253,13 +251,15 @@ landmark_map |= ranges::actions::sort | ranges::actions::unique;
 * `ranges::views::take_exactly(tutorial_params.number_of_doors)` defines the number of doors to take, using the **number_of_doors** parameter.
 * `ranges::to<LandmarkMapVector>` convert the range to a LandmarkMapVector type defined previously.
 * `landmark_map |= ranges::actions::sort | ranges::actions::unique` will remove repeated landmarks in the same position, and arrange them from lowest to highest to facilitate debugging.
+
 >Note: read about [Range Adaptor Closure Object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorClosureObject) to understand the `|` operator.
 
-### 2.1.3 Generate Particles
-As boundry condition the algorithm requires an initial belief $bel(x_0)$ at time $t = 0$. If ones knows the value of $x_0$
+### 3.3 Generate Particles
+As boundary condition the algorithm requires an initial belief $bel(x_0)$ at time $t = 0$. If ones knows the value of $x_0$
 with a certain certainty, $bel(x_0)$ should be initialize with a point mass distribution that center all probability mass on the correct value of $x_0$. Otherwise, a uniform distribution over the space can be used to initialize $x_0$.
 
 In our case, to demonstrate how the filter is capable of converging to the true state, we will initialize the particles using a normal distribution, setting the mean to the initial position of the true state and with a certain standard deviation value.
+
 ```cpp
 // Generate particles
 std::normal_distribution<double> initial_distribution(tutorial_params.initial_pose, tutorial_params.initial_pose_sd);
@@ -273,10 +273,10 @@ auto particles = beluga::views::sample(initial_distribution) |
 * `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the **number_of_particles** parameter.
 * `ranges::to<beluga::TupleVector>` convert the range to a `beluga::TupleVector`, which is a shorthand for a tuple of vectors with the default allocator, see beluga code for more detail (link).
 
-### 2.1.3 Simulation Loop
+### 3.4 Simulation Loop
 The parameters **initial_pose**, **velocity**, and **dt** are used to express the movement of the robot along the one-dimensional space and in a single direction, represented by the following equation:
 $$x(t) = x(t-1) + v * d_t$$
-wehre $x(t)$, or in the code **current_pose**, is initialize with the parameter **initial_pose**, and at the beginning of each iteration cycle, it also functions as $x(t-1)$ before being updated. Therefore, the following loop will iterate over a configurable **number_of_cycles** or until the robot exceeds the map boundaries.
+where $x(t)$, or in the code **current_pose**, is initialize with the parameter **initial_pose**, and at the beginning of each iteration cycle, it also functions as $x(t-1)$ before being updated. Therefore, the following loop will iterate over a configurable **number_of_cycles** or until the robot exceeds the map boundaries.
 ```cpp
   double current_pose{tutorial_params.initial_pose};
   for (auto n = 0; n < tutorial_params.number_of_cycles; n++) {
@@ -292,7 +292,7 @@ wehre $x(t)$, or in the code **current_pose**, is initialize with the parameter 
     // ...
   }
 ```
-### 2.1.4 Control Update - Motion Model
+### 3.5 Control Update - Motion Model
 The motion model comprise the state transition probability $p(x_t | x_{t-1}, u_t)$ which plays an essential role in the prediction step (or control update step) of the Bayes filter. Probabilistic robotics generalizes kinematic equations to the fact that the outcome of a control is uncertain, due to control noise or unmodeled exogenous effects. Deterministic robot actuator models are “probilified” by adding noise variables that characterize the types of uncertainty that exist in robotic actuation. Here $x_t$ and $x_{t−1}$ are both robot poses (in our case the x position with a positive direction), and $u_t$ is a motion command. This model describes the posterior distribution over kinematics states that a robots assumes when executing the motion command $u_t$ when its pose is $x_{t−1}$.
 
 In this tutorial, we will be using an **Sample Motion Model Odometry** (pag. 111 of ProbRob). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
@@ -300,6 +300,7 @@ In this tutorial, we will be using an **Sample Motion Model Odometry** (pag. 111
 At time $t$, the pose of the robot is a random variable $x(t)$. This model considers that within the time interval $(t-1, t]$, the registered movement from odometry is a reliable estimator of the true state movement, despite any potential drift and slippage that the robot may encounter during this interval.
 
 The **Sample Motion Model Odometry** receives as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x_t$. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles. It accepts an execution policy (for more details, see link) and a function that applies the motion model (or transformation) to each particle in the range.
+
 ```cpp
 // Motion model
 auto motion_model = [&](double state) {
@@ -320,7 +321,7 @@ does not match the updated belief $bel(x_t)$ explain in [MCL background](#monte-
 
 >**Note:** The effect of the motion model is to increase the space occupied by the particles.
 
-### 2.1.5 Measurement Update - Sensor Model
+### 3.6 Measurement Update - Sensor Model
 Measurement models describe the formation process by which sensor measurements are generated in the physical world. Probabilistic robotics explicitly models the noise in sensor measurements. Such models account for the inherent uncertainty in the robot’s sensors. Formally, the measurement model is defined as a conditional probability distribution $p(z_t | x_t , m)$, where $x_t$ is the robot pose, $z_t$ is the measurement at time $t$, and $m$ is the map of the environment.
 
 The most common model for processing landmarks assumes that the sensor can measure the range and the bearing of the landmark relative to the robot’s
@@ -328,6 +329,7 @@ local coordinate frame. In this tutorial we will use an approximation to the **l
 since the doors do not have a signature that differentiates them from each other, but we can calculate the relative pose of each door to the robot. This sensor model, receives as inputs the landmark map, the sensor data and a particle (a state), and outputs the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
 
 In our case, we need to generate simulated sensor data. This data corresponds to the relative positions of landmarks around the robot's **current_pose** within a configurable range specified by the **sensor_range** parameter.
+
 ```cpp
 // Generate simulated sensor data
 auto sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) {
@@ -341,7 +343,7 @@ auto sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) 
 * `ranges::views::transform` transform them to relative poses from the robot's **current_pose**.
 * `ranges::to<SensorData>` convert the range to a SensorData type defined previously.
 
-To calculate the weigth for each particle, we previously need to build the range `particle_sensor_data`. This range represent the relative distances of each landmark to the particle.
+To calculate the weight for each particle, we previously need to build the range `particle_sensor_data`. This range represent the relative distances of each landmark to the particle.
 
 ```cpp
 // Sensor model
@@ -360,7 +362,8 @@ $$p(z_t | x_t, m) = \prod_i p(z_{t}^{i} | x_t, m)$$
 To calculate the probability $p(z_{t}^{i} | x_t, m)$ we use the equation of a simplified version of the normal distribution's PDF.
 
 **(review this paragraph)**
-In this context, each landmark lacks distinguishing features that uniquely differentiate it from others. Therefore, we employ an approximation method where the `min_distance` between the landmarks' position measured from the sensor and the landmark's position relative to the particle, is considered. This approximation assumes that the smallest distance observed in the comparison provides the most accurate correspondece between the observed landmarks.
+In this context, each landmark lacks distinguishing features that uniquely differentiate it from others. Therefore, we employ an approximation method where the `min_distance` between the landmarks' position measured from the sensor and the landmark's position relative to the particle, is considered. This approximation assumes that the smallest distance observed in the comparison provides the most accurate correspondence between the observed landmarks.
+
 ```cpp
 // Sensor model
 auto sensor_model = [&](const double& state) {
@@ -380,12 +383,14 @@ auto sensor_model = [&](const double& state) {
   return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{}) + tutorial_params.min_particle_weight;
 };
 ```
+
 * `landmark_probability` store each $p(z_{t}^{i} | x_t, m)$
 * `ranges::accumulate` calculate the $\prod_i p(z_{t}^{i} | x_t, m)$
-* `tutorial_params.min_particle_weight` is the minimun weight a particle can have. Is used to mantain the particle "alive" even though its probability is very low.
+* `tutorial_params.min_particle_weight` is the minimum weight a particle can have. Is used to maintain the particle "alive" even though its probability is very low.
 * The sensor model returns the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
 
-Beluga uses the function `beluga::actions::reweight` to transform a range of particle, to a range of **weigthed** particles. It accepts an execution policy (for more details, see link) and a function that applies the sensor model (or transformation) to each particle in the range.
+Beluga uses the function `beluga::actions::reweight` to transform a range of particle, to a range of **weighted** particles. It accepts an execution policy (for more details, see link) and a function that applies the sensor model (or transformation) to each particle in the range.
+
 ```cpp
 // Reweight stage
 particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
@@ -393,7 +398,7 @@ particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | belu
 
 The `beluga::actions::normalize` is a range adaptor that allows users to normalize the weights of a range (or a range of particles) by dividing each weight by a specified normalization factor. If none is specified, the default normalization factor corresponds to the total sum of weights in the given range.
 
-### 2.1.6 Resample
+### 3.7 Resample
 The updated belief is prefigured by the spatial distribution of the particles $x_{t-1}$ in the set and their importance weights. A few of the particles will have migrated to state regions with low probability, however, and their importance weights will therefore be low.
 To correct this, the update step is completed by performing a **resampling process**, which consist of drawing a new set of particles $x_t$ from the current set, with replacement, using importance weights as unnormalized probabilities. This process causes particles with low weights to be discarded and particles with high weights to be propagated multiple times into the new particle set.
 
@@ -408,4 +413,76 @@ particles |= beluga::views::sample | ranges::views::take_exactly(tutorial_params
 * `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the **number_of_particles** parameter.
 * `beluga::actions::assign` effectively converts any view into an action and assigns the result to `particles`.
 
-### 2.2 Compiling the code
+## 4 Compiling the code
+### 4.1 package.xml
+Create a `package.xml` file and put the following inside:
+
+```xml
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>beluga_tutorial</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="user@mail.com">developer</maintainer>
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>cmake</buildtool_depend>
+
+  <depend>beluga</depend>
+  <depend>yaml_cpp_vendor</depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
+```
+
+This declares the package needs `beluga` and `yaml_cpp` when its code is built and executed.
+
+### 4.2 CMakeLists.txt
+The final `CMakeLists.txt` looks like:
+
+```cmake
+cmake_minimum_required(VERSION 3.16)
+
+project(beluga_tutorial)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+if(NOT CMAKE_BUILD_TYPE)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE
+      "Release"
+      CACHE STRING "Build type" FORCE)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(
+    -Wall
+    -Wconversion
+    -Wextra
+    -Werror
+    -Wpedantic)
+endif()
+
+find_package(beluga REQUIRED)
+find_package(yaml_cpp_vendor REQUIRED)
+
+add_executable(${PROJECT_NAME} src/main.cpp)
+
+target_include_directories(
+  ${PROJECT_NAME}
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:include> ${yaml_cpp_vendor_INCLUDE_DIRS})
+
+target_link_libraries(${PROJECT_NAME} beluga::beluga yaml-cpp)
+
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib/${PROJECT_NAME})
+```
+
+* `find_package()` is used to import external dependecies.
+* `add_executable(${PROJECT_NAME} src/main.cpp)` create an executable called `beluga_tutorial`.
+* `target_include_directories()` is used to include the header fiels of `yaml-cpp` package.
+* `target_link_libraries(${PROJECT_NAME} beluga::beluga yaml-cpp)` link `beluga` and `yaml-cpp` in the compilation process.
+* `install(TARGETS...)` will intall the executable under the path `install/beluga_tutorial/lib/beluga_tutorial`.
