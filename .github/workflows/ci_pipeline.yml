@@ -38,6 +38,7 @@ jobs:
           - noetic
           - humble
           - iron
+          - jazzy
         include:
           - ros_distro: humble
             upload_artifacts: true
