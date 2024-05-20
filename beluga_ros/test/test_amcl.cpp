@@ -12,13 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga_ros/amcl.hpp>
+#include <cstddef>
+#include <cstdint>
+#include <execution>
+#include <memory>
+#include <vector>
+
+#include <Eigen/Core>
 
 #if BELUGA_ROS_VERSION == 1
 #include <boost/smart_ptr.hpp>
 #endif
+
+#include <beluga/motion/differential_drive_model.hpp>
+#include <beluga/sensor/likelihood_field_model.hpp>
+
+#include "beluga_ros/amcl.hpp"
+#include "beluga_ros/laser_scan.hpp"
+#include "beluga_ros/messages.hpp"
 
 namespace {
 

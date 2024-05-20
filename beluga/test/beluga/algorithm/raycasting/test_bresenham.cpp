@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "beluga/algorithm/raycasting/bresenham.hpp"
+#include <gtest/gtest.h>
 
 #include <vector>
 
 #include <Eigen/Core>
 
-#include <gmock/gmock.h>
-
 #include <range/v3/range/conversion.hpp>
+
+#include "beluga/algorithm/raycasting/bresenham.hpp"
 
 namespace beluga {
 

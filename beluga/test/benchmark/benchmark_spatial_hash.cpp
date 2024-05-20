@@ -14,10 +14,16 @@
 
 #include <benchmark/benchmark.h>
 
-#include <beluga/algorithm/spatial_hash.hpp>
+#include <array>
+#include <cstddef>
+#include <iterator>
+#include <tuple>
+
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
+
+#include "beluga/algorithm/spatial_hash.hpp"
 
 namespace {
 

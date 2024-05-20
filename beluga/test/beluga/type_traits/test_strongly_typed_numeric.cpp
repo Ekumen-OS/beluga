@@ -14,7 +14,11 @@
 
 #include <gtest/gtest.h>
 
-#include <beluga/type_traits/strongly_typed_numeric.hpp>
+#include <cstddef>
+#include <functional>
+#include <limits>
+
+#include "beluga/type_traits/strongly_typed_numeric.hpp"
 
 namespace beluga {
 using strong_double = Numeric<double, struct StrongDoubleTag>;
@@ -33,7 +37,7 @@ TEST(NumericTypeDef, implicitCasts) {
   // They're not type-safe
   strong_size_t ss = 1;
   strong_size_t_2 ss2 = 1;
-  std::size_t r = ss + ss2;
+  const std::size_t r = ss + ss2;
   ASSERT_EQ(r, 2);
 }
 

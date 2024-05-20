@@ -12,16 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <gtest/gtest.h>
+
+#include <execution>
+#include <utility>
+#include <vector>
+
+#include <Eigen/Core>
+#include <sophus/se2.hpp>
+
 #include "beluga/algorithm/amcl_core.hpp"
 #include "beluga/algorithm/spatial_hash.hpp"
 #include "beluga/containers/tuple_vector.hpp"
+#include "beluga/motion/differential_drive_model.hpp"
 #include "beluga/sensor/beam_model.hpp"
+#include "beluga/sensor/likelihood_field_model.hpp"
 #include "beluga/test/static_occupancy_grid.hpp"
 #include "beluga/views/particles.hpp"
-
-#include <gmock/gmock.h>
-#include <range/v3/view/take_last.hpp>
-#include <sophus/se2.hpp>
 
 namespace {
 
@@ -43,7 +50,7 @@ auto make_amcl(const beluga::AmclParams& params = {}) {
     false , false, false, false, false},
     kResolution};
   // clang-format on
-  beluga::BeamModelParam param{};
+  const beluga::BeamModelParam param{};
 
   auto random_state_maker = []() { return Sophus::SE2d{}; };
 

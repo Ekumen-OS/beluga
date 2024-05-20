@@ -18,16 +18,16 @@
 #include <ostream>
 #include <type_traits>
 
-#include <beluga/sensor/data/sparse_value_grid.hpp>
-
 #include <Eigen/Core>
 
-#include <Eigen/src/Core/util/Constants.h>
 #include <range/v3/view/zip.hpp>
+
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 #include <sophus/so2.hpp>
+
+#include "beluga/sensor/data/sparse_value_grid.hpp"
 
 namespace beluga {
 
@@ -54,13 +54,13 @@ struct NDTCell {
   }
 
   /// Ostream overload mostly for debugging purposes.
-  friend inline std::ostream& operator<<(std::ostream& os, const NDTCell& cell) {
+  friend std::ostream& operator<<(std::ostream& os, const NDTCell& cell) {
     os << "Mean \n" << cell.mean.transpose() << " \n\nCovariance: \n" << cell.covariance;
     return os;
   }
 
   /// Transform the normal distribution according to tf, both mean and covariance.
-  friend inline NDTCell operator*(const Sophus::SE2<scalar_type>& tf, const NDTCell& ndt_cell) {
+  friend NDTCell operator*(const Sophus::SE2<scalar_type>& tf, const NDTCell& ndt_cell) {
     static_assert(num_dim == 2, "Cannot transform a non 2D NDT Cell with a SE2 transform.");
     const Eigen::Vector2d uij = tf * ndt_cell.mean;
     const Eigen::Matrix2Xd cov = tf.so2().matrix() * ndt_cell.covariance * tf.so2().matrix().transpose();
@@ -68,7 +68,7 @@ struct NDTCell {
   }
 
   /// Transform the normal distribution according to tf, both mean and covariance.
-  friend inline NDTCell operator*(const Sophus::SE3<scalar_type>& tf, const NDTCell& ndt_cell) {
+  friend NDTCell operator*(const Sophus::SE3<scalar_type>& tf, const NDTCell& ndt_cell) {
     static_assert(num_dim == 3, "Cannot transform a non 3D NDT Cell with a SE3 transform.");
     const Eigen::Vector3d uij = tf * ndt_cell.mean;
     const Eigen::Matrix3Xd cov = tf.so2().matrix() * ndt_cell.covariance * tf.so2().matrix().transpose();

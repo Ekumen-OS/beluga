@@ -15,6 +15,7 @@
 #ifndef BELUGA_ALGORITHM_RAYCASTING_BRESENHAM_HPP
 #define BELUGA_ALGORITHM_RAYCASTING_BRESENHAM_HPP
 
+#include <cstdint>
 #include <utility>
 
 #include <range/v3/view/all.hpp>
@@ -33,7 +34,7 @@ namespace beluga {
 class Bresenham2i {
  public:
   /// Bresenham's 2D line drawing algorithm variants.
-  enum Variant {
+  enum Variant : std::uint8_t {
     kStandard = 0,  ///< Standard Bresenham's algorithm.
     kModified       ///< Modified, aka supercover, Bresenham's algorithm.
                     ///  See http://eugen.dedu.free.fr/projects/bresenham.

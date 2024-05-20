@@ -13,15 +13,22 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "beluga/views/random_intersperse.hpp"
+#include <array>
+#include <vector>
 
 #include <range/v3/algorithm/count.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/range/conversion.hpp>
+#include <range/v3/range/primitives.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_exactly.hpp>
+
+#include "beluga/views/random_intersperse.hpp"
 
 namespace {
 

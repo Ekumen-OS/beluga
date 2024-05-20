@@ -28,11 +28,11 @@
 #error BELUGA_ROS_VERSION is not defined or invalid
 #endif
 
-#include <beluga_ros/messages.hpp>
-
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 #include <sophus/types.hpp>
+
+#include <beluga_ros/messages.hpp>
 
 /**
  * \file

@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <iterator>
-#include <type_traits>
-
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/containers/circular_array.hpp>
-#include <beluga/type_traits/tuple_traits.hpp>
+#include <algorithm>
+#include <array>
+#include <iterator>
+#include <stdexcept>
 
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/transform.hpp>
+
+#include "beluga/containers/circular_array.hpp"
+#include "beluga/type_traits/tuple_traits.hpp"
 
 namespace {
 

@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "test_utils/node_testing.hpp"
-
-#include <beluga_amcl/amcl_node.hpp>
-#include <beluga_ros/tf2_sophus.hpp>
-
-#include <tf2_ros/create_timer_ros.h>
+#include <chrono>
+#include <future>
+#include <memory>
+#include <string>
+#include <tuple>
 
 #include <lifecycle_msgs/msg/state.hpp>
+#include <rclcpp/utilities.hpp>
+
+#include <sophus/common.hpp>
+
+#include "beluga_amcl/amcl_node.hpp"
+#include "test_utils/node_testing.hpp"
 
 namespace {
 
@@ -87,7 +92,7 @@ class BaseNodeFixture : public T {
       return false;
     }
     auto future = tester_node_->async_request_global_localization();
-    bool done =
+    const bool done =
         spin_until([&] { return future.wait_for(0s) == std::future_status::ready; }, 500ms, amcl_node_, tester_node_);
     if (done) {
       return true;
@@ -101,7 +106,7 @@ class BaseNodeFixture : public T {
       return false;
     }
     auto future = tester_node_->async_nomotion_update_request();
-    bool done =
+    const bool done =
         spin_until([&] { return future.wait_for(0s) == std::future_status::ready; }, 500ms, amcl_node_, tester_node_);
     if (done) {
       return true;

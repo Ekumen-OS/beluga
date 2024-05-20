@@ -14,8 +14,11 @@
 
 #include <gtest/gtest.h>
 
-#include <beluga/primitives.hpp>
+#include <tuple>
+
 #include <range/v3/utility/common_tuple.hpp>
+
+#include "beluga/primitives.hpp"
 
 namespace {
 

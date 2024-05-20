@@ -85,7 +85,7 @@ template <typename Derived>
 class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
  public:
   /// Coordinate frames.
-  enum class Frame { kLocal, kGlobal };
+  enum class Frame : std::uint8_t { kLocal, kGlobal };
 
   /// Checks if cell is free.
   /**

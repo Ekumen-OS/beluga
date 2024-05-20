@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <sstream>
-
 #include <gtest/gtest.h>
 
-#include <beluga/testing/sophus_printers.hpp>
+#include <sstream>
+
+#include <Eigen/Core>
 
 #include "beluga/test/utils/eigen_initializers.hpp"
+#include "beluga/testing/sophus_printers.hpp"
 
 namespace {
 

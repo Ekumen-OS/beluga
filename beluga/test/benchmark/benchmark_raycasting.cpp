@@ -12,18 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <vector>
-
 #include <benchmark/benchmark.h>
 
-#include <beluga/algorithm/raycasting.hpp>
-#include <beluga/test/raycasting.hpp>
-#include <beluga/test/static_occupancy_grid.hpp>
+#include <cstddef>
+#include <initializer_list>
+#include <vector>
 
-#include <range/v3/range/conversion.hpp>
+#include <Eigen/Core>
 
+#include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
+
+#include "beluga/algorithm/raycasting.hpp"
+#include "beluga/algorithm/raycasting/bresenham.hpp"
+#include "beluga/sensor/data/occupancy_grid.hpp"
+#include "beluga/test/raycasting.hpp"
+#include "beluga/test/static_occupancy_grid.hpp"
 
 namespace {
 

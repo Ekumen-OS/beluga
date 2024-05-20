@@ -12,14 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
-#include <beluga_ros/laser_scan.hpp>
+#include <gtest/gtest.h>
+
+#include <memory>
+#include <vector>
 
 #include <range/v3/range/conversion.hpp>
 
 #if BELUGA_ROS_VERSION == 1
 #include <boost/smart_ptr.hpp>
 #endif
+
+#include "beluga_ros/laser_scan.hpp"
+#include "beluga_ros/messages.hpp"
 
 namespace {
 

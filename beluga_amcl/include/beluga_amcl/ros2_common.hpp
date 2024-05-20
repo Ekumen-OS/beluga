@@ -15,10 +15,13 @@
 #ifndef BELUGA_AMCL_ROS2_COMMON_HPP
 #define BELUGA_AMCL_ROS2_COMMON_HPP
 
+#include <string_view>
+
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/time.hpp>
+
 #include <sophus/se2.hpp>
 
 #include <tf2/convert.h>
@@ -26,7 +29,6 @@
 #include <tf2_ros/create_timer_ros.h>
 
 #include <beluga_ros/tf2_sophus.hpp>
-#include <string_view>
 
 namespace beluga_amcl {
 

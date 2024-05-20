@@ -13,11 +13,14 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "beluga/views/take_evenly.hpp"
+#include <vector>
 
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/iota.hpp>
+
+#include "beluga/views/take_evenly.hpp"
 
 namespace {
 

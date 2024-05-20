@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <gtest/gtest.h>
+
 #include <stdexcept>
 #include <unordered_map>
-
-#include <beluga/sensor/data/sparse_value_grid.hpp>
-#include <beluga/sensor/ndt_sensor_model.hpp>
+#include <utility>
+#include <vector>
 
 #include <Eigen/Core>
-
-#include <gmock/gmock.h>
-#include <gtest/gtest-typed-test.h>
-#include <gtest/gtest.h>
 #include <sophus/se2.hpp>
+
+#include "beluga/sensor/data/ndt_cell.hpp"
+#include "beluga/sensor/data/sparse_value_grid.hpp"
+#include "beluga/sensor/ndt_sensor_model.hpp"
 
 namespace beluga {
 
@@ -42,8 +43,8 @@ TEST(NDTSensorModelTests, CanConstruct) {
 TEST(NDTSensorModelTests, MinLikelihood) {
   const double minimum_likelihood = 1e-6;
 
-  NDTModelParam2d param{minimum_likelihood};
-  NDTSensorModel model{param, sparse_grid_2d_t{}};
+  const NDTModelParam2d param{minimum_likelihood};
+  const NDTSensorModel model{param, sparse_grid_2d_t{}};
 
   for (const auto& val : {
            Eigen::Vector2d{0.1, 0.1},
@@ -68,7 +69,7 @@ TEST(NDTSensorModelTests, Likelihoood) {
     cov << 0.5, 0.0,
            0.0, 0.3;
     // clang-format on
-    Eigen::Vector2d mean(0.5, 0.5);
+    const Eigen::Vector2d mean(0.5, 0.5);
     map[Eigen::Vector2i(0, 0)] = NDTCell2d{mean, cov};
   }
   {
@@ -77,14 +78,14 @@ TEST(NDTSensorModelTests, Likelihoood) {
     cov << 0.5, 0.0,
            0.0, 0.5;
     // clang-format on
-    Eigen::Vector2d mean(1.5, 1.5);
+    const Eigen::Vector2d mean(1.5, 1.5);
     map[Eigen::Vector2i(1, 1)] = NDTCell2d{mean, cov};
   }
   sparse_grid_2d_t grid{std::move(map), 1.0};
 
   const double minimum_likelihood = 1e-6;
-  NDTModelParam2d param{minimum_likelihood};
-  NDTSensorModel model{param, std::move(grid)};
+  const NDTModelParam2d param{minimum_likelihood};
+  const NDTSensorModel model{param, std::move(grid)};
 
   EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.5}, get_diagonal_covariance()}), 1.3678794411714423);
   EXPECT_DOUBLE_EQ(model.likelihood_at({{0.8, 0.5}, get_diagonal_covariance()}), 1.4307317817730123);
@@ -97,7 +98,7 @@ TEST(NDTSensorModelTests, Likelihoood) {
 
 TEST(NDTSensorModelTests, FitPoints) {
   {
-    std::vector meas{
+    const std::vector meas{
         Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
         Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
     };
@@ -107,7 +108,7 @@ TEST(NDTSensorModelTests, FitPoints) {
     ASSERT_FALSE(cell.covariance.isZero());
   }
   {
-    std::vector meas{
+    const std::vector meas{
         Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.9}, Eigen::Vector2d{0.1, 0.2},
         Eigen::Vector2d{0.1, 0.9}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
     };
@@ -120,7 +121,7 @@ TEST(NDTSensorModelTests, FitPoints) {
 
 TEST(NDTSensorModelTests, ToCellsNotEnoughPointsInCell) {
   const double map_res = 0.5;
-  std::vector map_data{
+  const std::vector map_data{
       Eigen::Vector2d{0.1, 0.2},
       Eigen::Vector2d{0.112, 0.22},
       Eigen::Vector2d{0.15, 0.23},
@@ -130,8 +131,8 @@ TEST(NDTSensorModelTests, ToCellsNotEnoughPointsInCell) {
 }
 
 TEST(NDTSensorModelTests, SensorModel) {
-  double map_res = 0.5;
-  std::vector map_data{
+  const double map_res = 0.5;
+  const std::vector map_data{
       Eigen::Vector2d{0.1, 0.2},  Eigen::Vector2d{0.112, 0.22}, Eigen::Vector2d{0.15, 0.23},
       Eigen::Vector2d{0.1, 0.24}, Eigen::Vector2d{0.16, 0.25},  Eigen::Vector2d{0.1, 0.26},
   };
@@ -142,7 +143,7 @@ TEST(NDTSensorModelTests, SensorModel) {
     map_cells_data[(cell.mean.array() / map_res).cast<int>()] = cell;
   }
   std::vector perfect_measurement = map_data;
-  NDTSensorModel model{{}, sparse_grid_2d_t{map_cells_data, map_res}};
+  const NDTSensorModel model{{}, sparse_grid_2d_t{map_cells_data, map_res}};
   auto state_weighing_fn = model(std::move(perfect_measurement));
   // This is a perfect hit, so we should expect weight to be 1 + num_cells == 2.
   ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE2d{}), 2);

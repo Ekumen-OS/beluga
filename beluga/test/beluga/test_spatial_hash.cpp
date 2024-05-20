@@ -14,11 +14,18 @@
 
 #include <gtest/gtest.h>
 
-#include <beluga/algorithm/spatial_hash.hpp>
+#include <algorithm>
+#include <array>
+#include <iterator>
+#include <tuple>
+#include <vector>
+
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/cartesian_product.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/transform.hpp>
+
+#include "beluga/algorithm/spatial_hash.hpp"
 
 namespace {
 
@@ -82,7 +89,7 @@ TEST(SpatialHash, NoCollisions) {
 
   std::sort(std::begin(hashes), std::end(hashes));
   auto it = std::adjacent_find(std::begin(hashes), std::end(hashes));
-  bool has_duplicates = it != std::end(hashes);
+  const bool has_duplicates = it != std::end(hashes);
   ASSERT_FALSE(has_duplicates);
 }
 

@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 // standard library
-#include <cstdint>
 #include <optional>
-#include <utility>
-#include <vector>
+
+// external
+#include <sophus/se3.hpp>
 
 // project
-#include <beluga/sensor/data/landmark_map.hpp>
+#include "beluga/sensor/data/landmark_map.hpp"
+#include "beluga/types/landmark_detection_types.hpp"
 
 namespace {
 

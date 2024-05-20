@@ -14,14 +14,19 @@
 
 #include <benchmark/benchmark.h>
 
-#include <beluga/containers/tuple_vector.hpp>
-#include <beluga/type_traits.hpp>
-#include <beluga/views/particles.hpp>
+#include <cstddef>
+#include <tuple>
+#include <vector>
 
 #include <range/v3/algorithm/transform.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
+#include <range/v3/range/access.hpp>
 #include <range/v3/view/filter.hpp>
-#include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/transform.hpp>
+
+#include "beluga/containers/tuple_vector.hpp"
+#include "beluga/primitives.hpp"
+#include "beluga/views/particles.hpp"
 
 namespace {
 

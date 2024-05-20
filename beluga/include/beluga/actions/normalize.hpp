@@ -18,12 +18,12 @@
 #include <algorithm>
 #include <execution>
 
-#include <beluga/type_traits/particle_traits.hpp>
-#include <beluga/views/particles.hpp>
-
 #include <range/v3/action/action.hpp>
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/view/common.hpp>
+
+#include <beluga/type_traits/particle_traits.hpp>
+#include <beluga/views/particles.hpp>
 
 /**
  * \file

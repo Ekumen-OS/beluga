@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "beluga/sensor/data/regular_grid.hpp"
+#include <vector>
 
 #include <range/v3/range/conversion.hpp>
+
+#include "beluga/sensor/data/regular_grid.hpp"
 
 namespace {
 

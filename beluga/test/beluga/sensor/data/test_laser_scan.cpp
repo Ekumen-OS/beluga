@@ -13,13 +13,20 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <sophus/se3.hpp>
+#include <limits>
+#include <utility>
+#include <vector>
 
 #include <range/v3/range/conversion.hpp>
+#include <range/v3/view/all.hpp>
 
-#include <beluga/sensor/data/laser_scan.hpp>
-#include <beluga/testing.hpp>
+#include <sophus/common.hpp>
+#include <sophus/se3.hpp>
+
+#include "beluga/sensor/data/laser_scan.hpp"
+#include "beluga/testing/sophus_matchers.hpp"
 
 namespace {
 

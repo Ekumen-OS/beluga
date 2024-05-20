@@ -13,15 +13,18 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/random/multivariate_uniform_distribution.hpp>
-#include <beluga/testing/sophus_matchers.hpp>
-#include <beluga/testing/sophus_printers.hpp>
-#include <beluga/views/sample.hpp>
+#include <cstddef>
+#include <unordered_map>
 
-#include <beluga/test/static_occupancy_grid.hpp>
-
+#include <range/v3/range/primitives.hpp>
 #include <range/v3/view/take_exactly.hpp>
+
+#include "beluga/random/multivariate_uniform_distribution.hpp"
+#include "beluga/test/static_occupancy_grid.hpp"
+#include "beluga/testing/sophus_matchers.hpp"
+#include "beluga/views/sample.hpp"
 
 namespace {
 
@@ -94,8 +97,8 @@ TEST(MultivariateUniformDistribution, GridSomeFreeSlots) {
 
   struct bucket_hash {
     std::size_t operator()(const Sophus::Vector2d& s) const noexcept {
-      std::size_t h1 = std::hash<double>{}(s.x());
-      std::size_t h2 = std::hash<double>{}(s.y());
+      const std::size_t h1 = std::hash<double>{}(s.x());
+      const std::size_t h2 = std::hash<double>{}(s.y());
       return h1 ^ (h2 << 1);
     }
   };

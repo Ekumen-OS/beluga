@@ -12,17 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
-#include <gtest/gtest-death-test.h>
+#include <gtest/gtest.h>
 
-#include "beluga/views/sample.hpp"
-
-#include <beluga/containers/tuple_vector.hpp>
+#include <array>
+#include <cstddef>
+#include <tuple>
+#include <type_traits>
+#include <unordered_map>
+#include <vector>
 
 #include <range/v3/algorithm/count.hpp>
 #include <range/v3/algorithm/find.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
+#include <range/v3/range/dangling.hpp>
+#include <range/v3/range/primitives.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/take_exactly.hpp>
+
+#include "beluga/containers/tuple_vector.hpp"
+#include "beluga/primitives.hpp"
+#include "beluga/views/particles.hpp"
+#include "beluga/views/sample.hpp"
 
 namespace {
 

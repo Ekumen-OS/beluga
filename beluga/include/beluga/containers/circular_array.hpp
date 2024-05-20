@@ -32,7 +32,7 @@
 namespace beluga {
 
 /// Feature flags for circular arrays.
-enum class CircularArrayFeatureFlags : int {
+enum class CircularArrayFeatureFlags : std::int8_t {
   kNone = 0x00,
   kRolloverOnWrite = 0x01,    ///<! If enabled, older values in the array are overwritten by
                               /// newer values if the array has reached its maximum size already.
@@ -43,17 +43,17 @@ enum class CircularArrayFeatureFlags : int {
 };
 
 /// Bitwise OR operator overload to combine two feature flags in a single mask-like flag.
-inline constexpr CircularArrayFeatureFlags operator|(CircularArrayFeatureFlags lflag, CircularArrayFeatureFlags rflag) {
-  return static_cast<CircularArrayFeatureFlags>(
-      static_cast<typename std::underlying_type<CircularArrayFeatureFlags>::type>(lflag) |
-      static_cast<typename std::underlying_type<CircularArrayFeatureFlags>::type>(rflag));
+constexpr CircularArrayFeatureFlags operator|(CircularArrayFeatureFlags lflag, CircularArrayFeatureFlags rflag) {
+  return static_cast<CircularArrayFeatureFlags>(  // NOLINT(lang-analyzer-optin.core.EnumCastOutOfRange)
+      static_cast<std::underlying_type_t<CircularArrayFeatureFlags>>(lflag) |
+      static_cast<std::underlying_type_t<CircularArrayFeatureFlags>>(rflag));
 }
 
 /// Bitwise AND operator overload to check of the presence of a feature `flag` in a feature `mask`.
-inline constexpr bool operator&(CircularArrayFeatureFlags mask, CircularArrayFeatureFlags flag) {
+constexpr bool operator&(CircularArrayFeatureFlags mask, CircularArrayFeatureFlags flag) {
   return static_cast<bool>(
-      static_cast<typename std::underlying_type<CircularArrayFeatureFlags>::type>(mask) &
-      static_cast<typename std::underlying_type<CircularArrayFeatureFlags>::type>(flag));
+      static_cast<std::underlying_type_t<CircularArrayFeatureFlags>>(mask) &
+      static_cast<std::underlying_type_t<CircularArrayFeatureFlags>>(flag));
 }
 
 /// An implementation of generic, non-threadsafe circular array.
@@ -228,7 +228,7 @@ class CircularArray {
    * \throws std::length_error If the array is full and
    * the rollover on write feature is not enabled.
    */
-  template <bool Enabled = F& CircularArrayFeatureFlags::kLayoutReversal>
+  template <bool Enabled = (F & CircularArrayFeatureFlags::kLayoutReversal)>
   std::enable_if_t<Enabled> push_front(value_type value) {
     static_assert(
         F & CircularArrayFeatureFlags::kLayoutReversal,
@@ -250,7 +250,7 @@ class CircularArray {
    * Behavior is undefined when popping from the back of an empty array.
    * No destructors are invoked on the value popped.
    */
-  template <bool Enabled = F& CircularArrayFeatureFlags::kLayoutReversal>
+  template <bool Enabled = (F & CircularArrayFeatureFlags::kLayoutReversal)>
   std::enable_if_t<Enabled> pop_back() noexcept {
     --size_;
   }

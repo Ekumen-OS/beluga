@@ -15,12 +15,10 @@
 #ifndef BELUGA_AMCL_TEST_TEST_UTILS_NODE_TESTING_HPP  // NOLINT(llvm-header-guard,-warnings-as-errors)
 #define BELUGA_AMCL_TEST_TEST_UTILS_NODE_TESTING_HPP  // NOLINT(llvm-header-guard,-warnings-as-errors)
 
-#include <bondcpp/bond.hpp>
-#include <geometry_msgs/msg/pose_stamped.hpp>
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <nav_msgs/msg/occupancy_grid.hpp>
-#include <rclcpp/rclcpp.hpp>
 #include <sophus/se2.hpp>
+
+#include <bondcpp/bond.hpp>
+#include <rclcpp/rclcpp.hpp>
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
@@ -29,7 +27,10 @@
 #include <tf2_ros/transform_listener.h>
 
 #include <geometry_msgs/msg/pose_array.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
+#include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 

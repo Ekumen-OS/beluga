@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
+#include <array>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+
+#include <range/v3/range/access.hpp>
+#include <range/v3/utility/common_tuple.hpp>
+#include <range/v3/view/subrange.hpp>
 
 #include "beluga/type_traits/tuple_traits.hpp"
-
-#include <range/v3/view/subrange.hpp>
 
 namespace {
 

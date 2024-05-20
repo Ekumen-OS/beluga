@@ -13,9 +13,20 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/algorithm/estimation.hpp>
-#include <beluga/testing.hpp>
+#include <algorithm>
+#include <limits>
+#include <numeric>
+#include <vector>
+
+#include <Eigen/Core>
+#include <sophus/common.hpp>
+#include <sophus/se2.hpp>
+#include <sophus/so2.hpp>
+
+#include "beluga/algorithm/estimation.hpp"
+#include "beluga/testing/sophus_matchers.hpp"
 
 namespace {
 

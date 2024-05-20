@@ -14,17 +14,25 @@
 
 #include <gtest/gtest.h>
 
-// external
-#include <ciabatta/ciabatta.hpp>
-
 // standard library
-#include <algorithm>
-#include <random>
+#include <cstdint>
+#include <functional>
+#include <numeric>
+#include <tuple>
+#include <utility>
 #include <vector>
 
+// external
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/transform.hpp>
+
+#include <sophus/common.hpp>
+#include <sophus/se2.hpp>
+
 // project
-#include <beluga/sensor.hpp>
 #include <beluga/sensor/data/landmark_map.hpp>
+#include "beluga/sensor/bearing_sensor_model.hpp"
+#include "beluga/types/landmark_detection_types.hpp"
 
 namespace beluga {
 

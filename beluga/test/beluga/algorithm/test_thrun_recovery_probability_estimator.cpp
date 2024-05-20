@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
-#include <gtest/gtest-death-test.h>
+#include <gtest/gtest.h>
 
-#include <beluga/algorithm/thrun_recovery_probability_estimator.hpp>
+#include <tuple>
+#include <vector>
+
+#include "beluga/algorithm/thrun_recovery_probability_estimator.hpp"
+#include "beluga/primitives.hpp"
 
 namespace {
 
