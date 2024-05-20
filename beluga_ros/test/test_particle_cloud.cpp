@@ -83,9 +83,9 @@ TEST(TestParticleCloud, AssignMatchingEmpty) {
 TEST(TestParticleCloud, AssignMarkers) {
   using Constants = Sophus::Constants<double>;
   const auto particles = std::vector{
+      std::make_tuple(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.0, 0.0}}, beluga::Weight(0.35)),
       std::make_tuple(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.0, 0.0}}, beluga::Weight(0.25)),
-      std::make_tuple(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.0, 0.0}}, beluga::Weight(0.25)),
-      std::make_tuple(Sophus::SE2d{Sophus::SO2d{Constants::pi()}, Eigen::Vector2d{0.0, -1.0}}, beluga::Weight(0.5)),
+      std::make_tuple(Sophus::SE2d{Sophus::SO2d{Constants::pi()}, Eigen::Vector2d{0.0, -1.0}}, beluga::Weight(0.4)),
   };
   auto message = beluga_ros::msg::MarkerArray{};
   beluga_ros::assign_particle_cloud(particles, message);
