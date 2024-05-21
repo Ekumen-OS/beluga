@@ -204,7 +204,8 @@ std::pair<Scalar, Scalar> estimate(Scalars&& scalars, Weights&& weights) {
         return weight * (scalar - weighted_mean) * (scalar - weighted_mean);
       });
 
-  const Scalar number_of_non_zero_weights = ranges::count_if(weights_view, [&](auto weight) { return weight > 0; });
+  const Scalar number_of_non_zero_weights =
+      static_cast<double>(ranges::count_if(weights_view, [&](auto weight) { return weight > 0; }));
 
   const Scalar weighted_sd =
       std::sqrt(weighted_squared_deviations * number_of_non_zero_weights / (number_of_non_zero_weights - 1));
