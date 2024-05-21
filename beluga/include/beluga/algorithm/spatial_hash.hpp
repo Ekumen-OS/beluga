@@ -146,9 +146,8 @@ class spatial_hash<Tuple<Types...>, std::enable_if_t<(std::is_arithmetic_v<Types
 template <>
 class spatial_hash<Sophus::SE2d, void> {
  public:
-  /// Constructs a spatial hasher from an `std::array` of doubles.
+  /// Constructs a spatial hasher given per-coordinate resolutions.
   /**
-   *
    * \param x_clustering_resolution Clustering resolution for the X axis, in meters.
    * \param y_clustering_resolution Clustering resolution for the Y axis, in meters.
    * \param theta_clustering_resolution Clustering resolution for the Theta axis, in radians.
@@ -158,6 +157,14 @@ class spatial_hash<Sophus::SE2d, void> {
       double y_clustering_resolution,
       double theta_clustering_resolution)
       : underlying_hasher_{{x_clustering_resolution, y_clustering_resolution, theta_clustering_resolution}} {};
+
+  /// Constructs a spatial hasher given per-group resolutions.
+  /**
+   * \param linear_clustering_resolution Clustering resolution for translational coordinates, in meters.
+   * \param angular_clustering_resolution Clustering resolution for rotational coordinates, in radians.
+   */
+  explicit spatial_hash(double linear_clustering_resolution, double angular_clustering_resolution)
+      : spatial_hash(linear_clustering_resolution, linear_clustering_resolution, angular_clustering_resolution){};
 
   /// Default constructor
   spatial_hash() = default;

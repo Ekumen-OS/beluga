@@ -27,4 +27,6 @@ Thin, Beluga-compatible wrappers for typical ROS data structures (usually messag
 
 | | |
 |-|-|
+| [particle_cloud.hpp](@ref particle_cloud.hpp) | APIs for particle cloud I/O over ROS interfaces. |
+| [tf2_eigen.hpp](@ref tf2_eigen.hpp) | tf2 message conversion API overloads for Eigen types. |
 | [tf2_sophus.hpp](@ref tf2_sophus.hpp) | tf2 message conversion API overloads for Sophus types. |

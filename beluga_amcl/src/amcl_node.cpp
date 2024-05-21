@@ -177,6 +177,8 @@ void AmclNode::autostart_callback() {
 AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Configuring");
   particle_cloud_pub_ = create_publisher<geometry_msgs::msg::PoseArray>("particle_cloud", rclcpp::SensorDataQoS());
+  particle_markers_pub_ =
+      create_publisher<visualization_msgs::msg::MarkerArray>("particle_markers", rclcpp::SystemDefaultsQoS());
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("pose", rclcpp::SystemDefaultsQoS());
   return CallbackReturn::SUCCESS;
 }
@@ -184,6 +186,7 @@ AmclNode::CallbackReturn AmclNode::on_configure(const rclcpp_lifecycle::State&) 
 AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Activating");
   particle_cloud_pub_->on_activate();
+  particle_markers_pub_->on_activate();
   pose_pub_->on_activate();
 
   {
@@ -275,6 +278,7 @@ AmclNode::CallbackReturn AmclNode::on_activate(const rclcpp_lifecycle::State&) {
 AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
+  particle_markers_pub_->on_deactivate();
   pose_pub_->on_deactivate();
   map_sub_.reset();
   initial_pose_sub_.reset();
@@ -292,6 +296,7 @@ AmclNode::CallbackReturn AmclNode::on_deactivate(const rclcpp_lifecycle::State&)
 AmclNode::CallbackReturn AmclNode::on_cleanup(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
+  particle_markers_pub_.reset();
   pose_pub_.reset();
   particle_filter_.reset();
   enable_tf_broadcast_ = false;
@@ -474,14 +479,19 @@ void AmclNode::timer_callback() {
     return;
   }
 
-  if (particle_cloud_pub_->get_subscription_count() == 0) {
-    return;
+  if (particle_cloud_pub_->get_subscription_count() > 0) {
+    auto message = beluga_ros::msg::PoseArray{};
+    beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
+    beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
+    particle_cloud_pub_->publish(message);
   }
 
-  auto message = beluga_ros::msg::PoseArray{};
-  beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
-  beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
-  particle_cloud_pub_->publish(message);
+  if (particle_markers_pub_->get_subscription_count() > 0) {
+    auto message = beluga_ros::msg::MarkerArray{};
+    beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
+    beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
+    particle_markers_pub_->publish(message);
+  }
 }
 
 void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {

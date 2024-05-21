@@ -17,17 +17,21 @@ find_package(
   catkin REQUIRED
   COMPONENTS nav_msgs
              sensor_msgs
+             std_msgs
              tf2
              tf2_eigen
-             tf2_geometry_msgs)
+             tf2_geometry_msgs
+             visualization_msgs)
 
 catkin_package(
   CATKIN_DEPENDS
     nav_msgs
     sensor_msgs
+    std_msgs
     tf2
     tf2_eigen
     tf2_geometry_msgs
+    visualization_msgs
   DEPENDS beluga
   INCLUDE_DIRS include
   CFG_EXTRAS ${PROJECT_NAME}-extras.cmake.in)
