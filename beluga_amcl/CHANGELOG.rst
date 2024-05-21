@@ -2,8 +2,8 @@
 Changelog for package beluga_amcl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2024-05-21)
+------------------
 * Please clang-tidy on Ubuntu Noble (`#379 <https://github.com/Ekumen-OS/beluga/issues/379>`_)
 * Add ROS 2 Jazzy to CI/CD and dev workflows (`#378 <https://github.com/Ekumen-OS/beluga/issues/378>`_)
 * Restore particle cloud visualization using markers (`#377 <https://github.com/Ekumen-OS/beluga/issues/377>`_)

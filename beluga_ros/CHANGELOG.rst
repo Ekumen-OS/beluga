@@ -2,8 +2,8 @@
 Changelog for package beluga_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2024-05-21)
+------------------
 * Please clang-tidy on Ubuntu Noble (`#379 <https://github.com/Ekumen-OS/beluga/issues/379>`_)
 * Restore particle cloud visualization using markers (`#377 <https://github.com/Ekumen-OS/beluga/issues/377>`_)
 * Use `geometry_msgs::msg::PoseArray` instead of `nav2_msgs::msg::ParticleCloud` (`#372 <https://github.com/Ekumen-OS/beluga/issues/372>`_)

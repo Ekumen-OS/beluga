@@ -2,8 +2,8 @@
 Changelog for package beluga_benchmark
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2024-05-21)
+------------------
 * Drop ament_lint_auto dependencies (`#370 <https://github.com/Ekumen-OS/beluga/issues/370>`_)
 * Update missed ROS version detection logic (`#368 <https://github.com/Ekumen-OS/beluga/issues/368>`_)
 * Add option to compare_results.py to save data to csv instead of plotting (`#261 <https://github.com/Ekumen-OS/beluga/issues/261>`_)

@@ -2,8 +2,8 @@
 Changelog for package beluga_system_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2024-05-21)
+------------------
 * Please clang-tidy on Ubuntu Noble (`#379 <https://github.com/Ekumen-OS/beluga/issues/379>`_)
 * Update missed ROS version detection logic (`#368 <https://github.com/Ekumen-OS/beluga/issues/368>`_)
 * Add AMCL implementation for ROS (`#327 <https://github.com/Ekumen-OS/beluga/issues/327>`_)
