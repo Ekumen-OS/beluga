@@ -37,16 +37,16 @@ struct Parameters {
    * In the simulation, the 1D map is continuous,
    * but the limit is defined as an integer to simplify data visualization.
    */
-  int map_size{100};
+  std::size_t map_size{100};
 
   /// Maximum number of doors (or landmarks) in the map.
-  int number_of_doors{33};
+  std::size_t number_of_doors{33};
 
   /// Fixed number of particles used by the algorithm.
-  int number_of_particles{200};
+  std::size_t number_of_particles{200};
 
   /// Number of simulation cycles.
-  unsigned int number_of_cycles{100};
+  std::size_t number_of_cycles{100};
 
   /// Robot's initial position in meters (m).
   double initial_position{0.0};
@@ -92,32 +92,28 @@ struct Parameters {
 };
 
 using Particle = std::tuple<double, beluga::Weight>;
-using LandmarkMapVector = std::vector<double>;
-using SensorData = std::vector<double>;
-using GroundTruth = double;
-using Estimate = std::pair<double, double>;
 
 struct RobotRecord {
-  GroundTruth ground_truth;
+  double ground_truth;
   beluga::TupleVector<Particle> current;
   beluga::TupleVector<Particle> propagate;
   beluga::TupleVector<Particle> reweight;
   beluga::TupleVector<Particle> resample;
-  Estimate estimation;
+  std::pair<double, double> estimation;
 };
 
 struct SimulationRecord {
-  LandmarkMapVector landmark_map;
+  std::vector<double> landmark_map;
   std::vector<RobotRecord> robot_record;
 };
 
 void load_parameters(const std::filesystem::path& path, Parameters& parameters) {
   try {
     YAML::Node params = YAML::LoadFile(path);
-    parameters.map_size = params["map_size"].as<int>();
-    parameters.number_of_doors = params["number_of_doors"].as<int>();
-    parameters.number_of_particles = params["number_of_particles"].as<int>();
-    parameters.number_of_cycles = params["number_of_cycles"].as<unsigned int>();
+    parameters.map_size = params["map_size"].as<std::size_t>();
+    parameters.number_of_doors = params["number_of_doors"].as<std::size_t>();
+    parameters.number_of_particles = params["number_of_particles"].as<std::size_t>();
+    parameters.number_of_cycles = params["number_of_cycles"].as<std::size_t>();
     parameters.initial_position = params["initial_position"].as<double>();
     parameters.initial_position_sd = params["initial_position_sd"].as<double>();
     parameters.dt = params["dt"].as<double>();
@@ -132,10 +128,10 @@ void load_parameters(const std::filesystem::path& path, Parameters& parameters) 
   }
 }
 
-void load_landmark_map(const std::filesystem::path& path, LandmarkMapVector& landmark_map) {
+void load_landmark_map(const std::filesystem::path& path, std::vector<double>& landmark_map) {
   try {
     YAML::Node node = YAML::LoadFile(path);
-    landmark_map = node["landmark_map"].as<LandmarkMapVector>();
+    landmark_map = node["landmark_map"].as<std::vector<double>>();
   } catch (YAML::BadFile& e) {
     std::cout << e.what() << "\n";
   }
@@ -188,7 +184,7 @@ int main(int argc, char* argv[]) {
 
   SimulationRecord simulation_record;
 
-  LandmarkMapVector landmark_map;
+  std::vector<double> landmark_map;
   load_landmark_map(argv[1], landmark_map);
   simulation_record.landmark_map = landmark_map;
 
@@ -199,41 +195,41 @@ int main(int argc, char* argv[]) {
                    ranges::to<beluga::TupleVector>;
 
   double current_position{parameters.initial_position};
-  for (unsigned int n = 0; n < parameters.number_of_cycles; ++n) {
+  for (std::size_t n = 0; n < parameters.number_of_cycles; ++n) {
     RobotRecord robot_record;
 
     current_position += parameters.velocity * parameters.dt;
     robot_record.ground_truth = current_position;
 
-    if (current_position > parameters.map_size) {
+    if (current_position > static_cast<double>(parameters.map_size)) {
       break;
     }
 
-    auto motion_model = [&](double particle_position, auto& gen) {
+    auto motion_model = [&](double particle_position, auto& random_engine) {
       const double distance = parameters.velocity * parameters.dt;
       std::normal_distribution<double> distribution(distance, parameters.translation_sd);
-      return particle_position + distribution(gen);
+      return particle_position + distribution(random_engine);
     };
 
     auto detections =
         landmark_map |                                                                                       //
         ranges::views::transform([&](double landmark) { return landmark - current_position; }) |             //
         ranges::views::remove_if([&](double range) { return std::abs(range) > parameters.sensor_range; }) |  //
-        ranges::to<SensorData>;
+        ranges::to<std::vector>;
 
     auto sensor_model = [&](double particle_position) {
       auto particle_detections =
           landmark_map |                                                                             //
           ranges::views::transform([&](double landmark) { return landmark - particle_position; }) |  //
-          ranges::to<SensorData>;
+          ranges::to<std::vector>;
 
       return parameters.min_particle_weight +
              std::transform_reduce(
                  detections.begin(), detections.end(), 1.0, std::multiplies<>{}, [&](double detection) {
-                   auto distances = particle_detections |  //
-                                    ranges::views::transform([&](double particle_detection) {
-                                      return std::abs(detection - particle_detection);
-                                    });
+                   auto distances =           //
+                       particle_detections |  //
+                       ranges::views::transform(
+                           [&](double particle_detection) { return std::abs(detection - particle_detection); });
                    const auto min_distance = ranges::min(distances);
                    return std::exp((-1 * std::pow(min_distance, 2)) / (2 * parameters.sensor_model_sigma));
                  });
