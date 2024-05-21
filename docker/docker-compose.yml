@@ -4,6 +4,7 @@ services:
     build:
       context: ..
       dockerfile: docker/images/${ROSDISTRO:-humble}/Dockerfile
+    image: ekumenlabs/beluga-${ROSDISTRO:-humble}-dev
     container_name: beluga-dev
     environment:
       - DISPLAY

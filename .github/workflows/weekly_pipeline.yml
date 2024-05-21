@@ -24,6 +24,7 @@ jobs:
           - noetic
           - humble
           - iron
+          - jazzy
           - rolling
     container:
       image: ros:${{ matrix.ros_distro }}-ros-base

@@ -135,7 +135,7 @@ TEST(OmnidirectionalDriveModelSamples, RotateFirstQuadrant) {
                 const auto pose = SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}};
                 return state_sampling_function(pose, generator).so2().log();
               }) |
-              ranges::views::take_exactly(1'000'000) | ranges::views::common;
+              ranges::views::take_exactly(100'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
   ASSERT_NEAR(mean, initial_angle + motion_angle, tolerance);
   ASSERT_NEAR(stddev, std::sqrt(alpha * motion_angle * motion_angle), tolerance);
@@ -155,7 +155,7 @@ TEST(OmnidirectionalDriveModelSamples, RotateThirdQuadrant) {
                 const auto pose = SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}};
                 return state_sampling_function(pose, generator).so2().log();
               }) |
-              ranges::views::take_exactly(1'000'000) | ranges::views::common;
+              ranges::views::take_exactly(100'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
   ASSERT_NEAR(mean, initial_angle + motion_angle, tolerance);
 

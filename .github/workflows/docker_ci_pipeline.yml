@@ -20,6 +20,7 @@ jobs:
           - noetic
           - humble
           - iron
+          - jazzy
           - rolling
     steps:
       - name: Checkout repository

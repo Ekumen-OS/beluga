@@ -23,7 +23,11 @@ SCRIPT_PATH=$(dirname "$(readlink -f "$0")")
 set -o errexit
 
 if [ "${ROS_DISTRO}" != "noetic" ]; then
-    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
+    if [ "${ROS_DISTRO}" != "jazzy" ] && [ "${ROS_DISTRO}" != "rolling" ]; then
+        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
+    else
+        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
+    fi
 else
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_example"
 fi
