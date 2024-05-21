@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -470,8 +470,8 @@ $(function() {
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="keyword">using</span> self_type = MostDerived;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  [[nodiscard]] decltype(<span class="keyword">auto</span>) self() &amp; { <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>self_type&amp;<span class="keyword">&gt;</span>(*this); }</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  [[nodiscard]] decltype(<span class="keyword">auto</span>) self() &amp;&amp; { <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>self_type&amp;&amp;<span class="keyword">&gt;</span>(*this); }</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  [[nodiscard]] decltype(<span class="keyword">auto</span>) self() const&amp; { <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>self_type const&amp;<span class="keyword">&gt;</span>(*this); }</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  [[nodiscard]] decltype(<span class="keyword">auto</span>) self() const&amp;&amp; { <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>self_type const&amp;&amp;<span class="keyword">&gt;</span>(*this); }</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  [[nodiscard]] decltype(<span class="keyword">auto</span>) self() const&amp; { <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>self_type&amp;<span class="keyword">&gt;</span>(*this); }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  [[nodiscard]] decltype(<span class="keyword">auto</span>) self() const&amp;&amp; { <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>self_type&amp;&amp;<span class="keyword">&gt;</span>(*this); }</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;};</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">struct </span>deferred {</div>
@@ -585,7 +585,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>

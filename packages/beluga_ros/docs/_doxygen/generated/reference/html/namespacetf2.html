@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -439,6 +439,10 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a566dca2143ff3a8cddb13ee0fa9cfc23"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a566dca2143ff3a8cddb13ee0fa9cfc23"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Point&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">toMsg</a> (const Eigen::Matrix&lt; Scalar, 2, 1 &gt; &amp;in)</td></tr>
+<tr class="memdesc:a566dca2143ff3a8cddb13ee0fa9cfc23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an Eigen Vector2 type to a Point message.  <a href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">More...</a><br /></td></tr>
+<tr class="separator:a566dca2143ff3a8cddb13ee0fa9cfc23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
 <tr class="memitem:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Pose &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</td></tr>
 <tr class="memdesc:a0a74cb89468798ba6738c62f3fdca4cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Pose message.  <a href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">More...</a><br /></td></tr>
@@ -771,8 +775,45 @@ template&lt;class Scalar &gt; </div>
 
 </div>
 </div>
+<a id="a566dca2143ff3a8cddb13ee0fa9cfc23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a566dca2143ff3a8cddb13ee0fa9cfc23">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[1/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">beluga_ros::msg::Point tf2::toMsg </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::Matrix&lt; Scalar, 2, 1 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts an Eigen Vector2 type to a Point message. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>The Eigen Vector2 element to convert. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The converted Point message. </dd></dl>
+
+</div>
+</div>
 <a id="a4165e54c2868393e7d80cc82809ce366"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4165e54c2868393e7d80cc82809ce366">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[1/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4165e54c2868393e7d80cc82809ce366">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -810,7 +851,7 @@ template&lt;class Scalar &gt; </div>
 </div>
 </div>
 <a id="a0a74cb89468798ba6738c62f3fdca4cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a74cb89468798ba6738c62f3fdca4cb">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[2/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a74cb89468798ba6738c62f3fdca4cb">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -846,7 +887,7 @@ template&lt;class Scalar &gt; </div>
 </div><div class="memdoc">
 
 <p>Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Pose message. </p>
-<p>The canonical message for an SE2 instance is Transform. If a Pose message is needed, this function must be called directly using <code><a class="el" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb" title="Converts a Sophus SE2 type to a Pose message.">tf2::toMsg</a></code>, not through the <code>tf2::convert</code> customization function.</p>
+<p>The canonical message for an SE2 instance is Transform. If a Pose message is needed, this function must be called directly using <code><a class="el" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23" title="Converts an Eigen Vector2 type to a Point message.">tf2::toMsg</a></code>, not through the <code>tf2::convert</code> customization function.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">in</td><td>The <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 element to convert. </td></tr>
@@ -859,7 +900,7 @@ template&lt;class Scalar &gt; </div>
 </div>
 </div>
 <a id="a0a48396a86427eec876d6d2959411ffa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a48396a86427eec876d6d2959411ffa">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a48396a86427eec876d6d2959411ffa">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -897,7 +938,7 @@ template&lt;class Scalar &gt; </div>
 </div>
 </div>
 <a id="a4511f028283bafd60e8fe142ca2bee2e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4511f028283bafd60e8fe142ca2bee2e">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4511f028283bafd60e8fe142ca2bee2e">&#9670;&nbsp;</a></span>toMsg() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -933,7 +974,7 @@ template&lt;class Scalar &gt; </div>
 </div><div class="memdoc">
 
 <p>Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Pose message. </p>
-<p>The canonical message for an SE3 instance is Transform. If a Pose message is needed, this function must be called directly using <code><a class="el" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb" title="Converts a Sophus SE2 type to a Pose message.">tf2::toMsg</a></code>, not through the <code>tf2::convert</code> customization function.</p>
+<p>The canonical message for an SE3 instance is Transform. If a Pose message is needed, this function must be called directly using <code><a class="el" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23" title="Converts an Eigen Vector2 type to a Point message.">tf2::toMsg</a></code>, not through the <code>tf2::convert</code> customization function.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">in</td><td>The <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 element to convert. </td></tr>
@@ -1003,7 +1044,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>

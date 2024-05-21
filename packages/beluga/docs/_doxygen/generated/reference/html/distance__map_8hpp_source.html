@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -492,7 +492,7 @@ $(function() {
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordflow">while</span> (!queue.empty()) {</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">auto</span> parent = queue.top();</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    queue.pop();</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">for</span> (std::size_t index : neighbors_function(parent.index)) {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> std::size_t index : neighbors_function(parent.index)) {</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      <span class="keywordflow">if</span> (!visited[index]) {</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        visited[index] = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        distance_map[index] = distance_function(parent.nearest_obstacle_index, index);</div>
@@ -567,7 +567,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>

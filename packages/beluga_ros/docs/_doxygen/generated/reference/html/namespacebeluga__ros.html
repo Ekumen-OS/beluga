@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -465,6 +465,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ac585b55e7effebae20f0b86be5319c0a"><td class="memTemplItemLeft" align="right" valign="top">Message &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#ac585b55e7effebae20f0b86be5319c0a">stamp_message</a> (std::string_view frame_id, detail::Time timestamp, Message &amp;message)</td></tr>
 <tr class="memdesc:ac585b55e7effebae20f0b86be5319c0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamp a message with a frame ID and timestamp.  <a href="namespacebeluga__ros.html#ac585b55e7effebae20f0b86be5319c0a">More...</a><br /></td></tr>
 <tr class="separator:ac585b55e7effebae20f0b86be5319c0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51e9af3fab5a224206addbcc122532bc"><td class="memItemLeft" align="right" valign="top">beluga_ros::msg::MarkerArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a51e9af3fab5a224206addbcc122532bc">stamp_message</a> (std::string_view frame_id, detail::Time timestamp, beluga_ros::msg::MarkerArray &amp;message)</td></tr>
+<tr class="memdesc:a51e9af3fab5a224206addbcc122532bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamp all markers in a marker array message with a frame ID and timestamp.  <a href="namespacebeluga__ros.html#a51e9af3fab5a224206addbcc122532bc">More...</a><br /></td></tr>
+<tr class="separator:a51e9af3fab5a224206addbcc122532bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1031238cbda7b7b12efe3a7e8b0508c9"><td class="memTemplParams" colspan="2">template&lt;class Particles , class Particle  = ranges::range_value_t&lt;Particles&gt;, class State  = typename beluga::state_t&lt;Particle&gt;, class Scalar  = typename State::Scalar, typename  = std::enable_if_t&lt;        std::is_same_v&lt;State, typename Sophus::SE2&lt;Scalar&gt;&gt; || std::is_same_v&lt;State, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a1031238cbda7b7b12efe3a7e8b0508c9"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::PoseArray &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a> (Particles &amp;&amp;particles, std::size_t size, beluga_ros::msg::PoseArray &amp;message)</td></tr>
 <tr class="memdesc:a1031238cbda7b7b12efe3a7e8b0508c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a pose distribution to a particle cloud message.  <a href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">More...</a><br /></td></tr>
@@ -473,12 +476,65 @@ Functions</h2></td></tr>
 <tr class="memitem:a45839d53c0f449dd3ac78bbccf49bbcd"><td class="memTemplItemLeft" align="right" valign="top">Message &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a45839d53c0f449dd3ac78bbccf49bbcd">assign_particle_cloud</a> (Particles &amp;&amp;particles, Message &amp;message)</td></tr>
 <tr class="memdesc:a45839d53c0f449dd3ac78bbccf49bbcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a distribution to a particle cloud message.  <a href="namespacebeluga__ros.html#a45839d53c0f449dd3ac78bbccf49bbcd">More...</a><br /></td></tr>
 <tr class="separator:a45839d53c0f449dd3ac78bbccf49bbcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826a7340292db6f5231a361ca63c4af7"><td class="memTemplParams" colspan="2">template&lt;class Particles , class Particle  = ranges::range_value_t&lt;Particles&gt;, class State  = typename beluga::state_t&lt;Particle&gt;, class Weight  = typename beluga::weight_t&lt;Particle&gt;, class Scalar  = typename State::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;State, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a826a7340292db6f5231a361ca63c4af7"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::MarkerArray &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a826a7340292db6f5231a361ca63c4af7">assign_particle_cloud</a> (Particles &amp;&amp;particles, Scalar linear_resolution, Scalar angular_resolution, beluga_ros::msg::MarkerArray &amp;message)</td></tr>
+<tr class="memdesc:a826a7340292db6f5231a361ca63c4af7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a pose distribution to a markers message for visualization.  <a href="namespacebeluga__ros.html#a826a7340292db6f5231a361ca63c4af7">More...</a><br /></td></tr>
+<tr class="separator:a826a7340292db6f5231a361ca63c4af7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3a6b3a74143cfc2852e53ce015569b7"><td class="memTemplParams" colspan="2">template&lt;class Particles , class Particle  = ranges::range_value_t&lt;Particles&gt;, class State  = typename beluga::state_t&lt;Particle&gt;, class Scalar  = typename State::Scalar&gt; </td></tr>
+<tr class="memitem:aa3a6b3a74143cfc2852e53ce015569b7"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::MarkerArray &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#aa3a6b3a74143cfc2852e53ce015569b7">assign_particle_cloud</a> (Particles &amp;&amp;particles, beluga_ros::msg::MarkerArray &amp;message)</td></tr>
+<tr class="memdesc:aa3a6b3a74143cfc2852e53ce015569b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a pose distribution to a markers message for visualization with suitable resolutions.  <a href="namespacebeluga__ros.html#aa3a6b3a74143cfc2852e53ce015569b7">More...</a><br /></td></tr>
+<tr class="separator:aa3a6b3a74143cfc2852e53ce015569b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The main Beluga ROS namespace. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="aa3a6b3a74143cfc2852e53ce015569b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3a6b3a74143cfc2852e53ce015569b7">&#9670;&nbsp;</a></span>assign_particle_cloud() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Particles , class Particle  = ranges::range_value_t&lt;Particles&gt;, class State  = typename beluga::state_t&lt;Particle&gt;, class Scalar  = typename State::Scalar&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">beluga_ros::msg::MarkerArray&amp; beluga_ros::assign_particle_cloud </td>
+          <td>(</td>
+          <td class="paramtype">Particles &amp;&amp;&#160;</td>
+          <td class="paramname"><em>particles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">beluga_ros::msg::MarkerArray &amp;&#160;</td>
+          <td class="paramname"><em>message</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assign a pose distribution to a markers message for visualization with suitable resolutions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">particles</td><td>Pose distribution, as a particle cloud itself. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">message</td><td>Markers message to be assigned. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Particles</td><td>A sized range type whose value type satisfies <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/ParticlePage.html">Particle</a> named requirements. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a45839d53c0f449dd3ac78bbccf49bbcd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45839d53c0f449dd3ac78bbccf49bbcd">&#9670;&nbsp;</a></span>assign_particle_cloud() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a45839d53c0f449dd3ac78bbccf49bbcd">&#9670;&nbsp;</a></span>assign_particle_cloud() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -523,8 +579,67 @@ template&lt;class Particles , class Message &gt; </div>
 
 </div>
 </div>
+<a id="a826a7340292db6f5231a361ca63c4af7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a826a7340292db6f5231a361ca63c4af7">&#9670;&nbsp;</a></span>assign_particle_cloud() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Particles , class Particle  = ranges::range_value_t&lt;Particles&gt;, class State  = typename beluga::state_t&lt;Particle&gt;, class Weight  = typename beluga::weight_t&lt;Particle&gt;, class Scalar  = typename State::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;State, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">beluga_ros::msg::MarkerArray&amp; beluga_ros::assign_particle_cloud </td>
+          <td>(</td>
+          <td class="paramtype">Particles &amp;&amp;&#160;</td>
+          <td class="paramname"><em>particles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Scalar&#160;</td>
+          <td class="paramname"><em>linear_resolution</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Scalar&#160;</td>
+          <td class="paramname"><em>angular_resolution</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">beluga_ros::msg::MarkerArray &amp;&#160;</td>
+          <td class="paramname"><em>message</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assign a pose distribution to a markers message for visualization. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">particles</td><td>Pose distribution, as a particle cloud itself. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">linear_resolution</td><td>Linear resolution, in meters, for visualization. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">angular_resolution</td><td>Angular resolution, in radians, for visualization. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">message</td><td>Markers message to be assigned. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Particles</td><td>A sized range type whose value type satisfies <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/ParticlePage.html">Particle</a> named requirements. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a1031238cbda7b7b12efe3a7e8b0508c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1031238cbda7b7b12efe3a7e8b0508c9">&#9670;&nbsp;</a></span>assign_particle_cloud() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1031238cbda7b7b12efe3a7e8b0508c9">&#9670;&nbsp;</a></span>assign_particle_cloud() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -575,8 +690,60 @@ template&lt;class Particles , class Particle  = ranges::range_value_t&lt;Particl
 
 </div>
 </div>
+<a id="a51e9af3fab5a224206addbcc122532bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51e9af3fab5a224206addbcc122532bc">&#9670;&nbsp;</a></span>stamp_message() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">beluga_ros::msg::MarkerArray&amp; beluga_ros::stamp_message </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>frame_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">detail::Time&#160;</td>
+          <td class="paramname"><em>timestamp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">beluga_ros::msg::MarkerArray &amp;&#160;</td>
+          <td class="paramname"><em>message</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stamp all markers in a marker array message with a frame ID and timestamp. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">frame_id</td><td>Frame ID to stamp markers with. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">timestamp</td><td>Time to stamp markers at. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">message</td><td>Message to be stamped. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ac585b55e7effebae20f0b86be5319c0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac585b55e7effebae20f0b86be5319c0a">&#9670;&nbsp;</a></span>stamp_message()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac585b55e7effebae20f0b86be5319c0a">&#9670;&nbsp;</a></span>stamp_message() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -614,7 +781,7 @@ template&lt;class Message &gt; </div>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">frame_id</td><td>Frame ID to stamp the message with. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">timestamp</td><td>Time to stamp the message at. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">message</td><td>Message to be assigned. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">message</td><td>Message to be stamped. </td></tr>
   </table>
   </dd>
 </dl>
@@ -685,7 +852,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>

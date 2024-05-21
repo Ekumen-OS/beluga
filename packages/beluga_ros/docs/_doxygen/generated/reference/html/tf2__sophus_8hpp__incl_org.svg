@@ -5,17 +5,17 @@
  -->
 <!-- Title: /home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp Pages: 1 -->
 <svg width="670pt" height="106pt"
- viewBox="0.00 0.00 669.50 106.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ viewBox="0.00 0.00 670.00 106.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 102)">
 <title>/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp</title>
 <!-- Node1 -->
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title="Message conversion API overloads for Sophus types.">
-<polygon fill="#bfbfbf" stroke="black" points="242.5,-56.5 242.5,-97.5 392.5,-97.5 392.5,-56.5 242.5,-56.5"/>
-<text text-anchor="start" x="250.5" y="-85.5" font-family="Helvetica,sans-Serif" font-size="10.00">/home/runner/work/beluga</text>
-<text text-anchor="start" x="250.5" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/beluga_ros/include</text>
-<text text-anchor="middle" x="317.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga_ros/tf2_sophus.hpp</text>
+<polygon fill="#bfbfbf" stroke="black" points="204.5,-56.5 204.5,-97.5 354.5,-97.5 354.5,-56.5 204.5,-56.5"/>
+<text text-anchor="start" x="212.5" y="-85.5" font-family="Helvetica,sans-Serif" font-size="10.00">/home/runner/work/beluga</text>
+<text text-anchor="start" x="212.5" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/beluga_ros/include</text>
+<text text-anchor="middle" x="279.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga_ros/tf2_sophus.hpp</text>
 </a>
 </g>
 </g>
@@ -31,8 +31,8 @@
 <!-- Node1&#45;&gt;Node2 -->
 <g id="edge1" class="edge">
 <title>Node1&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M242.27,-58.41C192.4,-46.75 128.55,-31.82 85.95,-21.86"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="86.66,-18.43 76.13,-19.56 85.07,-25.25 86.66,-18.43"/>
+<path fill="none" stroke="midnightblue" d="M207.49,-56.5C166.15,-45.3 115.7,-31.64 80.94,-22.22"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="81.7,-18.8 71.13,-19.57 79.87,-25.56 81.7,-18.8"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node">
@@ -46,68 +46,68 @@
 <!-- Node1&#45;&gt;Node3 -->
 <g id="edge2" class="edge">
 <title>Node1&#45;&gt;Node3</title>
-<path fill="none" stroke="midnightblue" d="M260.79,-56.5C229.03,-45.57 190.45,-32.3 163.16,-22.92"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="164.25,-19.6 153.66,-19.65 161.98,-26.21 164.25,-19.6"/>
+<path fill="none" stroke="midnightblue" d="M234.2,-56.5C209.49,-45.86 179.61,-33 157.93,-23.67"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="159.17,-20.39 148.6,-19.65 156.4,-26.82 159.17,-20.39"/>
 </g>
 <!-- Node4 -->
 <g id="node4" class="node">
 <title>Node4</title>
-<g id="a_node4"><a xlink:href="messages_8hpp_source.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="178,-0.5 178,-19.5 321,-19.5 321,-0.5 178,-0.5"/>
-<text text-anchor="middle" x="249.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga_ros/messages.hpp</text>
+<g id="a_node4"><a xlink:title=" ">
+<polygon fill="none" stroke="#bfbfbf" points="178.5,-0.5 178.5,-19.5 270.5,-19.5 270.5,-0.5 178.5,-0.5"/>
+<text text-anchor="middle" x="224.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se2.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node4 -->
 <g id="edge3" class="edge">
 <title>Node1&#45;&gt;Node4</title>
-<path fill="none" stroke="midnightblue" d="M297.1,-56.5C287.17,-47.01 275.4,-35.76 266.04,-26.81"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="268.2,-24.03 258.55,-19.65 263.36,-29.09 268.2,-24.03"/>
+<path fill="none" stroke="midnightblue" d="M263,-56.5C255.13,-47.2 245.83,-36.21 238.34,-27.36"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="240.95,-25.03 231.82,-19.65 235.61,-29.55 240.95,-25.03"/>
 </g>
 <!-- Node5 -->
 <g id="node5" class="node">
 <title>Node5</title>
 <g id="a_node5"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="339.5,-0.5 339.5,-19.5 431.5,-19.5 431.5,-0.5 339.5,-0.5"/>
-<text text-anchor="middle" x="385.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se2.hpp</text>
+<polygon fill="none" stroke="#bfbfbf" points="288.5,-0.5 288.5,-19.5 380.5,-19.5 380.5,-0.5 288.5,-0.5"/>
+<text text-anchor="middle" x="334.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se3.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node5 -->
 <g id="edge4" class="edge">
 <title>Node1&#45;&gt;Node5</title>
-<path fill="none" stroke="midnightblue" d="M337.9,-56.5C347.83,-47.01 359.6,-35.76 368.96,-26.81"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="371.64,-29.09 376.45,-19.65 366.8,-24.03 371.64,-29.09"/>
+<path fill="none" stroke="midnightblue" d="M296,-56.5C303.87,-47.2 313.17,-36.21 320.66,-27.36"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="323.39,-29.55 327.18,-19.65 318.05,-25.03 323.39,-29.55"/>
 </g>
 <!-- Node6 -->
 <g id="node6" class="node">
 <title>Node6</title>
 <g id="a_node6"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="449.5,-0.5 449.5,-19.5 541.5,-19.5 541.5,-0.5 449.5,-0.5"/>
-<text text-anchor="middle" x="495.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se3.hpp</text>
+<polygon fill="none" stroke="#bfbfbf" points="398.5,-0.5 398.5,-19.5 500.5,-19.5 500.5,-0.5 398.5,-0.5"/>
+<text text-anchor="middle" x="449.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/types.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node6 -->
 <g id="edge5" class="edge">
 <title>Node1&#45;&gt;Node6</title>
-<path fill="none" stroke="midnightblue" d="M370.91,-56.5C400.56,-45.67 436.52,-32.54 462.17,-23.17"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="463.61,-26.37 471.81,-19.65 461.21,-19.8 463.61,-26.37"/>
+<path fill="none" stroke="midnightblue" d="M330.51,-56.5C358.7,-45.72 392.87,-32.65 417.35,-23.29"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="418.78,-26.49 426.87,-19.65 416.28,-19.95 418.78,-26.49"/>
 </g>
 <!-- Node7 -->
 <g id="node7" class="node">
 <title>Node7</title>
-<g id="a_node7"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="559.5,-0.5 559.5,-19.5 661.5,-19.5 661.5,-0.5 559.5,-0.5"/>
-<text text-anchor="middle" x="610.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/types.hpp</text>
+<g id="a_node7"><a xlink:href="messages_8hpp_source.html" target="_top" xlink:title=" ">
+<polygon fill="none" stroke="black" points="519,-0.5 519,-19.5 662,-19.5 662,-0.5 519,-0.5"/>
+<text text-anchor="middle" x="590.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga_ros/messages.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node7 -->
 <g id="edge6" class="edge">
 <title>Node1&#45;&gt;Node7</title>
-<path fill="none" stroke="midnightblue" d="M392.57,-59.35C445.85,-47.53 515.82,-32 561.92,-21.78"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="562.95,-25.13 571.96,-19.55 561.44,-18.3 562.95,-25.13"/>
+<path fill="none" stroke="midnightblue" d="M354.78,-60.27C412.13,-48.28 489.53,-32.1 539.73,-21.61"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="540.62,-25 549.7,-19.53 539.19,-18.15 540.62,-25"/>
 </g>
 </g>
 </svg>

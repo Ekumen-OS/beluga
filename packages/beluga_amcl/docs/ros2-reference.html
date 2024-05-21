@@ -58,7 +58,7 @@
     <link rel="prev" title="ROS Reference" href="ros-reference.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -638,6 +638,8 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 <dl class="simple myst">
 <dt><code class="docutils literal notranslate"><span class="pre">particle_cloud</span></code></dt><dd><p>Estimated pose distribution published as <code class="docutils literal notranslate"><span class="pre">geometry_msgs/msg/PoseArray</span></code> messages, using a sensor data QoS policy. It will only be published if subscribers are found.</p>
 </dd>
+<dt><code class="docutils literal notranslate"><span class="pre">particle_markers</span></code></dt><dd><p>Estimated pose distribution visualization published as <code class="docutils literal notranslate"><span class="pre">visualization_msgs/msg/MarkerArray</span></code> messages, using a system default QoS policy. Each particle is depicted using an arrow. Each arrow is colored and scaled according to the weight of the corresponding state in the distribution. Large, bright red arrows represent the most likely states, whereas small, dim purple arrows represent the least likely states. The rest lie in between. It will only be published if subscribers are found.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">pose</span></code></dt><dd><p>Mean and covariance of the estimated pose distribution published as <code class="docutils literal notranslate"><span class="pre">geometry_msgs/msg/PoseWithCovarianceStamped</span></code> messages (assumed Gaussian), using a system default QoS policy.</p>
 </dd>
 </dl>
@@ -1083,7 +1085,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>

@@ -205,6 +205,9 @@ Also available as a standalone `amcl_node` executable.
 `particle_cloud`
 : Estimated pose distribution published as `geometry_msgs/msg/PoseArray` messages, using a sensor data QoS policy. It will only be published if subscribers are found.
 
+`particle_markers`
+: Estimated pose distribution visualization published as `visualization_msgs/msg/MarkerArray` messages, using a system default QoS policy. Each particle is depicted using an arrow. Each arrow is colored and scaled according to the weight of the corresponding state in the distribution. Large, bright red arrows represent the most likely states, whereas small, dim purple arrows represent the least likely states. The rest lie in between. It will only be published if subscribers are found.
+
 `pose`
 : Mean and covariance of the estimated pose distribution published as `geometry_msgs/msg/PoseWithCovarianceStamped` messages (assumed Gaussian), using a system default QoS policy.
 

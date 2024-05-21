@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -638,7 +638,7 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a04edda41f9d87d101fa8dd0c7f965743"><td class="memTemplParams" colspan="2">template&lt;typename T , std::size_t N&gt; </td></tr>
-<tr class="memitem:a04edda41f9d87d101fa8dd0c7f965743"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a04edda41f9d87d101fa8dd0c7f965743">RollingWindow</a> = <a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a>&lt; T, N, <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5aa38f8eba9e293be57492aa18397a225a">CircularArrayFeatureFlags::kRolloverOnWrite</a>|<a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5ad2b5d1942cd95644c792b766cebcdfbf">CircularArrayFeatureFlags::kExtrapolateOnRead</a>|<a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5a65589df174cbdb08dcee4d419d84912f">CircularArrayFeatureFlags::kLayoutReversal</a> &gt;</td></tr>
+<tr class="memitem:a04edda41f9d87d101fa8dd0c7f965743"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a04edda41f9d87d101fa8dd0c7f965743">RollingWindow</a> = <a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a>&lt; T, N, <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825caa38f8eba9e293be57492aa18397a225a">CircularArrayFeatureFlags::kRolloverOnWrite</a>|<a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825cad2b5d1942cd95644c792b766cebcdfbf">CircularArrayFeatureFlags::kExtrapolateOnRead</a>|<a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825ca65589df174cbdb08dcee4d419d84912f">CircularArrayFeatureFlags::kLayoutReversal</a> &gt;</td></tr>
 <tr class="memdesc:a04edda41f9d87d101fa8dd0c7f965743"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenient type alias for a circular array that behaves like a rolling window.  <a href="namespacebeluga.html#a04edda41f9d87d101fa8dd0c7f965743">More...</a><br /></td></tr>
 <tr class="separator:a04edda41f9d87d101fa8dd0c7f965743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51cbced5170bfe37a85ef0a454b4ade0"><td class="memTemplParams" colspan="2"><a id="a51cbced5170bfe37a85ef0a454b4ade0"></a>
@@ -747,13 +747,13 @@ using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nam
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a00fad2156828ca3126f9a8a94359a0c5"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5">CircularArrayFeatureFlags</a> : int { <b>kNone</b> = 0x00
-, <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5aa38f8eba9e293be57492aa18397a225a">kRolloverOnWrite</a> = 0x01
-, <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5ad2b5d1942cd95644c792b766cebcdfbf">kExtrapolateOnRead</a> = 0x02
-, <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5a65589df174cbdb08dcee4d419d84912f">kLayoutReversal</a> = 0x04
+<tr class="memitem:af4335f481449a38c85a391979273825c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a> : std::int8_t { <b>kNone</b> = 0x00
+, <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825caa38f8eba9e293be57492aa18397a225a">kRolloverOnWrite</a> = 0x01
+, <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825cad2b5d1942cd95644c792b766cebcdfbf">kExtrapolateOnRead</a> = 0x02
+, <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825ca65589df174cbdb08dcee4d419d84912f">kLayoutReversal</a> = 0x04
  }</td></tr>
-<tr class="memdesc:a00fad2156828ca3126f9a8a94359a0c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Feature flags for circular arrays.  <a href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5">More...</a><br /></td></tr>
-<tr class="separator:a00fad2156828ca3126f9a8a94359a0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:af4335f481449a38c85a391979273825c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Feature flags for circular arrays.  <a href="namespacebeluga.html#af4335f481449a38c85a391979273825c">More...</a><br /></td></tr>
+<tr class="separator:af4335f481449a38c85a391979273825c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -781,11 +781,11 @@ Functions</h2></td></tr>
 <tr class="memdesc:a992598bc475f99f59e5b32b06caf854b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes mean and covariance Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">More...</a><br /></td></tr>
 <tr class="separator:a992598bc475f99f59e5b32b06caf854b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a223b23ff16126a77c01a5c636bd4f51f"><td class="memItemLeft" align="right" valign="top"><a id="a223b23ff16126a77c01a5c636bd4f51f"></a>
-constexpr <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5">CircularArrayFeatureFlags</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a223b23ff16126a77c01a5c636bd4f51f">operator|</a> (<a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5">CircularArrayFeatureFlags</a> lflag, <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5">CircularArrayFeatureFlags</a> rflag)</td></tr>
+constexpr <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a223b23ff16126a77c01a5c636bd4f51f">operator|</a> (<a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a> lflag, <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a> rflag)</td></tr>
 <tr class="memdesc:a223b23ff16126a77c01a5c636bd4f51f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitwise OR operator overload to combine two feature flags in a single mask-like flag. <br /></td></tr>
 <tr class="separator:a223b23ff16126a77c01a5c636bd4f51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02968a6d27e0b7ea3b409d54471da135"><td class="memItemLeft" align="right" valign="top"><a id="a02968a6d27e0b7ea3b409d54471da135"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a02968a6d27e0b7ea3b409d54471da135">operator&amp;</a> (<a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5">CircularArrayFeatureFlags</a> mask, <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5">CircularArrayFeatureFlags</a> flag)</td></tr>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a02968a6d27e0b7ea3b409d54471da135">operator&amp;</a> (<a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a> mask, <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a> flag)</td></tr>
 <tr class="memdesc:a02968a6d27e0b7ea3b409d54471da135"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitwise AND operator overload to check of the presence of a feature <code>flag</code> in a feature <code>mask</code>. <br /></td></tr>
 <tr class="separator:a02968a6d27e0b7ea3b409d54471da135"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1c2126fbec7a8720dc2ea5d06c60dd0"><td class="memTemplParams" colspan="2">template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F&gt; </td></tr>
@@ -899,7 +899,7 @@ template&lt;class T , class TupleLike &gt; </td></tr>
 template&lt;typename T , std::size_t N&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespacebeluga.html#a04edda41f9d87d101fa8dd0c7f965743">beluga::RollingWindow</a> = typedef <a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a>&lt; T, N, <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5aa38f8eba9e293be57492aa18397a225a">CircularArrayFeatureFlags::kRolloverOnWrite</a> | <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5ad2b5d1942cd95644c792b766cebcdfbf">CircularArrayFeatureFlags::kExtrapolateOnRead</a> | <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5a65589df174cbdb08dcee4d419d84912f">CircularArrayFeatureFlags::kLayoutReversal</a>&gt;</td>
+          <td class="memname">using <a class="el" href="namespacebeluga.html#a04edda41f9d87d101fa8dd0c7f965743">beluga::RollingWindow</a> = typedef <a class="el" href="classbeluga_1_1CircularArray.html">CircularArray</a>&lt; T, N, <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825caa38f8eba9e293be57492aa18397a225a">CircularArrayFeatureFlags::kRolloverOnWrite</a> | <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825cad2b5d1942cd95644c792b766cebcdfbf">CircularArrayFeatureFlags::kExtrapolateOnRead</a> | <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825ca65589df174cbdb08dcee4d419d84912f">CircularArrayFeatureFlags::kLayoutReversal</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -910,8 +910,8 @@ template&lt;typename T , std::size_t N&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a00fad2156828ca3126f9a8a94359a0c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00fad2156828ca3126f9a8a94359a0c5">&#9670;&nbsp;</a></span>CircularArrayFeatureFlags</h2>
+<a id="af4335f481449a38c85a391979273825c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4335f481449a38c85a391979273825c">&#9670;&nbsp;</a></span>CircularArrayFeatureFlags</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -920,7 +920,7 @@ template&lt;typename T , std::size_t N&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespacebeluga.html#a00fad2156828ca3126f9a8a94359a0c5">beluga::CircularArrayFeatureFlags</a> : int</td>
+          <td class="memname">enum <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">beluga::CircularArrayFeatureFlags</a> : std::int8_t</td>
         </tr>
       </table>
   </td>
@@ -932,11 +932,11 @@ template&lt;typename T , std::size_t N&gt; </div>
 
 <p>Feature flags for circular arrays. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a00fad2156828ca3126f9a8a94359a0c5aa38f8eba9e293be57492aa18397a225a"></a>kRolloverOnWrite&#160;</td><td class="fielddoc"><p>! If enabled, older values in the array are overwritten by newer values if the array has reached its maximum size already. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af4335f481449a38c85a391979273825caa38f8eba9e293be57492aa18397a225a"></a>kRolloverOnWrite&#160;</td><td class="fielddoc"><p>! If enabled, older values in the array are overwritten by newer values if the array has reached its maximum size already. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a00fad2156828ca3126f9a8a94359a0c5ad2b5d1942cd95644c792b766cebcdfbf"></a>kExtrapolateOnRead&#160;</td><td class="fielddoc"><p>! If enabled, the back value is extrapolated for constant accesses up to the array maximum size. </p>
+<tr><td class="fieldname"><a id="af4335f481449a38c85a391979273825cad2b5d1942cd95644c792b766cebcdfbf"></a>kExtrapolateOnRead&#160;</td><td class="fielddoc"><p>! If enabled, the back value is extrapolated for constant accesses up to the array maximum size. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a00fad2156828ca3126f9a8a94359a0c5a65589df174cbdb08dcee4d419d84912f"></a>kLayoutReversal&#160;</td><td class="fielddoc"><p>! If enabled, the circular array memory layout is reversed so that values can be pushed to the front rather than the back of the array. </p>
+<tr><td class="fieldname"><a id="af4335f481449a38c85a391979273825ca65589df174cbdb08dcee4d419d84912f"></a>kLayoutReversal&#160;</td><td class="fielddoc"><p>! If enabled, the circular array memory layout is reversed so that values can be pushed to the front rather than the back of the array. </p>
 </td></tr>
 </table>
 
@@ -1643,7 +1643,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>

@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -455,16 +455,16 @@ $(function() {
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;ostream&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="sparse__value__grid_8hpp.html">beluga/sensor/data/sparse_value_grid.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;Eigen/Core&gt;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;Eigen/Core&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/zip.hpp&gt;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;Eigen/src/Core/util/Constants.h&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/zip.hpp&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;sophus/common.hpp&gt;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;sophus/se3.hpp&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;sophus/so2.hpp&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;sophus/common.hpp&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;sophus/se3.hpp&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;sophus/so2.hpp&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="sparse__value__grid_8hpp.html">beluga/sensor/data/sparse_value_grid.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
@@ -483,19 +483,19 @@ $(function() {
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> d1 * rhs;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  }</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="structbeluga_1_1NDTCell.html#ab79d263f8d7ccecf528e4286def46c31">   57</a></span>&#160;  <span class="keyword">friend</span> <span class="keyword">inline</span> std::ostream&amp; <a class="code" href="structbeluga_1_1NDTCell.html#ab79d263f8d7ccecf528e4286def46c31">operator&lt;&lt;</a>(std::ostream&amp; os, <span class="keyword">const</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a>&amp; cell) {</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="structbeluga_1_1NDTCell.html#ab79d263f8d7ccecf528e4286def46c31">   57</a></span>&#160;  <span class="keyword">friend</span> std::ostream&amp; <a class="code" href="structbeluga_1_1NDTCell.html#ab79d263f8d7ccecf528e4286def46c31">operator&lt;&lt;</a>(std::ostream&amp; os, <span class="keyword">const</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a>&amp; cell) {</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    os &lt;&lt; <span class="stringliteral">&quot;Mean \n&quot;</span> &lt;&lt; cell.<a class="code" href="structbeluga_1_1NDTCell.html#a7663fcc7ce67bc3a9ca38be64b061fcc">mean</a>.transpose() &lt;&lt; <span class="stringliteral">&quot; \n\nCovariance: \n&quot;</span> &lt;&lt; cell.<a class="code" href="structbeluga_1_1NDTCell.html#ab172e670fce9684ce7b6f646953d3648">covariance</a>;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> os;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  }</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="structbeluga_1_1NDTCell.html#a1aaa8bd0c50cfe192e58293476fb5faf">   63</a></span>&#160;  <span class="keyword">friend</span> <span class="keyword">inline</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a> <a class="code" href="structbeluga_1_1NDTCell.html#a1aaa8bd0c50cfe192e58293476fb5faf">operator*</a>(<span class="keyword">const</span> Sophus::SE2&lt;scalar_type&gt;&amp; tf, <span class="keyword">const</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a>&amp; ndt_cell) {</div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="structbeluga_1_1NDTCell.html#a1aaa8bd0c50cfe192e58293476fb5faf">   63</a></span>&#160;  <span class="keyword">friend</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a> <a class="code" href="structbeluga_1_1NDTCell.html#a1aaa8bd0c50cfe192e58293476fb5faf">operator*</a>(<span class="keyword">const</span> Sophus::SE2&lt;scalar_type&gt;&amp; tf, <span class="keyword">const</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a>&amp; ndt_cell) {</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    static_assert(<a class="code" href="structbeluga_1_1NDTCell.html#ad37c8473e56dda4f3d4cea641749c22c">num_dim</a> == 2, <span class="stringliteral">&quot;Cannot transform a non 2D NDT Cell with a SE2 transform.&quot;</span>);</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">const</span> Eigen::Vector2d uij = tf * ndt_cell.<a class="code" href="structbeluga_1_1NDTCell.html#a7663fcc7ce67bc3a9ca38be64b061fcc">mean</a>;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> Eigen::Matrix2Xd cov = tf.so2().matrix() * ndt_cell.<a class="code" href="structbeluga_1_1NDTCell.html#ab172e670fce9684ce7b6f646953d3648">covariance</a> * tf.so2().matrix().transpose();</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a>{uij, cov};</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  }</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="structbeluga_1_1NDTCell.html#aff879ce532159dc0686428b86e8e0218">   71</a></span>&#160;  <span class="keyword">friend</span> <span class="keyword">inline</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a> <a class="code" href="structbeluga_1_1NDTCell.html#aff879ce532159dc0686428b86e8e0218">operator*</a>(<span class="keyword">const</span> Sophus::SE3&lt;scalar_type&gt;&amp; tf, <span class="keyword">const</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a>&amp; ndt_cell) {</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="structbeluga_1_1NDTCell.html#aff879ce532159dc0686428b86e8e0218">   71</a></span>&#160;  <span class="keyword">friend</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a> <a class="code" href="structbeluga_1_1NDTCell.html#aff879ce532159dc0686428b86e8e0218">operator*</a>(<span class="keyword">const</span> Sophus::SE3&lt;scalar_type&gt;&amp; tf, <span class="keyword">const</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell</a>&amp; ndt_cell) {</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    static_assert(<a class="code" href="structbeluga_1_1NDTCell.html#ad37c8473e56dda4f3d4cea641749c22c">num_dim</a> == 3, <span class="stringliteral">&quot;Cannot transform a non 3D NDT Cell with a SE3 transform.&quot;</span>);</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> Eigen::Vector3d uij = tf * ndt_cell.<a class="code" href="structbeluga_1_1NDTCell.html#a7663fcc7ce67bc3a9ca38be64b061fcc">mean</a>;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> Eigen::Matrix3Xd cov = tf.so2().matrix() * ndt_cell.<a class="code" href="structbeluga_1_1NDTCell.html#ab172e670fce9684ce7b6f646953d3648">covariance</a> * tf.so2().matrix().transpose();</div>
@@ -580,7 +580,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>

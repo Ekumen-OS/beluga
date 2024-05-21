@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -514,7 +514,7 @@ $(function() {
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">  106</a></span>&#160;constexpr std::size_t <a class="code" href="tuple__traits_8hpp.html#ad6f44de7c762670dd07066c46c19dedc">tuple_index_helper</a>() noexcept {</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  constexpr <span class="keywordtype">bool</span> kMatches[<span class="keyword">sizeof</span>...(Args)] =  <span class="comment">// NOLINT(modernize-avoid-c-arrays)</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      {std::is_same&lt;T, std::decay_t&lt;Args&gt;&gt;::value...};</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      {std::is_same_v&lt;T, std::decay_t&lt;Args&gt;&gt;...};</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  std::size_t selected = kTupleIndexNotFound;</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; <span class="keyword">sizeof</span>...(Args); ++i) {</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">if</span> (kMatches[i]) {</div>
@@ -662,7 +662,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>

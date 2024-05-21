@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -452,63 +452,256 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_ROS_PARTICLE_CLOUD_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ROS_PARTICLE_CLOUD_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;range/v3/range/primitives.hpp&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/take_exactly.hpp&gt;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;sophus/se3.hpp&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;sophus/types.hpp&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/primitives_8hpp.html">beluga/primitives.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sample_8hpp.html">beluga/views/sample.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;beluga_ros/messages.hpp&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="tf2__sophus_8hpp.html">beluga_ros/tf2_sophus.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga__ros.html">beluga_ros</a> {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">class </span>Particles,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">class </span>Particle = ranges::range_value_t&lt;Particles&gt;,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">class </span>State = <span class="keyword">typename</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#aac55da7142ee7f5d5daec24943726cee">beluga::state_t&lt;Particle&gt;</a>,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">class </span>Scalar = <span class="keyword">typename</span> State::Scalar,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">typename</span> = std::enable_if_t&lt;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        std::is_same_v&lt;State, typename Sophus::SE2&lt;Scalar&gt;&gt; || std::is_same_v&lt;State, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;beluga_ros::msg::PoseArray&amp;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">   55</a></span>&#160;<a class="code" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a>(Particles&amp;&amp; particles, std::size_t size, beluga_ros::msg::PoseArray&amp; message) {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  static_assert(ranges::sized_range&lt;decltype(particles)&gt;);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  message.poses.clear();</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keywordflow">if</span> (ranges::size(particles) &gt; 0) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    message.poses.reserve(size);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; particle : particles | beluga::views::sample | ranges::views::take_exactly(size)) {</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      <span class="keyword">auto</span>&amp; pose = message.poses.emplace_back();</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      <a class="code" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">tf2::toMsg</a>(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a>(particle), pose);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordflow">return</span> message;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Particles, <span class="keyword">class</span> Message&gt;</div>
-<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a45839d53c0f449dd3ac78bbccf49bbcd">   77</a></span>&#160;Message&amp; <a class="code" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a>(Particles&amp;&amp; particles, Message&amp; message) {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  static_assert(ranges::sized_range&lt;decltype(particles)&gt;);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a>(particles, ranges::size(particles), message);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;range/v3/range/primitives.hpp&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/take_exactly.hpp&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;sophus/se3.hpp&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;sophus/types.hpp&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/spatial__hash_8hpp.html">beluga/algorithm/spatial_hash.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/primitives_8hpp.html">beluga/primitives.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sample_8hpp.html">beluga/views/sample.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/zip_8hpp.html">beluga/views/zip.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;beluga_ros/messages.hpp&gt;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="tf2__eigen_8hpp.html">beluga_ros/tf2_eigen.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="tf2__sophus_8hpp.html">beluga_ros/tf2_sophus.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga__ros.html">beluga_ros</a> {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="particle__cloud_8hpp.html#af6a134db705789a0442b0b60a032e46c">   52</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::ColorRGBA <a class="code" href="particle__cloud_8hpp.html#af6a134db705789a0442b0b60a032e46c">alphaHueToRGBA</a>(<span class="keywordtype">float</span> hue, <span class="keywordtype">float</span> alpha) {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  beluga_ros::msg::ColorRGBA message;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="comment">// https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB_alternative</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="comment">// specialized for V = S = 1 and using single precision floats because</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="comment">// that is what the color message expects.</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> kr = std::fmod(5.0F + hue / 60.0F, 6.0F);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> kg = std::fmod(3.0F + hue / 60.0F, 6.0F);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> kb = std::fmod(1.0F + hue / 60.0F, 6.0F);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  message.r = 1.0F - 1.0F * std::max(0.0F, std::min({kr, 4.0F - kr, 1.0F}));</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  message.g = 1.0F - 1.0F * std::max(0.0F, std::min({kg, 4.0F - kg, 1.0F}));</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  message.b = 1.0F - 1.0F * std::max(0.0F, std::min({kb, 4.0F - kb, 1.0F}));</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  message.a = alpha;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordflow">return</span> message;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1detail_1_1almost__equal__to.html">   69</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga__ros_1_1detail_1_1almost__equal__to.html">almost_equal_to</a>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Scalar&gt;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html">   73</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga__ros_1_1detail_1_1almost__equal__to.html">almost_equal_to</a>&lt;<a class="code" href="namespaceSophus.html">Sophus</a>::SE2&lt;Scalar&gt;&gt; {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a8d4fca0fd144e8a9a0994e62deb17e26">   79</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a8d4fca0fd144e8a9a0994e62deb17e26">almost_equal_to</a>(Scalar _linear_resolution, Scalar _angular_resolution)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      : linear_resolution(_linear_resolution), angular_resolution(_angular_resolution) {}</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}  <span class="comment">// namespace beluga_ros</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_ROS_PARTICLE_CLOUD_HPP</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a289e2d1da6536822962be6df7381660f">   83</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a289e2d1da6536822962be6df7381660f">operator()</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; a, <span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; b)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">using</span> std::abs, std::atan, std::tan;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> (abs(a.translation().x() - b.translation().x()) &lt; linear_resolution) &amp;&amp;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;           (abs(a.translation().y() - b.translation().y()) &lt; linear_resolution) &amp;&amp;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;           (abs(atan(tan(a.so2().log() - b.so2().log()))) &lt; angular_resolution);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ad38de783971fa25a7beae3ee994f2c5f">   90</a></span>&#160;  <span class="keyword">const</span> Scalar <a class="code" href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ad38de783971fa25a7beae3ee994f2c5f">linear_resolution</a>;   </div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a5e0d30c01993e1b66d5427ab5741e776">   91</a></span>&#160;  <span class="keyword">const</span> Scalar <a class="code" href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a5e0d30c01993e1b66d5427ab5741e776">angular_resolution</a>;  </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">class </span>Particles,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">class </span>Particle = ranges::range_value_t&lt;Particles&gt;,</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">class </span>State = <span class="keyword">typename</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#aac55da7142ee7f5d5daec24943726cee">beluga::state_t&lt;Particle&gt;</a>,</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keyword">class </span>Scalar = <span class="keyword">typename</span> State::Scalar,</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">typename</span> = std::enable_if_t&lt;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        std::is_same_v&lt;State, typename Sophus::SE2&lt;Scalar&gt;&gt; || std::is_same_v&lt;State, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;beluga_ros::msg::PoseArray&amp;</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">  111</a></span>&#160;<a class="code" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a>(Particles&amp;&amp; particles, std::size_t size, beluga_ros::msg::PoseArray&amp; message) {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  static_assert(ranges::sized_range&lt;decltype(particles)&gt;);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  message.poses.clear();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keywordflow">if</span> (ranges::size(particles) &gt; 0) {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    message.poses.reserve(size);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; particle : particles | beluga::views::sample | ranges::views::take_exactly(size)) {</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      <span class="keyword">auto</span>&amp; pose = message.poses.emplace_back();</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;      <a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a>(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a>(particle), pose);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="keywordflow">return</span> message;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Particles, <span class="keyword">class</span> Message&gt;</div>
+<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a45839d53c0f449dd3ac78bbccf49bbcd">  133</a></span>&#160;Message&amp; <a class="code" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a>(Particles&amp;&amp; particles, Message&amp; message) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;  static_assert(ranges::sized_range&lt;decltype(particles)&gt;);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a>(std::forward&lt;Particles&gt;(particles), ranges::size(particles), message);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keyword">class </span>Particles,</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keyword">class </span>Particle = ranges::range_value_t&lt;Particles&gt;,</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keyword">class </span>State = <span class="keyword">typename</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#aac55da7142ee7f5d5daec24943726cee">beluga::state_t&lt;Particle&gt;</a>,</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">class </span><a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">Weight</a> = <span class="keyword">typename</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a507b3341999e969684415b2bff7fad52">beluga::weight_t&lt;Particle&gt;</a>,</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keyword">class </span>Scalar = <span class="keyword">typename</span> State::Scalar,</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keyword">typename</span> = std::enable_if_t&lt;std::is_same_v&lt;State, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt;</div>
+<div class="line"><a name="l00153"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a826a7340292db6f5231a361ca63c4af7">  153</a></span>&#160;beluga_ros::msg::MarkerArray&amp; <a class="code" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a>(</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    Particles&amp;&amp; particles,</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    Scalar linear_resolution,</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    Scalar angular_resolution,</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    beluga_ros::msg::MarkerArray&amp; message) {</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;  <span class="comment">// Particle weights from the filter may or may not be representative of the</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;  <span class="comment">// true distribution. If we resampled, they are not, and there will be multiple copies</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;  <span class="comment">// of the most likely candidates, all with unit weight. In this case the number of copies</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;  <span class="comment">// is a proxy for the prob density at each candidate. If we did not resample before updating</span></div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  <span class="comment">// the estimation and publishing this message (which can happen if the resample interval</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;  <span class="comment">// is set to something other than 1), then all particles are expected to be different</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;  <span class="comment">// and their weights are proportional to the prob density at each candidate.</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  <span class="comment">//</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  <span class="comment">// Only the combination of both the state distribution and the candidate weights together</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;  <span class="comment">// provide information about the probability density at each candidate.</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <span class="keyword">auto</span> max_bin_weight = <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">Weight</a>{1e-3};</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  <span class="keyword">auto</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/particles_8hpp.html#a0ef04e7d6ee3b982c96629ca0c8ab670">states</a> = beluga::views::states(particles);</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  <span class="keyword">auto</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/particles_8hpp.html#a77f6a442f88b44e322efa2f32eb184b5">weights</a> = beluga::views::weights(particles);</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  <span class="keyword">using</span> StateHistogram = std::unordered_map&lt;State, Weight, beluga::spatial_hash&lt;State&gt;, <a class="code" href="structbeluga__ros_1_1detail_1_1almost__equal__to.html">detail::almost_equal_to&lt;State&gt;</a>&gt;;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;  <span class="keyword">auto</span> histogram = StateHistogram{</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;      10U, <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1spatial__hash.html">beluga::spatial_hash&lt;State&gt;</a>{linear_resolution, angular_resolution},</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;      <a class="code" href="structbeluga__ros_1_1detail_1_1almost__equal__to.html">detail::almost_equal_to&lt;State&gt;</a>{linear_resolution, angular_resolution}};</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>, <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a>] : beluga::views::zip(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/particles_8hpp.html#a0ef04e7d6ee3b982c96629ca0c8ab670">states</a>, <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/particles_8hpp.html#a77f6a442f88b44e322efa2f32eb184b5">weights</a>)) {</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keyword">auto</span>&amp; bin_weight = histogram[<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>];</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    bin_weight += <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a>;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordflow">if</span> (bin_weight &gt; max_bin_weight) {</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;      max_bin_weight = bin_weight;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    }</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;  }</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;  message.markers.clear();</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;  <span class="keywordflow">if</span> (histogram.empty()) {</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordflow">return</span> message;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;  }</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;  <span class="comment">// There are no arrow list markers yet (https://github.com/ros2/rviz/pull/972)</span></div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;  <span class="comment">// so we replicate them using a line list for arrow bodies and a triangle list</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;  <span class="comment">// for arrow heads.</span></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;  constexpr <span class="keyword">auto</span> kArrowBodyLength = Scalar{0.5};</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;  constexpr <span class="keyword">auto</span> kArrowHeadLength = Scalar{0.1};</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;  constexpr <span class="keyword">auto</span> kArrowHeadWidth = kArrowHeadLength / Scalar{5.0};</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;  constexpr <span class="keyword">auto</span> kArrowLength = kArrowBodyLength + kArrowHeadLength;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;  <span class="keyword">using</span> Translation = <span class="keyword">typename</span> State::TranslationType;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> arrow_body_base = Translation::Zero();</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> arrow_head_tip = kArrowLength * Translation::UnitX();</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> arrow_head_base = kArrowBodyLength * Translation::UnitX();</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> arrow_head_right_corner =</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;      kArrowBodyLength * Translation::UnitX() - (kArrowHeadWidth / Scalar{2.0}) * Translation::UnitY();</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> arrow_head_left_corner =</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;      kArrowBodyLength * Translation::UnitX() + (kArrowHeadWidth / Scalar{2.0}) * Translation::UnitY();</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;  message.markers.reserve(2);</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;  <span class="keyword">auto</span>&amp; arrow_bodies = message.markers.emplace_back();</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  arrow_bodies.id = 0;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;  arrow_bodies.ns = <span class="stringliteral">&quot;bodies&quot;</span>;</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;  arrow_bodies.color.a = 1.0;</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  arrow_bodies.pose.orientation.w = 1.0;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;  arrow_bodies.lifetime.sec = 1;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;  arrow_bodies.type = beluga_ros::msg::Marker::LINE_LIST;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;  arrow_bodies.action = beluga_ros::msg::Marker::ADD;</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;  arrow_bodies.points.reserve(histogram.size() * 2);  <span class="comment">// 2 vertices per arrow body</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  arrow_bodies.colors.reserve(histogram.size() * 2);</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  <span class="keyword">auto</span>&amp; arrow_heads = message.markers.emplace_back();</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;  arrow_heads.id = 1;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  arrow_heads.ns = <span class="stringliteral">&quot;heads&quot;</span>;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  arrow_heads.scale.x = 1.0;</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;  arrow_heads.scale.y = 1.0;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;  arrow_heads.scale.z = 1.0;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;  arrow_heads.color.a = 1.0;</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;  arrow_heads.pose.orientation.w = 1.0;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;  arrow_heads.lifetime.sec = 1;</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;  arrow_heads.type = beluga_ros::msg::Marker::TRIANGLE_LIST;</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;  arrow_heads.action = beluga_ros::msg::Marker::ADD;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;  arrow_heads.points.reserve(histogram.size() * 3);  <span class="comment">// 3 vertices per arrow head</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;  arrow_heads.colors.reserve(histogram.size() * 3);</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;  <span class="keyword">auto</span> min_scale_factor = <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">Weight</a>{1.0};</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>, <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a>] : histogram) {</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <span class="comment">// fix markers scale ratio to ensure they can still be seen</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keyword">using</span> std::max;</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> scale_factor = max(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a> / max_bin_weight, 1e-1);  <span class="comment">// or 1:10</span></div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <span class="keywordflow">if</span> (scale_factor &lt; min_scale_factor) {</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      min_scale_factor = scale_factor;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    }</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="comment">// use an inverted rainbow scale of decreasing opacity: bright red</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="comment">// for the most likely state and dim purple for the least likely one</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> vertex_color = detail::alphaHueToRGBA(</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>((1.0 - scale_factor) * 270.0), <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(0.25 + 0.75 * scale_factor));</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160; </div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="comment">// linearly scale arrow sizes using particle weights too</span></div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    arrow_bodies.points.push_back(<a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a>(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a> * (scale_factor * arrow_body_base)));</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    arrow_bodies.points.push_back(<a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a>(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a> * (scale_factor * arrow_head_base)));</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    arrow_bodies.colors.insert(arrow_bodies.colors.end(), 2, vertex_color);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    arrow_heads.points.push_back(<a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a>(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a> * (scale_factor * arrow_head_left_corner)));</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    arrow_heads.points.push_back(<a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a>(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a> * (scale_factor * arrow_head_right_corner)));</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    arrow_heads.points.push_back(<a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a>(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a> * (scale_factor * arrow_head_tip)));</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    arrow_heads.colors.insert(arrow_heads.colors.end(), 3, vertex_color);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  }</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160; </div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;  arrow_bodies.scale.x = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(min_scale_factor * kArrowHeadWidth) * 0.8;</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;  <span class="keywordflow">return</span> message;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;}</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="keyword">class </span>Particles,</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keyword">class </span>Particle = ranges::range_value_t&lt;Particles&gt;,</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keyword">class </span>State = <span class="keyword">typename</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#aac55da7142ee7f5d5daec24943726cee">beluga::state_t&lt;Particle&gt;</a>,</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="keyword">class </span>Scalar = <span class="keyword">typename</span> State::Scalar&gt;</div>
+<div class="line"><a name="l00274"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#aa3a6b3a74143cfc2852e53ce015569b7">  274</a></span>&#160;beluga_ros::msg::MarkerArray&amp; <a class="code" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a>(Particles&amp;&amp; particles, beluga_ros::msg::MarkerArray&amp; message) {</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  constexpr <span class="keyword">auto</span> kDefaultLinearResolution = Scalar{1e-3};   <span class="comment">// ie. 1 mm</span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  constexpr <span class="keyword">auto</span> kDefaultAngularResolution = Scalar{1e-3};  <span class="comment">// ie. 0.05 degrees</span></div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a>(</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;      std::forward&lt;Particles&gt;(particles), kDefaultLinearResolution, kDefaultAngularResolution, message);</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;}</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;}  <span class="comment">// namespace beluga_ros</span></div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_ROS_PARTICLE_CLOUD_HPP</span></div>
+<div class="ttc" id="anamespaceSophus_html"><div class="ttname"><a href="namespaceSophus.html">Sophus</a></div><div class="ttdoc">Sophus namespace extension for message conversion function overload resolution (ADL enabled).</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:251</div></div>
 <div class="ttc" id="anamespacebeluga__ros_html"><div class="ttname"><a href="namespacebeluga__ros.html">beluga_ros</a></div><div class="ttdoc">The main Beluga ROS namespace.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:33</div></div>
-<div class="ttc" id="anamespacebeluga__ros_html_a1031238cbda7b7b12efe3a7e8b0508c9"><div class="ttname"><a href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">beluga_ros::assign_particle_cloud</a></div><div class="ttdeci">beluga_ros::msg::PoseArray &amp; assign_particle_cloud(Particles &amp;&amp;particles, std::size_t size, beluga_ros::msg::PoseArray &amp;message)</div><div class="ttdoc">Assign a pose distribution to a particle cloud message.</div><div class="ttdef"><b>Definition:</b> particle_cloud.hpp:55</div></div>
+<div class="ttc" id="anamespacebeluga__ros_html_a1031238cbda7b7b12efe3a7e8b0508c9"><div class="ttname"><a href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">beluga_ros::assign_particle_cloud</a></div><div class="ttdeci">beluga_ros::msg::PoseArray &amp; assign_particle_cloud(Particles &amp;&amp;particles, std::size_t size, beluga_ros::msg::PoseArray &amp;message)</div><div class="ttdoc">Assign a pose distribution to a particle cloud message.</div><div class="ttdef"><b>Definition:</b> particle_cloud.hpp:111</div></div>
+<div class="ttc" id="anamespacebeluga_html_a507b3341999e969684415b2bff7fad52"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a507b3341999e969684415b2bff7fad52">beluga::weight_t</a></div><div class="ttdeci">typename particle_traits&lt; T &gt;::weight_type weight_t</div></div>
 <div class="ttc" id="anamespacebeluga_html_a706431bba3d6cfb1ee0690221f3a9af9"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a></div><div class="ttdeci">constexpr state_detail::state_fn state</div></div>
+<div class="ttc" id="anamespacebeluga_html_a7804cf035e3e2c218773a71ee9f3b0de"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">Weight</a></div><div class="ttdeci">Numeric&lt; double, struct WeightTag &gt; Weight</div></div>
+<div class="ttc" id="anamespacebeluga_html_a80abdff6d85df8ef392ca252ed8588c1"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a></div><div class="ttdeci">constexpr weight_detail::weight_fn weight</div></div>
 <div class="ttc" id="anamespacebeluga_html_aac55da7142ee7f5d5daec24943726cee"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#aac55da7142ee7f5d5daec24943726cee">beluga::state_t</a></div><div class="ttdeci">typename particle_traits&lt; T &gt;::state_type state_t</div></div>
-<div class="ttc" id="anamespacetf2_html_a0a74cb89468798ba6738c62f3fdca4cb"><div class="ttname"><a href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">tf2::toMsg</a></div><div class="ttdeci">beluga_ros::msg::Pose &amp; toMsg(const Sophus::SE2&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</div><div class="ttdoc">Converts a Sophus SE2 type to a Pose message.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:56</div></div>
+<div class="ttc" id="anamespacetf2_html_a566dca2143ff3a8cddb13ee0fa9cfc23"><div class="ttname"><a href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a></div><div class="ttdeci">beluga_ros::msg::Point toMsg(const Eigen::Matrix&lt; Scalar, 2, 1 &gt; &amp;in)</div><div class="ttdoc">Converts an Eigen Vector2 type to a Point message.</div><div class="ttdef"><b>Definition:</b> tf2_eigen.hpp:46</div></div>
+<div class="ttc" id="aparticle__cloud_8hpp_html_af6a134db705789a0442b0b60a032e46c"><div class="ttname"><a href="particle__cloud_8hpp.html#af6a134db705789a0442b0b60a032e46c">beluga_ros::detail::alphaHueToRGBA</a></div><div class="ttdeci">beluga_ros::msg::ColorRGBA alphaHueToRGBA(float hue, float alpha)</div><div class="ttdoc">Make an RGBA color based on hue alone.</div><div class="ttdef"><b>Definition:</b> particle_cloud.hpp:52</div></div>
+<div class="ttc" id="aparticles_8hpp_html_a0ef04e7d6ee3b982c96629ca0c8ab670"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/particles_8hpp.html#a0ef04e7d6ee3b982c96629ca0c8ab670">states</a></div><div class="ttdeci">constexpr auto states</div></div>
+<div class="ttc" id="aparticles_8hpp_html_a77f6a442f88b44e322efa2f32eb184b5"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/particles_8hpp.html#a77f6a442f88b44e322efa2f32eb184b5">weights</a></div><div class="ttdeci">constexpr auto weights</div></div>
 <div class="ttc" id="aprimitives_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/primitives_8hpp.html">primitives.hpp</a></div></div>
 <div class="ttc" id="asample_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sample_8hpp.html">sample.hpp</a></div></div>
+<div class="ttc" id="aspatial__hash_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/spatial__hash_8hpp.html">spatial_hash.hpp</a></div></div>
+<div class="ttc" id="astructbeluga_1_1spatial__hash_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1spatial__hash.html">beluga::spatial_hash</a></div></div>
+<div class="ttc" id="astructbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4_html_a289e2d1da6536822962be6df7381660f"><div class="ttname"><a href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a289e2d1da6536822962be6df7381660f">beluga_ros::detail::almost_equal_to&lt; Sophus::SE2&lt; Scalar &gt; &gt;::operator()</a></div><div class="ttdeci">bool operator()(const Sophus::SE2&lt; Scalar &gt; &amp;a, const Sophus::SE2&lt; Scalar &gt; &amp;b) const</div><div class="ttdoc">Compares a and b for near equality.</div><div class="ttdef"><b>Definition:</b> particle_cloud.hpp:83</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4_html_a5e0d30c01993e1b66d5427ab5741e776"><div class="ttname"><a href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a5e0d30c01993e1b66d5427ab5741e776">beluga_ros::detail::almost_equal_to&lt; Sophus::SE2&lt; Scalar &gt; &gt;::angular_resolution</a></div><div class="ttdeci">const Scalar angular_resolution</div><div class="ttdoc">Resolution for rotational coordinates, in radians.</div><div class="ttdef"><b>Definition:</b> particle_cloud.hpp:91</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4_html_a8d4fca0fd144e8a9a0994e62deb17e26"><div class="ttname"><a href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a8d4fca0fd144e8a9a0994e62deb17e26">beluga_ros::detail::almost_equal_to&lt; Sophus::SE2&lt; Scalar &gt; &gt;::almost_equal_to</a></div><div class="ttdeci">almost_equal_to(Scalar _linear_resolution, Scalar _angular_resolution)</div><div class="ttdoc">Constructs near equality functor.</div><div class="ttdef"><b>Definition:</b> particle_cloud.hpp:79</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4_html_ad38de783971fa25a7beae3ee994f2c5f"><div class="ttname"><a href="structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ad38de783971fa25a7beae3ee994f2c5f">beluga_ros::detail::almost_equal_to&lt; Sophus::SE2&lt; Scalar &gt; &gt;::linear_resolution</a></div><div class="ttdeci">const Scalar linear_resolution</div><div class="ttdoc">Resolution for translational coordinates, in meters.</div><div class="ttdef"><b>Definition:</b> particle_cloud.hpp:90</div></div>
+<div class="ttc" id="astructbeluga__ros_1_1detail_1_1almost__equal__to_html"><div class="ttname"><a href="structbeluga__ros_1_1detail_1_1almost__equal__to.html">beluga_ros::detail::almost_equal_to</a></div><div class="ttdoc">std::equal_to equivalent for near equality operations.</div><div class="ttdef"><b>Definition:</b> particle_cloud.hpp:69</div></div>
+<div class="ttc" id="atf2__eigen_8hpp_html"><div class="ttname"><a href="tf2__eigen_8hpp.html">tf2_eigen.hpp</a></div><div class="ttdoc">Message conversion API overloads for Eigen types.</div></div>
 <div class="ttc" id="atf2__sophus_8hpp_html"><div class="ttname"><a href="tf2__sophus_8hpp.html">tf2_sophus.hpp</a></div><div class="ttdoc">Message conversion API overloads for Sophus types.</div></div>
+<div class="ttc" id="azip_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/zip_8hpp.html">zip.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -567,7 +760,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>

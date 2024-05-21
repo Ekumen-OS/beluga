@@ -1,5 +1,5 @@
 <map id="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp" name="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp">
-<area shape="rect" id="node1" title="Message conversion API overloads for Sophus types." alt="" coords="123,5,323,61"/>
-<area shape="rect" id="node2" href="$beluga__ros_8hpp.html" title="Includes all the Beluga ROS API." alt="" coords="5,109,205,165"/>
-<area shape="rect" id="node3" href="$particle__cloud_8hpp.html" title="Utilities for particle cloud I/O over ROS interfaces." alt="" coords="230,109,450,165"/>
+<area shape="rect" id="node1" title="Message conversion API overloads for Sophus types." alt="" coords="5,5,205,61"/>
+<area shape="rect" id="node2" href="$beluga__ros_8hpp.html" title="Includes all the Beluga ROS API." alt="" coords="5,213,205,269"/>
+<area shape="rect" id="node3" href="$particle__cloud_8hpp.html" title="Utilities for particle cloud I/O over ROS interfaces." alt="" coords="70,109,290,165"/>
 </map>

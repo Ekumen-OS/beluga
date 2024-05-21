@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;"/>
   </head>
   
   
@@ -465,17 +465,17 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#error BELUGA_ROS_VERSION is not defined or invalid</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;beluga_ros/messages.hpp&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;sophus/se3.hpp&gt;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;sophus/types.hpp&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;sophus/se3.hpp&gt;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;sophus/types.hpp&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;beluga_ros/messages.hpp&gt;</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="namespacetf2.html">   43</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetf2.html">tf2</a> {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetf2.html">tf2</a> {</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">   56</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Pose&amp; <a class="code" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">toMsg</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; in, beluga_ros::msg::Pose&amp; out) {</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">   56</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Pose&amp; <a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">toMsg</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; in, beluga_ros::msg::Pose&amp; out) {</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">double</span> theta = in.so2().log();</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  out.position.x = in.translation().x();</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  out.position.y = in.translation().y();</div>
@@ -489,7 +489,7 @@ $(function() {
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="namespacetf2.html#a4511f028283bafd60e8fe142ca2bee2e">   79</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Pose&amp; <a class="code" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">toMsg</a>(<span class="keyword">const</span> Sophus::SE3&lt;Scalar&gt;&amp; in, beluga_ros::msg::Pose&amp; out) {</div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="namespacetf2.html#a4511f028283bafd60e8fe142ca2bee2e">   79</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Pose&amp; <a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">toMsg</a>(<span class="keyword">const</span> Sophus::SE3&lt;Scalar&gt;&amp; in, beluga_ros::msg::Pose&amp; out) {</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  out.position.x = in.translation().x();</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  out.position.y = in.translation().y();</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  out.position.z = in.translation().z();</div>
@@ -502,7 +502,7 @@ $(function() {
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="namespacetf2.html#a4165e54c2868393e7d80cc82809ce366">   98</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Transform <a class="code" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">toMsg</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; in) {</div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="namespacetf2.html#a4165e54c2868393e7d80cc82809ce366">   98</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Transform <a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">toMsg</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; in) {</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  <span class="keyword">auto</span> msg = beluga_ros::msg::Transform{};</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">double</span> theta = in.so2().log();</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  msg.translation.x = in.translation().x();</div>
@@ -517,7 +517,7 @@ $(function() {
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="namespacetf2.html#a0a48396a86427eec876d6d2959411ffa">  119</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Transform <a class="code" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">toMsg</a>(<span class="keyword">const</span> Sophus::SE3&lt;Scalar&gt;&amp; in) {</div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="namespacetf2.html#a0a48396a86427eec876d6d2959411ffa">  119</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Transform <a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">toMsg</a>(<span class="keyword">const</span> Sophus::SE3&lt;Scalar&gt;&amp; in) {</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <span class="keyword">auto</span> msg = beluga_ros::msg::Transform{};</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  msg.translation.x = in.translation().x();</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  msg.translation.y = in.translation().y();</div>
@@ -618,12 +618,12 @@ $(function() {
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
 <div class="line"><a name="l00255"></a><span class="lineno"><a class="line" href="namespaceSophus.html#a3a8cd23b674364e3312d842e8ecc9c15">  255</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Transform <a class="code" href="namespaceSophus.html#a3a8cd23b674364e3312d842e8ecc9c15">toMsg</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; pose) {</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">tf2::toMsg</a>(pose);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a>(pose);</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;}</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
 <div class="line"><a name="l00261"></a><span class="lineno"><a class="line" href="namespaceSophus.html#a736860469ddeff215b25af5d506a0071">  261</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Transform <a class="code" href="namespaceSophus.html#a3a8cd23b674364e3312d842e8ecc9c15">toMsg</a>(<span class="keyword">const</span> Sophus::SE3&lt;Scalar&gt;&amp; in) {</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">tf2::toMsg</a>(in);</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a>(in);</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;}</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
@@ -652,8 +652,8 @@ $(function() {
 <div class="ttc" id="anamespaceSophus_html"><div class="ttname"><a href="namespaceSophus.html">Sophus</a></div><div class="ttdoc">Sophus namespace extension for message conversion function overload resolution (ADL enabled).</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:251</div></div>
 <div class="ttc" id="anamespaceSophus_html_a3a8cd23b674364e3312d842e8ecc9c15"><div class="ttname"><a href="namespaceSophus.html#a3a8cd23b674364e3312d842e8ecc9c15">Sophus::toMsg</a></div><div class="ttdeci">beluga_ros::msg::Transform toMsg(const Sophus::SE2&lt; Scalar &gt; &amp;pose)</div><div class="ttdoc">Converts an SE2 pose to a geometry_msgs/Transform message.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:255</div></div>
 <div class="ttc" id="anamespaceSophus_html_a7c54d773fcaa635dc4c00ff079521c69"><div class="ttname"><a href="namespaceSophus.html#a7c54d773fcaa635dc4c00ff079521c69">Sophus::fromMsg</a></div><div class="ttdeci">void fromMsg(const beluga_ros::msg::Transform &amp;message, Sophus::SE2&lt; Scalar &gt; &amp;pose)</div><div class="ttdoc">Extracts an SE2 pose from a geometry_msgs/Transform message.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:267</div></div>
-<div class="ttc" id="anamespacetf2_html"><div class="ttname"><a href="namespacetf2.html">tf2</a></div><div class="ttdoc">tf2 namespace extension for message conversion overload resolution.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:43</div></div>
-<div class="ttc" id="anamespacetf2_html_a0a74cb89468798ba6738c62f3fdca4cb"><div class="ttname"><a href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">tf2::toMsg</a></div><div class="ttdeci">beluga_ros::msg::Pose &amp; toMsg(const Sophus::SE2&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</div><div class="ttdoc">Converts a Sophus SE2 type to a Pose message.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:56</div></div>
+<div class="ttc" id="anamespacetf2_html"><div class="ttname"><a href="namespacetf2.html">tf2</a></div><div class="ttdoc">tf2 namespace extension for message conversion overload resolution.</div><div class="ttdef"><b>Definition:</b> tf2_eigen.hpp:38</div></div>
+<div class="ttc" id="anamespacetf2_html_a566dca2143ff3a8cddb13ee0fa9cfc23"><div class="ttname"><a href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a></div><div class="ttdeci">beluga_ros::msg::Point toMsg(const Eigen::Matrix&lt; Scalar, 2, 1 &gt; &amp;in)</div><div class="ttdoc">Converts an Eigen Vector2 type to a Point message.</div><div class="ttdef"><b>Definition:</b> tf2_eigen.hpp:46</div></div>
 <div class="ttc" id="anamespacetf2_html_ab5b19c7fe5425ac099422ea142b7b459"><div class="ttname"><a href="namespacetf2.html#ab5b19c7fe5425ac099422ea142b7b459">tf2::fromMsg</a></div><div class="ttdeci">void fromMsg(const beluga_ros::msg::Transform &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</div><div class="ttdoc">Converts a Transform message type to a Sophus SE2 type.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:139</div></div>
 <div class="ttc" id="anamespacetf2_html_adb1233c4d542bb7a5e8a1497b37813d0"><div class="ttname"><a href="namespacetf2.html#adb1233c4d542bb7a5e8a1497b37813d0">tf2::covarianceRowMajorToEigen</a></div><div class="ttdeci">Sophus::Matrix3&lt; Scalar &gt; &amp; covarianceRowMajorToEigen(const Array&lt; Scalar, 36 &gt; &amp;in, Sophus::Matrix3&lt; Scalar &gt; &amp;out)</div><div class="ttdoc">Converts a 6x6 row-major array to an Eigen 3x3 covariance matrix.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:235</div></div>
 <div class="ttc" id="anamespacetf2_html_afce89eb3573108e41ac4c57448e2fab5"><div class="ttname"><a href="namespacetf2.html#afce89eb3573108e41ac4c57448e2fab5">tf2::covarianceEigenToRowMajor</a></div><div class="ttdeci">Array&lt; Scalar, 36 &gt; &amp; covarianceEigenToRowMajor(const Sophus::Matrix3&lt; Scalar &gt; &amp;in, Array&lt; Scalar, 36 &gt; &amp;out)</div><div class="ttdoc">Converts a Sophus (ie. Eigen) 3x3 covariance matrix to a 6x6 row-major array.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:214</div></div>
@@ -715,7 +715,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon May 20 13:22:10 2024 -0300, bda970b&#39;.
+  Last updated on &#39;Tue May 21 11:49:22 2024 -0300, 630f903&#39;.
   <br/>
 </p>
   </div>
