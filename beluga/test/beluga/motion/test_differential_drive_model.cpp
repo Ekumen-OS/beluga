@@ -13,14 +13,25 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/motion.hpp>
-#include <beluga/testing.hpp>
+#include <cmath>
+#include <functional>
+#include <random>
+#include <tuple>
+#include <utility>
 
-#include <ciabatta/ciabatta.hpp>
+#include <Eigen/Core>
+#include <sophus/common.hpp>
+#include <sophus/se2.hpp>
+#include <sophus/so2.hpp>
+
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
+
+#include "beluga/motion/differential_drive_model.hpp"
+#include "beluga/testing/sophus_matchers.hpp"
 
 namespace {
 

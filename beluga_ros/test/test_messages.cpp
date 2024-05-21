@@ -13,7 +13,8 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
-#include <beluga_ros/messages.hpp>
+
+#include "beluga_ros/messages.hpp"
 
 namespace {
 

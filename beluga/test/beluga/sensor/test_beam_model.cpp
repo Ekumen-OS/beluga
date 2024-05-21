@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "beluga/algorithm/raycasting.hpp"
-#include "beluga/sensor.hpp"
+#include <utility>
+#include <vector>
 
+#include "beluga/sensor/beam_model.hpp"
 #include "beluga/test/static_occupancy_grid.hpp"
-
-#include "ciabatta/ciabatta.hpp"
 
 namespace beluga {
 

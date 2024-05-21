@@ -13,8 +13,13 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/testing/sophus_matchers.hpp>
+#include <Eigen/Core>
+#include <sophus/se2.hpp>
+#include <sophus/so2.hpp>
+
+#include "beluga/testing/sophus_matchers.hpp"
 
 namespace {
 

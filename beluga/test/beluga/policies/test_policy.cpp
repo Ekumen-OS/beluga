@@ -13,8 +13,11 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/policies/policy.hpp>
+#include <functional>
+
+#include "beluga/policies/policy.hpp"
 
 namespace {
 

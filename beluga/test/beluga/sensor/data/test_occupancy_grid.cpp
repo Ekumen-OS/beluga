@@ -13,18 +13,17 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <cstdint>
-#include <optional>
-#include <utility>
+#include <cstddef>
 #include <vector>
-
-#include "beluga/test/static_occupancy_grid.hpp"
 
 #include <range/v3/range/conversion.hpp>
 
-#include <Eigen/Core>
+#include <sophus/common.hpp>
 #include <sophus/se2.hpp>
+
+#include "beluga/test/static_occupancy_grid.hpp"
 
 namespace {
 

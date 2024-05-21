@@ -14,13 +14,22 @@
 
 #include <benchmark/benchmark.h>
 
-#include <beluga/algorithm/spatial_hash.hpp>
-#include <beluga/containers/tuple_vector.hpp>
-#include <beluga/type_traits.hpp>
-#include <beluga/views/particles.hpp>
-#include <beluga/views/sample.hpp>
-#include <beluga/views/take_while_kld.hpp>
-#include <range/v3/view.hpp>
+#include <array>
+#include <cstddef>
+#include <tuple>
+#include <type_traits>
+
+#include <range/v3/algorithm/copy.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/primitives.hpp>
+#include <range/v3/view/subrange.hpp>
+#include <range/v3/view/take_exactly.hpp>
+
+#include "beluga/algorithm/spatial_hash.hpp"
+#include "beluga/containers/tuple_vector.hpp"
+#include "beluga/primitives.hpp"
+#include "beluga/views/sample.hpp"
+#include "beluga/views/take_while_kld.hpp"
 
 namespace {
 
@@ -88,10 +97,10 @@ void BM_AdaptiveResample(benchmark::State& state) {
     }
   }
 
-  std::size_t min_samples = 0;
-  std::size_t max_samples = container_size;
-  double kld_epsilon = 0.05;
-  double kld_z = 3.;
+  const std::size_t min_samples = 0;
+  const std::size_t max_samples = container_size;
+  const double kld_epsilon = 0.05;
+  const double kld_z = 3.;
 
   for (auto _ : state) {
     auto samples =

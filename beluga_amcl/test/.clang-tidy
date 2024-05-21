@@ -1,0 +1,7 @@
+---
+# Configure clang-tidy for this project tests.
+
+InheritParentConfig: true
+
+Checks: >
+  -bugprone-unchecked-optional-access

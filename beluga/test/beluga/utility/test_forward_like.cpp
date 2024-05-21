@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/utility/forward_like.hpp>
+#include <type_traits>
+
+#include "beluga/utility/forward_like.hpp"
 
 namespace {
 

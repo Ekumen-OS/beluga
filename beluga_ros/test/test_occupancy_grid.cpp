@@ -13,11 +13,18 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
-#include <beluga_ros/occupancy_grid.hpp>
+
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <vector>
 
 #if BELUGA_ROS_VERSION == 1
 #include <boost/smart_ptr.hpp>
 #endif
+
+#include "beluga_ros/messages.hpp"
+#include "beluga_ros/occupancy_grid.hpp"
 
 namespace {
 

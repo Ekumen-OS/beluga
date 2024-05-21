@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "beluga/sensor.hpp"
-#include "beluga/test/static_occupancy_grid.hpp"
-
-#include "ciabatta/ciabatta.hpp"
-
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
+#include <utility>
+#include <vector>
+
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/transform.hpp>
+#include <sophus/common.hpp>
+
+#include "beluga/sensor/likelihood_field_model.hpp"
+#include "beluga/test/static_occupancy_grid.hpp"
 
 namespace {
 

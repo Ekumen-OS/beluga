@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <gtest/gtest.h>
+
+#include <cmath>
+#include <optional>
+
+#include <sophus/common.hpp>
+#include <sophus/se2.hpp>
+
 #include "beluga/algorithm/raycasting.hpp"
 #include "beluga/test/raycasting.hpp"
 #include "beluga/test/static_occupancy_grid.hpp"
-
-#include <gmock/gmock.h>
-
-#include <sophus/se2.hpp>
 
 namespace beluga {
 

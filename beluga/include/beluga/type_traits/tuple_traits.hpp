@@ -105,7 +105,7 @@ static constexpr std::size_t kTupleIndexAmbiguous = static_cast<std::size_t>(-2)
 template <class T, class... Args>
 constexpr std::size_t tuple_index_helper() noexcept {
   constexpr bool kMatches[sizeof...(Args)] =  // NOLINT(modernize-avoid-c-arrays)
-      {std::is_same<T, std::decay_t<Args>>::value...};
+      {std::is_same_v<T, std::decay_t<Args>>...};
   std::size_t selected = kTupleIndexNotFound;
   for (std::size_t i = 0; i < sizeof...(Args); ++i) {
     if (kMatches[i]) {

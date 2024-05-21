@@ -14,7 +14,9 @@
 
 #include <gtest/gtest.h>
 
-#include <beluga/policies/on_effective_size_drop.hpp>
+#include <vector>
+
+#include "beluga/policies/on_effective_size_drop.hpp"
 
 namespace {
 

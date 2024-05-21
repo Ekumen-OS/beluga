@@ -15,25 +15,25 @@
 #ifndef BELUGA_SENSOR_NDT_SENSOR_MODEL_HPP
 #define BELUGA_SENSOR_NDT_SENSOR_MODEL_HPP
 
-#include <beluga/sensor/data/ndt_cell.hpp>
-#include <beluga/sensor/data/sparse_value_grid.hpp>
-
-#include <Eigen/src/Core/Matrix.h>
-#include <H5Cpp.h>
 #include <cassert>
-#include <sophus/common.hpp>
-#include <sophus/se2.hpp>
-#include <sophus/se3.hpp>
-#include <sophus/so2.hpp>
-
-#include <Eigen/Core>
-
 #include <cstdint>
 #include <filesystem>
 #include <stdexcept>
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+
+#include <H5Cpp.h>
+
+#include <Eigen/Core>
+
+#include <sophus/common.hpp>
+#include <sophus/se2.hpp>
+#include <sophus/se3.hpp>
+#include <sophus/so2.hpp>
+
+#include <beluga/sensor/data/ndt_cell.hpp>
+#include <beluga/sensor/data/sparse_value_grid.hpp>
 
 namespace beluga {
 
@@ -82,7 +82,7 @@ inline std::vector<NDTCell<NDim, Scalar>> to_cells(
     const double resolution) {
   static constexpr int kMinPointsPerCell = 5;
 
-  Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic>> points_view(
+  const Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic>> points_view(
       reinterpret_cast<const Scalar*>(points.data()), NDim, static_cast<int64_t>(points.size()));
 
   std::vector<NDTCell<NDim, Scalar>> ret;
@@ -247,11 +247,11 @@ NDTMapRepresentationT load_from_hdf5_2d(const std::filesystem::path& path_to_hdf
     throw std::invalid_argument(ss.str());
   }
 
-  H5::H5File file(path_to_hdf5_file, H5F_ACC_RDONLY);
-  H5::DataSet means_dataset = file.openDataSet("means");
-  H5::DataSet covariances_dataset = file.openDataSet("covariances");
-  H5::DataSet resolution_dataset = file.openDataSet("resolution");
-  H5::DataSet cells_dataset = file.openDataSet("cells");
+  const H5::H5File file(path_to_hdf5_file, H5F_ACC_RDONLY);
+  const H5::DataSet means_dataset = file.openDataSet("means");
+  const H5::DataSet covariances_dataset = file.openDataSet("covariances");
+  const H5::DataSet resolution_dataset = file.openDataSet("resolution");
+  const H5::DataSet cells_dataset = file.openDataSet("cells");
 
   std::array<hsize_t, 2> dims_out;
   means_dataset.getSpace().getSimpleExtentDims(dims_out.data(), nullptr);

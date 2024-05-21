@@ -13,8 +13,15 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/algorithm/distance_map.hpp>
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <cstdlib>
+#include <vector>
+
+#include "beluga/algorithm/distance_map.hpp"
 
 namespace {
 

@@ -15,18 +15,15 @@
 #ifndef BELUGA_ROS_OCCUPANCY_GRID_HPP
 #define BELUGA_ROS_OCCUPANCY_GRID_HPP
 
-#include <tf2/utils.h>
-
 #include <cmath>
 #include <memory>
 #include <utility>
 #include <vector>
 
-#include <beluga/sensor/data/occupancy_grid.hpp>
-#include <beluga_ros/messages.hpp>
-
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
+
+#include <tf2/utils.h>
 
 #if BELUGA_ROS_VERSION == 2
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
@@ -35,6 +32,9 @@
 #else
 #error BELUGA_ROS_VERSION is not defined or invalid
 #endif
+
+#include <beluga/sensor/data/occupancy_grid.hpp>
+#include <beluga_ros/messages.hpp>
 
 /**
  * \file

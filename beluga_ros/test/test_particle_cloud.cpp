@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cmath>
-#include <vector>
-
 #include <gtest/gtest.h>
 
+#include <cmath>
+#include <cstddef>
+#include <tuple>
+#include <vector>
+
 #include <range/v3/algorithm/count_if.hpp>
+
+#include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 
-#include <beluga_ros/messages.hpp>
-#include <beluga_ros/particle_cloud.hpp>
+#include "beluga/primitives.hpp"
+#include "beluga_ros/messages.hpp"
+#include "beluga_ros/particle_cloud.hpp"
 
 namespace {
 

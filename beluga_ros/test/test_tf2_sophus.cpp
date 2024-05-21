@@ -13,7 +13,11 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
-#include <beluga_ros/tf2_sophus.hpp>
+
+#include <sophus/se2.hpp>
+#include <sophus/se3.hpp>
+
+#include "beluga_ros/tf2_sophus.hpp"
 
 namespace {
 

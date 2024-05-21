@@ -12,16 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "beluga/views/take_while_kld.hpp"
+#include <array>
+#include <cstddef>
+#include <tuple>
+#include <vector>
 
 #include <range/v3/algorithm/equal.hpp>
+#include <range/v3/iterator/operations.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/intersperse.hpp>
 #include <range/v3/view/sample.hpp>
+#include <range/v3/view/take_while.hpp>
+
+#include "beluga/primitives.hpp"
+#include "beluga/views/take_while_kld.hpp"
 
 namespace {
 

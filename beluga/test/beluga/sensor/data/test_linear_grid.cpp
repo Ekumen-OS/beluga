@@ -12,17 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
-#include <gtest/gtest-death-test.h>
+#include <gtest/gtest.h>
 
-#include <cstdint>
+#include <cstddef>
 #include <optional>
-#include <utility>
 #include <vector>
 
 #include "beluga/sensor/data/value_grid.hpp"
-
-#include <Eigen/Core>
 
 namespace {
 

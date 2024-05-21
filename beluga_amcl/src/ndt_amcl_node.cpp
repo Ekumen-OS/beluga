@@ -12,42 +12,60 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <beluga/algorithm/estimation.hpp>
-#include <beluga/algorithm/spatial_hash.hpp>
-#include <beluga/containers/tuple_vector.hpp>
-#include <beluga/motion/differential_drive_model.hpp>
-#include <beluga/motion/stationary_model.hpp>
-#include <beluga/primitives.hpp>
-#include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga/sensor/ndt_sensor_model.hpp>
-#include <beluga/views/particles.hpp>
-#include <beluga_amcl/ndt_amcl_node.hpp>
-#include <beluga_amcl/ros2_common.hpp>
-
-#include <tf2/convert.h>
-#include <tf2/utils.h>
-#include <tf2_ros/create_timer_ros.h>
-
 #include <chrono>
+#include <cstddef>
 #include <execution>
+#include <functional>
 #include <memory>
-#include <sophus/se2.hpp>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <tuple>
 #include <utility>
 #include <variant>
+#include <vector>
 
-#include <geometry_msgs/msg/pose_stamped.hpp>
-#include <lifecycle_msgs/msg/state.hpp>
-#include <range/v3/algorithm/transform.hpp>
 #include <range/v3/range/conversion.hpp>
-#include <rclcpp_components/register_node_macro.hpp>
+#include <range/v3/view/transform.hpp>
 
-#include <beluga_ros/amcl.hpp>
+#include <Eigen/Core>
+#include <sophus/se2.hpp>
+#include <sophus/types.hpp>
+
+#include <tf2/convert.h>
+#include <tf2/exceptions.h>
+#include <tf2/time.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/buffer_interface.h>
+#include <tf2_ros/create_timer_ros.h>
+#include <tf2_ros/message_filter.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/transform_listener.h>
+
+#include <message_filters/subscriber.h>
+#include <bondcpp/bond.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_lifecycle/lifecycle_node.hpp>
+
+#include <geometry_msgs/msg/pose_array.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <lifecycle_msgs/msg/state.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
+
+#include <beluga/algorithm/amcl_core.hpp>
+#include <beluga/algorithm/estimation.hpp>
+#include <beluga/algorithm/spatial_hash.hpp>
+#include <beluga/motion/differential_drive_model.hpp>
+#include <beluga/motion/omnidirectional_drive_model.hpp>
+#include <beluga/motion/stationary_model.hpp>
+#include <beluga/random/multivariate_normal_distribution.hpp>
+#include <beluga/sensor/ndt_sensor_model.hpp>
+#include <beluga/views/particles.hpp>
+#include <beluga_ros/messages.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
+#include "beluga_amcl/ndt_amcl_node.hpp"
+#include "beluga_amcl/ros2_common.hpp"
 
 namespace beluga_amcl {
 
@@ -438,29 +456,30 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
     return;
   }
 
-  const auto& [base_pose_in_map, base_pose_covariance] = last_known_estimate_.value();
+  // Transforms are always published to keep them current.
+  if (enable_tf_broadcast_ && get_parameter("tf_broadcast").as_bool()) {
+    if (last_known_odom_transform_in_map_.has_value()) {
+      auto message = geometry_msgs::msg::TransformStamped{};
+      // Sending a transform that is valid into the future so that odom can be used.
+      const auto expiration_stamp = tf2_ros::fromMsg(laser_scan->header.stamp) +
+                                    tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
+      message.header.stamp = tf2_ros::toMsg(expiration_stamp);
+      message.header.frame_id = get_parameter("global_frame_id").as_string();
+      message.child_frame_id = get_parameter("odom_frame_id").as_string();
+      message.transform = tf2::toMsg(last_known_odom_transform_in_map_.value());
+      tf_broadcaster_->sendTransform(message);
+    }
+  }
 
   // New pose messages are only published on updates to the filter.
   if (new_estimate.has_value()) {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
     message.header.stamp = laser_scan->header.stamp;
     message.header.frame_id = get_parameter("global_frame_id").as_string();
+    const auto& [base_pose_in_map, base_pose_covariance] = new_estimate.value();
     tf2::toMsg(base_pose_in_map, message.pose.pose);
     tf2::covarianceEigenToRowMajor(base_pose_covariance, message.pose.covariance);
     pose_pub_->publish(message);
-  }
-
-  // Transforms are always published to keep them current.
-  if (enable_tf_broadcast_ && get_parameter("tf_broadcast").as_bool()) {
-    auto message = geometry_msgs::msg::TransformStamped{};
-    // Sending a transform that is valid into the future so that odom can be used.
-    const auto expiration_stamp = tf2_ros::fromMsg(laser_scan->header.stamp) +
-                                  tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
-    message.header.stamp = tf2_ros::toMsg(expiration_stamp);
-    message.header.frame_id = get_parameter("global_frame_id").as_string();
-    message.child_frame_id = get_parameter("odom_frame_id").as_string();
-    message.transform = tf2::toMsg(*last_known_odom_transform_in_map_);
-    tf_broadcaster_->sendTransform(message);
   }
 }
 
@@ -515,4 +534,5 @@ bool NdtAmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::
 }
 }  // namespace beluga_amcl
 
+#include <rclcpp_components/register_node_macro.hpp>
 RCLCPP_COMPONENTS_REGISTER_NODE(beluga_amcl::NdtAmclNode)

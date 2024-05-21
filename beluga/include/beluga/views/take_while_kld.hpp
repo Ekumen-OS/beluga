@@ -18,10 +18,10 @@
 #include <cmath>
 #include <unordered_set>
 
-#include <beluga/type_traits/particle_traits.hpp>
-
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_while.hpp>
+
+#include <beluga/type_traits/particle_traits.hpp>
 
 /**
  * \file
@@ -74,9 +74,9 @@ inline auto kld_condition(std::size_t min, double epsilon, double z = beluga::de
     if (k <= 2U) {
       return std::numeric_limits<std::size_t>::max();
     }
-    double common = 2. / static_cast<double>(9 * (k - 1));
-    double base = 1. - common + std::sqrt(common) * z;
-    double result = (static_cast<double>(k - 1) / two_epsilon) * base * base * base;
+    const double common = 2. / static_cast<double>(9 * (k - 1));
+    const double base = 1. - common + std::sqrt(common) * z;
+    const double result = (static_cast<double>(k - 1) / two_epsilon) * base * base * base;
     return static_cast<std::size_t>(std::ceil(result));
   };
 

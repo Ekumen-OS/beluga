@@ -40,8 +40,8 @@ namespace beluga {
 
 /// Parameters used to construct a BearingSensorModel instance.
 struct BearingModelParam {
-  double sigma_bearing{1.0};            ///< Standard deviation of the bearing error.
-  Sophus::SE3d sensor_pose_in_robot{};  ///< Pose of the sensor in the robot reference frame.
+  double sigma_bearing{1.0};          ///< Standard deviation of the bearing error.
+  Sophus::SE3d sensor_pose_in_robot;  ///< Pose of the sensor in the robot reference frame.
 };
 
 /// Generic bearing sensor model, for both 2D and 3D state types.

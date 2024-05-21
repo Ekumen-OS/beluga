@@ -13,23 +13,30 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/algorithm/estimation.hpp>
-#include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga/testing.hpp>
+#include <numeric>
+#include <stdexcept>
+#include <utility>
+#include <vector>
+
+#include <Eigen/Core>
 
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
+#include "beluga/algorithm/estimation.hpp"
+#include "beluga/random/multivariate_normal_distribution.hpp"
 #include "beluga/test/utils/eigen_initializers.hpp"
+#include "beluga/testing/sophus_matchers.hpp"
 
 namespace {
 
 using beluga::testing::Vector2Near;
 
 TEST(MultivariateNormalDistribution, CopyAndCompare) {
-  Eigen::Matrix3d covariance = Eigen::Vector3d::Ones().asDiagonal();
+  const Eigen::Matrix3d covariance = Eigen::Vector3d::Ones().asDiagonal();
   auto distribution = beluga::MultivariateNormalDistribution<Eigen::Vector3d>{covariance};
   auto other_distribution = distribution;
   ASSERT_EQ(distribution, other_distribution);
@@ -41,7 +48,7 @@ TEST(MultivariateNormalDistribution, CopyAndCompare) {
 }
 
 TEST(MultivariateNormalDistribution, NegativeEigenvaluesMatrix) {
-  Eigen::Matrix3d covariance = Eigen::Matrix3d::Ones();
+  const Eigen::Matrix3d covariance = Eigen::Matrix3d::Ones();
   EXPECT_THROW(beluga::MultivariateNormalDistribution<Eigen::Vector3d>{covariance}, std::runtime_error);
 }
 

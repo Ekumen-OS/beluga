@@ -14,14 +14,17 @@
 
 #include <gtest/gtest.h>
 
-#include <beluga/policies/on_motion.hpp>
+#include <sophus/se2.hpp>
+#include <sophus/so2.hpp>
+
+#include "beluga/policies/on_motion.hpp"
 
 namespace {
 
 TEST(OnMotionPolicy, TriggerOnMotion) {
   auto policy = beluga::policies::on_motion(0.1, 0.05);
-  Sophus::SE2d pose1(Sophus::SO2d(0.2), Eigen::Vector2d(1.0, 2.0));
-  Sophus::SE2d pose2(Sophus::SO2d(0.25), Eigen::Vector2d(1.2, 2.2));
+  const Sophus::SE2d pose1(Sophus::SO2d(0.2), Eigen::Vector2d(1.0, 2.0));
+  const Sophus::SE2d pose2(Sophus::SO2d(0.25), Eigen::Vector2d(1.2, 2.2));
 
   ASSERT_TRUE(policy(pose1));   // First pose triggers the policy
   ASSERT_FALSE(policy(pose1));  // Same pose should not trigger again
@@ -30,8 +33,8 @@ TEST(OnMotionPolicy, TriggerOnMotion) {
 
 TEST(OnMotionPolicy, NoTriggerWithoutMotion) {
   auto policy = beluga::policies::on_motion(0.1, 0.05);
-  Sophus::SE2d pose1(Sophus::SO2d(0.1), Eigen::Vector2d(1.0, 2.0));
-  Sophus::SE2d pose2(Sophus::SO2d(0.1), Eigen::Vector2d(1.05, 2.05));
+  const Sophus::SE2d pose1(Sophus::SO2d(0.1), Eigen::Vector2d(1.0, 2.0));
+  const Sophus::SE2d pose2(Sophus::SO2d(0.1), Eigen::Vector2d(1.05, 2.05));
 
   ASSERT_TRUE(policy(pose1));   // First pose triggers the policy
   ASSERT_FALSE(policy(pose2));  // Small motion should not trigger the policy

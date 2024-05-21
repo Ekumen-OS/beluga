@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <optional>
+
+#include <range/v3/algorithm/transform.hpp>
+
 #include <nodelet/nodelet.h>
 #include <pluginlib/class_list_macros.h>
 #include <ros/ros.h>
@@ -24,15 +28,11 @@
 #include <sensor_msgs/LaserScan.h>
 #include <std_srvs/Empty.h>
 
-#include <optional>
-#include <range/v3/algorithm/transform.hpp>
-
-#include <beluga_amcl/amcl_nodelet.hpp>
-
 #include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
+#include "beluga_amcl/amcl_nodelet.hpp"
 
 // LCOV_EXCL_BR_START: Disable branch coverage.
 

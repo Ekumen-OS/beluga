@@ -80,7 +80,7 @@ auto nearest_obstacle_distance_map(
   while (!queue.empty()) {
     auto parent = queue.top();
     queue.pop();
-    for (std::size_t index : neighbors_function(parent.index)) {
+    for (const std::size_t index : neighbors_function(parent.index)) {
       if (!visited[index]) {
         visited[index] = true;
         distance_map[index] = distance_function(parent.nearest_obstacle_index, index);

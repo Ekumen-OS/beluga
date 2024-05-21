@@ -13,18 +13,18 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <optional>
 #include <utility>
 #include <vector>
 
-#include "beluga/sensor/data/dense_grid.hpp"
-
-#include <range/v3/range/conversion.hpp>
-
 #include <Eigen/Core>
+
+#include "beluga/sensor/data/dense_grid.hpp"
 
 namespace {
 

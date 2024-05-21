@@ -36,7 +36,7 @@ template <class T, class U>
     if constexpr (is_adding_const) {
       return std::as_const(value);
     } else {
-      return static_cast<U&>(value);
+      return value;
     }
   } else {
     if constexpr (is_adding_const) {

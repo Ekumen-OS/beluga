@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "beluga/type_traits/particle_traits.hpp"
-#include "beluga/type_traits/tuple_traits.hpp"
+#include <tuple>
+#include <utility>
 
 #include <range/v3/utility/common_tuple.hpp>
+
+#include "beluga/primitives.hpp"
+#include "beluga/type_traits/particle_traits.hpp"
 
 namespace {
 

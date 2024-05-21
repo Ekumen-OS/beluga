@@ -13,13 +13,21 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/actions/assign.hpp>
-#include <beluga/actions/propagate.hpp>
-#include <beluga/views/sample.hpp>
+#include <execution>
+#include <functional>
+#include <tuple>
+#include <vector>
 
-#include <range/v3/algorithm/equal.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/view/take_exactly.hpp>
+
+#include "beluga/actions/assign.hpp"
+#include "beluga/actions/propagate.hpp"
+#include "beluga/primitives.hpp"
+#include "beluga/views/particles.hpp"
+#include "beluga/views/sample.hpp"
 
 namespace {
 

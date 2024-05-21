@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <beluga_amcl/ndt_amcl_node.hpp>
+#include <gtest/gtest.h>
 
-#include "test_utils/node_testing.hpp"
+#include <chrono>
+#include <cstdlib>
+#include <memory>
+#include <string>
+#include <variant>
 
-#include <gmock/gmock.h>
+#include <sophus/common.hpp>
 
 #include <lifecycle_msgs/msg/state.hpp>
+#include <rclcpp/utilities.hpp>
 
-#include <tf2_ros/create_timer_ros.h>
-
-#include <cstdlib>
-
-#include <beluga_ros/tf2_sophus.hpp>
+#include "beluga_amcl/ndt_amcl_node.hpp"
+#include "test_utils/node_testing.hpp"
 
 namespace {
 

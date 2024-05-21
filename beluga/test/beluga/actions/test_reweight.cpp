@@ -13,12 +13,20 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/actions/assign.hpp>
-#include <beluga/actions/reweight.hpp>
+#include <execution>
+#include <functional>
+#include <tuple>
+#include <vector>
 
-#include <range/v3/algorithm/equal.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/view/intersperse.hpp>
+
+#include "beluga/actions/assign.hpp"
+#include "beluga/actions/reweight.hpp"
+#include "beluga/primitives.hpp"
+#include "beluga/views/particles.hpp"
 
 namespace {
 

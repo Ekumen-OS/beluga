@@ -13,16 +13,29 @@
 // limitations under the License.
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/containers/tuple_vector.hpp>
-#include <beluga/type_traits.hpp>
-#include <beluga/views/particles.hpp>
+#include <array>
+#include <cstddef>
+#include <ostream>
+#include <tuple>
+#include <type_traits>
+#include <utility>
 
 #include <range/v3/algorithm/equal.hpp>
+#include <range/v3/iterator/access.hpp>
+#include <range/v3/range/access.hpp>
+#include <range/v3/range/concepts.hpp>
 #include <range/v3/range/conversion.hpp>
+#include <range/v3/range/traits.hpp>
+#include <range/v3/utility/common_tuple.hpp>
+#include <range/v3/view/all.hpp>
+#include <range/v3/view/const.hpp>
 #include <range/v3/view/filter.hpp>
-#include <range/v3/view/generate.hpp>
-#include <range/v3/view/take_exactly.hpp>
+
+#include "beluga/containers/tuple_vector.hpp"
+#include "beluga/primitives.hpp"
+#include "beluga/views/particles.hpp"
 
 namespace {
 

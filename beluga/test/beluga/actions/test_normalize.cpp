@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <beluga/actions/assign.hpp>
-#include <beluga/actions/normalize.hpp>
+#include <cmath>
+#include <execution>
+#include <tuple>
+#include <vector>
 
-#include <range/v3/algorithm/equal.hpp>
+#include "beluga/actions/normalize.hpp"
+#include "beluga/primitives.hpp"
 
 namespace {
 

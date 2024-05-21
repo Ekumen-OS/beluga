@@ -195,7 +195,7 @@ beluga_ros::msg::MarkerArray& assign_particle_cloud(
   constexpr auto kArrowLength = kArrowBodyLength + kArrowHeadLength;
 
   using Translation = typename State::TranslationType;
-  const auto arrow_body_base = Translation{};
+  const auto arrow_body_base = Translation::Zero();
   const auto arrow_head_tip = kArrowLength * Translation::UnitX();
   const auto arrow_head_base = kArrowBodyLength * Translation::UnitX();
   const auto arrow_head_right_corner =

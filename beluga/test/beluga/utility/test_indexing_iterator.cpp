@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
+#include <algorithm>
+#include <cstdlib>
+#include <functional>
+#include <iterator>
 #include <type_traits>
-#include <utility>
 #include <vector>
 
-#include <gmock/gmock.h>
+#include <range/v3/iterator/concepts.hpp>
 
-#include <range/v3/range/concepts.hpp>
-
-#include <beluga/utility/indexing_iterator.hpp>
+#include "beluga/utility/indexing_iterator.hpp"
 
 namespace {
 
