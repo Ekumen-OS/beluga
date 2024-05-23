@@ -8,7 +8,8 @@
   - [1 Create the Workspace](#1-create-the-workspace)
   - [2 Create the Package](#2-create-the-package)
   - [3 Write the Simulation code](#3-write-the-simulation-code)
-    - [3.1 Tutorial Parameters](#31-tutorial-parameters)
+    - [3.1 Parameters](#31-parameters)
+    - [3.2 Records](#32-records)
     - [3.2 Landmark Map](#32-landmark-map)
     - [3.3 Generate Particles](#33-generate-particles)
     - [3.4 Simulation Loop](#34-simulation-loop)
@@ -67,26 +68,15 @@ mkdir -p beluga_ws/src/beluga_tutorial/src
 `beluga_tutorial` should have a `package.xml` and a `CmakeLists.txt` in order to be able to use `colcon` for the compilation process. We will create these files later ([for more details](#4-compile-and-run-code)).
 
 ## 3 Write the Simulation code
-To build the simulation step by step, we'll first explain the main functionality of the code, which is assembling the particle filter, and all the necessary resources around this. In a second step, we'll add the necessary functionalities for visualizing the simulation ([for more details]()).
+To build the simulation step by step, we'll first explain the main functionality of the code, which is assembling the particle filter, and all the necessary resources around this. In a second step, we'll explain the necessary functionalities for a post-processing simulation's information.
 
-Create a `beluga_tutorial/src/main.cpp` file and put the following code in:
+To start, create a `beluga_tutorial/src/main.cpp` file and put the following code inside:
 
 ```cpp
-// Copyright 2022-2024 Ekumen, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 #include <cmath>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <random>
 #include <string>
 #include <vector>
@@ -99,161 +89,400 @@ Create a `beluga_tutorial/src/main.cpp` file and put the following code in:
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
+#include <yaml-cpp/yaml.h>
 #include <beluga/beluga.hpp>
 
-struct TutorialParams {
-  int map_size{100};
-  int number_of_doors{33};
-  int number_of_particles{200};
-  int number_of_cycles{100};
-  double initial_pose{0.0};
-  double initial_pose_sd{1.0};
+struct Parameters {
+  /// Size of the 1D map in (m)
+  /**
+   * In the simulation, the 1D map is continuous,
+   * but the limit is defined as an integer to simplify data visualization.
+   */
+  std::size_t map_size{100};
+
+  /// Maximum number of doors (or landmarks) in the map.
+  std::size_t number_of_doors{33};
+
+  /// Fixed number of particles used by the algorithm.
+  std::size_t number_of_particles{200};
+
+  /// Number of simulation cycles.
+  std::size_t number_of_cycles{100};
+
+  /// Robot's initial position in meters (m).
+  double initial_position{0.0};
+
+  /// Standard deviation of the robot's initial position.
+  /**
+   * Represents the uncertainty of the robot's initial position.
+   */
+  double initial_position_sd{1.0};
+
+  /// Delta time in seconds (s).
   double dt{1.0};
+
+  /// Translation velocity in meters per second (m/s) of the robot in 1D.
   double velocity{1.0};
-  double translation_sigma{1.0};
+
+  /// Translation standard deviation.
+  /**
+   * Represents the robot's translation noise due to drift and slippage.
+   */
+  double translation_sd{1.0};
+
+  /// Sensor range of view in meters (m)
   double sensor_range{2.0};
-  double sensor_model_sigam{1.0};
+
+  /// Sensor model sigma
+  /**
+   * Represents the precision of the modeled sensor.
+   */
+  double sensor_model_sigma{1.0};
+
+  /// Minimum particle weight.
+  /**
+   * Used to keep all particles "alive" in the reweight step.
+   */
   double min_particle_weight{0.08};
+
+  /// Dataset path.
+  /**
+   * The dataset file is used to save the data produced by the simulation for posterior analisys.
+   */
+  std::filesystem::path record_path{"./record.yaml"};
 };
 
 using Particle = std::tuple<double, beluga::Weight>;
-using LandmarkMapVector = std::vector<double>;
-using SensorData = std::vector<double>;
-using GroundTruth = double;
-using Estimate = std::pair<double, double>;
 
-double generateRandom(double mean, double sd) {
-  static auto generator = std::mt19937{std::random_device()()};
-  std::normal_distribution<double> distribution(mean, sd);
+struct RobotRecord {
+  double ground_truth;
+  beluga::TupleVector<Particle> current;
+  beluga::TupleVector<Particle> propagate;
+  beluga::TupleVector<Particle> reweight;
+  beluga::TupleVector<Particle> resample;
+  std::pair<double, double> estimation;
+};
 
-  return distribution(generator);
+struct SimulationRecord {
+  std::vector<double> landmark_map;
+  std::vector<RobotRecord> robot_record;
+};
+
+void load_parameters(const std::filesystem::path& path, Parameters& parameters) {
+  try {
+    YAML::Node params = YAML::LoadFile(path);
+    parameters.map_size = params["map_size"].as<std::size_t>();
+    parameters.number_of_doors = params["number_of_doors"].as<std::size_t>();
+    parameters.number_of_particles = params["number_of_particles"].as<std::size_t>();
+    parameters.number_of_cycles = params["number_of_cycles"].as<std::size_t>();
+    parameters.initial_position = params["initial_position"].as<double>();
+    parameters.initial_position_sd = params["initial_position_sd"].as<double>();
+    parameters.dt = params["dt"].as<double>();
+    parameters.velocity = params["velocity"].as<double>();
+    parameters.translation_sd = params["translation_sd"].as<double>();
+    parameters.sensor_range = params["sensor_range"].as<double>();
+    parameters.sensor_model_sigma = params["sensor_model_sigma"].as<double>();
+    parameters.min_particle_weight = params["min_particle_weight"].as<double>();
+    parameters.record_path = params["record_path"].as<std::string>();
+  } catch (YAML::BadFile& e) {
+    std::cout << e.what() << "\n";
+  }
 }
 
-int main() {
-  // Initialize tutorial's parameters
-  TutorialParams tutorial_params;
+void load_landmark_map(const std::filesystem::path& path, std::vector<double>& landmark_map) {
+  try {
+    YAML::Node node = YAML::LoadFile(path);
+    landmark_map = node["landmark_map"].as<std::vector<double>>();
+  } catch (YAML::BadFile& e) {
+    std::cout << e.what() << "\n";
+  }
+}
 
-  // Generate a random map
-  std::uniform_int_distribution landmark_distribution{0, tutorial_params.map_size};
-  LandmarkMapVector landmark_map = beluga::views::sample(landmark_distribution) |
-                ranges::views::take_exactly(tutorial_params.number_of_doors) | ranges::to<LandmarkMapVector>;
-  landmark_map |= ranges::actions::sort | ranges::actions::unique;
+void save_simulation_records(const std::filesystem::path& path, const SimulationRecord& simulation_record) {
+  YAML::Node node;
 
-  // Generate particles
-  std::normal_distribution<double> initial_distribution(tutorial_params.initial_pose, tutorial_params.initial_pose_sd);
-  auto particles = beluga::views::sample(initial_distribution) |
-                   ranges::views::transform(beluga::make_from_state<Particle>) |
-                   ranges::views::take_exactly(tutorial_params.number_of_particles) | ranges::to<beluga::TupleVector>;
+  for (const auto& landmark : simulation_record.landmark_map) {
+    node["landmark_map"].push_back(landmark);
+  }
 
-  // Execute the particle filter using beluga
-  double current_pose{tutorial_params.initial_pose};
-  for (auto n = 0; n < tutorial_params.number_of_cycles; n++) {
-    // Keep track of the the simulated ground truth
-    current_pose += (tutorial_params.velocity * tutorial_params.dt);
+  for (auto&& [cycle, record] : simulation_record.robot_record | ranges::views::enumerate) {
+    node["simulation_records"][cycle]["ground_truth"] = record.ground_truth;
 
-    // Check if the simulation is out of bounds
-    if (current_pose > tutorial_params.map_size) {
+    auto current = node["simulation_records"][cycle]["particles"]["current"];
+    current["states"] = beluga::views::states(record.current) | ranges::to<std::vector<double>>;
+    current["weights"] = beluga::views::weights(record.current) | ranges::to<std::vector<double>>;
+
+    auto propagate = node["simulation_records"][cycle]["particles"]["propagate"];
+    propagate["states"] = beluga::views::states(record.propagate) | ranges::to<std::vector<double>>;
+    propagate["weights"] = beluga::views::weights(record.propagate) | ranges::to<std::vector<double>>;
+
+    auto reweight = node["simulation_records"][cycle]["particles"]["reweight"];
+    reweight["states"] = beluga::views::states(record.reweight) | ranges::to<std::vector<double>>;
+    reweight["weights"] = beluga::views::weights(record.reweight) | ranges::to<std::vector<double>>;
+
+    auto resample = node["simulation_records"][cycle]["particles"]["resample"];
+    resample["states"] = beluga::views::states(record.resample) | ranges::to<std::vector<double>>;
+    resample["weights"] = beluga::views::weights(record.resample) | ranges::to<std::vector<double>>;
+
+    auto estimation = node["simulation_records"][cycle]["estimation"];
+    estimation["mean"] = std::get<0>(record.estimation);
+    estimation["sd"] = std::get<1>(record.estimation);
+  }
+
+  std::ofstream fout(path, std::ios::trunc);
+  fout << node;
+  fout.close();
+}
+
+int main(int argc, char* argv[]) {
+  if (argc < 2) {
+    std::cerr << "Usage: " << argv[0] << "<parameters_path>\n";
+    return 1;
+  }
+
+  Parameters parameters;
+  load_parameters(argv[1], parameters);
+
+  SimulationRecord simulation_record;
+
+  std::vector<double> landmark_map;
+  load_landmark_map(argv[1], landmark_map);
+  simulation_record.landmark_map = landmark_map;
+
+  std::normal_distribution<double> initial_distribution(parameters.initial_position, parameters.initial_position_sd);
+  auto particles = beluga::views::sample(initial_distribution) |                  //
+                   ranges::views::transform(beluga::make_from_state<Particle>) |  //
+                   ranges::views::take_exactly(parameters.number_of_particles) |  //
+                   ranges::to<beluga::TupleVector>;
+
+  double current_position{parameters.initial_position};
+  for (std::size_t n = 0; n < parameters.number_of_cycles; ++n) {
+    RobotRecord robot_record;
+
+    current_position += parameters.velocity * parameters.dt;
+    robot_record.ground_truth = current_position;
+
+    if (current_position > static_cast<double>(parameters.map_size)) {
       break;
     }
 
-    // Motion model
-    auto motion_model = [&](double state) {
-      double distance = (tutorial_params.velocity * tutorial_params.dt);
-      double translation_param = generateRandom(0.0, tutorial_params.translation_sigma);
-      return state + distance - translation_param;
+    auto motion_model = [&](double particle_position, auto& random_engine) {
+      const double distance = parameters.velocity * parameters.dt;
+      std::normal_distribution<double> distribution(distance, parameters.translation_sd);
+      return particle_position + distribution(random_engine);
     };
 
-    // Generate simulated sensor data
-    auto sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) {
-                         return std::abs(lm - current_pose) > tutorial_params.sensor_range;
-                       }) |
-                       ranges::views::transform([&](const double lm) { return lm - current_pose; }) |
-                       ranges::to<SensorData>;
-    // Sensor model
-    auto sensor_model = [&](const double& state) {
-      auto particle_sensor_data =
-          landmark_map | ranges::views::transform([&](const double lm) { return lm - state; }) | ranges::to<SensorData>;
+    auto detections =
+        landmark_map |                                                                                       //
+        ranges::views::transform([&](double landmark) { return landmark - current_position; }) |             //
+        ranges::views::remove_if([&](double range) { return std::abs(range) > parameters.sensor_range; }) |  //
+        ranges::to<std::vector>;
 
-      LandmarkMapVector landmark_probability;
-      for (const auto& sensor_datum : sensor_data) {
-        auto distances = particle_sensor_data | ranges::views::transform([&](auto& particle_sensor_datum) {
-                           return std::abs(sensor_datum - particle_sensor_datum);
-                         });
+    auto sensor_model = [&](double particle_position) {
+      auto particle_detections =
+          landmark_map |                                                                             //
+          ranges::views::transform([&](double landmark) { return landmark - particle_position; }) |  //
+          ranges::to<std::vector>;
 
-        auto min_distance = ranges::min(distances);
-        landmark_probability.push_back(exp((-1 * pow(min_distance, 2)) / (2 * tutorial_params.sensor_model_sigam)));
-      }
-
-      return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{}) + tutorial_params.min_particle_weight;
+      return parameters.min_particle_weight +
+             std::transform_reduce(
+                 detections.begin(), detections.end(), 1.0, std::multiplies<>{}, [&](double detection) {
+                   auto distances =           //
+                       particle_detections |  //
+                       ranges::views::transform(
+                           [&](double particle_detection) { return std::abs(detection - particle_detection); });
+                   const auto min_distance = ranges::min(distances);
+                   return std::exp((-1 * std::pow(min_distance, 2)) / (2 * parameters.sensor_model_sigma));
+                 });
     };
 
-    // For the propose of the tutorial, we split the process in the following stages:
-    // Propagate stage
+    robot_record.current = particles;
+
     particles |= beluga::actions::propagate(std::execution::seq, motion_model);
+    robot_record.propagate = particles;
 
-    // Reweight stage
     particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
+    robot_record.reweight = particles;
 
-    // Resample
-    particles |= beluga::views::sample | ranges::views::take_exactly(tutorial_params.number_of_particles) |
+    particles |= beluga::views::sample |                                        //
+                 ranges::views::take_exactly(parameters.number_of_particles) |  //
                  beluga::actions::assign;
+    robot_record.resample = particles;
 
-    // Calculate mean and standard deviation
     const auto estimation = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
+    robot_record.estimation = estimation;
+
+    simulation_record.robot_record.push_back(std::move(robot_record));
   }
+
+  save_simulation_records(parameters.record_path, simulation_record);
 
   return 0;
 }
 ```
-The first few lines include all of the headers we need to compile.
-
-The following `using` declarations help us to maintain the code cleaner
-```cpp
-using Particle = std::tuple<double, beluga::Weight>;
-using LandmarkMapVector = std::vector<double>;
-using SensorData = std::vector<double>;
-using GroundTruth = double;
-using Estimate = std::pair<double, double>;
-```
-
 Lets examine the code by parts:
 
-### 3.1 Tutorial Parameters
-A `TutorialParams tutorial_params` object is initialize with default values. `TutorialParams` is a struct that contain all the necessary parameter the code needs to conduct the simulation.
+### 3.1 Parameters
+`Parameters` is a struct that contain all the necessary parameters the code needs to conduct the simulation.
+
 ```cpp
-struct TutorialParams {
-int map_size{100};
-int number_of_doors{33};
-int number_of_particles{200};
-int number_of_cycles{100};
-double initial_pose{0.0};
-double initial_pose_sd{1.0};
-double dt{1.0};
-double velocity{1.0};
-double translation_sigma{1.0};
-double sensor_range{2.0};
-double sensor_model_sigam{1.0};
-double min_particle_weight{0.08};
+struct Parameters {
+  /// Size of the 1D map in (m)
+  /**
+   * In the simulation, the 1D map is continuous,
+   * but the limit is defined as an integer to simplify data visualization.
+   */
+  std::size_t map_size{100};
+
+  /// Maximum number of doors (or landmarks) in the map.
+  std::size_t number_of_doors{33};
+
+  /// Fixed number of particles used by the algorithm.
+  std::size_t number_of_particles{200};
+
+  /// Number of simulation cycles.
+  std::size_t number_of_cycles{100};
+
+  /// Robot's initial position in meters (m).
+  double initial_position{0.0};
+
+  /// Standard deviation of the robot's initial position.
+  /**
+   * Represents the uncertainty of the robot's initial position.
+   */
+  double initial_position_sd{1.0};
+
+  /// Delta time in seconds (s).
+  double dt{1.0};
+
+  /// Translation velocity in meters per second (m/s) of the robot in 1D.
+  double velocity{1.0};
+
+  /// Translation standard deviation.
+  /**
+   * Represents the robot's translation noise due to drift and slippage.
+   */
+  double translation_sd{1.0};
+
+  /// Sensor range of view in meters (m)
+  double sensor_range{2.0};
+
+  /// Sensor model sigma
+  /**
+   * Represents the precision of the modeled sensor.
+   */
+  double sensor_model_sigma{1.0};
+
+  /// Minimum particle weight.
+  /**
+   * Used to keep all particles "alive" in the reweight step.
+   */
+  double min_particle_weight{0.08};
+
+  /// Dataset path.
+  /**
+   * The dataset file is used to save the data produced by the simulation for posterior analisys.
+   */
+  std::filesystem::path record_path{"./record.yaml"};
 };
 ```
-### 3.2 Landmark Map
-A map of the environment is a list of object in the environment and their locations `M = {M1, M2, ..., Mn}`.\
-A **landmark map** represent a **feature-based map**, where each feature in the map contain a property and its Cartesian location. In the tutorial, the landmark map represent the position of the doors, but all doors are equal. This means there are no distinguishing properties between them, such as an ID for each door. To generate a random map, we use the following code:
+
+The program forces the user to provide an absolute path to parameters file.
+>**Note:** The default values defined in the `struct Parameters` are not used, but we leave them as a reference.
 
 ```cpp
-// Generate a random map
-std::uniform_int_distribution landmark_distribution{0, tutorial_params.map_size};
-LandmarkMapVector landmark_map = beluga::views::sample(landmark_distribution) |
-              ranges::views::take_exactly(tutorial_params.number_of_doors) | ranges::to<LandmarkMapVector>;
-landmark_map |= ranges::actions::sort | ranges::actions::unique;
-```
-* We use a `uniform_int_distribution` to randomly assign landmark to any position of the map defined by `[0, map_size]`.
-* `beluga::views::sample(landmark_distribution)` is in charge of, given a type of distribution, generate samples.
-* `ranges::views::take_exactly(tutorial_params.number_of_doors)` defines the number of doors to take, using the **number_of_doors** parameter.
-* `ranges::to<LandmarkMapVector>` convert the range to a LandmarkMapVector type defined previously.
-* `landmark_map |= ranges::actions::sort | ranges::actions::unique` will remove repeated landmarks in the same position, and arrange them from lowest to highest to facilitate debugging.
+int main(int argc, char* argv[]) {
+  if (argc < 2) {
+    std::cerr << "Usage: " << argv[0] << "<parameters_path>\n";
+    return 1;
+  }
 
->Note: read about [Range Adaptor Closure Object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorClosureObject) to understand the `|` operator.
+  Parameters parameters;
+  load_parameters(argv[1], parameters);
+
+  // Rest of the code
+  // ...
+}
+```
+
+If a parameters file exists and is defined correctly, `load_parameters()` will load them into `parameters`,
+which is a reference to the variable used throughout the code.
+
+```cpp
+void load_parameters(const std::filesystem::path& path, Parameters& parameters) {
+  try {
+    YAML::Node params = YAML::LoadFile(path);
+    parameters.map_size = params["map_size"].as<std::size_t>();
+    parameters.number_of_doors = params["number_of_doors"].as<std::size_t>();
+    parameters.number_of_particles = params["number_of_particles"].as<std::size_t>();
+    parameters.number_of_cycles = params["number_of_cycles"].as<std::size_t>();
+    parameters.initial_position = params["initial_position"].as<double>();
+    parameters.initial_position_sd = params["initial_position_sd"].as<double>();
+    parameters.dt = params["dt"].as<double>();
+    parameters.velocity = params["velocity"].as<double>();
+    parameters.translation_sd = params["translation_sd"].as<double>();
+    parameters.sensor_range = params["sensor_range"].as<double>();
+    parameters.sensor_model_sigma = params["sensor_model_sigma"].as<double>();
+    parameters.min_particle_weight = params["min_particle_weight"].as<double>();
+    parameters.record_path = params["record_path"].as<std::string>();
+  } catch (YAML::BadFile& e) {
+    std::cout << e.what() << "\n";
+  }
+}
+```
+>**Note:** In this tutorial we are using **YAML** as the format to manage the persistence of the parameters, the landmark_map, and the records.
+
+### 3.2 Records
+Two structures are used to record simulation data for a post-processing:
+1. `RobotRecord` that is used to record relevant data of the robot from each cycle (or `dt`).
+2. `SimulationRecord` that saved the data of the entire simulation.
+
+>**Note:** the alias `Particle` is also used by the particles range created in the main code.
+
+```cpp
+using Particle = std::tuple<double, beluga::Weight>;
+
+struct RobotRecord {
+  double ground_truth;
+  beluga::TupleVector<Particle> current;
+  beluga::TupleVector<Particle> propagate;
+  beluga::TupleVector<Particle> reweight;
+  beluga::TupleVector<Particle> resample;
+  std::pair<double, double> estimation;
+};
+
+struct SimulationRecord {
+  std::vector<double> landmark_map;
+  std::vector<RobotRecord> robot_record;
+};
+```
+
+A `SimulationRecord simulation_record;` object is defined in the code to save all the data that will be used in the visualization.
+
+### 3.2 Landmark Map
+A map of the environment is a list of object in the environment and their locations `M = {M1, M2, ..., Mn}`. A **landmark map** is represented by a **feature-based map**, where each feature in the map contain a property and its Cartesian location. In the tutorial, the landmark map represent the position of the doors, but all doors are equal. This means there are no distinguishing properties between them, such as an ID for each door.
+
+The map is loaded by the function `load_landmark_map()` which is in charge to load the map from the parameters file.
+
+```cpp
+void load_landmark_map(const std::filesystem::path& path, std::vector<double>& landmark_map) {
+  try {
+    YAML::Node node = YAML::LoadFile(path);
+    landmark_map = node["landmark_map"].as<std::vector<double>>();
+  } catch (YAML::BadFile& e) {
+    std::cout << e.what() << "\n";
+  }
+}
+```
+
+The map is saved in the `simulation_record` object.
+```cpp
+std::vector<double> landmark_map;
+load_landmark_map(argv[1], landmark_map);
+simulation_record.landmark_map = landmark_map;
+```
+
+>**Note:** you must provide a landmark_map in the parametrs file. See the example provided by this tutorial to create your own file (link).
 
 ### 3.3 Generate Particles
 As boundary condition the algorithm requires an initial belief $bel(x_0)$ at time $t = 0$. If ones knows the value of $x_0$
@@ -262,11 +491,11 @@ with a certain certainty, $bel(x_0)$ should be initialize with a point mass dist
 In our case, to demonstrate how the filter is capable of converging to the true state, we will initialize the particles using a normal distribution, setting the mean to the initial position of the true state and with a certain standard deviation value.
 
 ```cpp
-// Generate particles
-std::normal_distribution<double> initial_distribution(tutorial_params.initial_pose, tutorial_params.initial_pose_sd);
-auto particles = beluga::views::sample(initial_distribution) |
-                ranges::views::transform(beluga::make_from_state<Particle>) |
-                ranges::views::take_exactly(tutorial_params.number_of_particles) | ranges::to<beluga::TupleVector>;
+std::normal_distribution<double> initial_distribution(parameters.initial_position, parameters.initial_position_sd);
+auto particles = beluga::views::sample(initial_distribution) |                  //
+                 ranges::views::transform(beluga::make_from_state<Particle>) |  //
+                 ranges::views::take_exactly(parameters.number_of_particles) |  //
+                 ranges::to<beluga::TupleVector>;
 ```
 * We define a `std::normal_distribution<double>` to initialize the position of the robot with some uncertainty.
 * `beluga::views::sample(initial_distribution)` will spread the particles around the normal distribution.
@@ -274,89 +503,100 @@ auto particles = beluga::views::sample(initial_distribution) |
 * `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the **number_of_particles** parameter.
 * `ranges::to<beluga::TupleVector>` convert the range to a `beluga::TupleVector`, which is a shorthand for a tuple of vectors with the default allocator, see beluga code for more detail (link).
 
+>**Note:** read about [Range Adaptor Closure Object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorClosureObject) to understand the `|` operator.
+
 ### 3.4 Simulation Loop
-The parameters **initial_pose**, **velocity**, and **dt** are used to express the movement of the robot along the one-dimensional space and in a single direction, represented by the following equation:
+The parameters **initial_position**, **velocity**, and **dt** are used to express the movement of the robot along the one-dimensional space and in a single direction, represented by the following equation:
 $$x(t) = x(t-1) + v * d_t$$
-where $x(t)$, or in the code **current_pose**, is initialize with the parameter **initial_pose**, and at the beginning of each iteration cycle, it also functions as $x(t-1)$ before being updated. Therefore, the following loop will iterate over a configurable **number_of_cycles** or until the robot exceeds the map boundaries.
+where $x(t)$, or in the code **current_pose**, is initialize with the parameter **initial_position**, and at the beginning of each iteration cycle, it also functions as $x(t-1)$ before being updated. Therefore, the following loop will iterate over a configurable **number_of_cycles** or until the robot exceeds the map boundaries.
+
 ```cpp
-  double current_pose{tutorial_params.initial_pose};
-  for (auto n = 0; n < tutorial_params.number_of_cycles; n++) {
-    // Keep track of the the simulated ground truth
-    current_pose += (tutorial_params.velocity * tutorial_params.dt);
+double current_position{parameters.initial_position};
+for (std::size_t n = 0; n < parameters.number_of_cycles; ++n) {
+  current_position += parameters.velocity * parameters.dt;
 
-    // Check if the simulation is out of bounds
-    if (current_pose > tutorial_params.map_size) {
-      break;
-    }
-
-    // Rest of the code
-    // ...
+  if (current_position > static_cast<double>(parameters.map_size)) {
+    break;
   }
+
+  // Rest of the code
+  // ...
+}
 ```
 ### 3.5 Control Update - Motion Model
-The motion model comprise the state transition probability $p(x_t | x_{t-1}, u_t)$ which plays an essential role in the prediction step (or control update step) of the Bayes filter. Probabilistic robotics generalizes kinematic equations to the fact that the outcome of a control is uncertain, due to control noise or unmodeled exogenous effects. Deterministic robot actuator models are “probilified” by adding noise variables that characterize the types of uncertainty that exist in robotic actuation. Here $x_t$ and $x_{t−1}$ are both robot poses (in our case the x position with a positive direction), and $u_t$ is a motion command. This model describes the posterior distribution over kinematics states that a robots assumes when executing the motion command $u_t$ when its pose is $x_{t−1}$.
+The motion model comprise the state transition probability $p(x_t | x_{t-1}, u_t)$ which plays an essential role in the prediction step (or control update step) of the Bayes filter. Probabilistic robotics generalizes kinematic equations to the fact that the outcome of a control is uncertain, due to control noise or unmodeled exogenous effects. Deterministic robot actuator models are “probilified” by adding noise variables that characterize the types of uncertainty that exist in robotic actuation. Here $x_t$ and $x_{t−1}$ are both robot positions (in our case a one-dimensional position), and $u_t$ is a motion command. This model describes the posterior distribution over kinematics states that a robots assumes when executing the motion command $u_t$ when its position is $x_{t−1}$.
 
 In this tutorial, we will be using an **Sample Motion Model Odometry** (pag. 111 of ProbRob). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
 
-At time $t$, the pose of the robot is a random variable $x(t)$. This model considers that within the time interval $(t-1, t]$, the registered movement from odometry is a reliable estimator of the true state movement, despite any potential drift and slippage that the robot may encounter during this interval.
+At time $t$, the robot's position is a random variable $x(t)$. This model considers that within the time interval $(t-1, t]$, the registered movement from odometry is a reliable estimator of the true state movement, despite any potential drift and slippage that the robot may encounter during this interval.
 
 The **Sample Motion Model Odometry** receives as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x_t$. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles. It accepts an execution policy (for more details, see link) and a function that applies the motion model (or transformation) to each particle in the range.
 
 ```cpp
-// Motion model
-auto motion_model = [&](double state) {
-  double distance = (tutorial_params.velocity * tutorial_params.dt);
-  double translation_param = generateRandom(0.0, tutorial_params.translation_sigma);
-  return state + distance - translation_param;
+auto motion_model = [&](double particle_position, auto& random_engine) {
+  const double distance = parameters.velocity * parameters.dt;
+  std::normal_distribution<double> distribution(distance, parameters.translation_sd);
+  return particle_position + distribution(random_engine);
 };
 
 // Propagate stage
 particles |= beluga::actions::propagate(std::execution::seq, motion_model);
 ```
-* The argument `state` represent a single particle (or pose) from the range $x_{t-1}$ before applying the control update step.
-* Here, the equivalent of the odometry translation is the calculation of the `distance - translation_param`, where `translation_param` represent the noise due to drift and slippage during the translation of the robot.
-* The motion model returns a single particle's state corresponding to the new range $x_t$.
+* The argument `particle_position` represent a single particle from the range $x_{t-1}$ before applying the control update step.
+* Here, the equivalent of the odometry translation is the calculation of the `distance`.
+* A, `std::normal_distribution<double> distribution` is created with a mean equal to `distance` and the standard deviation `parameters.translation_sd`. This normal distribution represent the noise obtained from an odometry measurement due to drift and slippage during the translation of the robot.
+* The motion model returns a single particle's state corresponding to the new range $x'_t$.
 
->**Note:** The range $x_t$ represent the posterior $bel'(x_t)$ before incorporating the measurement $z_t$. This posterior or particle set distribution
+>**Note:** The range $x'_t$ represent the posterior $bel'(x'_t)$ before incorporating the measurement $z_t$. This posterior or particle set distribution
 does not match the updated belief $bel(x_t)$ explain in [MCL background](#monte-carlo-localization-mcl-background).
 
 >**Note:** The effect of the motion model is to increase the space occupied by the particles.
 
 ### 3.6 Measurement Update - Sensor Model
-Measurement models describe the formation process by which sensor measurements are generated in the physical world. Probabilistic robotics explicitly models the noise in sensor measurements. Such models account for the inherent uncertainty in the robot’s sensors. Formally, the measurement model is defined as a conditional probability distribution $p(z_t | x_t , m)$, where $x_t$ is the robot pose, $z_t$ is the measurement at time $t$, and $m$ is the map of the environment.
+Measurement models describe the formation process by which sensor measurements are generated in the physical world. Probabilistic robotics explicitly models the noise in sensor measurements. Such models account for the inherent uncertainty in the robot’s sensors. Formally, the measurement model is defined as a conditional probability distribution $p(z_t | x_t , m)$, where $x_t$ is the robot position, $z_t$ is the measurement at time $t$, and $m$ is the map of the environment.
 
 The most common model for processing landmarks assumes that the sensor can measure the range and the bearing of the landmark relative to the robot’s
 local coordinate frame. In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (pag. 149 of ProbRob),
-since the doors do not have a signature that differentiates them from each other, but we can calculate the relative pose of each door to the robot. This sensor model, receives as inputs the landmark map, the sensor data and a particle (a state), and outputs the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
+since the doors do not have a signature that differentiates them from each other, but we can calculate the relative position of each door to the robot. This sensor model, receives as inputs the landmark map, the sensor data and a particle (a state), and outputs the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
 
-In our case, we need to generate simulated sensor data. This data corresponds to the relative positions of landmarks around the robot's **current_pose** within a configurable range specified by the **sensor_range** parameter.
+In our case, we need to generate simulated sensor data called `detections`. This data corresponds to the relative positions of landmarks around the robot's `current_position` within a configurable range specified by `parameters.sensor_range`.
 
 ```cpp
-// Generate simulated sensor data
-auto sensor_data = landmark_map | ranges::views::remove_if([&](const double lm) {
-                      return std::abs(lm - current_pose) > tutorial_params.sensor_range;
-                    }) |
-                    ranges::views::transform([&](const double lm) { return lm - current_pose; }) |
-                    ranges::to<SensorData>;
+auto detections =
+  landmark_map |                                                                                       //
+  ranges::views::transform([&](double landmark) { return landmark - current_position; }) |             //
+  ranges::views::remove_if([&](double range) { return std::abs(range) > parameters.sensor_range; }) |  //
+  ranges::to<std::vector>;
 ```
 * `landmark_map` is the map generated above.
-* `ranges::views::remove_if` will remove all landmarks grater than the range of view of the sensor.
-* `ranges::views::transform` transform them to relative poses from the robot's **current_pose**.
-* `ranges::to<SensorData>` convert the range to a SensorData type defined previously.
+* `ranges::views::transform` return the relative position of each landmark to the robot's **current_position**.
+* `ranges::views::remove_if` will remove all landmarks farther out of the sensor's viewing range.
+* `ranges::to<std::vector>` convert the range to a `std::vector<double>`.
 
-To calculate the weight for each particle, we previously need to build the range `particle_sensor_data`. This range represent the relative distances of each landmark to the particle.
+To calculate the weight for each particle, we previously need to build the range `particle_detections`. This range represent the relative distances of each landmark to the proposed particle.
 
 ```cpp
-// Sensor model
-auto sensor_model = [&](const double& state) {
-  auto particle_sensor_data =
-      landmark_map | ranges::views::transform([&](const double lm) { return lm - state; }) | ranges::to<SensorData>;
-
+auto sensor_model = [&](double particle_position) {
+  auto particle_detections =
+      landmark_map |                                                                             //
+      ranges::views::transform([&](double landmark) { return landmark - particle_position; }) |  //
+      ranges::to<std::vector>;
   // Rest of the code
   // ...
+
+  return parameters.min_particle_weight +
+          std::transform_reduce(
+              detections.begin(), detections.end(), 1.0, std::multiplies<>{}, [&](double detection) {
+                auto distances =           //
+                    particle_detections |  //
+                    ranges::views::transform(
+                        [&](double particle_detection) { return std::abs(detection - particle_detection); });
+                const auto min_distance = ranges::min(distances);
+                return std::exp((-1 * std::pow(min_distance, 2)) / (2 * parameters.sensor_model_sigma));
+              });
 };
 ```
-The number of features identified at each time step is variable. However, many probabilistic robotic algorithms assume conditional independence between features, it means, the noise in each individual measurement is independent of the noise in other measurements. Under the conditional independence assumption, we can process one feature at-a-time. That is:
+The number of features identified at each time step is variable. However, many probabilistic robotic algorithms assume conditional independence between features, it means, the noise in each individual measurement is independent of the noise in other measurements, when conditioned on the current system state and prior world knowledge. Under the conditional independence assumption, we can process one feature at-a-time. That is:
 
 $$p(z_t | x_t, m) = \prod_i p(z_{t}^{i} | x_t, m)$$
 
@@ -366,57 +606,56 @@ To calculate the probability $p(z_{t}^{i} | x_t, m)$ we use the equation of a si
 In this context, each landmark lacks distinguishing features that uniquely differentiate it from others. Therefore, we employ an approximation method where the `min_distance` between the landmarks' position measured from the sensor and the landmark's position relative to the particle, is considered. This approximation assumes that the smallest distance observed in the comparison provides the most accurate correspondence between the observed landmarks.
 
 ```cpp
-// Sensor model
-auto sensor_model = [&](const double& state) {
-  auto particle_sensor_data =
-      landmark_map | ranges::views::transform([&](const double lm) { return lm - state; }) | ranges::to<SensorData>;
+auto sensor_model = [&](double particle_position) {
+  auto particle_detections =
+      landmark_map |                                                                             //
+      ranges::views::transform([&](double landmark) { return landmark - particle_position; }) |  //
+      ranges::to<std::vector>;
 
-  LandmarkMapVector landmark_probability;
-  for (const auto& sensor_datum : sensor_data) {
-    auto distances = particle_sensor_data | ranges::views::transform([&](auto& particle_sensor_datum) {
-                        return std::abs(sensor_datum - particle_sensor_datum);
-                      });
-
-    auto min_distance = ranges::min(distances);
-    landmark_probability.push_back(exp((-1 * pow(min_distance, 2)) / (2 * tutorial_params.sensor_model_sigam)));
-  }
-
-  return ranges::accumulate(landmark_probability, 1.0, std::multiplies<>{}) + tutorial_params.min_particle_weight;
+  return parameters.min_particle_weight +
+          std::transform_reduce(
+              detections.begin(), detections.end(), 1.0, std::multiplies<>{}, [&](double detection) {
+                auto distances =           //
+                    particle_detections |  //
+                    ranges::views::transform(
+                        [&](double particle_detection) { return std::abs(detection - particle_detection); });
+                const auto min_distance = ranges::min(distances);
+                return std::exp((-1 * std::pow(min_distance, 2)) / (2 * parameters.sensor_model_sigma));
+              });
 };
 ```
-
-* `landmark_probability` store each $p(z_{t}^{i} | x_t, m)$
-* `ranges::accumulate` calculate the $\prod_i p(z_{t}^{i} | x_t, m)$
-* `tutorial_params.min_particle_weight` is the minimum weight a particle can have. Is used to maintain the particle "alive" even though its probability is very low.
+* `tutorial_params.min_particle_weight` is the minimum weight a particle can have. Is used to maintain the particle "alive" even though
+  its probability is very low.
+* `std::transform_reduce()` conduct the formula (link to the formula) and calculate the $p(z_t | x_t, m)$.
 * The sensor model returns the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
 
-Beluga uses the function `beluga::actions::reweight` to transform a range of particle, to a range of **weighted** particles. It accepts an execution policy (for more details, see link) and a function that applies the sensor model (or transformation) to each particle in the range.
+Beluga uses the function `beluga::actions::reweight` to transform a range of particle $x'_t$, to a range of **weighted** particles. It accepts an execution policy (for more details, see link) and a function that applies the sensor model (or transformation) to each particle in the range.
 
 ```cpp
-// Reweight stage
 particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
 ```
 
 The `beluga::actions::normalize` is a range adaptor that allows users to normalize the weights of a range (or a range of particles) by dividing each weight by a specified normalization factor. If none is specified, the default normalization factor corresponds to the total sum of weights in the given range.
 
 ### 3.7 Resample
-The updated belief is prefigured by the spatial distribution of the particles $x_{t-1}$ in the set and their importance weights. A few of the particles will have migrated to state regions with low probability, however, and their importance weights will therefore be low.
+The updated belief is prefigured by the spatial distribution of the particles $x'_t$ in the set and their importance weights. A few of the particles will have migrated to state regions with low probability, however, and their importance weights will therefore be low.
 To correct this, the update step is completed by performing a **resampling process**, which consist of drawing a new set of particles $x_t$ from the current set, with replacement, using importance weights as unnormalized probabilities. This process causes particles with low weights to be discarded and particles with high weights to be propagated multiple times into the new particle set.
 
 Adaptive Monte Carlo Localization (AMCL) uses different sampling techniques to dynamically adjust the number of particles to match the complexity of the posterior distribution. For the simplicity of this tutorial, we'll keep a fixed number of particles, as the performance is adequate.
 
 ```cpp
-// Resample
-particles |= beluga::views::sample | ranges::views::take_exactly(tutorial_params.number_of_particles) |
-              beluga::actions::assign;
+particles |= beluga::views::sample |                                        //
+             ranges::views::take_exactly(parameters.number_of_particles) |  //
+             beluga::actions::assign;
+robot_record.resample = particles;
 ```
 * `beluga::views::sample` implements a multinomial resampling on `particles`.
-* `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the **number_of_particles** parameter.
+* `ranges::views::take_exactly` defines the number of particles to take, using the **number_of_particles** parameter.
 * `beluga::actions::assign` effectively converts any view into an action and assigns the result to `particles`.
 
 ## 4 Compile and run code
 ### 4.1 package.xml
-Create a `package.xml` file and put the following inside:
+Create a `beluga_tutorial/package.xml` file and put the following inside:
 
 ```xml
 <?xml version="1.0"?>
@@ -442,30 +681,12 @@ Create a `package.xml` file and put the following inside:
 This declares the package needs `beluga` and `yaml_cpp` when its code is built and executed.
 
 ### 4.2 CMakeLists.txt
-The final `CMakeLists.txt` looks like:
+The final `beluga_tutorial/CMakeLists.txt` looks like:
 
 ```cmake
 cmake_minimum_required(VERSION 3.16)
 
 project(beluga_tutorial)
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-if(NOT CMAKE_BUILD_TYPE)
-  message(STATUS "Setting build type to 'Release' as none was specified.")
-  set(CMAKE_BUILD_TYPE
-      "Release"
-      CACHE STRING "Build type" FORCE)
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(
-    -Wall
-    -Wconversion
-    -Wextra
-    -Werror
-    -Wpedantic)
-endif()
 
 find_package(beluga REQUIRED)
 find_package(yaml_cpp_vendor REQUIRED)
@@ -482,6 +703,7 @@ target_link_libraries(${PROJECT_NAME} beluga::beluga yaml-cpp)
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib/${PROJECT_NAME})
 ```
 
+* `project()` define the name of the project. `${PROJECT_NAME}` macro will use this name alongside the file.
 * `find_package()` is used to import external dependencies.
 * `add_executable(${PROJECT_NAME} src/main.cpp)` create the executable called `beluga_tutorial`.
 * `target_include_directories()` is used to include the header files of `yaml-cpp` package.
@@ -494,7 +716,7 @@ Open a new terminal and build your new package:
 ```bash
 source /opt/ros/humble/setup.bash
 cd beluga_ws/
-colcon build beluga_tutorial
+colcon build
 ```
 
 In the same terminal run the code:
