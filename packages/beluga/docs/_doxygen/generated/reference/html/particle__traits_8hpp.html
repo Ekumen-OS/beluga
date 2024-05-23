@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 23 10:22:02 2024 -0300, 06c5e84&#39;"/>
   </head>
   
   
@@ -435,7 +435,7 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">particle_traits.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -466,6 +466,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1particle__traits.html">beluga::particle_traits&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common traits of all particle types. See <a class="el" href="ParticlePage.html">Page</a> requirements as well.  <a href="structbeluga_1_1particle__traits.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1detail_1_1make__from__state__fn.html">beluga::detail::make_from_state_fn&lt; Particle, State &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object type to create a particle from a given state.  <a href="structbeluga_1_1detail_1_1make__from__state__fn.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -486,12 +489,12 @@ template&lt;class T &gt; </td></tr>
 <tr class="memdesc:a507b3341999e969684415b2bff7fad52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait that returns the weight type given a particle type. <br /></td></tr>
 <tr class="separator:a507b3341999e969684415b2bff7fad52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a8aa8df97f1cdadba1ae6dfadd1ce486a"><td class="memTemplParams" colspan="2">template&lt;class Particle , class T  = state_t&lt;Particle&gt;&gt; </td></tr>
-<tr class="memitem:a8aa8df97f1cdadba1ae6dfadd1ce486a"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a8aa8df97f1cdadba1ae6dfadd1ce486a">beluga::make_from_state</a> (T value)</td></tr>
-<tr class="memdesc:a8aa8df97f1cdadba1ae6dfadd1ce486a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new particle from the given state.  <a href="namespacebeluga.html#a8aa8df97f1cdadba1ae6dfadd1ce486a">More...</a><br /></td></tr>
-<tr class="separator:a8aa8df97f1cdadba1ae6dfadd1ce486a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a30ab9d2dd17389ef5260b264329a463f"><td class="memTemplParams" colspan="2">template&lt;class Particle &gt; </td></tr>
+<tr class="memitem:a30ab9d2dd17389ef5260b264329a463f"><td class="memTemplItemLeft" align="right" valign="top">constexpr detail::make_from_state_fn&lt; Particle &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a30ab9d2dd17389ef5260b264329a463f">beluga::make_from_state</a></td></tr>
+<tr class="memdesc:a30ab9d2dd17389ef5260b264329a463f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function object to create a particle from a given state.  <a href="namespacebeluga.html#a30ab9d2dd17389ef5260b264329a463f">More...</a><br /></td></tr>
+<tr class="separator:a30ab9d2dd17389ef5260b264329a463f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of traits for particle types, see the <a class="el" href="ParticlePage.html">Particle</a> named requirements. </p>
@@ -553,7 +556,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;.
+  Last updated on &#39;Thu May 23 10:22:02 2024 -0300, 06c5e84&#39;.
   <br/>
 </p>
   </div>

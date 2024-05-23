@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 23 10:22:02 2024 -0300, 06c5e84&#39;"/>
   </head>
   
   
@@ -839,10 +839,6 @@ template&lt;class Derived &gt; </td></tr>
 <tr class="memitem:a3a68b075a1af1561921788425e0fd656"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a3a68b075a1af1561921788425e0fd656">MultivariateUniformDistribution</a> (const <a class="el" href="classbeluga_1_1BaseOccupancyGrid2.html">BaseOccupancyGrid2</a>&lt; Derived &gt; &amp;) -&gt; <a class="el" href="classbeluga_1_1MultivariateUniformDistribution.html">MultivariateUniformDistribution</a>&lt; Sophus::SE2d, Derived &gt;</td></tr>
 <tr class="memdesc:a3a68b075a1af1561921788425e0fd656"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide for 2D occupancy grids. <br /></td></tr>
 <tr class="separator:a3a68b075a1af1561921788425e0fd656"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8aa8df97f1cdadba1ae6dfadd1ce486a"><td class="memTemplParams" colspan="2">template&lt;class Particle , class T  = state_t&lt;Particle&gt;&gt; </td></tr>
-<tr class="memitem:a8aa8df97f1cdadba1ae6dfadd1ce486a"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a8aa8df97f1cdadba1ae6dfadd1ce486a">make_from_state</a> (T value)</td></tr>
-<tr class="memdesc:a8aa8df97f1cdadba1ae6dfadd1ce486a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new particle from the given state.  <a href="namespacebeluga.html#a8aa8df97f1cdadba1ae6dfadd1ce486a">More...</a><br /></td></tr>
-<tr class="separator:a8aa8df97f1cdadba1ae6dfadd1ce486a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afecd4522d48bf1f7b59320b62b024102"><td class="memTemplParams" colspan="2"><a id="afecd4522d48bf1f7b59320b62b024102"></a>
 template&lt;class T , class TupleLike &gt; </td></tr>
 <tr class="memitem:afecd4522d48bf1f7b59320b62b024102"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#afecd4522d48bf1f7b59320b62b024102">element</a> (TupleLike &amp;&amp;tuple) noexcept</td></tr>
@@ -870,6 +866,10 @@ constexpr <a class="el" href="structbeluga_1_1state__detail_1_1state__fn.html">s
 constexpr <a class="el" href="structbeluga_1_1weight__detail_1_1weight__fn.html">weight_detail::weight_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a></td></tr>
 <tr class="memdesc:a80abdff6d85df8ef392ca252ed8588c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object for accessing the <code>weight</code> of a particle. <br /></td></tr>
 <tr class="separator:a80abdff6d85df8ef392ca252ed8588c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30ab9d2dd17389ef5260b264329a463f"><td class="memTemplParams" colspan="2">template&lt;class Particle &gt; </td></tr>
+<tr class="memitem:a30ab9d2dd17389ef5260b264329a463f"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structbeluga_1_1detail_1_1make__from__state__fn.html">detail::make_from_state_fn</a>&lt; Particle &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a30ab9d2dd17389ef5260b264329a463f">make_from_state</a></td></tr>
+<tr class="memdesc:a30ab9d2dd17389ef5260b264329a463f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function object to create a particle from a given state.  <a href="namespacebeluga.html#a30ab9d2dd17389ef5260b264329a463f">More...</a><br /></td></tr>
+<tr class="separator:a30ab9d2dd17389ef5260b264329a463f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57df71946142fa16a5d42d198c2ca3ec"><td class="memTemplParams" colspan="2"><a id="a57df71946142fa16a5d42d198c2ca3ec"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a57df71946142fa16a5d42d198c2ca3ec"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a57df71946142fa16a5d42d198c2ca3ec">is_tuple_like_v</a> = <a class="el" href="structbeluga_1_1is__tuple__like.html">is_tuple_like</a>&lt;T&gt;::value</td></tr>
@@ -1463,51 +1463,6 @@ Z is the upper standard normal quantile for P, where P is the probability that t
 
 </div>
 </div>
-<a id="a8aa8df97f1cdadba1ae6dfadd1ce486a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8aa8df97f1cdadba1ae6dfadd1ce486a">&#9670;&nbsp;</a></span>make_from_state()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Particle , class T  = state_t&lt;Particle&gt;&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr auto beluga::make_from_state </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>value</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns a new particle from the given state. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Particle</td><td>The particle type to be used. </td></tr>
-    <tr><td class="paramname">T</td><td>The particle state type. T must be convertible to <code>state_t&lt;Particle&gt;</code>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">value</td><td>The state to make the particle from. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The new particle, created from the given state.</dd></dl>
-<p>The new particle will have a weight equal to 1. </p>
-
-</div>
-</div>
 <a id="a3356c1b099bda88b4dfda8ff230bac88"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3356c1b099bda88b4dfda8ff230bac88">&#9670;&nbsp;</a></span>nearest_obstacle_distance_map()</h2>
 
@@ -1638,6 +1593,40 @@ template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F, CircularArr
 
 </div>
 </div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a30ab9d2dd17389ef5260b264329a463f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30ab9d2dd17389ef5260b264329a463f">&#9670;&nbsp;</a></span>make_from_state</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Particle &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="structbeluga_1_1detail_1_1make__from__state__fn.html">detail::make_from_state_fn</a>&lt;Particle&gt; beluga::make_from_state</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A function object to create a particle from a given state. </p>
+<p>Takes a state and returns a new particle with that state. The new particle is given a weight of 1.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Particle</td><td>The particle type to be created. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -1696,7 +1685,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;.
+  Last updated on &#39;Thu May 23 10:22:02 2024 -0300, 06c5e84&#39;.
   <br/>
 </p>
   </div>
