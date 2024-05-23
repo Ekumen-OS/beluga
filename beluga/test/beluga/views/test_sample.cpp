@@ -25,6 +25,7 @@
 #include <range/v3/algorithm/find.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/range/dangling.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/view/const.hpp>
@@ -87,7 +88,9 @@ TEST(SampleView, DiscreteDistributionSingleElement) {
 
 TEST(SampleView, DiscreteDistributionSingleElementFromParticleRange) {
   auto input = std::array{std::make_tuple(5, beluga::Weight(5.0))};
-  auto output = input | beluga::views::sample | ranges::views::take_exactly(20);
+  // NOTE: We convert to std::vector because `sample` does not produce a forward range,
+  // and thus does not support iterating over the whole sequence twice.
+  auto output = input | beluga::views::sample | ranges::views::take_exactly(20) | ranges::to<std::vector>;
   ASSERT_EQ(ranges::count(output | beluga::views::states, 5), 20);
   ASSERT_EQ(ranges::count(output | beluga::views::weights, beluga::Weight(1.0)), 20);
 }

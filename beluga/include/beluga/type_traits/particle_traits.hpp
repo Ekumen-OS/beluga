@@ -77,32 +77,47 @@ inline constexpr bool is_particle_range_v = is_particle_v<ranges::range_value_t<
 
 /// \endcond
 
-/// Returns a new particle from the given state.
+namespace detail {
+
+/// Function object type to create a particle from a given state.
+template <class Particle, class State = state_t<Particle>>
+struct make_from_state_fn {
+  /// Returns a new particle from the given state.
+  /**
+   * \param value The state to make the particle from.
+   * \return The new particle, created from the given state.
+   *
+   * The new particle will have a weight equal to 1.
+   */
+  constexpr auto operator()(State value) const {
+    static_assert(is_particle_v<Particle>);
+    auto particle = []() {
+      if constexpr (is_tuple_like_v<Particle>) {
+        // Support for zipped ranges composed with views that don't
+        // propagate the tuple value type of the original range
+        // (ranges::views::const_).
+        return decay_tuple_like_t<Particle>{};
+      } else {
+        return Particle{};
+      }
+    }();
+    beluga::state(particle) = std::move(value);
+    beluga::weight(particle) = 1.0;
+    return particle;
+  }
+};
+
+}  // namespace detail
+
+/// A function object to create a particle from a given state.
 /**
- * \tparam Particle The particle type to be used.
- * \tparam T The particle state type. T must be convertible to `state_t<Particle>`.
- * \param value The state to make the particle from.
- * \return The new particle, created from the given state.
+ * Takes a state and returns a new particle with that state.
+ * The new particle is given a weight of 1.
  *
- * The new particle will have a weight equal to 1.
+ * \tparam Particle The particle type to be created.
  */
-template <class Particle, class T = state_t<Particle>>
-constexpr auto make_from_state(T value) {
-  static_assert(is_particle_v<Particle>);
-  auto particle = []() {
-    if constexpr (is_tuple_like_v<Particle>) {
-      // Support for zipped ranges composed with views that don't
-      // propagate the tuple value type of the original range
-      // (ranges::views::const_).
-      return decay_tuple_like_t<Particle>{};
-    } else {
-      return Particle{};
-    }
-  }();
-  beluga::state(particle) = std::move(value);
-  beluga::weight(particle) = 1.0;
-  return particle;
-}
+template <class Particle>
+inline constexpr detail::make_from_state_fn<Particle> make_from_state;
 
 }  // namespace beluga
 
