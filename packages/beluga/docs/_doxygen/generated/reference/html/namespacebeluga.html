@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -46,7 +46,7 @@
     <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
-    <script src="../../../../../../../_static/design-tabs.js?v=36754332"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/namespacebeluga';</script>
     <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
     <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue May 21 16:56:40 2024 +0000, f5d3632&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;"/>
   </head>
   
   
@@ -776,9 +776,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a3f8114604160ec3d3fd272f183f621f3"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Sophus::Matrix3&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a3f8114604160ec3d3fd272f183f621f3">estimate</a> (Poses &amp;&amp;poses, Weights &amp;&amp;weights)</td></tr>
 <tr class="memdesc:a3f8114604160ec3d3fd272f183f621f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a3f8114604160ec3d3fd272f183f621f3">More...</a><br /></td></tr>
 <tr class="separator:a3f8114604160ec3d3fd272f183f621f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a249b73c891cd88fee740fcc632b655b5"><td class="memTemplParams" colspan="2">template&lt;class Scalars , class Weights , class Scalar  = ranges::range_value_t&lt;Scalars&gt;, typename  = std::enable_if_t&lt;std::is_arithmetic_v&lt;Scalar&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a249b73c891cd88fee740fcc632b655b5"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Scalar, Scalar &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a249b73c891cd88fee740fcc632b655b5">estimate</a> (Scalars &amp;&amp;scalars, Weights &amp;&amp;weights)</td></tr>
+<tr class="memdesc:a249b73c891cd88fee740fcc632b655b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes mean and standard deviation of a range of weighted scalars.  <a href="namespacebeluga.html#a249b73c891cd88fee740fcc632b655b5">More...</a><br /></td></tr>
+<tr class="separator:a249b73c891cd88fee740fcc632b655b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a992598bc475f99f59e5b32b06caf854b"><td class="memTemplParams" colspan="2">template&lt;class Poses , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a992598bc475f99f59e5b32b06caf854b"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Sophus::Matrix3&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">estimate</a> (Poses &amp;&amp;poses)</td></tr>
-<tr class="memdesc:a992598bc475f99f59e5b32b06caf854b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes mean and covariance Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">More...</a><br /></td></tr>
+<tr class="memdesc:a992598bc475f99f59e5b32b06caf854b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">More...</a><br /></td></tr>
 <tr class="separator:a992598bc475f99f59e5b32b06caf854b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a223b23ff16126a77c01a5c636bd4f51f"><td class="memItemLeft" align="right" valign="top"><a id="a223b23ff16126a77c01a5c636bd4f51f"></a>
 constexpr <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a223b23ff16126a77c01a5c636bd4f51f">operator|</a> (<a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a> lflag, <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a> rflag)</td></tr>
@@ -1081,7 +1085,7 @@ template&lt;class Range , std::enable_if_t&lt;!is_particle_range_v&lt; Range &gt
 </div>
 </div>
 <a id="a992598bc475f99f59e5b32b06caf854b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a992598bc475f99f59e5b32b06caf854b">&#9670;&nbsp;</a></span>estimate() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a992598bc475f99f59e5b32b06caf854b">&#9670;&nbsp;</a></span>estimate() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1098,8 +1102,8 @@ template&lt;class Poses , class Pose  = ranges::range_value_t&lt;Poses&gt;, clas
       </table>
 </div><div class="memdoc">
 
-<p>Computes mean and covariance Returns a pair consisting of the estimated mean pose and its covariance. </p>
-<p>Given a range of 2D poses, computes the estimated pose by averaging the translation and rotation parts, assuming all poses are equally weighted. Computes the covariance matrix of the translation parts and the circular variance of the rotation angles to create a 3x3 covariance matrix. It does not take into account the particle weights. This is appropriate for use with filter update cycles that resample the particle set at every iteration, since in that case the belief is fully represented by the spatial distribution of the particles, and the particle weights provide no additional information.</p>
+<p>Returns a pair consisting of the estimated mean pose and its covariance. </p>
+<p>Given a range of poses, computes the estimated pose by averaging the translation and rotation parts, assuming all poses are equally weighted. Computes the covariance matrix of the translation parts and the circular variance of the rotation angles to create a 3x3 covariance matrix. It does not take into account the particle weights. This is appropriate for use with filter update cycles that resample the particle set at every iteration, since in that case the belief is fully represented by the spatial distribution of the particles, and the particle weights provide no additional information.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Poses</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Sophus::SE2&lt;Scalar&gt;</code>. </td></tr>
@@ -1119,7 +1123,7 @@ template&lt;class Poses , class Pose  = ranges::range_value_t&lt;Poses&gt;, clas
 </div>
 </div>
 <a id="a3f8114604160ec3d3fd272f183f621f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f8114604160ec3d3fd272f183f621f3">&#9670;&nbsp;</a></span>estimate() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f8114604160ec3d3fd272f183f621f3">&#9670;&nbsp;</a></span>estimate() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1165,6 +1169,55 @@ template&lt;class Poses , class Weights , class Pose  = ranges::range_value_t&lt
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The estimated pose and its 3x3 covariance matrix. </dd></dl>
+
+</div>
+</div>
+<a id="a249b73c891cd88fee740fcc632b655b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a249b73c891cd88fee740fcc632b655b5">&#9670;&nbsp;</a></span>estimate() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Scalars , class Weights , class Scalar  = ranges::range_value_t&lt;Scalars&gt;, typename  = std::enable_if_t&lt;std::is_arithmetic_v&lt;Scalar&gt;&gt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;Scalar, Scalar&gt; beluga::estimate </td>
+          <td>(</td>
+          <td class="paramtype">Scalars &amp;&amp;&#160;</td>
+          <td class="paramname"><em>scalars</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Weights &amp;&amp;&#160;</td>
+          <td class="paramname"><em>weights</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Computes mean and standard deviation of a range of weighted scalars. </p>
+<p>Given a range of scalars, computes the scalar mean and standard deviation.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Scalars</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>std::vector&lt;Scalar&gt;</code>. </td></tr>
+    <tr><td class="paramname">Weights</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Scalar</code>. </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar value type of the given range of Scalars. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scalars</td><td>Range of scalars. </td></tr>
+    <tr><td class="paramname">weights</td><td>Range of weights. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The estimated mean and its standard deviation. </dd></dl>
 
 </div>
 </div>
@@ -1643,7 +1696,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue May 21 16:56:40 2024 +0000, f5d3632&#39;.
+  Last updated on &#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;.
   <br/>
 </p>
   </div>

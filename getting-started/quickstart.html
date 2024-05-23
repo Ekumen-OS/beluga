@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cc8b88f9" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -46,7 +46,7 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
-    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'getting-started/quickstart';</script>
     <script src="../_static/custom.js?v=b6861115"></script>
     <link rel="icon" href="../_static/logo_200x200.png"/>
@@ -56,7 +56,7 @@
     <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue May 21 16:56:40 2024 +0000, f5d3632&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;"/>
   </head>
   
   
@@ -402,14 +402,14 @@ document.write(`
 <p>Data recordings are key when tuning for performance and troubleshooting issues, even if synthetic like the ROS bags used by this example. On a terminal, just run:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-0">
+<label class="sd-tab-label" for="sd-tab-item-0">
 ROS 2</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>beluga_example<span class="w"> </span>perfect_odometry.launch.xml
 </pre></div>
 </div>
 </div>
 <input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-1">
+<label class="sd-tab-label" for="sd-tab-item-1">
 ROS 1</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>roslaunch<span class="w"> </span>beluga_example<span class="w"> </span>perfect_odometry.launch
 </pre></div>
@@ -431,7 +431,7 @@ ROS 1</label><div class="sd-tab-content docutils">
 <p>On two separate terminals run:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-2">
+<label class="sd-tab-label" for="sd-tab-item-2">
 ROS 2</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>beluga_example<span class="w"> </span>simulation.launch.xml
 </pre></div>
@@ -441,7 +441,7 @@ ROS 2</label><div class="sd-tab-content docutils">
 </div>
 </div>
 <input id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-3">
+<label class="sd-tab-label" for="sd-tab-item-3">
 ROS 1</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>roslaunch<span class="w"> </span>beluga_example<span class="w"> </span>simulation.launch
 </pre></div>
@@ -461,14 +461,14 @@ ROS 1</label><div class="sd-tab-content docutils">
 <p>Eventually, we have to hit the hardware. This example assumes a fully functional ROS (1) or ROS 2 powered robot, equipped with a 2D lidar and already publishing odometry estimates. Furthermore, a 2D map is necessary. Any suitable SLAM solution may be used to build one. <a class="reference external" href="https://github.com/SteveMacenski/slam_toolbox">SLAM Toolbox</a>, <a class="reference external" href="https://google-cartographer-ros.readthedocs.io/en/latest/">Cartographer ROS</a>, and <a class="reference external" href="https://github.com/introlab/rtabmap_ros">RTABMap ROS</a> are quite popular. Once you are all set, on a terminal you can just run:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-4" name="sd-tab-set-2" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-4">
+<label class="sd-tab-label" for="sd-tab-item-4">
 ROS 2</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>beluga_example<span class="w"> </span>localization_launch.py<span class="w"> </span>use_composition:<span class="o">=</span>True<span class="w"> </span>localization_params_file:<span class="o">=</span>&lt;PARAMS_PATH&gt;<span class="w"> </span>localization_map:<span class="o">=</span>&lt;MAP_YAML_PATH&gt;
 </pre></div>
 </div>
 </div>
 <input id="sd-tab-item-5" name="sd-tab-set-2" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-5">
+<label class="sd-tab-label" for="sd-tab-item-5">
 ROS 1</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>roslaunch<span class="w"> </span>beluga_example<span class="w"> </span>localization.launch<span class="w"> </span>localization_params_file:<span class="o">=</span>&lt;PARAMS_PATH&gt;<span class="w"> </span>localization_map:<span class="o">=</span>&lt;MAP_YAML_PATH&gt;
 </pre></div>
@@ -485,14 +485,14 @@ ROS 1</label><div class="sd-tab-content docutils">
 <p>A picture is worth a thousand words. Probabilistic algorithms are no exception. Fortunately, there is RViz. Just run:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-6" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-6">
+<label class="sd-tab-label" for="sd-tab-item-6">
 ROS 2</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rviz2<span class="w"> </span>-d<span class="w"> </span><span class="k">$(</span>ros2<span class="w"> </span>pkg<span class="w"> </span>prefix<span class="w"> </span>--share<span class="w"> </span>beluga_example<span class="k">)</span>/rviz/amcl.ros2.rviz
 </pre></div>
 </div>
 </div>
 <input id="sd-tab-item-7" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-7">
+<label class="sd-tab-label" for="sd-tab-item-7">
 ROS 1</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rviz<span class="w"> </span>-d<span class="w"> </span><span class="k">$(</span>rospack<span class="w"> </span>find<span class="w"> </span>beluga_example<span class="k">)</span>/rviz/amcl.ros.rviz
 </pre></div>
@@ -619,7 +619,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue May 21 16:56:40 2024 +0000, f5d3632&#39;.
+  Last updated on &#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;.
   <br/>
 </p>
   </div>

@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cc8b88f9" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -46,7 +46,7 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
-    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'getting-started/installation';</script>
     <script src="../_static/custom.js?v=b6861115"></script>
     <link rel="icon" href="../_static/logo_200x200.png"/>
@@ -56,7 +56,7 @@
     <link rel="prev" title="Overview" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue May 21 16:56:40 2024 +0000, f5d3632&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;"/>
   </head>
   
   
@@ -411,7 +411,7 @@ document.write(`
 <p>Remember to source the corresponding installation from now on, as documented upstream:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-0">
+<label class="sd-tab-label" for="sd-tab-item-0">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/opt/ros/<span class="si">${</span><span class="nv">ROS_DISTRO</span><span class="si">}</span>/setup.bash
 </pre></div>
@@ -425,7 +425,7 @@ Ubuntu</label><div class="sd-tab-content docutils">
 <p>All packages in the Beluga project are ROS packages. Cloning them into a local workspace is thus best for subsequent build, install, and use:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-1">
+<label class="sd-tab-label" for="sd-tab-item-1">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ws/src
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ekumen-OS/beluga.git<span class="w"> </span>~/ws/src/beluga
@@ -439,7 +439,7 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ekume
 <p>First of all, ensure your system and package manager are up to date before proceeding.</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-2">
+<label class="sd-tab-label" for="sd-tab-item-2">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>upgrade
 </pre></div>
@@ -449,7 +449,7 @@ Ubuntu</label><div class="sd-tab-content docutils">
 <p>Then use <code class="docutils literal notranslate"><span class="pre">rosdep</span></code> to install Beluga packages’ dependencies:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-3">
+<label class="sd-tab-label" for="sd-tab-item-3">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rosdep<span class="w"> </span>update
 rosdep<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>--from-paths<span class="w"> </span>~/ws/src/beluga<span class="w"> </span>-y<span class="w"> </span>-i<span class="w"> </span>-t<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span><span class="nb">exec</span>
@@ -463,7 +463,7 @@ rosdep<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> 
 <p>For ROS 2 and ROS 1 distributions alike, <code class="docutils literal notranslate"><span class="pre">colcon</span></code> can be used to build:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-4">
+<label class="sd-tab-label" for="sd-tab-item-4">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build<span class="w"> </span>--packages-up-to<span class="w"> </span>beluga_example<span class="w"> </span>--cmake-args<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
 </pre></div>
@@ -473,7 +473,7 @@ Ubuntu</label><div class="sd-tab-content docutils">
 <p>Alternatively, for ROS 1 distributions, you may use <code class="docutils literal notranslate"><span class="pre">catkin_make_isolated</span></code> instead:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
-</input><label class="sd-tab-label" for="sd-tab-item-5">
+<label class="sd-tab-label" for="sd-tab-item-5">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>catkin_make_isolated<span class="w"> </span>--only-pkg-with-deps<span class="w"> </span>beluga_example<span class="w"> </span>--install<span class="w"> </span>--cmake-args<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
 </pre></div>
@@ -570,7 +570,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue May 21 16:56:40 2024 +0000, f5d3632&#39;.
+  Last updated on &#39;Thu May 23 08:47:11 2024 -0300, 9134791&#39;.
   <br/>
 </p>
   </div>
