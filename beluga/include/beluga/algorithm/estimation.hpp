@@ -15,6 +15,8 @@
 #ifndef BELUGA_ALGORITHM_ESTIMATION_HPP
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
+#include <range/v3/algorithm/count_if.hpp>
+#include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/view/common.hpp>
@@ -169,9 +171,51 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, 
   return std::pair{estimated_pose, covariance_matrix};
 }
 
-/// Computes mean and covariance Returns a pair consisting of the estimated mean pose and its covariance.
+/// Computes mean and standard deviation of a range of weighted scalars.
 /**
- * Given a range of 2D poses, computes the estimated pose by averaging the translation
+ * Given a range of scalars, computes the scalar mean and standard deviation.
+ *
+ * \tparam Scalars A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
+ *  value type is `std::vector<Scalar>`.
+ * \tparam Weights A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
+ *  value type is `Scalar`.
+ * \tparam Scalar The scalar value type of the given range of Scalars.
+ * \param scalars Range of scalars.
+ * \param weights Range of weights.
+ * \return The estimated mean and its standard deviation.
+ */
+template <
+    class Scalars,
+    class Weights,
+    class Scalar = ranges::range_value_t<Scalars>,
+    typename = std::enable_if_t<std::is_arithmetic_v<Scalar>>>
+std::pair<Scalar, Scalar> estimate(Scalars&& scalars, Weights&& weights) {
+  auto weights_view = weights | ranges::views::common;
+  const auto weights_sum = ranges::accumulate(weights, 0.0, std::plus<>{});
+  auto normalized_weights_view =
+      weights_view | ranges::views::transform([weights_sum](auto weight) { return weight / weights_sum; });
+
+  const Scalar weighted_mean = std::transform_reduce(
+      scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{}, std::multiplies<>{});
+
+  const Scalar weighted_squared_deviations = std::transform_reduce(
+      scalars.begin(), scalars.end(), normalized_weights_view.begin(), 0.0, std::plus<>{},
+      [weighted_mean](const auto& scalar, const auto& weight) {
+        return weight * (scalar - weighted_mean) * (scalar - weighted_mean);
+      });
+
+  const auto number_of_non_zero_weights =
+      static_cast<Scalar>(ranges::count_if(weights_view, [&](auto weight) { return weight > 0; }));
+
+  const Scalar weighted_sd =
+      std::sqrt(weighted_squared_deviations * number_of_non_zero_weights / (number_of_non_zero_weights - 1));
+
+  return std::pair{weighted_mean, weighted_sd};
+}
+
+/// Returns a pair consisting of the estimated mean pose and its covariance.
+/**
+ * Given a range of poses, computes the estimated pose by averaging the translation
  * and rotation parts, assuming all poses are equally weighted.
  * Computes the covariance matrix of the translation parts and the circular variance
  * of the rotation angles to create a 3x3 covariance matrix.
