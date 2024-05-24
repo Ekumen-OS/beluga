@@ -47,6 +47,7 @@ constexpr std::size_t floor_and_fibo_hash(double value) {
     if constexpr (std::is_same_v<std::size_t, std::uint64_t>) {
       return 11400714819323198485LLU;  // golden ratio for 64 bits
     } else {
+      static_assert(std::is_same_v<std::size_t, std::uint32_t>);
       return 2654435769U;  // golden ratio for 32 bits
     }
   }();
