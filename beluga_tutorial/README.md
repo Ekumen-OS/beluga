@@ -508,7 +508,7 @@ auto particles = beluga::views::sample(initial_distribution) |                  
 ### 3.4 Simulation Loop
 The parameters **initial_position**, **velocity**, and **dt** are used to express the movement of the robot along the one-dimensional space and in a single direction, represented by the following equation:
 $$x(t) = x(t-1) + v * d_t$$
-where $x(t)$, or in the code **current_pose**, is initialize with the parameter **initial_position**, and at the beginning of each iteration cycle, it also functions as $x(t-1)$ before being updated. Therefore, the following loop will iterate over a configurable **number_of_cycles** or until the robot exceeds the map boundaries.
+where $x(t)$, or in the code **current_position**, is initialize with the parameter **initial_position**, and at the beginning of each iteration cycle, it also functions as $x(t-1)$ before being updated. Therefore, the following loop will iterate over a configurable **number_of_cycles** or until the robot exceeds the map boundaries.
 
 ```cpp
 double current_position{parameters.initial_position};
