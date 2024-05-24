@@ -2,6 +2,9 @@
 Changelog for package beluga_benchmark
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.0.0 (2024-05-21)
 ------------------
 * Drop ament_lint_auto dependencies (`#370 <https://github.com/Ekumen-OS/beluga/issues/370>`_)

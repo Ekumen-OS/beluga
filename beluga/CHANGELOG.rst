@@ -2,6 +2,13 @@
 Changelog for package beluga
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Support 32-bit hashes (`#386 <https://github.com/Ekumen-OS/beluga/issues/386>`_)
+* Rewrite `make_from_state` as a function object (`#384 <https://github.com/Ekumen-OS/beluga/issues/384>`_)
+
+* Contributors: Alon Druck, Nahuel Espinosa
+
 2.0.0 (2024-05-21)
 ------------------
 * Please clang-tidy on Ubuntu Noble (`#379 <https://github.com/Ekumen-OS/beluga/issues/379>`_)
