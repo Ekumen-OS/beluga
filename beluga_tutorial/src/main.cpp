@@ -172,13 +172,8 @@ void DumpFile(const std::filesystem::path& path, const Node& node) {
 
 namespace beluga::tutorial {
 
-int Run(int argc, char* argv[]) {
-  if (argc < 2) {
-    std::cerr << "Usage: " << argv[0] << "<parameters_path>\n";
-    return 1;
-  }
-
-  const auto parameters = YAML::LoadFile(argv[1]).as<beluga::tutorial::Parameters>();
+int run(const std::filesystem::path& path) {
+  const auto parameters = YAML::LoadFile(path).as<beluga::tutorial::Parameters>();
 
   std::normal_distribution<double> initial_distribution(parameters.initial_position, parameters.initial_position_sd);
   auto particles = beluga::views::sample(initial_distribution) |                  //
@@ -259,5 +254,10 @@ int Run(int argc, char* argv[]) {
 }  // namespace beluga::tutorial
 
 int main(int argc, char* argv[]) {
-  return beluga::tutorial::Run(argc, argv);
+  if (argc < 2) {
+    std::cerr << "Usage: " << argv[0] << " <parameters_path>\n";
+    return 1;
+  }
+
+  return beluga::tutorial::run(argv[1]);
 }
