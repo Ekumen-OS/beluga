@@ -2,8 +2,8 @@
 Changelog for package beluga
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.1 (2024-05-24)
+------------------
 * Support 32-bit hashes (`#386 <https://github.com/Ekumen-OS/beluga/issues/386>`_)
 * Rewrite `make_from_state` as a function object (`#384 <https://github.com/Ekumen-OS/beluga/issues/384>`_)
 
