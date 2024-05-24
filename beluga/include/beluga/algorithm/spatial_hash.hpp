@@ -43,18 +43,31 @@ namespace detail {
  */
 template <std::size_t N, std::size_t I>
 constexpr std::size_t floor_and_fibo_hash(double value) {
-  static_assert(std::is_same_v<std::size_t, std::uint64_t>);
-  constexpr auto kFib64 = 11400714819323198485LLU;  // golden ratio for 64 bits
+  constexpr auto kFib = []() {
+    if constexpr (std::is_same_v<std::size_t, std::uint64_t>) {
+      return 11400714819323198485LLU;  // golden ratio for 64 bits
+    } else if constexpr (std::is_same_v<std::size_t, std::uint32_t>) {
+      return 2654435769U;  // golden ratio for 32 bits
+    } else {
+      // Write false in a sufficiently complex way so as to confuse the compiler.
+      // See https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2593r1.html
+      static_assert([](auto) { return false; }(std::integral_constant<std::size_t, N>{}));
+    }
+  }();
+
+  using signed_type = std::make_signed_t<std::size_t>;
+  using unsigned_type = std::make_unsigned_t<std::size_t>;
+
   // floor the value and convert to integer
-  const auto signed_value = static_cast<std::int64_t>(std::floor(value));
+  const auto signed_value = static_cast<signed_type>(std::floor(value));
   // work with unsigned from now on
-  const auto unsigned_value = static_cast<std::uint64_t>(signed_value);
-  // spread number information all through the 64 bits using the fibonacci hash
-  const auto div_hashed_value = kFib64 * unsigned_value;
+  const auto unsigned_value = static_cast<unsigned_type>(signed_value);
+  // spread number information through all the bits using the fibonacci hash
+  const auto div_hashed_value = kFib * unsigned_value;
   // rotate bits to avoid aliasing between different values of I
   if constexpr (N * I != 0) {
     const auto left_hash = (div_hashed_value << N * I);
-    const auto right_hash = (div_hashed_value >> (64 - N * I));
+    const auto right_hash = (div_hashed_value >> (std::numeric_limits<std::size_t>::digits - N * I));
     return left_hash | right_hash;
   } else {
     return div_hashed_value;
