@@ -31,6 +31,8 @@
 #include <yaml-cpp/yaml.h>
 #include <beluga/beluga.hpp>
 
+namespace beluga::tutorial {
+
 struct Parameters {
   /// Size of the 1D map in (m)
   /**
@@ -38,9 +40,6 @@ struct Parameters {
    * but the limit is defined as an integer to simplify data visualization.
    */
   std::size_t map_size{100};
-
-  /// Maximum number of doors (or landmarks) in the map.
-  std::size_t number_of_doors{33};
 
   /// Fixed number of particles used by the algorithm.
   std::size_t number_of_particles{200};
@@ -84,6 +83,9 @@ struct Parameters {
    */
   double min_particle_weight{0.08};
 
+  /// Landmark coordinates in the simulated world.
+  std::vector<double> landmark_map;
+
   /// Dataset path.
   /**
    * The dataset file is used to save the data produced by the simulation for posterior analisys.
@@ -95,111 +97,95 @@ using Particle = std::tuple<double, beluga::Weight>;
 
 struct RobotRecord {
   double ground_truth;
-  beluga::TupleVector<Particle> current;
-  beluga::TupleVector<Particle> propagate;
-  beluga::TupleVector<Particle> reweight;
-  beluga::TupleVector<Particle> resample;
+  std::vector<Particle> current;
+  std::vector<Particle> propagate;
+  std::vector<Particle> reweight;
+  std::vector<Particle> resample;
   std::pair<double, double> estimation;
 };
 
-struct SimulationRecord {
-  std::vector<double> landmark_map;
-  std::vector<RobotRecord> robot_record;
+}  // namespace beluga::tutorial
+
+namespace YAML {
+
+template <>
+struct convert<beluga::tutorial::Parameters> {
+  static bool decode(const Node& node, beluga::tutorial::Parameters& parameters) {
+    parameters.map_size = node["map_size"].as<std::size_t>();
+    parameters.number_of_particles = node["number_of_particles"].as<std::size_t>();
+    parameters.number_of_cycles = node["number_of_cycles"].as<std::size_t>();
+    parameters.initial_position = node["initial_position"].as<double>();
+    parameters.initial_position_sd = node["initial_position_sd"].as<double>();
+    parameters.dt = node["dt"].as<double>();
+    parameters.velocity = node["velocity"].as<double>();
+    parameters.translation_sd = node["translation_sd"].as<double>();
+    parameters.sensor_range = node["sensor_range"].as<double>();
+    parameters.sensor_model_sigma = node["sensor_model_sigma"].as<double>();
+    parameters.min_particle_weight = node["min_particle_weight"].as<double>();
+    parameters.record_path = node["record_path"].as<std::string>();
+    parameters.landmark_map = node["landmark_map"].as<std::vector<double>>();
+    return true;
+  }
 };
 
-void load_parameters(const std::filesystem::path& path, Parameters& parameters) {
-  try {
-    YAML::Node params = YAML::LoadFile(path);
-    parameters.map_size = params["map_size"].as<std::size_t>();
-    parameters.number_of_doors = params["number_of_doors"].as<std::size_t>();
-    parameters.number_of_particles = params["number_of_particles"].as<std::size_t>();
-    parameters.number_of_cycles = params["number_of_cycles"].as<std::size_t>();
-    parameters.initial_position = params["initial_position"].as<double>();
-    parameters.initial_position_sd = params["initial_position_sd"].as<double>();
-    parameters.dt = params["dt"].as<double>();
-    parameters.velocity = params["velocity"].as<double>();
-    parameters.translation_sd = params["translation_sd"].as<double>();
-    parameters.sensor_range = params["sensor_range"].as<double>();
-    parameters.sensor_model_sigma = params["sensor_model_sigma"].as<double>();
-    parameters.min_particle_weight = params["min_particle_weight"].as<double>();
-    parameters.record_path = params["record_path"].as<std::string>();
-  } catch (YAML::BadFile& e) {
-    std::cout << e.what() << "\n";
+template <>
+struct convert<std::vector<beluga::tutorial::Particle>> {
+  static Node encode(const std::vector<beluga::tutorial::Particle>& particles) {
+    Node node;
+    node["states"] = beluga::views::states(particles) | ranges::to<std::vector<double>>;
+    node["weights"] = beluga::views::weights(particles) | ranges::to<std::vector<double>>;
+    return node;
   }
-}
+};
 
-void load_landmark_map(const std::filesystem::path& path, std::vector<double>& landmark_map) {
-  try {
-    YAML::Node node = YAML::LoadFile(path);
-    landmark_map = node["landmark_map"].as<std::vector<double>>();
-  } catch (YAML::BadFile& e) {
-    std::cout << e.what() << "\n";
+template <>
+struct convert<std::vector<beluga::tutorial::RobotRecord>> {
+  static Node encode(const std::vector<beluga::tutorial::RobotRecord>& records) {
+    Node node;
+    for (auto&& [cycle, record] : ranges::views::enumerate(records)) {
+      node[cycle]["ground_truth"] = record.ground_truth;
+
+      auto particles = node[cycle]["particles"];
+      particles["current"] = record.current;
+      particles["propagate"] = record.propagate;
+      particles["reweight"] = record.reweight;
+      particles["resample"] = record.resample;
+
+      auto estimation = node[cycle]["estimation"];
+      estimation["mean"] = std::get<0>(record.estimation);
+      estimation["sd"] = std::get<1>(record.estimation);
+    }
+    return node;
   }
-}
+};
 
-void save_simulation_records(const std::filesystem::path& path, const SimulationRecord& simulation_record) {
-  YAML::Node node;
-
-  for (const auto& landmark : simulation_record.landmark_map) {
-    node["landmark_map"].push_back(landmark);
-  }
-
-  for (auto&& [cycle, record] : simulation_record.robot_record | ranges::views::enumerate) {
-    node["simulation_records"][cycle]["ground_truth"] = record.ground_truth;
-
-    auto current = node["simulation_records"][cycle]["particles"]["current"];
-    current["states"] = beluga::views::states(record.current) | ranges::to<std::vector<double>>;
-    current["weights"] = beluga::views::weights(record.current) | ranges::to<std::vector<double>>;
-
-    auto propagate = node["simulation_records"][cycle]["particles"]["propagate"];
-    propagate["states"] = beluga::views::states(record.propagate) | ranges::to<std::vector<double>>;
-    propagate["weights"] = beluga::views::weights(record.propagate) | ranges::to<std::vector<double>>;
-
-    auto reweight = node["simulation_records"][cycle]["particles"]["reweight"];
-    reweight["states"] = beluga::views::states(record.reweight) | ranges::to<std::vector<double>>;
-    reweight["weights"] = beluga::views::weights(record.reweight) | ranges::to<std::vector<double>>;
-
-    auto resample = node["simulation_records"][cycle]["particles"]["resample"];
-    resample["states"] = beluga::views::states(record.resample) | ranges::to<std::vector<double>>;
-    resample["weights"] = beluga::views::weights(record.resample) | ranges::to<std::vector<double>>;
-
-    auto estimation = node["simulation_records"][cycle]["estimation"];
-    estimation["mean"] = std::get<0>(record.estimation);
-    estimation["sd"] = std::get<1>(record.estimation);
-  }
-
+void DumpFile(const std::filesystem::path& path, const Node& node) {
   std::ofstream fout(path, std::ios::trunc);
   fout << node;
-  fout.close();
 }
 
-int main(int argc, char* argv[]) {
-  if (argc < 2) {
-    std::cerr << "Usage: " << argv[0] << "<parameters_path>\n";
-    return 1;
-  }
+}  // namespace YAML
 
-  Parameters parameters;
-  load_parameters(argv[1], parameters);
+namespace beluga::tutorial {
 
-  SimulationRecord simulation_record;
-
-  std::vector<double> landmark_map;
-  load_landmark_map(argv[1], landmark_map);
-  simulation_record.landmark_map = landmark_map;
+int run(const std::filesystem::path& path) {
+  const auto parameters = YAML::LoadFile(path).as<beluga::tutorial::Parameters>();
 
   std::normal_distribution<double> initial_distribution(parameters.initial_position, parameters.initial_position_sd);
   auto particles = beluga::views::sample(initial_distribution) |                  //
                    ranges::views::transform(beluga::make_from_state<Particle>) |  //
                    ranges::views::take_exactly(parameters.number_of_particles) |  //
-                   ranges::to<beluga::TupleVector>;
+                   ranges::to<std::vector>;
+
+  std::vector<RobotRecord> records;
+  records.reserve(parameters.number_of_cycles);
 
   double current_position{parameters.initial_position};
   for (std::size_t n = 0; n < parameters.number_of_cycles; ++n) {
-    RobotRecord robot_record;
+    RobotRecord record;
 
     current_position += parameters.velocity * parameters.dt;
-    robot_record.ground_truth = current_position;
+    record.ground_truth = current_position;
 
     if (current_position > static_cast<double>(parameters.map_size)) {
       break;
@@ -212,14 +198,14 @@ int main(int argc, char* argv[]) {
     };
 
     auto detections =
-        landmark_map |                                                                                       //
+        parameters.landmark_map |                                                                            //
         ranges::views::transform([&](double landmark) { return landmark - current_position; }) |             //
         ranges::views::remove_if([&](double range) { return std::abs(range) > parameters.sensor_range; }) |  //
         ranges::to<std::vector>;
 
     auto sensor_model = [&](double particle_position) {
       auto particle_detections =
-          landmark_map |                                                                             //
+          parameters.landmark_map |                                                                  //
           ranges::views::transform([&](double landmark) { return landmark - particle_position; }) |  //
           ranges::to<std::vector>;
 
@@ -235,26 +221,40 @@ int main(int argc, char* argv[]) {
                  });
     };
 
-    robot_record.current = particles;
+    record.current = particles;
 
     particles |= beluga::actions::propagate(std::execution::seq, motion_model);
-    robot_record.propagate = particles;
+    record.propagate = particles;
 
     particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
-    robot_record.reweight = particles;
+    record.reweight = particles;
 
     particles |= beluga::views::sample |                                        //
                  ranges::views::take_exactly(parameters.number_of_particles) |  //
                  beluga::actions::assign;
-    robot_record.resample = particles;
+    record.resample = particles;
 
     const auto estimation = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
-    robot_record.estimation = estimation;
+    record.estimation = estimation;
 
-    simulation_record.robot_record.push_back(std::move(robot_record));
+    records.push_back(std::move(record));
   }
 
-  save_simulation_records(parameters.record_path, simulation_record);
+  YAML::Node output;
+  output["landmark_map"] = parameters.landmark_map;
+  output["simulation_records"] = std::move(records);
+  YAML::DumpFile(parameters.record_path, output);
 
   return 0;
+}
+
+}  // namespace beluga::tutorial
+
+int main(int argc, char* argv[]) {
+  if (argc < 2) {
+    std::cerr << "Usage: " << argv[0] << " <parameters_path>\n";
+    return 1;
+  }
+
+  return beluga::tutorial::run(argv[1]);
 }
