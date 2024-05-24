@@ -177,7 +177,8 @@ int run(const std::filesystem::path& path) {
                    ranges::views::take_exactly(parameters.number_of_particles) |  //
                    ranges::to<std::vector>;
 
-  std::vector<RobotRecord> records{parameters.number_of_cycles};
+  std::vector<RobotRecord> records;
+  records.reserve(parameters.number_of_cycles);
 
   double current_position{parameters.initial_position};
   for (std::size_t n = 0; n < parameters.number_of_cycles; ++n) {
