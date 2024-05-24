@@ -2,6 +2,9 @@
 Changelog for package beluga_example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.0.0 (2024-05-21)
 ------------------
 * Add ROS 2 Jazzy to CI/CD and dev workflows (`#378 <https://github.com/Ekumen-OS/beluga/issues/378>`_)

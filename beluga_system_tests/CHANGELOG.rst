@@ -2,6 +2,9 @@
 Changelog for package beluga_system_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.0.0 (2024-05-21)
 ------------------
 * Please clang-tidy on Ubuntu Noble (`#379 <https://github.com/Ekumen-OS/beluga/issues/379>`_)
