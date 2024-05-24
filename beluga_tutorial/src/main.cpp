@@ -41,9 +41,6 @@ struct Parameters {
    */
   std::size_t map_size{100};
 
-  /// Maximum number of doors (or landmarks) in the map.
-  std::size_t number_of_doors{33};
-
   /// Fixed number of particles used by the algorithm.
   std::size_t number_of_particles{200};
 
@@ -115,7 +112,6 @@ template <>
 struct convert<beluga::tutorial::Parameters> {
   static bool decode(const Node& node, beluga::tutorial::Parameters& parameters) {
     parameters.map_size = node["map_size"].as<std::size_t>();
-    parameters.number_of_doors = node["number_of_doors"].as<std::size_t>();
     parameters.number_of_particles = node["number_of_particles"].as<std::size_t>();
     parameters.number_of_cycles = node["number_of_cycles"].as<std::size_t>();
     parameters.initial_position = node["initial_position"].as<double>();
