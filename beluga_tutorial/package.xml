@@ -16,7 +16,7 @@
   <buildtool_depend>cmake</buildtool_depend>
 
   <depend>beluga</depend>
-  <depend>yaml_cpp_vendor</depend>
+  <depend condition="$ROS_VERSION == 2">yaml_cpp_vendor</depend>
 
   <export>
     <build_type>cmake</build_type>
