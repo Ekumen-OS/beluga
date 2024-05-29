@@ -42,7 +42,7 @@ struct Parameters {
   std::size_t map_size{100};
 
   /// Fixed number of particles used by the algorithm.
-  std::size_t number_of_particles{200};
+  std::size_t number_of_particles{300};
 
   /// Number of simulation cycles.
   std::size_t number_of_cycles{100};
@@ -54,7 +54,7 @@ struct Parameters {
   /**
    * Represents the uncertainty of the robot's initial position.
    */
-  double initial_position_sd{1.0};
+  double initial_position_sd{10.0};
 
   /// Delta time in seconds (s).
   double dt{1.0};
@@ -69,7 +69,7 @@ struct Parameters {
   double translation_sd{1.0};
 
   /// Sensor range of view in meters (m)
-  double sensor_range{2.0};
+  double sensor_range{3.0};
 
   /// Sensor model sigma
   /**
@@ -84,7 +84,7 @@ struct Parameters {
   double min_particle_weight{0.08};
 
   /// Landmark coordinates in the simulated world.
-  std::vector<double> landmark_map;
+  std::vector<double> landmark_map{5, 12, 25, 37, 52, 55, 65, 74, 75, 87, 97};
 
   /// Dataset path.
   /**
