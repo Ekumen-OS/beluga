@@ -98,9 +98,8 @@ using Particle = std::tuple<double, beluga::Weight>;
 struct RobotRecord {
   double ground_truth;
   std::vector<Particle> current;
-  std::vector<Particle> propagate;
-  std::vector<Particle> reweight;
-  std::vector<Particle> resample;
+  std::vector<Particle> prediction;
+  std::vector<Particle> update;
   std::pair<double, double> estimation;
 };
 
@@ -147,9 +146,8 @@ struct convert<std::vector<beluga::tutorial::RobotRecord>> {
 
       auto particles = node[cycle]["particles"];
       particles["current"] = record.current;
-      particles["propagate"] = record.propagate;
-      particles["reweight"] = record.reweight;
-      particles["resample"] = record.resample;
+      particles["prediction"] = record.prediction;
+      particles["update"] = record.update;
 
       auto estimation = node[cycle]["estimation"];
       estimation["mean"] = std::get<0>(record.estimation);
@@ -224,15 +222,14 @@ int run(const std::filesystem::path& path) {
     record.current = particles;
 
     particles |= beluga::actions::propagate(std::execution::seq, motion_model);
-    record.propagate = particles;
+    record.prediction = particles;
 
     particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
-    record.reweight = particles;
 
     particles |= beluga::views::sample |                                        //
                  ranges::views::take_exactly(parameters.number_of_particles) |  //
                  beluga::actions::assign;
-    record.resample = particles;
+    record.update = particles;
 
     const auto estimation = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
     record.estimation = estimation;
