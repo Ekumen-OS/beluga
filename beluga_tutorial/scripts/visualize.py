@@ -29,7 +29,7 @@ import argparse
 
 def plot_stages(yaml_data, axs, index):
     particles = yaml_data['simulation_records'][index]["particles"]
-    for j, stage in enumerate(['current', 'propagate', 'reweight', 'resample']):
+    for j, stage in enumerate(['current', 'prediction', 'update']):
         states = particles[stage]['states']
         ax = axs[j]
         ax.clear()
@@ -46,7 +46,7 @@ def plot_stages(yaml_data, axs, index):
         ax.set_xticks(np.arange(-5, 101, 5))
 
     landmark_map = yaml_data["landmark_map"]
-    ax_landmark = axs[4]
+    ax_landmark = axs[3]
     ax_landmark.clear()
 
     for x in range(101):
@@ -63,7 +63,7 @@ def plot_stages(yaml_data, axs, index):
     ax_landmark.set_xticks(np.arange(-5, 101, 5))
 
     ground_truth = yaml_data['simulation_records'][index]["ground_truth"]
-    ax_ground_truth = axs[5]
+    ax_ground_truth = axs[4]
     ax_ground_truth.clear()
     ax_ground_truth.bar(ground_truth, 1, color='green')
     ax_ground_truth.set_title(f"Ground Truth: {ground_truth}")
@@ -80,7 +80,7 @@ def plot_stages(yaml_data, axs, index):
         f"Mean: {mean}\nSD: {sd}",
         ha='center',
         va='center',
-        transform=axs[5].transAxes,
+        transform=axs[4].transAxes,
         bbox=dict(facecolor='white', alpha=0.5),
     )
 
@@ -114,12 +114,19 @@ def main(argv=None) -> int:
         default=250,
     )
 
+    parser.add_argument(
+        '-r',
+        '--repeat-animation',
+        action='store_true',
+        help='Repeat the animation when it is finished',
+    )
+
     args = parser.parse_args(argv)
 
     with open(args.record_file_path, 'r') as file:
         yaml_data = yaml.safe_load(file)
 
-    fig, axs = plt.subplots(6, 1)
+    fig, axs = plt.subplots(5, 1)
     num_frames = len(yaml_data['simulation_records'])
 
     def plot_stages_update(current_frame: int) -> None:
@@ -151,7 +158,7 @@ def main(argv=None) -> int:
             frames=num_frames,
             blit=False,
             interval=args.interval_ms,
-            repeat=False,
+            repeat=args.repeat_animation,
         )
 
     plt.show()
