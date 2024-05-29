@@ -2,7 +2,6 @@
 
 :::{figure} ../_images/beluga_tutorial.gif
 :alt: Short video of a beluga_tutorial's record.
-TODO: Modify the GIF using the updated code
 :::
 
 ## Overview
