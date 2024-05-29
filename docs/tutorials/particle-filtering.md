@@ -1,22 +1,43 @@
 # Primer on Particle Filtering with Beluga
 
+:::{figure} ../_images/beluga_tutorial.gif
+:alt: Short video of a beluga_tutorial's record.
+TODO: Modify the GIF using the updated code
+:::
 
 ## Overview
-![Simulation Video](./resources/simulation_video.mp4)
 
-This tutorial demonstrates how to implement an MCL particle filter for a robot moving in a one-dimensional space and in a single direction, using Beluga. The code is written using C++17 with the ranges-v3 library for range handling along with its respective algorithms.
+Modern robotic systems operate in unstructured, unpredictable environments, making robust software crucial to handle diverse situations.
+A key challenge is uncertainty, which occurs when robots lack critical task information. Probabilistic robotics addresses this by
+representing uncertainty explicitly through probability theory, rather than relying on a single best guess.
+
+The robot localization problem is one of the most important ones in mobile robotics, as it is a fundamental requirement for autonomous navigation. The Monte Carlo Localization (MCL) algorithm is one of the most widely used algorithms for map-based localization and has become a key component in many robotic systems [^BelugaPaper]. **TODO: It is necessary to put here the reference, or just include it at the end?**
+
+
+The proposed of this tutorial is to show how to implement a custom {abbr}`MCL (Monte Carlo Localiaztion)` algorithm using **Beluga**,
+based on the example given by _Probabilistic Robotics [^ProbRob], page 200, figure 8.11_. **TODO: Can I used the image of the book?**
+
+The code is written using C++17 with the ranges-v3 [^RangesV3] library for range handling along with its respective algorithms.
 
 ## Requirements
-This tutorial requires to have installed beluga(link).
+Before starting the tutorial, first [install beluga](../getting-started/installation.md).
+
+:::{important}
+I highly recommend reading the [key concepts](../concepts/key-concepts.md) section before diving into this tutorial.
+:::
 
 ## Monte Carlo Localization (MCL) Background
 Monte Carlo Localization is part of the broader family of Bayesian state estimation methods. They are all based on the Bayes filter, which is a recursive algorithm that estimates the posterior probability distribution of the state of a system given a sequence of sensor measurements and control inputs.
 The estimation at any given time is represented using a probability distribution function, called **belief**, defined as:
+
 $$bel(x_t) = p(x_t|z_{1:t},u_{1:t})$$
+
 where $x_t$ is the state of the system at time $t$, and $z_{1:t}$ and $u_{1:t}$ are the sequence of sensor measurements and the sequence of control inputs up to time $t$ respectively. A belief reflects the robot's internal knowledge about the state of the environment. We therefore distinguish the **true state** from the robot's internal belief.
 
 It can be shown that the posterior belief can be recursively computed using the prior belief, the current sensor readings, and the current control inputs using the following update rule:
+
 $$bel(x_t)=η * p(z_t|x_t) * \int p(x_t|x_{t-1}, u_t)bel(x_{t-1}) \, dx_{t-1}$$
+
 where **η** is a normalization factor.
 
 A particle filter approximates this update rule by representing the belief as a set of discrete **samples**, each representing a possible state of the system. Collectively, these samples (or **particles**) represent the probability distribution over the state of the system at time $t$, condition on the prior state distribution, sensor readings, and control inputs.
@@ -25,9 +46,9 @@ Compared to other variants of Bayesian state estimation algorithms, such as Kalm
 to represent multimodal distributions and to easily incorporate complex dynamics and diverse sensor modalities.
 
 The purpose of this tutorial is to show a common implementation of the particle filter by performing the recursive update in three steps:
-* [Control Update](#214-control-update---motion-model)
-* [Measurement Update](#215-measurement-update---sensor-model)
-* [Resample](#216-resample)
+* [Control Update](#35-control-update---motion-model)
+* [Measurement Update](#36-measurement-update---sensor-model)
+* [Resample](#37-resample)
 
 ## Tasks
 
@@ -506,11 +527,11 @@ for (std::size_t n = 0; n < parameters.number_of_cycles; ++n) {
 ### 3.5 Control Update - Motion Model
 The motion model comprise the state transition probability $p(x_t | x_{t-1}, u_t)$ which plays an essential role in the prediction step (or control update step) of the Bayes filter. Probabilistic robotics generalizes kinematic equations to the fact that the outcome of a control is uncertain, due to control noise or unmodeled exogenous effects. Deterministic robot actuator models are “probilified” by adding noise variables that characterize the types of uncertainty that exist in robotic actuation. Here $x_t$ and $x_{t−1}$ are both robot positions (in our case a one-dimensional position), and $u_t$ is a motion command. This model describes the posterior distribution over kinematics states that a robots assumes when executing the motion command $u_t$ when its position is $x_{t−1}$.
 
-In this tutorial, we will be using an **Sample Motion Model Odometry** (pag. 111 of ProbRob). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
+In this tutorial, we will be using an **Sample Motion Model Odometry** (_Probabilistic Robotics [^ProbRob], page 111). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
 
 At time $t$, the robot's position is a random variable $x(t)$. This model considers that within the time interval $(t-1, t]$, the registered movement from odometry is a reliable estimator of the true state movement, despite any potential drift and slippage that the robot may encounter during this interval.
 
-The **Sample Motion Model Odometry** receives as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x_t$. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles. It accepts an execution policy (for more details, see link) and a function that applies the motion model (or transformation) to each particle in the range.
+The **Sample Motion Model Odometry** receives as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x_t$. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles. It accepts an execution policy (**TODO: for more details, see link**) and a function that applies the motion model (or transformation) to each particle in the range.
 
 ```cpp
 auto motion_model = [&](double particle_position, auto& random_engine) {
@@ -536,8 +557,8 @@ does not match the updated belief $bel(x_t)$ explain in [MCL background](#monte-
 Measurement models describe the formation process by which sensor measurements are generated in the physical world. Probabilistic robotics explicitly models the noise in sensor measurements. Such models account for the inherent uncertainty in the robot’s sensors. Formally, the measurement model is defined as a conditional probability distribution $p(z_t | x_t , m)$, where $x_t$ is the robot position, $z_t$ is the measurement at time $t$, and $m$ is the map of the environment.
 
 The most common model for processing landmarks assumes that the sensor can measure the range and the bearing of the landmark relative to the robot’s
-local coordinate frame. In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (pag. 149 of ProbRob),
-since the doors do not have a signature that differentiates them from each other, but we can calculate the relative position of each door to the robot. This sensor model, receives as inputs the landmark map, the sensor data and a particle (a state), and outputs the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
+local coordinate frame. In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (_Probabilistic Robotics [^ProbRob], page 149),
+since the doors do not have a signature that differentiates them from each other, but we can calculate the relative position of each door to the robot. This sensor model, receives as inputs the landmark map, the sensor data and a particle, and outputs the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
 
 In our case, we need to generate simulated sensor data called `detections`. This data corresponds to the relative positions of landmarks around the robot's `current_position` within a configurable range specified by `parameters.sensor_range`.
 
@@ -563,17 +584,6 @@ auto sensor_model = [&](double particle_position) {
       ranges::to<std::vector>;
   // Rest of the code
   // ...
-
-  return parameters.min_particle_weight +
-          std::transform_reduce(
-              detections.begin(), detections.end(), 1.0, std::multiplies<>{}, [&](double detection) {
-                auto distances =           //
-                    particle_detections |  //
-                    ranges::views::transform(
-                        [&](double particle_detection) { return std::abs(detection - particle_detection); });
-                const auto min_distance = ranges::min(distances);
-                return std::exp((-1 * std::pow(min_distance, 2)) / (2 * parameters.sensor_model_sigma));
-              });
 };
 ```
 The number of features identified at each time step is variable. However, many probabilistic robotic algorithms assume conditional independence between features, it means, the noise in each individual measurement is independent of the noise in other measurements, when conditioned on the current system state and prior world knowledge. Under the conditional independence assumption, we can process one feature at-a-time. That is:
@@ -609,7 +619,7 @@ auto sensor_model = [&](double particle_position) {
 * `std::transform_reduce()` conduct the formula (link to the formula) and calculate the $p(z_t | x_t, m)$.
 * The sensor model returns the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
 
-Beluga uses the function `beluga::actions::reweight` to transform a range of particle $x'_t$, to a range of **weighted** particles. It accepts an execution policy (for more details, see link) and a function that applies the sensor model (or transformation) to each particle in the range.
+Beluga uses the function `beluga::actions::reweight` to transform a range of particle $x'_t$, to a range of **weighted** particles. It accepts an execution policy (**TODO: for more details, see link**) and a function that applies the sensor model (or transformation) to each particle in the range.
 
 ```cpp
 particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
@@ -632,6 +642,8 @@ robot_record.resample = particles;
 * `beluga::views::sample` implements a multinomial resampling on `particles`.
 * `ranges::views::take_exactly` defines the number of particles to take, using the **number_of_particles** parameter.
 * `beluga::actions::assign` effectively converts any view into an action and assigns the result to `particles`.
+
+### 3.8 Estiamte
 
 ## 4 Compile and run code
 ### 4.1 package.xml
@@ -705,3 +717,12 @@ source install/local_setup.bash
 ./install/beluga_tutorial/lib/beluga_tutorial/beluga_tutorial <parameters_path>
 ```
 >**Note:** You must provide as argument in the command line the absolute path of the parameters file.
+
+## Conclusion
+
+## References
+
+[^ProbRob]: S. Thrun, W. Burgard, and D. Fox. _Probabilistic Robotics._ Intelligent Robotics and Autonomous Agents
+series. MIT Press, 2005. ISBN 9780262201629. URL <https://books.google.com.ar/books?id=jtSMEAAAQBAJ>
+[^BelugaPaper]: Beluga paper **TODO: add the link for the paper**
+[^RangesV3]: Ranges-v3 user manual <https://ericniebler.github.io/range-v3/>
