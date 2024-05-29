@@ -3,10 +3,14 @@ name: Docker CI pipeline
 on:
   push:
     branches: [ main ]
-    paths: 'docker/**'
+    paths:
+      - 'docker/**'
+      - '**/package.xml'
   pull_request:
     branches: [ main ]
-    paths: 'docker/**'
+    paths:
+      - 'docker/**'
+      - '**/package.xml'
   schedule:
     - cron: '0 0 * * 0'  # Weekly on Sunday
 
