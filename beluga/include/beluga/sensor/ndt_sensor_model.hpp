@@ -256,13 +256,19 @@ NDTMapRepresentationT load_from_hdf5_2d(const std::filesystem::path& path_to_hdf
   std::array<hsize_t, 2> dims_out;
   means_dataset.getSpace().getSimpleExtentDims(dims_out.data(), nullptr);
 
-  Eigen::Matrix2Xd means_matrix(dims_out[1], dims_out[0]);
-  Eigen::Matrix2Xi cells_matrix(dims_out[1], dims_out[0]);
+  // The static cast is necessary because hsize_t and size_t are not the same in all platforms.
+  std::array<std::size_t, 2> dims{
+      static_cast<std::size_t>(dims_out[0]),
+      static_cast<std::size_t>(dims_out[1]),
+  };
+
+  Eigen::Matrix2Xd means_matrix(dims[1], dims[0]);
+  Eigen::Matrix2Xi cells_matrix(dims[1], dims[0]);
 
   means_dataset.read(means_matrix.data(), H5::PredType::NATIVE_DOUBLE);
   cells_dataset.read(cells_matrix.data(), H5::PredType::NATIVE_INT);
 
-  std::vector<Eigen::Array<double, 2, 2>> covariances(dims_out[0]);
+  std::vector<Eigen::Array<double, 2, 2>> covariances(dims[0]);
   covariances_dataset.read(covariances.data(), H5::PredType::NATIVE_DOUBLE);
 
   double resolution;
