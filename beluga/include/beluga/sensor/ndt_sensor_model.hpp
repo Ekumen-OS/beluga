@@ -257,7 +257,7 @@ NDTMapRepresentationT load_from_hdf5_2d(const std::filesystem::path& path_to_hdf
   means_dataset.getSpace().getSimpleExtentDims(dims_out.data(), nullptr);
 
   // The static cast is necessary because hsize_t and size_t are not the same in all platforms.
-  std::array<std::size_t, 2> dims{
+  const std::array<std::size_t, 2> dims{
       static_cast<std::size_t>(dims_out[0]),
       static_cast<std::size_t>(dims_out[1]),
   };
