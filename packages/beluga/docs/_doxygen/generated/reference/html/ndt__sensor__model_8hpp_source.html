@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed May 29 08:40:49 2024 -0300, 4a953f8&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed May 29 09:32:58 2024 -0300, aafb943&#39;"/>
   </head>
   
   
@@ -642,35 +642,41 @@ $(function() {
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  std::array&lt;hsize_t, 2&gt; dims_out;</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;  means_dataset.getSpace().getSimpleExtentDims(dims_out.data(), <span class="keyword">nullptr</span>);</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  Eigen::Matrix2Xd means_matrix(dims_out[1], dims_out[0]);</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;  Eigen::Matrix2Xi cells_matrix(dims_out[1], dims_out[0]);</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160; </div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;  means_dataset.read(means_matrix.data(), H5::PredType::NATIVE_DOUBLE);</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;  cells_dataset.read(cells_matrix.data(), H5::PredType::NATIVE_INT);</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  <span class="comment">// The static cast is necessary because hsize_t and size_t are not the same in all platforms.</span></div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;  <span class="keyword">const</span> std::array&lt;std::size_t, 2&gt; dims{</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(dims_out[0]),</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(dims_out[1]),</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;  };</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  std::vector&lt;Eigen::Array&lt;double, 2, 2&gt;&gt; covariances(dims_out[0]);</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  covariances_dataset.read(covariances.data(), H5::PredType::NATIVE_DOUBLE);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  Eigen::Matrix2Xd means_matrix(dims[1], dims[0]);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  Eigen::Matrix2Xi cells_matrix(dims[1], dims[0]);</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  <span class="keywordtype">double</span> resolution;</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  resolution_dataset.read(&amp;resolution, H5::PredType::NATIVE_DOUBLE);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;  <span class="keyword">typename</span> NDTMapRepresentationT::map_type map{};</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  means_dataset.read(means_matrix.data(), H5::PredType::NATIVE_DOUBLE);</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;  cells_dataset.read(cells_matrix.data(), H5::PredType::NATIVE_INT);</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  std::vector&lt;Eigen::Array&lt;double, 2, 2&gt;&gt; covariances(dims[0]);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;  covariances_dataset.read(covariances.data(), H5::PredType::NATIVE_DOUBLE);</div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  <span class="comment">// Note: Ranges::zip_view doesn&#39;t seem to work in old Eigen.</span></div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; covariances.size(); ++i) {</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    map[cells_matrix.col(<span class="keyword">static_cast&lt;</span>Eigen::Index<span class="keyword">&gt;</span>(i))] =</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;        <a class="code" href="namespacebeluga.html#a26305234e807524dd077b13ae21b1dfd">NDTCell2d</a>{means_matrix.col(<span class="keyword">static_cast&lt;</span>Eigen::Index<span class="keyword">&gt;</span>(i)), covariances.at(i)};</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  }</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  <span class="keywordtype">double</span> resolution;</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  resolution_dataset.read(&amp;resolution, H5::PredType::NATIVE_DOUBLE);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  <span class="keyword">typename</span> NDTMapRepresentationT::map_type map{};</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  <span class="keywordflow">return</span> NDTMapRepresentationT{std::move(map), resolution};</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;}</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;}  <span class="comment">// namespace io</span></div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  <span class="comment">// Note: Ranges::zip_view doesn&#39;t seem to work in old Eigen.</span></div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; covariances.size(); ++i) {</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    map[cells_matrix.col(<span class="keyword">static_cast&lt;</span>Eigen::Index<span class="keyword">&gt;</span>(i))] =</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        <a class="code" href="namespacebeluga.html#a26305234e807524dd077b13ae21b1dfd">NDTCell2d</a>{means_matrix.col(<span class="keyword">static_cast&lt;</span>Eigen::Index<span class="keyword">&gt;</span>(i)), covariances.at(i)};</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  }</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  <span class="keywordflow">return</span> NDTMapRepresentationT{std::move(map), resolution};</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;}</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}  <span class="comment">// namespace io</span></div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160; </div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a></div><div class="ttdoc">NDT sensor model for range finders.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:162</div></div>
 <div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a1f11afe2f49ca0782b70ab8dbf69aa89"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">beluga::NDTSensorModel::measurement_type</a></div><div class="ttdeci">std::vector&lt; Eigen::Matrix&lt; typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim, 1 &gt; &gt; measurement_type</div><div class="ttdoc">Measurement type of the sensor: a point cloud for the range finder.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:176</div></div>
 <div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a32c0489df61614535aa51d7b110ef886"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a32c0489df61614535aa51d7b110ef886">beluga::NDTSensorModel::NDTSensorModel</a></div><div class="ttdeci">NDTSensorModel(param_type params, SparseGridT cells_data)</div><div class="ttdoc">Constructs a NDTSensorModel instance.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:189</div></div>
@@ -750,7 +756,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed May 29 08:40:49 2024 -0300, 4a953f8&#39;.
+  Last updated on &#39;Wed May 29 09:32:58 2024 -0300, aafb943&#39;.
   <br/>
 </p>
   </div>
