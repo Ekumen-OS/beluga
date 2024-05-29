@@ -224,10 +224,10 @@ int run(const std::filesystem::path& path) {
     particles |= beluga::actions::propagate(std::execution::seq, motion_model);
     record.prediction = particles;
 
-    particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
-
-    particles |= beluga::views::sample |                                        //
-                 ranges::views::take_exactly(parameters.number_of_particles) |  //
+    particles |= beluga::actions::reweight(std::execution::seq, sensor_model) |  //
+                 beluga::actions::normalize |                                    //
+                 beluga::views::sample |                                         //
+                 ranges::views::take_exactly(parameters.number_of_particles) |   //
                  beluga::actions::assign;
     record.update = particles;
 
