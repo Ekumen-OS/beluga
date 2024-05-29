@@ -42,7 +42,7 @@ struct Parameters {
   std::size_t map_size{100};
 
   /// Fixed number of particles used by the algorithm.
-  std::size_t number_of_particles{200};
+  std::size_t number_of_particles{300};
 
   /// Number of simulation cycles.
   std::size_t number_of_cycles{100};
@@ -54,7 +54,7 @@ struct Parameters {
   /**
    * Represents the uncertainty of the robot's initial position.
    */
-  double initial_position_sd{1.0};
+  double initial_position_sd{10.0};
 
   /// Delta time in seconds (s).
   double dt{1.0};
@@ -69,7 +69,7 @@ struct Parameters {
   double translation_sd{1.0};
 
   /// Sensor range of view in meters (m)
-  double sensor_range{2.0};
+  double sensor_range{3.0};
 
   /// Sensor model sigma
   /**
@@ -84,7 +84,7 @@ struct Parameters {
   double min_particle_weight{0.08};
 
   /// Landmark coordinates in the simulated world.
-  std::vector<double> landmark_map;
+  std::vector<double> landmark_map{5, 12, 25, 37, 52, 55, 65, 74, 75, 87, 97};
 
   /// Dataset path.
   /**
@@ -98,9 +98,8 @@ using Particle = std::tuple<double, beluga::Weight>;
 struct RobotRecord {
   double ground_truth;
   std::vector<Particle> current;
-  std::vector<Particle> propagate;
-  std::vector<Particle> reweight;
-  std::vector<Particle> resample;
+  std::vector<Particle> prediction;
+  std::vector<Particle> update;
   std::pair<double, double> estimation;
 };
 
@@ -147,9 +146,8 @@ struct convert<std::vector<beluga::tutorial::RobotRecord>> {
 
       auto particles = node[cycle]["particles"];
       particles["current"] = record.current;
-      particles["propagate"] = record.propagate;
-      particles["reweight"] = record.reweight;
-      particles["resample"] = record.resample;
+      particles["prediction"] = record.prediction;
+      particles["update"] = record.update;
 
       auto estimation = node[cycle]["estimation"];
       estimation["mean"] = std::get<0>(record.estimation);
@@ -224,15 +222,14 @@ int run(const std::filesystem::path& path) {
     record.current = particles;
 
     particles |= beluga::actions::propagate(std::execution::seq, motion_model);
-    record.propagate = particles;
+    record.prediction = particles;
 
-    particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
-    record.reweight = particles;
-
-    particles |= beluga::views::sample |                                        //
-                 ranges::views::take_exactly(parameters.number_of_particles) |  //
+    particles |= beluga::actions::reweight(std::execution::seq, sensor_model) |  //
+                 beluga::actions::normalize |                                    //
+                 beluga::views::sample |                                         //
+                 ranges::views::take_exactly(parameters.number_of_particles) |   //
                  beluga::actions::assign;
-    record.resample = particles;
+    record.update = particles;
 
     const auto estimation = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
     record.estimation = estimation;
