@@ -56,7 +56,7 @@
     <link rel="prev" title="Overview" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed May 29 10:00:35 2024 -0300, 825c0ed&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu May 30 08:38:33 2024 -0300, 70e7fe5&#39;"/>
   </head>
   
   
@@ -375,7 +375,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-binaries">Install binaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-binaries">Installing binaries</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-from-source-with-ros">Building from source (with ROS)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-ros-distribution">Install ROS distribution</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-beluga-repository">Clone Beluga repository</a></li>
@@ -396,9 +396,24 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
-<section id="install-binaries">
-<h2>Install binaries<a class="headerlink" href="#install-binaries" title="Link to this heading">#</a></h2>
-<p>Coming soon!</p>
+<section id="installing-binaries">
+<h2>Installing binaries<a class="headerlink" href="#installing-binaries" title="Link to this heading">#</a></h2>
+<p>Beluga binaries are released to several <a class="reference internal" href="../index.html#support"><span class="std std-ref">ROS distributions</span></a>, and thus are made available through package managers.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Only <code class="docutils literal notranslate"><span class="pre">beluga</span></code>, <code class="docutils literal notranslate"><span class="pre">beluga_ros</span></code>, and <code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code> packages are available as binaries. The rest must be <a class="reference internal" href="#building-from-source-with-ros">built from source</a>.</p>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Ubuntu</label><div class="sd-tab-content docutils">
+<p>Follow the <a class="reference external" href="https://docs.ros.org">official ROS documentation</a> on how to setup <code class="docutils literal notranslate"><span class="pre">apt</span></code> sources for the distribution of choice. You may also want to consider using <code class="docutils literal notranslate"><span class="pre">ros2-testing</span></code> repositories to get the absolute latest release for the target distribution.</p>
+<p>Then:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ros-<span class="si">${</span><span class="nv">ROS_DISTRO</span><span class="si">}</span>-beluga*
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="building-from-source-with-ros">
 <h2>Building from source (with ROS)<a class="headerlink" href="#building-from-source-with-ros" title="Link to this heading">#</a></h2>
@@ -411,8 +426,8 @@ document.write(`
 <p>Follow <a class="reference external" href="https://docs.ros.org">official ROS documentation</a> on how to install the distribution of choice. ROS development tools will be necessary – <a class="reference external" href="https://colcon.readthedocs.io"><code class="docutils literal notranslate"><span class="pre">colcon</span></code></a> and <a class="reference external" href="https://docs.ros.org/en/independent/api/rosdep/html"><code class="docutils literal notranslate"><span class="pre">rosdep</span></code></a> at the very least.</p>
 <p>Remember to source the corresponding installation from now on, as documented upstream:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
-<label class="sd-tab-label" for="sd-tab-item-0">
+<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/opt/ros/<span class="si">${</span><span class="nv">ROS_DISTRO</span><span class="si">}</span>/setup.bash
 </pre></div>
@@ -425,8 +440,8 @@ Ubuntu</label><div class="sd-tab-content docutils">
 <h3>Clone Beluga repository<a class="headerlink" href="#clone-beluga-repository" title="Link to this heading">#</a></h3>
 <p>All packages in the Beluga project are ROS packages. Cloning them into a local workspace is thus best for subsequent build, install, and use:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
-<label class="sd-tab-label" for="sd-tab-item-1">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-2">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ws/src
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ekumen-OS/beluga.git<span class="w"> </span>~/ws/src/beluga
@@ -439,8 +454,8 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ekume
 <h3>Install dependencies<a class="headerlink" href="#install-dependencies" title="Link to this heading">#</a></h3>
 <p>First of all, ensure your system and package manager are up to date before proceeding.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
-<label class="sd-tab-label" for="sd-tab-item-2">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-3">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>upgrade
 </pre></div>
@@ -449,8 +464,8 @@ Ubuntu</label><div class="sd-tab-content docutils">
 </div>
 <p>Then use <code class="docutils literal notranslate"><span class="pre">rosdep</span></code> to install Beluga packages’ dependencies:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
-<label class="sd-tab-label" for="sd-tab-item-3">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-4">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rosdep<span class="w"> </span>update
 rosdep<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>--from-paths<span class="w"> </span>~/ws/src/beluga<span class="w"> </span>-y<span class="w"> </span>-i<span class="w"> </span>-t<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span><span class="nb">exec</span>
@@ -463,8 +478,8 @@ rosdep<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> 
 <h3>Build and source workspace<a class="headerlink" href="#build-and-source-workspace" title="Link to this heading">#</a></h3>
 <p>For ROS 2 and ROS 1 distributions alike, <code class="docutils literal notranslate"><span class="pre">colcon</span></code> can be used to build:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
-<label class="sd-tab-label" for="sd-tab-item-4">
+<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-5">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build<span class="w"> </span>--packages-up-to<span class="w"> </span>beluga_example<span class="w"> </span>--cmake-args<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
 </pre></div>
@@ -473,8 +488,8 @@ Ubuntu</label><div class="sd-tab-content docutils">
 </div>
 <p>Alternatively, for ROS 1 distributions, you may use <code class="docutils literal notranslate"><span class="pre">catkin_make_isolated</span></code> instead:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
-<label class="sd-tab-label" for="sd-tab-item-5">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-6">
 Ubuntu</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>catkin_make_isolated<span class="w"> </span>--only-pkg-with-deps<span class="w"> </span>beluga_example<span class="w"> </span>--install<span class="w"> </span>--cmake-args<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
 </pre></div>
@@ -530,7 +545,7 @@ Ubuntu</label><div class="sd-tab-content docutils">
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-binaries">Install binaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-binaries">Installing binaries</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-from-source-with-ros">Building from source (with ROS)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-ros-distribution">Install ROS distribution</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-beluga-repository">Clone Beluga repository</a></li>
@@ -571,7 +586,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed May 29 10:00:35 2024 -0300, 825c0ed&#39;.
+  Last updated on &#39;Thu May 30 08:38:33 2024 -0300, 70e7fe5&#39;.
   <br/>
 </p>
   </div>
