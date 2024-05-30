@@ -1,8 +1,26 @@
 # Installation
 
-## Install binaries
+## Installing binaries
 
-Coming soon!
+Beluga binaries are released to several [ROS distributions](../index.md#support), and thus are made available through package managers.
+
+:::{important}
+Only `beluga`, `beluga_ros`, and `beluga_amcl` packages are available as binaries. The rest must be [built from source](#building-from-source-with-ros).
+:::
+
+::::{tab-set}
+
+:::{tab-item} Ubuntu
+Follow the [official ROS documentation](https://docs.ros.org) on how to setup `apt` sources for the distribution of choice. You may also want to consider using `ros2-testing` repositories to get the absolute latest release for the target distribution.
+
+Then:
+
+```bash
+sudo apt install ros-${ROS_DISTRO}-beluga*
+```
+:::
+
+::::
 
 ## Building from source (with ROS)
 
