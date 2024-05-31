@@ -554,6 +554,8 @@ In the same terminal run the code:
 
 ## Conclusion
 
+You can see that we have put most of our effort into explaining and implementing the components that make up or are used by the particle filter, such as the landmark map, motion model, sensor model, and how to initialize the set of particles. This was made possible thanks to **Beluga**, a C++ library that provides a set of reusable components that can be combined to assemble a complete and customizable particle filter. Moreover, **Beluga** offers additional features that can help build more complex {abbr}`MCL (Monte Carlo Localiaztion)` algorithms than those proposed by this tutorial, while minimizing code duplication and maximizing code reuse.
+
 ## References
 
 [^ProbRob]: S. Thrun, W. Burgard, and D. Fox. _Probabilistic Robotics._ Intelligent Robotics and Autonomous Agents
