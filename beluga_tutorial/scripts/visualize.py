@@ -20,11 +20,11 @@ This script uses the matplotlib to visualize the data generated
 by beluga_tutorial example code.
 """
 
-import yaml
+import argparse
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
-import argparse
+import yaml
 
 
 def plot_stages(yaml_data, axs, index):
