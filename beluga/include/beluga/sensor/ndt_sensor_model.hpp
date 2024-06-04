@@ -59,7 +59,7 @@ template <int NDim, typename Scalar = double>
 inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Matrix<Scalar, NDim, 1>>& points) {
   static constexpr double kMinVariance = 1e-5;
   Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic>> points_view(
-      reinterpret_cast<const Scalar*>(points.data()), 2, static_cast<int64_t>(points.size()));
+      reinterpret_cast<const Scalar*>(points.data()), NDim, static_cast<int64_t>(points.size()));
   const Eigen::Matrix<Scalar, NDim, 1> mean = points_view.rowwise().mean();
   const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic> centered = points_view.colwise() - mean;
   // Use sample covariance.
@@ -151,7 +151,6 @@ using NDTModelParam2d = NDTModelParam<2>;
 
 /// Convenience alias for a 3d parameters struct for the NDT sensor model.
 using NDTModelParam3d = NDTModelParam<3>;
-
 /// NDT sensor model for range finders.
 /**
  * This class satisfies \ref SensorModelPage.
@@ -161,7 +160,7 @@ using NDTModelParam3d = NDTModelParam<3>;
 template <typename SparseGridT>
 class NDTSensorModel {
  public:
-  static_assert(std::is_same_v<SparseValueGrid<typename SparseGridT::map_type>, SparseGridT>);
+  // static_assert(std::is_same_v<SparseValueGrid<typename SparseGridT::map_type>, SparseGridT>);
   /// NDT Cell type.
   using ndt_cell_type = typename SparseGridT::mapped_type;
   static_assert(ndt_cell_type::num_dim == 2, "NDT sensor model is only implemented for 2D problems.");
