@@ -86,8 +86,8 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
    * \return Plane coordinates of the cell centroid.
    */
   [[nodiscard]] Eigen::Vector2d coordinates_at(std::size_t index) const {
-    return this->self().coordinates_at(
-        Eigen::Vector2i{static_cast<int>(index % this->self().width()), static_cast<int>(index / this->self().width())});
+    return this->self().coordinates_at(Eigen::Vector2i{
+        static_cast<int>(index % this->self().width()), static_cast<int>(index / this->self().width())});
   }
 
   using BaseDenseGrid2<Derived>::data_at;

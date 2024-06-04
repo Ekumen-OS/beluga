@@ -62,7 +62,7 @@ TEST(RegularGrid2, CoordinatesForCells) {
 TEST(RegularGrid3, CoordinatesForCells) {
   const auto grid = TestRegularGrid3{};
 
-  const auto cells = std::vector{Eigen::Vector3i(1, 0, 0), Eigen::Vector3i(4, 1,-1)};
+  const auto cells = std::vector{Eigen::Vector3i(1, 0, 0), Eigen::Vector3i(4, 1, -1)};
   const auto coordinates = grid.coordinates_for(cells) | ranges::to<std::vector>;
   EXPECT_EQ(coordinates.size(), 2);
   EXPECT_TRUE(coordinates[0].isApprox(Eigen::Vector3d(1.5, 0.5, 0.5)));

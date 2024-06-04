@@ -105,7 +105,8 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \return Cell data if included, `std::nullopt` otherwise.
    */
   [[nodiscard]] auto data_at(int xi, int yi) const {
-    return this->self().contains(xi, yi) ? this->self().data_at(this->self().index_at(Eigen::Vector2i{xi, yi})) : std::nullopt;
+    return this->self().contains(xi, yi) ? this->self().data_at(this->self().index_at(Eigen::Vector2i{xi, yi}))
+                                         : std::nullopt;
   }
 
   /// Gets cell data, if included.
@@ -121,7 +122,9 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \param y Plane y-axis coordinate.
    * \return Cell data if included, `std::nullopt` otherwise.
    */
-  [[nodiscard]] auto data_near(double x, double y) const { return this->self().data_at(this->self().cell_near(Eigen::Vector2d{x, y})); }
+  [[nodiscard]] auto data_near(double x, double y) const {
+    return this->self().data_at(this->self().cell_near(Eigen::Vector2d{x, y}));
+  }
 
   /// Gets nearest cell data, if included.
   /**
