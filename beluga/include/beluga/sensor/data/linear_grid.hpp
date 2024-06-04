@@ -87,7 +87,7 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
    */
   [[nodiscard]] Eigen::Vector2d coordinates_at(std::size_t index) const {
     return this->self().coordinates_at(
-        static_cast<int>(index % this->self().width()), static_cast<int>(index / this->self().width()));
+        Eigen::Vector2i{static_cast<int>(index % this->self().width()), static_cast<int>(index / this->self().width())});
   }
 
   using BaseDenseGrid2<Derived>::data_at;

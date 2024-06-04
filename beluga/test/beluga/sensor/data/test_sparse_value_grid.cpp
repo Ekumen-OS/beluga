@@ -45,7 +45,7 @@ TYPED_TEST_SUITE(SparseGridTests, SparseGridTestCases, );
 
 TYPED_TEST(SparseGridTests, CanBeConstructedEmpty) {
   const TypeParam data;
-  [[maybe_unused]] const beluga::SparseValueGrid grid{data, 0.5};
+  [[maybe_unused]] const beluga::SparseValueGrid2<TypeParam> grid{data, 0.5};
 }
 
 TYPED_TEST(SparseGridTests, Size) {
@@ -56,27 +56,26 @@ TYPED_TEST(SparseGridTests, Size) {
       {Eigen::Vector2i{3, 2}, 1},
   };
 
-  const beluga::SparseValueGrid grid{data, 0.5};
+  const beluga::SparseValueGrid2<TypeParam> grid{data, 0.5};
   ASSERT_EQ(grid.size(), 4);
 }
 
 TYPED_TEST(SparseGridTests, NotPresent) {
   const TypeParam data{};
 
-  const beluga::SparseValueGrid grid{data, 0.5};
+  const beluga::SparseValueGrid2<TypeParam> grid{data, 0.5};
 
   ASSERT_EQ(grid.data_at(Eigen::Vector2i(2, 1)), std::nullopt);
   ASSERT_EQ(grid.data_near(Eigen::Vector2d(5, 3)), std::nullopt);
-  ASSERT_EQ(grid.data_near(5, 1), std::nullopt);
 }
 
 TYPED_TEST(SparseGridTests, Resolution) {
   {
-    const beluga::SparseValueGrid grid{TypeParam{}, 0.5};
+    const beluga::SparseValueGrid2<TypeParam> grid{TypeParam{}, 0.5};
     ASSERT_DOUBLE_EQ(grid.resolution(), 0.5);
   }
   {
-    const beluga::SparseValueGrid grid{TypeParam{}, 0.8};
+    const beluga::SparseValueGrid2<TypeParam> grid{TypeParam{}, 0.8};
     ASSERT_DOUBLE_EQ(grid.resolution(), 0.8);
   }
 }
@@ -90,19 +89,19 @@ TYPED_TEST(SparseGridTests, DataAccessing) {
   };
   // trivial case where resolution == 1.0
   {
-    const beluga::SparseValueGrid grid{data, 1.0};
+    const beluga::SparseValueGrid2<TypeParam> grid{data, 1.0};
     auto data = grid.data_near(Eigen::Vector2d{1.0, 2.0});
     ASSERT_TRUE(data.has_value());
     ASSERT_EQ(data, 1);
   }
   {
-    const beluga::SparseValueGrid grid{data, 1.0};
+    const beluga::SparseValueGrid2<TypeParam> grid{data, 1.0};
     auto data = grid.data_near(Eigen::Vector2d{4.0, 2.0});
     ASSERT_TRUE(data.has_value());
     ASSERT_EQ(data, 2);
   }
   {
-    const beluga::SparseValueGrid grid{data, 0.5};
+    const beluga::SparseValueGrid2<TypeParam> grid{data, 0.5};
     auto data = grid.data_near(Eigen::Vector2d{1.0, 2.0} * 0.5);
     ASSERT_TRUE(data.has_value());
     ASSERT_EQ(data, 1);
@@ -114,13 +113,12 @@ TYPED_TEST(SparseGridTests, AllAccessorMethodsAreEquivalent) {
       {Eigen::Vector2i{1, 2}, 1}, {Eigen::Vector2i{4, 2}, 2}, {Eigen::Vector2i{3, 2}, 3}, {Eigen::Vector2i{2, 2}, 4}};
 
   for (const auto resolution : {0.1, 0.5, 1.2, 1.5}) {
-    const beluga::SparseValueGrid grid{data, resolution};
+    const beluga::SparseValueGrid2<TypeParam> grid{data, resolution};
     for (const auto& [coordinates, value] : data) {
       Eigen::Vector2d double_coords = coordinates.template cast<double>() * resolution;
       ASSERT_TRUE(grid.cell_near(double_coords).isApprox(coordinates));
       ASSERT_EQ(grid.data_near(double_coords), std::make_optional<int>(value));
       ASSERT_EQ(grid.data_at(grid.cell_near(double_coords)), std::make_optional<int>(value));
-      ASSERT_EQ(grid.data_near(double_coords.x(), double_coords.y()), std::make_optional<int>(value));
     }
   }
 }

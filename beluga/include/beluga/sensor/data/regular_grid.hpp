@@ -31,60 +31,38 @@
 namespace beluga {
 
 /**
- * \page RegularGrid2Page Beluga named requirements: RegularGrid2
+ * \page RegularGridPage Beluga named requirements: RegularGrid
  *
  * Regular grids divide space in evenly sized portions or _cells_. A coordinate
  * system over integers can thus be defined, in addition to that of the space
  * in which the grid is embedded.
  *
- * A type `G` satisfies `RegularGrid2` requirements if given `g` a possibly
+ * A type `G` satisfies `RegularGrid` requirements if given `g`, a possibly
  * const instance of `G`:
- * - `g.resolution()` returns the side length of all grid cells as a `double`;
- * - given possibly const embedding space coordinates `x` and `y` of type `double`,
- *   `g.cell_at(x, y)` returns grid cell coordinates as an `Eigen::Vector2d` value;
- * - given possibly const embedding space coordinates `p` of `Eigen::Vector2d` type,
- *   `g.cell_at(p)` returns grid cell coordinates as an `Eigen::Vector2d` value;
- * - given possibly const grid cell coordinates `xi` and `yi` of type `int`,
- *   `g.coordinates_at(xi, yi)` returns embedding space coordinates as an
- *   `Eigen::Vector2d` value;
- * - given possibly const grid cell coordinates `pi` of `Eigen::Vector2i` type,
- *   `g.coordinates_at(p)` returns embedding space coordinates as an
- *   `Eigen::Vector2d` value;
- * - given a possibly const range `r` of grid cell coordinates of `Eigen::Vector2i`
+ * - `g.resolution()` returns the side length of all grid N-dimensional cells as a `double`;
+ * - given possibly const embedding space coordinates `x` of type `Eigen::Vector<double, NDim>`,
+ *   `g.cell_at(x)` returns grid cell coordinates as an `Eigen::Vector<int, NDim1>` value;
+ * - given possibly const embedding space coordinates `p` of `Eigen::Vector<double, NDim>` type,
+ *   `g.cell_at(p)` returns grid cell coordinates as an `Eigen::Vector<int, NDim>` value;
+ * - given possibly const grid cell coordinates `xi` of type `Eigen::Vector<int, NDim>`,
+ *   `g.coordinates_at(xi)` returns embedding space coordinates as an
+ *   `Eigen::Vector<double, NDim>` value;
+ * - given a possibly const range `r` of grid cell coordinates of `Eigen::Vector<int, NDim>`
  *   type, `g.coordinates_for(r)` returns a range of embedding space coordinates as
- *   `Eigen::Vector2d` values.
+ *   `Eigen::Vector<double, NDim>` values.
  */
 
-/// Regularly spaced 2D grid base type.
+/// Regularly spaced N dimensional grid base type.
 /**
- * When instantiated, it satisfies \ref RegularGrid2Page.
+ * When instantiated, it satisfies \ref RegularGridPage.
  *
  * \tparam Derived Concrete regular grid type. It must define
- * `Derived::resolution()`, as described in \ref RegularGrid2Page.
+ * `Derived::resolution()`, as described in \ref RegularGridPage.
+ * \tparam NDim Dimension of the grid.
  */
-template <typename Derived>
-class BaseRegularGrid2 : public ciabatta::ciabatta_top<Derived> {
+template <typename Derived, int NDim>
+class BaseRegularGrid : public ciabatta::ciabatta_top<Derived> {
  public:
-  /// Compute nearest grid cell coordinates given plane coordinates.
-  /**
-   * Note this is a surjective function.
-   *
-   * \param x Plane x-axis coordinate.
-   * \param y Plane y-axis coordinate.
-   * \return Grid cell coordinates.
-   */
-  [[nodiscard]] Eigen::Vector2i cell_near(double x, double y) const {
-    const auto inv_resolution = 1. / this->self().resolution();
-    const auto scaled_x = x * inv_resolution;
-    const auto scaled_y = y * inv_resolution;
-    // Use a poor man's replacement of `std::floor` because
-    // the later is awfully slow and this function is performance
-    // critical.
-    const auto xi = static_cast<int>(scaled_x) - (scaled_x < 0.0);
-    const auto yi = static_cast<int>(scaled_y) - (scaled_y < 0.0);
-    return Eigen::Vector2i{xi, yi};
-  }
-
   /// Compute nearest grid cell coordinates given plane coordinates.
   /**
    * Note this is a surjective function.
@@ -92,21 +70,9 @@ class BaseRegularGrid2 : public ciabatta::ciabatta_top<Derived> {
    * \param p Plane coordinates.
    * \return Grid cell coordinates.
    */
-  [[nodiscard]] Eigen::Vector2i cell_near(const Eigen::Vector2d& p) const {
-    return this->self().cell_near(p.x(), p.y());
-  }
-
-  /// Compute plane coordinates given grid cell coordinates.
-  /**
-   * Note this is an injective function.
-   *
-   * \param xi Grid cell x-axis coordinate.
-   * \param yi Grid cell y-axis coordinate.
-   * \return Plane coordinates of the cell centroid.
-   */
-  [[nodiscard]] Eigen::Vector2d coordinates_at(int xi, int yi) const {
-    const auto resolution = this->self().resolution();
-    return Eigen::Vector2d{(static_cast<double>(xi) + 0.5), (static_cast<double>(yi) + 0.5)} * resolution;
+  [[nodiscard]] Eigen::Vector<int, NDim> cell_near(const Eigen::Vector<double, NDim>& p) const {
+    const auto inv_resolution = 1. / this->self().resolution();
+    return (p * inv_resolution).array().floor().template cast<int>();
   }
 
   /// Compute plane coordinates given grid cell coordinates.
@@ -116,8 +82,8 @@ class BaseRegularGrid2 : public ciabatta::ciabatta_top<Derived> {
    * \param pi Grid cell coordinates.
    * \return Plane coordinates of the cell centroid.
    */
-  [[nodiscard]] Eigen::Vector2d coordinates_at(const Eigen::Vector2i& pi) const {
-    return this->self().coordinates_at(pi.x(), pi.y());
+  [[nodiscard]] Eigen::Vector<double, NDim> coordinates_at(const Eigen::Vector<int, NDim>& pi) const {
+    return (pi.template cast<double>() + Eigen::Vector<double, NDim>::Ones() * 0.5) * this->self().resolution();
   }
 
   /// Compute plane coordinates given a range of cell coordinates.
@@ -130,6 +96,13 @@ class BaseRegularGrid2 : public ciabatta::ciabatta_top<Derived> {
     return cells | ranges::views::transform([this](const auto& cell) { return this->self().coordinates_at(cell); });
   }
 };
+/// Convenience alias for a 2D base regular grid.
+template <typename Derived>
+using BaseRegularGrid2 = BaseRegularGrid<Derived, 2>;
+
+/// Convenience alias for a 3D base regular grid.
+template <typename Derived>
+using BaseRegularGrid3 = BaseRegularGrid<Derived, 3>;
 
 }  // namespace beluga
 
