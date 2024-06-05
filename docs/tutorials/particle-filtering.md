@@ -6,17 +6,13 @@
 
 ## Overview
 
-Modern robotic systems operate in unstructured, unpredictable environments, making robust software crucial to handle diverse situations.
-A key challenge is uncertainty, which occurs when robots lack critical task information. Probabilistic robotics addresses this by
-representing uncertainty explicitly through probability theory, rather than relying on a single best guess.
+The purpose of this tutorial is to show how to implement a custom {abbr}`MCL (Monte Carlo Localiaztion)` algorithm using Beluga,
+motivated by the example given by _Probabilistic Robotics [^ProbRob], page 200, figure 8.11_.
 
-The robot localization problem is one of the most important ones in mobile robotics, as it is a fundamental requirement for autonomous navigation. The Monte Carlo Localization (MCL) algorithm is one of the most widely used algorithms for map-based localization and has become a key component in many robotic systems [^BelugaPaper]. **TODO: It is necessary to put here the reference, or just include it at the end?**
+This example is about a 1-dimensional world, caractherized by 2 types of features, walls and doors. The robot is capable to move in a parallel free space,
+where it constantly scaning the landmarks of the walls-doors world (the robot also moves only in a 1-dimensional world). The two last graphs in the GIF showed above is a graphical representation of this world, where the blue bars represent the walls, the red bars represent the doors and the green bar is the robot.
 
-
-The purpose of this tutorial is to show how to implement a custom {abbr}`MCL (Monte Carlo Localiaztion)` algorithm using **Beluga**,
-motivated by the example given by _Probabilistic Robotics [^ProbRob], page 200, figure 8.11_. **TODO: Can I used the image of the book?**
-
-The code is written using C++17 with the ranges-v3 [^RangesV3] library for range handling along with its respective algorithms.
+To implement this example in a code we will need to create and define different components such as the map, the motion and sensor models, the generation of the initial set of partciles, the steps of the {abbr}`MCL (Monte Carlo Localiaztion)` algorithm and the estimation of the robot's position. Each component will be detailed explain in the following sections.
 
 ## Requirements
 
@@ -32,31 +28,9 @@ Based on [key concepts](../concepts/key-concepts.md), this tutorial will show an
 * [Prediction](#35-prediction)
 * [Update](#36-update)
 
-:::{note}
-We are using the [ROS2](https://docs.ros.org/en/humble/index.html) conventions for package management. **TODO: link to some specific tutorial in ROS2 or just provide the link of ROS2 is fine?**
-:::
-
-## 1 Create the Workspace
-
-Open a new terminal and create the workspace directory:
-
-```bash
-mkdir -p beluga_ws/src
-```
-
-## 2 Create the Package
-
-We are going to create a package inside the `beluga_ws/src` path. Therefore, let's start by creating the necessary directories. In the same terminal, run the following command:
-
-```bash
-mkdir -p beluga_ws/src/beluga_tutorial/src
-```
-
-`beluga_tutorial` should have a `package.xml` and a `CmakeLists.txt` in order to be able to use `colcon` for the compilation process. We will create these files later ([for more details](#4-compile-and-run-the-code)).
-
 ## 3 Write the Simulation code
 
-To start, create a `beluga_tutorial/src/main.cpp` file and put the following code inside:
+To start, create a `main.cpp` file and put the following code inside. After that we are going to analize the code by parts.
 
 ```cpp
 #include <cmath>
@@ -74,56 +48,17 @@ To start, create a `beluga_tutorial/src/main.cpp` file and put the following cod
 #include <beluga/beluga.hpp>
 
 struct Parameters {
-  /// Size of the 1D map in (m)
-  /**
-   * In the simulation, the 1D map is continuous,
-   * but the limit is defined as an integer to simplify data visualization.
-   */
   std::size_t map_size{100};
-
-  /// Fixed number of particles used by the algorithm.
   std::size_t number_of_particles{300};
-
-  /// Number of simulation cycles.
   std::size_t number_of_cycles{100};
-
-  /// Robot's initial position in meters (m).
   double initial_position{0.0};
-
-  /// Standard deviation of the robot's initial position.
-  /**
-   * Represents the uncertainty of the robot's initial position.
-   */
   double initial_position_sd{10.0};
-
-  /// Delta time in seconds (s).
   double dt{1.0};
-
-  /// Translation velocity in meters per second (m/s) of the robot in 1D.
   double velocity{1.0};
-
-  /// Translation standard deviation.
-  /**
-   * Represents the robot's translation noise due to drift and slippage.
-   */
   double translation_sd{1.0};
-
-  /// Sensor range of view in meters (m)
   double sensor_range{3.0};
-
-  /// Sensor model sigma
-  /**
-   * Represents the precision of the modeled sensor.
-   */
   double sensor_model_sigma{1.0};
-
-  /// Minimum particle weight.
-  /**
-   * Used to keep all particles "alive" in the reweight step.
-   */
   double min_particle_weight{0.08};
-
-  /// Landmark coordinates in the simulated world.
   std::vector<double> landmark_map{5, 12, 25, 37, 52, 55, 65, 74, 75, 87, 97};
 };
 
@@ -190,11 +125,13 @@ int main() {
 }
 ```
 
-Let's examine the code by parts.
+:::{note}
+The code is written using C++17 with the ranges-v3 [^RangesV3] library for range handling along with its respective algorithms.
+:::
 
 ### 3.1 Parameters
 
-`Parameters` is a struct that contain all the necessary parameters the code needs to conduct the simulation.
+This struct contain all the necessary parameters the code needs to conduct the simulation.
 
 ```cpp
 struct Parameters {
@@ -325,14 +262,13 @@ for (std::size_t n = 0; n < parameters.number_of_cycles; ++n) {
 
 ### 3.5 Prediction
 
-The motion model comprise the state transition probability $p(x_t | x_{t-1}, u_t)$ which plays an essential role in the prediction step (or control update step) of the Bayes filter. Probabilistic robotics generalizes kinematic equations to the fact that the outcome of a control is uncertain, due to control noise or unmodeled exogenous effects. Deterministic robot actuator models are converted to probabilistic models by adding noise variables that characterize the types of uncertainty that exist in robotic actuation. Here $x_t$ and $x_{t−1}$ are both robot positions (in our case a one-dimensional position), and $u_t$ is a motion command. This model describes the posterior distribution over kinematics states that a robots assumes when executing the motion command $u_t$ when its position is $x_{t−1}$.
-
-In this tutorial, we will be using an **Sample Motion Model Odometry** (*Probabilistic Robotics [^ProbRob], page 111*). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
+<!-- TODO(alon): What is it a motion model explanation should be in another doc like 'extending-beluga' -->
+For the prediction step, we will be using a **Sample Motion Model Odometry** (*Probabilistic Robotics [^ProbRob], page 111*). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
 
 At time $t$, the robot's position is a random variable $x(t)$. This model considers that within the time interval $(t-1, t]$, the registered movement from odometry is a reliable estimator of the true state movement, despite any potential drift and slippage that the robot may encounter during this interval.
 
-The **Sample Motion Model Odometry** receives as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x'_t$. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles. It accepts an execution policy and a function that applies the motion model (or transformation) to each particle in the range ([Beluga API](../packages/beluga/docs/index.md)).
-<!-- TODO: doesn't work([beluga::actions API](../packages/beluga/docs/_doxygen/generated/reference/html/propagate_8hpp.html)). -->
+The **Sample Motion Model Odometry** receives as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x'_t$. Due to the uncertainty associated with the odometry and the real movment of the robot, a Gaussian distribution with a `parameter.translation_sd` are used in the motion model. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles.
+<!-- TODO(alon): The explanation of beluga::actions::propagate should be in another doc like 'extending-beluga' -->
 
 ```cpp
 auto motion_model = [&](double particle_position, auto& random_engine) {
@@ -346,7 +282,7 @@ particles |= beluga::actions::propagate(std::execution::seq, motion_model);
 
 * The argument `particle_position` represent a single particle from the range $x_{t-1}$ before applying the control update step.
 * Here, the equivalent of the odometry translation is the calculation of the `distance`.
-* A, `std::normal_distribution<double> distribution` is created with a mean equal to `distance` and the standard deviation `parameters.translation_sd`. This normal distribution represent the noise obtained from an odometry measurement due to drift and slippage during the translation of the robot.
+* A, `std::normal_distribution<double> distribution` is created with a mean equal to `distance` and the standard deviation `parameters.translation_sd`.
 * The motion model returns a single particle's state corresponding to the new range $x'_t$.
 
 :::{note}
@@ -368,8 +304,7 @@ Together, these steps constitute the **Update** phase.
 
 ### 3.6.1 Measurement Update
 
-Measurement models describe the formation process by which sensor measurements are generated in the physical world. Probabilistic robotics explicitly models the noise in sensor measurements. Such models account for the inherent uncertainty in the robot’s sensors. Formally, the measurement model is defined as a conditional probability distribution $p(z_t | x_t , m)$, where $x_t$ is the robot position, $z_t$ is the measurement at time $t$, and $m$ is the map of the environment.
-
+<!-- TODO(alon): What is it a sensor model explanation should be in another doc like 'extending-beluga' -->
 The most common model for processing landmarks assumes that the sensor can measure the range and the bearing of the landmark relative to the robot’s
 local coordinate frame. In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (*Probabilistic Robotics [^ProbRob], page 149*),
 since the doors do not have a signature that differentiates them from each other, but we can calculate the relative position of each door to the robot.
