@@ -92,8 +92,13 @@ class SparseValueGrid : public BaseRegularGrid<SparseValueGrid<MapType, NDim>, N
   double resolution_ = 1.0;
 };
 
+/// Convenience alias for 2D sparse value grids.
 template <typename MapType>
 using SparseValueGrid2 = SparseValueGrid<MapType, 2>;
+
+/// Convenience alias for 3D sparse value grids.
+template <typename MapType>
+using SparseValueGrid3 = SparseValueGrid<MapType, 3>;
 }  // namespace beluga
 
 #endif
