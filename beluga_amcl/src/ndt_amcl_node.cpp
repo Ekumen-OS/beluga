@@ -81,7 +81,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("minimum_likelihood", rclcpp::ParameterValue(0.0), descriptor);
+    declare_parameter("minimum_likelihood", rclcpp::ParameterValue(0.01), descriptor);
   }
 
   {
@@ -101,7 +101,7 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1000;
     descriptor.floating_point_range[0].step = 0;
-    declare_parameter("d2", rclcpp::ParameterValue(1.0), descriptor);
+    declare_parameter("d2", rclcpp::ParameterValue(0.6), descriptor);
   }
 
   if (get_parameter("autostart").as_bool()) {
