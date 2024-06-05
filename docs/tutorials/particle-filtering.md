@@ -9,8 +9,8 @@
 The purpose of this tutorial is to show how to implement a custom {abbr}`MCL (Monte Carlo Localiaztion)` algorithm using Beluga,
 motivated by the example given by _Probabilistic Robotics [^ProbRob], page 200, figure 8.11_.
 
-This example is about a 1-dimensional world, caractherized by 2 types of features, walls and doors. The robot is capable to move in a parallel free space,
-where it constantly scaning the landmarks of the walls-doors world (the robot also moves only in a 1-dimensional world). The two last graphs in the GIF showed above is a graphical representation of this world, where the blue bars represent the walls, the red bars represent the doors and the green bar is the robot.
+This example is about a one-dimensional world, composed by walls and doors. The robot is capable to move in a parallel free and continuous space,
+where it constantly scaning the landmarks of the walls-doors world (the robot also moves only in a one-dimensional world). The last two graphs in the GIF showed above is a graphical representation of this world, where the blue bars represent the walls, the red bars represent the doors and the green bar is the robot.
 
 To implement this example in a code we will need to create and define different components such as the map, the motion and sensor models, the generation of the initial set of partciles, the steps of the {abbr}`MCL (Monte Carlo Localiaztion)` algorithm and the estimation of the robot's position. Each component will be detailed explain in the following sections.
 
@@ -28,7 +28,7 @@ Based on [key concepts](../concepts/key-concepts.md), this tutorial will show an
 * [Prediction](#35-prediction)
 * [Update](#36-update)
 
-## 3 Write the Simulation code
+## 1 Write the Simulation code
 
 To start, create a `main.cpp` file and put the following code inside. After that we are going to analize the code by parts.
 
@@ -129,7 +129,7 @@ int main() {
 The code is written using C++17 with the ranges-v3 [^RangesV3] library for range handling along with its respective algorithms.
 :::
 
-### 3.1 Parameters
+### 1.1 Parameters
 
 This struct contain all the necessary parameters the code needs to conduct the simulation.
 
@@ -189,7 +189,7 @@ struct Parameters {
 };
 ```
 
-### 3.2 Landmark Map
+### 1.2 Landmark Map
 
 A map of the environment is a list of object in the environment and their locations `M = {M1, M2, ..., Mn}`. A **landmark map** is represented by a **feature-based map**, where each feature in the map contain a property and its Cartesian location. In the tutorial, the landmark map represent the position of the doors, but all doors are equal. This means there are no distinguishing properties between them, such as an ID for each door.
 
@@ -210,12 +210,14 @@ If you are going to change the position of the landmarks, take into account the 
 :::
 
 
-### 3.3 Generate Particles
+### 1.3 Generate Particles
 
 As boundary condition the algorithm requires an initial belief $bel(x_0)$ at time $t = 0$. If ones knows the value of $x_0$
 with a certain certainty, $bel(x_0)$ should be initialize with a point mass distribution that center all probability mass on the correct value of $x_0$. Otherwise, a uniform distribution over the space can be used to initialize $x_0$.
 
 In our case, to demonstrate how the filter is capable of converging to the true state, we will initialize the particles using a normal distribution, setting the mean to the initial position of the true state and with a certain standard deviation value.
+
+To initialize the set of particles we use the following code:
 
 ```cpp
 std::normal_distribution<double> initial_distribution(parameters.initial_position, parameters.initial_position_sd);
@@ -225,17 +227,17 @@ auto particles = beluga::views::sample(initial_distribution) |                  
                   ranges::to<std::vector>;
 ```
 
-* We define a `std::normal_distribution<double>` to initialize the position of the robot with some uncertainty.
+* We define a `std::normal_distribution<double>` to initialize the position of the robot with some uncertainty configured by the parameters `parameters.initial_position` and `parameters.initial_position_sd`.
 * `beluga::views::sample(initial_distribution)` will spread the particles around the normal distribution.
 * `ranges::views::transform(beluga::make_from_state<Particle>)` convert each sample in a Particle data struct defined by `using Particle = std::tuple<double, beluga::Weight>;`.
-* `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the `number_of_particles` parameter.
+* `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the `parameters.number_of_particles`.
 * `ranges::to<std::vector>` convert the range to a `std::vector<double>`.
 
 :::{tip}
 read about [Range Adaptor Closure Object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorClosureObject) to understand the `|` operator.
 :::
 
-### 3.4 Simulation Loop
+### 1.4 Simulation Loop
 
 The parameters `initial_position`, `velocity`, and `dt` are used to express the movement of the robot along the one-dimensional space and in a single direction, represented by the following equation:
 
@@ -260,14 +262,20 @@ for (std::size_t n = 0; n < parameters.number_of_cycles; ++n) {
 }
 ```
 
-### 3.5 Prediction
+### 1.5 Prediction
 
 <!-- TODO(alon): What is it a motion model explanation should be in another doc like 'extending-beluga' -->
 For the prediction step, we will be using a **Sample Motion Model Odometry** (*Probabilistic Robotics [^ProbRob], page 111*). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
 
 At time $t$, the robot's position is a random variable $x(t)$. This model considers that within the time interval $(t-1, t]$, the registered movement from odometry is a reliable estimator of the true state movement, despite any potential drift and slippage that the robot may encounter during this interval.
 
-The **Sample Motion Model Odometry** receives as inputs the set of particles $x_{t-1}$ and the control signal $u_t$, and outputs a new set of particles $x'_t$. Due to the uncertainty associated with the odometry and the real movment of the robot, a Gaussian distribution with a `parameter.translation_sd` are used in the motion model. Beluga implements that using  the `beluga::actions::propagate` function applied to a range of particles.
+For the **Sample Motion Model Odometry** we will use the following definitions:
+* `particle_position` represent a single particle from the range $x_{t-1}$ before applying the control update step.
+* `distance = parameters.velocity * parameters.dt` is the equivalent of the odometry translation $u_t$.
+* The uncertainty associated with the robot reaching its intended position after a control command is issued is modeled using a Gaussian distribution
+  `std::normal_distribution<double> distribution`.
+* The spread of the Gaussian distribution is controlled by a standard deviation, which is a constant `parameters.translation_sd` that can be specified when initializing the model.
+* The motion model returns a single particle's state corresponding to the new range $x'_t$.
 <!-- TODO(alon): The explanation of beluga::actions::propagate should be in another doc like 'extending-beluga' -->
 
 ```cpp
@@ -277,13 +285,14 @@ auto motion_model = [&](double particle_position, auto& random_engine) {
   return particle_position + distribution(random_engine);
 };
 
-particles |= beluga::actions::propagate(std::execution::seq, motion_model);
+
 ```
 
-* The argument `particle_position` represent a single particle from the range $x_{t-1}$ before applying the control update step.
-* Here, the equivalent of the odometry translation is the calculation of the `distance`.
-* A, `std::normal_distribution<double> distribution` is created with a mean equal to `distance` and the standard deviation `parameters.translation_sd`.
-* The motion model returns a single particle's state corresponding to the new range $x'_t$.
+To apply this motion model to all the `particles` range we use `beluga::actions::propagate` function.
+
+```cpp
+particles |= beluga::actions::propagate(std::execution::seq, motion_model);
+```
 
 :::{note}
 The range $x'_t$ represent the posterior $bel'(x'_t)$ before incorporating the measurement $z_t$. This posterior or particle set distribution
@@ -294,7 +303,7 @@ does not match the updated belief $bel(x_t)$ explain in [key concepts](../concep
 The effect of the motion model is to increase the space occupied by the particles.
 :::
 
-### 3.6 Update
+### 1.6 Update
 
 We will divide this stage into two steps:
 *  [Measurement Update](#361-measurement-update)
@@ -302,16 +311,9 @@ We will divide this stage into two steps:
 
 Together, these steps constitute the **Update** phase.
 
-### 3.6.1 Measurement Update
+### 1.6.1 Measurement Update
 
-<!-- TODO(alon): What is it a sensor model explanation should be in another doc like 'extending-beluga' -->
-The most common model for processing landmarks assumes that the sensor can measure the range and the bearing of the landmark relative to the robot’s
-local coordinate frame. In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (*Probabilistic Robotics [^ProbRob], page 149*),
-since the doors do not have a signature that differentiates them from each other, but we can calculate the relative position of each door to the robot.
-
-This sensor model, receives as inputs the landmark map, the sensor data and a particle, and outputs the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
-
-In our case, we need to generate simulated sensor data called `detections`. This data corresponds to the relative positions of landmarks around the robot's `current_position` within a configurable range specified by `parameters.sensor_range`.
+To simluate sensor data, we will create a landmark detector, which is capable of measuring the distance between the robot's `current_position` and nearby landmarks. These measurements are called `detections`, where they consist of an array of distances from the robot's `current_position` to each visible landmark. The range of view of the sensor can be configured by `parameters.sensor_range`.
 
 ```cpp
 auto detections =
@@ -326,7 +328,24 @@ auto detections =
 * `ranges::views::remove_if` will remove all landmarks farther out of the sensor's viewing range.
 * `ranges::to<std::vector>` convert the range to a `std::vector<double>`.
 
-To calculate the weight for each particle, we previously need to build the `particle_detections` range. This range represent the relative distances of each landmark to the proposed particle.
+<!-- This sensor model, receives as inputs the landmark map, the sensor data and a particle, and outputs the likelihood (or weight) of the sensor data assuming that the particle represent the true state. -->
+
+<!-- TODO(alon): What is it a sensor model explanation should be in another doc like 'extending-beluga' -->
+In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (*Probabilistic Robotics [^ProbRob], page 149*), since the doors (the landmarks in this case) are indistinguishable from one another, and the are treated as identical in the context of measurement.
+
+For the **landmark sensor model with known correspondence** we will use the following definitions:
+* The sensor model is a landmark detector, capable of measuring the distance between the particle and the landmarks.
+* `particle_position` represent a single particle from the range $x'_t$.
+* `particle_detections` is a range of relative distances from the landmarks to the evaluated particle.
+* `tutorial_params.min_particle_weight` is the minimum weight a particle can have. Is used to maintain the particle "alive" even though its
+  probability is very low.
+* The sensor model holds an internal reference to a map of the environment to correctly determine the likelihood of each state.
+* The likelihood of each measurement is calculated using a Gaussian function centered at the distance to the nearest landmark.
+* The weight of each particle is calculated by aggregating the likelihoods derived from all detections, transformed to the particle's frame of reference.
+* The model's parameters include the standard deviation of the Gaussian distribution, which models the detection noise, and a map listing the positions of
+  all landmarks.
+
+To calculate the weight for each particle, we previously need to build the `particle_detections` range:
 
 ```cpp
 auto sensor_model = [&](double particle_position) {
@@ -339,18 +358,14 @@ auto sensor_model = [&](double particle_position) {
 };
 ```
 
-The number of features identified at each time step is variable. However, many probabilistic robotic algorithms assume conditional independence between features, it means, the noise in each individual measurement is independent of the noise in other measurements, when conditioned on the current system state and prior world knowledge. Under the conditional independence assumption, we can process one feature at-a-time. That is:
+Many probabilistic robotic algorithms assume conditional independence between features, it means, the noise in each individual measurement is independent of the noise in other measurements, when conditioned on the current system state and prior world knowledge. Under the conditional independence assumption, we can process one feature at-a-time. That is:
 
 ```{math}
 :label: importance-factor
 p(z_t | x_t, m) = \prod_i p(z_{t}^{i} | x_t, m)
 ```
 
-To calculate the probability $p(z_{t}^{i} | x_t, m)$ we use the equation of a simplified version of the normal distribution's PDF.
-
-**(TODO: review this paragraph)**
-In this context, each landmark lacks distinguishing features that uniquely differentiate it from others. Therefore, we employ an approximation method where the `min_distance` between the landmarks' position measured from the sensor and the landmark's position relative to the particle, is considered. This approximation assumes that the smallest distance observed in the comparison provides the most accurate correspondence between the observed landmarks.
-
+`std::transform_reduce()` conduct the equation [](#importance-factor) and calculate the $p(z_t | x_t, m)$:
 ```cpp
 auto sensor_model = [&](double particle_position) {
   auto particle_detections =
@@ -371,29 +386,21 @@ auto sensor_model = [&](double particle_position) {
 };
 ```
 
-* `tutorial_params.min_particle_weight` is the minimum weight a particle can have. Is used to maintain the particle "alive" even though
-  its probability is very low.
-* `std::transform_reduce()` conduct the equation [](#importance-factor) and calculate the $p(z_t | x_t, m)$.
-* The sensor model returns the likelihood (or weight) of the sensor data assuming that the particle represent the true state.
-
-Beluga uses the function `beluga::actions::reweight` to transform a range of particle $x'_t$, to a range of **weighted** particles. It accepts an execution policy and a function that applies the sensor model (or transformation) to each particle in the range ([Beluga API](../packages/beluga/docs/index.md)).
-
-The `beluga::actions::normalize` is a range adaptor that allows users to normalize the weights of a range (or a range of particles) by dividing each weight by a specified normalization factor. If none is specified, the default normalization factor corresponds to the total sum of weights in the given range ([Beluga API](../packages/beluga/docs/index.md)).
+Beluga uses the function `beluga::actions::reweight` to transform a range of particle $x'_t$, to a range of **weighted** particles, by applying the sensor model to each particles from the range $x'_t$.
 
 ```cpp
 particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | beluga::actions::normalize;
 ```
 
+The `beluga::actions::normalize` is a range adaptor that allows users to normalize the weights of a range (or a range of particles) by dividing each weight by a specified normalization factor. If none is specified, the default normalization factor corresponds to the total sum of weights in the given range.
+
 :::{hint}
-Measurement update step doesn't affect the spatial distrition of the particle set.
+Measurement update step doesn't affect the spatial distrition of the particle set $x'_t$.
 :::
 
-### 3.6.2 Resample
+### 1.6.2 Resample
 
-The updated belief is prefigured by the spatial distribution of the particles $x'_t$ in the set and their importance weights. A few of the particles will have migrated to state regions with low probability, however, and their importance weights will therefore be low.
-To correct this, the update step is completed by performing a **resampling process**, which consist of drawing a new set of particles $x_t$ from the current set, with replacement, using importance weights as unnormalized probabilities. This process causes particles with low weights to be discarded and particles with high weights to be propagated multiple times into the new particle set.
-
-Adaptive Monte Carlo Localization (AMCL) uses different sampling techniques to dynamically adjust the number of particles to match the complexity of the posterior distribution. For the simplicity of this tutorial, we'll keep a fixed number of particles, as the performance is adequate.
+As explained in the [key concepts](../concepts/key-concepts.md), the update step is completed by performing a **resampling process**, which consist of drawing a new set of particles from the current set, with replacement, using importance weights as unnormalized probabilities. The result of this is the range of particles $x_t$:
 
 ```cpp
 particles |= beluga::views::sample |                                        //
@@ -401,91 +408,33 @@ particles |= beluga::views::sample |                                        //
              beluga::actions::assign;
 ```
 
-* `beluga::views::sample` implements a multinomial resampling on `particles` ([Beluga API](../packages/beluga/docs/index.md)).
+* `beluga::views::sample` implements a multinomial resampling on `particles`.
 * `ranges::views::take_exactly` defines the number of particles to take, using the `number_of_particles` parameter.
-* `beluga::actions::assign` effectively converts any view into an action and assigns the result to `particles` ([Beluga API](../packages/beluga/docs/index.md)).
+* `beluga::actions::assign` effectively converts any view into an action and assigns the result to `particles`.
 
-### 3.7 Estiamte
+:::{note}
+Adaptive Monte Carlo Localization (AMCL) uses different sampling techniques to dynamically adjust the number of particles to match the complexity of the posterior distribution. For the simplicity of this tutorial, we'll keep a fixed number of particles, as the performance is adequate.
+:::
 
-As explained in the [key concepts](../concepts/key-concepts.md), the output of the {abbr}`MCL (Monte Carlo Localiaztion)` algorithm is an estimate of the posterior probability distribution represented by the set of particles $x_t$. To determine the **mean** and **standard deviation** of this distribution, we use `beluga::estimate` ([Beluga API](../packages/beluga/docs/index.md)):
+### 1.7 Estiamte
+
+As explained in the [key concepts](../concepts/key-concepts.md), the output of the {abbr}`MCL (Monte Carlo Localiaztion)` algorithm is an estimate of the posterior probability distribution represented by the set of particles $x_t$. To determine the **mean** and **standard deviation** of this distribution, we use `beluga::estimate`:
 
 ```cpp
 const auto estimation = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
 ```
+* Here, `estimation` is a `std::tuple<double, double>` data structure.
+* `beluga::views::states` will obtain a reference to the state of each particle in the input range lazily.
+* `beluga::views::weights` will obtain a reference to the weight of each particle in the input range lazily.
 
-Here, `estimation` is a `std::tuple<double, double>` data structure.
 
 :::{attention}
 `estimation` is not used in this code. You can use `<iostream>` to print the value of `estimation` on the screen or complete the TODO: [Visualization tutorial]().
 :::
 
-## 4 Compile and run the code
+## 2 Compile and run the code
 
-### 4.1 package.xml
-
-Create a `beluga_tutorial/package.xml` file and put the following inside:
-
-```xml
-<?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
-<package format="3">
-  <name>beluga_tutorial</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="user@mail.com">developer</maintainer>
-  <license>Apache License 2.0</license>
-
-  <buildtool_depend>cmake</buildtool_depend>
-
-  <depend>beluga</depend>
-
-  <export>
-    <build_type>cmake</build_type>
-  </export>
-</package>
-```
-
-This declares the package needs `beluga` when its code is built and executed.
-
-### 4.2 CMakeLists.txt
-
-The final `beluga_tutorial/CMakeLists.txt` looks like:
-
-```cmake
-cmake_minimum_required(VERSION 3.16)
-
-project(beluga_tutorial)
-
-find_package(beluga REQUIRED)
-
-add_executable(${PROJECT_NAME} src/main.cpp)
-
-target_link_libraries(${PROJECT_NAME} beluga::beluga)
-
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib/${PROJECT_NAME})
-```
-
-* `project()` define the name of the project. `${PROJECT_NAME}` macro will use this name alongside the file.
-* `find_package()` is used to import external dependencies.
-* `add_executable()` create the executable called `beluga_tutorial`.
-* `target_link_libraries()` link `beluga` in the compilation process.
-* `install(TARGETS...)` will install the executable under the path `install/beluga_tutorial/lib/beluga_tutorial/`.
-
-### 4.2 Build and run
-
-Open a new terminal and build your new package:
-
-```bash
-source /opt/ros/humble/setup.bash
-cd beluga_ws/
-colcon build
-```
-
-In the same terminal run the code:
-
-```bash
-./install/beluga_tutorial/lib/beluga_tutorial/beluga_tutorial
-```
+TODO: Add the command to compile using gcc.
 
 ## Conclusion
 
