@@ -115,7 +115,7 @@ TYPED_TEST(SparseGridTests, AllAccessorMethodsAreEquivalent) {
   for (const auto resolution : {0.1, 0.5, 1.2, 1.5}) {
     const beluga::SparseValueGrid2<TypeParam> grid{data, resolution};
     for (const auto& [coordinates, value] : data) {
-      Eigen::Vector2d double_coords = coordinates.template cast<double>() * resolution;
+      const Eigen::Vector2d double_coords = coordinates.template cast<double>() * resolution;
       ASSERT_TRUE(grid.cell_near(double_coords).isApprox(coordinates));
       ASSERT_EQ(grid.data_near(double_coords), std::make_optional<int>(value));
       ASSERT_EQ(grid.data_at(grid.cell_near(double_coords)), std::make_optional<int>(value));
