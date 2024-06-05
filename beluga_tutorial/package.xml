@@ -18,6 +18,10 @@
   <depend>beluga</depend>
   <depend condition="$ROS_VERSION == 2">yaml_cpp_vendor</depend>
 
+  <exec_depend condition="$ROS_VERSION == 2">python3-matplotlib</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-numpy</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-yaml</exec_depend>
+
   <export>
     <build_type>cmake</build_type>
   </export>
