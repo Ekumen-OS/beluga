@@ -22,6 +22,7 @@
 #include <range/v3/view/transform.hpp>
 
 #include <Eigen/Core>
+#include <beluga/eigen_compatibility.hpp>
 
 /**
  * \file

@@ -21,6 +21,7 @@
 #include <beluga/sensor/data/regular_grid.hpp>
 
 #include <Eigen/Core>
+#include <beluga/eigen_compatibility.hpp>
 
 /**
  * \file

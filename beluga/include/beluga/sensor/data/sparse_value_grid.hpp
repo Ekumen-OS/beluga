@@ -19,6 +19,7 @@
 #include <optional>
 #include <type_traits>
 
+#include <beluga/eigen_compatibility.hpp>
 #include <beluga/sensor/data/regular_grid.hpp>
 /**
  * \file
