@@ -18,7 +18,7 @@
 #include <Eigen/Dense>
 
 #if (EIGEN_WORLD_VERSION < 3) || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION < 4)
-namespace Eigen {
+namespace Eigen {  // NOLINT(readability-identifier-naming)
 /// Partial spetialization for one dimensional matrices, for convinience.
 template <typename Scalar, int Dims>
 using Vector = Eigen::Matrix<Scalar, Dims, 1>;
