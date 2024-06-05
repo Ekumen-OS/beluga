@@ -84,4 +84,6 @@ ndt_amcl:
     # Scaling parameter for NDT cells amplitude.
     d1: 1.0
     # Scaling parameter for NDT cells covariance.
-    d2: 0.85
+    d2: 0.6
+    # Minimum score NDT measurement cells.
+    minimum_likelihood: 0.01
