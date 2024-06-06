@@ -25,8 +25,9 @@ I highly recommend reading the [key concepts](../concepts/key-concepts.md) secti
 ## Tasks
 
 Based on [key concepts](../concepts/key-concepts.md), this tutorial will show an implementation of the particle filter by performing the recursive update in two steps:
-* [Prediction](#35-prediction)
-* [Update](#36-update)
+
+* [Prediction](#15-prediction)
+* [Update](#16-update)
 
 ## 1 Write the Simulation code
 
@@ -209,7 +210,6 @@ struct Parameters {
 If you are going to change the position of the landmarks, take into account the `std::size_t map_size` parameter as well.
 :::
 
-
 ### 1.3 Generate Particles
 
 As boundary condition the algorithm requires an initial belief $bel(x_0)$ at time $t = 0$. If ones knows the value of $x_0$
@@ -265,17 +265,19 @@ for (std::size_t n = 0; n < parameters.number_of_cycles; ++n) {
 ### 1.5 Prediction
 
 <!-- TODO(alon): What is it a motion model explanation should be in another doc like 'extending-beluga' -->
-For the prediction step, we will be using a **Sample Motion Model Odometry** (*Probabilistic Robotics [^ProbRob], page 111*). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
+For the prediction step, we will be using a **Sample Motion Model Odometry** (_Probabilistic Robotics [^ProbRob], page 111_). Technically, odometry are sensors measurements, not controls (they are only available retrospectively, after the robot has moved), but this poses no problem for filter algorithms, and it will be treated as a control signal.
 
 At time $t$, the robot's position is a random variable $x(t)$. This model considers that within the time interval $(t-1, t]$, the registered movement from odometry is a reliable estimator of the true state movement, despite any potential drift and slippage that the robot may encounter during this interval.
 
 For the **Sample Motion Model Odometry** we will use the following definitions:
+
 * `particle_position` represent a single particle from the range $x_{t-1}$ before applying the control update step.
 * `distance = parameters.velocity * parameters.dt` is the equivalent of the odometry translation $u_t$.
 * The uncertainty associated with the robot reaching its intended position after a control command is issued is modeled using a Gaussian distribution
   `std::normal_distribution<double> distribution`.
 * The spread of the Gaussian distribution is controlled by a standard deviation, which is a constant `parameters.translation_sd` that can be specified when initializing the model.
 * The motion model returns a single particle's state corresponding to the new range $x'_t$.
+
 <!-- TODO(alon): The explanation of beluga::actions::propagate should be in another doc like 'extending-beluga' -->
 
 ```cpp
@@ -306,8 +308,9 @@ The effect of the motion model is to increase the space occupied by the particle
 ### 1.6 Update
 
 We will divide this stage into two steps:
-*  [Measurement Update](#361-measurement-update)
-*  [Resample](#362-resample)
+
+* [Measurement Update](#161-measurement-update)
+* [Resample](#162-resample)
 
 Together, these steps constitute the **Update** phase.
 
@@ -331,9 +334,10 @@ auto detections =
 <!-- This sensor model, receives as inputs the landmark map, the sensor data and a particle, and outputs the likelihood (or weight) of the sensor data assuming that the particle represent the true state. -->
 
 <!-- TODO(alon): What is it a sensor model explanation should be in another doc like 'extending-beluga' -->
-In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (*Probabilistic Robotics [^ProbRob], page 149*), since the doors (the landmarks in this case) are indistinguishable from one another, and the are treated as identical in the context of measurement.
+In this tutorial we will use an approximation to the **landmark sensor model with known correspondence** (_Probabilistic Robotics [^ProbRob], page 149_), since the doors (the landmarks in this case) are indistinguishable from one another, and the are treated as identical in the context of measurement.
 
 For the **landmark sensor model with known correspondence** we will use the following definitions:
+
 * The sensor model is a landmark detector, capable of measuring the distance between the particle and the landmarks.
 * `particle_position` represent a single particle from the range $x'_t$.
 * `particle_detections` is a range of relative distances from the landmarks to the evaluated particle.
@@ -342,8 +346,7 @@ For the **landmark sensor model with known correspondence** we will use the foll
 * The sensor model holds an internal reference to a map of the environment to correctly determine the likelihood of each state.
 * The likelihood of each measurement is calculated using a Gaussian function centered at the distance to the nearest landmark.
 * The weight of each particle is calculated by aggregating the likelihoods derived from all detections, transformed to the particle's frame of reference.
-* The model's parameters include the standard deviation of the Gaussian distribution, which models the detection noise, and a map listing the positions of
-  all landmarks.
+* The model's parameters include the standard deviation of the Gaussian distribution, which models the detection noise, and a map listing the positions of all landmarks.
 
 To calculate the weight for each particle, we previously need to build the `particle_detections` range:
 
@@ -366,6 +369,7 @@ p(z_t | x_t, m) = \prod_i p(z_{t}^{i} | x_t, m)
 ```
 
 `std::transform_reduce()` conduct the equation [](#importance-factor) and calculate the $p(z_t | x_t, m)$:
+
 ```cpp
 auto sensor_model = [&](double particle_position) {
   auto particle_detections =
@@ -423,10 +427,10 @@ As explained in the [key concepts](../concepts/key-concepts.md), the output of t
 ```cpp
 const auto estimation = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
 ```
+
 * Here, `estimation` is a `std::tuple<double, double>` data structure.
 * `beluga::views::states` will obtain a reference to the state of each particle in the input range lazily.
 * `beluga::views::weights` will obtain a reference to the weight of each particle in the input range lazily.
-
 
 :::{attention}
 `estimation` is not used in this code. You can use `<iostream>` to print the value of `estimation` on the screen or complete the TODO: [Visualization tutorial]().
@@ -438,11 +442,10 @@ TODO: Add the command to compile using gcc.
 
 ## Conclusion
 
-You can see that we have put most of our effort into explaining and implementing the components that make up or are used by the particle filter, such as the landmark map, motion model, sensor model, and how to initialize the set of particles. This was made possible thanks to **Beluga**, a C++ library that provides a set of reusable components that can be combined to assemble a complete and customizable particle filter. Moreover, **Beluga** offers additional features that can help build more complex {abbr}`MCL (Monte Carlo Localiaztion)` algorithms than those proposed by this tutorial, while minimizing code duplication and maximizing code reuse.
+You can see that we have put most of our effort into explaining and implementing the components that make up or are used by the particle filter, such as the landmark map, the motion and sensor models, and how to initialize the set of particles. Meanwhile, Beluga provided us with all the necessary resources to implement a custom {abbr}`MCL (Monte Carlo Localiaztion)` algorithm.
 
 ## References
 
 [^ProbRob]: S. Thrun, W. Burgard, and D. Fox. _Probabilistic Robotics._ Intelligent Robotics and Autonomous Agents
 series. MIT Press, 2005. ISBN 9780262201629. URL <https://books.google.com.ar/books?id=jtSMEAAAQBAJ>
-[^BelugaPaper]: Beluga paper **TODO: add the link for the paper**
 [^RangesV3]: Ranges-v3 user manual <https://ericniebler.github.io/range-v3/>
