@@ -19,7 +19,7 @@
 
 #if (EIGEN_WORLD_VERSION < 3) || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION < 4)
 namespace Eigen {  // NOLINT(readability-identifier-naming)
-/// Partial spetialization for one dimensional matrices, for convinience.
+/// Type alias for single-column matrices, available starting Eigen 3.4
 template <typename Scalar, int Dims>
 using Vector = Eigen::Matrix<Scalar, Dims, 1>;
 }  // namespace Eigen
