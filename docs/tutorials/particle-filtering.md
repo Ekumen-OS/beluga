@@ -6,13 +6,13 @@
 
 ## Overview
 
-The purpose of this tutorial is to show how to implement a custom {abbr}`MCL (Monte Carlo Localiaztion)` algorithm using Beluga,
+The purpose of this tutorial is to show how to implement a custom {abbr}`MCL (Monte Carlo Localization)` algorithm using Beluga,
 motivated by the example given by _Probabilistic Robotics [^ProbRob], page 200, figure 8.11_.
 
 This example is about a one-dimensional world, composed by walls and doors. The robot is capable to move in a parallel free and continuous space,
-where it constantly scaning the landmarks of the walls-doors world (the robot also moves only in a one-dimensional world). The last two graphs in the GIF showed above is a graphical representation of this world, where the blue bars represent the walls, the red bars represent the doors and the green bar is the robot.
+where it constantly scanning the landmarks of the walls-doors world (the robot also moves only in a one-dimensional world). The last two graphs in the GIF showed above is a graphical representation of this world, where the blue bars represent the walls, the red bars represent the doors and the green bar is the robot.
 
-To implement this example in a code we will need to create and define different components such as the map, the motion and sensor models, the generation of the initial set of partciles, the steps of the {abbr}`MCL (Monte Carlo Localiaztion)` algorithm and the estimation of the robot's position. Each component will be detailed explain in the following sections.
+To implement this example in a code we will need to create and define different components such as the map, the motion and sensor models, the generation of the initial set of particles, the steps of the {abbr}`MCL (Monte Carlo Localization)` algorithm and the estimation of the robot's position. Each component will be detailed explain in the following sections.
 
 ## Requirements
 
@@ -31,7 +31,7 @@ Based on [key concepts](../concepts/key-concepts.md), this tutorial will show an
 
 ## 1 Write the Simulation code
 
-To start, create a `main.cpp` file and put the following code inside. After that we are going to analize the code by parts.
+To start, create a `main.cpp` file and put the following code inside. After that we are going to analyze the code by parts.
 
 ```cpp
 #include <cmath>
@@ -316,7 +316,7 @@ Together, these steps constitute the **Update** phase.
 
 ### 1.6.1 Measurement Update
 
-To simluate sensor data, we will create a landmark detector, which is capable of measuring the distance between the robot's `current_position` and nearby landmarks. These measurements are called `detections`, where they consist of an array of distances from the robot's `current_position` to each visible landmark. The range of view of the sensor can be configured by `parameters.sensor_range`.
+To simulate sensor data, we will create a landmark detector, which is capable of measuring the distance between the robot's `current_position` and nearby landmarks. These measurements are called `detections`, where they consist of an array of distances from the robot's `current_position` to each visible landmark. The range of view of the sensor can be configured by `parameters.sensor_range`.
 
 ```cpp
 auto detections =
@@ -399,7 +399,7 @@ particles |= beluga::actions::reweight(std::execution::seq, sensor_model) | belu
 The `beluga::actions::normalize` is a range adaptor that allows users to normalize the weights of a range (or a range of particles) by dividing each weight by a specified normalization factor. If none is specified, the default normalization factor corresponds to the total sum of weights in the given range.
 
 :::{hint}
-Measurement update step doesn't affect the spatial distrition of the particle set $x'_t$.
+Measurement update step doesn't affect the spatial distribution of the particle set $x'_t$.
 :::
 
 ### 1.6.2 Resample
@@ -420,9 +420,9 @@ particles |= beluga::views::sample |                                        //
 Adaptive Monte Carlo Localization (AMCL) uses different sampling techniques to dynamically adjust the number of particles to match the complexity of the posterior distribution. For the simplicity of this tutorial, we'll keep a fixed number of particles, as the performance is adequate.
 :::
 
-### 1.7 Estiamte
+### 1.7 Estimate
 
-As explained in the [key concepts](../concepts/key-concepts.md), the output of the {abbr}`MCL (Monte Carlo Localiaztion)` algorithm is an estimate of the posterior probability distribution represented by the set of particles $x_t$. To determine the **mean** and **standard deviation** of this distribution, we use `beluga::estimate`:
+As explained in the [key concepts](../concepts/key-concepts.md), the output of the {abbr}`MCL (Monte Carlo Localization)` algorithm is an estimate of the posterior probability distribution represented by the set of particles $x_t$. To determine the **mean** and **standard deviation** of this distribution, we use `beluga::estimate`:
 
 ```cpp
 const auto estimation = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
@@ -442,7 +442,7 @@ TODO: Add the command to compile using gcc.
 
 ## Conclusion
 
-You can see that we have put most of our effort into explaining and implementing the components that make up or are used by the particle filter, such as the landmark map, the motion and sensor models, and how to initialize the set of particles. Meanwhile, Beluga provided us with all the necessary resources to implement a custom {abbr}`MCL (Monte Carlo Localiaztion)` algorithm.
+You can see that we have put most of our effort into explaining and implementing the components that make up or are used by the particle filter, such as the landmark map, the motion and sensor models, and how to initialize the set of particles. Meanwhile, Beluga provided us with all the necessary resources to implement a custom {abbr}`MCL (Monte Carlo Localization)` algorithm.
 
 ## References
 
