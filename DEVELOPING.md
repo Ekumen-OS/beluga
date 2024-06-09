@@ -2,9 +2,12 @@
 
 ## Table of Contents
 
-- [Environment](#environment)
-- [Workflow](#workflow)
-- [CI/CD](#ci-cd)
+- [Developing Beluga](#developing-beluga)
+  - [Table of Contents](#table-of-contents)
+  - [Environment](#environment)
+  - [Workflow](#workflow)
+  - [CI/CD](#cicd)
+  - [Next Steps](#next-steps)
 
 ## Environment
 
@@ -36,7 +39,7 @@ To bring up a development environment:
    (cd beluga && ROSDISTRO=humble docker/run.sh)
    ```
 
-   Supported distributions include `noetic`, `humble`, `iron`, and `rolling`.
+   Supported distributions include `noetic`, `humble`, `iron`, `jazzy` and `rolling`.
 
 ## Workflow
 
