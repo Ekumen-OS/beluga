@@ -67,6 +67,7 @@ TYPED_TEST(SparseGridTests, NotPresent) {
 
   ASSERT_EQ(grid.data_at(Eigen::Vector2i(2, 1)), std::nullopt);
   ASSERT_EQ(grid.data_near(Eigen::Vector2d(5, 3)), std::nullopt);
+  ASSERT_EQ(grid.data_near(Eigen::Vector2d{5, 1}), std::nullopt);
 }
 
 TYPED_TEST(SparseGridTests, Resolution) {

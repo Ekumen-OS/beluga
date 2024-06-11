@@ -42,9 +42,6 @@ TEST(RegularGrid2, NearestCells) {
 TEST(RegularGrid2, CoordinatesAtCell) {
   const auto grid = TestRegularGrid2{};
 
-  EXPECT_TRUE(grid.coordinates_at(Eigen::Vector2i{0, 0}).isApprox(Eigen::Vector2d(0.5, 0.5)));
-  EXPECT_TRUE(grid.coordinates_at(Eigen::Vector2i{1, 0}).isApprox(Eigen::Vector2d(1.5, 0.5)));
-
   EXPECT_TRUE(grid.coordinates_at(Eigen::Vector2i(0, 0)).isApprox(Eigen::Vector2d(0.5, 0.5)));
   EXPECT_TRUE(grid.coordinates_at(Eigen::Vector2i(1, 0)).isApprox(Eigen::Vector2d(1.5, 0.5)));
 }
