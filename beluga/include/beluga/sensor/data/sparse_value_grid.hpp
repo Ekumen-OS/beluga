@@ -19,6 +19,7 @@
 #include <optional>
 #include <type_traits>
 
+#include <beluga/eigen_compatibility.hpp>
 #include <beluga/sensor/data/regular_grid.hpp>
 /**
  * \file
@@ -27,21 +28,22 @@
 
 namespace beluga {
 
-/// Generic 2D sparse value regular grid.
+/// Generic N dimensional sparse value regular grid.
 /**
- * \tparam MapType:
- *    Associative container representing a mapping from a Eigen::Vector2i to a value of type MapType::mapped_type.
- *    It should implement a subset of standard library's associative containers public API.
- *    In particular, given 'm' a possibly const instance of MapType:
- *         - MapType::key_type must be Eigen::Vector2i.
- *         - MapType::mapped_type should be the value type of the associative container entries.
- *         - 'm.at(const Eigen::Vector2i& cell_index) const' should return a const reference to 'MapType::value_type'
- * representing the value at that index, or throw 'std::out_of_range' if it doesn't exist.
- *        - 'm.find(const Eigen::Vector2i&)' should follow the same API as
- * [std::map](https://en.cppreference.com/w/cpp/container/map/find).
+ * \tparam MapType: Associative container representing a mapping from a Eigen::Vector<int, NDim> to a value of type
+ * MapType::mapped_type. It should implement a subset of standard library's associative containers public API.
+ * In particular, given 'm' a possibly const instance of MapType:
+ * - MapType::key_type must be Eigen::Vector<int, NDim>.
+ * - MapType::mapped_type should be the value type of the associative container entries.
+ * - 'm.at(const Eigen::Vector<int, NDim>& cell_index) const' should return a const reference to
+ *   'MapType::value_type' representing the value at that index,
+ *   or throw 'std::out_of_range' if it doesn't exist.
+ * - 'm.find(const Eigen::Vector<int, NDim>&)' should follow the same API as
+ *   [std::map](https://en.cppreference.com/w/cpp/container/map/find).
+ * \tparam NDim: Dimension of the grid.
  */
-template <typename MapType>
-class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
+template <typename MapType, int NDim>
+class SparseValueGrid : public BaseRegularGrid<SparseValueGrid<MapType, NDim>, NDim> {
  public:
   /// Construct without data and with a 1 cell/meter resolution.
   SparseValueGrid() = default;
@@ -51,7 +53,8 @@ class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
   using mapped_type = typename map_type::mapped_type;
   /// Key type for the key-value pairs.
   using key_type = typename map_type::key_type;
-  static_assert(std::is_same_v<key_type, Eigen::Vector2i>);
+
+  static_assert(std::is_same_v<key_type, Eigen::Vector<int, NDim>>);
   /// Constructs the grid.
   /**
    * \param data Grid data.
@@ -71,8 +74,8 @@ class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
   [[nodiscard]] const map_type& data() const { return data_; }
 
   /// Gets grid data at cell_index or std::nullopt if it's not present.
-  [[nodiscard]] std::optional<mapped_type> data_at(const Eigen::Vector2i& cell_index) const {
-    auto itr = data_.find(cell_index);
+  [[nodiscard]] std::optional<mapped_type> data_at(const Eigen::Vector<int, NDim>& cell_index) const {
+    const auto itr = data_.find(cell_index);
     if (itr == data_.end()) {
       return std::nullopt;
     }
@@ -80,13 +83,8 @@ class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
   }
 
   /// Gets grid data at real coordinates 'coordinates' or std::nullopt if it's not present.
-  [[nodiscard]] std::optional<mapped_type> data_near(const Eigen::Vector2d& coordinates) const {
+  [[nodiscard]] std::optional<mapped_type> data_near(const Eigen::Vector<double, NDim>& coordinates) const {
     return data_at(this->self().cell_near(coordinates));
-  }
-
-  /// Gets grid data at real coordinates '{x, y}' or std::nullopt if it's not present.
-  [[nodiscard]] std::optional<mapped_type> data_near(const double x, const double y) const {
-    return data_at(this->self().cell_near(x, y));
   }
 
  private:
@@ -94,6 +92,13 @@ class SparseValueGrid : public BaseRegularGrid2<SparseValueGrid<MapType>> {
   double resolution_ = 1.0;
 };
 
+/// Convenience alias for 2D sparse value grids.
+template <typename MapType>
+using SparseValueGrid2 = SparseValueGrid<MapType, 2>;
+
+/// Convenience alias for 3D sparse value grids.
+template <typename MapType>
+using SparseValueGrid3 = SparseValueGrid<MapType, 3>;
 }  // namespace beluga
 
 #endif

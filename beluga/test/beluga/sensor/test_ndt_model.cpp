@@ -33,7 +33,7 @@ namespace {
 Eigen::Matrix2Xd get_diagonal_covariance(double x_var = 0.5, double y_var = 0.5) {
   return Eigen::Vector2d{x_var, y_var}.asDiagonal();
 }
-using sparse_grid_2d_t = SparseValueGrid<std::unordered_map<Eigen::Vector2i, NDTCell2d, detail::CellHasher<2>>>;
+using sparse_grid_2d_t = SparseValueGrid2<std::unordered_map<Eigen::Vector2i, NDTCell2d, detail::CellHasher<2>>>;
 }  // namespace
 
 TEST(NDTSensorModelTests, CanConstruct) {

@@ -60,7 +60,7 @@ namespace beluga_amcl {
 
 /// Underlying map representation for the NDT sensor model.
 using NDTMapRepresentation =
-    beluga::SparseValueGrid<std::unordered_map<Eigen::Vector2i, beluga::NDTCell2d, beluga::detail::CellHasher<2>>>;
+    beluga::SparseValueGrid2<std::unordered_map<Eigen::Vector2i, beluga::NDTCell2d, beluga::detail::CellHasher<2>>>;
 
 /// Type of a particle-dependent random state generator.
 using RandomStateGenerator = std::function<std::function<beluga::NDTSensorModel<NDTMapRepresentation>::state_type()>(

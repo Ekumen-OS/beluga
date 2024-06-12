@@ -80,14 +80,6 @@ TEST(DenseGrid2, Data) {
   const auto grid =
       Image<5, 5>({{{0, 0, 0, 0, 0}, {0, 1, 1, 1, 0}, {0, 1, 2, 1, 0}, {0, 1, 1, 1, 0}, {0, 0, 0, 0, 0}}});
 
-  EXPECT_EQ(grid.data_at(0, 0), 0);
-  EXPECT_EQ(grid.data_at(2, 2), 2);
-  EXPECT_EQ(grid.data_at(3, 1), 1);
-  EXPECT_EQ(grid.data_at(-1, 0), std::nullopt);
-  EXPECT_EQ(grid.data_at(0, -1), std::nullopt);
-  EXPECT_EQ(grid.data_at(5, 0), std::nullopt);
-  EXPECT_EQ(grid.data_at(0, 5), std::nullopt);
-
   EXPECT_EQ(grid.data_at(Eigen::Vector2i(0, 0)), 0);
   EXPECT_EQ(grid.data_at(Eigen::Vector2i(2, 2)), 2);
   EXPECT_EQ(grid.data_at(Eigen::Vector2i(3, 1)), 1);
