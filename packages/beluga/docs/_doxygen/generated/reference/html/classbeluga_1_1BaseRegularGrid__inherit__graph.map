@@ -1,0 +1,10 @@
+<map id="beluga::BaseRegularGrid&lt; Derived, NDim &gt;" name="beluga::BaseRegularGrid&lt; Derived, NDim &gt;">
+<area shape="rect" id="node1" title="Regularly spaced N dimensional grid base type." alt="" coords="189,39,372,80"/>
+<area shape="rect" id="node3" href="$classbeluga_1_1BaseDenseGrid2.html" title="Dense 2D grid base type." alt="" coords="420,39,603,80"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,39,141,80"/>
+<area shape="rect" id="node4" href="$classbeluga_1_1BaseLinearGrid2.html" title=" " alt="" coords="651,5,832,47"/>
+<area shape="rect" id="node6" href="$classbeluga_1_1BaseLinearGrid2.html" title="Linear 2D grid base type." alt="" coords="651,71,832,112"/>
+<area shape="rect" id="node5" href="$classbeluga_1_1ValueGrid2.html" title="Generic 2D linear value grid." alt="" coords="895,13,1077,39"/>
+<area shape="rect" id="node7" href="$classbeluga_1_1ValueGrid2.html" title=" " alt="" coords="913,67,1059,108"/>
+<area shape="rect" id="node8" href="$classbeluga_1_1BaseOccupancyGrid2.html" title="Occupancy 2D grid base type." alt="" coords="880,132,1092,173"/>
+</map>

@@ -1,5 +1,5 @@
 <map id="beluga::BaseDenseGrid2&lt; Derived &gt;" name="beluga::BaseDenseGrid2&lt; Derived &gt;">
-<area shape="rect" id="node1" title="Dense 2D grid base type." alt="" coords="9,184,192,225"/>
-<area shape="rect" id="node2" href="$classbeluga_1_1BaseRegularGrid2.html" title="Regularly spaced 2D grid base type." alt="" coords="5,95,196,136"/>
-<area shape="rect" id="node3" title=" " alt="" coords="33,5,169,47"/>
+<area shape="rect" id="node1" title="Dense 2D grid base type." alt="" coords="24,169,207,211"/>
+<area shape="rect" id="node2" href="$classbeluga_1_1BaseRegularGrid.html" title="Regularly spaced N dimensional grid base type." alt="" coords="5,95,225,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="47,5,183,47"/>
 </map>

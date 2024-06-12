@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Beluga: Beluga named requirements: RegularGrid2 &#8212; Beluga  documentation</title>
+    <title>Beluga: Beluga named requirements: RegularGrid &#8212; Beluga  documentation</title>
   
   
   
@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=87e54e7c" />
@@ -45,16 +45,16 @@
     <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/RegularGrid2Page';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/RegularGridPage';</script>
     <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
     <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
     <link rel="index" title="Index" href="../../../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Jun 5 15:26:29 2024 -0300, 966c4e9&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Jun 12 11:43:25 2024 -0300, 45c4e9c&#39;"/>
   </head>
   
   
@@ -241,9 +241,9 @@
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -281,7 +281,7 @@
       
       
       
-      <li><a href="../../../../../../../_sources/packages/beluga/docs/_doxygen/generated/reference/html/RegularGrid2Page.rst" target="_blank"
+      <li><a href="../../../../../../../_sources/packages/beluga/docs/_doxygen/generated/reference/html/RegularGridPage.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -363,7 +363,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>RegularGrid2</h1>
+    <h1>RegularGrid</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -377,8 +377,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="regulargrid2">
-<h1>RegularGrid2<a class="headerlink" href="#regulargrid2" title="Link to this heading">#</a></h1>
+  <section id="regulargrid">
+<h1>RegularGrid<a class="headerlink" href="#regulargrid" title="Link to this heading">#</a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -387,7 +387,7 @@ document.write(`
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: Beluga named requirements: RegularGrid2</title>
+<title>Beluga: Beluga named requirements: RegularGrid</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -429,17 +429,16 @@ $(function() {
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Beluga named requirements: RegularGrid2 </div>  </div>
+<div class="title">Beluga named requirements: RegularGrid </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>Regular grids divide space in evenly sized portions or <em>cells</em>. A coordinate system over integers can thus be defined, in addition to that of the space in which the grid is embedded.</p>
-<p>A type <code>G</code> satisfies <code>RegularGrid2</code> requirements if given <code>g</code> a possibly const instance of <code>G</code>:</p><ul>
-<li><code>g.resolution()</code> returns the side length of all grid cells as a <code>double</code>;</li>
-<li>given possibly const embedding space coordinates <code>x</code> and <code>y</code> of type <code>double</code>, <code>g.cell_at(x, y)</code> returns grid cell coordinates as an <code>Eigen::Vector2d</code> value;</li>
-<li>given possibly const embedding space coordinates <code>p</code> of <code>Eigen::Vector2d</code> type, <code>g.cell_at(p)</code> returns grid cell coordinates as an <code>Eigen::Vector2d</code> value;</li>
-<li>given possibly const grid cell coordinates <code>xi</code> and <code>yi</code> of type <code>int</code>, <code>g.coordinates_at(xi, yi)</code> returns embedding space coordinates as an <code>Eigen::Vector2d</code> value;</li>
-<li>given possibly const grid cell coordinates <code>pi</code> of <code>Eigen::Vector2i</code> type, <code>g.coordinates_at(p)</code> returns embedding space coordinates as an <code>Eigen::Vector2d</code> value;</li>
-<li>given a possibly const range <code>r</code> of grid cell coordinates of <code>Eigen::Vector2i</code> type, <code>g.coordinates_for(r)</code> returns a range of embedding space coordinates as <code>Eigen::Vector2d</code> values. </li>
+<p>A type <code>G</code> satisfies <code>RegularGrid</code> requirements if given <code>g</code>, a possibly const instance of <code>G</code>:</p><ul>
+<li><code>g.resolution()</code> returns the side length of all grid N-dimensional cells as a <code>double</code>;</li>
+<li>given possibly const embedding space coordinates <code>x</code> of type <code>Eigen::Vector&lt;double, NDim&gt;</code>, <code>g.cell_at(x)</code> returns grid cell coordinates as an <code>Eigen::Vector&lt;int, NDim1&gt;</code> value;</li>
+<li>given possibly const embedding space coordinates <code>p</code> of <code>Eigen::Vector&lt;double, NDim&gt;</code> type, <code>g.cell_at(p)</code> returns grid cell coordinates as an <code>Eigen::Vector&lt;int, NDim&gt;</code> value;</li>
+<li>given possibly const grid cell coordinates <code>xi</code> of type <code>Eigen::Vector&lt;int, NDim&gt;</code>, <code>g.coordinates_at(xi)</code> returns embedding space coordinates as an <code>Eigen::Vector&lt;double, NDim&gt;</code> value;</li>
+<li>given a possibly const range <code>r</code> of grid cell coordinates of <code>Eigen::Vector&lt;int, NDim&gt;</code> type, <code>g.coordinates_for(r)</code> returns a range of embedding space coordinates as <code>Eigen::Vector&lt;double, NDim&gt;</code> values. </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -498,7 +497,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Jun 5 15:26:29 2024 -0300, 966c4e9&#39;.
+  Last updated on &#39;Wed Jun 12 11:43:25 2024 -0300, 45c4e9c&#39;.
   <br/>
 </p>
   </div>

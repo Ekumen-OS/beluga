@@ -1,8 +1,8 @@
 <map id="beluga::BaseLinearGrid2&lt; Derived &gt;" name="beluga::BaseLinearGrid2&lt; Derived &gt;">
-<area shape="rect" id="node1" title="Linear 2D grid base type." alt="" coords="89,273,270,315"/>
-<area shape="rect" id="node5" href="$classbeluga_1_1ValueGrid2.html" title=" " alt="" coords="5,363,151,404"/>
-<area shape="rect" id="node6" href="$classbeluga_1_1BaseOccupancyGrid2.html" title="Occupancy 2D grid base type." alt="" coords="175,363,387,404"/>
-<area shape="rect" id="node2" href="$classbeluga_1_1BaseDenseGrid2.html" title="Dense 2D grid base type." alt="" coords="88,184,271,225"/>
-<area shape="rect" id="node3" href="$classbeluga_1_1BaseRegularGrid2.html" title="Regularly spaced 2D grid base type." alt="" coords="84,95,275,136"/>
+<area shape="rect" id="node1" title="Linear 2D grid base type." alt="" coords="89,259,270,300"/>
+<area shape="rect" id="node5" href="$classbeluga_1_1ValueGrid2.html" title=" " alt="" coords="5,348,151,389"/>
+<area shape="rect" id="node6" href="$classbeluga_1_1BaseOccupancyGrid2.html" title="Occupancy 2D grid base type." alt="" coords="175,348,387,389"/>
+<area shape="rect" id="node2" href="$classbeluga_1_1BaseDenseGrid2.html" title="Dense 2D grid base type." alt="" coords="88,169,271,211"/>
+<area shape="rect" id="node3" href="$classbeluga_1_1BaseRegularGrid.html" title="Regularly spaced N dimensional grid base type." alt="" coords="69,95,289,121"/>
 <area shape="rect" id="node4" title=" " alt="" coords="111,5,247,47"/>
 </map>

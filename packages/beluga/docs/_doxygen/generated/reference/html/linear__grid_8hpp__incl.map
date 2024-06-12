@@ -1,12 +1,14 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/linear_grid.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/linear_grid.hpp">
-<area shape="rect" id="node1" title="Concepts and abstract implementations of linear (ie. contiguous storage) grids." alt="" coords="157,5,351,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="99,131,166,158"/>
-<area shape="rect" id="node3" title=" " alt="" coords="123,221,198,247"/>
-<area shape="rect" id="node4" title=" " alt="" coords="223,221,285,247"/>
-<area shape="rect" id="node5" href="$dense__grid_8hpp.html" title="Concepts and abstract implementations of dense grids." alt="" coords="291,124,438,165"/>
-<area shape="rect" id="node10" title=" " alt="" coords="512,303,604,329"/>
-<area shape="rect" id="node6" href="$regular__grid_8hpp.html" title="Concepts and abstract implementations of regular grids." alt="" coords="310,213,457,255"/>
-<area shape="rect" id="node7" title=" " alt="" coords="5,303,68,329"/>
-<area shape="rect" id="node8" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="93,303,253,329"/>
-<area shape="rect" id="node9" title=" " alt="" coords="277,303,487,329"/>
+<area shape="rect" id="node1" title="Concepts and abstract implementations of linear (ie. contiguous storage) grids." alt="" coords="237,5,431,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="179,131,246,158"/>
+<area shape="rect" id="node3" title=" " alt="" coords="225,221,299,247"/>
+<area shape="rect" id="node4" title=" " alt="" coords="324,221,387,247"/>
+<area shape="rect" id="node5" href="$dense__grid_8hpp.html" title="Concepts and abstract implementations of dense grids." alt="" coords="371,124,518,165"/>
+<area shape="rect" id="node10" title=" " alt="" coords="760,303,852,329"/>
+<area shape="rect" id="node6" href="$regular__grid_8hpp.html" title="Concepts and abstract implementations of regular grids." alt="" coords="462,213,609,255"/>
+<area shape="rect" id="node11" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="5,303,231,329"/>
+<area shape="rect" id="node7" title=" " alt="" coords="488,303,551,329"/>
+<area shape="rect" id="node8" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="575,303,735,329"/>
+<area shape="rect" id="node9" title=" " alt="" coords="254,303,465,329"/>
+<area shape="rect" id="node12" title=" " alt="" coords="67,377,169,404"/>
 </map>

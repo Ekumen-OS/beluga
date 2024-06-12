@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=87e54e7c" />
@@ -45,7 +45,7 @@
     <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/ndt__sensor__model_8hpp_source';</script>
     <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Jun 5 15:26:29 2024 -0300, 966c4e9&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Jun 12 11:43:25 2024 -0300, 45c4e9c&#39;"/>
   </head>
   
   
@@ -241,9 +241,9 @@
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -492,7 +492,7 @@ $(function() {
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">inline</span> <a class="code" href="structbeluga_1_1NDTCell.html">NDTCell&lt;NDim, Scalar&gt;</a> fit_points(<span class="keyword">const</span> std::vector&lt;Eigen::Matrix&lt;Scalar, NDim, 1&gt;&gt;&amp; points) {</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">static</span> constexpr <span class="keywordtype">double</span> kMinVariance = 1e-5;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  Eigen::Map&lt;const Eigen::Matrix&lt;Scalar, NDim, Eigen::Dynamic&gt;&gt; points_view(</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>Scalar*<span class="keyword">&gt;</span>(points.data()), 2, <span class="keyword">static_cast&lt;</span>int64_t<span class="keyword">&gt;</span>(points.size()));</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>Scalar*<span class="keyword">&gt;</span>(points.data()), NDim, <span class="keyword">static_cast&lt;</span>int64_t<span class="keyword">&gt;</span>(points.size()));</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">const</span> Eigen::Matrix&lt;Scalar, NDim, 1&gt; mean = points_view.rowwise().mean();</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">const</span> Eigen::Matrix&lt;Scalar, NDim, Eigen::Dynamic&gt; centered = points_view.colwise() - mean;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="comment">// Use sample covariance.</span></div>
@@ -571,123 +571,122 @@ $(function() {
 <div class="line"><a name="l00150"></a><span class="lineno"><a class="line" href="namespacebeluga.html#a4dfa989fa9330f6fb37201e77ac456c6">  150</a></span>&#160;<span class="keyword">using</span> <a class="code" href="structbeluga_1_1NDTModelParam.html">NDTModelParam2d</a> = <a class="code" href="structbeluga_1_1NDTModelParam.html">NDTModelParam&lt;2&gt;</a>;</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
 <div class="line"><a name="l00153"></a><span class="lineno"><a class="line" href="namespacebeluga.html#a111d1ffcd87bcc86a50428bd4562441f">  153</a></span>&#160;<span class="keyword">using</span> <a class="code" href="structbeluga_1_1NDTModelParam.html">NDTModelParam3d</a> = <a class="code" href="structbeluga_1_1NDTModelParam.html">NDTModelParam&lt;3&gt;</a>;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> SparseGr<span class="keywordtype">id</span>T&gt;</div>
-<div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html">  162</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1NDTSensorModel.html">NDTSensorModel</a> {</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;  static_assert(std::is_same_v&lt;<a class="code" href="classbeluga_1_1SparseValueGrid.html">SparseValueGrid&lt;typename SparseGridT::map_type&gt;</a>, SparseGridT&gt;);</div>
-<div class="line"><a name="l00166"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">  166</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">ndt_cell_type</a> = <span class="keyword">typename</span> SparseGridT::mapped_type;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;  static_assert(ndt_cell_type::num_dim == 2, <span class="stringliteral">&quot;NDT sensor model is only implemented for 2D problems.&quot;</span>);</div>
-<div class="line"><a name="l00169"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">  169</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">state_type</a> = std::conditional_t&lt;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      ndt_cell_type::num_dim == 2,</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      Sophus::SE2&lt;typename ndt_cell_type::scalar_type&gt;,</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;      Sophus::SE3&lt;typename ndt_cell_type::scalar_type&gt;&gt;;</div>
-<div class="line"><a name="l00174"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a5683322173461d6892a2f2caef48b05d">  174</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#a5683322173461d6892a2f2caef48b05d">weight_type</a> = double;</div>
-<div class="line"><a name="l00176"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">  176</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">measurement_type</a> = std::vector&lt;Eigen::Matrix&lt;typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim, 1&gt;&gt;;</div>
-<div class="line"><a name="l00178"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a7999a7ca4b8a951248ea984b6d53e795">  178</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#a7999a7ca4b8a951248ea984b6d53e795">map_type</a> = SparseGridT;</div>
-<div class="line"><a name="l00180"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#ae0a30290c6942e725d1ca92effb6256a">  180</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1NDTModelParam.html">param_type</a> = <a class="code" href="structbeluga_1_1NDTModelParam.html">NDTModelParam&lt;ndt_cell_type::num_dim&gt;</a>;</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
-<div class="line"><a name="l00189"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a32c0489df61614535aa51d7b110ef886">  189</a></span>&#160;  <a class="code" href="classbeluga_1_1NDTSensorModel.html#a32c0489df61614535aa51d7b110ef886">NDTSensorModel</a>(<a class="code" href="structbeluga_1_1NDTModelParam.html">param_type</a> params, SparseGridT cells_data)</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;      : params_{std::move(params)}, cells_data_{std::move(cells_data)} {</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    assert(params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#a7d1733f124471a7698daf43ddf137c99">minimum_likelihood</a> &gt;= 0);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;  }</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
-<div class="line"><a name="l00200"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a96f46d36ee863edf393de48ae1d86953">  200</a></span>&#160;  [[nodiscard]] <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#a96f46d36ee863edf393de48ae1d86953">operator()</a>(<a class="code" href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">measurement_type</a>&amp;&amp; points)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keywordflow">return</span> [<span class="keyword">this</span>, cells = detail::to_cells&lt;ndt_cell_type::num_dim, typename ndt_cell_type::scalar_type&gt;(</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;                      points, cells_data_.resolution())](<span class="keyword">const</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">state_type</a>&amp; <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>) -&gt; <a class="code" href="classbeluga_1_1NDTSensorModel.html#a5683322173461d6892a2f2caef48b05d">weight_type</a> {</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;      <span class="keywordflow">return</span> std::transform_reduce(</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;          cells.cbegin(), cells.cend(), 1.0, std::plus{},</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;          [<span class="keyword">this</span>, <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>](<span class="keyword">const</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">ndt_cell_type</a>&amp; ndt_cell) { return likelihood_at(state * ndt_cell); });</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    };</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;  }</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
-<div class="line"><a name="l00211"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#abd59e24040fbcd5cf6c78c771d1cf26c">  211</a></span>&#160;  [[nodiscard]] <span class="keywordtype">double</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#abd59e24040fbcd5cf6c78c771d1cf26c">likelihood_at</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">ndt_cell_type</a>&amp; measurement)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keywordtype">double</span> likelihood = 0;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keyword">const</span> <span class="keyword">typename</span> map_type::key_type measurement_cell = cells_data_.cell_near(measurement.mean);</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; offset : params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#a447e28141d1ca9bdc909c2115409aa30">neighbors_kernel</a>) {</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> maybe_ndt = cells_data_.data_at(measurement_cell + offset);</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;      <span class="keywordflow">if</span> (maybe_ndt.has_value()) {</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        likelihood += maybe_ndt-&gt;likelihood_at(measurement, params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#a9166b1782daadf5dc47af2c0a5531052">d1</a>, params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#af317950ed06e629d9054d12db8b0a6f3">d2</a>);</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;      }</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    }</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordflow">return</span> std::max(likelihood, params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#a7d1733f124471a7698daf43ddf137c99">minimum_likelihood</a>);</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  }</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;  <span class="keyword">const</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#ae0a30290c6942e725d1ca92effb6256a">param_type</a> params_;</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;  <span class="keyword">const</span> SparseGridT cells_data_;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;};</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160; </div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="keyword">namespace </span>io {</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> NDTMapRepresentationT&gt;</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;NDTMapRepresentationT load_from_hdf5_2d(<span class="keyword">const</span> std::filesystem::path&amp; path_to_hdf5_file) {</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;  static_assert(std::is_same_v&lt;typename NDTMapRepresentationT::mapped_type, NDTCell2d&gt;);</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;  static_assert(std::is_same_v&lt;typename NDTMapRepresentationT::key_type, Eigen::Vector2i&gt;);</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;  <span class="keywordflow">if</span> (!std::filesystem::exists(path_to_hdf5_file) || std::filesystem::is_directory(path_to_hdf5_file)) {</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    std::stringstream ss;</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    ss &lt;&lt; <span class="stringliteral">&quot;Couldn&#39;t find a valid HDF5 file at &quot;</span> &lt;&lt; path_to_hdf5_file;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <span class="keywordflow">throw</span> std::invalid_argument(ss.str());</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;  }</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  <span class="keyword">const</span> H5::H5File file(path_to_hdf5_file, H5F_ACC_RDONLY);</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;  <span class="keyword">const</span> H5::DataSet means_dataset = file.openDataSet(<span class="stringliteral">&quot;means&quot;</span>);</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;  <span class="keyword">const</span> H5::DataSet covariances_dataset = file.openDataSet(<span class="stringliteral">&quot;covariances&quot;</span>);</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;  <span class="keyword">const</span> H5::DataSet resolution_dataset = file.openDataSet(<span class="stringliteral">&quot;resolution&quot;</span>);</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;  <span class="keyword">const</span> H5::DataSet cells_dataset = file.openDataSet(<span class="stringliteral">&quot;cells&quot;</span>);</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  std::array&lt;hsize_t, 2&gt; dims_out;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;  means_dataset.getSpace().getSimpleExtentDims(dims_out.data(), <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  <span class="comment">// The static cast is necessary because hsize_t and size_t are not the same in all platforms.</span></div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;  <span class="keyword">const</span> std::array&lt;std::size_t, 2&gt; dims{</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(dims_out[0]),</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(dims_out[1]),</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;  };</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  Eigen::Matrix2Xd means_matrix(dims[1], dims[0]);</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  Eigen::Matrix2Xi cells_matrix(dims[1], dims[0]);</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  means_dataset.read(means_matrix.data(), H5::PredType::NATIVE_DOUBLE);</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;  cells_dataset.read(cells_matrix.data(), H5::PredType::NATIVE_INT);</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  std::vector&lt;Eigen::Array&lt;double, 2, 2&gt;&gt; covariances(dims[0]);</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;  covariances_dataset.read(covariances.data(), H5::PredType::NATIVE_DOUBLE);</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  <span class="keywordtype">double</span> resolution;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  resolution_dataset.read(&amp;resolution, H5::PredType::NATIVE_DOUBLE);</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  <span class="keyword">typename</span> NDTMapRepresentationT::map_type map{};</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  <span class="comment">// Note: Ranges::zip_view doesn&#39;t seem to work in old Eigen.</span></div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; covariances.size(); ++i) {</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    map[cells_matrix.col(<span class="keyword">static_cast&lt;</span>Eigen::Index<span class="keyword">&gt;</span>(i))] =</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        <a class="code" href="namespacebeluga.html#a26305234e807524dd077b13ae21b1dfd">NDTCell2d</a>{means_matrix.col(<span class="keyword">static_cast&lt;</span>Eigen::Index<span class="keyword">&gt;</span>(i)), covariances.at(i)};</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  }</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  <span class="keywordflow">return</span> NDTMapRepresentationT{std::move(map), resolution};</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;}</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}  <span class="comment">// namespace io</span></div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160; </div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a></div><div class="ttdoc">NDT sensor model for range finders.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:162</div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a1f11afe2f49ca0782b70ab8dbf69aa89"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">beluga::NDTSensorModel::measurement_type</a></div><div class="ttdeci">std::vector&lt; Eigen::Matrix&lt; typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim, 1 &gt; &gt; measurement_type</div><div class="ttdoc">Measurement type of the sensor: a point cloud for the range finder.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:176</div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a32c0489df61614535aa51d7b110ef886"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a32c0489df61614535aa51d7b110ef886">beluga::NDTSensorModel::NDTSensorModel</a></div><div class="ttdeci">NDTSensorModel(param_type params, SparseGridT cells_data)</div><div class="ttdoc">Constructs a NDTSensorModel instance.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:189</div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a5683322173461d6892a2f2caef48b05d"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a5683322173461d6892a2f2caef48b05d">beluga::NDTSensorModel::weight_type</a></div><div class="ttdeci">double weight_type</div><div class="ttdoc">Weight type of the particle.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:174</div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a7999a7ca4b8a951248ea984b6d53e795"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a7999a7ca4b8a951248ea984b6d53e795">beluga::NDTSensorModel::map_type</a></div><div class="ttdeci">SparseGridT map_type</div><div class="ttdoc">Map representation type.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:178</div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a96f46d36ee863edf393de48ae1d86953"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a96f46d36ee863edf393de48ae1d86953">beluga::NDTSensorModel::operator()</a></div><div class="ttdeci">auto operator()(measurement_type &amp;&amp;points) const</div><div class="ttdoc">Returns a state weighting function conditioned on 2D / 3D lidar hits.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:200</div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_abd59e24040fbcd5cf6c78c771d1cf26c"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#abd59e24040fbcd5cf6c78c771d1cf26c">beluga::NDTSensorModel::likelihood_at</a></div><div class="ttdeci">double likelihood_at(const ndt_cell_type &amp;measurement) const</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:211</div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_adb32c32e4342f012e9a98be93bd0c018"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">beluga::NDTSensorModel::state_type</a></div><div class="ttdeci">std::conditional_t&lt; ndt_cell_type::num_dim==2, Sophus::SE2&lt; typename ndt_cell_type::scalar_type &gt;, Sophus::SE3&lt; typename ndt_cell_type::scalar_type &gt; &gt; state_type</div><div class="ttdoc">State type of a particle.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:172</div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_ae0a30290c6942e725d1ca92effb6256a"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#ae0a30290c6942e725d1ca92effb6256a">beluga::NDTSensorModel::param_type</a></div><div class="ttdeci">NDTModelParam&lt; ndt_cell_type::num_dim &gt; param_type</div><div class="ttdoc">Parameter type that the constructor uses to configure the NDT sensor model.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:180</div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_af6c1226a83cb402751669187e08a9c77"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">beluga::NDTSensorModel::ndt_cell_type</a></div><div class="ttdeci">typename SparseGridT::mapped_type ndt_cell_type</div><div class="ttdoc">NDT Cell type.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:166</div></div>
-<div class="ttc" id="aclassbeluga_1_1SparseValueGrid_html"><div class="ttname"><a href="classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a></div><div class="ttdoc">Generic 2D sparse value regular grid.</div><div class="ttdef"><b>Definition:</b> sparse_value_grid.hpp:44</div></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> SparseGr<span class="keywordtype">id</span>T&gt;</div>
+<div class="line"><a name="l00161"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html">  161</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1NDTSensorModel.html">NDTSensorModel</a> {</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00164"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">  164</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">ndt_cell_type</a> = <span class="keyword">typename</span> SparseGridT::mapped_type;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  static_assert(std::is_same_v&lt;<a class="code" href="classbeluga_1_1SparseValueGrid.html">SparseValueGrid&lt;typename SparseGridT::map_type, ndt_cell_type::num_dim&gt;</a>, SparseGridT&gt;);</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  static_assert(ndt_cell_type::num_dim == 2, <span class="stringliteral">&quot;NDT sensor model is only implemented for 2D problems.&quot;</span>);</div>
+<div class="line"><a name="l00168"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">  168</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">state_type</a> = std::conditional_t&lt;</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      ndt_cell_type::num_dim == 2,</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      Sophus::SE2&lt;typename ndt_cell_type::scalar_type&gt;,</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      Sophus::SE3&lt;typename ndt_cell_type::scalar_type&gt;&gt;;</div>
+<div class="line"><a name="l00173"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a5683322173461d6892a2f2caef48b05d">  173</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#a5683322173461d6892a2f2caef48b05d">weight_type</a> = double;</div>
+<div class="line"><a name="l00175"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">  175</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">measurement_type</a> = std::vector&lt;Eigen::Matrix&lt;typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim, 1&gt;&gt;;</div>
+<div class="line"><a name="l00177"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a7999a7ca4b8a951248ea984b6d53e795">  177</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#a7999a7ca4b8a951248ea984b6d53e795">map_type</a> = SparseGridT;</div>
+<div class="line"><a name="l00179"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#ae0a30290c6942e725d1ca92effb6256a">  179</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1NDTModelParam.html">param_type</a> = <a class="code" href="structbeluga_1_1NDTModelParam.html">NDTModelParam&lt;ndt_cell_type::num_dim&gt;</a>;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160; </div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
+<div class="line"><a name="l00188"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a32c0489df61614535aa51d7b110ef886">  188</a></span>&#160;  <a class="code" href="classbeluga_1_1NDTSensorModel.html#a32c0489df61614535aa51d7b110ef886">NDTSensorModel</a>(<a class="code" href="structbeluga_1_1NDTModelParam.html">param_type</a> params, SparseGridT cells_data)</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;      : params_{std::move(params)}, cells_data_{std::move(cells_data)} {</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    assert(params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#a7d1733f124471a7698daf43ddf137c99">minimum_likelihood</a> &gt;= 0);</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;  }</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
+<div class="line"><a name="l00199"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#a96f46d36ee863edf393de48ae1d86953">  199</a></span>&#160;  [[nodiscard]] <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#a96f46d36ee863edf393de48ae1d86953">operator()</a>(<a class="code" href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">measurement_type</a>&amp;&amp; points)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keywordflow">return</span> [<span class="keyword">this</span>, cells = detail::to_cells&lt;ndt_cell_type::num_dim, typename ndt_cell_type::scalar_type&gt;(</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;                      points, cells_data_.resolution())](<span class="keyword">const</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">state_type</a>&amp; <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>) -&gt; <a class="code" href="classbeluga_1_1NDTSensorModel.html#a5683322173461d6892a2f2caef48b05d">weight_type</a> {</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;      <span class="keywordflow">return</span> std::transform_reduce(</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;          cells.cbegin(), cells.cend(), 1.0, std::plus{},</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;          [<span class="keyword">this</span>, <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>](<span class="keyword">const</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">ndt_cell_type</a>&amp; ndt_cell) { return likelihood_at(state * ndt_cell); });</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    };</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;  }</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno"><a class="line" href="classbeluga_1_1NDTSensorModel.html#abd59e24040fbcd5cf6c78c771d1cf26c">  210</a></span>&#160;  [[nodiscard]] <span class="keywordtype">double</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#abd59e24040fbcd5cf6c78c771d1cf26c">likelihood_at</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">ndt_cell_type</a>&amp; measurement)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keywordtype">double</span> likelihood = 0;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keyword">const</span> <span class="keyword">typename</span> map_type::key_type measurement_cell = cells_data_.cell_near(measurement.mean);</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; offset : params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#a447e28141d1ca9bdc909c2115409aa30">neighbors_kernel</a>) {</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> maybe_ndt = cells_data_.data_at(measurement_cell + offset);</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;      <span class="keywordflow">if</span> (maybe_ndt.has_value()) {</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        likelihood += maybe_ndt-&gt;likelihood_at(measurement, params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#a9166b1782daadf5dc47af2c0a5531052">d1</a>, params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#af317950ed06e629d9054d12db8b0a6f3">d2</a>);</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;      }</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    }</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keywordflow">return</span> std::max(likelihood, params_.<a class="code" href="structbeluga_1_1NDTModelParam.html#a7d1733f124471a7698daf43ddf137c99">minimum_likelihood</a>);</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  }</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;  <span class="keyword">const</span> <a class="code" href="classbeluga_1_1NDTSensorModel.html#ae0a30290c6942e725d1ca92effb6256a">param_type</a> params_;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;  <span class="keyword">const</span> SparseGridT cells_data_;</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;};</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="keyword">namespace </span>io {</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> NDTMapRepresentationT&gt;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;NDTMapRepresentationT load_from_hdf5_2d(<span class="keyword">const</span> std::filesystem::path&amp; path_to_hdf5_file) {</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;  static_assert(std::is_same_v&lt;typename NDTMapRepresentationT::mapped_type, NDTCell2d&gt;);</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;  static_assert(std::is_same_v&lt;typename NDTMapRepresentationT::key_type, Eigen::Vector2i&gt;);</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;  <span class="keywordflow">if</span> (!std::filesystem::exists(path_to_hdf5_file) || std::filesystem::is_directory(path_to_hdf5_file)) {</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    std::stringstream ss;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    ss &lt;&lt; <span class="stringliteral">&quot;Couldn&#39;t find a valid HDF5 file at &quot;</span> &lt;&lt; path_to_hdf5_file;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordflow">throw</span> std::invalid_argument(ss.str());</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;  }</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;  <span class="keyword">const</span> H5::H5File file(path_to_hdf5_file, H5F_ACC_RDONLY);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  <span class="keyword">const</span> H5::DataSet means_dataset = file.openDataSet(<span class="stringliteral">&quot;means&quot;</span>);</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;  <span class="keyword">const</span> H5::DataSet covariances_dataset = file.openDataSet(<span class="stringliteral">&quot;covariances&quot;</span>);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;  <span class="keyword">const</span> H5::DataSet resolution_dataset = file.openDataSet(<span class="stringliteral">&quot;resolution&quot;</span>);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;  <span class="keyword">const</span> H5::DataSet cells_dataset = file.openDataSet(<span class="stringliteral">&quot;cells&quot;</span>);</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;  std::array&lt;hsize_t, 2&gt; dims_out;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  means_dataset.getSpace().getSimpleExtentDims(dims_out.data(), <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160; </div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;  <span class="comment">// The static cast is necessary because hsize_t and size_t are not the same in all platforms.</span></div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  <span class="keyword">const</span> std::array&lt;std::size_t, 2&gt; dims{</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(dims_out[0]),</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(dims_out[1]),</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;  };</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160; </div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  Eigen::Matrix2Xd means_matrix(dims[1], dims[0]);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  Eigen::Matrix2Xi cells_matrix(dims[1], dims[0]);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160; </div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;  means_dataset.read(means_matrix.data(), H5::PredType::NATIVE_DOUBLE);</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  cells_dataset.read(cells_matrix.data(), H5::PredType::NATIVE_INT);</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  std::vector&lt;Eigen::Array&lt;double, 2, 2&gt;&gt; covariances(dims[0]);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  covariances_dataset.read(covariances.data(), H5::PredType::NATIVE_DOUBLE);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;  <span class="keywordtype">double</span> resolution;</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  resolution_dataset.read(&amp;resolution, H5::PredType::NATIVE_DOUBLE);</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;  <span class="keyword">typename</span> NDTMapRepresentationT::map_type map{};</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;  <span class="comment">// Note: Ranges::zip_view doesn&#39;t seem to work in old Eigen.</span></div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; covariances.size(); ++i) {</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    map[cells_matrix.col(<span class="keyword">static_cast&lt;</span>Eigen::Index<span class="keyword">&gt;</span>(i))] =</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        <a class="code" href="namespacebeluga.html#a26305234e807524dd077b13ae21b1dfd">NDTCell2d</a>{means_matrix.col(<span class="keyword">static_cast&lt;</span>Eigen::Index<span class="keyword">&gt;</span>(i)), covariances.at(i)};</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;  }</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;  <span class="keywordflow">return</span> NDTMapRepresentationT{std::move(map), resolution};</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;}</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;}  <span class="comment">// namespace io</span></div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a></div><div class="ttdoc">NDT sensor model for range finders.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:161</div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a1f11afe2f49ca0782b70ab8dbf69aa89"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a1f11afe2f49ca0782b70ab8dbf69aa89">beluga::NDTSensorModel::measurement_type</a></div><div class="ttdeci">std::vector&lt; Eigen::Matrix&lt; typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim, 1 &gt; &gt; measurement_type</div><div class="ttdoc">Measurement type of the sensor: a point cloud for the range finder.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:175</div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a32c0489df61614535aa51d7b110ef886"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a32c0489df61614535aa51d7b110ef886">beluga::NDTSensorModel::NDTSensorModel</a></div><div class="ttdeci">NDTSensorModel(param_type params, SparseGridT cells_data)</div><div class="ttdoc">Constructs a NDTSensorModel instance.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:188</div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a5683322173461d6892a2f2caef48b05d"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a5683322173461d6892a2f2caef48b05d">beluga::NDTSensorModel::weight_type</a></div><div class="ttdeci">double weight_type</div><div class="ttdoc">Weight type of the particle.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:173</div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a7999a7ca4b8a951248ea984b6d53e795"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a7999a7ca4b8a951248ea984b6d53e795">beluga::NDTSensorModel::map_type</a></div><div class="ttdeci">SparseGridT map_type</div><div class="ttdoc">Map representation type.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:177</div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_a96f46d36ee863edf393de48ae1d86953"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#a96f46d36ee863edf393de48ae1d86953">beluga::NDTSensorModel::operator()</a></div><div class="ttdeci">auto operator()(measurement_type &amp;&amp;points) const</div><div class="ttdoc">Returns a state weighting function conditioned on 2D / 3D lidar hits.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:199</div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_abd59e24040fbcd5cf6c78c771d1cf26c"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#abd59e24040fbcd5cf6c78c771d1cf26c">beluga::NDTSensorModel::likelihood_at</a></div><div class="ttdeci">double likelihood_at(const ndt_cell_type &amp;measurement) const</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:210</div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_adb32c32e4342f012e9a98be93bd0c018"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">beluga::NDTSensorModel::state_type</a></div><div class="ttdeci">std::conditional_t&lt; ndt_cell_type::num_dim==2, Sophus::SE2&lt; typename ndt_cell_type::scalar_type &gt;, Sophus::SE3&lt; typename ndt_cell_type::scalar_type &gt; &gt; state_type</div><div class="ttdoc">State type of a particle.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:171</div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_ae0a30290c6942e725d1ca92effb6256a"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#ae0a30290c6942e725d1ca92effb6256a">beluga::NDTSensorModel::param_type</a></div><div class="ttdeci">NDTModelParam&lt; ndt_cell_type::num_dim &gt; param_type</div><div class="ttdoc">Parameter type that the constructor uses to configure the NDT sensor model.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:179</div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_af6c1226a83cb402751669187e08a9c77"><div class="ttname"><a href="classbeluga_1_1NDTSensorModel.html#af6c1226a83cb402751669187e08a9c77">beluga::NDTSensorModel::ndt_cell_type</a></div><div class="ttdeci">typename SparseGridT::mapped_type ndt_cell_type</div><div class="ttdoc">NDT Cell type.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:164</div></div>
+<div class="ttc" id="aclassbeluga_1_1SparseValueGrid_html"><div class="ttname"><a href="classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a></div><div class="ttdoc">Generic N dimensional sparse value regular grid.</div><div class="ttdef"><b>Definition:</b> sparse_value_grid.hpp:46</div></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> assign.hpp:28</div></div>
 <div class="ttc" id="anamespacebeluga_html_a26305234e807524dd077b13ae21b1dfd"><div class="ttname"><a href="namespacebeluga.html#a26305234e807524dd077b13ae21b1dfd">beluga::NDTCell2d</a></div><div class="ttdeci">NDTCell&lt; 2, double &gt; NDTCell2d</div><div class="ttdoc">Convenience alias for a 2D NDT cell with double representation.</div><div class="ttdef"><b>Definition:</b> ndt_cell.hpp:80</div></div>
 <div class="ttc" id="anamespacebeluga_html_a706431bba3d6cfb1ee0690221f3a9af9"><div class="ttname"><a href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a></div><div class="ttdeci">constexpr state_detail::state_fn state</div><div class="ttdoc">Customization point object for accessing the state of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:163</div></div>
@@ -756,7 +755,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Jun 5 15:26:29 2024 -0300, 966c4e9&#39;.
+  Last updated on &#39;Wed Jun 12 11:43:25 2024 -0300, 45c4e9c&#39;.
   <br/>
 </p>
   </div>

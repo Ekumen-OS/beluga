@@ -1,5 +1,5 @@
-<map id="beluga::SparseValueGrid&lt; MapType &gt;" name="beluga::SparseValueGrid&lt; MapType &gt;">
-<area shape="rect" id="node1" title="Generic 2D sparse value regular grid." alt="" coords="38,199,219,240"/>
-<area shape="rect" id="node2" href="$classbeluga_1_1BaseRegularGrid2.html" title=" " alt="" coords="5,109,252,151"/>
-<area shape="rect" id="node3" title=" " alt="" coords="43,5,215,61"/>
+<map id="beluga::SparseValueGrid&lt; MapType, NDim &gt;" name="beluga::SparseValueGrid&lt; MapType, NDim &gt;">
+<area shape="rect" id="node1" title="Generic N dimensional sparse value regular grid." alt="" coords="25,213,207,255"/>
+<area shape="rect" id="node2" href="$classbeluga_1_1BaseRegularGrid.html" title=" " alt="" coords="5,109,227,165"/>
+<area shape="rect" id="node3" title=" " alt="" coords="30,5,202,61"/>
 </map>

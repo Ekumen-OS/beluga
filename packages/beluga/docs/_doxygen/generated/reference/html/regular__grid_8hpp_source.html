@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=87e54e7c" />
@@ -45,7 +45,7 @@
     <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/regular__grid_8hpp_source';</script>
     <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Jun 5 15:26:29 2024 -0300, 966c4e9&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Jun 12 11:43:25 2024 -0300, 45c4e9c&#39;"/>
   </head>
   
   
@@ -241,9 +241,9 @@
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -460,58 +460,44 @@ $(function() {
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/transform.hpp&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;Eigen/Core&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid2.html">   66</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1BaseRegularGrid2.html">BaseRegularGrid2</a> : <span class="keyword">public</span> ciabatta::ciabatta_top&lt;Derived&gt; {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid2.html#a602cce4a18dfd0b84aae4c0a920d1b72">   76</a></span>&#160;  [[nodiscard]] Eigen::Vector2i <a class="code" href="classbeluga_1_1BaseRegularGrid2.html#a602cce4a18dfd0b84aae4c0a920d1b72">cell_near</a>(<span class="keywordtype">double</span> x, <span class="keywordtype">double</span> y)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> inv_resolution = 1. / this-&gt;<span class="keyword">self</span>().resolution();</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> scaled_x = x * inv_resolution;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> scaled_y = y * inv_resolution;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Use a poor man&#39;s replacement of `std::floor` because</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// the later is awfully slow and this function is performance</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// critical.</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> xi = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(scaled_x) - (scaled_x &lt; 0.0);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> yi = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(scaled_y) - (scaled_y &lt; 0.0);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> Eigen::Vector2i{xi, yi};</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;beluga/eigen_compatibility.hpp&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived, <span class="keywordtype">int</span> NDim&gt;</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid.html">   65</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1BaseRegularGrid.html">BaseRegularGrid</a> : <span class="keyword">public</span> ciabatta::ciabatta_top&lt;Derived&gt; {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid.html#adb3e317d449dc890c9ad92428653c9c3">   74</a></span>&#160;  [[nodiscard]] Eigen::Vector&lt;int, NDim&gt; <a class="code" href="classbeluga_1_1BaseRegularGrid.html#adb3e317d449dc890c9ad92428653c9c3">cell_near</a>(<span class="keyword">const</span> Eigen::Vector&lt;double, NDim&gt;&amp; p)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> inv_resolution = 1. / this-&gt;<span class="keyword">self</span>().resolution();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> (p * inv_resolution).array().floor().template cast&lt;int&gt;();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  }</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid.html#a7500774ca98e855ad5555364cc91e5bb">   86</a></span>&#160;  [[nodiscard]] Eigen::Vector&lt;double, NDim&gt; <a class="code" href="classbeluga_1_1BaseRegularGrid.html#a7500774ca98e855ad5555364cc91e5bb">coordinates_at</a>(<span class="keyword">const</span> Eigen::Vector&lt;int, NDim&gt;&amp; pi)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> (pi.template cast&lt;double&gt;() + Eigen::Vector&lt;double, NDim&gt;::Ones() * 0.5) * this-&gt;<span class="keyword">self</span>().resolution();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  }</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid2.html#a7396cb465856c940e470342fd83be11c">   95</a></span>&#160;  [[nodiscard]] Eigen::Vector2i <a class="code" href="classbeluga_1_1BaseRegularGrid2.html#a7396cb465856c940e470342fd83be11c">cell_near</a>(<span class="keyword">const</span> Eigen::Vector2d&amp; p)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">return</span> this-&gt;<span class="keyword">self</span>().<a class="code" href="classbeluga_1_1BaseRegularGrid2.html#a602cce4a18dfd0b84aae4c0a920d1b72">cell_near</a>(p.x(), p.y());</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid2.html#af89868aced9e270c1f9d14931fb9f6a8">  107</a></span>&#160;  [[nodiscard]] Eigen::Vector2d <a class="code" href="classbeluga_1_1BaseRegularGrid2.html#af89868aced9e270c1f9d14931fb9f6a8">coordinates_at</a>(<span class="keywordtype">int</span> xi, <span class="keywordtype">int</span> yi)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> resolution = this-&gt;<span class="keyword">self</span>().resolution();</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">return</span> Eigen::Vector2d{(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(xi) + 0.5), (<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(yi) + 0.5)} * resolution;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  }</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid2.html#a2d2577ecf2e4d3d689e4e80341812d5b">  119</a></span>&#160;  [[nodiscard]] Eigen::Vector2d <a class="code" href="classbeluga_1_1BaseRegularGrid2.html#a2d2577ecf2e4d3d689e4e80341812d5b">coordinates_at</a>(<span class="keyword">const</span> Eigen::Vector2i&amp; pi)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">return</span> this-&gt;<span class="keyword">self</span>().<a class="code" href="classbeluga_1_1BaseRegularGrid2.html#af89868aced9e270c1f9d14931fb9f6a8">coordinates_at</a>(pi.x(), pi.y());</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  }</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range&gt;</div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid2.html#a54e29328501489ed117fb774ebc2ad07">  129</a></span>&#160;  [[nodiscard]] <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1BaseRegularGrid2.html#a54e29328501489ed117fb774ebc2ad07">coordinates_for</a>(Range&amp;&amp; cells)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">return</span> cells | ranges::views::transform([<span class="keyword">this</span>](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cell) { <span class="keywordflow">return</span> this-&gt;<span class="keyword">self</span>().<a class="code" href="classbeluga_1_1BaseRegularGrid2.html#af89868aced9e270c1f9d14931fb9f6a8">coordinates_at</a>(cell); });</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  }</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;};</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid2_html"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid2.html">beluga::BaseRegularGrid2</a></div><div class="ttdoc">Regularly spaced 2D grid base type.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:66</div></div>
-<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid2_html_a2d2577ecf2e4d3d689e4e80341812d5b"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid2.html#a2d2577ecf2e4d3d689e4e80341812d5b">beluga::BaseRegularGrid2::coordinates_at</a></div><div class="ttdeci">Eigen::Vector2d coordinates_at(const Eigen::Vector2i &amp;pi) const</div><div class="ttdoc">Compute plane coordinates given grid cell coordinates.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:119</div></div>
-<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid2_html_a54e29328501489ed117fb774ebc2ad07"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid2.html#a54e29328501489ed117fb774ebc2ad07">beluga::BaseRegularGrid2::coordinates_for</a></div><div class="ttdeci">auto coordinates_for(Range &amp;&amp;cells) const</div><div class="ttdoc">Compute plane coordinates given a range of cell coordinates.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:129</div></div>
-<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid2_html_a602cce4a18dfd0b84aae4c0a920d1b72"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid2.html#a602cce4a18dfd0b84aae4c0a920d1b72">beluga::BaseRegularGrid2::cell_near</a></div><div class="ttdeci">Eigen::Vector2i cell_near(double x, double y) const</div><div class="ttdoc">Compute nearest grid cell coordinates given plane coordinates.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:76</div></div>
-<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid2_html_a7396cb465856c940e470342fd83be11c"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid2.html#a7396cb465856c940e470342fd83be11c">beluga::BaseRegularGrid2::cell_near</a></div><div class="ttdeci">Eigen::Vector2i cell_near(const Eigen::Vector2d &amp;p) const</div><div class="ttdoc">Compute nearest grid cell coordinates given plane coordinates.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:95</div></div>
-<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid2_html_af89868aced9e270c1f9d14931fb9f6a8"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid2.html#af89868aced9e270c1f9d14931fb9f6a8">beluga::BaseRegularGrid2::coordinates_at</a></div><div class="ttdeci">Eigen::Vector2d coordinates_at(int xi, int yi) const</div><div class="ttdoc">Compute plane coordinates given grid cell coordinates.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:107</div></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range&gt;</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classbeluga_1_1BaseRegularGrid.html#a95854fe0f6b3d5de1b8b0d273887a3c3">   96</a></span>&#160;  [[nodiscard]] <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1BaseRegularGrid.html#a95854fe0f6b3d5de1b8b0d273887a3c3">coordinates_for</a>(Range&amp;&amp; cells)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">return</span> cells | ranges::views::transform([<span class="keyword">this</span>](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cell) { <span class="keywordflow">return</span> this-&gt;<span class="keyword">self</span>().<a class="code" href="classbeluga_1_1BaseRegularGrid.html#a7500774ca98e855ad5555364cc91e5bb">coordinates_at</a>(cell); });</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;};</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="namespacebeluga.html#a8804a411436199a660eb427f3f664a86">  102</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classbeluga_1_1BaseRegularGrid.html">BaseRegularGrid2</a> = <a class="code" href="classbeluga_1_1BaseRegularGrid.html">BaseRegularGrid&lt;Derived, 2&gt;</a>;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="namespacebeluga.html#a9a79ccb7d9229efc84c438c573dcb31e">  106</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classbeluga_1_1BaseRegularGrid.html">BaseRegularGrid3</a> = <a class="code" href="classbeluga_1_1BaseRegularGrid.html">BaseRegularGrid&lt;Derived, 3&gt;</a>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid_html"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid.html">beluga::BaseRegularGrid</a></div><div class="ttdoc">Regularly spaced N dimensional grid base type.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:65</div></div>
+<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid_html_a7500774ca98e855ad5555364cc91e5bb"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid.html#a7500774ca98e855ad5555364cc91e5bb">beluga::BaseRegularGrid::coordinates_at</a></div><div class="ttdeci">Eigen::Vector&lt; double, NDim &gt; coordinates_at(const Eigen::Vector&lt; int, NDim &gt; &amp;pi) const</div><div class="ttdoc">Compute plane coordinates given grid cell coordinates.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:86</div></div>
+<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid_html_a95854fe0f6b3d5de1b8b0d273887a3c3"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid.html#a95854fe0f6b3d5de1b8b0d273887a3c3">beluga::BaseRegularGrid::coordinates_for</a></div><div class="ttdeci">auto coordinates_for(Range &amp;&amp;cells) const</div><div class="ttdoc">Compute plane coordinates given a range of cell coordinates.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:96</div></div>
+<div class="ttc" id="aclassbeluga_1_1BaseRegularGrid_html_adb3e317d449dc890c9ad92428653c9c3"><div class="ttname"><a href="classbeluga_1_1BaseRegularGrid.html#adb3e317d449dc890c9ad92428653c9c3">beluga::BaseRegularGrid::cell_near</a></div><div class="ttdeci">Eigen::Vector&lt; int, NDim &gt; cell_near(const Eigen::Vector&lt; double, NDim &gt; &amp;p) const</div><div class="ttdoc">Compute nearest grid cell coordinates given plane coordinates.</div><div class="ttdef"><b>Definition:</b> regular_grid.hpp:74</div></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> assign.hpp:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
@@ -569,7 +555,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Jun 5 15:26:29 2024 -0300, 966c4e9&#39;.
+  Last updated on &#39;Wed Jun 12 11:43:25 2024 -0300, 45c4e9c&#39;.
   <br/>
 </p>
   </div>

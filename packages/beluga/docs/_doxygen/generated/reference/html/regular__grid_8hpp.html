@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=87e54e7c" />
@@ -45,7 +45,7 @@
     <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga/docs/_doxygen/generated/reference/html/regular__grid_8hpp';</script>
     <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Jun 5 15:26:29 2024 -0300, 966c4e9&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Jun 12 11:43:25 2024 -0300, 45c4e9c&#39;"/>
   </head>
   
   
@@ -241,9 +241,9 @@
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -434,7 +434,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">regular_grid.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -446,10 +447,11 @@ $(function() {
 <code>#include &lt;ciabatta/ciabatta.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/transform.hpp&gt;</code><br />
 <code>#include &lt;Eigen/Core&gt;</code><br />
+<code>#include &lt;beluga/eigen_compatibility.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for regular_grid.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="regular__grid_8hpp__incl.svg" width="610" height="156"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="regular__grid_8hpp__incl.svg" width="100%" height="473"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -463,8 +465,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BaseRegularGrid2.html">beluga::BaseRegularGrid2&lt; Derived &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Regularly spaced 2D grid base type.  <a href="classbeluga_1_1BaseRegularGrid2.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1BaseRegularGrid.html">beluga::BaseRegularGrid&lt; Derived, NDim &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Regularly spaced N dimensional grid base type.  <a href="classbeluga_1_1BaseRegularGrid.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -472,6 +474,19 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacebeluga"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html">beluga</a></td></tr>
 <tr class="memdesc:namespacebeluga"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main Beluga namespace. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a8804a411436199a660eb427f3f664a86"><td class="memTemplParams" colspan="2"><a id="a8804a411436199a660eb427f3f664a86"></a>
+template&lt;typename Derived &gt; </td></tr>
+<tr class="memitem:a8804a411436199a660eb427f3f664a86"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a8804a411436199a660eb427f3f664a86">beluga::BaseRegularGrid2</a> = BaseRegularGrid&lt; Derived, 2 &gt;</td></tr>
+<tr class="memdesc:a8804a411436199a660eb427f3f664a86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for a 2D base regular grid. <br /></td></tr>
+<tr class="separator:a8804a411436199a660eb427f3f664a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a79ccb7d9229efc84c438c573dcb31e"><td class="memTemplParams" colspan="2"><a id="a9a79ccb7d9229efc84c438c573dcb31e"></a>
+template&lt;typename Derived &gt; </td></tr>
+<tr class="memitem:a9a79ccb7d9229efc84c438c573dcb31e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a9a79ccb7d9229efc84c438c573dcb31e">beluga::BaseRegularGrid3</a> = BaseRegularGrid&lt; Derived, 3 &gt;</td></tr>
+<tr class="memdesc:a9a79ccb7d9229efc84c438c573dcb31e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias for a 3D base regular grid. <br /></td></tr>
+<tr class="separator:a9a79ccb7d9229efc84c438c573dcb31e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Concepts and abstract implementations of regular grids. </p>
@@ -531,7 +546,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Jun 5 15:26:29 2024 -0300, 966c4e9&#39;.
+  Last updated on &#39;Wed Jun 12 11:43:25 2024 -0300, 45c4e9c&#39;.
   <br/>
 </p>
   </div>

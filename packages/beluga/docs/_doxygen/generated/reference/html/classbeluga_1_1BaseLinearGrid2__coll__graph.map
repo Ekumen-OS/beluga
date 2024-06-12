@@ -1,6 +1,6 @@
 <map id="beluga::BaseLinearGrid2&lt; Derived &gt;" name="beluga::BaseLinearGrid2&lt; Derived &gt;">
-<area shape="rect" id="node1" title="Linear 2D grid base type." alt="" coords="10,273,191,315"/>
-<area shape="rect" id="node2" href="$classbeluga_1_1BaseDenseGrid2.html" title="Dense 2D grid base type." alt="" coords="9,184,192,225"/>
-<area shape="rect" id="node3" href="$classbeluga_1_1BaseRegularGrid2.html" title="Regularly spaced 2D grid base type." alt="" coords="5,95,196,136"/>
-<area shape="rect" id="node4" title=" " alt="" coords="33,5,169,47"/>
+<area shape="rect" id="node1" title="Linear 2D grid base type." alt="" coords="25,259,206,300"/>
+<area shape="rect" id="node2" href="$classbeluga_1_1BaseDenseGrid2.html" title="Dense 2D grid base type." alt="" coords="24,169,207,211"/>
+<area shape="rect" id="node3" href="$classbeluga_1_1BaseRegularGrid.html" title="Regularly spaced N dimensional grid base type." alt="" coords="5,95,225,121"/>
+<area shape="rect" id="node4" title=" " alt="" coords="47,5,183,47"/>
 </map>

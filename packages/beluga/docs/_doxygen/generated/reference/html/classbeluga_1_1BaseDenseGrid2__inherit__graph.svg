@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 829;
+var viewWidth = 851;
 var viewHeight = 134;
 var sectionId = 'dynsection-0';
 </script>
@@ -58,9 +58,9 @@ var sectionId = 'dynsection-0';
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title="Dense 2D grid base type.">
-<polygon fill="#bfbfbf" stroke="black" points="317,-70.5 317,-100.5 454,-100.5 454,-70.5 317,-70.5"/>
-<text text-anchor="start" x="325" y="-88.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::BaseDenseGrid2</text>
-<text text-anchor="middle" x="385.5" y="-77.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
+<polygon fill="#bfbfbf" stroke="black" points="339,-70.5 339,-100.5 476,-100.5 476,-70.5 339,-70.5"/>
+<text text-anchor="start" x="347" y="-88.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::BaseDenseGrid2</text>
+<text text-anchor="middle" x="407.5" y="-77.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
 </a>
 </g>
 </g>
@@ -68,49 +68,48 @@ var sectionId = 'dynsection-0';
 <g id="node4" class="node">
 <title>Node4</title>
 <g id="a_node4"><a xlink:href="classbeluga_1_1BaseLinearGrid2.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="490,-95.5 490,-125.5 626,-125.5 626,-95.5 490,-95.5"/>
-<text text-anchor="start" x="498" y="-113.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::BaseLinearGrid2</text>
-<text text-anchor="middle" x="558" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; ValueGrid2&lt; T &gt; &gt;</text>
+<polygon fill="none" stroke="black" points="512,-95.5 512,-125.5 648,-125.5 648,-95.5 512,-95.5"/>
+<text text-anchor="start" x="520" y="-113.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::BaseLinearGrid2</text>
+<text text-anchor="middle" x="580" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; ValueGrid2&lt; T &gt; &gt;</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node4 -->
 <g id="edge3" class="edge">
 <title>Node1&#45;&gt;Node4</title>
-<path fill="none" stroke="midnightblue" d="M464.34,-96.91C472.88,-98.17 481.52,-99.43 489.91,-100.66"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="464.78,-93.44 454.38,-95.45 463.76,-100.37 464.78,-93.44"/>
+<path fill="none" stroke="midnightblue" d="M486.34,-96.91C494.88,-98.17 503.52,-99.43 511.91,-100.66"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="486.78,-93.44 476.38,-95.45 485.76,-100.37 486.78,-93.44"/>
 </g>
 <!-- Node6 -->
 <g id="node6" class="node">
 <title>Node6</title>
 <g id="a_node6"><a xlink:href="classbeluga_1_1BaseLinearGrid2.html" target="_top" xlink:title="Linear 2D grid base type.">
-<polygon fill="none" stroke="black" points="490,-46.5 490,-76.5 626,-76.5 626,-46.5 490,-46.5"/>
-<text text-anchor="start" x="498" y="-64.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::BaseLinearGrid2</text>
-<text text-anchor="middle" x="558" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
+<polygon fill="none" stroke="black" points="512,-46.5 512,-76.5 648,-76.5 648,-46.5 512,-46.5"/>
+<text text-anchor="start" x="520" y="-64.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::BaseLinearGrid2</text>
+<text text-anchor="middle" x="580" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node6 -->
 <g id="edge5" class="edge">
 <title>Node1&#45;&gt;Node6</title>
-<path fill="none" stroke="midnightblue" d="M464.34,-74.54C472.88,-73.34 481.52,-72.12 489.91,-70.94"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="463.79,-71.09 454.38,-75.95 464.77,-78.02 463.79,-71.09"/>
+<path fill="none" stroke="midnightblue" d="M486.34,-74.54C494.88,-73.34 503.52,-72.12 511.91,-70.94"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="485.79,-71.09 476.38,-75.95 486.77,-78.02 485.79,-71.09"/>
 </g>
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="classbeluga_1_1BaseRegularGrid2.html" target="_top" xlink:title="Regularly spaced 2D grid base type.">
-<polygon fill="none" stroke="black" points="138,-70.5 138,-100.5 281,-100.5 281,-70.5 138,-70.5"/>
-<text text-anchor="start" x="146" y="-88.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::BaseRegularGrid2</text>
-<text text-anchor="middle" x="209.5" y="-77.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
+<g id="a_node2"><a xlink:href="classbeluga_1_1BaseRegularGrid.html" target="_top" xlink:title="Regularly spaced N dimensional grid base type.">
+<polygon fill="none" stroke="black" points="138,-76 138,-95 303,-95 303,-76 138,-76"/>
+<text text-anchor="middle" x="220.5" y="-83" font-family="Helvetica,sans-Serif" font-size="10.00">BaseRegularGrid2&lt; Derived &gt;</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge">
 <title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="midnightblue" d="M291.12,-85.5C299.77,-85.5 308.5,-85.5 316.98,-85.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="291.02,-82 281.02,-85.5 291.02,-89 291.02,-82"/>
+<path fill="none" stroke="midnightblue" d="M313.27,-85.5C321.88,-85.5 330.49,-85.5 338.82,-85.5"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="313.18,-82 303.18,-85.5 313.18,-89 313.18,-82"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node">
@@ -125,55 +124,55 @@ var sectionId = 'dynsection-0';
 <!-- Node3&#45;&gt;Node2 -->
 <g id="edge2" class="edge">
 <title>Node3&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M112.42,-85.5C120.79,-85.5 129.44,-85.5 137.98,-85.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="112.38,-82 102.38,-85.5 112.38,-89 112.38,-82"/>
+<path fill="none" stroke="midnightblue" d="M112.53,-85.5C120.79,-85.5 129.39,-85.5 137.96,-85.5"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="112.26,-82 102.26,-85.5 112.26,-89 112.26,-82"/>
 </g>
 <!-- Node5 -->
 <g id="node5" class="node">
 <title>Node5</title>
 <g id="a_node5"><a xlink:href="classbeluga_1_1ValueGrid2.html" target="_top" xlink:title="Generic 2D linear value grid.">
-<polygon fill="none" stroke="black" points="673,-101 673,-120 810,-120 810,-101 673,-101"/>
-<text text-anchor="middle" x="741.5" y="-108" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::ValueGrid2&lt; T &gt;</text>
+<polygon fill="none" stroke="black" points="695,-101 695,-120 832,-120 832,-101 695,-101"/>
+<text text-anchor="middle" x="763.5" y="-108" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::ValueGrid2&lt; T &gt;</text>
 </a>
 </g>
 </g>
 <!-- Node4&#45;&gt;Node5 -->
 <g id="edge4" class="edge">
 <title>Node4&#45;&gt;Node5</title>
-<path fill="none" stroke="midnightblue" d="M636.19,-110.5C648.36,-110.5 660.87,-110.5 672.8,-110.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="636.07,-107 626.07,-110.5 636.07,-114 636.07,-107"/>
+<path fill="none" stroke="midnightblue" d="M658.19,-110.5C670.36,-110.5 682.87,-110.5 694.8,-110.5"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="658.07,-107 648.07,-110.5 658.07,-114 658.07,-107"/>
 </g>
 <!-- Node7 -->
 <g id="node7" class="node">
 <title>Node7</title>
 <g id="a_node7"><a xlink:href="classbeluga_1_1ValueGrid2.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="687,-49.5 687,-79.5 796,-79.5 796,-49.5 687,-49.5"/>
-<text text-anchor="start" x="695" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::ValueGrid2</text>
-<text text-anchor="middle" x="741.5" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double &gt;</text>
+<polygon fill="none" stroke="black" points="709,-49.5 709,-79.5 818,-79.5 818,-49.5 709,-49.5"/>
+<text text-anchor="start" x="717" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::ValueGrid2</text>
+<text text-anchor="middle" x="763.5" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double &gt;</text>
 </a>
 </g>
 </g>
 <!-- Node6&#45;&gt;Node7 -->
 <g id="edge6" class="edge">
 <title>Node6&#45;&gt;Node7</title>
-<path fill="none" stroke="midnightblue" d="M636.5,-62.78C653.43,-63.06 670.98,-63.35 686.73,-63.61"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="636.12,-59.27 626.07,-62.61 636.01,-66.27 636.12,-59.27"/>
+<path fill="none" stroke="midnightblue" d="M658.5,-62.78C675.43,-63.06 692.98,-63.35 708.73,-63.61"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="658.12,-59.27 648.07,-62.61 658.01,-66.27 658.12,-59.27"/>
 </g>
 <!-- Node8 -->
 <g id="node8" class="node">
 <title>Node8</title>
 <g id="a_node8"><a xlink:href="classbeluga_1_1BaseOccupancyGrid2.html" target="_top" xlink:title="Occupancy 2D grid base type.">
-<polygon fill="none" stroke="black" points="662,-0.5 662,-30.5 821,-30.5 821,-0.5 662,-0.5"/>
-<text text-anchor="start" x="670" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::BaseOccupancyGrid2</text>
-<text text-anchor="middle" x="741.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
+<polygon fill="none" stroke="black" points="684,-0.5 684,-30.5 843,-30.5 843,-0.5 684,-0.5"/>
+<text text-anchor="start" x="692" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::BaseOccupancyGrid2</text>
+<text text-anchor="middle" x="763.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
 </a>
 </g>
 </g>
 <!-- Node6&#45;&gt;Node8 -->
 <g id="edge7" class="edge">
 <title>Node6&#45;&gt;Node8</title>
-<path fill="none" stroke="midnightblue" d="M628.52,-43.88C645.91,-39.47 664.41,-34.79 681.25,-30.52"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="627.26,-40.59 618.43,-46.44 628.98,-47.37 627.26,-40.59"/>
+<path fill="none" stroke="midnightblue" d="M650.52,-43.88C667.91,-39.47 686.41,-34.79 703.25,-30.52"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="649.26,-40.59 640.43,-46.44 650.98,-47.37 649.26,-40.59"/>
 </g>
 </g>
 </svg>
