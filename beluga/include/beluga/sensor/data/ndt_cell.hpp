@@ -27,7 +27,7 @@
 #include <sophus/se3.hpp>
 #include <sophus/so2.hpp>
 
-#include "beluga/sensor/data/sparse_value_grid.hpp"
+#include "beluga/eigen_compatibility.hpp"
 
 namespace beluga {
 
@@ -40,14 +40,14 @@ struct NDTCell {
   /// Floating point scalar type.
   using scalar_type = Scalar;
   /// Mean of the N dimensional normal distribution.
-  Eigen::Matrix<Scalar, NDim, 1> mean;
+  Eigen::Vector<Scalar, NDim> mean;
   /// Covariance of the N dimensional normal distribution.
   Eigen::Matrix<Scalar, NDim, NDim> covariance;
 
   /// Get the L2 likelihood at measurement, scaled by d1 and d2. It assumes the measurement is pre-transformed
   /// into the same frame as this cell instance.
   [[nodiscard]] double likelihood_at(const NDTCell& measurement, double d1 = 1.0, double d2 = 1.0) const {
-    const Eigen::Matrix<Scalar, NDim, 1> error = measurement.mean - mean;
+    const Eigen::Vector<Scalar, NDim> error = measurement.mean - mean;
     const double rhs =
         std::exp((-d2 / 2.0) * error.transpose() * (measurement.covariance + covariance).inverse() * error);
     return d1 * rhs;
@@ -71,7 +71,7 @@ struct NDTCell {
   friend NDTCell operator*(const Sophus::SE3<scalar_type>& tf, const NDTCell& ndt_cell) {
     static_assert(num_dim == 3, "Cannot transform a non 3D NDT Cell with a SE3 transform.");
     const Eigen::Vector3d uij = tf * ndt_cell.mean;
-    const Eigen::Matrix3Xd cov = tf.so2().matrix() * ndt_cell.covariance * tf.so2().matrix().transpose();
+    const Eigen::Matrix3Xd cov = tf.so3().matrix() * ndt_cell.covariance * tf.so3().matrix().transpose();
     return NDTCell{uij, cov};
   }
 };
