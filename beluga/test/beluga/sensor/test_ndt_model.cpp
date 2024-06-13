@@ -43,7 +43,7 @@ TEST(NDTSensorModel2DTests, CanConstruct) {
 }
 
 TEST(NDTSensorModel2DTests, MinLikelihood) {
-  const double minimum_likelihood = 1e-6;
+  constexpr double minimum_likelihood = 1e-6;
 
   const NDTModelParam2d param{minimum_likelihood};
   const NDTSensorModel model{param, sparse_grid_2d_t{}};
@@ -85,7 +85,7 @@ TEST(NDTSensorModel2DTests, Likelihoood) {
   }
   sparse_grid_2d_t grid{std::move(map), 1.0};
 
-  const double minimum_likelihood = 1e-6;
+  constexpr double minimum_likelihood = 1e-6;
   const NDTModelParam2d param{minimum_likelihood};
   const NDTSensorModel model{param, std::move(grid)};
 
@@ -104,7 +104,7 @@ TEST(NDTSensorModel2DTests, FitPoints) {
         Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
         Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
     };
-    auto cell = detail::fit_points<2>(meas);
+    auto cell = detail::fit_points(meas);
     ASSERT_TRUE(cell.mean.isApprox(Eigen::Vector2d{0.1, 0.2}));
     // We introduce a minimum variance to avoid numeric errors down the line.
     ASSERT_FALSE(cell.covariance.isZero());
@@ -114,7 +114,7 @@ TEST(NDTSensorModel2DTests, FitPoints) {
         Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.9}, Eigen::Vector2d{0.1, 0.2},
         Eigen::Vector2d{0.1, 0.9}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
     };
-    auto cell = detail::fit_points<2>(meas);
+    auto cell = detail::fit_points(meas);
     ASSERT_TRUE(cell.mean.isApprox(Eigen::Vector2d{0.1, 0.433333}, 1e-6));
     ASSERT_FALSE(cell.covariance.isZero());
     ASSERT_GT(cell.covariance(1, 1), cell.covariance(0, 0));
@@ -122,24 +122,24 @@ TEST(NDTSensorModel2DTests, FitPoints) {
 }
 
 TEST(NDTSensorModel2DTests, ToCellsNotEnoughPointsInCell) {
-  const double map_res = 0.5;
+  constexpr double map_res = 0.5;
   const std::vector map_data{
       Eigen::Vector2d{0.1, 0.2},
       Eigen::Vector2d{0.112, 0.22},
       Eigen::Vector2d{0.15, 0.23},
   };
-  const auto cells = detail::to_cells<2UL>(map_data, map_res);
+  const auto cells = detail::to_cells(map_data, map_res);
   ASSERT_EQ(cells.size(), 0UL);
 }
 
 TEST(NDTSensorModel3DTests, ToCellsNotEnoughPointsInCell) {
-  const double map_res = 0.5;
+  constexpr double map_res = 0.5;
   const std::vector map_data{
       Eigen::Vector3d{0.1, 0.2, 0.0},
       Eigen::Vector3d{0.112, 0.22, 0.0},
       Eigen::Vector3d{0.15, 0.23, 0.0},
   };
-  const auto cells = detail::to_cells<3UL>(map_data, map_res);
+  const auto cells = detail::to_cells(map_data, map_res);
   ASSERT_EQ(cells.size(), 0UL);
 }
 
@@ -149,7 +149,7 @@ TEST(NDTSensorModel3DTests, FitPoints) {
         Eigen::Vector3d{0.1, 0.2, 0.3}, Eigen::Vector3d{0.1, 0.2, 0.3}, Eigen::Vector3d{0.1, 0.2, 0.3},
         Eigen::Vector3d{0.1, 0.2, 0.3}, Eigen::Vector3d{0.1, 0.2, 0.3}, Eigen::Vector3d{0.1, 0.2, 0.3},
     };
-    auto cell = detail::fit_points<3>(meas);
+    auto cell = detail::fit_points(meas);
     ASSERT_TRUE(cell.mean.isApprox(Eigen::Vector3d{0.1, 0.2, 0.3}));
     // We introduce a minimum variance to avoid numeric errors down the line.
     ASSERT_FALSE(cell.covariance.isZero());
@@ -158,7 +158,7 @@ TEST(NDTSensorModel3DTests, FitPoints) {
     const std::vector meas{
         Eigen::Vector3d{0.1, 0.2, 0.3}, Eigen::Vector3d{0.1, 0.2, 0.3}, Eigen::Vector3d{0.1, 0.2, 0.5},
         Eigen::Vector3d{0.1, 0.2, 0.3}, Eigen::Vector3d{0.1, 0.9, 0.4}};
-    auto cell = detail::fit_points<3>(meas);
+    auto cell = detail::fit_points(meas);
     ASSERT_TRUE(cell.mean.isApprox(Eigen::Vector3d{0.1, 0.34, 0.36}, 1e-6));
     ASSERT_FALSE(cell.covariance.isZero());
     ASSERT_GT(cell.covariance(1, 1), cell.covariance(0, 0));
@@ -168,12 +168,12 @@ TEST(NDTSensorModel3DTests, FitPoints) {
 }
 
 TEST(NDTSensorModel3DTests, SensorModel) {
-  const double map_res = 0.5;
+  constexpr double map_res = 0.5;
   const std::vector map_data{
       Eigen::Vector3d{0.1, 0.2, 0.0},  Eigen::Vector3d{0.112, 0.22, 0.1}, Eigen::Vector3d{0.15, 0.23, 0.1},
       Eigen::Vector3d{0.1, 0.24, 0.1}, Eigen::Vector3d{0.16, 0.25, 0.1},  Eigen::Vector3d{0.1, 0.26, 0.0},
   };
-  auto cells = detail::to_cells<3UL>(map_data, map_res);
+  auto cells = detail::to_cells(map_data, map_res);
 
   typename sparse_grid_3d_t::map_type map_cells_data;
 
@@ -211,12 +211,12 @@ TEST(NDTSensorModel3DTests, SensorModel) {
 }
 
 TEST(NDTSensorModel2DTests, SensorModel) {
-  const double map_res = 0.5;
+  constexpr double map_res = 0.5;
   const std::vector map_data{
       Eigen::Vector2d{0.1, 0.2},  Eigen::Vector2d{0.112, 0.22}, Eigen::Vector2d{0.15, 0.23},
       Eigen::Vector2d{0.1, 0.24}, Eigen::Vector2d{0.16, 0.25},  Eigen::Vector2d{0.1, 0.26},
   };
-  auto cells = detail::to_cells<2UL>(map_data, map_res);
+  auto cells = detail::to_cells(map_data, map_res);
 
   typename sparse_grid_2d_t::map_type map_cells_data;
   for (const auto& cell : cells) {
