@@ -43,9 +43,9 @@ TEST(NDTSensorModel2DTests, CanConstruct) {
 }
 
 TEST(NDTSensorModel2DTests, MinLikelihood) {
-  constexpr double minimum_likelihood = 1e-6;
+  constexpr double kMinimumLikelihood = 1e-6;
 
-  const NDTModelParam2d param{minimum_likelihood};
+  const NDTModelParam2d param{kMinimumLikelihood};
   const NDTSensorModel model{param, sparse_grid_2d_t{}};
 
   for (const auto& val : {
@@ -59,7 +59,7 @@ TEST(NDTSensorModel2DTests, MinLikelihood) {
            Eigen::Vector2d{0.75, 0.75},
 
        }) {
-    ASSERT_DOUBLE_EQ(model.likelihood_at({val, get_diagonal_covariance_2d()}), minimum_likelihood);
+    ASSERT_DOUBLE_EQ(model.likelihood_at({val, get_diagonal_covariance_2d()}), kMinimumLikelihood);
   }
 }
 
@@ -85,8 +85,8 @@ TEST(NDTSensorModel2DTests, Likelihoood) {
   }
   sparse_grid_2d_t grid{std::move(map), 1.0};
 
-  constexpr double minimum_likelihood = 1e-6;
-  const NDTModelParam2d param{minimum_likelihood};
+  constexpr double kMinimumLikelihood = 1e-6;
+  const NDTModelParam2d param{kMinimumLikelihood};
   const NDTSensorModel model{param, std::move(grid)};
 
   EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.5}, get_diagonal_covariance_2d()}), 1.3678794411714423);
@@ -122,24 +122,24 @@ TEST(NDTSensorModel2DTests, FitPoints) {
 }
 
 TEST(NDTSensorModel2DTests, ToCellsNotEnoughPointsInCell) {
-  constexpr double map_res = 0.5;
+  constexpr double kMapResolution = 0.5;
   const std::vector map_data{
       Eigen::Vector2d{0.1, 0.2},
       Eigen::Vector2d{0.112, 0.22},
       Eigen::Vector2d{0.15, 0.23},
   };
-  const auto cells = detail::to_cells(map_data, map_res);
+  const auto cells = detail::to_cells(map_data, kMapResolution);
   ASSERT_EQ(cells.size(), 0UL);
 }
 
 TEST(NDTSensorModel3DTests, ToCellsNotEnoughPointsInCell) {
-  constexpr double map_res = 0.5;
+  constexpr double kMapResolution = 0.5;
   const std::vector map_data{
       Eigen::Vector3d{0.1, 0.2, 0.0},
       Eigen::Vector3d{0.112, 0.22, 0.0},
       Eigen::Vector3d{0.15, 0.23, 0.0},
   };
-  const auto cells = detail::to_cells(map_data, map_res);
+  const auto cells = detail::to_cells(map_data, kMapResolution);
   ASSERT_EQ(cells.size(), 0UL);
 }
 
@@ -168,21 +168,21 @@ TEST(NDTSensorModel3DTests, FitPoints) {
 }
 
 TEST(NDTSensorModel3DTests, SensorModel) {
-  constexpr double map_res = 0.5;
+  constexpr double kMapResolution = 0.5;
   const std::vector map_data{
       Eigen::Vector3d{0.1, 0.2, 0.0},  Eigen::Vector3d{0.112, 0.22, 0.1}, Eigen::Vector3d{0.15, 0.23, 0.1},
       Eigen::Vector3d{0.1, 0.24, 0.1}, Eigen::Vector3d{0.16, 0.25, 0.1},  Eigen::Vector3d{0.1, 0.26, 0.0},
   };
-  auto cells = detail::to_cells(map_data, map_res);
+  auto cells = detail::to_cells(map_data, kMapResolution);
 
   typename sparse_grid_3d_t::map_type map_cells_data;
 
   for (const auto& cell : cells) {
-    map_cells_data[(cell.mean.array() / map_res).floor().cast<int>()] = cell;
+    map_cells_data[(cell.mean.array() / kMapResolution).floor().cast<int>()] = cell;
   }
 
   std::vector perfect_measurement = map_data;
-  const NDTSensorModel model{{}, sparse_grid_3d_t{map_cells_data, map_res}};
+  const NDTSensorModel model{{}, sparse_grid_3d_t{map_cells_data, kMapResolution}};
   auto state_weighing_fn = model(std::move(perfect_measurement));
 
   {
@@ -211,19 +211,19 @@ TEST(NDTSensorModel3DTests, SensorModel) {
 }
 
 TEST(NDTSensorModel2DTests, SensorModel) {
-  constexpr double map_res = 0.5;
+  constexpr double kMapResolution = 0.5;
   const std::vector map_data{
       Eigen::Vector2d{0.1, 0.2},  Eigen::Vector2d{0.112, 0.22}, Eigen::Vector2d{0.15, 0.23},
       Eigen::Vector2d{0.1, 0.24}, Eigen::Vector2d{0.16, 0.25},  Eigen::Vector2d{0.1, 0.26},
   };
-  auto cells = detail::to_cells(map_data, map_res);
+  auto cells = detail::to_cells(map_data, kMapResolution);
 
   typename sparse_grid_2d_t::map_type map_cells_data;
   for (const auto& cell : cells) {
-    map_cells_data[(cell.mean.array() / map_res).cast<int>()] = cell;
+    map_cells_data[(cell.mean.array() / kMapResolution).cast<int>()] = cell;
   }
   std::vector perfect_measurement = map_data;
-  const NDTSensorModel model{{}, sparse_grid_2d_t{map_cells_data, map_res}};
+  const NDTSensorModel model{{}, sparse_grid_2d_t{map_cells_data, kMapResolution}};
   auto state_weighing_fn = model(std::move(perfect_measurement));
   // This is a perfect hit, so we should expect weight to be 1 + num_cells == 2.
   ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE2d{}), 2);
