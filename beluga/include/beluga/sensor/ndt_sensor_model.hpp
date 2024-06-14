@@ -34,6 +34,7 @@
 
 #include <beluga/sensor/data/ndt_cell.hpp>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
+#include "beluga/eigen_compatibility.hpp"
 
 namespace beluga {
 
@@ -44,7 +45,7 @@ namespace detail {
 template <int N>
 struct CellHasher {
   /// Hashes an integer N dimensional integer vector.
-  size_t operator()(const Eigen::Matrix<int, N, 1> vector) const {
+  size_t operator()(const Eigen::Vector<int, N> vector) const {
     size_t seed = 0;
     for (auto i = 0L; i < vector.size(); ++i) {
       auto elem = *(vector.data() + i);
@@ -56,11 +57,11 @@ struct CellHasher {
 
 /// Fit a vector of points to an NDT cell, by computing its mean and covariance.
 template <int NDim, typename Scalar = double>
-inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Matrix<Scalar, NDim, 1>>& points) {
+inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Vector<Scalar, NDim>>& points) {
   static constexpr double kMinVariance = 1e-5;
   Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic>> points_view(
       reinterpret_cast<const Scalar*>(points.data()), NDim, static_cast<int64_t>(points.size()));
-  const Eigen::Matrix<Scalar, NDim, 1> mean = points_view.rowwise().mean();
+  const Eigen::Vector<Scalar, NDim> mean = points_view.rowwise().mean();
   const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic> centered = points_view.colwise() - mean;
   // Use sample covariance.
   Eigen::Matrix<Scalar, NDim, Eigen::Dynamic> cov =
@@ -78,7 +79,7 @@ inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Matrix<Scalar, 
 /// minimum number of points in them.
 template <int NDim, typename Scalar = double>
 inline std::vector<NDTCell<NDim, Scalar>> to_cells(
-    const std::vector<Eigen::Matrix<Scalar, NDim, 1>>& points,
+    const std::vector<Eigen::Vector<Scalar, NDim>>& points,
     const double resolution) {
   static constexpr int kMinPointsPerCell = 5;
 
@@ -88,9 +89,8 @@ inline std::vector<NDTCell<NDim, Scalar>> to_cells(
   std::vector<NDTCell<NDim, Scalar>> ret;
   ret.reserve(static_cast<size_t>(points_view.cols()) / kMinPointsPerCell);
 
-  std::unordered_map<Eigen::Matrix<int, NDim, 1>, std::vector<Eigen::Matrix<Scalar, NDim, 1>>, CellHasher<NDim>>
-      cell_grid;
-  for (const Eigen::Matrix<Scalar, NDim, 1>& col : points) {
+  std::unordered_map<Eigen::Vector<int, NDim>, std::vector<Eigen::Vector<Scalar, NDim>>, CellHasher<NDim>> cell_grid;
+  for (const Eigen::Vector<Scalar, NDim>& col : points) {
     cell_grid[(col / resolution).template cast<int>()].emplace_back(col);
   }
 
@@ -105,17 +105,28 @@ inline std::vector<NDTCell<NDim, Scalar>> to_cells(
 }
 /// Default neighbor kernel for the 2D NDT sensor model.
 const std::vector<Eigen::Vector2i> kDefaultNeighborKernel2d = {
-    Eigen::Vector2i{-1, -1}, Eigen::Vector2i{-1, -0}, Eigen::Vector2i{-1, 1},
-    Eigen::Vector2i{0, -1},  Eigen::Vector2i{0, 0},   Eigen::Vector2i{0, 1},
-    Eigen::Vector2i{1, -1},  Eigen::Vector2i{1, 0},   Eigen::Vector2i{1, 1},
+    Eigen::Vector2i{-1, -1},  //
+    Eigen::Vector2i{-1, -0},  //
+    Eigen::Vector2i{-1, 1},   //
+    Eigen::Vector2i{0, -1},   //
+    Eigen::Vector2i{0, 0},    //
+    Eigen::Vector2i{0, 1},    //
+    Eigen::Vector2i{1, -1},   //
+    Eigen::Vector2i{1, 0},    //
+    Eigen::Vector2i{1, 1},    //
 };
 
 /// Default neighbor kernel for the 3D NDT sensor model.
 const std::vector<Eigen::Vector3i> kDefaultNeighborKernel3d = {
     // TODO(Ramiro) revisit this kernel when we implement the 3D sensor model and extend this if it's computationally
     // feasible.
-    Eigen::Vector3i{0, 0, 0},  Eigen::Vector3i{0, 0, 1},  Eigen::Vector3i{0, 0, -1}, Eigen::Vector3i{0, 1, 0},
-    Eigen::Vector3i{0, -1, 0}, Eigen::Vector3i{-1, 0, 0}, Eigen::Vector3i{1, 0, 0},
+    Eigen::Vector3i{0, 0, 0},   //
+    Eigen::Vector3i{0, 0, 1},   //
+    Eigen::Vector3i{0, 0, -1},  //
+    Eigen::Vector3i{0, 1, 0},   //
+    Eigen::Vector3i{0, -1, 0},  //
+    Eigen::Vector3i{-1, 0, 0},  //
+    Eigen::Vector3i{1, 0, 0},
 };
 
 /// Helper to get the default neighbors kernel
@@ -137,9 +148,9 @@ struct NDTModelParam {
   static_assert(NDim == 2 or NDim == 3, "Only 2D or 3D is supported for the NDT sensor model.");
   /// Likelihood for measurements that lie inside cells that are not present in the map.
   double minimum_likelihood = 0;
-  /// Scaling parameter d1 in literature, used for scaling 2D likelihoods.
+  /// Scaling parameter d1 in literature, used for scaling likelihoods.
   double d1 = 1.0;
-  /// Scaling parameter d2 in literature, used for scaling 2D likelihoods.
+  /// Scaling parameter d2 in literature, used for scaling likelihoods.
   double d2 = 1.0;
   /// Neighbor kernel used for likelihood computation.
   std::conditional_t<NDim == 2, std::vector<Eigen::Vector2i>, std::vector<Eigen::Vector3i>> neighbors_kernel =
@@ -163,7 +174,9 @@ class NDTSensorModel {
   /// NDT Cell type.
   using ndt_cell_type = typename SparseGridT::mapped_type;
   static_assert(std::is_same_v<SparseValueGrid<typename SparseGridT::map_type, ndt_cell_type::num_dim>, SparseGridT>);
-  static_assert(ndt_cell_type::num_dim == 2, "NDT sensor model is only implemented for 2D problems.");
+  static_assert(
+      ndt_cell_type::num_dim == 2 or ndt_cell_type::num_dim == 3,
+      "NDT sensor model is only implemented for 2D or 3D problems.");
   /// State type of a particle.
   using state_type = std::conditional_t<
       ndt_cell_type::num_dim == 2,
@@ -172,7 +185,7 @@ class NDTSensorModel {
   /// Weight type of the particle.
   using weight_type = double;
   /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<Eigen::Matrix<typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim, 1>>;
+  using measurement_type = std::vector<Eigen::Vector<typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim>>;
   /// Map representation type.
   using map_type = SparseGridT;
   /// Parameter type that the constructor uses to configure the NDT sensor model.
@@ -192,7 +205,7 @@ class NDTSensorModel {
 
   /// Returns a state weighting function conditioned on 2D / 3D lidar hits.
   /**
-   * \param points 2D lidar hit points in the reference frame of particle states.
+   * \param points Lidar hit points in the reference frame of particle states.
    * \return a state weighting function satisfying \ref StateWeightingFunctionPage
    *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
@@ -206,7 +219,7 @@ class NDTSensorModel {
   }
 
   /// Returns the L2 likelihood scaled by 'd1' and 'd2' set in the parameters for this instance for 'measurement', for
-  /// the 3x3 cells around the measurement cell, or 'params_.min_likelihood', whichever is higher.
+  /// the neighbors kernel cells around the measurement cell, or 'params_.min_likelihood', whichever is higher.
   [[nodiscard]] double likelihood_at(const ndt_cell_type& measurement) const {
     double likelihood = 0;
     const typename map_type::key_type measurement_cell = cells_data_.cell_near(measurement.mean);
