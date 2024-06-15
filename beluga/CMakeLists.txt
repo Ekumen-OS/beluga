@@ -33,8 +33,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
               -Wconversion
               -Werror
               -Wextra
-              -Wpedantic
-              -Wno-gnu-zero-variadic-macro-arguments)
+              -Wpedantic)
 endif()
 
 find_package(Eigen3 REQUIRED NO_MODULE)

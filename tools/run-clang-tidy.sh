@@ -28,4 +28,13 @@ fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
-echo ${ROS_PACKAGES} | xargs -n1 echo | xargs -I{} run-clang-tidy -j 4 -fix -p ./build/{} ${PWD}/src/.*
+echo ${ROS_PACKAGES} |
+    xargs -n1 echo |
+    # NOTE: `-Wno-gnu-zero-variadic-macro-arguments` is needed due to
+    # https://github.com/google/googletest/issues/2650, fixed in 1.11 but not backported to 1.10.
+    xargs -I{} run-clang-tidy \
+        -j=4 \
+        -fix \
+        -extra-arg='-Wno-gnu-zero-variadic-macro-arguments' \
+        -p=./build/{} \
+        ${PWD}/src/.*

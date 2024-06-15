@@ -71,7 +71,7 @@ struct LandmarkSensorModelTests : public ::testing::Test {};
 
 using LandmarkSensorModelTestsTypes = ::testing::Types<Sensor2D, Sensor3D>;
 
-TYPED_TEST_SUITE(LandmarkSensorModelTests, LandmarkSensorModelTestsTypes);
+TYPED_TEST_SUITE(LandmarkSensorModelTests, LandmarkSensorModelTestsTypes, );
 
 TYPED_TEST(LandmarkSensorModelTests, BullsEyeDetection) {
   // test case where the landmark is exactly where we expected it
