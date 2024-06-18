@@ -2,8 +2,8 @@
 Changelog for package beluga
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.2 (2024-06-18)
+------------------
 * Use `no-gnu-zero-variadic-macro-arguments` only with `clang-tidy` (`#391 <https://github.com/Ekumen-OS/beluga/issues/391>`_)
 * Add 3D NDT sensor model and tests. (`#400 <https://github.com/Ekumen-OS/beluga/issues/400>`_)
 * Expand grid concepts to n dimensions (`#396 <https://github.com/Ekumen-OS/beluga/issues/396>`_)

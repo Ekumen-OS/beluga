@@ -2,8 +2,8 @@
 Changelog for package beluga_amcl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.2 (2024-06-18)
+------------------
 * Expand grid concepts to n dimensions (`#396 <https://github.com/Ekumen-OS/beluga/issues/396>`_)
 * Change NDT sensor model default params (`#397 <https://github.com/Ekumen-OS/beluga/issues/397>`_)
 
