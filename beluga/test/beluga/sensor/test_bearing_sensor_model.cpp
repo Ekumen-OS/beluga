@@ -79,7 +79,7 @@ struct BearingSensorModelTests : public ::testing::Test {};
 
 using BearingSensorModelTestsTypes = ::testing::Types<Sensor2D, Sensor3D>;
 
-TYPED_TEST_SUITE(BearingSensorModelTests, BearingSensorModelTestsTypes);
+TYPED_TEST_SUITE(BearingSensorModelTests, BearingSensorModelTestsTypes, );
 
 TYPED_TEST(BearingSensorModelTests, SmokeTest) {
   auto sensor_model =
