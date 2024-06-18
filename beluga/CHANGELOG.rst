@@ -2,6 +2,15 @@
 Changelog for package beluga
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use `no-gnu-zero-variadic-macro-arguments` only with `clang-tidy` (`#391 <https://github.com/Ekumen-OS/beluga/issues/391>`_)
+* Add 3D NDT sensor model and tests. (`#400 <https://github.com/Ekumen-OS/beluga/issues/400>`_)
+* Expand grid concepts to n dimensions (`#396 <https://github.com/Ekumen-OS/beluga/issues/396>`_)
+* Add cast from `hsize_t` to `size_t` (`#392 <https://github.com/Ekumen-OS/beluga/issues/392>`_)
+
+* Contributors: Nahuel Espinosa, Ramiro Serra
+
 2.0.1 (2024-05-24)
 ------------------
 * Support 32-bit hashes (`#386 <https://github.com/Ekumen-OS/beluga/issues/386>`_)
