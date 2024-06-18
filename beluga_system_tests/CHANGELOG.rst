@@ -2,6 +2,9 @@
 Changelog for package beluga_system_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.0.1 (2024-05-24)
 ------------------
 
