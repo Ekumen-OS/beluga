@@ -12,7 +12,7 @@ motivated by the example given by _Probabilistic Robotics [^ProbRob], page 200, 
 This example is about a one-dimensional world, composed by walls and doors. The robot is capable to move in a parallel free and continuous space,
 where it constantly scanning the landmarks of the walls-doors world (the robot also moves only in a one-dimensional world). The last two graphs in the GIF showed above is a graphical representation of this world, where the blue bars represent the walls, the red bars represent the doors and the green bar is the robot.
 
-To implement this example in a code we will need to create and define different components such as the map, the motion and sensor models, the generation of the initial set of particles, the steps of the {abbr}`MCL (Monte Carlo Localization)` algorithm and the estimation of the robot's position. Each component will be detailed explain in the following sections.
+To implement this example in a code we will need to create and define different components such as the map, the motion and sensor models, the generation of the initial set of particles, the steps of the {abbr}`MCL (Monte Carlo Localization)` algorithm and the estimation of the robot's position.
 
 ## Requirements
 
@@ -24,7 +24,7 @@ I highly recommend reading the [key concepts](../concepts/key-concepts.md) secti
 
 ## Tasks
 
-Based on [key concepts](../concepts/key-concepts.md), this tutorial will show an implementation of the particle filter by performing the recursive update in two steps:
+This tutorial will show an implementation of a particle filter by performing the recursive update in two steps:
 
 * [Prediction](#15-prediction)
 * [Update](#16-update)
@@ -192,7 +192,7 @@ struct Parameters {
 
 ### 1.2 Landmark Map
 
-A map of the environment is a list of object in the environment and their locations `M = {M1, M2, ..., Mn}`. A **landmark map** is represented by a **feature-based map**, where each feature in the map contain a property and its Cartesian location. In the tutorial, the landmark map represent the position of the doors, but all doors are equal. This means there are no distinguishing properties between them, such as an ID for each door.
+A map of the environment is a list of object in the environment and their locations `M = {M1, M2, ..., Mn}`. A **landmark map** is a **feature-based map**, where each feature in the map contain a property and its Cartesian location. In the tutorial, the landmark map represent the position of the doors, but all doors are equal. This means there are no distinguishing properties between them, such as an ID for each door.
 
 We define a default map in the `Parameters` struct:
 
@@ -228,8 +228,8 @@ auto particles = beluga::views::sample(initial_distribution) |                  
 ```
 
 * We define a `std::normal_distribution<double>` to initialize the position of the robot with some uncertainty configured by the parameters `parameters.initial_position` and `parameters.initial_position_sd`.
-* `beluga::views::sample(initial_distribution)` will spread the particles around the normal distribution.
-* `ranges::views::transform(beluga::make_from_state<Particle>)` convert each sample in a Particle data struct defined by `using Particle = std::tuple<double, beluga::Weight>;`.
+* `beluga::views::sample(initial_distribution)` will sample robot states (ie. a scalar position) from the distribution.
+* `ranges::views::transform(beluga::make_from_state<Particle>)` will transform each state into a weighted particle, as defined by `using Particle = std::tuple<double, beluga::Weight>;`.
 * `ranges::views::take_exactly(tutorial_params.number_of_particles)` defines the number of particles to take, using the `parameters.number_of_particles`.
 * `ranges::to<std::vector>` convert the range to a `std::vector<double>`.
 
@@ -297,12 +297,7 @@ particles |= beluga::actions::propagate(std::execution::seq, motion_model);
 ```
 
 :::{note}
-The range $x'_t$ represent the posterior $bel'(x'_t)$ before incorporating the measurement $z_t$. This posterior or particle set distribution
-does not match the updated belief $bel(x_t)$ explain in [key concepts](../concepts/key-concepts.md).
-:::
-
-:::{hint}
-The effect of the motion model is to increase the space occupied by the particles.
+The range $x'_t$ represent the proposal distribution $q(x_t|x_{t-1})$ explain in [key concepts](../concepts/key-concepts.md).
 :::
 
 ### 1.6 Update
@@ -404,7 +399,7 @@ Measurement update step doesn't affect the spatial distribution of the particle 
 
 ### 1.6.2 Resample
 
-As explained in the [key concepts](../concepts/key-concepts.md), the update step is completed by performing a **resampling process**, which consist of drawing a new set of particles from the current set, with replacement, using importance weights as unnormalized probabilities. The result of this is the range of particles $x_t$:
+As explained in the [key concepts](../concepts/key-concepts.md), the update step is completed by performing a **resampling process**, which consist of drawing a new set of particles from the current set, with replacement, using importance weights as the unnormalized probabilities of a multinomial distribution. The result of this is the range of particles $x_t$:
 
 ```cpp
 particles |= beluga::views::sample |                                        //
