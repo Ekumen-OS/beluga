@@ -433,7 +433,42 @@ const auto estimation = beluga::estimate(beluga::views::states(particles), belug
 
 ## 2 Compile and run the code
 
-TODO: Add the command to compile using gcc.
+To compile and run the code, follow these steps:
+
+1. Create a `CMakeLists.txt` file in the same directory as `main.cpp` and copy the following content into it:
+
+    ```cmake
+    cmake_minimum_required(VERSION 3.16)
+
+    project(beluga_tutorial)
+
+    find_package(beluga REQUIRED)
+    add_executable(${PROJECT_NAME} src/main.cpp)
+    target_link_libraries(${PROJECT_NAME} beluga::beluga)
+
+    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib/${PROJECT_NAME})
+    ```
+
+2. Create a `/build` directory and run the following commands:
+
+    ```bash
+    mkdir build
+    cd build
+    cmake ..
+    make
+    ```
+
+    :::{warning}
+    If the `cmake ..` command fails, you may need to source the path where Beluga is installed.
+    :::
+
+    The executable named `beluga_tutorial` will be generated in the `/build` directory.
+
+3. To run the code, execute:
+
+    ```bash
+    ./beluga_tutorial
+    ```
 
 ## Conclusion
 
