@@ -16,9 +16,7 @@
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
 // standard library
-#include <algorithm>
 #include <numeric>
-#include <tuple>
 
 // external
 #include <beluga/views/elements.hpp>
@@ -261,8 +259,8 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses) 
 /// \return A vector of tuples, containing the weight, mean and covariance of each cluster, in no particular order.
 template <class Range, class Weights, class Clusters>
 [[nodiscard]] auto estimate_clusters(Range&& states, Weights&& weights, Clusters&& clusters) {
-  static constexpr auto weight = [](const auto& t) { return std::get<1>(t); };
-  static constexpr auto cluster = [](const auto& t) { return std::get<2>(t); };
+  static constexpr auto get_weight = [](const auto& t) { return std::get<1>(t); };
+  static constexpr auto get_cluster = [](const auto& t) { return std::get<2>(t); };
 
   auto particles = ranges::views::zip(states, weights, clusters);
 
@@ -275,7 +273,7 @@ template <class Range, class Weights, class Clusters>
 
   for (const auto id : cluster_ids) {
     auto filtered_particles =
-        particles | ranges::views::cache1 | ranges::views::filter([id](const auto& p) { return cluster(p) == id; });
+        particles | ranges::views::cache1 | ranges::views::filter([id](const auto& p) { return get_cluster(p) == id; });
 
     const auto particle_count = ranges::distance(filtered_particles);
     if (particle_count < 2) {
@@ -283,7 +281,7 @@ template <class Range, class Weights, class Clusters>
       continue;
     }
 
-    const auto total_weight = ranges::accumulate(filtered_particles, 0.0, std::plus{}, weight);
+    const auto total_weight = ranges::accumulate(filtered_particles, 0.0, std::plus{}, get_weight);
     auto filtered_states = filtered_particles | beluga::views::elements<0>;
     auto filtered_weights = filtered_particles | beluga::views::elements<1>;
     const auto [mean, covariance] = estimate(filtered_states, filtered_weights);

@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_ESTIMATION_CLUSTER_BASED_ESTIMATOR_HPP
-#define BELUGA_ESTIMATION_CLUSTER_BASED_ESTIMATOR_HPP
+#ifndef BELUGA_ALGORITHM_CLUSTER_BASED_ESTIMATOR_HPP
+#define BELUGA_ALGORITHM_CLUSTER_BASED_ESTIMATOR_HPP
 
 // standard library
-#include <algorithm>
-#include <initializer_list>
-#include <numeric>
+#include <functional>
 #include <optional>
 #include <queue>
-#include <tuple>
 #include <unordered_map>
-#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -34,6 +30,7 @@
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/cache1.hpp>
 #include <range/v3/view/filter.hpp>
+#include <range/v3/view/map.hpp>
 #include <range/v3/view/zip.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/types.hpp>
@@ -45,181 +42,164 @@
 
 /**
  * \file
- * \brief Implementation of a cluster-base estimator mixin.
+ * \brief Implementation of a cluster-based estimation algorithm.
  */
 
 namespace beluga {
 
-/// \brief A struct that holds the data of a single cell in the grid.
-struct GridCellData {
-  double weight{0.0};                         ///< average weight of the cell
-  std::size_t num_particles{0};               ///< number of particles in the cell
-  Sophus::SE2d representative_pose_in_world;  ///< state of a particle that is within the cell
-  std::optional<std::size_t> cluster_id;      ///< cluster id of the cell
+/// Create a priority queue from a map using a specified projection.
+/**
+ * This function template constructs a priority queue where the elements are
+ * ordered by a priority value derived from the map's values. The projection
+ * function is applied to each map value to determine its priority.
+ *
+ * \tparam Map The type of the associative container.
+ * \tparam Proj The type of the projection function.
+ * \param map The map containing the data to be inserted into the priority queue.
+ * \param proj The projection function used to compute the priority of each element.
+ * \return A priority queue where elements are ordered by the priority computed
+ *         from the map's values using the projection function.
+ */
+template <class Map, class Proj>
+[[nodiscard]] auto make_priority_queue(const Map& map, Proj&& proj) {
+  struct KeyWithPriority {
+    double priority;  // priority value used to order the queue (higher value first).
+    std::size_t key;  // hash of the cell in the grid cell data map.
+
+    bool operator<(const KeyWithPriority& other) const {
+      return priority < other.priority;  // sort in decreasing priority order
+    }
+  };
+
+  const auto make_from_pair = [proj = std::forward<Proj>(proj)](const auto& pair) {
+    return KeyWithPriority{std::invoke(proj, pair.second), pair.first};
+  };
+
+  const auto range = map |                                       //
+                     ranges::views::transform(make_from_pair) |  //
+                     ranges::views::common;
+
+  return std::priority_queue<KeyWithPriority>(range.begin(), range.end());
+}
+
+/// Calculates the threshold value at a specified percentile from a range.
+/**
+ * Find the value that is greater than the given percentage of the numbers in a range.
+ *
+ * \tparam Range The type of the input range containing the values.
+ * \param range The input range of values from which to calculate the percentile threshold.
+ * \param percentile The percentile (between 0 and 1) to calculate the threshold for.
+ * \return The value at the specified percentile in the sorted range.
+ */
+template <class Range>
+[[nodiscard]] auto calculate_percentile_threshold(Range&& range, double percentile) {
+  auto values = range | ranges::to<std::vector> | ranges::actions::sort;
+  return values[static_cast<std::size_t>(static_cast<double>(values.size()) * percentile)];
+}
+
+struct ParticleClusterizerImpl {
+  /// A struct that holds the data of a single cell for the clusterization algorithm.
+  template <class State>
+  struct Cell {
+    State representative_state;             ///< state of a particle that is within the cell
+    double weight{0.0};                     ///< average weight of the cell
+    std::size_t num_particles{0};           ///< number of particles in the cell
+    std::optional<std::size_t> cluster_id;  ///< cluster id of the cell
+  };
+
+  /// A map that holds the sparse data about the particles grouped in cells.
+  template <class State>
+  using Map = std::unordered_map<std::size_t, Cell<State>>;
+
+  template <class States, class Weights, class Hashes>
+  [[nodiscard]] static auto make_cluster_map(States&& states, Weights&& weights, Hashes&& hashes) {
+    using State = ranges::range_value_t<States>;
+    Map<State> map;
+
+    // preallocate memory with a very rough estimation of the number of grid_cells we might end up with
+    map.reserve(states.size() / 5);
+
+    // calculate the accumulated cell weight and save a single representative state for each cell
+    for (const auto& [state, weight, hash] : ranges::views::zip(states, weights, hashes)) {
+      auto [it, inserted] = map.try_emplace(hash, Cell<State>{});
+      auto& [_, entry] = *it;
+      entry.weight += weight;
+      entry.num_particles++;
+      if (inserted) {
+        entry.representative_state = state;
+      }
+    }
+
+    return map;
+  }
+
+  template <class State>
+  static void normalize_and_cap_weights(Map<State>& map, double percentile) {
+    auto entries = ranges::views::values(map);
+
+    // normalize the accumulated weight by the number of particles in each cell
+    // to avoid biasing the clustering algorithm towards cells that randomly end up
+    // with more particles than others.
+    for (auto& entry : entries) {
+      assert(entry.num_particles > 0);
+      entry.weight /= static_cast<double>(entry.num_particles);
+    }
+
+    const double max_weight =
+        calculate_percentile_threshold(ranges::views::transform(entries, &Cell<State>::weight), percentile);
+
+    for (auto& entry : entries) {
+      entry.weight = std::min(entry.weight, max_weight);
+    }
+  }
+
+  template <class State, class NeighborsFunction>
+  static void assign_clusters(Map<State>& map, NeighborsFunction&& neighbors_function) {
+    auto queue = make_priority_queue(map, &Cell<State>::weight);
+    const auto max_priority = queue.top().priority;
+
+    std::size_t next_cluster_id = 0;
+
+    while (!queue.empty()) {
+      const auto hash = queue.top().key;
+      queue.pop();
+
+      // any hash that comes out of the queue is known to exist in the cell data map
+      auto& grid_cell = map[hash];
+
+      // if there's no cluster id assigned to the cell, assign a new one
+      if (!grid_cell.cluster_id.has_value()) {
+        grid_cell.cluster_id = next_cluster_id++;
+      }
+
+      // process the neighbors of the cell; if they don't have a cluster id already assigned
+      // then assign them one and add them to the queue with an inflated priority
+      // to ensure they get processed ASAP before moving on to other local peaks.
+      // Notice that with this algorithm each cell will go through the priority queue at most twice.
+
+      const auto is_valid_neighbor = [&](const auto& neighbor_hash) {
+        auto it = map.find(neighbor_hash);
+        return (
+            (it != map.end()) &&                       // is within the map
+            (!it->second.cluster_id.has_value()) &&    // AND not yet mapped to a cluster
+            (it->second.weight <= grid_cell.weight));  // AND has lower weight than the current cell
+      };
+
+      for (const std::size_t neighbor_hash : neighbors_function(grid_cell.representative_state) |  //
+                                                 ranges::views::cache1 |                           //
+                                                 ranges::views::filter(is_valid_neighbor)) {
+        auto& neighbor = map[neighbor_hash];
+        neighbor.cluster_id = grid_cell.cluster_id;
+        queue.push({max_priority + neighbor.weight, neighbor_hash});  // reintroduce with inflated priority
+      }
+    }
+  }
 };
 
-/// \brief A map that holds the sparse data about the particles grouped in cells. Used by the clusterization algorithm.
-using GridCellDataMap2D = std::unordered_map<std::size_t, GridCellData>;
-
-/// \brief Populate the grid cell data map with the data from the particles and their weights.
-/// \tparam GridCellDataMapType Type of the grid cell data map.
-/// \tparam Range Type of the states range.
-/// \tparam Weights Type of the weights range.
-/// \tparam Hashes Type of the hashes range.
-/// \param states Range containing the states of the particles.
-/// \param weights Range containing the weights of the particles.
-/// \param hashes Range containing the hashes of the particles.
-/// \return New instance of the grid cell data map populated with the information from the states.
-template <class GridCellDataMapType, class Range, class Weights, class Hashes>
-[[nodiscard]] auto populate_grid_cell_data_from_particles(Range&& states, Weights&& weights, const Hashes& hashes) {
-  GridCellDataMapType grid_cell_data;
-
-  // preallocate memory with a very rough estimation of the number of grid_cells we might end up with
-  grid_cell_data.reserve(states.size() / 5);
-
-  // calculate the accumulated cell weight and save a single representative_pose_in_world for each cell
-  for (const auto& [state, weight, hash] : ranges::views::zip(states, weights, hashes)) {
-    auto [it, inserted] = grid_cell_data.try_emplace(hash, GridCellData{});
-    it->second.weight += weight;
-    it->second.num_particles++;
-    if (inserted) {
-      it->second.representative_pose_in_world = state;
-    }
-  }
-
-  // normalize the accumulated weight by the number of particles in each cell
-  // to avoid biasing the clustering algorithm towards cells that randomly end up
-  // with more particles than others.
-  for (auto& [hash, entry] : grid_cell_data) {
-    entry.weight /= static_cast<double>(entry.num_particles);  // num_particles is guaranteed to be > 0
-  }
-
-  return grid_cell_data;
-}
-
-/// \brief Calculate the weight threshold that corresponds to a given percentile of the weights.
-/// \tparam GridCellDataMapType Type of the grid cell data map.
-/// \param grid_cell_data The grid cell data map.
-/// \param threshold The percentile of the weights to calculate the threshold for (range: 0.0 to 1.0)
-/// \return Threshold value that corresponds to the given percentile of the weights.
-template <class GridCellDataMapType>
-[[nodiscard]] auto calculate_percentile_weight_threshold(GridCellDataMapType&& grid_cell_data, double threshold) {
-  const auto extract_weight_f = [](const auto& grid_cell) { return grid_cell.second.weight; };
-  auto weights = grid_cell_data | ranges::views::transform(extract_weight_f) | ranges::to<std::vector<double>>() |
-                 ranges::actions::sort;
-  return weights[static_cast<std::size_t>(static_cast<double>(weights.size()) * threshold)];
-}
-
-/// \brief Cap the weight of each cell in the grid cell data map to a given value.
-/// \tparam GridCellDataMapType Type of the grid cell data map.
-/// \param grid_cell_data The grid cell data map.
-/// \param weight_cap The maximum weight value to be assigned to each cell.
-template <class GridCellDataMapType>
-void cap_grid_cell_data_weights(GridCellDataMapType&& grid_cell_data, double weight_cap) {
-  for (auto& [hash, entry] : grid_cell_data) {
-    const auto capped_weight = std::min(entry.weight, weight_cap);
-    entry.weight = capped_weight;
-  }
-}
-
-/// \brief Creates the priority queue used by the clustering information from the grid cell data map.
-/// \tparam GridCellDataMapType Type of the grid cell data map.
-/// \param grid_cell_data The grid cell data map.
-/// \return A priority queue containing the information from the grid cell data map.
-template <class GridCellDataMapType>
-[[nodiscard]] auto populate_priority_queue(GridCellDataMapType&& grid_cell_data) {
-  struct PriorityQueueItem {
-    double priority;   // priority value used to order the queue (higher value first).
-    std::size_t hash;  // hash of the cell in the grid cell data map.
-  };
-
-  struct PriorityQueueItemCompare {
-    constexpr bool operator()(const PriorityQueueItem& lhs, const PriorityQueueItem& rhs) const {
-      return lhs.priority < rhs.priority;  // sort in decreasing priority order
-    }
-  };
-
-  const auto cell_data_to_queue_item = [](const auto& grid_cell) {
-    return PriorityQueueItem{grid_cell.second.weight, grid_cell.first};
-  };
-
-  auto queue_container = grid_cell_data |                                     //
-                         ranges::views::transform(cell_data_to_queue_item) |  //
-                         ranges::to<std::vector<PriorityQueueItem>>();        //
-  return std::priority_queue<PriorityQueueItem, std::vector<PriorityQueueItem>, PriorityQueueItemCompare>(
-      PriorityQueueItemCompare{}, std::move(queue_container));
-}
-
-/// \brief Function that runs the clustering algorithm and assigns a cluster id to each cell in the grid cell data map.
-/// \tparam GridCellDataMapType Type of the grid cell data map.
-/// \tparam Hasher Type of the hash function used to convert states into hashes.
-/// \tparam Neighbors Type of the range containing the neighbors of a cell.
-/// \param grid_cell_data The grid cell data map.
-/// \param spatial_hash_function_ The hash object instance.
-/// \param neighbors Range containing the neighbors of a cell.
-/// \param weight_cap The maximum weight value to be assigned to each cell.
-template <class GridCellDataMapType, class Hasher, class Neighbors>
-void map_cells_to_clusters(
-    GridCellDataMapType&& grid_cell_data,
-    Hasher&& spatial_hash_function_,
-    Neighbors&& neighbors,
-    double weight_cap) {
-  auto grid_cell_queue = populate_priority_queue(grid_cell_data);
-
-  std::size_t next_cluster_id = 0;
-
-  while (!grid_cell_queue.empty()) {
-    const auto grid_cell_hash = grid_cell_queue.top().hash;
-    grid_cell_queue.pop();
-
-    // any hash that comes out of the queue is known to exist in the cell data map
-    auto& grid_cell = grid_cell_data[grid_cell_hash];
-    const auto& grid_cell_weight = grid_cell.weight;
-    const auto& representative_pose_in_world = grid_cell.representative_pose_in_world;
-
-    // if there's no cluster id assigned to the cell, assign it a new one
-    if (!grid_cell.cluster_id.has_value()) {
-      grid_cell.cluster_id = next_cluster_id++;
-    }
-
-    // process the neighbors of the cell; if they don't have a cluster id already assigned
-    // then assign them one and add them to the queue with an inflated priority
-    // to ensure they get processed ASAP before moving on to other local peaks.
-    // Notice that with this algorithm each cell will go through the priority queue at most twice.
-
-    const auto get_neighbor_hash = [&](const auto& neighbor_pose_in_representative) {
-      return spatial_hash_function_(representative_pose_in_world * neighbor_pose_in_representative);
-    };
-
-    const auto filter_invalid_neighbors = [&](const auto& neighbor_hash) {
-      auto it = grid_cell_data.find(neighbor_hash);
-      return (
-          (it != grid_cell_data.end()) &&            // is within the map
-          (!it->second.cluster_id.has_value()) &&    // AND not yet mapped to a cluster
-          (it->second.weight <= grid_cell_weight));  // AND has lower weight than the current cell
-    };
-
-    auto valid_neighbor_hashes_view =                     //
-        neighbors |                                       //
-        ranges::views::transform(get_neighbor_hash) |     //
-        ranges::views::cache1 |                           //
-        ranges::views::filter(filter_invalid_neighbors);  //
-
-    for (const auto& neighbor_hash : valid_neighbor_hashes_view) {
-      auto& neighbor = grid_cell_data[neighbor_hash];
-      neighbor.cluster_id = grid_cell.cluster_id;
-      const auto inflated_priority =
-          weight_cap + neighbor.weight;  // since weights are capped at weight_cap, this gives us a value that is
-                                         // guaranteed to be higher than any other weight from a local maximum.
-      grid_cell_queue.push({inflated_priority, neighbor_hash});  // reintroduce with inflated priority
-    }
-  }
-}
-
-/// Parameters used to construct a ClusterBasedEstimator instance.
-struct ClusterBasedStateEstimatorParam {
+/// Parameters used to construct a ParticleClusterizer instance.
+struct ParticleClusterizerParam {
   double spatial_hash_resolution = 0.20;   ///< clustering algorithm spatial resolution
-  double angular_hash_hesolution = 0.524;  ///< clustering algorithm angular resolution
+  double angular_hash_resolution = 0.524;  ///< clustering algorithm angular resolution
 
   /// Cluster weight cap threshold.
   /**
@@ -234,73 +214,58 @@ struct ClusterBasedStateEstimatorParam {
   double weight_cap_percentile = 0.90;
 };
 
-/// Primary template for a cluster-based estimation algorithm.
-/**
- * Particles are grouped into clusters around local maxima, and the state mean and covariance
- * of the cluster with the highest total weight is returned.
- *
- * This class implements the EstimationInterface interface
- * and satisfies \ref StateEstimatorPage.
- */
-class ClusterBasedStateEstimator {
+class ParticleClusterizer {
  public:
-  using param_type = ClusterBasedStateEstimatorParam;  ///< Type of the parameters used to construct the estimator.
+  explicit ParticleClusterizer(const ParticleClusterizerParam& parameters) : parameters_{parameters} {}
 
-  /// Constructs a ClusterBasedStateEstimator instance.
-  /**
-   * \param parameters Algorithm parameters.
-   */
-  explicit ClusterBasedStateEstimator(const param_type& parameters) : parameters_{parameters} {}
+  [[nodiscard]] auto neighbors(const Sophus::SE2d& pose) const {
+    return adjacent_grid_cells_ |  //
+           ranges::views::transform([&pose](const Sophus::SE2d& neighbor_pose) { return pose * neighbor_pose; }) |
+           ranges::views::transform(spatial_hash_function_);
+  }
 
-  /// Estimate the weighted mean and covariance of largest (largest aggregated weight) cluster within the particle set.
-  /**
-   * \tparam Particles The type of the states range.
-   * \param particles The particle set.
-   * \return The weighted mean state and covariance of the largest cluster.
-   */
   template <class Particles>
-  [[nodiscard]] auto estimate(Particles&& particles) const;
+  [[nodiscard]] auto operator()(Particles&& particles) {
+    auto states = beluga::views::states(particles);
+    auto weights = beluga::views::weights(particles);
+    auto hashes = states | ranges::views::transform(spatial_hash_function_) | ranges::to<std::vector>;
+
+    auto map = ParticleClusterizerImpl::make_cluster_map(states, weights, hashes);
+    ParticleClusterizerImpl::normalize_and_cap_weights(map, parameters_.weight_cap_percentile);
+    ParticleClusterizerImpl::assign_clusters(map, [this](const auto& state) { return neighbors(state); });
+
+    return hashes |  //
+           ranges::views::transform([&map](std::size_t hash) { return map[hash].cluster_id.value(); }) |
+           ranges::to<std::vector>;
+  }
 
  private:
-  param_type parameters_;
+  ParticleClusterizerParam parameters_;
 
-  /// \brief spatial hash function used to group particles in cells
-  const beluga::spatial_hash<Sophus::SE2d> spatial_hash_function_{
+  beluga::spatial_hash<Sophus::SE2d> spatial_hash_function_{
       parameters_.spatial_hash_resolution,  // x
       parameters_.spatial_hash_resolution,  // y
-      parameters_.angular_hash_hesolution   // theta
+      parameters_.angular_hash_resolution   // theta
   };
 
-  /// \brief Adjacent grid cells used by the clustering algorithm.
-  const std::vector<Sophus::SE2d> adjacent_grid_cells_ = {
+  std::array<Sophus::SE2d, 6> adjacent_grid_cells_ = {
       Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{+parameters_.spatial_hash_resolution, 0.0}},
       Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{-parameters_.spatial_hash_resolution, 0.0}},
       Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{0.0, +parameters_.spatial_hash_resolution}},
       Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{0.0, -parameters_.spatial_hash_resolution}},
-      Sophus::SE2d{Sophus::SO2d{+parameters_.angular_hash_hesolution}, Sophus::Vector2d{0.0, 0.0}},
-      Sophus::SE2d{Sophus::SO2d{-parameters_.angular_hash_hesolution}, Sophus::Vector2d{0.0, 0.0}},
+      Sophus::SE2d{Sophus::SO2d{+parameters_.angular_hash_resolution}, Sophus::Vector2d{0.0, 0.0}},
+      Sophus::SE2d{Sophus::SO2d{-parameters_.angular_hash_resolution}, Sophus::Vector2d{0.0, 0.0}},
   };
 };
 
+/// Computes a cluster based estimate from a particle set.
+/**
+ * Particles are grouped into clusters around local maxima, and the state mean and covariance
+ * of the cluster with the highest total weight is returned.
+ */
 template <class Particles>
-auto ClusterBasedStateEstimator::estimate(Particles&& particles) const {
-  auto hashes = beluga::views::states(particles) | ranges::views::transform(spatial_hash_function_) |
-                ranges::to<std::vector<std::size_t>>();
-
-  auto grid_cell_data = populate_grid_cell_data_from_particles<GridCellDataMap2D>(
-      beluga::views::states(particles), beluga::views::weights(particles), hashes);
-
-  const auto weight_cap = calculate_percentile_weight_threshold(grid_cell_data, parameters_.weight_cap_percentile);
-
-  cap_grid_cell_data_weights(grid_cell_data, weight_cap);
-  map_cells_to_clusters(grid_cell_data, spatial_hash_function_, adjacent_grid_cells_, weight_cap);
-
-  const auto cluster_from_hash = [&grid_cell_data](const std::size_t hash) {
-    const auto& grid_cell = grid_cell_data[hash];
-    return grid_cell.cluster_id;
-  };
-
-  const auto clusters = hashes | ranges::views::transform(cluster_from_hash) | ranges::views::common;
+[[nodiscard]] auto cluster_based_estimate(Particles&& particles, ParticleClusterizerParam parameters = {}) {
+  const auto clusters = ParticleClusterizer{parameters}(particles);
 
   auto per_cluster_estimates =
       estimate_clusters(beluga::views::states(particles), beluga::views::weights(particles), clusters);
@@ -310,8 +275,8 @@ auto ClusterBasedStateEstimator::estimate(Particles&& particles) const {
     return beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
   }
 
-  const auto [_, mean, covariance] =
-      *ranges::max_element(per_cluster_estimates, std::less{}, [](const auto& t) { return std::get<0>(t); });
+  const auto get_weight = [](const auto& t) { return std::get<0>(t); };
+  const auto [_, mean, covariance] = *ranges::max_element(per_cluster_estimates, std::less{}, get_weight);
   return std::make_pair(mean, covariance);
 }
 

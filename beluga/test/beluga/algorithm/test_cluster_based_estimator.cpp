@@ -54,19 +54,18 @@ struct ClusterBasedEstimationDetailTesting : public ::testing::Test {
   [[nodiscard]] auto generate_test_grid_cell_data_map() const {
     constexpr auto kUpperLimit = 30.0;
 
-    GridCellDataMap2D map;
+    ParticleClusterizerImpl::Map<SE2d> map;
     for (double x = 0.0; x < kUpperLimit; x += 1.0) {
       const auto weight = x;
       const auto state = SE2d{SO2d{0.}, Vector2d{x, x}};
-      map.emplace(spatial_hash_function(state), GridCellData{weight, 0, state, std::nullopt});
+      map.emplace(spatial_hash_function(state), ParticleClusterizerImpl::Cell<SE2d>{state, weight, 0, std::nullopt});
     }
     return map;
   }
 
   [[nodiscard]] static auto
   make_particle_multicluster_dataset(double xmin, double xmax, double ymin, double ymax, double step) {
-    std::vector<SE2d> states;
-    std::vector<beluga::Weight> weights;
+    std::vector<std::pair<SE2d, beluga::Weight>> particles;
 
     const auto xwidth = xmax - xmin;
     const auto ywidth = ymax - ymin;
@@ -85,12 +84,11 @@ struct ClusterBasedEstimationDetailTesting : public ::testing::Test {
         // add a field of zeros around the peaks to ease predicting the mean and
         // covariance values of the highest peaks
         weight = std::max(0.0, weight - k / 2.0);
-        states.emplace_back(SO2d{0.}, Vector2d{x + xmin, y + ymin});
-        weights.emplace_back(weight);
+        particles.emplace_back(SE2d{SO2d{0.}, Vector2d{x + xmin, y + ymin}}, weight);
       }
     }
 
-    return std::make_tuple(states, weights);
+    return particles;
   }
 };
 
@@ -122,11 +120,18 @@ TEST_F(ClusterBasedEstimationDetailTesting, GridCellDataMapGenerationStep) {
   const auto s10 = SE2d{SO2d{2.0}, Vector2d{0.00, 0.00}};  // bin 2
   const auto s20 = SE2d{SO2d{2.0}, Vector2d{2.00, 0.00}};  // bin 3
 
-  const auto states = std::vector{s00, s01, s10, s20};
-  const auto weights = std::vector{1.5, 0.5, 1.0, 1.0};
+  const auto particles = std::vector<std::pair<SE2d, beluga::Weight>>{
+      std::make_pair(s00, 1.5),
+      std::make_pair(s01, 0.5),
+      std::make_pair(s10, 1.0),
+      std::make_pair(s20, 1.0),
+  };
 
-  auto hashes = precalculate_particle_hashes(states, spatial_hash_function);
-  auto test_data = populate_grid_cell_data_from_particles<GridCellDataMap2D>(states, weights, hashes);
+  auto states = beluga::views::states(particles);
+  auto weights = beluga::views::weights(particles);
+  auto hashes = states | ranges::views::transform(spatial_hash_function) | ranges::to<std::vector>;
+
+  auto test_data = ParticleClusterizerImpl::make_cluster_map(states, weights, hashes);
 
   const auto hash00 = spatial_hash_function(s00);
   const auto hash10 = spatial_hash_function(s10);
@@ -137,52 +142,26 @@ TEST_F(ClusterBasedEstimationDetailTesting, GridCellDataMapGenerationStep) {
   ASSERT_NE(test_data.find(hash10), test_data.end());
   ASSERT_NE(test_data.find(hash20), test_data.end());
 
-  EXPECT_EQ(test_data[hash00].weight, 1.0);  // this one is averaged between both particles
+  EXPECT_EQ(test_data[hash00].weight, 2.0);
   EXPECT_EQ(test_data[hash10].weight, 1.0);
   EXPECT_EQ(test_data[hash20].weight, 1.0);
 
-  ASSERT_THAT(test_data[hash00].representative_pose_in_world, SE2Near(s00.so2(), s00.translation(), kTolerance));
-  ASSERT_THAT(test_data[hash10].representative_pose_in_world, SE2Near(s10.so2(), s10.translation(), kTolerance));
-  ASSERT_THAT(test_data[hash20].representative_pose_in_world, SE2Near(s20.so2(), s20.translation(), kTolerance));
+  ASSERT_THAT(test_data[hash00].representative_state, SE2Near(s00.so2(), s00.translation(), kTolerance));
+  ASSERT_THAT(test_data[hash10].representative_state, SE2Near(s10.so2(), s10.translation(), kTolerance));
+  ASSERT_THAT(test_data[hash20].representative_state, SE2Near(s20.so2(), s20.translation(), kTolerance));
 
   ASSERT_FALSE(test_data[hash00].cluster_id.has_value());
   ASSERT_FALSE(test_data[hash10].cluster_id.has_value());
   ASSERT_FALSE(test_data[hash20].cluster_id.has_value());
 }
 
-TEST_F(ClusterBasedEstimationDetailTesting, WeightThresholdCalculationStep) {
-  auto map = generate_test_grid_cell_data_map();
-  const auto threshold = calculate_percentile_weight_threshold(map, 0.9);
-  EXPECT_DOUBLE_EQ(threshold, 27.0);
-}
-
-TEST_F(ClusterBasedEstimationDetailTesting, WeightCappingStep) {
+TEST_F(ClusterBasedEstimationDetailTesting, MakePriorityQueue) {
   // data preparation
-  auto original_map = generate_test_grid_cell_data_map();
-  const auto weight_cap = calculate_percentile_weight_threshold(original_map, 0.9);
+  auto data = generate_test_grid_cell_data_map();
 
   // test proper
-  auto tested_map = original_map;
-  cap_grid_cell_data_weights(tested_map, weight_cap);
-
-  for (const auto& [hash, grid_cell] : tested_map) {
-    const auto original_grid_cell = original_map[hash];
-    EXPECT_DOUBLE_EQ(grid_cell.weight, std::min(original_grid_cell.weight, weight_cap));
-  }
-}
-
-TEST_F(ClusterBasedEstimationDetailTesting, PriorityQueuePopulationStep) {
-  // data preparation
-  auto map = generate_test_grid_cell_data_map();
-  const auto weight_cap = calculate_percentile_weight_threshold(map, 0.9);
-  cap_grid_cell_data_weights(map, weight_cap);
-
-  // test proper
-  auto prio_queue = populate_priority_queue(map);
-  EXPECT_EQ(prio_queue.size(), map.size());
-
-  // the top element necessarily has the highest weight equal to the cap
-  EXPECT_DOUBLE_EQ(prio_queue.top().priority, weight_cap);
+  auto prio_queue = make_priority_queue(data, &ParticleClusterizerImpl::Cell<SE2d>::weight);
+  EXPECT_EQ(prio_queue.size(), data.size());
 
   // from there on the weights should be strictly decreasing
   auto prev_weight = prio_queue.top().priority;
@@ -207,29 +186,34 @@ TEST_F(ClusterBasedEstimationDetailTesting, MapGridCellsToClustersStep) {
     }
   }
 
-  GridCellDataMap2D map;
+  ParticleClusterizerImpl::Map<SE2d> map;
+
   for (const auto& [x, y, w] : coordinates) {
     const auto state = SE2d{SO2d{0.}, Vector2d{x, y}};
-    map.emplace(spatial_hash_function(state), GridCellData{w, 0, state, std::nullopt});
+    map.emplace(spatial_hash_function(state), ParticleClusterizerImpl::Cell<SE2d>{state, w, 0, std::nullopt});
   }
 
-  const auto weight_cap = calculate_percentile_weight_threshold(map, 0.9);
+  const auto neighbors = [&](const auto& state) {
+    static const auto kAdjacentGridCells = {
+        SE2d{SO2d{0.0}, Vector2d{+kSpatialHashResolution, 0.0}},
+        SE2d{SO2d{0.0}, Vector2d{-kSpatialHashResolution, 0.0}},
+        SE2d{SO2d{0.0}, Vector2d{0.0, +kSpatialHashResolution}},
+        SE2d{SO2d{0.0}, Vector2d{0.0, -kSpatialHashResolution}},
+    };
 
-  cap_grid_cell_data_weights(map, weight_cap);
-
-  const auto adjacent_grid_cells = {
-      SE2d{SO2d{0.0}, Vector2d{+kSpatialHashResolution, 0.0}},
-      SE2d{SO2d{0.0}, Vector2d{-kSpatialHashResolution, 0.0}},
-      SE2d{SO2d{0.0}, Vector2d{0.0, +kSpatialHashResolution}},
-      SE2d{SO2d{0.0}, Vector2d{0.0, -kSpatialHashResolution}},
+    return kAdjacentGridCells |  //
+           ranges::views::transform([&state](const Sophus::SE2d& neighbor_pose) { return state * neighbor_pose; }) |
+           ranges::views::transform(spatial_hash_function);
   };
 
   // test proper
 
   // only cells beyond the 10% weight percentile to avoid the messy border
   // between clusters beneath that threshold
-  const auto ten_percent_threshold = calculate_percentile_weight_threshold(map, 0.15);
-  map_cells_to_clusters(map, spatial_hash_function, adjacent_grid_cells, weight_cap);
+  const auto ten_percent_threshold = calculate_percentile_threshold(
+      map | ranges::views::values | ranges::views::transform(&ParticleClusterizerImpl::Cell<SE2d>::weight), 0.15);
+
+  ParticleClusterizerImpl::assign_clusters(map, neighbors);
 
   auto cells_above_minimum_threshold_view =
       coordinates | ranges::views::filter([&](const auto& c) { return std::get<2>(c) >= ten_percent_threshold; });
@@ -302,33 +286,17 @@ TEST_F(ClusterBasedEstimationDetailTesting, MapGridCellsToClustersStep) {
   EXPECT_EQ(full_field_unique_ids.size(), 4);
 }
 
-TEST_F(ClusterBasedEstimationDetailTesting, ClusterStatEstimationStep) {
+TEST_F(ClusterBasedEstimationDetailTesting, ClusterStateEstimationStep) {
   const double k_field_side = 36.0;
 
   // create a map with four independent peaks
-  auto [states, weights] = make_particle_multicluster_dataset(0.0, k_field_side, 0.0, k_field_side, 1.0);
+  auto particles = make_particle_multicluster_dataset(0.0, k_field_side, 0.0, k_field_side, 1.0);
 
-  const auto adjacent_grid_cells = {
-      SE2d{SO2d{0.0}, Vector2d{+kSpatialHashResolution, 0.0}},
-      SE2d{SO2d{0.0}, Vector2d{-kSpatialHashResolution, 0.0}},
-      SE2d{SO2d{0.0}, Vector2d{0.0, +kSpatialHashResolution}},
-      SE2d{SO2d{0.0}, Vector2d{0.0, -kSpatialHashResolution}},
-  };
+  const auto clusters =
+      ParticleClusterizer{ParticleClusterizerParam{kSpatialHashResolution, kAngularHashResolution, 0.9}}(particles);
 
-  auto hashes = precalculate_particle_hashes(states, spatial_hash_function);
-  auto grid_cell_data = populate_grid_cell_data_from_particles<GridCellDataMap2D>(states, weights, hashes);
-  const auto weight_cap = calculate_percentile_weight_threshold(grid_cell_data, 0.9);
-  cap_grid_cell_data_weights(grid_cell_data, weight_cap);
-  map_cells_to_clusters(grid_cell_data, spatial_hash_function, adjacent_grid_cells, weight_cap);
-
-  const auto cluster_from_hash = [&grid_cell_data](const std::size_t hash) {
-    const auto& grid_cell = grid_cell_data[hash];
-    return grid_cell.cluster_id;
-  };
-
-  const auto clusters = hashes | ranges::views::transform(cluster_from_hash) | ranges::views::common;
-
-  auto per_cluster_estimates = estimate_clusters(states, weights, clusters);
+  auto per_cluster_estimates =
+      estimate_clusters(beluga::views::states(particles), beluga::views::weights(particles), clusters);
 
   // check that the number of clusters is correct
   ASSERT_EQ(per_cluster_estimates.size(), 4);
@@ -345,33 +313,23 @@ TEST_F(ClusterBasedEstimationDetailTesting, ClusterStatEstimationStep) {
   EXPECT_THAT(std::get<1>(per_cluster_estimates[3]), SE2Near(SO2d{0.0}, Vector2d{9.0, 9.0}, kTolerance));
 }
 
-template <class Mixin>
-class MockMixin : public Mixin {
- public:
-  MOCK_METHOD(const std::vector<Sophus::SE2d>&, states, (), (const));
-  MOCK_METHOD(const std::vector<double>&, weights, (), (const));
-};
-
 TEST_F(ClusterBasedEstimationDetailTesting, HeaviestClusterSelectionTest) {
-  const auto [states, weights] = make_particle_multicluster_dataset(-2.0, +2.0, -2.0, +2.0, 0.025);
-
-  const auto uut = beluga::ClusterBasedStateEstimator{beluga::ClusterBasedStateEstimatorParam{}};
+  const auto particles = make_particle_multicluster_dataset(-2.0, +2.0, -2.0, +2.0, 0.025);
 
   // determine the expected values of the mean and covariance of the highest
   // weight cluster
   const auto max_peak_filter = [](const auto& s) { return s.translation().x() >= 0.0 && s.translation().y() >= 0.0; };
   const auto mask_filter = [](const auto& sample) { return std::get<1>(sample); };
 
-  auto max_peak_mask = states | ranges::views::transform(max_peak_filter);
-  auto max_peak_masked_states =
-      ranges::views::zip(states, max_peak_mask) | ranges::views::filter(mask_filter) | beluga::views::elements<0>;
-  auto max_peak_masked_weights =
-      ranges::views::zip(weights, max_peak_mask) | ranges::views::filter(mask_filter) | beluga::views::elements<0>;
+  auto max_peak_mask = beluga::views::states(particles) | ranges::views::transform(max_peak_filter);
+  auto max_peak_masked_states = ranges::views::zip(beluga::views::states(particles), max_peak_mask) |
+                                ranges::views::filter(mask_filter) | beluga::views::elements<0>;
+  auto max_peak_masked_weights = ranges::views::zip(beluga::views::weights(particles), max_peak_mask) |
+                                 ranges::views::filter(mask_filter) | beluga::views::elements<0>;
 
   const auto [expected_pose, expected_covariance] = beluga::estimate(max_peak_masked_states, max_peak_masked_weights);
 
-  auto particles = ranges::views::zip(states, weights) | ranges::to<std::vector>();
-  const auto [pose, covariance] = uut.estimate(particles);
+  const auto [pose, covariance] = beluga::cluster_based_estimate(particles);
 
   ASSERT_THAT(pose, SE2Near(expected_pose.so2(), expected_pose.translation(), kTolerance));
   ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), 0.001);
@@ -386,8 +344,6 @@ TEST_F(ClusterBasedEstimationDetailTesting, HeaviestClusterSelectionTest) {
 }
 
 TEST_F(ClusterBasedEstimationDetailTesting, NightmareDistributionTest) {
-  const auto uut = beluga::ClusterBasedStateEstimator{beluga::ClusterBasedStateEstimatorParam{}};
-
   // particles so far away that they are isolated and will therefore form four separate single
   // particle clusters
   const auto states = std::vector{
@@ -402,7 +358,7 @@ TEST_F(ClusterBasedEstimationDetailTesting, NightmareDistributionTest) {
   const auto [expected_pose, expected_covariance] = beluga::estimate(states, weights);
 
   auto particles = ranges::views::zip(states, weights) | ranges::to<std::vector>();
-  const auto [pose, covariance] = uut.estimate(particles);
+  const auto [pose, covariance] = beluga::cluster_based_estimate(particles);
 
   ASSERT_THAT(pose, SE2Near(expected_pose.so2(), expected_pose.translation(), kTolerance));
   ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), 0.001);
