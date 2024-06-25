@@ -132,6 +132,10 @@ struct multivariate_distribution_traits<T, std::enable_if_t<std::is_base_of_v<So
 
   /// Convert from vector to result representation.
   [[nodiscard]] static constexpr result_type from_vector(const vector_type& v) {
+    // Projecting a Gaussian through the exponential map is not exactly correct.
+    // Rotations in Lie groups don't have infinite support, making the term 'normal' distribution incorrect.
+    // This approach follows the SO2/SE2 method, facing similar issues in 3D.
+    // For small covariances, the resulting rotations in SO3 approximate a normal distribution.
     return Sophus::SO3<scalar_type>::exp(v);
   }
 };
@@ -160,6 +164,10 @@ struct multivariate_distribution_traits<T, std::enable_if_t<std::is_base_of_v<So
 
   /// Convert from vector to result representation.
   [[nodiscard]] static constexpr result_type from_vector(const vector_type& v) {
+    // Projecting a Gaussian through the exponential map is not exactly correct.
+    // Rotations in Lie groups don't have infinite support, making the term 'normal' distribution incorrect.
+    // This approach follows the SO2/SE2 method, facing similar issues in 3D.
+    // For small covariances, the resulting rotations in SO3 approximate a normal distribution.
     return result_type{Sophus::SO3<scalar_type>::exp(v.tail(3)), v.head(3)};
   }
 };
