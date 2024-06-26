@@ -15,6 +15,11 @@
 #ifndef BELUGA_ALGORITHM_ESTIMATION_HPP
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
+// standard library
+#include <numeric>
+
+// external
+#include <beluga/views/elements.hpp>
 #include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/access.hpp>
@@ -22,10 +27,12 @@
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/transform.hpp>
+
 #include <sophus/se2.hpp>
 #include <sophus/types.hpp>
 
-#include <numeric>
+// project
+#include <beluga/views.hpp>
 
 /**
  * \file
@@ -128,6 +135,7 @@ template <
     typename = std::enable_if_t<std::is_same_v<Pose, typename Sophus::SE2<Scalar>>>>
 std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, Weights&& weights) {
   auto translation_view = poses | ranges::views::transform([](const auto& pose) { return pose.translation(); });
+  auto poses_view = poses | ranges::views::common;
   auto weights_view = weights | ranges::views::common;
   const auto weights_sum = std::accumulate(weights_view.begin(), weights_view.end(), 0.0);
   auto normalized_weights_view =
@@ -144,8 +152,8 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, 
   // This is expected and the value will be renormalized after having used the non-normal result to estimate the
   // orientation autocovariance.
   const Sophus::Vector4<Scalar> mean_pose_vector = std::transform_reduce(
-      poses.begin(), poses.end(), normalized_weights_view.begin(), Sophus::Vector4<Scalar>::Zero().eval(), std::plus{},
-      pose_to_weighted_eigen_vector);
+      poses_view.begin(), poses_view.end(), normalized_weights_view.begin(), Sophus::Vector4<Scalar>::Zero().eval(),
+      std::plus{}, pose_to_weighted_eigen_vector);
 
   // Calculate the weighted pose estimation
   Sophus::SE2<Scalar> estimated_pose = Eigen::Map<const Sophus::SE2<Scalar>>{mean_pose_vector.data()};
@@ -238,6 +246,49 @@ template <
     typename = std::enable_if_t<std::is_same_v<Pose, typename Sophus::SE2<Scalar>>>>
 std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses) {
   return beluga::estimate(poses, ranges::views::repeat_n(1.0, static_cast<std::ptrdiff_t>(poses.size())));
+}
+
+/// \brief For each cluster, estimate the mean and covariance of the states that belong to it.
+/// \tparam GridCellDataMapType Type of the grid cell data map.
+/// \tparam Range Range type of the states.
+/// \tparam Weights Range type of the weights.
+/// \tparam Hashes Range type of the hashes.
+/// \param states Range containing the states of the particles.
+/// \param weights Range containing the weights of the particles.
+/// \param clusters cluster ids of the particles.
+/// \return A vector of tuples, containing the weight, mean and covariance of each cluster, in no particular order.
+template <class Range, class Weights, class Clusters>
+[[nodiscard]] auto estimate_clusters(Range&& states, Weights&& weights, Clusters&& clusters) {
+  static constexpr auto get_weight = [](const auto& t) { return std::get<1>(t); };
+  static constexpr auto get_cluster = [](const auto& t) { return std::get<2>(t); };
+
+  auto particles = ranges::views::zip(states, weights, clusters);
+
+  const auto cluster_ids = clusters | ranges::to<std::unordered_set>;
+
+  // for each cluster found, estimate the mean and covariance of the states that belong to it
+  using StateType = std::decay_t<decltype(std::get<0>(beluga::estimate(states, weights)))>;
+  using CovarianceType = std::decay_t<decltype(std::get<1>(beluga::estimate(states, weights)))>;
+  std::vector<std::tuple<double, StateType, CovarianceType>> cluster_estimates;
+
+  for (const auto id : cluster_ids) {
+    auto filtered_particles =
+        particles | ranges::views::cache1 | ranges::views::filter([id](const auto& p) { return get_cluster(p) == id; });
+
+    const auto particle_count = ranges::distance(filtered_particles);
+    if (particle_count < 2) {
+      // if there's only one sample in the cluster we can't estimate the covariance
+      continue;
+    }
+
+    const auto total_weight = ranges::accumulate(filtered_particles, 0.0, std::plus{}, get_weight);
+    auto filtered_states = filtered_particles | beluga::views::elements<0>;
+    auto filtered_weights = filtered_particles | beluga::views::elements<1>;
+    const auto [mean, covariance] = estimate(filtered_states, filtered_weights);
+    cluster_estimates.emplace_back(total_weight, std::move(mean), std::move(covariance));
+  }
+
+  return cluster_estimates;
 }
 
 }  // namespace beluga
