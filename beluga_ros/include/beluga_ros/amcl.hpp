@@ -92,7 +92,7 @@ class Amcl {
 
   /// Motion model variant type for runtime selection support.
   using motion_model_variant = std::variant<
-      beluga::DifferentialDriveModel,     //
+      beluga::DifferentialDriveModel2d,   //
       beluga::OmnidirectionalDriveModel,  //
       beluga::StationaryModel>;
 

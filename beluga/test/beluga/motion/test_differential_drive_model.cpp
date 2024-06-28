@@ -18,6 +18,7 @@
 #include <cmath>
 #include <functional>
 #include <random>
+#include <sophus/se3.hpp>
 #include <tuple>
 #include <utility>
 
@@ -30,6 +31,7 @@
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_exactly.hpp>
 
+#include "beluga/3d_embedding.hpp"
 #include "beluga/motion/differential_drive_model.hpp"
 #include "beluga/testing/sophus_matchers.hpp"
 
@@ -42,7 +44,7 @@ using Sophus::SO2d;
 
 using beluga::testing::SE2Near;
 
-using UUT = beluga::DifferentialDriveModel;
+using UUT = beluga::DifferentialDriveModel2d;
 
 class DifferentialDriveModelTest : public ::testing::Test {
  protected:
@@ -149,6 +151,29 @@ TEST(DifferentialDriveModelSamples, RotateFirstQuadrant) {
   auto view = ranges::views::generate([&]() {
                 const auto pose = SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}};
                 return state_sampling_function(pose, generator).so2().log();
+              }) |
+              ranges::views::take_exactly(100'000) | ranges::views::common;
+  const auto [mean, stddev] = get_statistics(view);
+  ASSERT_NEAR(mean, initial_angle + motion_angle, tolerance);
+  ASSERT_NEAR(stddev, std::sqrt(alpha * motion_angle * motion_angle), tolerance);
+}
+
+TEST(DifferentialDriveModel3DSamples, RotateFirstQuadrant) {
+  // Demonstrate 3D planar diff drive model.
+  using beluga::To3d;
+  const double tolerance = 0.01;
+  const double alpha = 0.2;
+  const double initial_angle = Constants::pi() / 6;
+  const double motion_angle = Constants::pi() / 4;
+  const auto motion_model = beluga::DifferentialDriveModel<Sophus::SE3d>{
+      beluga::DifferentialDriveModelParam{alpha, 0.0, 0.0, 0.0}};  // Rotation variance
+  auto generator = std::mt19937{std::random_device()()};
+  const auto control_action =
+      std::make_tuple(To3d(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}}), To3d(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}));
+  const auto state_sampling_function = motion_model(control_action);
+  auto view = ranges::views::generate([&]() {
+                const auto pose = To3d(SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}});
+                return state_sampling_function(pose, generator).angleZ();
               }) |
               ranges::views::take_exactly(100'000) | ranges::views::common;
   const auto [mean, stddev] = get_statistics(view);
