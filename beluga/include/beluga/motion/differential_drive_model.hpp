@@ -15,15 +15,16 @@
 #ifndef BELUGA_MOTION_DIFFERENTIAL_DRIVE_MODEL_HPP
 #define BELUGA_MOTION_DIFFERENTIAL_DRIVE_MODEL_HPP
 
-#include <optional>
 #include <random>
+#include <sophus/se3.hpp>
 #include <tuple>
-#include <type_traits>
 
 #include <beluga/type_traits/tuple_traits.hpp>
 
+#include <beluga/3d_embedding.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
+#include <type_traits>
 
 /**
  * \file
@@ -68,16 +69,25 @@ struct DifferentialDriveModelParam {
 
 /// Sampled odometry model for a differential drive.
 /**
+ * Supports 2D and (flattened) 3D state types.
  * This class satisfies \ref MotionModelPage.
  *
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 5.4.2.
+ *
+ * \tparam StateType Type for particle's state. Either Sophus::SE2d or Sophus::SE3d.
  */
+template <class StateType = Sophus::SE2d>
 class DifferentialDriveModel {
+  static_assert(
+      std::is_same_v<StateType, Sophus::SE2d> or std::is_same_v<StateType, Sophus::SE3d>,
+      "Differential model only supports SE2 and SE3 state types.");
+
  public:
+  /// 2D or flattened 3D pose as motion model state (to match that of the particles).
+  using state_type = StateType;
+
   /// Current and previous odometry estimates as motion model control action.
-  using control_type = std::tuple<Sophus::SE2d, Sophus::SE2d>;
-  /// 2D pose as motion model state (to match that of the particles).
-  using state_type = Sophus::SE2d;
+  using control_type = std::tuple<state_type, state_type>;
 
   /// Parameter type that the constructor uses to configure the motion model.
   using param_type = DifferentialDriveModelParam;
@@ -96,9 +106,27 @@ class DifferentialDriveModel {
    * \return a callable satisfying \ref StateSamplingFunctionPage.
    */
   template <class Control, typename = common_tuple_type_t<Control, control_type>>
-  [[nodiscard]] auto operator()(Control&& action) const {
+  [[nodiscard]] auto operator()(const Control& action) const {
     const auto& [pose, previous_pose] = action;
+    if constexpr (std::is_same_v<state_type, Sophus::SE2d>) {
+      return sampling_fn_2d(pose, previous_pose);
+    } else {
+      return sampling_fn_3d(pose, previous_pose);
+    }
+  }
 
+ private:
+  using control_type_2d = std::tuple<Sophus::SE2d, Sophus::SE2d>;
+  using control_type_3d = std::tuple<Sophus::SE3d, Sophus::SE3d>;
+
+  [[nodiscard]] auto sampling_fn_3d(const Sophus::SE3d& pose, const Sophus::SE3d& previous_pose) const {
+    const auto current_pose_2d = To2d(pose);
+    const auto previous_pose_pose_2d = To2d(previous_pose);
+    const auto two_d_sampling_fn = sampling_fn_2d(current_pose_2d, previous_pose_pose_2d);
+    return [=](const state_type& state, auto& gen) { return To3d(two_d_sampling_fn(To2d(state), gen)); };
+  }
+
+  [[nodiscard]] auto sampling_fn_2d(const Sophus::SE2d& pose, const Sophus::SE2d& previous_pose) const {
     const auto translation = pose.translation() - previous_pose.translation();
     const double distance = translation.norm();
     const double distance_variance = distance * distance;
@@ -125,7 +153,7 @@ class DifferentialDriveModel {
                                    params_.rotation_noise_from_rotation * rotation_variance(second_rotation) +
                                    params_.rotation_noise_from_translation * distance_variance)};
 
-    return [=](const state_type& state, auto& gen) {
+    return [=](const auto& state, auto& gen) {
       static thread_local auto distribution = std::normal_distribution<double>{};
       const auto first_rotation = Sophus::SO2d{distribution(gen, first_rotation_params)};
       const auto translation = Eigen::Vector2d{distribution(gen, translation_params), 0.0};
@@ -134,8 +162,6 @@ class DifferentialDriveModel {
              Sophus::SE2d{second_rotation, translation};
     };
   }
-
- private:
   param_type params_;
 
   static double rotation_variance(const Sophus::SO2d& rotation) {
@@ -146,6 +172,12 @@ class DifferentialDriveModel {
     return delta * delta;
   }
 };
+
+/// Alias for a 2D differential drive model, for convinience.
+using DifferentialDriveModel2d = DifferentialDriveModel<Sophus::SE2d>;
+
+/// Alias for a 3D differential drive model, for convinience.
+using DifferentialDriveModel3d = DifferentialDriveModel<Sophus::SE3d>;
 
 }  // namespace beluga
 

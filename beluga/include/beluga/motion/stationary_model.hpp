@@ -15,10 +15,8 @@
 #ifndef BELUGA_MOTION_STATIONARY_MODEL_HPP
 #define BELUGA_MOTION_STATIONARY_MODEL_HPP
 
-#include <optional>
 #include <random>
 #include <tuple>
-#include <type_traits>
 
 #include <beluga/type_traits/tuple_traits.hpp>
 
