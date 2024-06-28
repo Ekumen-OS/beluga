@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Beluga: beluga::DifferentialDriveModel Class Reference &#8212; Beluga  documentation</title>
+    <title>Beluga: beluga::DifferentialDriveModel&amp;lt; StateType &amp;gt; Class Template Reference &#8212; Beluga  documentation</title>
   
   
   
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;"/>
   </head>
   
   
@@ -365,7 +365,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>DifferentialDriveModel Class Reference</h1>
+    <h1>DifferentialDriveModel&lt; StateType &gt; Class Template Reference</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -379,8 +379,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="differentialdrivemodel-class-reference">
-<h1>DifferentialDriveModel Class Reference<a class="headerlink" href="#differentialdrivemodel-class-reference" title="Link to this heading">#</a></h1>
+  <section id="differentialdrivemodel-lt-statetype-gt-class-template-reference">
+<h1>DifferentialDriveModel&amp;lt; StateType &amp;gt; Class Template Reference<a class="headerlink" href="#differentialdrivemodel-lt-statetype-gt-class-template-reference" title="Link to this heading">#</a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -389,7 +389,7 @@ document.write(`
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::DifferentialDriveModel Class Reference</title>
+<title>Beluga: beluga::DifferentialDriveModel&lt; StateType &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -439,7 +439,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classbeluga_1_1DifferentialDriveModel-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::DifferentialDriveModel Class Reference</div>  </div>
+<div class="title">beluga::DifferentialDriveModel&lt; StateType &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -450,47 +450,58 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a12c4c5f2a4d6915f8cc6f9682d37dad3"><td class="memItemLeft" align="right" valign="top"><a id="a12c4c5f2a4d6915f8cc6f9682d37dad3"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a12c4c5f2a4d6915f8cc6f9682d37dad3">control_type</a> = std::tuple&lt; Sophus::SE2d, Sophus::SE2d &gt;</td></tr>
-<tr class="memdesc:a12c4c5f2a4d6915f8cc6f9682d37dad3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current and previous odometry estimates as motion model control action. <br /></td></tr>
-<tr class="separator:a12c4c5f2a4d6915f8cc6f9682d37dad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a0d4a1a7f8523d0df9f6bf03f424b7d"><td class="memItemLeft" align="right" valign="top"><a id="a9a0d4a1a7f8523d0df9f6bf03f424b7d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a9a0d4a1a7f8523d0df9f6bf03f424b7d">state_type</a> = Sophus::SE2d</td></tr>
-<tr class="memdesc:a9a0d4a1a7f8523d0df9f6bf03f424b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">2D pose as motion model state (to match that of the particles). <br /></td></tr>
-<tr class="separator:a9a0d4a1a7f8523d0df9f6bf03f424b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c5b9a5cf8896ec2441cdd95a8a7ea41"><td class="memItemLeft" align="right" valign="top"><a id="a6c5b9a5cf8896ec2441cdd95a8a7ea41"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a6c5b9a5cf8896ec2441cdd95a8a7ea41">param_type</a> = <a class="el" href="structbeluga_1_1DifferentialDriveModelParam.html">DifferentialDriveModelParam</a></td></tr>
-<tr class="memdesc:a6c5b9a5cf8896ec2441cdd95a8a7ea41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter type that the constructor uses to configure the motion model. <br /></td></tr>
-<tr class="separator:a6c5b9a5cf8896ec2441cdd95a8a7ea41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92b5ed60742da571e0b282d6b4aed4b9"><td class="memItemLeft" align="right" valign="top"><a id="a92b5ed60742da571e0b282d6b4aed4b9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a92b5ed60742da571e0b282d6b4aed4b9">state_type</a> = StateType</td></tr>
+<tr class="memdesc:a92b5ed60742da571e0b282d6b4aed4b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">2D or flattened 3D pose as motion model state (to match that of the particles). <br /></td></tr>
+<tr class="separator:a92b5ed60742da571e0b282d6b4aed4b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9858a4d8d0780039822d349fba9a23e1"><td class="memItemLeft" align="right" valign="top"><a id="a9858a4d8d0780039822d349fba9a23e1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a9858a4d8d0780039822d349fba9a23e1">control_type</a> = std::tuple&lt; <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a92b5ed60742da571e0b282d6b4aed4b9">state_type</a>, <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a92b5ed60742da571e0b282d6b4aed4b9">state_type</a> &gt;</td></tr>
+<tr class="memdesc:a9858a4d8d0780039822d349fba9a23e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current and previous odometry estimates as motion model control action. <br /></td></tr>
+<tr class="separator:a9858a4d8d0780039822d349fba9a23e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4745c3ed6264e36aa2dfd1731ea5c926"><td class="memItemLeft" align="right" valign="top"><a id="a4745c3ed6264e36aa2dfd1731ea5c926"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a4745c3ed6264e36aa2dfd1731ea5c926">param_type</a> = <a class="el" href="structbeluga_1_1DifferentialDriveModelParam.html">DifferentialDriveModelParam</a></td></tr>
+<tr class="memdesc:a4745c3ed6264e36aa2dfd1731ea5c926"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter type that the constructor uses to configure the motion model. <br /></td></tr>
+<tr class="separator:a4745c3ed6264e36aa2dfd1731ea5c926"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7a97675f22f769f603d664ca8b76b121"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a7a97675f22f769f603d664ca8b76b121">DifferentialDriveModel</a> (const <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a6c5b9a5cf8896ec2441cdd95a8a7ea41">param_type</a> &amp;params)</td></tr>
-<tr class="memdesc:a7a97675f22f769f603d664ca8b76b121"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1DifferentialDriveModel.html" title="Sampled odometry model for a differential drive.">DifferentialDriveModel</a> instance.  <a href="classbeluga_1_1DifferentialDriveModel.html#a7a97675f22f769f603d664ca8b76b121">More...</a><br /></td></tr>
-<tr class="separator:a7a97675f22f769f603d664ca8b76b121"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64c860463aec6af4304fa86d325b8de6"><td class="memTemplParams" colspan="2">template&lt;class Control , typename  = common_tuple_type_t&lt;Control, control_type&gt;&gt; </td></tr>
-<tr class="memitem:a64c860463aec6af4304fa86d325b8de6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a64c860463aec6af4304fa86d325b8de6">operator()</a> (Control &amp;&amp;action) const</td></tr>
-<tr class="memdesc:a64c860463aec6af4304fa86d325b8de6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a state sampling function conditioned on a given control action.  <a href="classbeluga_1_1DifferentialDriveModel.html#a64c860463aec6af4304fa86d325b8de6">More...</a><br /></td></tr>
-<tr class="separator:a64c860463aec6af4304fa86d325b8de6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1f509df5d083d8ed64a91b883dae5ed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#ac1f509df5d083d8ed64a91b883dae5ed">DifferentialDriveModel</a> (const <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a4745c3ed6264e36aa2dfd1731ea5c926">param_type</a> &amp;params)</td></tr>
+<tr class="memdesc:ac1f509df5d083d8ed64a91b883dae5ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1DifferentialDriveModel.html" title="Sampled odometry model for a differential drive.">DifferentialDriveModel</a> instance.  <a href="classbeluga_1_1DifferentialDriveModel.html#ac1f509df5d083d8ed64a91b883dae5ed">More...</a><br /></td></tr>
+<tr class="separator:ac1f509df5d083d8ed64a91b883dae5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92bf543aacf77217546d4de458ebedca"><td class="memTemplParams" colspan="2">template&lt;class Control , typename  = common_tuple_type_t&lt;Control, control_type&gt;&gt; </td></tr>
+<tr class="memitem:a92bf543aacf77217546d4de458ebedca"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a92bf543aacf77217546d4de458ebedca">operator()</a> (const Control &amp;action) const</td></tr>
+<tr class="memdesc:a92bf543aacf77217546d4de458ebedca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a state sampling function conditioned on a given control action.  <a href="classbeluga_1_1DifferentialDriveModel.html#a92bf543aacf77217546d4de458ebedca">More...</a><br /></td></tr>
+<tr class="separator:a92bf543aacf77217546d4de458ebedca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Sampled odometry model for a differential drive. </p>
-<p>This class satisfies <a class="el" href="MotionModelPage.html">Beluga named requirements: MotionModel</a>.</p>
-<p>See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[5]</a> Chapter 5.4.2. </p>
+<div class="textblock"><h3>template&lt;class StateType = Sophus::SE2d&gt;<br />
+class beluga::DifferentialDriveModel&lt; StateType &gt;</h3>
+
+<p>Sampled odometry model for a differential drive. </p>
+<p>Supports 2D and (flattened) 3D state types. This class satisfies <a class="el" href="MotionModelPage.html">Beluga named requirements: MotionModel</a>.</p>
+<p>See Probabilistic Robotics <a class="el" href="citelist.html#CITEREF_thrun2005probabilistic">[5]</a> Chapter 5.4.2.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">StateType</td><td>Type for particle's state. Either Sophus::SE2d or Sophus::SE3d. </td></tr>
+  </table>
+  </dd>
+</dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7a97675f22f769f603d664ca8b76b121"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a97675f22f769f603d664ca8b76b121">&#9670;&nbsp;</a></span>DifferentialDriveModel()</h2>
+<a id="ac1f509df5d083d8ed64a91b883dae5ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1f509df5d083d8ed64a91b883dae5ed">&#9670;&nbsp;</a></span>DifferentialDriveModel()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class StateType  = Sophus::SE2d&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">beluga::DifferentialDriveModel::DifferentialDriveModel </td>
+          <td class="memname"><a class="el" href="classbeluga_1_1DifferentialDriveModel.html">beluga::DifferentialDriveModel</a>&lt; StateType &gt;::<a class="el" href="classbeluga_1_1DifferentialDriveModel.html">DifferentialDriveModel</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a6c5b9a5cf8896ec2441cdd95a8a7ea41">param_type</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classbeluga_1_1DifferentialDriveModel.html#a4745c3ed6264e36aa2dfd1731ea5c926">param_type</a> &amp;&#160;</td>
           <td class="paramname"><em>params</em></td><td>)</td>
           <td></td>
         </tr>
@@ -513,11 +524,13 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a64c860463aec6af4304fa86d325b8de6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64c860463aec6af4304fa86d325b8de6">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="a92bf543aacf77217546d4de458ebedca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92bf543aacf77217546d4de458ebedca">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class StateType  = Sophus::SE2d&gt; </div>
 <div class="memtemplate">
 template&lt;class Control , typename  = common_tuple_type_t&lt;Control, control_type&gt;&gt; </div>
 <table class="mlabels">
@@ -525,9 +538,9 @@ template&lt;class Control , typename  = common_tuple_type_t&lt;Control, control_
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto beluga::DifferentialDriveModel::operator() </td>
+          <td class="memname">auto <a class="el" href="classbeluga_1_1DifferentialDriveModel.html">beluga::DifferentialDriveModel</a>&lt; StateType &gt;::operator() </td>
           <td>(</td>
-          <td class="paramtype">Control &amp;&amp;&#160;</td>
+          <td class="paramtype">const Control &amp;&#160;</td>
           <td class="paramname"><em>action</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -615,7 +628,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;.
+  Last updated on &#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;.
   <br/>
 </p>
   </div>

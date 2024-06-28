@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;"/>
   </head>
   
   
@@ -499,8 +499,8 @@ $(function() {
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#aa586ffdda4cddc4d4f030618e05fc227">   91</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#aa586ffdda4cddc4d4f030618e05fc227">particle_type</a> = std::tuple&lt;Sophus::SE2d, beluga::Weight&gt;;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">   94</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">motion_model_variant</a> = std::variant&lt;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1DifferentialDriveModel.html">beluga::DifferentialDriveModel</a>,     <span class="comment">//</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#a498ad92b1620d80d14c7e196e505592d">   94</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1Amcl.html#a498ad92b1620d80d14c7e196e505592d">motion_model_variant</a> = std::variant&lt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">beluga::DifferentialDriveModel2d</a>,   <span class="comment">//</span></div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a>,  <span class="comment">//</span></div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>&gt;;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
@@ -513,7 +513,7 @@ $(function() {
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1Amcl.html#afa212077f1c1f8a75fccb2f706741628">  115</a></span>&#160;  <a class="code" href="classbeluga__ros_1_1Amcl.html#afa212077f1c1f8a75fccb2f706741628">Amcl</a>(</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;      <a class="code" href="classbeluga__ros_1_1OccupancyGrid.html">beluga_ros::OccupancyGrid</a> map,</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      <a class="code" href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">motion_model_variant</a> motion_model,</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      <a class="code" href="classbeluga__ros_1_1Amcl.html#a498ad92b1620d80d14c7e196e505592d">motion_model_variant</a> motion_model,</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;      <a class="code" href="classbeluga__ros_1_1Amcl.html#aaa2f9ea60afb2d085a4e0db60676c73f">sensor_model_variant</a> sensor_model,</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      <span class="keyword">const</span> <a class="code" href="structbeluga__ros_1_1AmclParams.html">AmclParams</a>&amp; params = <a class="code" href="structbeluga__ros_1_1AmclParams.html">AmclParams</a>(),</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;      <a class="code" href="classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">execution_policy_variant</a> execution_policy = std::execution::seq)</div>
@@ -613,7 +613,7 @@ $(function() {
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;  <a class="code" href="structbeluga__ros_1_1AmclParams.html">AmclParams</a> params_;</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1MultivariateUniformDistribution.html">beluga::MultivariateUniformDistribution&lt;Sophus::SE2d, beluga_ros::OccupancyGrid&gt;</a> map_distribution_;</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;  <a class="code" href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">motion_model_variant</a> motion_model_;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;  <a class="code" href="classbeluga__ros_1_1Amcl.html#a498ad92b1620d80d14c7e196e505592d">motion_model_variant</a> motion_model_;</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;  <a class="code" href="classbeluga__ros_1_1Amcl.html#aaa2f9ea60afb2d085a4e0db60676c73f">sensor_model_variant</a> sensor_model_;</div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;  <a class="code" href="classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">execution_policy_variant</a> execution_policy_;</div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
@@ -633,7 +633,6 @@ $(function() {
 <div class="ttc" id="abeluga_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/beluga_8hpp.html">beluga.hpp</a></div></div>
 <div class="ttc" id="aclassbeluga_1_1BeamSensorModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1BeamSensorModel.html">beluga::BeamSensorModel</a></div></div>
 <div class="ttc" id="aclassbeluga_1_1CircularArray_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1CircularArray.html">beluga::CircularArray</a></div></div>
-<div class="ttc" id="aclassbeluga_1_1DifferentialDriveModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1DifferentialDriveModel.html">beluga::DifferentialDriveModel</a></div></div>
 <div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1LikelihoodFieldModel.html">beluga::LikelihoodFieldModel</a></div></div>
 <div class="ttc" id="aclassbeluga_1_1MultivariateNormalDistribution_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1MultivariateNormalDistribution.html">beluga::MultivariateNormalDistribution</a></div></div>
 <div class="ttc" id="aclassbeluga_1_1MultivariateUniformDistribution_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1MultivariateUniformDistribution.html">beluga::MultivariateUniformDistribution</a></div></div>
@@ -643,8 +642,8 @@ $(function() {
 <div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html_a3a5f7b123f1a2065e4f50e0ea46126ea"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">beluga::ThrunRecoveryProbabilityEstimator::reset</a></div><div class="ttdeci">constexpr void reset() noexcept</div></div>
 <div class="ttc" id="aclassbeluga_1_1TupleVector_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1TupleVector.html">beluga::TupleVector</a></div></div>
 <div class="ttc" id="aclassbeluga__ros_1_1Amcl_html"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></div><div class="ttdef"><b>Definition:</b> amcl.hpp:88</div></div>
-<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a21d35994c9082f5e7c44759bad1b5058"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a21d35994c9082f5e7c44759bad1b5058">beluga_ros::Amcl::motion_model_variant</a></div><div class="ttdeci">std::variant&lt; beluga::DifferentialDriveModel, beluga::OmnidirectionalDriveModel, beluga::StationaryModel &gt; motion_model_variant</div><div class="ttdoc">Motion model variant type for runtime selection support.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:97</div></div>
 <div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a3cb115f47859bbcb7253ef5341adb23e"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a3cb115f47859bbcb7253ef5341adb23e">beluga_ros::Amcl::initialize_from_map</a></div><div class="ttdeci">void initialize_from_map()</div><div class="ttdoc">Initialize particles using the default map distribution.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:157</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a498ad92b1620d80d14c7e196e505592d"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a498ad92b1620d80d14c7e196e505592d">beluga_ros::Amcl::motion_model_variant</a></div><div class="ttdeci">std::variant&lt; beluga::DifferentialDriveModel2d, beluga::OmnidirectionalDriveModel, beluga::StationaryModel &gt; motion_model_variant</div><div class="ttdoc">Motion model variant type for runtime selection support.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:97</div></div>
 <div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a57cc8a88b38595c3f9dbaf7c89ddd0cc"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">beluga_ros::Amcl::execution_policy_variant</a></div><div class="ttdeci">std::variant&lt; std::execution::sequenced_policy, std::execution::parallel_policy &gt; execution_policy_variant</div><div class="ttdoc">Execution policy variant type for runtime selection support.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:105</div></div>
 <div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a7d8c6b65cf6cc0d0b958c8290d46c378"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a7d8c6b65cf6cc0d0b958c8290d46c378">beluga_ros::Amcl::update_map</a></div><div class="ttdeci">void update_map(beluga_ros::OccupancyGrid map)</div><div class="ttdoc">Update the map used for localization.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:160</div></div>
 <div class="ttc" id="aclassbeluga__ros_1_1Amcl_html_a978000a10d56de7f709ecd526dbc61f2"><div class="ttname"><a href="classbeluga__ros_1_1Amcl.html#a978000a10d56de7f709ecd526dbc61f2">beluga_ros::Amcl::particles</a></div><div class="ttdeci">const auto &amp; particles() const</div><div class="ttdoc">Returns a reference to the current set of particles.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:136</div></div>
@@ -662,6 +661,7 @@ $(function() {
 <div class="ttc" id="anamespacebeluga__ros_html"><div class="ttname"><a href="namespacebeluga__ros.html">beluga_ros</a></div><div class="ttdoc">The main Beluga ROS namespace.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:33</div></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a></div></div>
 <div class="ttc" id="anamespacebeluga_html_a3f8114604160ec3d3fd272f183f621f3"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a3f8114604160ec3d3fd272f183f621f3">beluga::estimate</a></div><div class="ttdeci">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Sophus::Matrix3&lt; Scalar &gt; &gt; estimate(Poses &amp;&amp;poses, Weights &amp;&amp;weights)</div></div>
+<div class="ttc" id="anamespacebeluga_html_a9142e25bdd4e8cea7f524dc95afa78e5"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">beluga::DifferentialDriveModel2d</a></div><div class="ttdeci">DifferentialDriveModel&lt; Sophus::SE2d &gt; DifferentialDriveModel2d</div></div>
 <div class="ttc" id="aoccupancy__grid_8hpp_html"><div class="ttname"><a href="occupancy__grid_8hpp.html">occupancy_grid.hpp</a></div><div class="ttdoc">Implementation of nav_msgs/OccupancyGrid wrapper type.</div></div>
 <div class="ttc" id="aon__motion_8hpp_html_a54bb57da3afb678567632c2c8362afb8"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/on__motion_8hpp.html#a54bb57da3afb678567632c2c8362afb8">on_motion</a></div><div class="ttdeci">constexpr detail::on_motion_fn on_motion</div></div>
 <div class="ttc" id="astructbeluga_1_1policy_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1policy.html">beluga::policy</a></div></div>
@@ -737,7 +737,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;.
+  Last updated on &#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;.
   <br/>
 </p>
   </div>

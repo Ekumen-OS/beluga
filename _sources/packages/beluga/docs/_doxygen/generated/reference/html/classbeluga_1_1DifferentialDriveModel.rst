@@ -1,11 +1,11 @@
-.. meta::33603fd3208a84988021b6a61245e16a33a9a0d3105b2918095220575849c679232409d655ad07a0daa4dad314c741457807bebaa24dd502f8a77dab97a7b728
+.. meta::ae2d4395ec6b6253b8c277cc7da728f15d3c0abf52cd7664e01254299665fa4de63d89a4188a0687e13d9ae906861718f422b8ae3803d253b6a6b603527f4eac
 
 :orphan:
 
-.. title:: Beluga: beluga::DifferentialDriveModel Class Reference
+.. title:: Beluga: beluga::DifferentialDriveModel&lt; StateType &gt; Class Template Reference
 
-DifferentialDriveModel Class Reference
-======================================
+DifferentialDriveModel&lt; StateType &gt; Class Template Reference
+==================================================================
 
 .. container:: doxygen-content
 

@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;"/>
   </head>
   
   
@@ -455,43 +455,41 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_MOTION_STATIONARY_MODEL_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_MOTION_STATIONARY_MODEL_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;random&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;random&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="tuple__traits_8hpp.html">beluga/type_traits/tuple_traits.hpp</a>&gt;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="tuple__traits_8hpp.html">beluga/type_traits/tuple_traits.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;sophus/so2.hpp&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;sophus/so2.hpp&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classbeluga_1_1StationaryModel.html">   41</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1StationaryModel.html">StationaryModel</a> {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classbeluga_1_1StationaryModel.html#ab39521e3d1e7333975d21ca72c4d1306">   44</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1StationaryModel.html#ab39521e3d1e7333975d21ca72c4d1306">control_type</a> = std::tuple&lt;Sophus::SE2d, Sophus::SE2d&gt;;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classbeluga_1_1StationaryModel.html#a75fe857a9a817b66cfd143cc101543b6">   46</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1StationaryModel.html#a75fe857a9a817b66cfd143cc101543b6">state_type</a> = Sophus::SE2d;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classbeluga_1_1StationaryModel.html">   39</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1StationaryModel.html">StationaryModel</a> {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classbeluga_1_1StationaryModel.html#ab39521e3d1e7333975d21ca72c4d1306">   42</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1StationaryModel.html#ab39521e3d1e7333975d21ca72c4d1306">control_type</a> = std::tuple&lt;Sophus::SE2d, Sophus::SE2d&gt;;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classbeluga_1_1StationaryModel.html#a75fe857a9a817b66cfd143cc101543b6">   44</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga_1_1StationaryModel.html#a75fe857a9a817b66cfd143cc101543b6">state_type</a> = Sophus::SE2d;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Control, <span class="keyword">typename</span> = common_tuple_type_t&lt;Control, control_type&gt;&gt;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classbeluga_1_1StationaryModel.html#aa6d2704df6c54ad0a334846e7dd0af72">   57</a></span>&#160;  [[nodiscard]] <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1StationaryModel.html#aa6d2704df6c54ad0a334846e7dd0af72">operator()</a>([[maybe_unused]] Control&amp;&amp;)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> [](<span class="keyword">const</span> <a class="code" href="classbeluga_1_1StationaryModel.html#a75fe857a9a817b66cfd143cc101543b6">state_type</a>&amp; <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>, <span class="keyword">auto</span>&amp; gen) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      <span class="keyword">static</span> thread_local <span class="keyword">auto</span> distribution = std::normal_distribution&lt;&gt;{0, 0.02};</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a> *</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;             Sophus::SE2d{Sophus::SO2d{distribution(gen)}, Eigen::Vector2d{distribution(gen), distribution(gen)}};</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    };</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Control, <span class="keyword">typename</span> = common_tuple_type_t&lt;Control, control_type&gt;&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classbeluga_1_1StationaryModel.html#aa6d2704df6c54ad0a334846e7dd0af72">   55</a></span>&#160;  [[nodiscard]] <span class="keyword">auto</span> <a class="code" href="classbeluga_1_1StationaryModel.html#aa6d2704df6c54ad0a334846e7dd0af72">operator()</a>([[maybe_unused]] Control&amp;&amp;)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> [](<span class="keyword">const</span> <a class="code" href="classbeluga_1_1StationaryModel.html#a75fe857a9a817b66cfd143cc101543b6">state_type</a>&amp; <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>, <span class="keyword">auto</span>&amp; gen) {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      <span class="keyword">static</span> thread_local <span class="keyword">auto</span> distribution = std::normal_distribution&lt;&gt;{0, 0.02};</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a> *</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;             Sophus::SE2d{Sophus::SO2d{distribution(gen)}, Eigen::Vector2d{distribution(gen), distribution(gen)}};</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    };</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}  <span class="comment">// namespace beluga</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassbeluga_1_1StationaryModel_html"><div class="ttname"><a href="classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a></div><div class="ttdoc">A stationary motion model.</div><div class="ttdef"><b>Definition:</b> stationary_model.hpp:41</div></div>
-<div class="ttc" id="aclassbeluga_1_1StationaryModel_html_a75fe857a9a817b66cfd143cc101543b6"><div class="ttname"><a href="classbeluga_1_1StationaryModel.html#a75fe857a9a817b66cfd143cc101543b6">beluga::StationaryModel::state_type</a></div><div class="ttdeci">Sophus::SE2d state_type</div><div class="ttdoc">2D pose as motion model state (to match that of the particles).</div><div class="ttdef"><b>Definition:</b> stationary_model.hpp:46</div></div>
-<div class="ttc" id="aclassbeluga_1_1StationaryModel_html_aa6d2704df6c54ad0a334846e7dd0af72"><div class="ttname"><a href="classbeluga_1_1StationaryModel.html#aa6d2704df6c54ad0a334846e7dd0af72">beluga::StationaryModel::operator()</a></div><div class="ttdeci">auto operator()([[maybe_unused]] Control &amp;&amp;) const</div><div class="ttdoc">Computes a state sampling function conditioned on a given control action.</div><div class="ttdef"><b>Definition:</b> stationary_model.hpp:57</div></div>
-<div class="ttc" id="aclassbeluga_1_1StationaryModel_html_ab39521e3d1e7333975d21ca72c4d1306"><div class="ttname"><a href="classbeluga_1_1StationaryModel.html#ab39521e3d1e7333975d21ca72c4d1306">beluga::StationaryModel::control_type</a></div><div class="ttdeci">std::tuple&lt; Sophus::SE2d, Sophus::SE2d &gt; control_type</div><div class="ttdoc">Current and previous odometry estimates as motion model control action.</div><div class="ttdef"><b>Definition:</b> stationary_model.hpp:44</div></div>
-<div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> assign.hpp:28</div></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassbeluga_1_1StationaryModel_html"><div class="ttname"><a href="classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a></div><div class="ttdoc">A stationary motion model.</div><div class="ttdef"><b>Definition:</b> stationary_model.hpp:39</div></div>
+<div class="ttc" id="aclassbeluga_1_1StationaryModel_html_a75fe857a9a817b66cfd143cc101543b6"><div class="ttname"><a href="classbeluga_1_1StationaryModel.html#a75fe857a9a817b66cfd143cc101543b6">beluga::StationaryModel::state_type</a></div><div class="ttdeci">Sophus::SE2d state_type</div><div class="ttdoc">2D pose as motion model state (to match that of the particles).</div><div class="ttdef"><b>Definition:</b> stationary_model.hpp:44</div></div>
+<div class="ttc" id="aclassbeluga_1_1StationaryModel_html_aa6d2704df6c54ad0a334846e7dd0af72"><div class="ttname"><a href="classbeluga_1_1StationaryModel.html#aa6d2704df6c54ad0a334846e7dd0af72">beluga::StationaryModel::operator()</a></div><div class="ttdeci">auto operator()([[maybe_unused]] Control &amp;&amp;) const</div><div class="ttdoc">Computes a state sampling function conditioned on a given control action.</div><div class="ttdef"><b>Definition:</b> stationary_model.hpp:55</div></div>
+<div class="ttc" id="aclassbeluga_1_1StationaryModel_html_ab39521e3d1e7333975d21ca72c4d1306"><div class="ttname"><a href="classbeluga_1_1StationaryModel.html#ab39521e3d1e7333975d21ca72c4d1306">beluga::StationaryModel::control_type</a></div><div class="ttdeci">std::tuple&lt; Sophus::SE2d, Sophus::SE2d &gt; control_type</div><div class="ttdoc">Current and previous odometry estimates as motion model control action.</div><div class="ttdef"><b>Definition:</b> stationary_model.hpp:42</div></div>
+<div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
 <div class="ttc" id="anamespacebeluga_html_a706431bba3d6cfb1ee0690221f3a9af9"><div class="ttname"><a href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a></div><div class="ttdeci">constexpr state_detail::state_fn state</div><div class="ttdoc">Customization point object for accessing the state of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:163</div></div>
 <div class="ttc" id="atuple__traits_8hpp_html"><div class="ttname"><a href="tuple__traits_8hpp.html">tuple_traits.hpp</a></div><div class="ttdoc">Implementation of traits for tuple-like types.</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -550,7 +548,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;.
+  Last updated on &#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;.
   <br/>
 </p>
   </div>

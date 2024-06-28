@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;"/>
   </head>
   
   
@@ -591,7 +591,7 @@ $(function() {
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01st82aee1c4aa004416efdc2dd54a3ad958_html_a2b89a203f062ee3d2a1ea4e0d544a8ef"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01st82aee1c4aa004416efdc2dd54a3ad958.html#a2b89a203f062ee3d2a1ea4e0d544a8ef">beluga::spatial_hash&lt; std::array&lt; T, N &gt;, std::enable_if_t&lt; std::is_arithmetic_v&lt; T &gt;, void &gt; &gt;::resolution_in_each_axis_t</a></div><div class="ttdeci">std::array&lt; double, N &gt; resolution_in_each_axis_t</div><div class="ttdoc">Type that represents the resolution in each axis.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:107</div></div>
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01st82aee1c4aa004416efdc2dd54a3ad958_html_a5103642503797005d402eb4b1c3b5a65"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01st82aee1c4aa004416efdc2dd54a3ad958.html#a5103642503797005d402eb4b1c3b5a65">beluga::spatial_hash&lt; std::array&lt; T, N &gt;, std::enable_if_t&lt; std::is_arithmetic_v&lt; T &gt;, void &gt; &gt;::spatial_hash</a></div><div class="ttdeci">spatial_hash(const resolution_in_each_axis_t &amp;resolution)</div><div class="ttdoc">Constructs a spatial hasher from an std::array of doubles.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:114</div></div>
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01st82aee1c4aa004416efdc2dd54a3ad958_html_aeccaed7b096fd2750169a911f95b8a92"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01std_1_1array_3_01T_00_01N_01_4_00_01std_1_1enable__if__t_3_01st82aee1c4aa004416efdc2dd54a3ad958.html#aeccaed7b096fd2750169a911f95b8a92">beluga::spatial_hash&lt; std::array&lt; T, N &gt;, std::enable_if_t&lt; std::is_arithmetic_v&lt; T &gt;, void &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr std::size_t operator()(const std::array&lt; T, N &gt; &amp;array) const</div><div class="ttdoc">Calculates the array hash, with the resolutions in each axis, given at construction time.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:121</div></div>
-<div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> assign.hpp:28</div></div>
+<div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
 <div class="ttc" id="anamespacebeluga_html_a706431bba3d6cfb1ee0690221f3a9af9"><div class="ttname"><a href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a></div><div class="ttdeci">constexpr state_detail::state_fn state</div><div class="ttdoc">Customization point object for accessing the state of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:163</div></div>
 <div class="ttc" id="aspatial__hash_8hpp_html_a0bdcaf797012a4bbeee297728f447421"><div class="ttname"><a href="spatial__hash_8hpp.html#a0bdcaf797012a4bbeee297728f447421">beluga::detail::hash_impl</a></div><div class="ttdeci">constexpr std::size_t hash_impl(const T &amp;value, const std::array&lt; double, sizeof...(Ids)&gt; &amp;resolution, [[maybe_unused]] std::index_sequence&lt; Ids... &gt; index_sequence)</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:88</div></div>
 <div class="ttc" id="aspatial__hash_8hpp_html_a7ebab8784b644ef92d7fc78baf3ca55b"><div class="ttname"><a href="spatial__hash_8hpp.html#a7ebab8784b644ef92d7fc78baf3ca55b">beluga::detail::floor_and_fibo_hash</a></div><div class="ttdeci">constexpr std::size_t floor_and_fibo_hash(double value)</div><div class="ttdoc">Returns the hashed and rotated floor of a value.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:45</div></div>
@@ -652,7 +652,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;.
+  Last updated on &#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;.
   <br/>
 </p>
   </div>

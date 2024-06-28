@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;"/>
   </head>
   
   
@@ -655,6 +655,14 @@ template&lt;class T &gt; </td></tr>
 <tr class="memitem:a51cbced5170bfe37a85ef0a454b4ade0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a51cbced5170bfe37a85ef0a454b4ade0">Vector</a> = std::vector&lt; T, std::allocator&lt; T &gt; &gt;</td></tr>
 <tr class="memdesc:a51cbced5170bfe37a85ef0a454b4ade0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorthand for a vector with the default allocator. <br /></td></tr>
 <tr class="separator:a51cbced5170bfe37a85ef0a454b4ade0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9142e25bdd4e8cea7f524dc95afa78e5"><td class="memItemLeft" align="right" valign="top"><a id="a9142e25bdd4e8cea7f524dc95afa78e5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">DifferentialDriveModel2d</a> = <a class="el" href="classbeluga_1_1DifferentialDriveModel.html">DifferentialDriveModel</a>&lt; Sophus::SE2d &gt;</td></tr>
+<tr class="memdesc:a9142e25bdd4e8cea7f524dc95afa78e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a 2D differential drive model, for convinience. <br /></td></tr>
+<tr class="separator:a9142e25bdd4e8cea7f524dc95afa78e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9abfcaa4332ab9a79816a58bb4094dd4"><td class="memItemLeft" align="right" valign="top"><a id="a9abfcaa4332ab9a79816a58bb4094dd4"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a9abfcaa4332ab9a79816a58bb4094dd4">DifferentialDriveModel3d</a> = <a class="el" href="classbeluga_1_1DifferentialDriveModel.html">DifferentialDriveModel</a>&lt; Sophus::SE3d &gt;</td></tr>
+<tr class="memdesc:a9abfcaa4332ab9a79816a58bb4094dd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a 3D differential drive model, for convinience. <br /></td></tr>
+<tr class="separator:a9abfcaa4332ab9a79816a58bb4094dd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d92f9d833e5def9bea860e52f64a5b6"><td class="memTemplParams" colspan="2"><a id="a9d92f9d833e5def9bea860e52f64a5b6"></a>
 template&lt;class... Args&gt; </td></tr>
 <tr class="memitem:a9d92f9d833e5def9bea860e52f64a5b6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a9d92f9d833e5def9bea860e52f64a5b6">any_policy</a> = <a class="el" href="structbeluga_1_1policy.html">policy</a>&lt; std::function&lt; bool(Args...)&gt; &gt;</td></tr>
@@ -786,6 +794,14 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a8701feef2edde9d5688efec1a66045ab"><td class="memItemLeft" align="right" valign="top"><a id="a8701feef2edde9d5688efec1a66045ab"></a>
+Sophus::SE2d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a8701feef2edde9d5688efec1a66045ab">To2d</a> (const Sophus::SE3d &amp;tf)</td></tr>
+<tr class="memdesc:a8701feef2edde9d5688efec1a66045ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms a SE3 transform into a SE2 transform, by flattening the Z axis. <br /></td></tr>
+<tr class="separator:a8701feef2edde9d5688efec1a66045ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dcdce1508dcbf370be7429ab791d89e"><td class="memItemLeft" align="right" valign="top"><a id="a4dcdce1508dcbf370be7429ab791d89e"></a>
+Sophus::SE3d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a4dcdce1508dcbf370be7429ab791d89e">To3d</a> (const Sophus::SE2d &amp;tf)</td></tr>
+<tr class="memdesc:a4dcdce1508dcbf370be7429ab791d89e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Embed a SE2 transform into 3D space with zero Z translation and only rotation about the Z axis. <br /></td></tr>
+<tr class="separator:a4dcdce1508dcbf370be7429ab791d89e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3356c1b099bda88b4dfda8ff230bac88"><td class="memTemplParams" colspan="2">template&lt;class Range , class DistanceFunction , class NeighborsFunction &gt; </td></tr>
 <tr class="memitem:a3356c1b099bda88b4dfda8ff230bac88"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">nearest_obstacle_distance_map</a> (Range &amp;&amp;obstacle_map, DistanceFunction &amp;&amp;distance_function, NeighborsFunction &amp;&amp;neighbors_function)</td></tr>
 <tr class="memdesc:a3356c1b099bda88b4dfda8ff230bac88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a map where the value of each cell is the distance to the nearest obstacle.  <a href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">More...</a><br /></td></tr>
@@ -1712,7 +1728,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Jun 25 17:34:02 2024 -0300, 53e55dc&#39;.
+  Last updated on &#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;.
   <br/>
 </p>
   </div>
