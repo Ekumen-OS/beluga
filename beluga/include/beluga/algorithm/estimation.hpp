@@ -171,9 +171,9 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, 
   return std::pair{estimated_pose, covariance_matrix};
 }
 
-/// Computes mean and standard deviation of a range of weighted scalars.
+/// Computes mean and variance of a range of weighted scalars.
 /**
- * Given a range of scalars, computes the scalar mean and standard deviation.
+ * Given a range of scalars, computes the scalar mean and variance.
  *
  * \tparam Scalars A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
  *  value type is `std::vector<Scalar>`.
@@ -182,7 +182,7 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, 
  * \tparam Scalar The scalar value type of the given range of Scalars.
  * \param scalars Range of scalars.
  * \param weights Range of weights.
- * \return The estimated mean and its standard deviation.
+ * \return The estimated mean and variance.
  */
 template <
     class Scalars,
@@ -207,10 +207,10 @@ std::pair<Scalar, Scalar> estimate(Scalars&& scalars, Weights&& weights) {
   const auto number_of_non_zero_weights =
       static_cast<Scalar>(ranges::count_if(weights_view, [&](auto weight) { return weight > 0; }));
 
-  const Scalar weighted_sd =
-      std::sqrt(weighted_squared_deviations * number_of_non_zero_weights / (number_of_non_zero_weights - 1));
+  const Scalar weighted_variance =
+      weighted_squared_deviations * number_of_non_zero_weights / (number_of_non_zero_weights - 1);
 
-  return std::pair{weighted_mean, weighted_sd};
+  return std::pair{weighted_mean, weighted_variance};
 }
 
 /// Returns a pair consisting of the estimated mean pose and its covariance.
