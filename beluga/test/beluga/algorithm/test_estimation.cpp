@@ -229,26 +229,28 @@ TEST_F(PoseCovarianceEstimation, RandomWalkWithSmoothRotationAndNonUniformWeight
   ASSERT_THAT(covariance.col(2).eval(), Vector3Near({0.0000, 0.0000, 0.0855}, kTolerance));
 }
 
-struct MeanStandardDeviationEstimation : public testing::Test {};
+struct ScalarEstimation : public testing::Test {};
 
-TEST_F(MeanStandardDeviationEstimation, UniformWeightOverload) {
-  // Mean and standard deviation estimation with uniform weights.
+TEST_F(ScalarEstimation, UniformWeightOverload) {
+  // Mean and variance estimation with uniform weights.
   const auto states = std::vector{0.0, 1.0, 1.0, 2.0, 2.0, 3.0, 4.0, 4.0, 5.0, 5.0, 6.0, 7.0, 7.0, 8.0, 9.0};
   const auto weights = std::vector(states.size(), 1.0);
-  const auto estimation = beluga::estimate(states, weights);
+  const auto [mean, variance] = beluga::estimate(states, weights);
+  const auto standard_deviation = std::sqrt(variance);
   constexpr double kTolerance = 0.001;
-  ASSERT_NEAR(std::get<0>(estimation), 4.266, kTolerance);
-  ASSERT_NEAR(std::get<1>(estimation), 2.763, kTolerance);
+  ASSERT_NEAR(mean, 4.266, kTolerance);
+  ASSERT_NEAR(standard_deviation, 2.763, kTolerance);
 }
 
-TEST_F(MeanStandardDeviationEstimation, NonUniformWeightOverload) {
-  // Mean and standard deviation estimation with non-uniform weights.
+TEST_F(ScalarEstimation, NonUniformWeightOverload) {
+  // Mean and variance estimation with non-uniform weights.
   const auto states = std::vector{0.0, 1.0, 1.0, 2.0, 2.0, 3.0, 4.0, 4.0, 5.0, 5.0, 6.0, 7.0, 7.0, 8.0, 9.0};
   const auto weights = std::vector{0.1, 0.15, 0.15, 0.3, 0.3, 0.4, 0.8, 0.8, 0.4, 0.4, 0.35, 0.3, 0.3, 0.15, 0.1};
-  const auto estimation = beluga::estimate(states, weights);
+  const auto [mean, variance] = beluga::estimate(states, weights);
+  const auto standard_deviation = std::sqrt(variance);
   constexpr double kTolerance = 0.001;
-  ASSERT_NEAR(std::get<0>(estimation), 4.300, kTolerance);
-  ASSERT_NEAR(std::get<1>(estimation), 2.026, kTolerance);
+  ASSERT_NEAR(mean, 4.300, kTolerance);
+  ASSERT_NEAR(standard_deviation, 2.026, kTolerance);
 }
 
 }  // namespace
