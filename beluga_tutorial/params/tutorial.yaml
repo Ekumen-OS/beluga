@@ -1,14 +1,13 @@
 map_size: 100 # Size of the map in [m]
-number_of_doors: 15
 number_of_particles: 300 # Fixed number of particles
 number_of_cycles: 100
 initial_position: 0.0 #[m]
-initial_position_sd: 20.0
+initial_position_sigma: 20.0
 dt: 1.0 #[s]
 velocity: 1.0 #[m/s]
-translation_sd: 1.0
+motion_model_sigma: 1.0 #[m/s]
 sensor_range: 3.0 # Sensor range of view in [m]
-sensor_model_sigma: 1.0
+sensor_model_sigma: 1.0 #[m]
 min_particle_weight: 0.08
 record_path: "./record.yaml"
 
