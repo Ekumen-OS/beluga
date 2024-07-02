@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Jul 2 17:59:28 2024 -0300, 4ff2418&#39;"/>
   </head>
   
   
@@ -590,10 +590,10 @@ $(function() {
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> number_of_non_zero_weights =</div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;      <span class="keyword">static_cast&lt;</span>Scalar<span class="keyword">&gt;</span>(ranges::count_if(weights_view, [&amp;](<span class="keyword">auto</span> <a class="code" href="namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a>) { <span class="keywordflow">return</span> <a class="code" href="namespacebeluga.html#a80abdff6d85df8ef392ca252ed8588c1">weight</a> &gt; 0; }));</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;  <span class="keyword">const</span> Scalar weighted_sd =</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;      std::sqrt(weighted_squared_deviations * number_of_non_zero_weights / (number_of_non_zero_weights - 1));</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;  <span class="keyword">const</span> Scalar weighted_variance =</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;      weighted_squared_deviations * number_of_non_zero_weights / (number_of_non_zero_weights - 1);</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;  <span class="keywordflow">return</span> std::pair{weighted_mean, weighted_sd};</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;  <span class="keywordflow">return</span> std::pair{weighted_mean, weighted_variance};</div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;}</div>
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
@@ -669,7 +669,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Fri Jun 28 10:10:29 2024 -0300, 064a3ca&#39;.
+  Last updated on &#39;Tue Jul 2 17:59:28 2024 -0300, 4ff2418&#39;.
   <br/>
 </p>
   </div>
