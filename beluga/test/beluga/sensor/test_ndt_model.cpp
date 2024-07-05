@@ -236,12 +236,21 @@ TEST(NDTSensorModel2DTests, SensorModel) {
 }
 
 TEST(NDTSensorModel2DTests, LoadFromHDF5HappyPath) {
-  const auto ndt_map_representation = io::load_from_hdf5_2d<sparse_grid_2d_t>("./test_data/turtlebot3_world.hdf5");
+  const auto ndt_map_representation = io::load_from_hdf5<sparse_grid_2d_t>("./test_data/turtlebot3_world.hdf5");
   ASSERT_EQ(ndt_map_representation.size(), 30UL);
 }
 
 TEST(NDTSensorModel2DTests, LoadFromHDF5NonExistingFile) {
-  ASSERT_THROW(io::load_from_hdf5_2d<sparse_grid_2d_t>("bad_file.hdf5"), std::invalid_argument);
+  ASSERT_THROW(io::load_from_hdf5<sparse_grid_2d_t>("bad_file.hdf5"), std::invalid_argument);
+}
+
+TEST(NDTSensorModel3DTests, LoadFromHDF5NonExistingFile) {
+  ASSERT_THROW(io::load_from_hdf5<sparse_grid_3d_t>("bad_file.hdf5"), std::invalid_argument);
+}
+
+TEST(NDTSensorModel3DTests, LoadFromHDF5HappyPath) {
+  const auto ndt_map_representation = io::load_from_hdf5<sparse_grid_3d_t>("./test_data/sample_3d_ndt_map.hdf5");
+  ASSERT_EQ(ndt_map_representation.size(), 398);
 }
 
 }  // namespace beluga

@@ -306,7 +306,7 @@ beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode::get_sensor_model() con
   RCLCPP_INFO(get_logger(), "Loading map from %s.", map_path.c_str());
 
   return beluga::NDTSensorModel<NDTMapRepresentation>{
-      params, beluga::io::load_from_hdf5_2d<NDTMapRepresentation>(get_parameter("map_path").as_string())};
+      params, beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string())};
 }
 
 auto NdtAmclNode::get_execution_policy() const -> ExecutionPolicyVariant {
