@@ -78,7 +78,7 @@ int main() {
       break;
     }
 
-    auto motion_model = [&](double position, auto& random_engine) {
+    const auto motion_model = [&](double position, auto& random_engine) {
       std::normal_distribution<double> motion_distribution(
           parameters.velocity * parameters.dt,
           parameters.motion_model_sigma * parameters.dt);
