@@ -36,8 +36,8 @@ namespace beluga::tutorial {
 struct Parameters {
   /// Size of the 1D map in (m)
   /**
-   * In the simulation, the 1D map is continuous,
-   * but the limit is defined as an integer to simplify data visualization.
+   * 1D map space is continuous, but its size is defined
+   * as an integer to simplify data visualization.
    */
   std::size_t map_size{100};
 
@@ -47,33 +47,30 @@ struct Parameters {
   /// Number of simulation cycles.
   std::size_t number_of_cycles{100};
 
-  /// Robot's initial position in meters (m).
+  /// Initial robot position, in meters (m).
   double initial_position{0.0};
 
-  /// Standard deviation of the robot's initial position.
-  /**
-   * Represents the uncertainty of the robot's initial position.
-   */
-  double initial_position_sd{10.0};
+  /// Standard deviation of the robot's estimate of its initial position.
+  double initial_position_sigma{10.0};
 
   /// Delta time in seconds (s).
   double dt{1.0};
 
-  /// Translation velocity in meters per second (m/s) of the robot in 1D.
+  /// Constant robot velocity, in meters per second (m/s).
   double velocity{1.0};
 
-  /// Translation standard deviation.
+  /// Motion model standard deviation, in meters per second (m/s).
   /**
-   * Represents the robot's translation noise due to drift and slippage.
+   * Models the uncertainty in the robot's estimate of its own velocity.
    */
-  double translation_sd{1.0};
+  double motion_model_sigma{1.0};
 
-  /// Sensor range of view in meters (m)
+  /// Sensor field of view, in meters (m).
   double sensor_range{3.0};
 
-  /// Sensor model sigma
+  /// Sensor model standard deviation, in meters (m).
   /**
-   * Represents the precision of the modeled sensor.
+   * Models the uncertainty in range measurements to landmarks.
    */
   double sensor_model_sigma{1.0};
 
@@ -83,7 +80,7 @@ struct Parameters {
    */
   double min_particle_weight{0.08};
 
-  /// Landmark coordinates in the simulated world.
+  /// Landmark positions in the simulated world.
   std::vector<double> landmark_map{5, 12, 25, 37, 52, 55, 65, 74, 75, 87, 97};
 
   /// Dataset path.
@@ -114,10 +111,10 @@ struct convert<beluga::tutorial::Parameters> {
     parameters.number_of_particles = node["number_of_particles"].as<std::size_t>();
     parameters.number_of_cycles = node["number_of_cycles"].as<std::size_t>();
     parameters.initial_position = node["initial_position"].as<double>();
-    parameters.initial_position_sd = node["initial_position_sd"].as<double>();
+    parameters.initial_position_sigma = node["initial_position_sigma"].as<double>();
     parameters.dt = node["dt"].as<double>();
     parameters.velocity = node["velocity"].as<double>();
-    parameters.translation_sd = node["translation_sd"].as<double>();
+    parameters.motion_model_sigma = node["motion_model_sigma"].as<double>();
     parameters.sensor_range = node["sensor_range"].as<double>();
     parameters.sensor_model_sigma = node["sensor_model_sigma"].as<double>();
     parameters.min_particle_weight = node["min_particle_weight"].as<double>();
@@ -151,7 +148,7 @@ struct convert<std::vector<beluga::tutorial::RobotRecord>> {
 
       auto estimation = node[cycle]["estimation"];
       estimation["mean"] = std::get<0>(record.estimation);
-      estimation["sd"] = std::get<1>(record.estimation);
+      estimation["sd"] = std::sqrt(std::get<1>(record.estimation));
     }
     return node;
   }
@@ -169,8 +166,9 @@ namespace beluga::tutorial {
 int run(const std::filesystem::path& path) {
   const auto parameters = YAML::LoadFile(path).as<beluga::tutorial::Parameters>();
 
-  std::normal_distribution<double> initial_distribution(parameters.initial_position, parameters.initial_position_sd);
-  auto particles = beluga::views::sample(initial_distribution) |                  //
+  std::normal_distribution<double> initial_position_distribution(
+      parameters.initial_position, parameters.initial_position_sigma);
+  auto particles = beluga::views::sample(initial_position_distribution) |         //
                    ranges::views::transform(beluga::make_from_state<Particle>) |  //
                    ranges::views::take_exactly(parameters.number_of_particles) |  //
                    ranges::to<std::vector>;
@@ -189,31 +187,31 @@ int run(const std::filesystem::path& path) {
       break;
     }
 
-    auto motion_model = [&](double particle_position, auto& random_engine) {
-      const double distance = parameters.velocity * parameters.dt;
-      std::normal_distribution<double> distribution(distance, parameters.translation_sd);
-      return particle_position + distribution(random_engine);
+    const auto motion_model = [&](double position, auto& random_engine) {
+      std::normal_distribution<double> motion_distribution(
+          parameters.velocity * parameters.dt, parameters.motion_model_sigma * parameters.dt);
+      return position + motion_distribution(random_engine);
     };
 
-    auto detections =
-        parameters.landmark_map |                                                                            //
-        ranges::views::transform([&](double landmark) { return landmark - current_position; }) |             //
-        ranges::views::remove_if([&](double range) { return std::abs(range) > parameters.sensor_range; }) |  //
+    const auto range_measurements =
+        parameters.landmark_map |                                                                                   //
+        ranges::views::transform([&](double landmark_position) { return landmark_position - current_position; }) |  //
+        ranges::views::remove_if([&](double range) { return std::abs(range) > parameters.sensor_range; }) |         //
         ranges::to<std::vector>;
 
-    auto sensor_model = [&](double particle_position) {
-      auto particle_detections =
-          parameters.landmark_map |                                                                  //
-          ranges::views::transform([&](double landmark) { return landmark - particle_position; }) |  //
+    const auto sensor_model = [&](double position) {
+      auto range_map =
+          parameters.landmark_map |                                                                           //
+          ranges::views::transform([&](double landmark_position) { return landmark_position - position; }) |  //
           ranges::to<std::vector>;
 
       return parameters.min_particle_weight +
              std::transform_reduce(
-                 detections.begin(), detections.end(), 1.0, std::multiplies<>{}, [&](double detection) {
-                   auto distances =           //
-                       particle_detections |  //
-                       ranges::views::transform(
-                           [&](double particle_detection) { return std::abs(detection - particle_detection); });
+                 range_measurements.begin(), range_measurements.end(), 1.0, std::multiplies<>{},
+                 [&](double range_measurement) {
+                   const auto distances = range_map | ranges::views::transform([&](double range) {
+                                            return std::abs(range - range_measurement);
+                                          });
                    const auto min_distance = ranges::min(distances);
                    return std::exp((-1 * std::pow(min_distance, 2)) / (2 * parameters.sensor_model_sigma));
                  });
