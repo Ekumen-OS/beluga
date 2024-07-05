@@ -47,6 +47,8 @@
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/particle-filtering';</script>
     <script src="../_static/custom.js?v=b6861115"></script>
     <link rel="icon" href="../_static/logo_200x200.png"/>
@@ -56,7 +58,7 @@
     <link rel="prev" title="Benchmarking Beluga" href="../guides/benchmarking-beluga.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Fri Jul 5 09:00:08 2024 -0300, 4fd65a7&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Jul 5 12:07:06 2024 -0300, 24be8ad&#39;"/>
   </head>
   
   
@@ -354,7 +356,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -370,6 +374,28 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">Tasks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#develop">1 Develop</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">1.1 Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#landmark-map">1.2 Landmark map</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-belief">1.3 Initial belief</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-modelling">1.4 System modelling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-prediction-step">1.5 Filter prediction step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-update-step">1.6 Filter update step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-resampling-step">1.6.2 Filter resampling step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimate">1.7 Estimate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compile-and-run">2 Compile and run</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -381,7 +407,404 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="primer-on-particle-filtering-with-beluga">
 <h1>Primer on Particle Filtering with Beluga<a class="headerlink" href="#primer-on-particle-filtering-with-beluga" title="Link to this heading">#</a></h1>
-<p>Coming soon!</p>
+<figure class="align-default">
+<img alt="Short video of a beluga_tutorial's record." src="../_images/beluga_tutorial.gif" />
+</figure>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>In this tutorial, we will show how to implement a custom <abbr title="Monte Carlo Localization">MCL</abbr> algorithm using Beluga.</p>
+<p>This tutorial takes after the one-dimensional particle filter example given in <span id="id1">[<a class="reference internal" href="../resources/bibliography.html#id2" title="S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. ISBN 9780262201629. URL: https://books.google.com.ar/books?id=jtSMEAAAQBAJ.">TBF05</a>, page 200, figure 8.11]</span>. There are walls and there are doors in our one-dimensional world, and our one-dimensional robot is free to move along this world. The last two plots in the animation shown above depict this world, where the blue bars are the walls, the red bars are the doors, and the green bar is the robot. While moving, our robot scans for doors and measures its distance to them. There is uncertainty in those measurements, however. There is also uncertainty in our robot’s proprioception (i.e. its sense of self-movement). We wish to estimate the robot’s position over time while acknowledging that uncertainty. So we will use a particle filter. The first two plots in the animation show how that position estimate or distribution evolves as the robot moves.</p>
+<p>To implement this particle filter in Beluga, we will need a map, a motion model, a sensor model, and a prior or initial position estimate. We can then write an <abbr title="Monte Carlo Localization">MCL</abbr> algorithm to estimate the robot’s position over time.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<p>Make sure to <a class="reference internal" href="../getting-started/installation.html"><span class="std std-doc">install Beluga</span></a> first.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>It is highly recommended to first read through the <a class="reference internal" href="../concepts/key-concepts.html"><span class="std std-doc">key concepts</span></a> section before diving into this tutorial.</p>
+</div>
+</section>
+<section id="tasks">
+<h2>Tasks<a class="headerlink" href="#tasks" title="Link to this heading">#</a></h2>
+<p>This tutorial will go over the implementation of a (bootstrap) particle filter to solve our one-dimensional state estimation problem.</p>
+<section id="develop">
+<h3>1 Develop<a class="headerlink" href="#develop" title="Link to this heading">#</a></h3>
+<p>To begin with, put the following code in a <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code> file:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cmath&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;random&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/action.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/algorithm/any_of.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/algorithm/min_element.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/numeric/accumulate.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/range/conversion.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/view/generate.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/view/take_exactly.hpp&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;beluga/beluga.hpp&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Parameters</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">map_size</span><span class="p">{</span><span class="mi">100</span><span class="p">};</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">number_of_particles</span><span class="p">{</span><span class="mi">300</span><span class="p">};</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">number_of_cycles</span><span class="p">{</span><span class="mi">100</span><span class="p">};</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">initial_position</span><span class="p">{</span><span class="mf">0.0</span><span class="p">};</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">initial_position_sigma</span><span class="p">{</span><span class="mf">10.0</span><span class="p">};</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">dt</span><span class="p">{</span><span class="mf">1.0</span><span class="p">};</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">velocity</span><span class="p">{</span><span class="mf">1.0</span><span class="p">};</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">motion_model_sigma</span><span class="p">{</span><span class="mf">1.0</span><span class="p">};</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sensor_range</span><span class="p">{</span><span class="mf">3.0</span><span class="p">};</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sensor_model_sigma</span><span class="p">{</span><span class="mf">1.0</span><span class="p">};</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">min_particle_weight</span><span class="p">{</span><span class="mf">0.08</span><span class="p">};</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">landmark_map</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">37</span><span class="p">,</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w"> </span><span class="mi">55</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="mi">97</span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">Particle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">Weight</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">Parameters</span><span class="w"> </span><span class="n">parameters</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">initial_position_distribution</span><span class="p">(</span>
+<span class="w">      </span><span class="n">parameters</span><span class="p">.</span><span class="n">initial_position</span><span class="p">,</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">initial_position_sigma</span><span class="p">);</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">particles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">sample</span><span class="p">(</span><span class="n">initial_position_distribution</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">         </span><span class="c1">//</span>
+<span class="w">                   </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">transform</span><span class="p">(</span><span class="n">beluga</span><span class="o">::</span><span class="n">make_from_state</span><span class="o">&lt;</span><span class="n">Particle</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">                   </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">take_exactly</span><span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">number_of_particles</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">                   </span><span class="n">ranges</span><span class="o">::</span><span class="n">to</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">current_position</span><span class="p">{</span><span class="n">parameters</span><span class="p">.</span><span class="n">initial_position</span><span class="p">};</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">number_of_cycles</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">current_position</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">dt</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">current_position</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">map_size</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">motion_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">position</span><span class="p">,</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">random_engine</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">motion_distribution</span><span class="p">(</span>
+<span class="w">          </span><span class="n">parameters</span><span class="p">.</span><span class="n">velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">dt</span><span class="p">,</span>
+<span class="w">          </span><span class="n">parameters</span><span class="p">.</span><span class="n">motion_model_sigma</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">dt</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">position</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">motion_distribution</span><span class="p">(</span><span class="n">random_engine</span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">range_measurements</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">parameters</span><span class="p">.</span><span class="n">landmark_map</span><span class="w"> </span><span class="o">|</span><span class="w">                                                                                   </span><span class="c1">//</span>
+<span class="w">        </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">transform</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">landmark_position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">landmark_position</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">current_position</span><span class="p">;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">        </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">remove_if</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">range</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">range</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">sensor_range</span><span class="p">;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">|</span><span class="w">         </span><span class="c1">//</span>
+<span class="w">        </span><span class="n">ranges</span><span class="o">::</span><span class="n">to</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sensor_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">range_map</span><span class="w"> </span><span class="o">=</span>
+<span class="w">          </span><span class="n">parameters</span><span class="p">.</span><span class="n">landmark_map</span><span class="w"> </span><span class="o">|</span><span class="w">                                                                           </span><span class="c1">//</span>
+<span class="w">          </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">transform</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">landmark_position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">landmark_position</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">position</span><span class="p">;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">          </span><span class="n">ranges</span><span class="o">::</span><span class="n">to</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">min_particle_weight</span><span class="w"> </span><span class="o">+</span>
+<span class="w">             </span><span class="n">std</span><span class="o">::</span><span class="n">transform_reduce</span><span class="p">(</span>
+<span class="w">                 </span><span class="n">range_measurements</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">range_measurements</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="o">&lt;&gt;</span><span class="p">{},</span>
+<span class="w">                 </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">range_measurement</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                   </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">distances</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">range_map</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">transform</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">range</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                                            </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">range</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">range_measurement</span><span class="p">);</span>
+<span class="w">                                          </span><span class="p">});</span>
+<span class="w">                   </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">min_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">distances</span><span class="p">);</span>
+<span class="w">                   </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">exp</span><span class="p">((</span><span class="mi">-1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">min_distance</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">sensor_model_sigma</span><span class="p">));</span>
+<span class="w">                 </span><span class="p">});</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">particles</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">actions</span><span class="o">::</span><span class="n">propagate</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">execution</span><span class="o">::</span><span class="n">seq</span><span class="p">,</span><span class="w"> </span><span class="n">motion_model</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">particles</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">actions</span><span class="o">::</span><span class="n">reweight</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">execution</span><span class="o">::</span><span class="n">seq</span><span class="p">,</span><span class="w"> </span><span class="n">sensor_model</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">actions</span><span class="o">::</span><span class="n">normalize</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">particles</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">sample</span><span class="w"> </span><span class="o">|</span><span class="w">                                        </span><span class="c1">//</span>
+<span class="w">                 </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">take_exactly</span><span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">number_of_particles</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">                 </span><span class="n">beluga</span><span class="o">::</span><span class="n">actions</span><span class="o">::</span><span class="n">assign</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">estimation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">estimate</span><span class="p">(</span><span class="n">beluga</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">states</span><span class="p">(</span><span class="n">particles</span><span class="p">),</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">weights</span><span class="p">(</span><span class="n">particles</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The code is written using C++17 with the <a class="reference external" href="https://ericniebler.github.io/range-v3"><code class="docutils literal notranslate"><span class="pre">ranges-v3</span></code></a> library for range handling along with its respective algorithms.</p>
+</div>
+<p>Now, let’s break it down.</p>
+</section>
+<section id="parameters">
+<h3>1.1 Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
+<p>This data structure contains all the parameters we need to simulate our one-dimensional world, initialized to suitable defaults.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Parameters</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">/// Size of the 1D map in (m)</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * 1D map space is continuous, but its size is defined</span>
+<span class="cm">   * as an integer to simplify data visualization.</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">map_size</span><span class="p">{</span><span class="mi">100</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Fixed number of particles used by the algorithm.</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">number_of_particles</span><span class="p">{</span><span class="mi">200</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Number of simulation cycles.</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">number_of_cycles</span><span class="p">{</span><span class="mi">100</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Initial robot position, in meters (m).</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">initial_position</span><span class="p">{</span><span class="mf">0.0</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Standard deviation of the robot&#39;s estimate of its initial position.</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">initial_position_sigma</span><span class="p">{</span><span class="mf">1.0</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Delta time in seconds (s).</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">dt</span><span class="p">{</span><span class="mf">1.0</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Constant robot velocity, in meters per second (m/s).</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">velocity</span><span class="p">{</span><span class="mf">1.0</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Motion model standard deviation, in meters per second (m/s).</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Models the uncertainty in the robot&#39;s estimate of its own velocity.</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">motion_model_sigma</span><span class="p">{</span><span class="mf">1.0</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Sensor field of view, in meters (m).</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sensor_range</span><span class="p">{</span><span class="mf">2.0</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Sensor model standard deviation, in meters (m).</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Models the uncertainty in range measurements to landmarks.</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sensor_model_sigma</span><span class="p">{</span><span class="mf">1.0</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Minimum particle weight.</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Used to keep all particles &quot;alive&quot; in the reweight step.</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">min_particle_weight</span><span class="p">{</span><span class="mf">0.08</span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">/// Landmark positions in the simulated world.</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">landmark_map</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="landmark-map">
+<h3>1.2 Landmark map<a class="headerlink" href="#landmark-map" title="Link to this heading">#</a></h3>
+<p>Note the landmark map among parameters. In this tutorial, the landmark map stores the position of all known doors. It is a <em>feature-based map</em>, but doors have no distinguishing properties.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Parameters</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Rest of parameters</span>
+<span class="w">  </span><span class="c1">// ...</span>
+
+<span class="w">  </span><span class="c1">/// Landmark coordinates in the simulated world.</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">landmark_map</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">37</span><span class="p">,</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w"> </span><span class="mi">55</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="mi">97</span><span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>If you are going to change the position of the landmarks, make sure to update the <code class="docutils literal notranslate"><span class="pre">map_size</span></code> as well.</p>
+</div>
+</section>
+<section id="initial-belief">
+<h3>1.3 Initial belief<a class="headerlink" href="#initial-belief" title="Link to this heading">#</a></h3>
+<p>Filtering algorithms require an initial belief <span class="math notranslate nohighlight">\(bel(x_0)\)</span> at time <span class="math notranslate nohighlight">\(t = 0\)</span> – a prior distribution. If one knows the value of <span class="math notranslate nohighlight">\(x_0\)</span> with some certainty, <span class="math notranslate nohighlight">\(bel(x_0)\)</span> should be initialized to a distribution where all probability mass is centered at and close to the <span class="math notranslate nohighlight">\(x_0\)</span> value. Otherwise, a uniform distribution over all space can be used to initialize <span class="math notranslate nohighlight">\(x_0\)</span>.</p>
+<p>In our case, to demonstrate how the filter is capable of converging to the true state, we will draw particles from a normal distribution centered at the true initial position:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">initial_position_distribution</span><span class="p">(</span>
+<span class="w">    </span><span class="n">parameters</span><span class="p">.</span><span class="n">initial_position</span><span class="p">,</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">initial_position_sigma</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">particles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">sample</span><span class="p">(</span><span class="n">initial_position_distribution</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">         </span><span class="c1">//</span>
+<span class="w">                 </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">transform</span><span class="p">(</span><span class="n">beluga</span><span class="o">::</span><span class="n">make_from_state</span><span class="o">&lt;</span><span class="n">Particle</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">                 </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">take_exactly</span><span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">number_of_particles</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">                 </span><span class="n">ranges</span><span class="o">::</span><span class="n">to</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Note that:</p>
+<ul class="simple">
+<li><p>we configure a <code class="docutils literal notranslate"><span class="pre">std::normal_distribution&lt;double&gt;</span></code> with <code class="docutils literal notranslate"><span class="pre">parameters.initial_position</span></code> and <code class="docutils literal notranslate"><span class="pre">parameters.initial_position_sigma</span></code> as mean and standard deviation, respectively.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">beluga::views::sample</span></code> samples robot states (ie. a scalar position) from the distribution.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ranges::views::transform</span></code> transforms each state into a weighted particle, as defined by <code class="docutils literal notranslate"><span class="pre">using</span> <span class="pre">Particle</span> <span class="pre">=</span> <span class="pre">std::tuple&lt;double,</span> <span class="pre">beluga::Weight&gt;;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ranges::views::take_exactly</span></code> takes as many particles as <code class="docutils literal notranslate"><span class="pre">parameters.number_of_particles</span></code> specifies.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ranges::to&lt;std::vector&gt;</span></code> turns the range into an <code class="docutils literal notranslate"><span class="pre">std::vector</span></code>.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Read about <a class="reference external" href="https://en.cppreference.com/w/cpp/named_req/RangeAdaptorClosureObject">range adaptor closures</a> to understand the <code class="docutils literal notranslate"><span class="pre">|</span></code> operator.</p>
+</div>
+</section>
+<section id="system-modelling">
+<h3>1.4 System modelling<a class="headerlink" href="#system-modelling" title="Link to this heading">#</a></h3>
+<p>Parameters <code class="docutils literal notranslate"><span class="pre">initial_position</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span></code>, and <code class="docutils literal notranslate"><span class="pre">dt</span></code> configure a constant velocity model for our one-dimensional robot kinematics:</p>
+<div class="math notranslate nohighlight" id="equation-robot-kinematic">
+<span class="eqno">(1)<a class="headerlink" href="#equation-robot-kinematic" title="Link to this equation">#</a></span>\[x_k = x_{k-1} + v \mathrm{d}t\]</div>
+<p>Note <span class="math notranslate nohighlight">\(t = k \mathrm{d}t\)</span> i.e. time is discretized.</p>
+<p>This equation will be stepped a configurable  <code class="docutils literal notranslate"><span class="pre">number_of_cycles</span></code> or until the robot reaches its map boundary:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">current_position</span><span class="p">{</span><span class="n">parameters</span><span class="p">.</span><span class="n">initial_position</span><span class="p">};</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">number_of_cycles</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">current_position</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">dt</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">current_position</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">map_size</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Rest of the code</span>
+<span class="w">  </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We will also simulate sensor data, measuring the distance between the robot’s <code class="docutils literal notranslate"><span class="pre">current_position</span></code> and nearby landmarks. The field of view of the sensor can be configured by <code class="docutils literal notranslate"><span class="pre">parameters.sensor_range</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">range_measurements</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">parameters</span><span class="p">.</span><span class="n">landmark_map</span><span class="w"> </span><span class="o">|</span><span class="w">                                                                                   </span><span class="c1">//</span>
+<span class="w">    </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">transform</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">landmark_position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">landmark_position</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">current_position</span><span class="p">;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">    </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">remove_if</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">range</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">range</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">sensor_range</span><span class="p">;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">|</span><span class="w">         </span><span class="c1">//</span>
+<span class="w">    </span><span class="n">ranges</span><span class="o">::</span><span class="n">to</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Note that:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">parameters.landmark_map</span></code> is the map configured above.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ranges::views::transform</span></code> computes the distance to each landmark.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ranges::views::remove_if</span></code> removes all landmarks beyond the sensor field of view.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ranges::to&lt;std::vector&gt;</span></code> turns the range into an <code class="docutils literal notranslate"><span class="pre">std::vector</span></code>.</p></li>
+</ul>
+</section>
+<section id="filter-prediction-step">
+<h3>1.5 Filter prediction step<a class="headerlink" href="#filter-prediction-step" title="Link to this heading">#</a></h3>
+<p>For the prediction step, we will take a noisy velocity measurement as our control action and integrate it. While technically a sensor measurement, this poses no problem for the particle filter. We could have equally used a fixed velocity control setpoint (i.e. a point mass conditional distribution for a motion model) and simulated actuation noise instead.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">motion_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">position</span><span class="p">,</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">random_engine</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">motion_distribution</span><span class="p">(</span>
+<span class="w">      </span><span class="n">parameters</span><span class="p">.</span><span class="n">velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">motion_model_sigma</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">dt</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">position</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">motion_distribution</span><span class="p">(</span><span class="n">random_engine</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Note that:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">position</span></code> is the robot state <span class="math notranslate nohighlight">\(x_{t-1}\)</span> that conditions <span class="math notranslate nohighlight">\(p(x_t|x_{t-1}, u_t)\)</span>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">distance</span> <span class="pre">=</span> <span class="pre">parameters.velocity</span> <span class="pre">*</span> <span class="pre">parameters.dt</span></code> integrates the velocity setpoint.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">std::normal_distribution&lt;double&gt;</span> <span class="pre">distribution</span></code> models velocity uncertainty as additive Gaussian noise.</p></li>
+</ul>
+<p>The motion model then returns a new particle state, effectively sampling the <span class="math notranslate nohighlight">\(p(x_t|x_{t-1}, u_t)\)</span> distribution.</p>
+<p>To apply this motion model to the whole <code class="docutils literal notranslate"><span class="pre">particles</span></code> range, we use the <code class="docutils literal notranslate"><span class="pre">beluga::actions::propagate</span></code> action:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">particles</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">actions</span><span class="o">::</span><span class="n">propagate</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">execution</span><span class="o">::</span><span class="n">seq</span><span class="p">,</span><span class="w"> </span><span class="n">motion_model</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This yields the proposal distribution <span class="math notranslate nohighlight">\(q(x_t|x_{t-1})\)</span> for our particle filter.</p>
+</section>
+<section id="filter-update-step">
+<h3>1.6 Filter update step<a class="headerlink" href="#filter-update-step" title="Link to this heading">#</a></h3>
+<p>For the measurement update step, we will calculate the measurements likelihood by aggregating that of each landmark:</p>
+<div class="math notranslate nohighlight" id="equation-importance-factor">
+<span class="eqno">(2)<a class="headerlink" href="#equation-importance-factor" title="Link to this equation">#</a></span>\[p(z_t | x_t, m) = \prod_i p(z_{t}^{i} | x_t, m)\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This sensor model rests on a conditional independence assumption for landmark detections, given robot state and landmark map. This simplifying assumption is adequate in this case because there is no structure to the landmark map nor are we trying (or need) to exploit it.</p>
+</div>
+<p>To do this, we need to construct the likely set of range measurements given robot position and landmark map:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sensor_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">range_map</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">parameters</span><span class="p">.</span><span class="n">landmark_map</span><span class="w"> </span><span class="o">|</span><span class="w">                                                                           </span><span class="c1">//</span>
+<span class="w">      </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">transform</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">landmark_position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">landmark_position</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">position</span><span class="p">;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">      </span><span class="n">ranges</span><span class="o">::</span><span class="n">to</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Rest of the code</span>
+<span class="w">  </span><span class="c1">// ...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">std::transform_reduce()</span></code> can then be used to compute equation <a class="reference internal" href="#equation-importance-factor">(2)</a>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sensor_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">range_map</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">parameters</span><span class="p">.</span><span class="n">landmark_map</span><span class="w"> </span><span class="o">|</span><span class="w">                                                                           </span><span class="c1">//</span>
+<span class="w">      </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">transform</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">landmark_position</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">landmark_position</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">position</span><span class="p">;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">      </span><span class="n">ranges</span><span class="o">::</span><span class="n">to</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">min_particle_weight</span><span class="w"> </span><span class="o">+</span>
+<span class="w">         </span><span class="n">std</span><span class="o">::</span><span class="n">transform_reduce</span><span class="p">(</span>
+<span class="w">             </span><span class="n">range_measurements</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">range_measurements</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="o">&lt;&gt;</span><span class="p">{},</span>
+<span class="w">             </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">range_measurement</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">distances</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">range_map</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">transform</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">range</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                                        </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">range</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">range_measurement</span><span class="p">);</span>
+<span class="w">                                      </span><span class="p">});</span>
+<span class="w">               </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">min_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">distances</span><span class="p">);</span>
+<span class="w">               </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">exp</span><span class="p">((</span><span class="mi">-1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">min_distance</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">parameters</span><span class="p">.</span><span class="n">sensor_model_sigma</span><span class="p">));</span>
+<span class="w">             </span><span class="p">});</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Note that:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">position</span></code> is the robot state <span class="math notranslate nohighlight">\(x_t\)</span> that conditions the likelihood <span class="math notranslate nohighlight">\(p(z_t|x_t)\)</span>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">range_map</span></code> is a range of relative distances from the landmarks to the evaluated particle.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tutorial_params.min_particle_weight</span></code> prevents total weight depletion, keeping particles “alive” even when its probability is low.</p></li>
+<li><p>The likelihood of each landmark detection is computed by applying a Gaussian kernel to the distance to the nearest landmark.</p></li>
+</ul>
+<p>To apply this sensor model to the whole <code class="docutils literal notranslate"><span class="pre">particles</span></code> range, we use the <code class="docutils literal notranslate"><span class="pre">beluga::actions::reweight</span></code> action. We also normalize all weights using the <code class="docutils literal notranslate"><span class="pre">beluga::actions::normalize</span></code> action:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">particles</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">actions</span><span class="o">::</span><span class="n">reweight</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">execution</span><span class="o">::</span><span class="n">seq</span><span class="p">,</span><span class="w"> </span><span class="n">sensor_model</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">actions</span><span class="o">::</span><span class="n">normalize</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This yields the posterior state distribution or updated belief.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Note that the measurement update step does not change the spatial distribution of the particle set.</p>
+</div>
+</section>
+<section id="filter-resampling-step">
+<h3>1.6.2 Filter resampling step<a class="headerlink" href="#filter-resampling-step" title="Link to this heading">#</a></h3>
+<p>To avoid weight degeneracy, the filter must <em>resample</em>, drawing a new set of particles from the current set, with replacement, using particle weights as the unnormalized probabilities of a multinomial distribution:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">particles</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">sample</span><span class="w"> </span><span class="o">|</span><span class="w">                                        </span><span class="c1">//</span>
+<span class="w">             </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">take_exactly</span><span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">number_of_particles</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="c1">//</span>
+<span class="w">             </span><span class="n">beluga</span><span class="o">::</span><span class="n">actions</span><span class="o">::</span><span class="n">assign</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">beluga::views::sample</span></code> samples particles from <code class="docutils literal notranslate"><span class="pre">particles</span></code> according to their weights.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ranges::views::take_exactly</span></code> takes as many particles as <code class="docutils literal notranslate"><span class="pre">parameters.number_of_particles</span></code> specifies.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">beluga::actions::assign</span></code> effectively converts any view into an action and assigns the result to <code class="docutils literal notranslate"><span class="pre">particles</span></code>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Other particle filtering techniques use different resampling schemes. Adaptive Monte Carlo Localization (AMCL) dynamically adjusts the number of particles to match the complexity of the posterior distribution. For simplicity’s sake, we use a fixed number of particles. This yields adequate performance.</p>
+</div>
+</section>
+<section id="estimate">
+<h3>1.7 Estimate<a class="headerlink" href="#estimate" title="Link to this heading">#</a></h3>
+<p>The output of our <abbr title="Monte Carlo Localization">MCL</abbr> algorithm is an estimate of the posterior state distribution or belief, represented by a set of weighted particles. To determine the <strong>mean</strong> and <strong>variance</strong> parameters of this distribution, we can use <code class="docutils literal notranslate"><span class="pre">beluga::estimate</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">estimation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">estimate</span><span class="p">(</span><span class="n">beluga</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">states</span><span class="p">(</span><span class="n">particles</span><span class="p">),</span><span class="w"> </span><span class="n">beluga</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">weights</span><span class="p">(</span><span class="n">particles</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Note that:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">beluga::views::states</span></code> obtains a view to the state of each particle in the given range.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">beluga::views::weights</span></code> obtains a view to the weight of each particle in the given range.</p></li>
+</ul>
+</section>
+</section>
+<section id="compile-and-run">
+<h2>2 Compile and run<a class="headerlink" href="#compile-and-run" title="Link to this heading">#</a></h2>
+<p>We are almost there! Add a <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file next to your <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code> file, and copy the following:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
+
+<span class="nb">project</span><span class="p">(</span><span class="s">beluga_tutorial</span><span class="p">)</span>
+
+<span class="nb">find_package</span><span class="p">(</span><span class="s">beluga</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="s">src/main.cpp</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="s">beluga::beluga</span><span class="p">)</span>
+
+<span class="nb">install</span><span class="p">(</span><span class="s">TARGETS</span><span class="w"> </span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="s">RUNTIME</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">lib/</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now you can configure and build the tutorial:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>build
+<span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>..
+make
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">..</span></code> command fails, you may need to source the path where Beluga is installed.</p>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">beluga_tutorial</span></code> executable will show up. Run it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./beluga_tutorial
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -420,6 +843,35 @@ document.write(`
             
             
               
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">Tasks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#develop">1 Develop</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">1.1 Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#landmark-map">1.2 Landmark map</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-belief">1.3 Initial belief</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-modelling">1.4 System modelling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-prediction-step">1.5 Filter prediction step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-update-step">1.6 Filter update step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-resampling-step">1.6.2 Filter resampling step</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimate">1.7 Estimate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compile-and-run">2 Compile and run</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -448,7 +900,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Fri Jul 5 09:00:08 2024 -0300, 4fd65a7&#39;.
+  Last updated on &#39;Fri Jul 5 12:07:06 2024 -0300, 24be8ad&#39;.
   <br/>
 </p>
   </div>
