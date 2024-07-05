@@ -6,23 +6,23 @@
 
 ## Overview
 
-[Nav2](https://docs.nav2.org/index.html) is a ROS2 framework that includes several components for robot navigation. Among these components is the localization system, which typically uses the [nav2_amcl](https://github.com/ros-navigation/navigation2/tree/humble/nav2_amcl) implementation.
+[Nav2](https://docs.nav2.org/index.html) is a ROS 2 framework that includes several components for robot navigation. One of these components is the localization system, typically [nav2_amcl](https://github.com/ros-navigation/navigation2/tree/humble/nav2_amcl).
 
-This tutorial will demonstrate how to integrate [beluga_amcl](../packages/beluga_amcl/docs/index.md) into the Nav2 stack as an alternative to the default `nav2_amcl`.
+This tutorial will demonstrate how to use [beluga_amcl](../packages/beluga_amcl/docs/index.md) in place for `nav2_amcl`.
 
-To keep things straightforward, we’ll base this tutorial on the [Nav2 Getting Started Guide](https://docs.nav2.org/getting_started/index.html#). We will use the simulated robot and environment provided by [TurtleBot 3](https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/).
+To keep it simple, we have built this tutorial on top of the [Nav2 Getting Started Guide](https://docs.nav2.org/getting_started/index.html#). We will use the same simulated [TurtleBot 3](https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/) robot and environment.
 
 ## Requirements
 
 :::{important}
-This tutorial is using ROS2 **Humble**.
+This tutorial is using ROS 2 **Humble**.
 :::
 
-Install [ROS2](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html), [Beluga](../getting-started/installation.md) and [Nav2](https://docs.nav2.org/getting_started/index.html#installation).
+Install [ROS2](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html), [Beluga](../getting-started/installation.md), and [Nav2](https://docs.nav2.org/getting_started/index.html#installation).
 
 ## Create the workspace
 
-Since we are using ROS2, we need to create a workspace. Open a terminal and run the following command:
+Since we are using ROS 2, we need to create a workspace. Open a terminal and run the following command:
 
 ```bash
 mkdir -p ~/beluga_demo_ws/src
@@ -34,25 +34,21 @@ mkdir -p ~/beluga_demo_ws/src
 
 The [beluga_demo](https://github.com/Ekumen-OS/beluga-demos) is a public repository where you can find the `beluga_demo_nav2` package, among others.
 
-Clone the repository into the workspace you created earlier:
+Clone the [`Ekumen-OS/beluga-demos`](https://github.com/Ekumen-OS/beluga-demos) repository in your workspace:
 
 ```bash
 cd ~/beluga_demo_ws/src
 git clone https://github.com/Ekumen-OS/beluga-demos.git
 ```
 
-:::{note}
-For this tutorial, we will use only the `beluga_demo_nav2` package from the `beluga_demo` repository. This package contains all the necessary files to launch the simulation.
-:::
+For this tutorial, we will only use the `beluga_demo_nav2` package in that repository. This package contains all the necessary files to launch the simulation.
 
 ### Explanation
 
-As explained in the [beluga_amcl ROS2 reference](../packages/beluga_amcl/docs/ros2-reference.md), `beluga_amcl` is feature-wise compatible with `nav2_amcl`.
-
-Because of this, we copied the necessary folders and files from `nav2_bringup` to the `beluga_demo_nav2` package, simplified them, and replaced the use of `nav2_amcl` with `beluga_amcl` in the `localization_launch.py` launch file, as shown in the following images.
+Since `beluga_amcl` is feature-wise compatible with `nav2_amcl` (as thoroughly discussed in the [`beluga_amcl` ROS 2 reference page](../packages/beluga_amcl/docs/ros2-reference.md)), we can adapt to use `beluga_amcl` instead of `nav2_amcl` by loading the `beluga_amcl` component into the `nav2_container` as it is done in the `beluga_nav2_launch.py` file:
 
 :::{figure} ../_images/beluga_amcl.png
-:alt: beluga_amcl component in localization_launch.py from beluga_demo_nav2 package.
+:alt: beluga_amcl component in beluga_nav2_launch.py from beluga_demo_nav2 package.
 :align: center
 
 Load of beluga_amcl composable node from beluga_demo_nav2 package.
@@ -65,7 +61,7 @@ Load of beluga_amcl composable node from beluga_demo_nav2 package.
 Load of nav2_amcl composable node from nav2_bringup package.
 :::
 
-Similarly, the parameter file we use is the same as the one from the `nav2_bringup` package, with minimal modifications. These modifications are explained in the table found on the *beluga_amcl ROS2 reference* page.
+That is what the `beluga_demo_nav2` package does. Even the same parameter file can be used unchanged, though `beluga_demo_nav2` does apply a few minimal changes to better configure `beluga_amcl`, as explained in reference page.
 
 ## Run the example
 
@@ -77,22 +73,22 @@ cd ~/beluga_demo_ws
 colcon build --symlink-install --packages-up-to beluga_demo_nav2
 ```
 
-Launch the program:
+Launch the system:
 
 ```bash
 source install/local_setup.bash
-ros2 launch beluga_demo_nav2 beluga_demo_nav2_launch.py
+ros2 launch beluga_demo_nav2 bringup_launch.py
 ```
 
-After launching the program, you should see rviz2 open with a map loaded and the robot initialized in an incorrect position. You should also see Gazebo open with the TurtleBot 3 world and robot spawned.
+You should see `rviz2` open with a map loaded and the robot initialized in an incorrect position. You should also see Gazebo open with both TurtleBot 3 world and robot spawned.
 
 :::{image} ../_images/beluga_nav2_rviz.png
-:alt: nav2_amcl component in localization_launch.py from nav2_bringup package.
+:alt: beluga_amcl component in beluga_nav2_launch.py from beluga_demo_nav2 package.
 :align: center
 :::
 
 :::{image} ../_images/beluga_nav2_gazebo.png
-:alt: nav2_amcl component in localization_launch.py from nav2_bringup package.
+:alt: beluga_amcl component in beluga_nav2_launch.py from beluga_demo_nav2 package.
 :align: center
 :::
 
@@ -100,8 +96,8 @@ After launching the program, you should see rviz2 open with a map loaded and the
 If the robot is not spawned in gazebo, check the `GAZEBO_MODEL_PATH` environment variable set in the `beluga_demo_nav2_launch.py` file.
 :::
 
-At this point, the program is ready to start. You can use the rviz2 tools to set the correct initial pose of the robot and to navigate the robot alongside the map.
+You can use `rviz2` tools to set the correct initial pose of the robot and to navigate the robot around the map.
 
 ## Conclusion
 
-This tutorial demonstrates a specific integration case using ROS2 Humble and the TurtleBot 3 with Nav2. You can also try using Beluga with other ROS/ROS2 versions and different types of robots.
+This tutorial integrates Beluga and Nav2 for a simulated TurtleBot 3 on ROS 2 Humble. You may also try using Beluga on other supported ROS 2 versions, with different types of robots.
