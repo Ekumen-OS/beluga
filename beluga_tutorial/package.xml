@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>beluga_tutorial</name>
-  <version>2.0.1</version>
+  <version>2.0.2</version>
 
   <description>Primer on Particle Filtering with Beluga.</description>
 
@@ -17,6 +17,10 @@
 
   <depend>beluga</depend>
   <depend condition="$ROS_VERSION == 2">yaml_cpp_vendor</depend>
+
+  <exec_depend condition="$ROS_VERSION == 2">python3-matplotlib</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-numpy</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-yaml</exec_depend>
 
   <export>
     <build_type>cmake</build_type>

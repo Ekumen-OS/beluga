@@ -21,6 +21,7 @@
 #include <beluga/sensor/data/regular_grid.hpp>
 
 #include <Eigen/Core>
+#include <beluga/eigen_compatibility.hpp>
 
 /**
  * \file
@@ -35,10 +36,10 @@ namespace beluga {
  * Dense grids support random, indexed access to each cell. These
  * grids have a finite extent and thus can hold cell data in finite
  * memory. Dense grids are regular grids, meaning they satisfy
- * \ref RegularGrid2Page requirements.
+ * \ref RegularGridPage requirements.
  *
  * A type `G` satisfies `DenseGrid2` requirements if it satisfies
- * \ref RegularGrid2Page and given `g` a possibly const instance of `G`:
+ * \ref RegularGridPage and given `g` a possibly const instance of `G`:
  * - `g.width()` returns the grid width, in grid cells along the grid
  *   x-axis, as an `std::size_t` value.
  * - `g.height()` returns the grid height, in grid cells along the grid
@@ -105,7 +106,8 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \return Cell data if included, `std::nullopt` otherwise.
    */
   [[nodiscard]] auto data_at(int xi, int yi) const {
-    return this->self().contains(xi, yi) ? this->self().data_at(this->self().index_at(xi, yi)) : std::nullopt;
+    return this->self().contains(xi, yi) ? this->self().data_at(this->self().index_at(Eigen::Vector2i{xi, yi}))
+                                         : std::nullopt;
   }
 
   /// Gets cell data, if included.
@@ -121,7 +123,9 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \param y Plane y-axis coordinate.
    * \return Cell data if included, `std::nullopt` otherwise.
    */
-  [[nodiscard]] auto data_near(double x, double y) const { return this->self().data_at(this->self().cell_near(x, y)); }
+  [[nodiscard]] auto data_near(double x, double y) const {
+    return this->self().data_at(this->self().cell_near(Eigen::Vector2d{x, y}));
+  }
 
   /// Gets nearest cell data, if included.
   /**

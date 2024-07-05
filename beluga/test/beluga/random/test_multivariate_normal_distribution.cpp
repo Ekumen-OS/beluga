@@ -128,4 +128,27 @@ TEST(MultivariateNormalDistribution, SE2Element) {
   ASSERT_NEAR(mean.translation()(1), expected_mean.translation()(1), kTolerance);
 }
 
+TEST(MultivariateNormalDistribution, SO3Element) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto expected_mean = Sophus::SO3d::exp(Eigen::Vector3d{0.5, 1.0, 1.5});
+  auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix3d::Zero()};
+  auto mean = distribution(generator);
+  ASSERT_NEAR(mean.log()(0), expected_mean.log()(0), 0.001);
+  ASSERT_NEAR(mean.log()(1), expected_mean.log()(1), 0.001);
+  ASSERT_NEAR(mean.log()(2), expected_mean.log()(2), 0.001);
+}
+
+TEST(MultivariateNormalDistribution, SE3Element) {
+  auto generator = std::mt19937{std::random_device()()};
+  auto expected_mean = Sophus::SE3d{Sophus::SO3d::exp(Eigen::Vector3d{0.5, 1.0, 1.5}), Eigen::Vector3d{1.0, 2.0, 3.0}};
+  auto distribution = beluga::MultivariateNormalDistribution{expected_mean, Eigen::Matrix<double, 6, 6>::Zero()};
+  auto mean = distribution(generator);
+  ASSERT_NEAR(mean.log()(0), expected_mean.log()(0), 0.001);
+  ASSERT_NEAR(mean.log()(1), expected_mean.log()(1), 0.001);
+  ASSERT_NEAR(mean.log()(2), expected_mean.log()(2), 0.001);
+  ASSERT_NEAR(mean.translation()(0), expected_mean.translation()(0), 0.001);
+  ASSERT_NEAR(mean.translation()(1), expected_mean.translation()(1), 0.001);
+  ASSERT_NEAR(mean.translation()(2), expected_mean.translation()(2), 0.001);
+}
+
 }  // namespace

@@ -125,7 +125,9 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    * \param x Plane x-axis coordinate.
    * \param y Plane y-axis coordinate.
    */
-  [[nodiscard]] bool free_near(double x, double y) const { return this->self().free_at(this->self().cell_near(x, y)); }
+  [[nodiscard]] bool free_near(double x, double y) const {
+    return this->self().free_at(this->self().cell_near(Eigen::Vector2d{x, y}));
+  }
 
   /// Checks if nearest cell is free.
   /**
