@@ -239,20 +239,26 @@ class NDTSensorModel {
 
 namespace io {
 
-/// Loads a 2D NDT map representation from a hdf5 file, with the following datasets:
+/// Loads a 2D or 3D NDT map representation from a hdf5 file, with the following datasets:
 /// - "resolution": () resolution for the discrete grid (cells are resolution x
-///   resolution m^2 squares).
-/// - "cells": (NUM_CELLS, 2) that contains the cell coordinates.
-/// - "means": (NUM_CELLS, 2) that contains the 2d mean of the normal distribution
+///   resolution m^2 squares for the 2D case and resolution**3 cubes for the 3D case).
+/// - "cells": (NUM_CELLS, 2 / 3) that contains the cell coordinates.
+/// - "means": (NUM_CELLS, 2 / 3) that contains the 2d mean of the normal distribution
 ///   of the cell.
-/// - "covariances": (NUM_CELLS, 2, 2) Contains the covariance for each cell.
+/// - "covariances": (NUM_CELLS, 2 / 3, 2 / 3) Contains the covariance for each cell.
 ///
 ///  \tparam NDTMapRepresentation A specialized SparseValueGrid (see sensor/data/sparse_value_grid.hpp), where
-///  mapped_type == NDTCell2d, that will represent the NDT map as a mapping from 2D cells to NDTCells.
+///  mapped_type == NDTCell2d / NDTCell3d, that will represent the NDT map as a mapping from 2D / 3D cells to NDTCells.
 template <typename NDTMapRepresentationT>
-NDTMapRepresentationT load_from_hdf5_2d(const std::filesystem::path& path_to_hdf5_file) {
-  static_assert(std::is_same_v<typename NDTMapRepresentationT::mapped_type, NDTCell2d>);
-  static_assert(std::is_same_v<typename NDTMapRepresentationT::key_type, Eigen::Vector2i>);
+NDTMapRepresentationT load_from_hdf5(const std::filesystem::path& path_to_hdf5_file) {
+  static_assert(
+      std::is_same_v<typename NDTMapRepresentationT::mapped_type, NDTCell2d> or
+      std::is_same_v<typename NDTMapRepresentationT::mapped_type, NDTCell3d>);
+  static_assert(
+      std::is_same_v<typename NDTMapRepresentationT::key_type, Eigen::Vector2i> or
+      std::is_same_v<typename NDTMapRepresentationT::key_type, Eigen::Vector3i>);
+
+  constexpr int kNumDim = NDTMapRepresentationT::key_type::RowsAtCompileTime;
   if (!std::filesystem::exists(path_to_hdf5_file) || std::filesystem::is_directory(path_to_hdf5_file)) {
     std::stringstream ss;
     ss << "Couldn't find a valid HDF5 file at " << path_to_hdf5_file;
@@ -274,13 +280,13 @@ NDTMapRepresentationT load_from_hdf5_2d(const std::filesystem::path& path_to_hdf
       static_cast<std::size_t>(dims_out[1]),
   };
 
-  Eigen::Matrix2Xd means_matrix(dims[1], dims[0]);
-  Eigen::Matrix2Xi cells_matrix(dims[1], dims[0]);
+  Eigen::Matrix<double, kNumDim, Eigen::Dynamic> means_matrix(dims[1], dims[0]);
+  Eigen::Matrix<int, kNumDim, Eigen::Dynamic> cells_matrix(dims[1], dims[0]);
 
   means_dataset.read(means_matrix.data(), H5::PredType::NATIVE_DOUBLE);
   cells_dataset.read(cells_matrix.data(), H5::PredType::NATIVE_INT);
 
-  std::vector<Eigen::Array<double, 2, 2>> covariances(dims[0]);
+  std::vector<Eigen::Array<double, kNumDim, kNumDim>> covariances(dims[0]);
   covariances_dataset.read(covariances.data(), H5::PredType::NATIVE_DOUBLE);
 
   double resolution;
@@ -292,7 +298,7 @@ NDTMapRepresentationT load_from_hdf5_2d(const std::filesystem::path& path_to_hdf
   // Note: Ranges::zip_view doesn't seem to work in old Eigen.
   for (size_t i = 0; i < covariances.size(); ++i) {
     map[cells_matrix.col(static_cast<Eigen::Index>(i))] =
-        NDTCell2d{means_matrix.col(static_cast<Eigen::Index>(i)), covariances.at(i)};
+        NDTCell<kNumDim, double>{means_matrix.col(static_cast<Eigen::Index>(i)), covariances.at(i)};
   }
 
   return NDTMapRepresentationT{std::move(map), resolution};
