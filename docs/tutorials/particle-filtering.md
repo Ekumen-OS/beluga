@@ -10,7 +10,7 @@ In this tutorial, we will show how to implement a custom {abbr}`MCL (Monte Carlo
 
 This tutorial takes after the one-dimensional particle filter example given in {cite}`thrun2005probabilistic{page 200, figure 8.11}`. There are walls and there are doors in our one-dimensional world, and our one-dimensional robot is free to move along this world. The last two plots in the animation shown above depict this world, where the blue bars are the walls, the red bars are the doors, and the green bar is the robot. While moving, our robot scans for doors and measures its distance to them. There is uncertainty in those measurements, however. There is also uncertainty in our robot's proprioception (i.e. its sense of self-movement). We wish to estimate the robot's position over time while acknowledging that uncertainty. So we will use a particle filter. The first two plots in the animation show how that position estimate or distribution evolves as the robot moves.
 
-To implement this particle filter in Beluga, we will need a map, a motion model, a sensor model, and a prior or initial position estimate. We can then write an {abbr}`MCL (Monte Carlo Localization)` algorithm to estimate the robot position over time.
+To implement this particle filter in Beluga, we will need a map, a motion model, a sensor model, and a prior or initial position estimate. We can then write an {abbr}`MCL (Monte Carlo Localization)` algorithm to estimate the robot's position over time.
 
 ## Requirements
 
