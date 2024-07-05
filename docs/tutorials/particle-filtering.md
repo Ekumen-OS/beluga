@@ -183,12 +183,6 @@ struct Parameters {
 
   /// Landmark positions in the simulated world.
   std::vector<double> landmark_map;
-
-  /// Dataset path.
-  /**
-   * The dataset file is used to save the data produced by the simulation for posterior analisys.
-   */
-  std::filesystem::path record_path{"./record.yaml"};
 };
 ```
 
