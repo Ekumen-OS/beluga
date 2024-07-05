@@ -222,9 +222,9 @@ auto particles = beluga::views::sample(initial_position_distribution) |         
 Note that:
 
 * we configure a `std::normal_distribution<double>` with `parameters.initial_position` and `parameters.initial_position_sigma` as mean and standard deviation, respectively.
-* `beluga::views::sample(initial_position_distribution)` samples robot states (ie. a scalar position) from the distribution.
-* `ranges::views::transform(beluga::make_from_state<Particle>)` transforms each state into a weighted particle, as defined by `using Particle = std::tuple<double, beluga::Weight>;`.
-* `ranges::views::take_exactly(tutorial_params.number_of_particles)` takes as many particles as `parameters.number_of_particles` specifies.
+* `beluga::views::sample` samples robot states (ie. a scalar position) from the distribution.
+* `ranges::views::transform` transforms each state into a weighted particle, as defined by `using Particle = std::tuple<double, beluga::Weight>;`.
+* `ranges::views::take_exactly` takes as many particles as `parameters.number_of_particles` specifies.
 * `ranges::to<std::vector>` turns the range into an `std::vector`.
 
 :::{tip}
