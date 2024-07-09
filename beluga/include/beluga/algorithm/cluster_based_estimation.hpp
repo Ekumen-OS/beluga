@@ -368,7 +368,7 @@ template <class States, class Weights, class Clusters>
   return particles |
 #if RANGE_V3_MAJOR == 0 && RANGE_V3_MINOR < 12
          // Compatibility support for old Range-v3 versions that don't have a `chunk_by` view.
-         // The difference with between the deprecated `group_by` and the standard `chunk_by` is:
+         // The difference between the deprecated `group_by` and the standard `chunk_by` is:
          // - group_by: The predicate is evaluated between the first element in the group and the current one.
          // - chunk_by: The predicate is evaluated between adjacent elements.
          //
@@ -381,13 +381,17 @@ template <class States, class Weights, class Clusters>
 #endif
          ranges::views::cache1 |  //
          ranges::views::filter([](auto subrange) {
+#if RANGE_V3_MAJOR == 0 && RANGE_V3_MINOR < 11
+           return ranges::distance(subrange) > 1;
+#else
            // If there's only one sample in the cluster we can't estimate the covariance.
            return subrange.size() > 1;
+#endif
          }) |
          ranges::views::transform([](auto subrange) {
            auto states = subrange | ranges::views::transform(&Particle::state);
            auto weights = subrange | ranges::views::transform(&Particle::weight);
-           const auto [mean, covariance] = estimate(states, weights);
+           const auto [mean, covariance] = beluga::estimate(states, weights);
            const auto total_weight = ranges::accumulate(weights, 0.0);
            return Estimate{total_weight, std::move(mean), std::move(covariance)};
          }) |
