@@ -64,7 +64,7 @@ template <class Map, class Proj>
 [[nodiscard]] auto make_priority_queue(const Map& map, Proj&& proj) {
   struct KeyWithPriority {
     double priority;  // priority value used to order the queue (higher value first).
-    std::size_t key;  // hash of the cell in the grid cell data map.
+    typename Map::key_type key;
 
     bool operator<(const KeyWithPriority& other) const {
       return priority < other.priority;  // sort in decreasing priority order
@@ -94,154 +94,155 @@ template <class Map, class Proj>
 template <class Range>
 [[nodiscard]] auto calculate_percentile_threshold(Range&& range, double percentile) {
   auto values = range | ranges::to<std::vector>;
-  const auto n = static_cast<std::size_t>(static_cast<double>(values.size()) * percentile);
+  const auto n = static_cast<std::ptrdiff_t>(static_cast<double>(values.size()) * percentile);
   std::nth_element(values.begin(), values.begin() + n, values.end());
-  return values[n];
+  return values[static_cast<std::size_t>(n)];
 }
 
-/// Implementation utilities for a particle clusterizer algorithm.
-struct ParticleClusterizerImpl {
-  /// A struct that holds the data of a single cell for the clusterization algorithm.
-  template <class State>
-  struct Cell {
-    State representative_state;             ///< state of a particle that is within the cell
-    double weight{0.0};                     ///< average weight of the cell
-    std::size_t num_particles{0};           ///< number of particles in the cell
-    std::optional<std::size_t> cluster_id;  ///< cluster id of the cell
-  };
+namespace clusterizer_detail {
 
-  /// A map that holds the sparse data about the particles grouped in cells.
-  template <class State>
-  using Map = std::unordered_map<std::size_t, Cell<State>>;
-
-  /// Create a cluster map from a range of particles and their corresponding spatial hashes.
-  /**
-   * This method will populate all the relevant fields in the map except for the cluster ID,
-   * which has to be computed with a separate call to `assign_clusters`.
-   *
-   * \tparam States The range type for particle states.
-   * \tparam Weights The range type for particle weights.
-   * \tparam Hashes The range type for particle spatial hashes.
-   * \param states A range of particle states.
-   * \param weights A range of particle weights.
-   * \param hashes A range of particle spatial hashes.
-   * \return A map where each unique hash corresponds to a cell with accumulated weight, particle count, and
-   * representative state.
-   */
-  template <class States, class Weights, class Hashes>
-  [[nodiscard]] static auto make_cluster_map(States&& states, Weights&& weights, Hashes&& hashes) {
-    using State = ranges::range_value_t<States>;
-    Map<State> map;
-
-    // Preallocate memory with a very rough estimation of the number of cells we might end up with.
-    map.reserve(states.size() / 5);
-
-    // Calculate the accumulated cell weight and save a single representative state for each cell.
-    for (const auto& [state, weight, hash] : ranges::views::zip(states, weights, hashes)) {
-      auto [it, inserted] = map.try_emplace(hash, Cell<State>{});
-      auto& [_, entry] = *it;
-      entry.weight += weight;
-      entry.num_particles++;
-      if (inserted) {
-        entry.representative_state = state;
-      }
-    }
-
-    return map;
-  }
-
-  /// Normalize weights and cap them to a given percentile.
-  /**
-   * Given a valid cluster map, normalize the accumulated weight by the number of particles
-   * in each cell to avoid biasing the clustering algorithm towards cells that randomly end up
-   * with more particles than others.
-   *
-   * Then cap the values to a given percentile to flatten the top of the approximated
-   * density function and make the clustering algorithm more robust to estimation noise,
-   * by fusing together any adjacent peaks whose weight is above the threshold.
-   *
-   * \tparam State The state type of the cells in the map.
-   * \param map A reference to the map where cells are stored.
-   * \param percentile The percentile threshold for capping the weights.
-   */
-  template <class State>
-  static void normalize_and_cap_weights(Map<State>& map, double percentile) {
-    auto entries = ranges::views::values(map);
-
-    for (auto& entry : entries) {
-      assert(entry.num_particles > 0);
-      entry.weight /= static_cast<double>(entry.num_particles);
-    }
-
-    const double max_weight =
-        calculate_percentile_threshold(ranges::views::transform(entries, &Cell<State>::weight), percentile);
-
-    for (auto& entry : entries) {
-      entry.weight = std::min(entry.weight, max_weight);
-    }
-  }
-
-  /// Assign cluster ids to an existing cluster map.
-  /**
-   * This function implements a clustering algorithm that assigns cluster IDs to cells in a map
-   * based on their spatial relationships.
-   *
-   * Notice that with this algorithm each cell will go through the priority queue at most twice.
-   *
-   * \tparam State The state type of the cells in the map.
-   * \tparam NeighborsFunction A callable object that, given a state, returns a range of neighboring cell hashes.
-   * \param map A reference to the map where cells are stored.
-   * \param neighbors_function A function that returns neighboring cell hashes for a given state.
-   */
-  template <class State, class NeighborsFunction>
-  static void assign_clusters(Map<State>& map, NeighborsFunction&& neighbors_function) {
-    auto queue = make_priority_queue(map, &Cell<State>::weight);
-    const auto max_priority = queue.top().priority;
-
-    std::size_t next_cluster_id = 0;
-
-    // Process cells in order of descending weight.
-    while (!queue.empty()) {
-      const auto hash = queue.top().key;
-      queue.pop();
-
-      // The hash is guaranteed to exist in the map.
-      auto& cell = map[hash];
-
-      // If there's no cluster id assigned to the cell, assign a new one.
-      if (!cell.cluster_id.has_value()) {
-        cell.cluster_id = next_cluster_id++;
-      }
-
-      // Process the neighbors of the cell; if they don't have a cluster id already assigned
-      // then assign them one and add them to the queue with an inflated priority
-      // to ensure they get processed ASAP before moving on to other local peaks.
-      // Notice that with this algorithm each cell will go through the priority queue at most twice.
-
-      // Define a lambda to check if a neighboring cell is valid for clustering.
-      const auto is_valid_neighbor = [&](const auto& neighbor_hash) {
-        auto it = map.find(neighbor_hash);
-        return (
-            (it != map.end()) &&                     // is within the map
-            (!it->second.cluster_id.has_value()) &&  // AND not yet mapped to a cluster
-            (it->second.weight <= cell.weight));     // AND has lower weight than the current cell
-      };
-
-      // Process the neighbors of the current cell.
-      for (const std::size_t neighbor_hash : neighbors_function(cell.representative_state) |  //
-                                                 ranges::views::cache1 |                      //
-                                                 ranges::views::filter(is_valid_neighbor)) {
-        auto& neighbor = map[neighbor_hash];
-        neighbor.cluster_id = cell.cluster_id;
-        queue.push({max_priority + neighbor.weight, neighbor_hash});  // reintroduce with inflated priority
-      }
-    }
-  }
+/// A struct that holds the data of a single cell for the clusterization algorithm.
+template <class State>
+struct Cell {
+  State representative_state;             ///< state of a particle that is within the cell
+  double weight{0.0};                     ///< average weight of the cell
+  std::size_t num_particles{0};           ///< number of particles in the cell
+  std::optional<std::size_t> cluster_id;  ///< cluster id of the cell
 };
+
+/// A map that holds the sparse data about the particles grouped in cells.
+template <class State>
+using Map = std::unordered_map<std::size_t, Cell<State>>;
+
+/// Create a cluster map from a range of particles and their corresponding spatial hashes.
+/**
+ * This method will populate all the relevant fields in the map except for the cluster ID,
+ * which has to be computed with a separate call to `assign_clusters`.
+ *
+ * \tparam States The range type for particle states.
+ * \tparam Weights The range type for particle weights.
+ * \tparam Hashes The range type for particle spatial hashes.
+ * \param states A range of particle states.
+ * \param weights A range of particle weights.
+ * \param hashes A range of particle spatial hashes.
+ * \return A map where each unique hash corresponds to a cell with accumulated weight, particle count, and
+ * representative state.
+ */
+template <class States, class Weights, class Hashes>
+[[nodiscard]] static auto make_cluster_map(States&& states, Weights&& weights, Hashes&& hashes) {
+  using State = ranges::range_value_t<States>;
+  Map<State> map;
+
+  // Preallocate memory with a very rough estimation of the number of cells we might end up with.
+  map.reserve(states.size() / 5);
+
+  // Calculate the accumulated cell weight and save a single representative state for each cell.
+  for (const auto& [state, weight, hash] : ranges::views::zip(states, weights, hashes)) {
+    auto [it, inserted] = map.try_emplace(hash, Cell<State>{});
+    auto& [_, entry] = *it;
+    entry.weight += weight;
+    entry.num_particles++;
+    if (inserted) {
+      entry.representative_state = state;
+    }
+  }
+
+  return map;
+}
+
+/// Normalize weights and cap them to a given percentile.
+/**
+ * Given a valid cluster map, normalize the accumulated weight by the number of particles
+ * in each cell to avoid biasing the clustering algorithm towards cells that randomly end up
+ * with more particles than others.
+ *
+ * Then cap the values to a given percentile to flatten the top of the approximated
+ * density function and make the clustering algorithm more robust to estimation noise,
+ * by fusing together any adjacent peaks whose weight is above the threshold.
+ *
+ * \tparam State The state type of the cells in the map.
+ * \param map A reference to the map where cells are stored.
+ * \param percentile The percentile threshold for capping the weights.
+ */
+template <class State>
+static void normalize_and_cap_weights(Map<State>& map, double percentile) {
+  auto entries = ranges::views::values(map);
+
+  for (auto& entry : entries) {
+    assert(entry.num_particles > 0);
+    entry.weight /= static_cast<double>(entry.num_particles);
+  }
+
+  const double max_weight =
+      calculate_percentile_threshold(ranges::views::transform(entries, &Cell<State>::weight), percentile);
+
+  for (auto& entry : entries) {
+    entry.weight = std::min(entry.weight, max_weight);
+  }
+}
+
+/// Assign cluster ids to an existing cluster map.
+/**
+ * This function implements a clustering algorithm that assigns cluster IDs to cells in a map
+ * based on their spatial relationships.
+ *
+ * Notice that with this algorithm each cell will go through the priority queue at most twice.
+ *
+ * \tparam State The state type of the cells in the map.
+ * \tparam NeighborsFunction A callable object that, given a state, returns a range of neighboring cell hashes.
+ * \param map A reference to the map where cells are stored.
+ * \param neighbors_function A function that returns neighboring cell hashes for a given state.
+ */
+template <class State, class NeighborsFunction>
+static void assign_clusters(Map<State>& map, NeighborsFunction&& neighbors_function) {
+  auto queue = make_priority_queue(map, &Cell<State>::weight);
+  const auto max_priority = queue.top().priority;
+
+  std::size_t next_cluster_id = 0;
+
+  // Process cells in order of descending weight.
+  while (!queue.empty()) {
+    const auto hash = queue.top().key;
+    queue.pop();
+
+    // The hash is guaranteed to exist in the map.
+    auto& cell = map[hash];
+
+    // If there's no cluster id assigned to the cell, assign a new one.
+    if (!cell.cluster_id.has_value()) {
+      cell.cluster_id = next_cluster_id++;
+    }
+
+    // Process the neighbors of the cell; if they don't have a cluster id already assigned
+    // then assign them one and add them to the queue with an inflated priority
+    // to ensure they get processed ASAP before moving on to other local peaks.
+    // Notice that with this algorithm each cell will go through the priority queue at most twice.
+
+    // Define a lambda to check if a neighboring cell is valid for clustering.
+    const auto is_valid_neighbor = [&](const auto& neighbor_hash) {
+      auto it = map.find(neighbor_hash);
+      return (
+          (it != map.end()) &&                     // is within the map
+          (!it->second.cluster_id.has_value()) &&  // AND not yet mapped to a cluster
+          (it->second.weight <= cell.weight));     // AND has lower weight than the current cell
+    };
+
+    // Process the neighbors of the current cell.
+    for (const std::size_t neighbor_hash : neighbors_function(cell.representative_state) |  //
+                                               ranges::views::cache1 |                      //
+                                               ranges::views::filter(is_valid_neighbor)) {
+      auto& neighbor = map[neighbor_hash];
+      neighbor.cluster_id = cell.cluster_id;
+      queue.push({max_priority + neighbor.weight, neighbor_hash});  // reintroduce with inflated priority
+    }
+  }
+}
+
+}  // namespace clusterizer_detail
 
 /// Parameters used to construct a ParticleClusterizer instance.
 struct ParticleClusterizerParam {
-  double spatial_hash_resolution = 0.20;   ///< clustering algorithm spatial resolution
+  double linear_hash_resolution = 0.20;    ///< clustering algorithm linear resolution
   double angular_hash_resolution = 0.524;  ///< clustering algorithm angular resolution
 
   /// Cluster weight cap threshold.
@@ -286,9 +287,9 @@ class ParticleClusterizer {
     auto weights = beluga::views::weights(particles);
     auto hashes = states | ranges::views::transform(spatial_hash_function_) | ranges::to<std::vector>;
 
-    auto map = ParticleClusterizerImpl::make_cluster_map(states, weights, hashes);
-    ParticleClusterizerImpl::normalize_and_cap_weights(map, parameters_.weight_cap_percentile);
-    ParticleClusterizerImpl::assign_clusters(map, [this](const auto& state) { return neighbors(state); });
+    auto map = clusterizer_detail::make_cluster_map(states, weights, hashes);
+    clusterizer_detail::normalize_and_cap_weights(map, parameters_.weight_cap_percentile);
+    clusterizer_detail::assign_clusters(map, [this](const auto& state) { return neighbors(state); });
 
     return hashes |  //
            ranges::views::transform([&map](std::size_t hash) { return map[hash].cluster_id.value(); }) |
@@ -299,17 +300,17 @@ class ParticleClusterizer {
   ParticleClusterizerParam parameters_;  ///< Parameters for the particle clusterizer.
 
   beluga::spatial_hash<Sophus::SE2d> spatial_hash_function_{
-      parameters_.spatial_hash_resolution,  // x
-      parameters_.spatial_hash_resolution,  // y
-      parameters_.angular_hash_resolution   // theta
+      parameters_.linear_hash_resolution,  // x
+      parameters_.linear_hash_resolution,  // y
+      parameters_.angular_hash_resolution  // theta
   };
 
   std::array<Sophus::SE2d, 6> adjacent_grid_cells_ = {
       ///< Adjacent grid cells for neighbor calculation.
-      Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{+parameters_.spatial_hash_resolution, 0.0}},
-      Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{-parameters_.spatial_hash_resolution, 0.0}},
-      Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{0.0, +parameters_.spatial_hash_resolution}},
-      Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{0.0, -parameters_.spatial_hash_resolution}},
+      Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{+parameters_.linear_hash_resolution, 0.0}},
+      Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{-parameters_.linear_hash_resolution, 0.0}},
+      Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{0.0, +parameters_.linear_hash_resolution}},
+      Sophus::SE2d{Sophus::SO2d{0.0}, Sophus::Vector2d{0.0, -parameters_.linear_hash_resolution}},
       Sophus::SE2d{Sophus::SO2d{+parameters_.angular_hash_resolution}, Sophus::Vector2d{0.0, 0.0}},
       Sophus::SE2d{Sophus::SO2d{-parameters_.angular_hash_resolution}, Sophus::Vector2d{0.0, 0.0}},
   };
@@ -353,13 +354,6 @@ template <class States, class Weights, class Clusters>
     /// Constructor used with `emplace_back`.
     constexpr Estimate(Weight w, EstimateState m, EstimateCovariance c)
         : weight{w}, mean{std::move(m)}, covariance{std::move(c)} {}
-
-    constexpr bool operator<(const Estimate& other) const { return weight < other.weight; }
-    constexpr bool operator<=(const Estimate& other) const { return weight <= other.weight; }
-    constexpr bool operator>(const Estimate& other) const { return weight > other.weight; }
-    constexpr bool operator>=(const Estimate& other) const { return weight >= other.weight; }
-    constexpr bool operator==(const Estimate& other) const { return weight == other.weight; }
-    constexpr bool operator!=(const Estimate& other) const { return weight != other.weight; }
   };
 
   // For each cluster found, estimate the mean and covariance of the states that belong to it.
@@ -413,7 +407,9 @@ template <class Particles>
         beluga::views::weights(particles));
   }
 
-  const auto [_, mean, covariance] = *ranges::max_element(per_cluster_estimates);
+  const auto [_, mean, covariance] =
+      *ranges::max_element(per_cluster_estimates, std::less{}, [](const auto& e) { return e.weight; });
+
   return std::make_pair(mean, covariance);
 }
 

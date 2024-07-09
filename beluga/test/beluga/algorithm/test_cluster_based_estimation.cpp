@@ -55,11 +55,11 @@ struct ClusterBasedEstimationDetailTesting : public ::testing::Test {
   [[nodiscard]] auto generate_test_grid_cell_data_map() const {
     constexpr auto kUpperLimit = 30.0;
 
-    ParticleClusterizerImpl::Map<SE2d> map;
+    typename clusterizer_detail::Map<SE2d> map;
     for (double x = 0.0; x < kUpperLimit; x += 1.0) {
       const auto weight = x;
       const auto state = SE2d{SO2d{0.}, Vector2d{x, x}};
-      map.emplace(spatial_hash_function(state), ParticleClusterizerImpl::Cell<SE2d>{state, weight, 0, std::nullopt});
+      map.emplace(spatial_hash_function(state), clusterizer_detail::Cell<SE2d>{state, weight, 0, std::nullopt});
     }
     return map;
   }
@@ -72,8 +72,8 @@ struct ClusterBasedEstimationDetailTesting : public ::testing::Test {
     const auto ywidth = ymax - ymin;
 
     // simulate particles in a grid with 4 (2x2) clusters with
-    // different peak heights. The highest on is the one located on the
-    // higher-right.
+    // different peak heights. The highest peak is the one located on the
+    // upper-right.
 
     for (double x = step / 2.0; x <= xwidth; x += step) {
       for (double y = step / 2.0; y <= ywidth; y += step) {
@@ -132,7 +132,7 @@ TEST_F(ClusterBasedEstimationDetailTesting, GridCellDataMapGenerationStep) {
   auto weights = beluga::views::weights(particles);
   auto hashes = states | ranges::views::transform(spatial_hash_function) | ranges::to<std::vector>;
 
-  auto test_data = ParticleClusterizerImpl::make_cluster_map(states, weights, hashes);
+  auto test_data = clusterizer_detail::make_cluster_map(states, weights, hashes);
 
   const auto hash00 = spatial_hash_function(s00);
   const auto hash10 = spatial_hash_function(s10);
@@ -161,7 +161,7 @@ TEST_F(ClusterBasedEstimationDetailTesting, MakePriorityQueue) {
   auto data = generate_test_grid_cell_data_map();
 
   // test proper
-  auto prio_queue = make_priority_queue(data, &ParticleClusterizerImpl::Cell<SE2d>::weight);
+  auto prio_queue = make_priority_queue(data, &clusterizer_detail::Cell<SE2d>::weight);
   EXPECT_EQ(prio_queue.size(), data.size());
 
   // from there on the weights should be strictly decreasing
@@ -187,11 +187,11 @@ TEST_F(ClusterBasedEstimationDetailTesting, MapGridCellsToClustersStep) {
     }
   }
 
-  ParticleClusterizerImpl::Map<SE2d> map;
+  typename clusterizer_detail::Map<SE2d> map;
 
   for (const auto& [x, y, w] : coordinates) {
     const auto state = SE2d{SO2d{0.}, Vector2d{x, y}};
-    map.emplace(spatial_hash_function(state), ParticleClusterizerImpl::Cell<SE2d>{state, w, 0, std::nullopt});
+    map.emplace(spatial_hash_function(state), clusterizer_detail::Cell<SE2d>{state, w, 0, std::nullopt});
   }
 
   const auto neighbors = [&](const auto& state) {
@@ -212,9 +212,9 @@ TEST_F(ClusterBasedEstimationDetailTesting, MapGridCellsToClustersStep) {
   // only cells beyond the 10% weight percentile to avoid the messy border
   // between clusters beneath that threshold
   const auto ten_percent_threshold = calculate_percentile_threshold(
-      map | ranges::views::values | ranges::views::transform(&ParticleClusterizerImpl::Cell<SE2d>::weight), 0.15);
+      map | ranges::views::values | ranges::views::transform(&clusterizer_detail::Cell<SE2d>::weight), 0.15);
 
-  ParticleClusterizerImpl::assign_clusters(map, neighbors);
+  clusterizer_detail::assign_clusters(map, neighbors);
 
   auto cells_above_minimum_threshold_view =
       coordinates | ranges::views::filter([&](const auto& c) { return std::get<2>(c) >= ten_percent_threshold; });
@@ -303,7 +303,7 @@ TEST_F(ClusterBasedEstimationDetailTesting, ClusterStateEstimationStep) {
   ASSERT_EQ(per_cluster_estimates.size(), 4);
 
   // order by decreasing weight
-  std::sort(per_cluster_estimates.begin(), per_cluster_estimates.end());
+  ranges::sort(per_cluster_estimates, std::less{}, [](const auto& e) { return e.weight; });
 
   // check that the cluster means were found in the expected order
   EXPECT_THAT(per_cluster_estimates[0].mean, SE2Near(SO2d{0.0}, Vector2d{9.0, 9.0}, kTolerance));
@@ -342,7 +342,8 @@ TEST_F(ClusterBasedEstimationDetailTesting, ClusterEstimation) {
 
   ASSERT_EQ(per_cluster_estimates.size(), 3);  // cluster 3 should be ignored because it has only one particle
 
-  const auto [_, pose, covariance] = *ranges::max_element(per_cluster_estimates);
+  const auto [_, pose, covariance] =
+      *ranges::max_element(per_cluster_estimates, std::less{}, [](const auto& e) { return e.weight; });
 
   constexpr double kTolerance = 0.001;
 
