@@ -24,7 +24,6 @@
 #include <vector>
 
 // external
-#include <range/v3/action/sort.hpp>
 #include <range/v3/algorithm/max_element.hpp>
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/conversion.hpp>
@@ -94,8 +93,10 @@ template <class Map, class Proj>
  */
 template <class Range>
 [[nodiscard]] auto calculate_percentile_threshold(Range&& range, double percentile) {
-  auto values = range | ranges::to<std::vector> | ranges::actions::sort;
-  return values[static_cast<std::size_t>(static_cast<double>(values.size()) * percentile)];
+  auto values = range | ranges::to<std::vector>;
+  const auto n = static_cast<std::size_t>(static_cast<double>(values.size()) * percentile);
+  std::nth_element(values.begin(), values.begin() + n, values.end());
+  return values[n];
 }
 
 /// Implementation utilities for a particle clusterizer algorithm.
