@@ -1,0 +1,6 @@
+# durability_override.yml
+# Need to override static transform QoS, to reflect that is a latched topic.
+# This is not handled properly by ROS1 to ROS2 bag converting tools.
+/tf_static:
+  durability: transient_local
+  history: keep_all

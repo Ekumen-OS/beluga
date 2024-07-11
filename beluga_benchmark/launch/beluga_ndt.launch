@@ -1,0 +1,32 @@
+<launch>
+  <!-- This is not needed strictly speaking, but is good for visualization -->
+  <arg name="map_filename"/>
+  <arg name="hdf5_map_filename"/>
+  <arg name="max_particles" default="2000"/>
+  <arg name="min_particles" default="500"/>
+  <arg name="execution_policy" default="seq"/>
+  <arg name="use_sim_time" default="false"/>
+
+  <set_parameter name="use_sim_time" value="$(var use_sim_time)"/>
+
+  <node pkg="beluga_amcl" exec="ndt_amcl_node" name="beluga_amcl" launch-prefix="$(env beluga_amcl_PREFIX '')">
+    <param from="$(find-pkg-share beluga_vs_nav2)/params/ndt_mcl.yaml"/>
+    <param name="map_path" value="$(var hdf5_map_filename)"/>
+    <param name="max_particles" value="$(var max_particles)"/>
+    <param name="min_particles" value="$(var min_particles)"/>
+    <param name="execution_policy" value="$(var execution_policy)"/>
+    <param name="tf_broadcast" value="true"/>
+    <remap from="pose" to="/beluga_amcl/pose"/>
+    <remap from="particle_cloud" to="/beluga_amcl/particle_cloud"/>
+  </node>
+
+  <node pkg="nav2_map_server" exec="map_server" name="map_server">
+    <param name="yaml_filename" value="$(var map_filename)"/>
+  </node>
+
+  <node pkg="nav2_lifecycle_manager" exec="lifecycle_manager" name="lifecycle_manager">
+    <param name="autostart" value="true"/>
+    <param name="node_names" value="[beluga_amcl, map_server]"/>
+  </node>
+
+</launch>

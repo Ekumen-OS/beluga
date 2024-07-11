@@ -1,28 +1,29 @@
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
-<package format="3">
+<package format="2">
   <name>beluga_benchmark</name>
   <version>2.0.2</version>
+  <description>LAMBKIN powered benchmarks for Beluga.</description>
 
-  <description>Scripts to benchmark, profile and compare beluga with other AMCL implementations.</description>
+  <maintainer email="serraramiro@ekumenlabs.com">Ramiro Serra</maintainer>
+  <maintainer email="michel@ekumenlabs.com">Michel Hidalgo</maintainer>
 
-  <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
-  <maintainer email="ivanpauno@ekumenlabs.com">Ivan Paunovic</maintainer>
-  <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
+  <license>Apache-2.0</license>
 
-  <license>Apache License 2.0</license>
-
-  <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>beluga_amcl</exec_depend>
-  <exec_depend>beluga_example</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">python3-matplotlib</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">python3-numpy</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">python3-pandas</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">python3-tk</exec_depend>
+
+  <exec_depend>python3-matplotlib</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-pandas</exec_depend>
+  <exec_depend>python3-tk</exec_depend>
+
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>nav2_amcl</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <exec_depend>rosbag2_storage_default_plugins</exec_depend>
 
   <export>
-    <build_type condition="$ROS_VERSION == 1">cmake</build_type>
-    <build_type condition="$ROS_VERSION == 2">ament_cmake</build_type>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

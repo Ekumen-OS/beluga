@@ -1,4 +1,4 @@
-amcl:
+/**:
   ros__parameters:
     # Odometry motion model type.
     robot_model_type: nav2_amcl::DifferentialMotionModel
@@ -17,11 +17,11 @@ amcl:
     # The name of the coordinate frame published by the odometry system.
     odom_frame_id: odom
     # The name of the coordinate frame of the robot base.
-    base_frame_id: base
+    base_frame_id: base_link
     # The name of the topic where the map is published by the map server.
     map_topic: map
     # The name of the topic where scans are being published.
-    scan_topic: scan
+    scan_topic: scan_front
     # The name of the topic where an initial pose can be published.
     # The particle filter will be reset using the provided pose with covariance.
     initial_pose_topic: initialpose
@@ -38,41 +38,35 @@ amcl:
     # Fast exponential filter constant, used to filter the average particles weights.
     # Random particles are added if the fast filter result is larger than the slow filter result
     # allowing the particle filter to recover from a bad approximation.
-    recovery_alpha_fast: 0.
+    recovery_alpha_fast: 0.1
     # Slow exponential filter constant, used to filter the average particles weights.
     # Random particles are added if the fast filter result is larger than the slow filter result
     # allowing the particle filter to recover from a bad approximation.
-    recovery_alpha_slow: 0.
+    recovery_alpha_slow: 0.001
     # Resample will happen after the amount of updates specified here happen.
     resample_interval: 1
     # Minimum angle difference from last resample for resampling to happen again.
-    update_min_a: 0.2
+    update_min_a: 0.1
     # Maximum angle difference from last resample for resampling to happen again.
-    update_min_d: 0.25
-    # Laser sensor model type.
-    laser_model_type: beam
-    # Maximum distance of an obstacle (if the distance is higher, this one will be used in the likelihood map).
-    laser_likelihood_max_dist: 2.0
+    update_min_d: 0.08
     # Maximum range of the laser.
-    laser_max_range: 100.0
-    # Maximum number of beams to use in the likelihood field sensor model.
-    max_beams: 100
-    # Weight used to combine the probability of hitting an obstacle.
-    z_hit: 0.5
-    # Weight used to combine the probability of random noise in perception.
-    z_rand: 0.5
-    # Standard deviation of a gaussian centered arounds obstacles.
-    sigma_hit: 0.2
+    laser_max_range: 25.0
+    # Maximum number of beams to use in the sensor models. We set this reasonably high so that we don't filter beams at all.
+    max_beams: 10000
     # Whether to broadcast map to odom transform or not.
-    tf_broadcast: true
+    tf_broadcast: false
     # Transform tolerance allowed.
     transform_tolerance: 1.0
     # Execution policy used to apply the motion update and importance weight steps.
     # Valid options: "seq", "par".
-    execution_policy: par
+    execution_policy: seq
     # Whether to set initial pose based on parameters.
     # When enabled, particles will be initialized with the specified pose coordinates and covariance.
-    set_initial_pose: false
+    set_initial_pose: true
+    # If false, AMCL will use the last known pose to initialize when a new map is received.
+    always_reset_initial_pose: false
+    # Set this to true when you want to load only the first published map from map_server and ignore subsequent ones.
+    first_map_only: false
     # Initial pose x coordinate.
     initial_pose.x: 0.0
     # Initial pose y coordinate.
@@ -91,3 +85,9 @@ amcl:
     initial_pose.covariance_xyaw: 0.0
     # Initial pose yyaw covariance.
     initial_pose.covariance_yyaw: 0.0
+    # Scaling parameter for NDT cells amplitude.
+    d1: 1.0
+    # Scaling parameter for NDT cells covariance.
+    d2: 0.6
+    # Minimum likelihood for scores.
+    minimum_likelihood: 0.01
