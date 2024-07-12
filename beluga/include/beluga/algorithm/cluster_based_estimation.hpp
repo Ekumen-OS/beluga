@@ -38,7 +38,6 @@
 // project
 #include <beluga/algorithm/estimation.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
-#include <beluga/views.hpp>
 
 #if RANGE_V3_MAJOR == 0 && RANGE_V3_MINOR < 12
 #include <range/v3/view/group_by.hpp>
@@ -52,6 +51,8 @@
  */
 
 namespace beluga {
+
+namespace clusterizer_detail {
 
 /// Create a priority queue from a map using a specified projection.
 /**
@@ -106,11 +107,9 @@ template <class Range>
   return values[static_cast<std::size_t>(n)];
 }
 
-namespace clusterizer_detail {
-
 /// A struct that holds the data of a single cell for the clusterization algorithm.
 template <class State>
-struct Cell {
+struct ClusterCell {
   State representative_state;             ///< state of a particle that is within the cell
   double weight{0.0};                     ///< average weight of the cell
   std::size_t num_particles{0};           ///< number of particles in the cell
@@ -119,7 +118,7 @@ struct Cell {
 
 /// A map that holds the sparse data about the particles grouped in cells.
 template <class State>
-using Map = std::unordered_map<std::size_t, Cell<State>>;
+using ClusterMap = std::unordered_map<std::size_t, ClusterCell<State>>;
 
 /// Create a cluster map from a range of particles and their corresponding spatial hashes.
 /**
@@ -138,14 +137,14 @@ using Map = std::unordered_map<std::size_t, Cell<State>>;
 template <class States, class Weights, class Hashes>
 [[nodiscard]] static auto make_cluster_map(States&& states, Weights&& weights, Hashes&& hashes) {
   using State = ranges::range_value_t<States>;
-  Map<State> map;
+  ClusterMap<State> map;
 
   // Preallocate memory with a very rough estimation of the number of cells we might end up with.
   map.reserve(states.size() / 5);
 
   // Calculate the accumulated cell weight and save a single representative state for each cell.
   for (const auto& [state, weight, hash] : ranges::views::zip(states, weights, hashes)) {
-    auto [it, inserted] = map.try_emplace(hash, Cell<State>{});
+    auto [it, inserted] = map.try_emplace(hash, ClusterCell<State>{});
     auto& [_, entry] = *it;
     entry.weight += weight;
     entry.num_particles++;
@@ -172,7 +171,7 @@ template <class States, class Weights, class Hashes>
  * \param percentile The percentile threshold for capping the weights.
  */
 template <class State>
-static void normalize_and_cap_weights(Map<State>& map, double percentile) {
+static void normalize_and_cap_weights(ClusterMap<State>& map, double percentile) {
   auto entries = ranges::views::values(map);
 
   for (auto& entry : entries) {
@@ -181,7 +180,7 @@ static void normalize_and_cap_weights(Map<State>& map, double percentile) {
   }
 
   const double max_weight =
-      calculate_percentile_threshold(ranges::views::transform(entries, &Cell<State>::weight), percentile);
+      calculate_percentile_threshold(ranges::views::transform(entries, &ClusterCell<State>::weight), percentile);
 
   for (auto& entry : entries) {
     entry.weight = std::min(entry.weight, max_weight);
@@ -201,8 +200,8 @@ static void normalize_and_cap_weights(Map<State>& map, double percentile) {
  * \param neighbors_function A function that returns neighboring cell hashes for a given state.
  */
 template <class State, class NeighborsFunction>
-static void assign_clusters(Map<State>& map, NeighborsFunction&& neighbors_function) {
-  auto queue = make_priority_queue(map, &Cell<State>::weight);
+static void assign_clusters(ClusterMap<State>& map, NeighborsFunction&& neighbors_function) {
+  auto queue = make_priority_queue(map, &ClusterCell<State>::weight);
   const auto max_priority = queue.top().priority;
 
   std::size_t next_cluster_id = 0;
@@ -284,14 +283,14 @@ class ParticleClusterizer {
 
   /// Clusters the given particles based on their states and weights.
   /**
-   * \tparam Particles The type of the particles range.
-   * \param particles A range of particles to be clustered.
+   * \tparam States Range type of the states.
+   * \tparam Weights Range type of the weights.
+   * \param states Range containing the states of the particles.
+   * \param weights Range containing the weights of the particles.
    * \return A vector of cluster IDs corresponding to the input particles.
    */
-  template <class Particles>
-  [[nodiscard]] auto operator()(Particles&& particles) {
-    auto states = beluga::views::states(particles);
-    auto weights = beluga::views::weights(particles);
+  template <class States, class Weights>
+  [[nodiscard]] auto operator()(States&& states, Weights&& weights) {
     auto hashes = states | ranges::views::transform(spatial_hash_function_) | ranges::to<std::vector>;
 
     auto map = clusterizer_detail::make_cluster_map(states, weights, hashes);
@@ -404,23 +403,25 @@ template <class States, class Weights, class Clusters>
  * of the cluster with the highest total weight is returned. If no clusters are found,
  * the overall mean and covariance of the particles are calculated and returned.
  *
- * \tparam Particles The type of the particles range.
- * \param particles A range of particles to be clustered and estimated.
+ * \tparam States Range type of the states.
+ * \tparam Weights Range type of the weights.
+ * \param states Range containing the states of the particles.
+ * \param weights Range containing the weights of the particles.
  * \param parameters Parameters for the particle clusterizer (optional).
  * \return A pair consisting of the state mean and covariance of the cluster with the highest total weight.
  */
-template <class Particles>
-[[nodiscard]] auto cluster_based_estimate(Particles&& particles, ParticleClusterizerParam parameters = {}) {
-  const auto clusters = ParticleClusterizer{parameters}(particles);
+template <class States, class Weights>
+[[nodiscard]] auto cluster_based_estimate(
+    States&& states,    //
+    Weights&& weights,  //
+    ParticleClusterizerParam parameters = {}) {
+  const auto clusters = ParticleClusterizer{parameters}(states, weights);
 
-  auto per_cluster_estimates =
-      estimate_clusters(beluga::views::states(particles), beluga::views::weights(particles), clusters);
+  auto per_cluster_estimates = estimate_clusters(states, weights, clusters);
 
   if (per_cluster_estimates.empty()) {
     // hmmm... maybe the particles are too fragmented? calculate the overall mean and covariance.
-    return beluga::estimate(
-        beluga::views::states(particles),  // namespace beluga
-        beluga::views::weights(particles));
+    return beluga::estimate(states, weights);
   }
 
   const auto [_, mean, covariance] =

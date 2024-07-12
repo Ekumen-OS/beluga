@@ -16,6 +16,7 @@
 
 #include <beluga/algorithm/cluster_based_estimation.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
+#include <beluga/views.hpp>
 #include <range/v3/action/sort.hpp>
 #include <range/v3/action/unique.hpp>
 #include <range/v3/view/filter.hpp>
@@ -55,11 +56,11 @@ struct ClusterBasedEstimationDetailTesting : public ::testing::Test {
   [[nodiscard]] auto generate_test_grid_cell_data_map() const {
     constexpr auto kUpperLimit = 30.0;
 
-    typename clusterizer_detail::Map<SE2d> map;
+    typename clusterizer_detail::ClusterMap<SE2d> map;
     for (double x = 0.0; x < kUpperLimit; x += 1.0) {
       const auto weight = x;
       const auto state = SE2d{SO2d{0.}, Vector2d{x, x}};
-      map.emplace(spatial_hash_function(state), clusterizer_detail::Cell<SE2d>{state, weight, 0, std::nullopt});
+      map.emplace(spatial_hash_function(state), clusterizer_detail::ClusterCell<SE2d>{state, weight, 0, std::nullopt});
     }
     return map;
   }
@@ -161,7 +162,7 @@ TEST_F(ClusterBasedEstimationDetailTesting, MakePriorityQueue) {
   auto data = generate_test_grid_cell_data_map();
 
   // test proper
-  auto prio_queue = make_priority_queue(data, &clusterizer_detail::Cell<SE2d>::weight);
+  auto prio_queue = make_priority_queue(data, &clusterizer_detail::ClusterCell<SE2d>::weight);
   EXPECT_EQ(prio_queue.size(), data.size());
 
   // from there on the weights should be strictly decreasing
@@ -187,11 +188,11 @@ TEST_F(ClusterBasedEstimationDetailTesting, MapGridCellsToClustersStep) {
     }
   }
 
-  typename clusterizer_detail::Map<SE2d> map;
+  typename clusterizer_detail::ClusterMap<SE2d> map;
 
   for (const auto& [x, y, w] : coordinates) {
     const auto state = SE2d{SO2d{0.}, Vector2d{x, y}};
-    map.emplace(spatial_hash_function(state), clusterizer_detail::Cell<SE2d>{state, w, 0, std::nullopt});
+    map.emplace(spatial_hash_function(state), clusterizer_detail::ClusterCell<SE2d>{state, w, 0, std::nullopt});
   }
 
   const auto neighbors = [&](const auto& state) {
@@ -212,7 +213,7 @@ TEST_F(ClusterBasedEstimationDetailTesting, MapGridCellsToClustersStep) {
   // only cells beyond the 10% weight percentile to avoid the messy border
   // between clusters beneath that threshold
   const auto ten_percent_threshold = calculate_percentile_threshold(
-      map | ranges::views::values | ranges::views::transform(&clusterizer_detail::Cell<SE2d>::weight), 0.15);
+      map | ranges::views::values | ranges::views::transform(&clusterizer_detail::ClusterCell<SE2d>::weight), 0.15);
 
   clusterizer_detail::assign_clusters(map, neighbors);
 
@@ -294,7 +295,8 @@ TEST_F(ClusterBasedEstimationDetailTesting, ClusterStateEstimationStep) {
   auto particles = make_particle_multicluster_dataset(0.0, k_field_side, 0.0, k_field_side, 1.0);
 
   const auto clusters =
-      ParticleClusterizer{ParticleClusterizerParam{kSpatialHashResolution, kAngularHashResolution, 0.9}}(particles);
+      ParticleClusterizer{ParticleClusterizerParam{kSpatialHashResolution, kAngularHashResolution, 0.9}}(
+          beluga::views::states(particles), beluga::views::weights(particles));
 
   auto per_cluster_estimates =
       estimate_clusters(beluga::views::states(particles), beluga::views::weights(particles), clusters);
@@ -369,7 +371,8 @@ TEST_F(ClusterBasedEstimationDetailTesting, HeaviestClusterSelectionTest) {
 
   const auto [expected_pose, expected_covariance] = beluga::estimate(max_peak_masked_states, max_peak_masked_weights);
 
-  const auto [pose, covariance] = beluga::cluster_based_estimate(particles);
+  const auto [pose, covariance] =
+      beluga::cluster_based_estimate(beluga::views::states(particles), beluga::views::weights(particles));
 
   ASSERT_THAT(pose, SE2Near(expected_pose.so2(), expected_pose.translation(), kTolerance));
   ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), 0.001);
@@ -398,7 +401,7 @@ TEST_F(ClusterBasedEstimationDetailTesting, NightmareDistributionTest) {
   const auto [expected_pose, expected_covariance] = beluga::estimate(states, weights);
 
   auto particles = ranges::views::zip(states, weights) | ranges::to<std::vector>();
-  const auto [pose, covariance] = beluga::cluster_based_estimate(particles);
+  const auto [pose, covariance] = beluga::cluster_based_estimate(states, weights);
 
   ASSERT_THAT(pose, SE2Near(expected_pose.so2(), expected_pose.translation(), kTolerance));
   ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), 0.001);
