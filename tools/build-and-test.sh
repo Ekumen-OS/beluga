@@ -24,9 +24,9 @@ set -o errexit
 
 if [ "${ROS_DISTRO}" != "noetic" ]; then
     if [ "${ROS_DISTRO}" != "jazzy" ] && [ "${ROS_DISTRO}" != "rolling" ]; then
-        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
+        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_benchmark beluga_example beluga_system_tests beluga_tools"
     else
-        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
+        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools"
     fi
 else
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_example"

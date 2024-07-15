@@ -54,7 +54,8 @@ RUN apt-get update \
 ENV PIP_BREAK_SYSTEM_PACKAGES 1
 RUN pip install \
   evo==1.21.0 \
-  pre-commit==2.20.0
+  pre-commit==2.20.0 \
+  plyfile==1.0.3
 
 COPY --from=timem-builder --chown=$USER:$GROUP /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
@@ -96,13 +97,17 @@ RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 
 COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
 
-RUN sudo apt-get update \
-  && sudo apt-get -y dist-upgrade \
+USER root
+ENV PIP_BREAK_SYSTEM_PACKAGES 1
+
+RUN apt-get update \
+  && apt-get -y dist-upgrade \
   && . /opt/ros/rolling/setup.sh \
   && rosdep update \
-  && rosdep install -i -y --from-path src --skip-keys 'turtlebot3_gazebo gazebo_ros_pkgs slam_toolbox' \
-  && rosdep install -i -y --from-path src -t doc \
-  && sudo rm -rf /var/lib/apt/lists/*
+  && rosdep install -i -y --from-path src --skip-keys 'turtlebot3_gazebo gazebo_ros_pkgs slam_toolbox' -t exec -t doc -t build \
+  && rm -rf /var/lib/apt/lists/*
+
+USER $USER:$GROUP
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/
 

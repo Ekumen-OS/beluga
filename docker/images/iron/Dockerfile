@@ -53,7 +53,8 @@ RUN apt-get update \
 
 RUN pip install \
   evo==1.21.0 \
-  pre-commit==2.20.0
+  pre-commit==2.20.0 \
+  h5py==3.11.0
 
 COPY --from=timem-builder --chown=$USER:$GROUP /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
