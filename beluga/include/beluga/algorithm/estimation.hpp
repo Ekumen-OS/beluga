@@ -128,6 +128,7 @@ template <
     typename = std::enable_if_t<std::is_same_v<Pose, typename Sophus::SE2<Scalar>>>>
 std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, Weights&& weights) {
   auto translation_view = poses | ranges::views::transform([](const auto& pose) { return pose.translation(); });
+  auto poses_view = poses | ranges::views::common;
   auto weights_view = weights | ranges::views::common;
   const auto weights_sum = std::accumulate(weights_view.begin(), weights_view.end(), 0.0);
   auto normalized_weights_view =
@@ -144,8 +145,8 @@ std::pair<Sophus::SE2<Scalar>, Sophus::Matrix3<Scalar>> estimate(Poses&& poses, 
   // This is expected and the value will be renormalized after having used the non-normal result to estimate the
   // orientation autocovariance.
   const Sophus::Vector4<Scalar> mean_pose_vector = std::transform_reduce(
-      poses.begin(), poses.end(), normalized_weights_view.begin(), Sophus::Vector4<Scalar>::Zero().eval(), std::plus{},
-      pose_to_weighted_eigen_vector);
+      poses_view.begin(), poses_view.end(), normalized_weights_view.begin(), Sophus::Vector4<Scalar>::Zero().eval(),
+      std::plus{}, pose_to_weighted_eigen_vector);
 
   // Calculate the weighted pose estimation
   Sophus::SE2<Scalar> estimated_pose = Eigen::Map<const Sophus::SE2<Scalar>>{mean_pose_vector.data()};
