@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon Jul 15 09:55:44 2024 -0300, aa5c0d7&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Mon Jul 15 10:55:41 2024 -0300, e8ca261&#39;"/>
   </head>
   
   
@@ -452,6 +452,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1Amcl.html">Amcl</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm.  <a href="classbeluga_1_1Amcl.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1ParticleClusterizerParam.html">ParticleClusterizerParam</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct a <a class="el" href="classbeluga_1_1ParticleClusterizer.html" title="Particle clusterizer implementation.">ParticleClusterizer</a> instance.  <a href="structbeluga_1_1ParticleClusterizerParam.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1ParticleClusterizer.html">ParticleClusterizer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Particle clusterizer implementation.  <a href="classbeluga_1_1ParticleClusterizer.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1ExponentialFilter.html">ExponentialFilter</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callable type implementing an exponential filter.  <a href="classbeluga_1_1ExponentialFilter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -802,6 +808,14 @@ Sophus::SE2d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 Sophus::SE3d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a4dcdce1508dcbf370be7429ab791d89e">To3d</a> (const Sophus::SE2d &amp;tf)</td></tr>
 <tr class="memdesc:a4dcdce1508dcbf370be7429ab791d89e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Embed a SE2 transform into 3D space with zero Z translation and only rotation about the Z axis. <br /></td></tr>
 <tr class="separator:a4dcdce1508dcbf370be7429ab791d89e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42d45e8d3d89749501aef47e0fdbb329"><td class="memTemplParams" colspan="2">template&lt;class States , class Weights , class Clusters &gt; </td></tr>
+<tr class="memitem:a42d45e8d3d89749501aef47e0fdbb329"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a42d45e8d3d89749501aef47e0fdbb329">estimate_clusters</a> (States &amp;&amp;states, Weights &amp;&amp;weights, Clusters &amp;&amp;clusters)</td></tr>
+<tr class="memdesc:a42d45e8d3d89749501aef47e0fdbb329"><td class="mdescLeft">&#160;</td><td class="mdescRight">For each cluster, estimate the mean and covariance of the states that belong to it.  <a href="namespacebeluga.html#a42d45e8d3d89749501aef47e0fdbb329">More...</a><br /></td></tr>
+<tr class="separator:a42d45e8d3d89749501aef47e0fdbb329"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a283a211c0e9ec8ad0a71140d11b96b94"><td class="memTemplParams" colspan="2">template&lt;class States , class Weights &gt; </td></tr>
+<tr class="memitem:a283a211c0e9ec8ad0a71140d11b96b94"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a283a211c0e9ec8ad0a71140d11b96b94">cluster_based_estimate</a> (States &amp;&amp;states, Weights &amp;&amp;weights, <a class="el" href="structbeluga_1_1ParticleClusterizerParam.html">ParticleClusterizerParam</a> parameters={})</td></tr>
+<tr class="memdesc:a283a211c0e9ec8ad0a71140d11b96b94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a cluster-based estimate from a particle set.  <a href="namespacebeluga.html#a283a211c0e9ec8ad0a71140d11b96b94">More...</a><br /></td></tr>
+<tr class="separator:a283a211c0e9ec8ad0a71140d11b96b94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3356c1b099bda88b4dfda8ff230bac88"><td class="memTemplParams" colspan="2">template&lt;class Range , class DistanceFunction , class NeighborsFunction &gt; </td></tr>
 <tr class="memitem:a3356c1b099bda88b4dfda8ff230bac88"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">nearest_obstacle_distance_map</a> (Range &amp;&amp;obstacle_map, DistanceFunction &amp;&amp;distance_function, NeighborsFunction &amp;&amp;neighbors_function)</td></tr>
 <tr class="memdesc:a3356c1b099bda88b4dfda8ff230bac88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a map where the value of each cell is the distance to the nearest obstacle.  <a href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">More...</a><br /></td></tr>
@@ -1092,6 +1106,61 @@ template&lt;class Range , class WeightsRange , class Scalar &gt; </div>
 
 </div>
 </div>
+<a id="a283a211c0e9ec8ad0a71140d11b96b94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a283a211c0e9ec8ad0a71140d11b96b94">&#9670;&nbsp;</a></span>cluster_based_estimate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class States , class Weights &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto beluga::cluster_based_estimate </td>
+          <td>(</td>
+          <td class="paramtype">States &amp;&amp;&#160;</td>
+          <td class="paramname"><em>states</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Weights &amp;&amp;&#160;</td>
+          <td class="paramname"><em>weights</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbeluga_1_1ParticleClusterizerParam.html">ParticleClusterizerParam</a>&#160;</td>
+          <td class="paramname"><em>parameters</em> = <code>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Computes a cluster-based estimate from a particle set. </p>
+<p>Particles are grouped into clusters around local maxima. The state mean and covariance of the cluster with the highest total weight is returned. If no clusters are found, the overall mean and covariance of the particles are calculated and returned.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">States</td><td>Range type of the states. </td></tr>
+    <tr><td class="paramname">Weights</td><td>Range type of the weights. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">states</td><td>Range containing the states of the particles. </td></tr>
+    <tr><td class="paramname">weights</td><td>Range containing the weights of the particles. </td></tr>
+    <tr><td class="paramname">parameters</td><td>Parameters for the particle clusterizer (optional). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pair consisting of the state mean and covariance of the cluster with the highest total weight. </dd></dl>
+
+</div>
+</div>
 <a id="a879996e3d483a908a7d5f706ac303b88"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a879996e3d483a908a7d5f706ac303b88">&#9670;&nbsp;</a></span>effective_sample_size()</h2>
 
@@ -1263,6 +1332,62 @@ template&lt;class Scalars , class Weights , class Scalar  = ranges::range_value_
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The estimated mean and variance. </dd></dl>
+
+</div>
+</div>
+<a id="a42d45e8d3d89749501aef47e0fdbb329"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42d45e8d3d89749501aef47e0fdbb329">&#9670;&nbsp;</a></span>estimate_clusters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class States , class Weights , class Clusters &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto beluga::estimate_clusters </td>
+          <td>(</td>
+          <td class="paramtype">States &amp;&amp;&#160;</td>
+          <td class="paramname"><em>states</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Weights &amp;&amp;&#160;</td>
+          <td class="paramname"><em>weights</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Clusters &amp;&amp;&#160;</td>
+          <td class="paramname"><em>clusters</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>For each cluster, estimate the mean and covariance of the states that belong to it. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">States</td><td>Range type of the states. </td></tr>
+    <tr><td class="paramname">Weights</td><td>Range type of the weights. </td></tr>
+    <tr><td class="paramname">Hashes</td><td>Range type of the hashes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">states</td><td>Range containing the states of the particles. </td></tr>
+    <tr><td class="paramname">weights</td><td>Range containing the weights of the particles. </td></tr>
+    <tr><td class="paramname">clusters</td><td>Cluster ids of the particles. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector of elements, containing the weight, mean and covariance of each cluster, in no particular order. </dd></dl>
+<p>Convenient factory method to pass to <code>zip_with</code>.</p>
 
 </div>
 </div>
@@ -1728,7 +1853,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Jul 15 09:55:44 2024 -0300, aa5c0d7&#39;.
+  Last updated on &#39;Mon Jul 15 10:55:41 2024 -0300, e8ca261&#39;.
   <br/>
 </p>
   </div>

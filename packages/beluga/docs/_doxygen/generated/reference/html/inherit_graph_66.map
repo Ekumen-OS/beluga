@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structbeluga_1_1spatial__hash.html" title=" " alt="" coords="5,5,161,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,9,156,35"/>
+<area shape="rect" id="node2" href="$structbeluga_1_1policy.html" title=" " alt="" coords="211,5,395,47"/>
+<area shape="rect" id="node3" href="$structbeluga_1_1policy__base.html" title="Implementation detail for a policy base object." alt="" coords="5,59,156,86"/>
+<area shape="rect" id="node4" href="$structbeluga_1_1policy.html" title=" " alt="" coords="223,75,384,116"/>
+<area shape="rect" id="node5" href="$structbeluga_1_1policy.html" title="Forward declaration of policy." alt="" coords="204,147,403,174"/>
+<area shape="rect" id="node6" title=" " alt="" coords="42,161,119,187"/>
+<area shape="rect" id="node7" title=" " alt="" coords="35,110,126,137"/>
 </map>
