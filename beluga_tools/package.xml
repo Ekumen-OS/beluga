@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>beluga_tools</name>
+  <version>0.0.0</version>
+
+  <description>Set of miscellaneous tools to work with beluga.</description>
+
+  <maintainer email="serraramiro@ekumenlabs.com">Ramiro Serra</maintainer>
+
+  <license>Apache License 2.0</license>
+
+
+  <!-- The released debian for h5py package when on humble or iron seems to have a bug where it's incompatible with numpy's 2.0.0 version.
+  We will install newest package version using pip in the development images to circumvent this..
+  See:
+  https://github.com/h5py/h5py/issues/2353
+  -->
+  <exec_depend condition="$ROS_VERSION == 2 and $ROS_DISTRO != 'humble' and $ROS_DISTRO != 'iron'">python3-h5py</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-matplotlib</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-numpy</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-scipy</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python-plyfile-pip</exec_depend>
+  <test_depend condition="$ROS_VERSION == 2">python3-pytest-cov</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

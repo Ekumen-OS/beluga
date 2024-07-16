@@ -13,7 +13,6 @@
 # limitations under the License.
 
 find_package(ament_cmake REQUIRED)
-find_package(ament_cmake_python REQUIRED)
 find_package(beluga REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
@@ -23,15 +22,6 @@ find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
-
-ament_python_install_package(
-  ${PROJECT_NAME}
-  PACKAGE_DIR
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}
-  SETUP_CFG
-  ${CMAKE_CURRENT_SOURCE_DIR}/setup.cfg
-  SCRIPTS_DESTINATION
-  lib/${PROJECT_NAME})
 
 add_library(beluga_ros INTERFACE)
 target_include_directories(

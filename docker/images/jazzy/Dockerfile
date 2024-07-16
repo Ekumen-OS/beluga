@@ -96,12 +96,14 @@ RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 
 COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
 
-RUN sudo apt-get update \
-  && sudo apt-get -y dist-upgrade \
+USER root
+ENV PIP_BREAK_SYSTEM_PACKAGES 1
+
+RUN apt-get update \
+  && apt-get -y dist-upgrade \
   && . /opt/ros/jazzy/setup.sh \
   && rosdep update \
-  && rosdep install -i -y --from-path src --skip-keys 'turtlebot3_gazebo gazebo_ros_pkgs slam_toolbox nav2_amcl nav2_lifecycle_manager nav2_map_server' \
-  && rosdep install -i -y --from-path src -t doc \
+  && rosdep install -i -y --from-path src --skip-keys 'turtlebot3_gazebo gazebo_ros_pkgs slam_toolbox nav2_amcl nav2_lifecycle_manager nav2_map_server' -t doc -t exec -t build \
   && sudo rm -rf /var/lib/apt/lists/*
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/

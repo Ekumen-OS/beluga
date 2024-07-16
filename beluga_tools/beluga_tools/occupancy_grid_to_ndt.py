@@ -18,11 +18,11 @@
 import argparse
 from pathlib import Path
 
-from beluga_ros.conversion_utils import (
+from beluga_tools.conversion_utils import (
     grid_to_point_cloud,
     OccupancyGrid,
-    point_cloud_to_ndt,
-    NDTMap,
+    point_cloud_to_ndt_2d,
+    NDTMap2D,
 )
 
 import matplotlib.pyplot as plt
@@ -68,7 +68,7 @@ def main():
     print(
         f"Extracted a pointcloud of {pc.shape[1]} points from the occupancy grid... \n"
     )
-    ndt = point_cloud_to_ndt(pc, args.cell_size)
+    ndt = point_cloud_to_ndt_2d(pc, args.cell_size)
     print(
         f"Constructed a NDT representation of the point cloud with {len(ndt.grid)} cells.\n"
     )
@@ -85,12 +85,8 @@ def main():
         "and verifying its integrity...\n"
     )
     assert ndt.is_close(
-        NDTMap.from_hdf5(output_hdf5_name)
+        NDTMap2D.from_hdf5(output_hdf5_name)
     ), "Reading the NDT map from disk produced a different map from the serialized one,\
           this is a bug."
 
     print("Integrity check OK!")
-
-
-if __name__ == "__main__":
-    main()

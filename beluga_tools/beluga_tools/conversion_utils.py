@@ -32,9 +32,16 @@ import matplotlib.pyplot as plt  # noqa: E402: Disable import not at top level.
 
 
 @dataclass(frozen=True)
-class DiscreteCell:
+class DiscreteCell2D:
     x: int
     y: int
+
+
+@dataclass(frozen=True)
+class DiscreteCell3D:
+    x: int
+    y: int
+    z: int
 
 
 @dataclass(frozen=True)
@@ -59,13 +66,100 @@ class NormalDistribution:
         )
 
 
-class NDTMap:
+class NDTMap3D:
     def __init__(self, resolution: float) -> None:
         """Create a new NDT map with cell size of 'resolution'."""
         self._resolution = resolution
-        self.grid: Dict[DiscreteCell, NormalDistribution] = {}
+        self.grid: Dict[DiscreteCell3D, NormalDistribution] = {}
 
-    def add_distribution(self, cell: DiscreteCell, ndt: NormalDistribution):
+    def add_distribution(self, cell: DiscreteCell3D, ndt: NormalDistribution):
+        """Add a new cell with its distribution."""
+        self.grid[cell] = ndt
+
+    def is_close(self, other: "NDTMap3D", abs_tol: float = 1e-8) -> bool:
+        """Equality with tolerance between two NDT maps."""
+        is_resolution_close = np.allclose(
+            self._resolution, other._resolution, atol=abs_tol
+        )
+        if not is_resolution_close:
+            return False
+        if len(self.grid) != len(other.grid):
+            return False
+        for cell, distribution in self.grid.items():
+            if cell not in other.grid:
+                return False
+            if not distribution.is_close(other=other.grid[cell], abs_tol=abs_tol):
+                return False
+        return True
+
+    def to_hdf5(self, output_file_path: Path):
+        """
+        Serialize the NDT map into an HDF5 format.
+
+        See https://docs.hdfgroup.org/hdf5/develop/_intro_h_d_f5.html for details on the format.
+        It'll create 4 datasets:
+            - "resolution": () resolution for the discrete grid (cells are resolution x
+              resolution x resolution m^3 cubes).
+            - "cells": (NUM_CELLS, 3) that contains the cell coordinates.
+            - "means": (NUM_CELLS, 3) that contains the 3d mean of the normal distribution
+              of the cell.
+            - "covariances": (NUM_CELLS, 3, 3) Contains the covariance for each cell.
+        """
+        assert output_file_path.suffix in (".hdf5", ".h5")
+        output_file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        num_cells = len(self.grid.keys())
+
+        with h5py.File(output_file_path.absolute(), "w") as fp:
+            cells_dataset = fp.create_dataset("cells", (num_cells, 3), chunks=True)
+            for idx, cell in enumerate(self.grid.keys()):
+                cells_dataset[idx] = np.asarray([cell.x, cell.y, cell.z])
+
+            means_dataset = fp.create_dataset("means", (num_cells, 3), chunks=True)
+            covariances_dataset = fp.create_dataset("covariances", (num_cells, 3, 3))
+
+            for idx, distribution in enumerate(self.grid.values()):
+                means_dataset[idx] = distribution.mean
+                covariances_dataset[idx] = distribution.covariance
+            fp.create_dataset("resolution", data=np.asarray(self._resolution))
+
+    @classmethod
+    def from_hdf5(cls, hdf5_file: Path):
+        """
+        Create an NDTMap3D instance from a path to a hdf5 file.
+
+        See 'to_hdf5' docstring for details on the hdf5 format.
+        """
+        with h5py.File(hdf5_file.absolute(), "r") as fp:
+            resolution: float = fp["resolution"][()]
+            means: np.ndarray = fp["means"]
+            cells: np.ndarray = fp["cells"]
+            covs: np.ndarray = fp["covariances"]
+            total_cells = covs.shape[0]
+
+            assert covs.shape[1] == 3
+            assert covs.shape[2] == 3
+            assert means.shape[1] == 3
+            assert cells.shape[0] == total_cells
+            assert cells.shape[1] == 3
+            assert means.shape[0] == total_cells
+
+            ret = NDTMap2D(resolution=resolution)
+            for cell, mean, cov in zip(cells, means, covs):
+                ret.add_distribution(
+                    cell=DiscreteCell3D(*cell),
+                    ndt=NormalDistribution(mean=mean, covariance=cov),
+                )
+            return ret
+
+
+class NDTMap2D:
+    def __init__(self, resolution: float) -> None:
+        """Create a new NDT map with cell size of 'resolution'."""
+        self._resolution = resolution
+        self.grid: Dict[DiscreteCell2D, NormalDistribution] = {}
+
+    def add_distribution(self, cell: DiscreteCell2D, ndt: NormalDistribution):
         """Add a new cell with its distribution."""
         self.grid[cell] = ndt
 
@@ -97,7 +191,7 @@ class NDTMap:
         xx, yy = np.mgrid[min_x:max_x:step_x, min_y:max_y:step_y]
         return (xx, yy, np.dstack((xx, yy)))
 
-    def is_close(self, other: "NDTMap", abs_tol: float = 1e-8) -> bool:
+    def is_close(self, other: "NDTMap2D", abs_tol: float = 1e-8) -> bool:
         """Equality with tolerance between two NDT maps."""
         is_resolution_close = np.allclose(
             self._resolution, other._resolution, atol=abs_tol
@@ -187,10 +281,10 @@ class NDTMap:
             assert cells.shape[1] == 2
             assert means.shape[0] == total_cells
 
-            ret = NDTMap(resolution=resolution)
+            ret = NDTMap2D(resolution=resolution)
             for cell, mean, cov in zip(cells, means, covs):
                 ret.add_distribution(
-                    cell=DiscreteCell(*cell),
+                    cell=DiscreteCell2D(*cell),
                     ndt=NormalDistribution(mean=mean, covariance=cov),
                 )
             return ret
@@ -245,11 +339,12 @@ def fit_normal_distribution(
     points: np.ndarray, min_variance: float = 5e-3
 ) -> Optional[NormalDistribution]:
     """
-    Fit a normal distribution to a set of 2D points.
+    Fit a normal distribution to a set of 2D or 3D points.
 
     A minimum variance in each dimension will be enforced to avoid singularities.
     """
-    assert points.shape[0] == 2
+    assert points.shape[0] == 2 or points.shape[0] == 3
+
     # Literature suggests doing this check to avoid singularities.
     # See The Three-Dimensional Normal-Distributions Transform– an Efficient
     # Representation for Registration, Surface Analysis, and Loop Detection
@@ -262,11 +357,12 @@ def fit_normal_distribution(
     # avoid singularities by enforcing a minimum variance in both dimensions.
     covariance[0, 0] = max(covariance[0, 0], min_variance)
     covariance[1, 1] = max(covariance[1, 1], min_variance)
-
+    if points.shape[0] == 3:
+        covariance[2, 2] = max(covariance[2, 2], min_variance)
     return NormalDistribution(mean=mean, covariance=covariance)
 
 
-def point_cloud_to_ndt(pc: np.ndarray, cell_size=1.0) -> NDTMap:
+def point_cloud_to_ndt_2d(pc: np.ndarray, cell_size=1.0) -> NDTMap2D:
     """
     Convert a 2D point cloud into a NDT map representation.
 
@@ -274,15 +370,42 @@ def point_cloud_to_ndt(pc: np.ndarray, cell_size=1.0) -> NDTMap:
     and fitting a normal distribution when applicable.
     """
     assert pc.shape[0] == 2
-    points_clusters: Dict[DiscreteCell, np.ndarray] = {}
+    points_clusters: Dict[DiscreteCell2D, np.ndarray] = {}
     discretized_points = np.floor(pc / cell_size).astype(np.int64)
     cells = np.unique(discretized_points, axis=-1).T
 
     for cell in cells:
         pts_in_cell = np.all(discretized_points.T == cell, axis=1)
-        points_clusters[DiscreteCell(x=cell[0], y=cell[1])] = pc[:, pts_in_cell]
+        points_clusters[DiscreteCell2D(x=cell[0], y=cell[1])] = pc[:, pts_in_cell]
 
-    ret = NDTMap(resolution=cell_size)
+    ret = NDTMap2D(resolution=cell_size)
+
+    for cell, points in points_clusters.items():
+        dist = fit_normal_distribution(points)
+        if dist is not None:
+            ret.add_distribution(cell=cell, ndt=dist)
+    return ret
+
+
+def point_cloud_to_ndt_3d(pc: np.ndarray, cell_size=1.0) -> NDTMap3D:
+    """
+    Convert a 3D point cloud into a NDT map representation.
+
+    Does so by clustering points in 3D cells of cell_size**3 meters^3
+    and fitting a normal distribution when applicable.
+    """
+    assert pc.shape[0] == 3
+    points_clusters: Dict[DiscreteCell3D, np.ndarray] = {}
+    discretized_points = np.floor(pc / cell_size).astype(np.int64)
+    cells = np.unique(discretized_points, axis=-1).T
+
+    for cell in cells:
+        pts_in_cell = np.all(discretized_points.T == cell, axis=1)
+        points_clusters[DiscreteCell3D(x=cell[0], y=cell[1], z=cell[2])] = pc[
+            :, pts_in_cell
+        ]
+
+    ret = NDTMap3D(resolution=cell_size)
 
     for cell, points in points_clusters.items():
         dist = fit_normal_distribution(points)
