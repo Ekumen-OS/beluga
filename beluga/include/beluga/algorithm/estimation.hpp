@@ -23,6 +23,8 @@
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/transform.hpp>
 #include <sophus/se2.hpp>
+#include <sophus/se3.hpp>
+#include <sophus/so3.hpp>
 #include <sophus/types.hpp>
 
 #include <numeric>
@@ -100,6 +102,68 @@ Sophus::Matrix2<Scalar> calculate_covariance(Range&& range, const Sophus::Vector
       range,
       ranges::views::repeat_n(1.0 / static_cast<Scalar>(sample_count), static_cast<std::ptrdiff_t>(sample_count)),
       mean);
+}
+
+/// Returns a pair consisting of the estimated mean pose and its covariance.
+/**
+ * Given a range of poses, computes the estimated pose by averaging the translation
+ * and rotation parts.
+ * Computes the covariance matrix of the translation and rotation parts to create a 6x6 covariance matrix.
+ *
+ * \tparam Poses A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
+ *  value type is `Sophus::SE3<Scalar>`.
+ * \tparam Weights A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
+ *  value type is `Scalar`.
+ * \tparam Pose The pose value type of the given range.
+ * \tparam Scalar A scalar type, e.g. double or float.
+ * \param poses 3D poses to estimate mean and covariances from.
+ * \param weights Weights for the poses with matching indices.
+ * \return The estimated pose and its 6x6 covariance matrix.
+ */
+template <
+    class Poses,
+    class Weights,
+    class Pose = ranges::range_value_t<Poses>,
+    class Scalar = typename Pose::Scalar,
+    typename = std::enable_if_t<std::is_same_v<Pose, typename Sophus::SE3<Scalar>>>>
+std::pair<Sophus::SE3<Scalar>, Sophus::Matrix6<Scalar>> estimate(Poses&& poses, Weights&& weights) {
+  assert(std::size(poses) == std::size(weights));
+  assert(std::size(poses) > 0);
+  auto translation_view = poses | ranges::views::transform([](const auto& pose) { return pose.translation(); });
+  auto poses_view = poses | ranges::views::common;
+  auto weights_view = weights | ranges::views::common;
+  const auto weights_sum = std::accumulate(weights_view.begin(), weights_view.end(), 0.0);
+  auto normalized_weights_view =
+      weights_view | ranges::views::transform([weights_sum](const auto& weight) { return weight / weights_sum; });
+
+  const auto weighted_translation = [](const Pose& pose, const auto& weight) { return pose.translation() * weight; };
+
+  const auto weighted_rotation_vector = [](const Pose& pose, const auto& weight) {
+    return (pose.so3().log() * weight).eval();
+  };
+
+  const Sophus::Vector3<Scalar> mean_rotation_vector = std::transform_reduce(
+      poses_view.begin(), poses_view.end(), normalized_weights_view.begin(), Sophus::Vector3<Scalar>::Zero().eval(),
+      std::plus{}, weighted_rotation_vector);
+
+  const Sophus::Vector3<Scalar> mean_translation = std::transform_reduce(
+      poses_view.begin(), poses_view.end(), normalized_weights_view.begin(), Sophus::Vector3<Scalar>::Zero().eval(),
+      std::plus{}, weighted_translation);
+
+  const Sophus::SE3<Scalar> mean{Sophus::SO3d::exp(mean_rotation_vector), mean_translation};
+
+  const auto weighted_cov = [inverse_mean = mean.inverse()](const Pose& pose, const auto& weight) {
+    // Compute deviation from mean in Lie algebra (logarithm of SE3)
+    const Pose delta = inverse_mean * pose;
+    // Accumulate weighted covariance
+    return Eigen::Matrix<Scalar, 6, 6>{weight * (delta.log() * delta.log().transpose())};
+  };
+
+  const Eigen::Matrix<Scalar, 6, 6> covariance = std::transform_reduce(
+      poses_view.begin(), poses_view.end(), normalized_weights_view.begin(), Eigen::Matrix<Scalar, 6, 6>::Zero().eval(),
+      std::plus{}, weighted_cov);
+
+  return std::pair{mean, covariance};
 }
 
 /// Returns a pair consisting of the estimated mean pose and its covariance.
