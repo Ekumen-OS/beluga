@@ -314,9 +314,9 @@ TEST_F(PoseCovarianceEstimation, SE3EquallyWeighted) {
 }
 
 TEST_F(PoseCovarianceEstimation, SE3BadArguments) {
-  ASSERT_DEBUG_DEATH(beluga::estimate(std::array{Sophus::SE3d{}}, std::array{1., 1., 1.}), "*");
-  ASSERT_DEBUG_DEATH(beluga::estimate(std::array{Sophus::SE3d{}, Sophus::SE3d{}}, std::array{1., 1., 1.}), "*");
-  ASSERT_DEBUG_DEATH(beluga::estimate(std::vector<Sophus::SE3d>{}, std::array{1., 1., 1.}), "*");
+  ASSERT_DEBUG_DEATH(beluga::estimate(std::array{Sophus::SE3d{}}, std::array{1., 1., 1.}), ".*");
+  ASSERT_DEBUG_DEATH(beluga::estimate(std::array{Sophus::SE3d{}, Sophus::SE3d{}}, std::array{1., 1., 1.}), ".*");
+  ASSERT_DEBUG_DEATH(beluga::estimate(std::vector<Sophus::SE3d>{}, std::array{1., 1., 1.}), ".*");
 }
 
 }  // namespace
