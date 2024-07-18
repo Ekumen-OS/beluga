@@ -16,12 +16,14 @@
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
 #include <range/v3/algorithm/count_if.hpp>
+#include <range/v3/iterator/operations.hpp>
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/view/common.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/zip.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 #include <sophus/so3.hpp>
@@ -36,6 +38,61 @@
  */
 
 namespace beluga {
+
+namespace detail {
+
+/**
+ * \brief Given a range with quaternions and a normalized range of weights, compute the weighted average quaternion.
+ *
+ * \tparam QuaternionRange A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
+ *  value type is `Eigen::Quaternion<Scalar>`.
+ * \tparam WeightsRange A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
+ *  value type is `Scalar`.
+ * \tparam Scalar The scalar type, matching those of the weights.
+ * \param quaternions Range of quaternions to compute the weighted average from.
+ * \param normalized_weights Range of normalized weights. With matching indices wrt \c quaternions . Non-normalized
+ * weights will yield incorrect results. \return The average quaternion.
+ */
+template <
+    class QuaternionRange,
+    class WeightsRange,
+    class Scalar = typename ranges::range_value_t<QuaternionRange>::Scalar>
+Eigen::Quaternion<Scalar> weighted_average_quaternion(
+    const QuaternionRange& quaternions,
+    const WeightsRange& normalized_weights) {
+  // Implementation is based on https://github.com/strasdat/Sophus/blob/main/sophus/average.hpp#L133 with the variant of
+  // non-uniform weights.
+  const size_t num_quaternions = std::size(quaternions);
+  assert(num_quaternions >= 1);
+  Eigen::Matrix<Scalar, 4, Eigen::Dynamic> all_quaternions(4, num_quaternions);
+
+  int i = 0;
+  for (const auto& [quaternion, normalized_weight] : ranges::views::zip(quaternions, normalized_weights)) {
+    all_quaternions.col(i) = normalized_weight * quaternion.coeffs();
+    ++i;
+  }
+
+  Eigen::Matrix<Scalar, 4, 4> qqt = all_quaternions * all_quaternions.transpose();
+  Eigen::EigenSolver<Eigen::Matrix<Scalar, 4, 4>> es(qqt);
+
+  std::complex<Scalar> max_eigenvalue = es.eigenvalues()[0];
+  Eigen::Matrix<std::complex<Scalar>, 4, 1> max_eigenvector = es.eigenvectors().col(0);
+
+  for (int i = 1; i < 4; i++) {
+    if (std::norm(es.eigenvalues()[i]) > std::norm(max_eigenvalue)) {
+      max_eigenvalue = es.eigenvalues()[i];
+      max_eigenvector = es.eigenvectors().col(i);
+    }
+  }
+  Eigen::Quaternion<Scalar> quat;
+  quat.coeffs() <<                //
+      max_eigenvector[0].real(),  //
+      max_eigenvector[1].real(),  //
+      max_eigenvector[2].real(),  //
+      max_eigenvector[3].real();
+  return quat;
+}
+}  // namespace detail
 
 /// Calculates the covariance of a range given its mean and the weights of each element.
 /**
@@ -109,6 +166,8 @@ Sophus::Matrix2<Scalar> calculate_covariance(Range&& range, const Sophus::Vector
  * Given a range of poses, computes the estimated pose by averaging the translation
  * and rotation parts.
  * Computes the covariance matrix of the translation and rotation parts to create a 6x6 covariance matrix.
+ * NOTE: The covariance matrix is in se3, the tangent space of the SE3 manifold. Users may perform
+ * the appropriate conversions to get the covariance matrix into their parametrization of interest.
  *
  * \tparam Poses A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
  *  value type is `Sophus::SE3<Scalar>`.
@@ -126,23 +185,20 @@ template <
     class Pose = ranges::range_value_t<Poses>,
     class Scalar = typename Pose::Scalar,
     typename = std::enable_if_t<std::is_same_v<Pose, typename Sophus::SE3<Scalar>>>>
-std::pair<Sophus::SE3<Scalar>, Sophus::Matrix6<Scalar>> estimate(Poses&& poses, Weights&& weights) {
+std::pair<Sophus::SE3<Scalar>, Sophus::Matrix6<Scalar>> estimate(const Poses& poses, const Weights& weights) {
   assert(std::size(poses) == std::size(weights));
   assert(std::size(poses) > 0);
   auto poses_view = poses | ranges::views::common;
   auto weights_view = weights | ranges::views::common;
+
+  auto quaternion_view = poses | ranges::views::transform([](const Pose& pose) { return pose.unit_quaternion(); });
+
   const auto weights_sum = std::accumulate(weights_view.begin(), weights_view.end(), 0.0);
   auto normalized_weights_view =
       weights_view |  //
       ranges::views::transform([weights_sum](const auto weight) { return weight / weights_sum; });
 
-  const Sophus::Vector3<Scalar> mean_rotation_vector = std::transform_reduce(
-      poses_view.begin(),                      //
-      poses_view.end(),                        //
-      normalized_weights_view.begin(),         //
-      Sophus::Vector3<Scalar>::Zero().eval(),  //
-      std::plus{},                             //
-      [](const Pose& pose, const auto& weight) { return (pose.so3().log() * weight).eval(); });
+  const auto average_quat = detail::weighted_average_quaternion(quaternion_view, normalized_weights_view);
 
   const Sophus::Vector3<Scalar> mean_translation = std::transform_reduce(
       poses_view.begin(),                      //
@@ -152,20 +208,28 @@ std::pair<Sophus::SE3<Scalar>, Sophus::Matrix6<Scalar>> estimate(Poses&& poses, 
       std::plus{},                             //
       [](const Pose& pose, const auto& weight) { return pose.translation() * weight; });
 
-  const Sophus::SE3<Scalar> mean{Sophus::SO3d::exp(mean_rotation_vector), mean_translation};
+  const Sophus::SE3<Scalar> mean{Sophus::SO3<Scalar>{average_quat}, mean_translation};
 
-  const Eigen::Matrix<Scalar, 6, 6> covariance = std::transform_reduce(
-      poses_view.begin(),                          //
-      poses_view.end(),                            //
-      normalized_weights_view.begin(),             //
-      Eigen::Matrix<Scalar, 6, 6>::Zero().eval(),  //
-      std::plus{},                                 //
-      [inverse_mean = mean.inverse()](const Pose& pose, const auto weight) {
-        // Compute deviation from mean in Lie algebra (logarithm of SE3)
-        const Pose delta = inverse_mean * pose;
-        // Accumulate weighted covariance
-        return Eigen::Matrix<Scalar, 6, 6>{weight * (delta.log() * delta.log().transpose())};
-      });
+  // calculate the averaging factor for the weighted covariance estimate
+  // See https://en.wikipedia.org/wiki/Sample_mean_and_covariance#Weighted_samples
+  const auto squared_weight_sum = std::transform_reduce(
+      normalized_weights_view.begin(), normalized_weights_view.end(), Scalar{0.0}, std::plus{},
+      [](const auto& weight) { return (weight * weight); });
+
+  const Eigen::Matrix<Scalar, 6, 6> covariance =
+      std::transform_reduce(
+          poses_view.begin(),                          //
+          poses_view.end(),                            //
+          normalized_weights_view.begin(),             //
+          Eigen::Matrix<Scalar, 6, 6>::Zero().eval(),  //
+          std::plus{},                                 //
+          [inverse_mean = mean.inverse()](const Pose& pose, const auto weight) {
+            // Compute deviation from mean in Lie algebra (logarithm of SE3)
+            const Pose delta = inverse_mean * pose;
+            // Accumulate weighted covariance
+            return Eigen::Matrix<Scalar, 6, 6>{weight * (delta.log() * delta.log().transpose())};
+          }) /
+      (1. - squared_weight_sum);
 
   return std::pair{mean, covariance};
 }

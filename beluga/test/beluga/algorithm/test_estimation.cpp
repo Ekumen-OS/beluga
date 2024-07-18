@@ -24,10 +24,12 @@
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/take_exactly.hpp>
+#include <range/v3/view/transform.hpp>
 #include <vector>
 
 #include <Eigen/Core>
 #include <beluga/random/multivariate_normal_distribution.hpp>
+#include <sophus/average.hpp>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
@@ -296,6 +298,33 @@ TEST_F(PoseCovarianceEstimation, WeightedSE3) {
   {
     const auto [mean, cov] = beluga::estimate(states, std::array{0.01, 0.01, 500.0});
     ASSERT_TRUE(mean.matrix().isApprox(Sophus::SE3d::rotZ(-.5).matrix(), kTolerance)) << mean.matrix();
+  }
+}
+
+TEST(AverageQuaternion, AgainstSophusImpl) {
+  const auto quaternions = std::vector{
+      Eigen::Quaterniond::UnitRandom(),
+      Eigen::Quaterniond::UnitRandom(),
+      Eigen::Quaterniond::UnitRandom(),
+  };
+
+  {
+    auto quats_as_so3_view =
+        quaternions | ranges::views::transform([](const Eigen::Quaterniond& q) { return SO3d{q}; });
+    const auto avg_quaternion = beluga::detail::weighted_average_quaternion(quaternions, std::array{1., 1., 1.});
+    const auto avg_quat_sophus = Sophus::details::averageUnitQuaternion(quats_as_so3_view | ranges::to<std::vector>);
+    ASSERT_TRUE(avg_quaternion.isApprox(avg_quat_sophus));
+  }
+
+  {
+    constexpr double kTolerance = 0.01;
+    auto quats_as_so3_view =
+        quaternions | ranges::views::transform([](const Eigen::Quaterniond& q) { return SO3d{q}; });
+    const auto avg_quaternion =
+        beluga::detail::weighted_average_quaternion(quaternions, std::array{1e-3, 1e-3, 1. - 2e-3});
+    const auto avg_quat_sophus = Sophus::details::averageUnitQuaternion(quats_as_so3_view | ranges::to<std::vector>);
+    ASSERT_FALSE(avg_quaternion.isApprox(avg_quat_sophus));
+    ASSERT_TRUE(avg_quaternion.isApprox(quaternions.back(), kTolerance));
   }
 }
 
