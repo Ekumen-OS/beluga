@@ -133,21 +133,34 @@ std::pair<Sophus::SE3<Scalar>, Sophus::Matrix6<Scalar>> estimate(Poses&& poses, 
   auto weights_view = weights | ranges::views::common;
   const auto weights_sum = std::accumulate(weights_view.begin(), weights_view.end(), 0.0);
   auto normalized_weights_view =
-      weights_view | ranges::views::transform([weights_sum](const auto weight) { return weight / weights_sum; });
+      weights_view |  //
+      ranges::views::transform([weights_sum](const auto weight) { return weight / weights_sum; });
 
   const Sophus::Vector3<Scalar> mean_rotation_vector = std::transform_reduce(
-      poses_view.begin(), poses_view.end(), normalized_weights_view.begin(), Sophus::Vector3<Scalar>::Zero().eval(),
-      std::plus{}, [](const Pose& pose, const auto& weight) { return (pose.so3().log() * weight).eval(); });
+      poses_view.begin(),                      //
+      poses_view.end(),                        //
+      normalized_weights_view.begin(),         //
+      Sophus::Vector3<Scalar>::Zero().eval(),  //
+      std::plus{},                             //
+      [](const Pose& pose, const auto& weight) { return (pose.so3().log() * weight).eval(); });
 
   const Sophus::Vector3<Scalar> mean_translation = std::transform_reduce(
-      poses_view.begin(), poses_view.end(), normalized_weights_view.begin(), Sophus::Vector3<Scalar>::Zero().eval(),
-      std::plus{}, [](const Pose& pose, const auto& weight) { return pose.translation() * weight; });
+      poses_view.begin(),                      //
+      poses_view.end(),                        //
+      normalized_weights_view.begin(),         //
+      Sophus::Vector3<Scalar>::Zero().eval(),  //
+      std::plus{},                             //
+      [](const Pose& pose, const auto& weight) { return pose.translation() * weight; });
 
   const Sophus::SE3<Scalar> mean{Sophus::SO3d::exp(mean_rotation_vector), mean_translation};
 
   const Eigen::Matrix<Scalar, 6, 6> covariance = std::transform_reduce(
-      poses_view.begin(), poses_view.end(), normalized_weights_view.begin(), Eigen::Matrix<Scalar, 6, 6>::Zero().eval(),
-      std::plus{}, [inverse_mean = mean.inverse()](const Pose& pose, const auto weight) {
+      poses_view.begin(),                          //
+      poses_view.end(),                            //
+      normalized_weights_view.begin(),             //
+      Eigen::Matrix<Scalar, 6, 6>::Zero().eval(),  //
+      std::plus{},                                 //
+      [inverse_mean = mean.inverse()](const Pose& pose, const auto weight) {
         // Compute deviation from mean in Lie algebra (logarithm of SE3)
         const Pose delta = inverse_mean * pose;
         // Accumulate weighted covariance
