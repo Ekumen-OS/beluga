@@ -15,12 +15,14 @@
 #ifndef BELUGA_ALGORITHM_ESTIMATION_HPP
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
+#include <Eigen/src/Core/util/Meta.h>
 #include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/view/common.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/zip.hpp>
@@ -51,7 +53,8 @@ namespace detail {
  * \tparam Scalar The scalar type, matching those of the weights.
  * \param quaternions Range of quaternions to compute the weighted average from.
  * \param normalized_weights Range of normalized weights. With matching indices wrt \c quaternions . Non-normalized
- * weights will yield incorrect results. \return The average quaternion.
+ * weights will yield incorrect results.
+ * \return The average quaternion.
  */
 template <
     class QuaternionRange,
@@ -62,34 +65,26 @@ Eigen::Quaternion<Scalar> weighted_average_quaternion(
     const WeightsRange& normalized_weights) {
   // Implementation is based on https://github.com/strasdat/Sophus/blob/main/sophus/average.hpp#L133 with the variant of
   // non-uniform weights.
+  // See https://ntrs.nasa.gov/api/citations/20070017872/downloads/20070017872.pdf equation (13).
   const size_t num_quaternions = std::size(quaternions);
   assert(num_quaternions >= 1);
   Eigen::Matrix<Scalar, 4, Eigen::Dynamic> all_quaternions(4, num_quaternions);
 
-  int i = 0;
-  for (const auto& [quaternion, normalized_weight] : ranges::views::zip(quaternions, normalized_weights)) {
+  for (const auto& [i, quaternion, normalized_weight] :
+       ranges::views::zip(ranges::views::iota(0), quaternions, normalized_weights)) {
     all_quaternions.col(i) = normalized_weight * quaternion.coeffs();
-    ++i;
   }
 
-  Eigen::Matrix<Scalar, 4, 4> qqt = all_quaternions * all_quaternions.transpose();
+  const Eigen::Matrix<Scalar, 4, 4> qqt = all_quaternions * all_quaternions.transpose();
   Eigen::EigenSolver<Eigen::Matrix<Scalar, 4, 4>> es(qqt);
 
-  std::complex<Scalar> max_eigenvalue = es.eigenvalues()[0];
-  Eigen::Matrix<std::complex<Scalar>, 4, 1> max_eigenvector = es.eigenvectors().col(0);
-
-  for (int i = 1; i < 4; i++) {
-    if (std::norm(es.eigenvalues()[i]) > std::norm(max_eigenvalue)) {
-      max_eigenvalue = es.eigenvalues()[i];
-      max_eigenvector = es.eigenvectors().col(i);
-    }
-  }
+  Eigen::Index max_eigenvalue_index;
+  es.eigenvalues().cwiseAbs().maxCoeff(&max_eigenvalue_index);
+  const Eigen::Matrix<std::complex<Scalar>, 4, 1> max_eigenvector = es.eigenvectors().col(max_eigenvalue_index);
   Eigen::Quaternion<Scalar> quat;
-  quat.coeffs() <<                //
-      max_eigenvector[0].real(),  //
-      max_eigenvector[1].real(),  //
-      max_eigenvector[2].real(),  //
-      max_eigenvector[3].real();
+  // This is not the same as quat{max_eigenvector.real()}. Eigen's internal coefficient order is different from the
+  // constructor one.
+  quat.coeffs() << max_eigenvector.real();
   return quat;
 }
 }  // namespace detail
@@ -166,8 +161,13 @@ Sophus::Matrix2<Scalar> calculate_covariance(Range&& range, const Sophus::Vector
  * Given a range of poses, computes the estimated pose by averaging the translation
  * and rotation parts.
  * Computes the covariance matrix of the translation and rotation parts to create a 6x6 covariance matrix.
- * NOTE: The covariance matrix is in se3, the tangent space of the SE3 manifold. Users may perform
- * the appropriate conversions to get the covariance matrix into their parametrization of interest.
+ * NOTE: We represent this estimate as a \c large noiseless SE3 pose and a covariance in  se3,
+ * the tangent space of the SE3 manifold.
+ * Users may perform the appropriate conversions to get the covariance matrix into their parametrization of interest.
+ * This reasoning is based on "Characterizing the Uncertainty of Jointly
+ * Distributed Poses in the Lie Algebra" by Mangelson et al.
+ * (https://robots.et.byu.edu/jmangelson/pubs/2020/mangelson2020tro.pdf). See section III. E) "Defining Random Variables
+ * over Poses" for more context.
  *
  * \tparam Poses A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range) type whose
  *  value type is `Sophus::SE3<Scalar>`.

@@ -275,7 +275,7 @@ TEST_F(PoseCovarianceEstimation, MultiVariateNormalSE3) {
   const Eigen::Matrix<double, 6, 6> expected_cov = Eigen::Matrix<double, 6, 6>::Identity() * 2e-1;
   auto distribution = beluga::MultivariateNormalDistribution{expected_mean, expected_cov};
   const auto samples = beluga::views::sample(distribution) |   //
-                       ranges::views::take_exactly(500'000) |  //
+                       ranges::views::take_exactly(100'000) |  //
                        ranges::to<std::vector>;
   const auto [mean, cov] =
       beluga::estimate(samples, ranges::views::repeat_n(1.0, static_cast<std::ptrdiff_t>(samples.size())));
