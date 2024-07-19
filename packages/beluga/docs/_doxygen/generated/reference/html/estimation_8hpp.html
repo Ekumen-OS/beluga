@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Jul 16 10:50:35 2024 -0300, 2200752&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Jul 19 18:04:39 2024 -0300, 815d361&#39;"/>
   </head>
   
   
@@ -444,14 +444,20 @@ $(function() {
 
 <p>Implementation of algorithms that allow calculating the estimated state of a particle filter.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;range/v3/algorithm/count_if.hpp&gt;</code><br />
+<div class="textblock"><code>#include &lt;Eigen/src/Core/util/Meta.h&gt;</code><br />
+<code>#include &lt;range/v3/algorithm/count_if.hpp&gt;</code><br />
+<code>#include &lt;range/v3/iterator/operations.hpp&gt;</code><br />
 <code>#include &lt;range/v3/numeric/accumulate.hpp&gt;</code><br />
 <code>#include &lt;range/v3/range/access.hpp&gt;</code><br />
 <code>#include &lt;range/v3/range/primitives.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/common.hpp&gt;</code><br />
+<code>#include &lt;range/v3/view/iota.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/repeat_n.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/transform.hpp&gt;</code><br />
+<code>#include &lt;range/v3/view/zip.hpp&gt;</code><br />
 <code>#include &lt;sophus/se2.hpp&gt;</code><br />
+<code>#include &lt;sophus/se3.hpp&gt;</code><br />
+<code>#include &lt;sophus/so3.hpp&gt;</code><br />
 <code>#include &lt;sophus/types.hpp&gt;</code><br />
 <code>#include &lt;numeric&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -477,6 +483,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a839fa06f6f6df0f38d661a8cf40c19af"><td class="memTemplParams" colspan="2">template&lt;class QuaternionRange , class WeightsRange , class Scalar  = typename ranges::range_value_t&lt;QuaternionRange&gt;::Scalar&gt; </td></tr>
+<tr class="memitem:a839fa06f6f6df0f38d661a8cf40c19af"><td class="memTemplItemLeft" align="right" valign="top">Eigen::Quaternion&lt; Scalar &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="estimation_8hpp.html#a839fa06f6f6df0f38d661a8cf40c19af">beluga::detail::weighted_average_quaternion</a> (const QuaternionRange &amp;quaternions, const WeightsRange &amp;normalized_weights)</td></tr>
+<tr class="memdesc:a839fa06f6f6df0f38d661a8cf40c19af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a range with quaternions and a normalized range of weights, compute the weighted average quaternion.  <a href="estimation_8hpp.html#a839fa06f6f6df0f38d661a8cf40c19af">More...</a><br /></td></tr>
+<tr class="separator:a839fa06f6f6df0f38d661a8cf40c19af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcec94ef6e5c1effabe7cced2982d8ae"><td class="memTemplParams" colspan="2">template&lt;class Range , class WeightsRange , class Scalar &gt; </td></tr>
 <tr class="memitem:adcec94ef6e5c1effabe7cced2982d8ae"><td class="memTemplItemLeft" align="right" valign="top">Sophus::Matrix2&lt; Scalar &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#adcec94ef6e5c1effabe7cced2982d8ae">beluga::calculate_covariance</a> (Range &amp;&amp;range, WeightsRange &amp;&amp;normalized_weights, const Sophus::Vector2&lt; Scalar &gt; &amp;mean)</td></tr>
 <tr class="memdesc:adcec94ef6e5c1effabe7cced2982d8ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the covariance of a range given its mean and the weights of each element.  <a href="namespacebeluga.html#adcec94ef6e5c1effabe7cced2982d8ae">More...</a><br /></td></tr>
@@ -484,6 +494,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a6556fb20721eaea6b5a2d4b86ce603b8"><td class="memTemplParams" colspan="2">template&lt;class Range , class Scalar &gt; </td></tr>
 <tr class="memitem:a6556fb20721eaea6b5a2d4b86ce603b8"><td class="memTemplItemLeft" align="right" valign="top">Sophus::Matrix2&lt; Scalar &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a6556fb20721eaea6b5a2d4b86ce603b8">beluga::calculate_covariance</a> (Range &amp;&amp;range, const Sophus::Vector2&lt; Scalar &gt; &amp;mean)</td></tr>
 <tr class="separator:a6556fb20721eaea6b5a2d4b86ce603b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8a86e1cace0396fa3b777e6568f5e02"><td class="memTemplParams" colspan="2">template&lt;class Poses , class Weights , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
+<tr class="memitem:ae8a86e1cace0396fa3b777e6568f5e02"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE3&lt; Scalar &gt;, Sophus::Matrix6&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#ae8a86e1cace0396fa3b777e6568f5e02">beluga::estimate</a> (const Poses &amp;poses, const Weights &amp;weights)</td></tr>
+<tr class="memdesc:ae8a86e1cace0396fa3b777e6568f5e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#ae8a86e1cace0396fa3b777e6568f5e02">More...</a><br /></td></tr>
+<tr class="separator:ae8a86e1cace0396fa3b777e6568f5e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f8114604160ec3d3fd272f183f621f3"><td class="memTemplParams" colspan="2">template&lt;class Poses , class Weights , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a3f8114604160ec3d3fd272f183f621f3"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Sophus::Matrix3&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a3f8114604160ec3d3fd272f183f621f3">beluga::estimate</a> (Poses &amp;&amp;poses, Weights &amp;&amp;weights)</td></tr>
 <tr class="memdesc:a3f8114604160ec3d3fd272f183f621f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a3f8114604160ec3d3fd272f183f621f3">More...</a><br /></td></tr>
@@ -492,6 +506,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a249b73c891cd88fee740fcc632b655b5"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Scalar, Scalar &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a249b73c891cd88fee740fcc632b655b5">beluga::estimate</a> (Scalars &amp;&amp;scalars, Weights &amp;&amp;weights)</td></tr>
 <tr class="memdesc:a249b73c891cd88fee740fcc632b655b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes mean and variance of a range of weighted scalars.  <a href="namespacebeluga.html#a249b73c891cd88fee740fcc632b655b5">More...</a><br /></td></tr>
 <tr class="separator:a249b73c891cd88fee740fcc632b655b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15f9f2960c89942dd6509401e23fdd48"><td class="memTemplParams" colspan="2">template&lt;class Poses , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a15f9f2960c89942dd6509401e23fdd48"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE3&lt; Scalar &gt;, Sophus::Matrix6&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a15f9f2960c89942dd6509401e23fdd48">beluga::estimate</a> (const Poses &amp;poses)</td></tr>
+<tr class="memdesc:a15f9f2960c89942dd6509401e23fdd48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a15f9f2960c89942dd6509401e23fdd48">More...</a><br /></td></tr>
+<tr class="separator:a15f9f2960c89942dd6509401e23fdd48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a992598bc475f99f59e5b32b06caf854b"><td class="memTemplParams" colspan="2">template&lt;class Poses , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a992598bc475f99f59e5b32b06caf854b"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Sophus::Matrix3&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">beluga::estimate</a> (Poses &amp;&amp;poses)</td></tr>
 <tr class="memdesc:a992598bc475f99f59e5b32b06caf854b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">More...</a><br /></td></tr>
@@ -499,7 +517,56 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of algorithms that allow calculating the estimated state of a particle filter. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a839fa06f6f6df0f38d661a8cf40c19af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a839fa06f6f6df0f38d661a8cf40c19af">&#9670;&nbsp;</a></span>weighted_average_quaternion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class QuaternionRange , class WeightsRange , class Scalar  = typename ranges::range_value_t&lt;QuaternionRange&gt;::Scalar&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::Quaternion&lt;Scalar&gt; beluga::detail::weighted_average_quaternion </td>
+          <td>(</td>
+          <td class="paramtype">const QuaternionRange &amp;&#160;</td>
+          <td class="paramname"><em>quaternions</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const WeightsRange &amp;&#160;</td>
+          <td class="paramname"><em>normalized_weights</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Given a range with quaternions and a normalized range of weights, compute the weighted average quaternion. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">QuaternionRange</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Eigen::Quaternion&lt;Scalar&gt;</code>. </td></tr>
+    <tr><td class="paramname">WeightsRange</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Scalar</code>. </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type, matching those of the weights. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">quaternions</td><td>Range of quaternions to compute the weighted average from. </td></tr>
+    <tr><td class="paramname">normalized_weights</td><td>Range of normalized weights. With matching indices wrt <code>quaternions</code> . Non-normalized weights will yield incorrect results. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The average quaternion. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
@@ -555,7 +622,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Jul 16 10:50:35 2024 -0300, 2200752&#39;.
+  Last updated on &#39;Fri Jul 19 18:04:39 2024 -0300, 815d361&#39;.
   <br/>
 </p>
   </div>
