@@ -76,7 +76,7 @@ Eigen::Quaternion<Scalar> weighted_average_quaternion(
   }
 
   const Eigen::Matrix<Scalar, 4, 4> qqt = all_quaternions * all_quaternions.transpose();
-  Eigen::EigenSolver<Eigen::Matrix<Scalar, 4, 4>> es(qqt);
+  const Eigen::EigenSolver<Eigen::Matrix<Scalar, 4, 4>> es(qqt);
 
   Eigen::Index max_eigenvalue_index;
   es.eigenvalues().cwiseAbs().maxCoeff(&max_eigenvalue_index);
