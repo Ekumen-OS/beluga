@@ -15,18 +15,30 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <gtest/gtest-death-test.h>
 #include <algorithm>
+#include <array>
+#include <ios>
 #include <limits>
 #include <numeric>
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/repeat_n.hpp>
+#include <range/v3/view/take_exactly.hpp>
+#include <range/v3/view/transform.hpp>
 #include <vector>
 
 #include <Eigen/Core>
+#include <beluga/random/multivariate_normal_distribution.hpp>
+#include <sophus/average.hpp>
 #include <sophus/common.hpp>
 #include <sophus/se2.hpp>
+#include <sophus/se3.hpp>
 #include <sophus/so2.hpp>
+#include <sophus/so3.hpp>
 
 #include "beluga/algorithm/estimation.hpp"
 #include "beluga/testing/sophus_matchers.hpp"
+#include "beluga/views/sample.hpp"
 
 namespace {
 
@@ -35,8 +47,11 @@ using beluga::testing::Vector3Near;
 
 using Constants = Sophus::Constants<double>;
 using Eigen::Vector2d;
+using Eigen::Vector3d;
 using Sophus::SE2d;
+using Sophus::SE3d;
 using Sophus::SO2d;
+using Sophus::SO3d;
 
 struct CovarianceCalculation : public testing::Test {};
 
@@ -251,6 +266,86 @@ TEST_F(ScalarEstimation, NonUniformWeightOverload) {
   constexpr double kTolerance = 0.001;
   ASSERT_NEAR(mean, 4.300, kTolerance);
   ASSERT_NEAR(standard_deviation, 2.026, kTolerance);
+}
+
+TEST_F(PoseCovarianceEstimation, MultiVariateNormalSE3) {
+  constexpr double kTolerance = 0.01;
+  const auto expected_mean =
+      Sophus::SE3d{Sophus::SO3d::exp(Eigen::Vector3d{-0.17, 0.25, 0.1}), Eigen::Vector3d{1.0, 2.0, 3.0}};
+  const Eigen::Matrix<double, 6, 6> expected_cov = Eigen::Matrix<double, 6, 6>::Identity() * 2e-1;
+  auto distribution = beluga::MultivariateNormalDistribution{expected_mean, expected_cov};
+  const auto samples = beluga::views::sample(distribution) |   //
+                       ranges::views::take_exactly(100'000) |  //
+                       ranges::to<std::vector>;
+  const auto [mean, cov] =
+      beluga::estimate(samples, ranges::views::repeat_n(1.0, static_cast<std::ptrdiff_t>(samples.size())));
+  ASSERT_TRUE(expected_mean.matrix().isApprox(mean.matrix(), kTolerance));
+  ASSERT_TRUE(((cov - expected_cov).array().abs() < kTolerance).all()) << std::fixed << (cov - expected_cov);
+}
+
+TEST_F(PoseCovarianceEstimation, WeightedSE3) {
+  constexpr double kTolerance = 0.001;
+  const auto states = std::vector{
+      Sophus::SE3d::rotZ(0.5),
+      Sophus::SE3d::rotZ(0.0),
+      Sophus::SE3d::rotZ(-.5),
+  };
+
+  {
+    const auto [mean, cov] = beluga::estimate(states, std::array{1., 1., 1.});
+    ASSERT_TRUE(mean.matrix().isApprox(Sophus::SE3d{}.matrix(), kTolerance));
+  }
+  {
+    const auto [mean, cov] = beluga::estimate(states, std::array{0.01, 0.01, 500.0});
+    ASSERT_TRUE(mean.matrix().isApprox(Sophus::SE3d::rotZ(-.5).matrix(), kTolerance)) << mean.matrix();
+  }
+}
+
+TEST(AverageQuaternion, AgainstSophusImpl) {
+  const auto quaternions = std::vector{
+      Eigen::Quaterniond::UnitRandom(),
+      Eigen::Quaterniond::UnitRandom(),
+      Eigen::Quaterniond::UnitRandom(),
+  };
+
+  {
+    auto quats_as_so3_view =
+        quaternions | ranges::views::transform([](const Eigen::Quaterniond& q) { return SO3d{q}; });
+    const auto avg_quaternion = beluga::detail::weighted_average_quaternion(quaternions, std::array{1., 1., 1.});
+    const auto avg_quat_sophus = Sophus::details::averageUnitQuaternion(quats_as_so3_view | ranges::to<std::vector>);
+    ASSERT_TRUE(avg_quaternion.isApprox(avg_quat_sophus));
+  }
+
+  {
+    constexpr double kTolerance = 0.01;
+    auto quats_as_so3_view =
+        quaternions | ranges::views::transform([](const Eigen::Quaterniond& q) { return SO3d{q}; });
+    const auto avg_quaternion =
+        beluga::detail::weighted_average_quaternion(quaternions, std::array{1e-3, 1e-3, 1. - 2e-3});
+    const auto avg_quat_sophus = Sophus::details::averageUnitQuaternion(quats_as_so3_view | ranges::to<std::vector>);
+    ASSERT_FALSE(avg_quaternion.isApprox(avg_quat_sophus));
+    ASSERT_TRUE(avg_quaternion.isApprox(quaternions.back(), kTolerance));
+  }
+}
+
+TEST_F(PoseCovarianceEstimation, SE3EquallyWeighted) {
+  constexpr double kTolerance = 0.001;
+  const auto states = std::vector{
+      Sophus::SE3d::rotZ(0.5),
+      Sophus::SE3d::rotZ(0.0),
+      Sophus::SE3d::rotZ(-.5),
+  };
+
+  {
+    const auto [mean, cov] = beluga::estimate(states);
+    ASSERT_TRUE(mean.matrix().isApprox(Sophus::SE3d{}.matrix(), kTolerance));
+  }
+}
+
+TEST_F(PoseCovarianceEstimation, SE3BadArguments) {
+  ASSERT_DEBUG_DEATH(beluga::estimate(std::array{Sophus::SE3d{}}, std::array{1., 1., 1.}), ".*");
+  ASSERT_DEBUG_DEATH(beluga::estimate(std::array{Sophus::SE3d{}, Sophus::SE3d{}}, std::array{1., 1., 1.}), ".*");
+  ASSERT_DEBUG_DEATH(beluga::estimate(std::vector<Sophus::SE3d>{}, std::array{1., 1., 1.}), ".*");
 }
 
 }  // namespace
