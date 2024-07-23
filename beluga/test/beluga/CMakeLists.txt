@@ -29,6 +29,7 @@ add_executable(
   algorithm/test_exponential_filter.cpp
   algorithm/test_raycasting.cpp
   algorithm/test_thrun_recovery_probability_estimator.cpp
+  algorithm/test_unscented_transform.cpp
   containers/test_circular_array.cpp
   containers/test_tuple_vector.cpp
   motion/test_differential_drive_model.cpp
