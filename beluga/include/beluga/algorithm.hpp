@@ -28,5 +28,6 @@
 #include <beluga/algorithm/raycasting.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
 #include <beluga/algorithm/thrun_recovery_probability_estimator.hpp>
+#include <beluga/algorithm/unscented_transform.hpp>
 
 #endif
