@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Jul 23 12:04:06 2024 -0300, 2754963&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Jul 25 10:48:51 2024 -0300, 483f00a&#39;"/>
   </head>
   
   
@@ -455,15 +455,15 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_ALGORITHM_SPATIAL_HASH_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ALGORITHM_SPATIAL_HASH_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;bitset&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;limits&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;limits&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;sophus/se3.hpp&gt;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
@@ -578,13 +578,68 @@ $(function() {
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;  <a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash&lt;std::tuple&lt;double, double, double&gt;</a>&gt; underlying_hasher_{{1., 1., 1.}};</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;};</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00204"></a><span class="lineno"><a class="line" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html">  204</a></span>&#160;<span class="keyword">class </span><a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a>&lt;Sophus::SE3d, void&gt; {</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
+<div class="line"><a name="l00215"></a><span class="lineno"><a class="line" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#a483789b7f1e56da99afabc766e9371a8">  215</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#a483789b7f1e56da99afabc766e9371a8">spatial_hash</a>(</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;      <span class="keywordtype">double</span> x_clustering_resolution,</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;      <span class="keywordtype">double</span> y_clustering_resolution,</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;      <span class="keywordtype">double</span> z_clustering_resolution,</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;      <span class="keywordtype">double</span> roll_clustering_resolution,</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;      <span class="keywordtype">double</span> pitch_clustering_resolution,</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;      <span class="keywordtype">double</span> yaw_clustering_resolution)</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;      : underlying_hasher_{</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            {x_clustering_resolution, y_clustering_resolution, z_clustering_resolution, roll_clustering_resolution,</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;             pitch_clustering_resolution, yaw_clustering_resolution}} {};</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160; </div>
+<div class="line"><a name="l00233"></a><span class="lineno"><a class="line" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#aa38f955654e8abcf19d783cd31ee999d">  233</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#aa38f955654e8abcf19d783cd31ee999d">spatial_hash</a>(</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      <span class="keywordtype">double</span> x_clustering_resolution,</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;      <span class="keywordtype">double</span> y_clustering_resolution,</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      <span class="keywordtype">double</span> z_clustering_resolution,</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;      <span class="keywordtype">double</span> angular_clustering_resolution)</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      : underlying_hasher_{</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;            {x_clustering_resolution, y_clustering_resolution, z_clustering_resolution, angular_clustering_resolution,</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;             angular_clustering_resolution, angular_clustering_resolution}} {};</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00247"></a><span class="lineno"><a class="line" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#a0ed01575b9e579dc64439a9550f6063e">  247</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#a0ed01575b9e579dc64439a9550f6063e">spatial_hash</a>(<span class="keywordtype">double</span> linear_clustering_resolution, <span class="keywordtype">double</span> angular_clustering_resolution)</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;      : <a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash</a>(</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            linear_clustering_resolution,</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            linear_clustering_resolution,</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            linear_clustering_resolution,</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            angular_clustering_resolution){};</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160; </div>
+<div class="line"><a name="l00255"></a><span class="lineno"><a class="line" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#abed23e9347f6c66d2817f13be2c5b151">  255</a></span>&#160;  <a class="code" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#abed23e9347f6c66d2817f13be2c5b151">spatial_hash</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160; </div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
+<div class="line"><a name="l00262"></a><span class="lineno"><a class="line" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#a13b708c82dfc9a778091a00872aef9ee">  262</a></span>&#160;  std::size_t <a class="code" href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#a13b708c82dfc9a778091a00872aef9ee">operator()</a>(<span class="keyword">const</span> Sophus::SE3d&amp; <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; position = <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>.translation();</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="comment">// Eigen&#39;s eulerAngles uses intrinsic rotations, but XYZ extrinsic rotation is the same as ZYX intrinsic rotation.</span></div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="comment">// See https://pages.github.berkeley.edu/EECS-106/fa21-site/assets/discussions/D1_Rotations_soln.pdf</span></div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <span class="comment">// This gives (extrinsic) yaw, pitch, roll in that order.</span></div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keyword">const</span> Eigen::Vector3d euler_angles = <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>.so3().matrix().eulerAngles(2, 1, 0);</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <span class="keywordflow">return</span> underlying_hasher_(std::make_tuple(</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        position.x(), position.y(), position.z(), euler_angles.z(), euler_angles.y(), euler_angles.x()));</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  }</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;  <a class="code" href="structbeluga_1_1spatial__hash.html">spatial_hash&lt;std::tuple&lt;double, double, double, double, double, double&gt;</a>&gt; underlying_hasher_{{1., 1., 1., 1., 1., 1.}};</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;};</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4_html_a03e2fcc3bd56d454f52145a8b3bc28b9"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#a03e2fcc3bd56d454f52145a8b3bc28b9">beluga::spatial_hash&lt; Sophus::SE2d, void &gt;::spatial_hash</a></div><div class="ttdeci">spatial_hash()=default</div><div class="ttdoc">Default constructor.</div></div>
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4_html_a7eaa3e5bf38cc8bcdbb96092f16d03e0"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#a7eaa3e5bf38cc8bcdbb96092f16d03e0">beluga::spatial_hash&lt; Sophus::SE2d, void &gt;::operator()</a></div><div class="ttdeci">std::size_t operator()(const Sophus::SE2d &amp;state) const</div><div class="ttdoc">Calculates the tuple hash, using the given resolution for x, y and rotation given at construction tim...</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:190</div></div>
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4_html_abd45116e840563b7003435440d6bb8c8"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#abd45116e840563b7003435440d6bb8c8">beluga::spatial_hash&lt; Sophus::SE2d, void &gt;::spatial_hash</a></div><div class="ttdeci">spatial_hash(double linear_clustering_resolution, double angular_clustering_resolution)</div><div class="ttdoc">Constructs a spatial hasher given per-group resolutions.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:179</div></div>
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4_html_ae8560d13a7d22b7a86b230a261053d08"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html#ae8560d13a7d22b7a86b230a261053d08">beluga::spatial_hash&lt; Sophus::SE2d, void &gt;::spatial_hash</a></div><div class="ttdeci">spatial_hash(double x_clustering_resolution, double y_clustering_resolution, double theta_clustering_resolution)</div><div class="ttdoc">Constructs a spatial hasher given per-coordinate resolutions.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:168</div></div>
+<div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4_html_a0ed01575b9e579dc64439a9550f6063e"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#a0ed01575b9e579dc64439a9550f6063e">beluga::spatial_hash&lt; Sophus::SE3d, void &gt;::spatial_hash</a></div><div class="ttdeci">spatial_hash(double linear_clustering_resolution, double angular_clustering_resolution)</div><div class="ttdoc">Constructs a spatial hasher given per-group resolutions.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:247</div></div>
+<div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4_html_a13b708c82dfc9a778091a00872aef9ee"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#a13b708c82dfc9a778091a00872aef9ee">beluga::spatial_hash&lt; Sophus::SE3d, void &gt;::operator()</a></div><div class="ttdeci">std::size_t operator()(const Sophus::SE3d &amp;state) const</div><div class="ttdoc">Calculates the tuple hash, using the given resolution for x, y, z and rotation given at construction ...</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:262</div></div>
+<div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4_html_a483789b7f1e56da99afabc766e9371a8"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#a483789b7f1e56da99afabc766e9371a8">beluga::spatial_hash&lt; Sophus::SE3d, void &gt;::spatial_hash</a></div><div class="ttdeci">spatial_hash(double x_clustering_resolution, double y_clustering_resolution, double z_clustering_resolution, double roll_clustering_resolution, double pitch_clustering_resolution, double yaw_clustering_resolution)</div><div class="ttdoc">Constructs a spatial hasher given per-coordinate resolutions.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:215</div></div>
+<div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4_html_aa38f955654e8abcf19d783cd31ee999d"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#aa38f955654e8abcf19d783cd31ee999d">beluga::spatial_hash&lt; Sophus::SE3d, void &gt;::spatial_hash</a></div><div class="ttdeci">spatial_hash(double x_clustering_resolution, double y_clustering_resolution, double z_clustering_resolution, double angular_clustering_resolution)</div><div class="ttdoc">Constructs a spatial hasher given per-coordinate and angular resolutions.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:233</div></div>
+<div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4_html_abed23e9347f6c66d2817f13be2c5b151"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html#abed23e9347f6c66d2817f13be2c5b151">beluga::spatial_hash&lt; Sophus::SE3d, void &gt;::spatial_hash</a></div><div class="ttdeci">spatial_hash()=default</div><div class="ttdoc">Default constructor.</div></div>
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1_7c7412bd4d4b17eb2e661212dfcf682d_html_a08692e76e34cc1e34ac1e0de4674f0be"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1_7c7412bd4d4b17eb2e661212dfcf682d.html#a08692e76e34cc1e34ac1e0de4674f0be">beluga::spatial_hash&lt; Tuple&lt; Types... &gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt; Types &gt; &amp;&amp;...), void &gt; &gt;::resolution_in_each_axis_t</a></div><div class="ttdeci">std::array&lt; double, sizeof...(Types)&gt; resolution_in_each_axis_t</div><div class="ttdoc">Type that represents the resolution in each axis.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:134</div></div>
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1_7c7412bd4d4b17eb2e661212dfcf682d_html_a5f8e8a26fbf2984fe467b2b4ba10dd94"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1_7c7412bd4d4b17eb2e661212dfcf682d.html#a5f8e8a26fbf2984fe467b2b4ba10dd94">beluga::spatial_hash&lt; Tuple&lt; Types... &gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt; Types &gt; &amp;&amp;...), void &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr std::size_t operator()(const Tuple&lt; Types... &gt; &amp;tuple) const</div><div class="ttdoc">Calculates the array hash, with the resolutions in each axis, given at construction time.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:148</div></div>
 <div class="ttc" id="aclassbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1_7c7412bd4d4b17eb2e661212dfcf682d_html_a8542f601e80167023e89f5d0dec1a4c9"><div class="ttname"><a href="classbeluga_1_1spatial__hash_3_01Tuple_3_01Types_8_8_8_01_4_00_01std_1_1enable__if__t_3_07std_1_7c7412bd4d4b17eb2e661212dfcf682d.html#a8542f601e80167023e89f5d0dec1a4c9">beluga::spatial_hash&lt; Tuple&lt; Types... &gt;, std::enable_if_t&lt;(std::is_arithmetic_v&lt; Types &gt; &amp;&amp;...), void &gt; &gt;::spatial_hash</a></div><div class="ttdeci">spatial_hash(const resolution_in_each_axis_t &amp;resolution)</div><div class="ttdoc">Constructs a spatial hasher from an std::array of doubles.</div><div class="ttdef"><b>Definition:</b> spatial_hash.hpp:141</div></div>
@@ -652,7 +707,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Jul 23 12:04:06 2024 -0300, 2754963&#39;.
+  Last updated on &#39;Thu Jul 25 10:48:51 2024 -0300, 483f00a&#39;.
   <br/>
 </p>
   </div>

@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="structbeluga_1_1views_1_1detail_1_1zip__fn.html" target="_top" xlink:title="Implementation detail for a zip range adaptor object.">
+<g id="a_node1"><a xlink:href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html" target="_top" xlink:title="Implementation detail for a take_evenly range adaptor object.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-30.5 118,-30.5 118,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::views::detail</text>
-<text text-anchor="middle" x="59" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::zip_fn</text>
+<text text-anchor="middle" x="59" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::take_evenly_fn</text>
 </a>
 </g>
 </g>
