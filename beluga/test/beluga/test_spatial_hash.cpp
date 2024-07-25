@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <array>
 #include <iterator>
+#include <sophus/se3.hpp>
 #include <tuple>
 #include <vector>
 
@@ -149,6 +150,57 @@ TEST(SpatialHash, NonPeriodicityCheck2) {
     EXPECT_NE(ref_hash, hash5);
     EXPECT_NE(ref_hash, hash6);
     EXPECT_NE(ref_hash, hash7);
+  }
+}
+
+TEST(SpatialHash, SE3) {
+  constexpr double kLinearResolution = 0.5;
+  constexpr double kAngularResolution = 0.2;
+  auto uut = beluga::spatial_hash<Sophus::SE3d>{kLinearResolution, kAngularResolution};
+  {
+    const auto h1 = uut(Sophus::SE3d{});
+    const auto h2 = uut(Sophus::SE3d::transX(kLinearResolution - 1e-6));
+    ASSERT_EQ(h1, h2);
+    const auto h3 = uut(Sophus::SE3d::transX(kLinearResolution));
+    ASSERT_NE(h1, h3);
+  }
+  {
+    const auto h1 = uut(Sophus::SE3d{});
+    const auto h2 = uut(Sophus::SE3d::transY(kLinearResolution - 1e-6));
+    ASSERT_EQ(h1, h2);
+    const auto h3 = uut(Sophus::SE3d::transY(kLinearResolution));
+    ASSERT_NE(h1, h3);
+  }
+  {
+    const auto h1 = uut(Sophus::SE3d{});
+    const auto h2 = uut(Sophus::SE3d::transZ(kLinearResolution - 1e-6));
+    ASSERT_EQ(h1, h2);
+    const auto h3 = uut(Sophus::SE3d::transZ(kLinearResolution));
+    ASSERT_NE(h1, h3);
+  }
+
+  {
+    const auto h1 = uut(Sophus::SE3d{});
+    const auto h2 = uut(Sophus::SE3d::rotX(kAngularResolution - 1e-6));
+    ASSERT_EQ(h1, h2);
+    const auto h3 = uut(Sophus::SE3d::rotX(kAngularResolution));
+    ASSERT_NE(h1, h3);
+  }
+
+  {
+    const auto h1 = uut(Sophus::SE3d{});
+    const auto h2 = uut(Sophus::SE3d::rotY(kAngularResolution - 1e-6));
+    ASSERT_EQ(h1, h2);
+    const auto h3 = uut(Sophus::SE3d::rotY(kAngularResolution));
+    ASSERT_NE(h1, h3);
+  }
+
+  {
+    const auto h1 = uut(Sophus::SE3d{});
+    const auto h2 = uut(Sophus::SE3d::rotZ(kAngularResolution - 1e-6));
+    ASSERT_EQ(h1, h2);
+    const auto h3 = uut(Sophus::SE3d::rotZ(kAngularResolution));
+    ASSERT_NE(h1, h3);
   }
 }
 
