@@ -197,13 +197,33 @@ class spatial_hash<Sophus::SE2d, void> {
 };
 
 /**
- * Specialization for Sophus::SE3d. Will calculate the spatial hash based on the translation and rotation (expressed in
- * Euler Angles).
+ * Specialization for Sophus::SE3d. It will calculate the spatial hash based on translation and rotation expressed in
+ * RPY angles. This is rotations with respect to a fixed frame (extrinsic rotation), in XYZ order.
  */
 template <>
 class spatial_hash<Sophus::SE3d, void> {
  public:
   /// Constructs a spatial hasher given per-coordinate resolutions.
+  /**
+   * \param x_clustering_resolution Clustering resolution for the X axis, in meters.
+   * \param y_clustering_resolution Clustering resolution for the Y axis, in meters.
+   * \param z_clustering_resolution Clustering resolution for the Z axis, in meters.
+   * \param roll_clustering_resolution Clustering resolution for roll in radians.
+   * \param pitch_clustering_resolution Clustering resolution for pitch in radians.
+   * \param yaw_clustering_resolution Clustering resolution for yaw in radians.
+   */
+  explicit spatial_hash(
+      double x_clustering_resolution,
+      double y_clustering_resolution,
+      double z_clustering_resolution,
+      double roll_clustering_resolution,
+      double pitch_clustering_resolution,
+      double yaw_clustering_resolution)
+      : underlying_hasher_{
+            {x_clustering_resolution, y_clustering_resolution, z_clustering_resolution, roll_clustering_resolution,
+             pitch_clustering_resolution, yaw_clustering_resolution}} {};
+
+  /// Constructs a spatial hasher given per-coordinate and angular resolutions.
   /**
    * \param x_clustering_resolution Clustering resolution for the X axis, in meters.
    * \param y_clustering_resolution Clustering resolution for the Y axis, in meters.
@@ -241,7 +261,9 @@ class spatial_hash<Sophus::SE3d, void> {
    */
   std::size_t operator()(const Sophus::SE3d& state) const {
     const auto& position = state.translation();
-    // This gives yaw, pitch, roll in that order.
+    // Eigen's eulerAngles uses intrinsic rotations, but XYZ extrinsic rotation is the same as ZYX intrinsic rotation.
+    // See https://pages.github.berkeley.edu/EECS-106/fa21-site/assets/discussions/D1_Rotations_soln.pdf
+    // This gives (extrinsic) yaw, pitch, roll in that order.
     const Eigen::Vector3d euler_angles = state.so3().matrix().eulerAngles(2, 1, 0);
     return underlying_hasher_(std::make_tuple(
         position.x(), position.y(), position.z(), euler_angles.z(), euler_angles.y(), euler_angles.x()));
