@@ -17,6 +17,7 @@
 
 // external
 #include <range/v3/view/filter.hpp>
+#include <range/v3/view/tail.hpp>
 #include <sophus/se3.hpp>
 
 // standard library
@@ -46,8 +47,22 @@ class LandmarkMap {
   /// @brief Constructor.
   /// @param boundaries Limits of the map.
   /// @param landmarks List of landmarks that can be expected to be detected.
-  LandmarkMap(const LandmarkMapBoundaries& boundaries, landmarks_set_position_data landmarks)
+  explicit LandmarkMap(const LandmarkMapBoundaries& boundaries, landmarks_set_position_data landmarks)
       : landmarks_(std::move(landmarks)), map_boundaries_(std::move(boundaries)) {}
+
+  /// @brief Constructor with implicit map boundaries (computed from landmarks).
+  /// @param landmarks List of landmarks that can be expected to be detected.
+  explicit LandmarkMap(landmarks_set_position_data landmarks) : landmarks_(std::move(landmarks)) {
+    if (!landmarks_.empty()) {
+      map_boundaries_.min() = landmarks_[0].detection_position_in_robot;
+      map_boundaries_.max() = landmarks_[0].detection_position_in_robot;
+      for (const auto& landmark : ranges::view::tail(landmarks_)) {
+        const auto& position = landmark.detection_position_in_robot;
+        map_boundaries_.min() = map_boundaries_.min().cwiseMin(position).eval();
+        map_boundaries_.max() = map_boundaries_.max().cwiseMax(position).eval();
+      }
+    }
+  }
 
   /// @brief Returns the map boundaries.
   /// @return The map boundaries.
