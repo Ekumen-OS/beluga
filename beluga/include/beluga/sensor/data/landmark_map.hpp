@@ -56,7 +56,7 @@ class LandmarkMap {
     if (!landmarks_.empty()) {
       map_boundaries_.min() = landmarks_[0].detection_position_in_robot;
       map_boundaries_.max() = landmarks_[0].detection_position_in_robot;
-      for (const auto& landmark : ranges::view::tail(landmarks_)) {
+      for (const auto& landmark : ranges::views::tail(landmarks_)) {
         const auto& position = landmark.detection_position_in_robot;
         map_boundaries_.min() = map_boundaries_.min().cwiseMin(position).eval();
         map_boundaries_.max() = map_boundaries_.max().cwiseMax(position).eval();
