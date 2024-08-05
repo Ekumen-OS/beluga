@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gmock/gmock-spec-builders.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <lifecycle_msgs/msg/state.hpp>
@@ -25,22 +24,25 @@
 #include "beluga_amcl/ros2_common.hpp"
 #include "test_utils/node_testing.hpp"
 
-namespace beluga_amcl {
+namespace {
 
-class MockAMCL : public BaseAMCLNode {
+class MockAMCL : public beluga_amcl::BaseAMCLNode {
  public:
-  using BaseAMCLNode::BaseAMCLNode;
-  MOCK_METHOD(void, do_activate, ([[maybe_unused]] const rclcpp_lifecycle::State& state), (override));
-  MOCK_METHOD(void, do_configure, ([[maybe_unused]] const rclcpp_lifecycle::State& state), (override));
-  MOCK_METHOD(void, do_shutdown, ([[maybe_unused]] const rclcpp_lifecycle::State& state), (override));
-  MOCK_METHOD(void, do_deactivate, ([[maybe_unused]] const rclcpp_lifecycle::State& state), (override));
-  MOCK_METHOD(void, do_cleanup, ([[maybe_unused]] const rclcpp_lifecycle::State& state), (override));
+  using beluga_amcl::BaseAMCLNode::BaseAMCLNode;
+  MOCK_METHOD(void, do_activate, (const rclcpp_lifecycle::State& state), (override));
+  MOCK_METHOD(void, do_configure, (const rclcpp_lifecycle::State& state), (override));
+  MOCK_METHOD(void, do_shutdown, (const rclcpp_lifecycle::State& state), (override));
+  MOCK_METHOD(void, do_deactivate, (const rclcpp_lifecycle::State& state), (override));
+  MOCK_METHOD(void, do_cleanup, (const rclcpp_lifecycle::State& state), (override));
   MOCK_METHOD(void, do_autostart_callback, (), (override));
   MOCK_METHOD(void, do_periodic_timer_callback, (), (override));
 };
 
+}  // namespace
+namespace beluga_amcl {
+
 class TestROS2Common : public ::testing::Test {
- public:
+ protected:
   void SetUp() override { rclcpp::init(0, nullptr); }
 
   void TearDown() override { rclcpp::shutdown(); }
