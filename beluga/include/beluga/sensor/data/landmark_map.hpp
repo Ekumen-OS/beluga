@@ -51,6 +51,12 @@ class LandmarkMap {
       : landmarks_(std::move(landmarks)), map_boundaries_(std::move(boundaries)) {}
 
   /// @brief Constructor with implicit map boundaries (computed from landmarks).
+  /// @important Note that computing map boundaries from landmarks will effectively
+  /// constrain the traversable region to the volume delimited by such landmarks.
+  /// In many cases this is undesirable e.g. when landmarks are scattered in some
+  /// region of space, when landmarks are distributed on some flat surface such
+  /// as a wall, when landmarks are located within a small area at some height
+  /// for visibility, etc. Use with care.
   /// @param landmarks List of landmarks that can be expected to be detected.
   explicit LandmarkMap(landmarks_set_position_data landmarks) : landmarks_(std::move(landmarks)) {
     if (!landmarks_.empty()) {
@@ -58,8 +64,8 @@ class LandmarkMap {
       map_boundaries_.max() = landmarks_[0].detection_position_in_robot;
       for (const auto& landmark : ranges::views::tail(landmarks_)) {
         const auto& position = landmark.detection_position_in_robot;
-        map_boundaries_.min() = map_boundaries_.min().cwiseMin(position).eval();
-        map_boundaries_.max() = map_boundaries_.max().cwiseMax(position).eval();
+        map_boundaries_.min() = map_boundaries_.min().cwiseMin(position);
+        map_boundaries_.max() = map_boundaries_.max().cwiseMax(position);
       }
     }
   }
