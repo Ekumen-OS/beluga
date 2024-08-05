@@ -100,6 +100,26 @@ TEST_F(TestROS2Common, Autostart) {
   testing::spin_for(300ms, amcl);
 }
 
+TEST_F(TestROS2Common, AutostartDefault) {
+  using namespace std::chrono_literals;
+  auto amcl = std::make_shared<BaseAMCLNode>(
+      "amcl", "",
+      rclcpp::NodeOptions{}
+          .append_parameter_override("autostart", true)
+          .append_parameter_override("autostart_delay", 0.1));
+  testing::spin_for(300ms, amcl);
+}
+
+TEST_F(TestROS2Common, PeriodicTimerDefault) {
+  using namespace std::chrono_literals;
+  using ::testing::_;
+  auto amcl =
+      std::make_shared<BaseAMCLNode>("amcl", "", rclcpp::NodeOptions{}.append_parameter_override("autostart", false));
+  amcl->configure();
+  amcl->activate();
+  testing::spin_for(300ms, amcl);
+}
+
 TEST_F(TestROS2Common, PeriodicTimer) {
   using namespace std::chrono_literals;
   using ::testing::_;
