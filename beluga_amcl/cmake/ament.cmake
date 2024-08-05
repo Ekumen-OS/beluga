@@ -22,7 +22,8 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_srvs REQUIRED)
 
 add_library(amcl_node_component SHARED)
-target_sources(amcl_node_component PRIVATE src/amcl_node.cpp)
+target_sources(amcl_node_component PRIVATE src/amcl_node.cpp
+                                           src/ros2_common.cpp)
 target_include_directories(
   amcl_node_component
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -63,7 +64,8 @@ install(TARGETS amcl_node DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 
 add_library(ndt_amcl_node_component SHARED)
-target_sources(ndt_amcl_node_component PRIVATE src/ndt_amcl_node.cpp)
+target_sources(ndt_amcl_node_component PRIVATE src/ndt_amcl_node.cpp
+                                               src/ros2_common.cpp)
 target_include_directories(
   ndt_amcl_node_component
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
