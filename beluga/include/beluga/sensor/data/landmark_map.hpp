@@ -51,7 +51,7 @@ class LandmarkMap {
       : landmarks_(std::move(landmarks)), map_boundaries_(std::move(boundaries)) {}
 
   /// @brief Constructor with implicit map boundaries (computed from landmarks).
-  /// @important Note that computing map boundaries from landmarks will effectively
+  /// @details Note that computing map boundaries from landmarks will effectively
   /// constrain the traversable region to the volume delimited by such landmarks.
   /// In many cases this is undesirable e.g. when landmarks are scattered in some
   /// region of space, when landmarks are distributed on some flat surface such
