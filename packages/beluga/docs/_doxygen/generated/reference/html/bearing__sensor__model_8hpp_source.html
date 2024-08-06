@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Jul 25 10:48:51 2024 -0300, 483f00a&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Aug 6 10:57:58 2024 -0300, a4242ae&#39;"/>
   </head>
   
   
@@ -572,8 +572,8 @@ $(function() {
 <div class="ttc" id="aclassbeluga_1_1BearingSensorModel_html_ae21d6c2078e9338a44022698350f7685"><div class="ttname"><a href="classbeluga_1_1BearingSensorModel.html#ae21d6c2078e9338a44022698350f7685">beluga::BearingSensorModel::operator()</a></div><div class="ttdeci">auto operator()(measurement_type &amp;&amp;detections) const</div><div class="ttdoc">Returns a state weighting function conditioned on landmark bearing detections.</div><div class="ttdef"><b>Definition:</b> bearing_sensor_model.hpp:89</div></div>
 <div class="ttc" id="aclassbeluga_1_1BearingSensorModel_html_ae38984eb1bdc9255d2081a83abc9e7f0"><div class="ttname"><a href="classbeluga_1_1BearingSensorModel.html#ae38984eb1bdc9255d2081a83abc9e7f0">beluga::BearingSensorModel::update_map</a></div><div class="ttdeci">void update_map(map_type &amp;&amp;map)</div><div class="ttdoc">Update the sensor model with a new landmark map.</div><div class="ttdef"><b>Definition:</b> bearing_sensor_model.hpp:144</div></div>
 <div class="ttc" id="aclassbeluga_1_1BearingSensorModel_html_aefed8d7ed2fb891cc1762434909eea89"><div class="ttname"><a href="classbeluga_1_1BearingSensorModel.html#aefed8d7ed2fb891cc1762434909eea89">beluga::BearingSensorModel::param_type</a></div><div class="ttdeci">BearingModelParam param_type</div><div class="ttdoc">Parameter type that the constructor uses to configure the bearing sensor model.</div><div class="ttdef"><b>Definition:</b> bearing_sensor_model.hpp:71</div></div>
-<div class="ttc" id="aclassbeluga_1_1LandmarkMap_html"><div class="ttname"><a href="classbeluga_1_1LandmarkMap.html">beluga::LandmarkMap</a></div><div class="ttdoc">Basic 3D landmark map datatype.</div><div class="ttdef"><b>Definition:</b> landmark_map.hpp:39</div></div>
-<div class="ttc" id="aclassbeluga_1_1LandmarkMap_html_a0a1a46c35a67b5432a15a4e28dd0f6f7"><div class="ttname"><a href="classbeluga_1_1LandmarkMap.html#a0a1a46c35a67b5432a15a4e28dd0f6f7">beluga::LandmarkMap::find_closest_bearing_landmark</a></div><div class="ttdeci">std::optional&lt; LandmarkBearing3 &gt; find_closest_bearing_landmark(const LandmarkBearing3 &amp;detection_bearing_in_sensor, const LandmarkCategory &amp;detection_category, const world_pose_type &amp;sensor_pose_in_world) const</div><div class="ttdoc">Finds the landmark that minimizes the bearing error to a given detection and returns its data.</div><div class="ttdef"><b>Definition:</b> landmark_map.hpp:96</div></div>
+<div class="ttc" id="aclassbeluga_1_1LandmarkMap_html"><div class="ttname"><a href="classbeluga_1_1LandmarkMap.html">beluga::LandmarkMap</a></div><div class="ttdoc">Basic 3D landmark map datatype.</div><div class="ttdef"><b>Definition:</b> landmark_map.hpp:40</div></div>
+<div class="ttc" id="aclassbeluga_1_1LandmarkMap_html_a0a1a46c35a67b5432a15a4e28dd0f6f7"><div class="ttname"><a href="classbeluga_1_1LandmarkMap.html#a0a1a46c35a67b5432a15a4e28dd0f6f7">beluga::LandmarkMap::find_closest_bearing_landmark</a></div><div class="ttdeci">std::optional&lt; LandmarkBearing3 &gt; find_closest_bearing_landmark(const LandmarkBearing3 &amp;detection_bearing_in_sensor, const LandmarkCategory &amp;detection_category, const world_pose_type &amp;sensor_pose_in_world) const</div><div class="ttdoc">Finds the landmark that minimizes the bearing error to a given detection and returns its data.</div><div class="ttdef"><b>Definition:</b> landmark_map.hpp:117</div></div>
 <div class="ttc" id="alandmark__detection__types_8hpp_html"><div class="ttname"><a href="landmark__detection__types_8hpp.html">landmark_detection_types.hpp</a></div><div class="ttdoc">Auxiliar types for landmark models.</div></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
 <div class="ttc" id="anamespacebeluga_html_a706431bba3d6cfb1ee0690221f3a9af9"><div class="ttname"><a href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a></div><div class="ttdeci">constexpr state_detail::state_fn state</div><div class="ttdoc">Customization point object for accessing the state of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:163</div></div>
@@ -636,7 +636,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Jul 25 10:48:51 2024 -0300, 483f00a&#39;.
+  Last updated on &#39;Tue Aug 6 10:57:58 2024 -0300, a4242ae&#39;.
   <br/>
 </p>
   </div>
