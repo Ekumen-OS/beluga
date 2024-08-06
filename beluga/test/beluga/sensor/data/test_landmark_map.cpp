@@ -33,6 +33,7 @@ struct LandmarkMapCartesianTest : public ::testing::Test {
 
 TEST_F(LandmarkMapCartesianTest, SmokeTest) {
   ASSERT_NO_THROW(beluga::LandmarkMap(default_map_boundaries, beluga::LandmarkMap::landmarks_set_position_data{}));
+  ASSERT_NO_THROW(beluga::LandmarkMap(beluga::LandmarkMap::landmarks_set_position_data{}));
 }
 
 TEST_F(LandmarkMapCartesianTest, SimpleMapLoading) {
@@ -58,6 +59,21 @@ TEST_F(LandmarkMapCartesianTest, SimpleMapLoading) {
     const auto nearest = uut.find_nearest_landmark({1.0, 2.0, 3.0}, 99);
     ASSERT_FALSE(nearest.has_value());
   }
+}
+
+TEST_F(LandmarkMapCartesianTest, ImplicitMapLimits) {
+  const auto landmark_0 = beluga::LandmarkPosition3{+1.0, -2.0, +3.0};
+  const auto landmark_1 = beluga::LandmarkPosition3{-1.0, +2.0, -3.0};
+  const auto landmark_2 = beluga::LandmarkPosition3{+5.0, +6.0, +7.0};
+
+  auto uut = beluga::LandmarkMap({{landmark_0, 0}, {landmark_1, 0}, {landmark_2, 0}});
+
+  ASSERT_DOUBLE_EQ(uut.map_limits().min().x(), -1.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().min().y(), -2.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().min().z(), -3.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().max().x(), +5.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().max().y(), +6.0);
+  ASSERT_DOUBLE_EQ(uut.map_limits().max().z(), +7.0);
 }
 
 TEST_F(LandmarkMapCartesianTest, EmptyMap) {
