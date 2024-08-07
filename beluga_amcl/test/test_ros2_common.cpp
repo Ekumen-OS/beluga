@@ -36,6 +36,11 @@ class MockAMCL : public beluga_amcl::BaseAMCLNode {
   MOCK_METHOD(void, do_cleanup, (const rclcpp_lifecycle::State& state), (override));
   MOCK_METHOD(void, do_autostart_callback, (), (override));
   MOCK_METHOD(void, do_periodic_timer_callback, (), (override));
+  MOCK_METHOD(
+      void,
+      do_initial_pose_callback,
+      (geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message),
+      (override));
 };
 
 }  // namespace
@@ -131,6 +136,34 @@ TEST_F(TestROS2Common, PeriodicTimer) {
   amcl->configure();
   amcl->activate();
   testing::spin_for(300ms, amcl);
+}
+
+TEST_F(TestROS2Common, InitialPoseCallback) {
+  using namespace std::chrono_literals;
+  using ::testing::_;
+  auto tester_node = std::make_shared<testing::TesterNode>();
+  auto amcl =
+      std::make_shared<MockAMCL>("amcl", "", rclcpp::NodeOptions{}.append_parameter_override("autostart", false));
+  EXPECT_CALL(*amcl, do_periodic_timer_callback());
+  EXPECT_CALL(*amcl, do_configure(_));
+  EXPECT_CALL(*amcl, do_activate(_));
+  amcl->configure();
+  amcl->activate();
+  EXPECT_CALL(*amcl, do_initial_pose_callback(_));
+  tester_node->publish_default_initial_pose();
+  testing::spin_for(300ms, amcl, tester_node);
+}
+
+TEST_F(TestROS2Common, InitialPoseCallbackDefault) {
+  using namespace std::chrono_literals;
+  using ::testing::_;
+  auto tester_node = std::make_shared<testing::TesterNode>();
+  auto amcl =
+      std::make_shared<BaseAMCLNode>("amcl", "", rclcpp::NodeOptions{}.append_parameter_override("autostart", false));
+  amcl->configure();
+  amcl->activate();
+  tester_node->publish_default_initial_pose();
+  testing::spin_for(300ms, amcl, tester_node);
 }
 
 }  // namespace beluga_amcl

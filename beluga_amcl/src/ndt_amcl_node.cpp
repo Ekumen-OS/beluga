@@ -124,13 +124,6 @@ void NdtAmclNode::do_activate(const rclcpp_lifecycle::State&) {
   particle_filter_ = make_particle_filter();
 
   {
-    initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-        get_parameter("initial_pose_topic").as_string(), rclcpp::SystemDefaultsQoS(),
-        std::bind(&NdtAmclNode::initial_pose_callback, this, std::placeholders::_1), common_subscription_options_);
-    RCLCPP_INFO(get_logger(), "Subscribed to initial_pose_topic: %s", initial_pose_sub_->get_topic_name());
-  }
-
-  {
     using LaserScanSubscriber =
         message_filters::Subscriber<sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode>;
     laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
@@ -157,7 +150,6 @@ void NdtAmclNode::do_activate(const rclcpp_lifecycle::State&) {
 }
 
 void NdtAmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
-  initial_pose_sub_.reset();
   laser_scan_connection_.disconnect();
   laser_scan_filter_.reset();
   laser_scan_sub_.reset();
@@ -410,15 +402,7 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
   }
 }
 
-void NdtAmclNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
-  const auto global_frame_id = get_parameter("global_frame_id").as_string();
-  if (message->header.frame_id != global_frame_id) {
-    RCLCPP_WARN(
-        get_logger(), "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\"",
-        message->header.frame_id.c_str(), global_frame_id.c_str());
-    return;
-  }
-
+void NdtAmclNode::do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
   auto pose = Sophus::SE2d{};
   tf2::convert(message->pose.pose, pose);
 

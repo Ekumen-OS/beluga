@@ -93,7 +93,7 @@ class AmclNode : public BaseAMCLNode {
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
 
   /// Callback for pose (re)initialization.
-  void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
+  void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;
 
   /// Callback for the global relocalization service.
   void global_localization_callback(
@@ -128,16 +128,6 @@ class AmclNode : public BaseAMCLNode {
    */
   bool initialize_from_map();
 
-  /// Node bond with the lifecycle manager.
-  std::unique_ptr<bond::Bond> bond_;
-
-  /// Timer for periodic particle cloud updates.
-  rclcpp::TimerBase::SharedPtr timer_;
-
-  /// Timer for node to configure and activate itself.
-  rclcpp::TimerBase::SharedPtr autostart_timer_;
-  /// Pose (re)initialization subscription.
-  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
   /// Occupancy grid map updates subscription.
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
   /// Laser scan updates subscription.

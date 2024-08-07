@@ -14,6 +14,7 @@
 
 #include "beluga_amcl/ros2_common.hpp"
 #include <lifecycle_msgs/msg/state.hpp>
+#include <rclcpp/publisher.hpp>
 
 namespace beluga_amcl {
 
@@ -416,6 +417,7 @@ BaseAMCLNode::CallbackReturn BaseAMCLNode::on_deactivate(const rclcpp_lifecycle:
   particle_cloud_pub_->on_deactivate();
   particle_markers_pub_->on_deactivate();
   pose_pub_->on_deactivate();
+  initial_pose_sub_.reset();
   tf_listener_.reset();
   tf_broadcaster_.reset();
   tf_buffer_.reset();
@@ -450,6 +452,12 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
   particle_markers_pub_->on_activate();
   pose_pub_->on_activate();
   {
+    initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
+        get_parameter("initial_pose_topic").as_string(), rclcpp::SystemDefaultsQoS(),
+        std::bind(&BaseAMCLNode::initial_pose_callback, this, std::placeholders::_1), common_subscription_options_);
+    RCLCPP_INFO(get_logger(), "Subscribed to initial_pose_topic: %s", initial_pose_sub_->get_topic_name());
+  }
+  {
     using namespace std::chrono_literals;
     // TODO(alon): create a parameter for the timer rate?
     timer_ = create_wall_timer(200ms, std::bind(&BaseAMCLNode::periodic_timer_callback, this), common_callback_group_);
@@ -473,5 +481,25 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
   }
   do_activate(state);
   return CallbackReturn::SUCCESS;
+}
+
+void BaseAMCLNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
+  const auto global_frame_id = get_parameter("global_frame_id").as_string();
+  if (message->header.frame_id != global_frame_id) {
+    RCLCPP_WARN(
+        get_logger(), "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\"",
+        message->header.frame_id.c_str(), global_frame_id.c_str());
+    return;
+  }
+  do_initial_pose_callback(message);
+}
+
+void BaseAMCLNode::periodic_timer_callback() {
+  do_periodic_timer_callback();
+};
+
+void BaseAMCLNode::autostart_callback() {
+  do_autostart_callback();
+  autostart_timer_->cancel();
 }
 }  // namespace beluga_amcl

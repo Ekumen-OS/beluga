@@ -137,7 +137,7 @@ class NdtAmclNode : public BaseAMCLNode {
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
 
   /// Callback for pose (re)initialization.
-  void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr);
+  void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;
 
   /// Initialize particles from an estimated pose and covariance.
   /**
@@ -150,8 +150,6 @@ class NdtAmclNode : public BaseAMCLNode {
    */
   bool initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::Matrix3d>& estimate);
 
-  /// Pose (re)initialization subscription.
-  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
   /// Laser scan updates subscription.
   std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode>>
       laser_scan_sub_;

@@ -76,14 +76,11 @@ class BaseAMCLNode : public rclcpp_lifecycle::LifecycleNode {
   /// Callback for lifecycle transitions from most states to the FINALIZED state.
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State&) override;
 
-  /// Callback for the perdioic particle updates.
-  void periodic_timer_callback() { do_periodic_timer_callback(); };
+  /// Callback for the periodic particle updates.
+  void periodic_timer_callback();
 
   /// Callback for the autostart timer.
-  void autostart_callback() {
-    do_autostart_callback();
-    autostart_timer_->cancel();
-  };
+  void autostart_callback();
 
   /// User provided extra steps for the autostart process.
   virtual void do_autostart_callback(){};
@@ -100,8 +97,14 @@ class BaseAMCLNode : public rclcpp_lifecycle::LifecycleNode {
   virtual void do_cleanup([[maybe_unused]] const rclcpp_lifecycle::State& state) {}
   /// Extra steps for the on_activate callback. Defaults to no-op.
   virtual void do_activate([[maybe_unused]] const rclcpp_lifecycle::State& state) {}
-  /// Extra steps for the periodic updates timer callback events.
+  /// Extra steps for the periodic updates timer callback events. Defaults to no-op.
   virtual void do_periodic_timer_callback() {}
+  /// Extra steps for (re)initialization messages.
+  virtual void do_initial_pose_callback(
+      [[maybe_unused]] geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {}
+
+  /// Callback for (re)initialization messages.
+  void initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message);
 
   /// Particle cloud publisher.
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseArray>::SharedPtr particle_cloud_pub_;
@@ -125,6 +128,8 @@ class BaseAMCLNode : public rclcpp_lifecycle::LifecycleNode {
   rclcpp::CallbackGroup::SharedPtr common_callback_group_;
   /// Common subscription options.
   rclcpp::SubscriptionOptions common_subscription_options_;
+  /// Pose (re)initialization subscription.
+  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_sub_;
 };
 }  // namespace beluga_amcl
 #endif
