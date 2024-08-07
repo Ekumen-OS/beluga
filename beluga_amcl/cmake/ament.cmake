@@ -21,15 +21,16 @@ find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_srvs REQUIRED)
 
-add_library(ros2_common SHARED)
-target_sources(ros2_common PRIVATE src/ros2_common.cpp)
+add_library(beluga_amcl_ros2_common SHARED)
+target_sources(beluga_amcl_ros2_common PRIVATE src/ros2_common.cpp)
 
 target_include_directories(
-  ros2_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                     $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+  beluga_amcl_ros2_common
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
 ament_target_dependencies(
-  ros2_common
+  beluga_amcl_ros2_common
   PUBLIC beluga_ros
          bondcpp
          rclcpp
@@ -40,12 +41,18 @@ ament_target_dependencies(
 add_library(amcl_node_component SHARED)
 target_sources(amcl_node_component PRIVATE src/amcl_node.cpp)
 
+install(
+  TARGETS beluga_amcl_ros2_common
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
+
 target_include_directories(
   amcl_node_component
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
          $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
-target_link_libraries(amcl_node_component PUBLIC ros2_common)
+target_link_libraries(amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
 target_compile_features(amcl_node_component PUBLIC cxx_std_17)
 
@@ -95,7 +102,7 @@ target_include_directories(
 
 target_compile_features(ndt_amcl_node_component PUBLIC cxx_std_17)
 
-target_link_libraries(ndt_amcl_node_component PUBLIC ros2_common)
+target_link_libraries(ndt_amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
 ament_target_dependencies(
   ndt_amcl_node_component

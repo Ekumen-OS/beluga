@@ -18,7 +18,7 @@ file(COPY test_data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ament_add_gmock(test_ros2_common test_ros2_common.cpp)
 target_compile_options(test_ros2_common PRIVATE -Wno-deprecated-copy)
-target_link_libraries(test_ros2_common amcl_node_component)
+target_link_libraries(test_ros2_common beluga_amcl_ros2_common)
 target_include_directories(test_ros2_common
                            PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/test_utils)
 
