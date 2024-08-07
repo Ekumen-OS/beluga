@@ -1,0 +1,6 @@
+<map id="beluga_amcl::BaseAMCLNode" name="beluga_amcl::BaseAMCLNode">
+<area shape="rect" id="node1" title=" " alt="" coords="95,80,311,107"/>
+<area shape="rect" id="node3" href="$classbeluga__amcl_1_1AmclNode.html" title="2D AMCL as a ROS 2 composable lifecycle node." alt="" coords="5,155,185,181"/>
+<area shape="rect" id="node4" href="$classbeluga__amcl_1_1NdtAmclNode.html" title="2D NDT AMCL as a ROS 2 composable lifecycle node." alt="" coords="210,155,413,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="92,5,315,32"/>
+</map>

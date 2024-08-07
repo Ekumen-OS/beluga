@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,136,32"/>
-<area shape="rect" id="node2" href="$classbeluga__amcl_1_1AmclNodelet.html" title="2D AMCL as a ROS (1) nodelet." alt="" coords="184,5,381,32"/>
+<area shape="rect" id="node1" href="$classbeluga__amcl_1_1AmclNode.html" title="2D AMCL as a ROS 2 composable lifecycle node." alt="" coords="5,5,185,32"/>
+<area shape="rect" id="node2" href="$classbeluga__amcl_1_1BaseAMCLNode.html" title=" " alt="" coords="233,5,449,32"/>
+<area shape="rect" id="node3" href="$classbeluga__amcl_1_1NdtAmclNode.html" title="2D NDT AMCL as a ROS 2 composable lifecycle node." alt="" coords="497,5,700,32"/>
 </map>
