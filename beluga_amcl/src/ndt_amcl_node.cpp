@@ -18,6 +18,7 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <rclcpp/duration.hpp>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -69,11 +70,8 @@
 
 namespace beluga_amcl {
 
-NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
-    : rclcpp_lifecycle::LifecycleNode{"ndt_amcl", "", options} {
+NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"ndt_amcl", "", options} {
   RCLCPP_INFO(get_logger(), "Creating");
-
-  declare_common_params(*this);
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Likelihood for measurements that lie inside cells that are not present in the map.";
@@ -103,20 +101,9 @@ NdtAmclNode::NdtAmclNode(const rclcpp::NodeOptions& options)
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("d2", rclcpp::ParameterValue(0.6), descriptor);
   }
-
-  if (get_parameter("autostart").as_bool()) {
-    auto autostart_delay = std::chrono::duration<double>(get_parameter("autostart_delay").as_double());
-    autostart_timer_ = create_wall_timer(autostart_delay, std::bind(&NdtAmclNode::autostart_callback, this));
-  }
 }
 
-NdtAmclNode::~NdtAmclNode() {
-  RCLCPP_INFO(get_logger(), "Destroying");
-  // In case this lifecycle node wasn't properly shut down, do it here
-  on_shutdown(get_current_state());
-}
-
-void NdtAmclNode::autostart_callback() {
+void NdtAmclNode::do_autostart_callback() {
   using lifecycle_msgs::msg::State;
   auto current_state = configure();
   if (current_state.id() != State::PRIMARY_STATE_INACTIVE) {
@@ -130,63 +117,18 @@ void NdtAmclNode::autostart_callback() {
     shutdown();
   }
   RCLCPP_INFO(get_logger(), "Auto activated successfully");
-  autostart_timer_->cancel();
 }
 
-NdtAmclNode::CallbackReturn NdtAmclNode::on_configure(const rclcpp_lifecycle::State&) {
-  RCLCPP_INFO(get_logger(), "Configuring");
-  particle_cloud_pub_ = create_publisher<geometry_msgs::msg::PoseArray>("particle_cloud", rclcpp::SensorDataQoS());
-  pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("pose", rclcpp::SystemDefaultsQoS());
-  return CallbackReturn::SUCCESS;
-}
-
-NdtAmclNode::CallbackReturn NdtAmclNode::on_activate(const rclcpp_lifecycle::State&) {
-  RCLCPP_INFO(get_logger(), "Activating");
+void NdtAmclNode::do_activate(const rclcpp_lifecycle::State&) {
+  RCLCPP_INFO(get_logger(), "Making particle filter");
   particle_filter_ = make_particle_filter();
-  particle_cloud_pub_->on_activate();
-  pose_pub_->on_activate();
 
   {
-    bond_ = std::make_unique<bond::Bond>("bond", get_name(), shared_from_this());
-    bond_->setHeartbeatPeriod(0.10);
-    bond_->setHeartbeatTimeout(4.0);
-    bond_->start();
-    RCLCPP_INFO(get_logger(), "Created bond (%s) to lifecycle manager", get_name());
-  }
-
-  // Accessing the particle filter is not thread safe.
-  // This ensures that different callbacks are not called concurrently.
-  auto common_callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-  auto common_subscription_options = rclcpp::SubscriptionOptions{};
-  common_subscription_options.callback_group = common_callback_group;
-
-  {
-    using namespace std::chrono_literals;
-    // TODO(alon): create a parameter for the timer rate?
-    timer_ = create_wall_timer(200ms, std::bind(&NdtAmclNode::timer_callback, this), common_callback_group);
-  }
-
-  {
-    initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-        get_parameter("initial_pose_topic").as_string(), rclcpp::SystemDefaultsQoS(),
-        std::bind(&NdtAmclNode::initial_pose_callback, this, std::placeholders::_1), common_subscription_options);
-    RCLCPP_INFO(get_logger(), "Subscribed to initial_pose_topic: %s", initial_pose_sub_->get_topic_name());
-  }
-
-  {
-    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(get_clock());
-    tf_buffer_->setCreateTimerInterface(
-        std::make_shared<tf2_ros::CreateTimerROS>(get_node_base_interface(), get_node_timers_interface()));
-    tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(shared_from_this());
-    tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
-        *tf_buffer_, this,
-        false);  // avoid using dedicated tf thread
-
     using LaserScanSubscriber =
         message_filters::Subscriber<sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode>;
     laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
         shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data,
-        common_subscription_options);
+        common_subscription_options_);
 
     // Message filter that caches laser scan readings until it is possible to transform
     // from laser frame to odom frame and update the particle filter.
@@ -205,43 +147,20 @@ NdtAmclNode::CallbackReturn NdtAmclNode::on_activate(const rclcpp_lifecycle::Sta
       initialize_from_estimate(initial_estimate.value());
     }
   }
-  return CallbackReturn::SUCCESS;
 }
 
-NdtAmclNode::CallbackReturn NdtAmclNode::on_deactivate(const rclcpp_lifecycle::State&) {
-  RCLCPP_INFO(get_logger(), "Deactivating");
-  particle_cloud_pub_->on_deactivate();
-  pose_pub_->on_deactivate();
-  initial_pose_sub_.reset();
+void NdtAmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   laser_scan_connection_.disconnect();
   laser_scan_filter_.reset();
   laser_scan_sub_.reset();
-  tf_listener_.reset();
-  tf_broadcaster_.reset();
-  tf_buffer_.reset();
-  bond_.reset();
-  return CallbackReturn::SUCCESS;
 }
 
-NdtAmclNode::CallbackReturn NdtAmclNode::on_cleanup(const rclcpp_lifecycle::State&) {
+void NdtAmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   pose_pub_.reset();
   particle_filter_.reset();
   enable_tf_broadcast_ = false;
-  return CallbackReturn::SUCCESS;
-}
-
-NdtAmclNode::CallbackReturn NdtAmclNode::on_shutdown(const rclcpp_lifecycle::State& state) {
-  RCLCPP_INFO(get_logger(), "Shutting down");
-  if (state.id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
-    on_deactivate(state);
-    on_cleanup(state);
-  }
-  if (state.id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
-    on_cleanup(state);
-  }
-  return CallbackReturn::SUCCESS;
 }
 
 auto NdtAmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
@@ -359,7 +278,7 @@ auto NdtAmclNode::make_particle_filter() const -> std::unique_ptr<NdtAmclVariant
   return std::make_unique<NdtAmclVariant>(std::move(amcl));
 }
 
-void NdtAmclNode::timer_callback() {
+void NdtAmclNode::do_periodic_timer_callback() {
   if (!particle_filter_) {
     return;
   }
@@ -483,15 +402,7 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
   }
 }
 
-void NdtAmclNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
-  const auto global_frame_id = get_parameter("global_frame_id").as_string();
-  if (message->header.frame_id != global_frame_id) {
-    RCLCPP_WARN(
-        get_logger(), "Ignoring initial pose in frame \"%s\"; it must be in the global frame \"%s\"",
-        message->header.frame_id.c_str(), global_frame_id.c_str());
-    return;
-  }
-
+void NdtAmclNode::do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
   auto pose = Sophus::SE2d{};
   tf2::convert(message->pose.pose, pose);
 
