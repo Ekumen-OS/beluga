@@ -19,7 +19,9 @@
   <depend>beluga</depend>
   <depend>beluga_ros</depend>
   <depend>message_filters</depend>
+  <depend>pcl_ros</depend>
   <depend>std_srvs</depend>
+
 
   <depend condition="$ROS_VERSION == 1">diagnostic_updater</depend>
   <depend condition="$ROS_VERSION == 1">dynamic_reconfigure</depend>
@@ -29,6 +31,7 @@
   <depend condition="$ROS_VERSION == 2">rclcpp</depend>
   <depend condition="$ROS_VERSION == 2">rclcpp_components</depend>
   <depend condition="$ROS_VERSION == 2">rclcpp_lifecycle</depend>
+  <depend condition="$ROS_VERSION == 2">pcl_conversions</depend>
 
   <test_depend condition="$ROS_VERSION == 1">rostest</test_depend>
   <test_depend condition="$ROS_VERSION == 2">ament_cmake_gmock</test_depend>

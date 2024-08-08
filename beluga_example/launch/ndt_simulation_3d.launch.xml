@@ -1,0 +1,16 @@
+<launch>
+  <arg name="localization_params_file" default="$(find-pkg-share beluga_example)/params/default_ndt_3d.ros2.yaml"/>
+  <arg name="localization_ndt_map"/>
+  <arg name="bag_path"/>
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/ndt_3d_localization_launch.py">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="localization_params_file" value="$(var localization_params_file)"/>
+    <arg name="localization_ndt_map" value="$(var localization_ndt_map)"/>
+  </include>
+
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/rosbag_launch.py">
+    <arg name="rosbag_path" value="$(var bag_path)"/>
+  </include>
+</launch>

@@ -37,3 +37,13 @@ target_include_directories(test_ndt_amcl_node
                            PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/test_utils)
 target_compile_options(test_ndt_amcl_node PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_ndt_amcl_node ndt_amcl_node_component)
+
+ament_add_gmock(
+  test_ndt_amcl_3d_node
+  test_ndt_amcl_3d_node.cpp
+  WORKING_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(test_ndt_amcl_3d_node
+                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/test_utils)
+target_compile_options(test_ndt_amcl_3d_node PRIVATE -Wno-deprecated-copy)
+target_link_libraries(test_ndt_amcl_3d_node ndt_amcl_node_3d_component)
