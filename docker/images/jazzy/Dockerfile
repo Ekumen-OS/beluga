@@ -67,6 +67,9 @@ RUN perf help || ( \
 ARG USER=developer
 ARG GROUP=ekumen
 
+# Drop ubuntu user to avoid fixuid clashes.
+RUN deluser ubuntu
+
 RUN addgroup --gid 1001 $GROUP \
   && adduser --uid 1001 --ingroup $GROUP --home /home/$USER --shell /bin/sh --disabled-password --gecos "" $USER \
   && adduser $USER sudo \
