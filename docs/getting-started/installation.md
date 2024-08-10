@@ -103,18 +103,6 @@ colcon build --packages-up-to beluga_example --cmake-args -DBUILD_TESTING=OFF
 
 ::::
 
-After building, don't forget to source the environment:
-
-::::{tab-set}
-
-:::{tab-item} Ubuntu
-```bash
-source install/setup.bash
-```
-:::
-
-::::
-
 Alternatively, for ROS 1 distributions, you may use `catkin_make_isolated` instead:
 
 ::::{tab-set}
@@ -122,6 +110,24 @@ Alternatively, for ROS 1 distributions, you may use `catkin_make_isolated` inste
 :::{tab-item} Ubuntu
 ```bash
 catkin_make_isolated --only-pkg-with-deps beluga_example --install --cmake-args -DBUILD_TESTING=OFF
+```
+:::
+
+::::
+
+After building, don't forget to source the environment:
+
+::::{tab-set}
+
+:::{tab-item} ROS 2
+```bash
+source install/setup.bash
+```
+:::
+
+:::{tab-item} ROS 1
+```bash
+source devel/setup.bash
 ```
 :::
 
