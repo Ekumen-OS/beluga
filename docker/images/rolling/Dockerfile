@@ -107,7 +107,8 @@ RUN apt-get update \
   && apt-get -y dist-upgrade \
   && . /opt/ros/rolling/setup.sh \
   && rosdep update \
-  && rosdep install -i -y --from-path src --skip-keys 'turtlebot3_gazebo gazebo_ros_pkgs slam_toolbox' -t exec -t doc -t build \
+  && rosdep install -i -y --from-path src \
+  && rosdep install -i -y --from-path src -t doc \
   && rm -rf /var/lib/apt/lists/*
 
 USER $USER:$GROUP
