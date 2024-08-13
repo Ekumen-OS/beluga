@@ -107,7 +107,7 @@ RUN apt-get update \
   && apt-get -y dist-upgrade \
   && . /opt/ros/rolling/setup.sh \
   && rosdep update \
-  && rosdep install -i -y --from-path src \
+  && rosdep install -i -y --from-path src --skip-keys 'slam_toolbox' \
   && rosdep install -i -y --from-path src -t doc \
   && rm -rf /var/lib/apt/lists/*
 
