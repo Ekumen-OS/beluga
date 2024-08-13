@@ -114,3 +114,21 @@ catkin_make_isolated --only-pkg-with-deps beluga_example --install --cmake-args 
 :::
 
 ::::
+
+After building, don't forget to source the environment:
+
+::::{tab-set}
+
+:::{tab-item} ROS 2
+```bash
+source install/setup.bash
+```
+:::
+
+:::{tab-item} ROS 1
+```bash
+source devel/setup.bash
+```
+:::
+
+::::
