@@ -64,13 +64,17 @@ inline constexpr detail::default_weighted_mean_fn default_weighted_mean;
  * \tparam TransferFn Callable that maps a vector from input space to output space. Possibly non-linear.
  * \tparam TransformedT State representing the output space. Deduced from the transfer function.
  * \tparam MeanFn Callable that converts a vector of elements in the output space, and weights, to its mean in the
- * output space \tparam ResidualFn Callable that computes a residual given two elements in the output space. \param mean
- * Mean in the input space. \param covariance Covariance in the input space. \param transfer_fn Callable that converts a
- * vector from input space to output space. \param kappa Parameter used for sigma points selection. A sensible default
- * will be used if not provided. \param mean_fn Callable that converts a vector of elements in the output space, and
- * weights, to its mean in the output space. A sensible default is provided for the trivial (euclidian) case. \param
- * residual_fn Callable that computes a residual given two elements in the output space.. A sensible default is provided
- * for the trivial (euclidian) case. \return A pair containing (mean, estimate) for the output space.
+ * output space.
+ * \tparam ResidualFn Callable that computes a residual given two elements in the output space.
+ * \param mean Mean in the input space.
+ * \param covariance Covariance in the input space.
+ * \param transfer_fn Callable that converts a* vector from input space to output space.
+ * \param kappa Parameter used for sigma points selection. A sensible default will be used if not provided.
+ * \param mean_fn Callable that converts a vector of elements in the output space, and
+ * weights, to its mean in the output space. A sensible default is provided for the trivial (euclidian) case.
+ * \param residual_fn Callable that computes a residual given two elements in the output space.. A sensible default is
+ * provided for the trivial (euclidian) case.
+ * \return A pair containing (mean, estimate) for the output space.
  */
 template <
     typename MeanDerived,

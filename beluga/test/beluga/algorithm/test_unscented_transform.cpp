@@ -61,17 +61,6 @@ TEST_F(UnscentedTransformTests, Scaling) {
   ASSERT_TRUE(transformed_cov.isApprox(expected_cov, kTolerance)) << transformed_cov << " \n" << expected_cov;
 }
 
-double wrap_negpi_pi(double a) {
-  static const double kPi = Sophus::Constants<double>::pi();
-  while (a < kPi) {
-    a += 2 * kPi;
-  }
-  while (a > kPi) {
-    a -= 2 * kPi;
-  }
-  return a;
-};
-
 TEST_F(UnscentedTransformTests, CartesianToPolar) {
   // This example is taken from wikipedia, see https://en.wikipedia.org/wiki/Unscented_transform .
   constexpr double kTolerance = 1e-2;
@@ -133,15 +122,14 @@ TEST_F(UnscentedTransformTests, WorksWithEigenExpressions) {
 }
 
 double angular_distance(double angle1, double angle2) {
-  Sophus::SO2<double> rot1(angle1);
-  Sophus::SO2<double> rot2(angle2);
+  const Sophus::SO2<double> rot1(angle1);
+  const Sophus::SO2<double> rot2(angle2);
 
-  Sophus::SO2<double> relative_rotation = rot1.inverse() * rot2;
-
-  double distance = relative_rotation.log();
+  const Sophus::SO2<double> relative_rotation = rot1.inverse() * rot2;
+  const double distance = relative_rotation.log();
 
   // Ensure the distance is the minimal distance
-  return std::min(std::abs(distance), 2 * M_PI - std::abs(distance));
+  return std::min(std::abs(distance), 2 * Sophus::Constants<double>::pi() - std::abs(distance));
 }
 
 TEST_F(UnscentedTransformTests, DifferentMeanFn) {
