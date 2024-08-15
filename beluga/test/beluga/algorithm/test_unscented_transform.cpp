@@ -18,6 +18,9 @@
 #include <cmath>
 
 #include <Eigen/Core>
+#include <range/v3/view/zip.hpp>
+#include <sophus/common.hpp>
+#include <sophus/so2.hpp>
 
 #include "beluga/algorithm/unscented_transform.hpp"
 
@@ -57,6 +60,17 @@ TEST_F(UnscentedTransformTests, Scaling) {
   ASSERT_TRUE(transformed_mean.isApprox(2. * mean, kTolerance)) << mean.transpose();
   ASSERT_TRUE(transformed_cov.isApprox(expected_cov, kTolerance)) << transformed_cov << " \n" << expected_cov;
 }
+
+double wrap_negpi_pi(double a) {
+  static const double kPi = Sophus::Constants<double>::pi();
+  while (a < kPi) {
+    a += 2 * kPi;
+  }
+  while (a > kPi) {
+    a -= 2 * kPi;
+  }
+  return a;
+};
 
 TEST_F(UnscentedTransformTests, CartesianToPolar) {
   // This example is taken from wikipedia, see https://en.wikipedia.org/wiki/Unscented_transform .
@@ -116,6 +130,67 @@ TEST_F(UnscentedTransformTests, WorksWithEigenExpressions) {
 
   ASSERT_TRUE(transformed_mean.isApprox(Eigen::Vector2d::Ones(), kTolerance));
   ASSERT_TRUE(transformed_cov.isApprox(Eigen::Matrix<double, 2, 2>::Identity()));
+}
+
+double angular_distance(double angle1, double angle2) {
+  Sophus::SO2<double> rot1(angle1);
+  Sophus::SO2<double> rot2(angle2);
+
+  Sophus::SO2<double> relative_rotation = rot1.inverse() * rot2;
+
+  double distance = relative_rotation.log();
+
+  // Ensure the distance is the minimal distance
+  return std::min(std::abs(distance), 2 * M_PI - std::abs(distance));
+}
+
+TEST_F(UnscentedTransformTests, DifferentMeanFn) {
+  constexpr double kTolerance = 1e-1;
+  // This mean in polar coordinates is {1.4, pi}. This is specifically chosen so that we're close to the wrap around
+  // point.
+  const Eigen::Vector2d mean{-1.4, 0.};
+  const Eigen::Vector2d expected_mean = {1.4, Sophus::Constants<double>::pi()};
+
+  Eigen::Matrix<double, 2, 2> cov;
+  cov << 1e-1, 0.,  //
+      0., 1e-1;
+
+  // Demonstrate why using default mean and residual functions can yield bad results, even bad means.
+  {
+    const auto [transformed_mean, transformed_cov] =
+        beluga::unscented_transform(mean, cov, [](const Eigen::Vector2d& in) -> Eigen::Vector2d {
+          return Eigen::Vector2d{std::hypot(in.x(), in.y()), std::atan2(in.y(), in.x())};
+        });
+
+    const Eigen::Vector2d expected_wrong_mean = {1.4348469228349534, 1.5707963267948966};
+
+    ASSERT_FALSE(transformed_mean.isApprox(expected_mean, kTolerance)) << transformed_mean.transpose();
+    ASSERT_TRUE(transformed_mean.isApprox(expected_wrong_mean, kTolerance)) << transformed_mean.transpose();
+  }
+  {
+    const auto [transformed_mean, transformed_cov] = beluga::unscented_transform(
+        mean, cov,
+        [](const Eigen::Vector2d& in) -> Eigen::Vector2d {
+          return Eigen::Vector2d{std::hypot(in.x(), in.y()), std::atan2(in.y(), in.x())};
+        },
+        std::nullopt,
+        [](const std::vector<Eigen::Vector2d>& samples, const std::vector<double>& weights) -> Eigen::Vector2d {
+          Eigen::Vector3d aux = Eigen::Vector3d::Zero();
+          for (const auto& [s, w] : ranges::views::zip(samples, weights)) {
+            aux.x() += s.x() * w;
+            aux.y() += std::sin(s.y()) * w;
+            aux.z() += std::cos(s.y()) * w;
+          }
+          return Eigen::Vector2d{aux.x(), std::atan2(aux.y(), aux.z())};
+        },
+        [](const Eigen::Vector2d& sample, const Eigen::Vector2d& mean) {
+          Eigen::Vector2d error;
+          error.x() = sample.x() - mean.x();
+          error.y() = angular_distance(sample.y(), mean.y());
+          return error;
+        });
+    ASSERT_TRUE(transformed_mean.isApprox(expected_mean, kTolerance)) << transformed_mean.transpose();
+  }
 }
 
 TEST_F(UnscentedTransformTests, DifferentKappa) {

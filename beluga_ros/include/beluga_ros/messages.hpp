@@ -19,6 +19,7 @@
 #include <geometry_msgs/msg/point.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/pose_array.hpp>
+#include <geometry_msgs/msg/pose_with_covariance.hpp>
 #include <geometry_msgs/msg/transform.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
@@ -31,6 +32,7 @@
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseArray.h>
+#include <geometry_msgs/PoseWithCovariance.h>
 #include <geometry_msgs/Transform.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <sensor_msgs/LaserScan.h>
@@ -60,6 +62,7 @@ using OccupancyGridConstSharedPtr = OccupancyGrid::ConstSharedPtr;
 using Point = geometry_msgs::msg::Point;
 using Pose = geometry_msgs::msg::Pose;
 using PoseArray = geometry_msgs::msg::PoseArray;
+using PoseWithCovariance = geometry_msgs::msg::PoseWithCovariance;
 using Transform = geometry_msgs::msg::Transform;
 
 #elif BELUGA_ROS_VERSION == 1
@@ -74,6 +77,7 @@ using OccupancyGridConstSharedPtr = OccupancyGrid::ConstPtr;
 using Point = geometry_msgs::Point;
 using Pose = geometry_msgs::Pose;
 using PoseArray = geometry_msgs::PoseArray;
+using PoseWithCovariance = geometry_msgs::PoseWithCovariance;
 using Transform = geometry_msgs::Transform;
 
 #else

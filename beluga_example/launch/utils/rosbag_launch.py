@@ -62,6 +62,11 @@ def get_launch_arguments():
             default_value='',
             description='Destination bagfile to create, defaults to timestamped folder',
         ),
+        DeclareLaunchArgument(
+            name='clock',
+            default_value='True',
+            description='Publish to /clock. Defaults to True.',
+        ),
     ]
 
 
@@ -73,10 +78,12 @@ def generate_launch_description(
     record_bag,
     topics_to_record,
     bagfile_output,
+    clock,
 ):
     start_paused = get_typed_value(start_paused, bool)
     record_bag = get_typed_value(record_bag, bool)
     topics_to_record = get_typed_value(topics_to_record, List[str])
+    clock = get_typed_value(clock, bool)
 
     bag_play_cmd = [
         'ros2',
@@ -85,9 +92,9 @@ def generate_launch_description(
         rosbag_path,
         '--rate',
         playback_rate,
-        '--clock',
     ]
-
+    if clock:
+        bag_play_cmd.append('--clock')
     if start_paused:
         bag_play_cmd.append('--start-paused')
 

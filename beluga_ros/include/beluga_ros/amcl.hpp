@@ -125,7 +125,7 @@ class Amcl {
         execution_policy_{std::move(execution_policy)},
         spatial_hasher_{params_.spatial_resolution_x, params_.spatial_resolution_y, params_.spatial_resolution_theta},
         random_probability_estimator_{params_.alpha_slow, params_.alpha_fast},
-        update_policy_{beluga::policies::on_motion(params_.update_min_d, params_.update_min_a)},
+        update_policy_{beluga::policies::on_motion<Sophus::SE2d>(params_.update_min_d, params_.update_min_a)},
         resample_policy_{beluga::policies::every_n(params_.resample_interval)} {
     if (params_.selective_resampling) {
       resample_policy_ = resample_policy_ && beluga::policies::on_effective_size_drop;

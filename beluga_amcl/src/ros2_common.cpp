@@ -334,19 +334,19 @@ BaseAMCLNode::BaseAMCLNode(
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose x axis covariance.";
-    this->declare_parameter("initial_pose.covariance_x", 0.0, descriptor);
+    this->declare_parameter("initial_pose.covariance_x", 1e-6, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose y axis covariance.";
-    this->declare_parameter("initial_pose.covariance_y", 0.0, descriptor);
+    this->declare_parameter("initial_pose.covariance_y", 1e-6, descriptor);
   }
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Initial pose yaw covariance.";
-    this->declare_parameter("initial_pose.covariance_yaw", 0.0, descriptor);
+    this->declare_parameter("initial_pose.covariance_yaw", 1e-6, descriptor);
   }
 
   {
@@ -499,7 +499,31 @@ void BaseAMCLNode::periodic_timer_callback() {
 };
 
 void BaseAMCLNode::autostart_callback() {
+  using lifecycle_msgs::msg::State;
+  auto current_state = configure();
+  if (current_state.id() != State::PRIMARY_STATE_INACTIVE) {
+    RCLCPP_WARN(get_logger(), "Failed to auto configure, shutting down");
+    shutdown();
+  }
+  RCLCPP_WARN(get_logger(), "Auto configured successfully");
+  current_state = activate();
+  if (current_state.id() != State::PRIMARY_STATE_ACTIVE) {
+    RCLCPP_WARN(get_logger(), "Failed to auto activate, shutting down");
+    shutdown();
+  }
+  RCLCPP_INFO(get_logger(), "Auto activated successfully");
   do_autostart_callback();
   autostart_timer_->cancel();
+}
+
+auto BaseAMCLNode::get_execution_policy() const -> ExecutionPolicyVariant {
+  const auto name = get_parameter("execution_policy").as_string();
+  if (name == "seq") {
+    return std::execution::seq;
+  }
+  if (name == "par") {
+    return std::execution::par;
+  }
+  throw std::invalid_argument("Execution policy must be seq or par.");
 }
 }  // namespace beluga_amcl

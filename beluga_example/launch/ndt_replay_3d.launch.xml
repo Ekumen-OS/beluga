@@ -1,0 +1,22 @@
+<launch>
+  <arg name="localization_params_file" default="$(find-pkg-share beluga_example)/params/default_ndt_3d.ros2.yaml"  description="Yaml file with configuration for the localization node."/>
+  <arg name="localization_ndt_map" description="Path to the HDF5 file containing the 3D NDT map."/>
+  <arg name="bag_path" description="Path to a bag recording to replay."/>
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/ndt_3d_localization_launch.py">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="localization_params_file" value="$(var localization_params_file)"/>
+    <arg name="localization_ndt_map" value="$(var localization_ndt_map)"/>
+  </include>
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/rviz_launch.py">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="display_config" value="$(find-pkg-share beluga_example)/rviz/ndt_amcl_3d.ros2.rviz"/>
+  </include>
+
+  <include file="$(find-pkg-share beluga_example)/launch/utils/rosbag_launch.py">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="clock" value="false"/>
+    <arg name="rosbag_path" value="$(var bag_path)"/>
+  </include>
+</launch>

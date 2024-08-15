@@ -74,9 +74,6 @@ class AmclNode : public BaseAMCLNode {
   auto get_sensor_model(std::string_view, nav_msgs::msg::OccupancyGrid::SharedPtr) const
       -> beluga_ros::Amcl::sensor_model_variant;
 
-  /// Get execution policy given its name.
-  static auto get_execution_policy(std::string_view) -> beluga_ros::Amcl::execution_policy_variant;
-
   /// Instantiate particle filter given an initial occupancy grid map and the current parametrization.
   auto make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr) const -> std::unique_ptr<beluga_ros::Amcl>;
 
@@ -85,9 +82,6 @@ class AmclNode : public BaseAMCLNode {
 
   /// Callback for periodic particle cloud updates.
   void do_periodic_timer_callback() override;
-
-  /// Callback for node to configure and activate itself.
-  void do_autostart_callback() override;
 
   /// Callback for laser scan updates.
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);

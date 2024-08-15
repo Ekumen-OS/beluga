@@ -139,6 +139,53 @@ install(TARGETS ndt_amcl_node DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 
+add_library(ndt_amcl_node_3d_component SHARED)
+target_sources(ndt_amcl_node_3d_component PRIVATE src/ndt_amcl_node_3d.cpp)
+
+target_include_directories(
+  ndt_amcl_node_3d_component
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+
+target_compile_features(ndt_amcl_node_3d_component PUBLIC cxx_std_17)
+
+target_link_libraries(ndt_amcl_node_3d_component PUBLIC beluga_amcl_ros2_common)
+
+ament_target_dependencies(
+  ndt_amcl_node_3d_component
+  PUBLIC beluga
+         beluga_ros
+         bondcpp
+         rclcpp
+         rclcpp_components
+         rclcpp_lifecycle
+         std_srvs)
+
+rclcpp_components_register_node(
+  ndt_amcl_node_3d_component
+  PLUGIN "beluga_amcl::NdtAmclNode3D"
+  EXECUTABLE ndt_amcl_node_3d)
+
+install(
+  TARGETS ndt_amcl_node_3d_component
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
+
+install(TARGETS ndt_amcl_node_3d DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
+
+ament_export_dependencies(
+  beluga
+  beluga_ros
+  bondcpp
+  rclcpp
+  rclcpp_components
+  rclcpp_lifecycle
+  std_srvs)
+ament_export_include_directories("include/${PROJECT_NAME}")
+
 if(BUILD_TESTING)
   enable_testing()
   add_subdirectory(test)
