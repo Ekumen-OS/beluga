@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 747;
+var viewWidth = 975;
 var viewHeight = 430;
 var sectionId = 'dynsection-0';
 </script>
@@ -58,10 +58,10 @@ var sectionId = 'dynsection-0';
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title="Implementation of useful policies.">
-<polygon fill="#bfbfbf" stroke="black" points="487.5,-380.5 487.5,-421.5 632.5,-421.5 632.5,-380.5 487.5,-380.5"/>
-<text text-anchor="start" x="495.5" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">/home/runner/work/beluga</text>
-<text text-anchor="start" x="495.5" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/beluga/include</text>
-<text text-anchor="middle" x="560" y="-387.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/policies.hpp</text>
+<polygon fill="#bfbfbf" stroke="black" points="494.5,-380.5 494.5,-421.5 639.5,-421.5 639.5,-380.5 494.5,-380.5"/>
+<text text-anchor="start" x="502.5" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">/home/runner/work/beluga</text>
+<text text-anchor="start" x="502.5" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/beluga/include</text>
+<text text-anchor="middle" x="567" y="-387.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/policies.hpp</text>
 </a>
 </g>
 </g>
@@ -69,17 +69,17 @@ var sectionId = 'dynsection-0';
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:href="every__n_8hpp.html" target="_top" xlink:title="Defines a policy for triggering an action every N calls.">
-<polygon fill="none" stroke="black" points="455.5,-313.5 455.5,-343.5 576.5,-343.5 576.5,-313.5 455.5,-313.5"/>
-<text text-anchor="start" x="463.5" y="-331.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/every</text>
-<text text-anchor="middle" x="516" y="-320.5" font-family="Helvetica,sans-Serif" font-size="10.00">_n.hpp</text>
+<polygon fill="none" stroke="black" points="462.5,-313.5 462.5,-343.5 583.5,-343.5 583.5,-313.5 462.5,-313.5"/>
+<text text-anchor="start" x="470.5" y="-331.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/every</text>
+<text text-anchor="middle" x="523" y="-320.5" font-family="Helvetica,sans-Serif" font-size="10.00">_n.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node2 -->
 <g id="edge1" class="edge">
 <title>Node1&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M547.74,-380.36C542.33,-371.68 535.92,-361.42 530.29,-352.4"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="533.25,-350.52 524.98,-343.89 527.31,-354.23 533.25,-350.52"/>
+<path fill="none" stroke="midnightblue" d="M554.74,-380.36C549.33,-371.68 542.92,-361.42 537.29,-352.4"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="540.25,-350.52 531.98,-343.89 534.31,-354.23 540.25,-350.52"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node">
@@ -91,48 +91,48 @@ var sectionId = 'dynsection-0';
 </g>
 </g>
 <!-- Node1&#45;&gt;Node3 -->
-<g id="edge30" class="edge">
+<g id="edge32" class="edge">
 <title>Node1&#45;&gt;Node3</title>
-<path fill="none" stroke="midnightblue" d="M572.6,-380.43C582.4,-362.66 593.09,-335.81 585,-313 580.33,-299.83 570.59,-287.59 561.78,-278.46"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="564.03,-275.77 554.42,-271.29 559.14,-280.78 564.03,-275.77"/>
+<path fill="none" stroke="midnightblue" d="M580.02,-380.28C590.11,-362.39 600.98,-335.48 592,-313 586.41,-299 574.88,-286.65 564.52,-277.68"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="566.57,-274.83 556.6,-271.23 562.15,-280.26 566.57,-274.83"/>
 </g>
 <!-- Node5 -->
 <g id="node5" class="node">
 <title>Node5</title>
 <g id="a_node5"><a xlink:href="on__effective__size__drop_8hpp.html" target="_top" xlink:title="Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric.">
-<polygon fill="none" stroke="black" points="300.5,-313.5 300.5,-343.5 437.5,-343.5 437.5,-313.5 300.5,-313.5"/>
-<text text-anchor="start" x="308.5" y="-331.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/on</text>
-<text text-anchor="middle" x="369" y="-320.5" font-family="Helvetica,sans-Serif" font-size="10.00">_effective_size_drop.hpp</text>
+<polygon fill="none" stroke="black" points="307.5,-313.5 307.5,-343.5 444.5,-343.5 444.5,-313.5 307.5,-313.5"/>
+<text text-anchor="start" x="315.5" y="-331.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/on</text>
+<text text-anchor="middle" x="376" y="-320.5" font-family="Helvetica,sans-Serif" font-size="10.00">_effective_size_drop.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node5 -->
 <g id="edge4" class="edge">
 <title>Node1&#45;&gt;Node5</title>
-<path fill="none" stroke="midnightblue" d="M507.05,-380.46C478.71,-369.99 444.08,-357.21 416.59,-347.07"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="417.78,-343.78 407.19,-343.6 415.36,-350.34 417.78,-343.78"/>
+<path fill="none" stroke="midnightblue" d="M514.05,-380.46C485.71,-369.99 451.08,-357.21 423.59,-347.07"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="424.78,-343.78 414.19,-343.6 422.36,-350.34 424.78,-343.78"/>
 </g>
 <!-- Node21 -->
 <g id="node21" class="node">
 <title>Node21</title>
 <g id="a_node21"><a xlink:href="on__motion_8hpp.html" target="_top" xlink:title="Defines a policy for triggering an action based on motion.">
-<polygon fill="none" stroke="black" points="633.5,-313.5 633.5,-343.5 738.5,-343.5 738.5,-313.5 633.5,-313.5"/>
-<text text-anchor="start" x="641.5" y="-331.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/on</text>
-<text text-anchor="middle" x="686" y="-320.5" font-family="Helvetica,sans-Serif" font-size="10.00">_motion.hpp</text>
+<polygon fill="none" stroke="black" points="640.5,-313.5 640.5,-343.5 745.5,-343.5 745.5,-313.5 640.5,-313.5"/>
+<text text-anchor="start" x="648.5" y="-331.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/on</text>
+<text text-anchor="middle" x="693" y="-320.5" font-family="Helvetica,sans-Serif" font-size="10.00">_motion.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node21 -->
 <g id="edge27" class="edge">
 <title>Node1&#45;&gt;Node21</title>
-<path fill="none" stroke="midnightblue" d="M595.1,-380.36C612.83,-370.44 634.26,-358.45 651.86,-348.6"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="653.66,-351.61 660.67,-343.67 650.24,-345.5 653.66,-351.61"/>
+<path fill="none" stroke="midnightblue" d="M602.1,-380.36C619.83,-370.44 641.26,-358.45 658.86,-348.6"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="660.66,-351.61 667.67,-343.67 657.24,-345.5 660.66,-351.61"/>
 </g>
 <!-- Node2&#45;&gt;Node3 -->
 <g id="edge2" class="edge">
 <title>Node2&#45;&gt;Node3</title>
-<path fill="none" stroke="midnightblue" d="M522.08,-313.4C526.23,-303.76 531.76,-290.91 536.23,-280.54"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="539.51,-281.76 540.25,-271.19 533.08,-278.99 539.51,-281.76"/>
+<path fill="none" stroke="midnightblue" d="M527.56,-313.4C530.64,-303.86 534.73,-291.18 538.07,-280.86"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="541.45,-281.79 541.19,-271.19 534.79,-279.63 541.45,-281.79"/>
 </g>
 <!-- Node4 -->
 <g id="node4" class="node">
@@ -152,8 +152,8 @@ var sectionId = 'dynsection-0';
 <!-- Node5&#45;&gt;Node3 -->
 <g id="edge26" class="edge">
 <title>Node5&#45;&gt;Node3</title>
-<path fill="none" stroke="midnightblue" d="M406.97,-313.4C438.22,-301.79 482.04,-285.51 511.64,-274.52"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="512.94,-277.77 521.1,-271.01 510.5,-271.21 512.94,-277.77"/>
+<path fill="none" stroke="midnightblue" d="M412.45,-313.4C442.32,-301.84 484.15,-285.66 512.56,-274.66"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="513.95,-277.88 522.01,-271.01 511.42,-271.35 513.95,-277.88"/>
 </g>
 <!-- Node6 -->
 <g id="node6" class="node">
@@ -167,8 +167,8 @@ var sectionId = 'dynsection-0';
 <!-- Node5&#45;&gt;Node6 -->
 <g id="edge5" class="edge">
 <title>Node5&#45;&gt;Node6</title>
-<path fill="none" stroke="midnightblue" d="M370.52,-313.4C371.53,-303.96 372.88,-291.45 373.99,-281.19"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="377.47,-281.51 375.06,-271.19 370.51,-280.76 377.47,-281.51"/>
+<path fill="none" stroke="midnightblue" d="M376,-313.4C376,-304.06 376,-291.71 376,-281.52"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="379.5,-281.19 376,-271.19 372.5,-281.19 379.5,-281.19"/>
 </g>
 <!-- Node7 -->
 <g id="node7" class="node">
@@ -183,8 +183,8 @@ var sectionId = 'dynsection-0';
 <!-- Node5&#45;&gt;Node7 -->
 <g id="edge6" class="edge">
 <title>Node5&#45;&gt;Node7</title>
-<path fill="none" stroke="midnightblue" d="M333.63,-313.4C309.28,-303.69 276.74,-290.71 250.61,-280.29"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="251.88,-277.03 241.3,-276.58 249.29,-283.53 251.88,-277.03"/>
+<path fill="none" stroke="midnightblue" d="M339.11,-313.4C313.61,-303.64 279.48,-290.59 252.17,-280.15"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="253.41,-276.88 242.82,-276.58 250.91,-283.42 253.41,-276.88"/>
 </g>
 <!-- Node8 -->
 <g id="node8" class="node">
@@ -422,25 +422,56 @@ var sectionId = 'dynsection-0';
 <polygon fill="midnightblue" stroke="midnightblue" points="421.07,-153.09 421.57,-142.51 414.58,-150.47 421.07,-153.09"/>
 </g>
 <!-- Node21&#45;&gt;Node3 -->
-<g id="edge28" class="edge">
+<g id="edge29" class="edge">
 <title>Node21&#45;&gt;Node3</title>
-<path fill="none" stroke="midnightblue" d="M655.19,-313.4C630.38,-302.04 595.82,-286.22 571.84,-275.24"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="573.13,-271.99 562.58,-271.01 570.22,-278.35 573.13,-271.99"/>
+<path fill="none" stroke="midnightblue" d="M660.67,-313.4C634.53,-301.99 598.05,-286.08 572.88,-275.1"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="574.07,-271.8 563.5,-271.01 571.27,-278.21 574.07,-271.8"/>
 </g>
 <!-- Node22 -->
 <g id="node22" class="node">
 <title>Node22</title>
 <g id="a_node22"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="640,-252 640,-271 732,-271 732,-252 640,-252"/>
-<text text-anchor="middle" x="686" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se2.hpp</text>
+<polygon fill="none" stroke="#bfbfbf" points="633.5,-246.5 633.5,-276.5 746.5,-276.5 746.5,-246.5 633.5,-246.5"/>
+<text text-anchor="start" x="641.5" y="-264.5" font-family="Helvetica,sans-Serif" font-size="10.00">Eigen/src/Geometry</text>
+<text text-anchor="middle" x="690" y="-253.5" font-family="Helvetica,sans-Serif" font-size="10.00">/AngleAxis.h</text>
 </a>
 </g>
 </g>
 <!-- Node21&#45;&gt;Node22 -->
-<g id="edge29" class="edge">
+<g id="edge28" class="edge">
 <title>Node21&#45;&gt;Node22</title>
-<path fill="none" stroke="midnightblue" d="M686,-313.4C686,-304.06 686,-291.71 686,-281.52"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="689.5,-281.19 686,-271.19 682.5,-281.19 689.5,-281.19"/>
+<path fill="none" stroke="midnightblue" d="M692.35,-313.4C691.99,-305.64 691.54,-295.81 691.12,-286.86"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="694.61,-286.4 690.65,-276.58 687.61,-286.73 694.61,-286.4"/>
+</g>
+<!-- Node23 -->
+<g id="node23" class="node">
+<title>Node23</title>
+<g id="a_node23"><a xlink:title=" ">
+<polygon fill="none" stroke="#bfbfbf" points="765,-252 765,-271 857,-271 857,-252 765,-252"/>
+<text text-anchor="middle" x="811" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se2.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node21&#45;&gt;Node23 -->
+<g id="edge30" class="edge">
+<title>Node21&#45;&gt;Node23</title>
+<path fill="none" stroke="midnightblue" d="M718.6,-313.4C738.85,-302.24 766.92,-286.78 786.79,-275.83"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="788.49,-278.9 795.56,-271.01 785.11,-272.77 788.49,-278.9"/>
+</g>
+<!-- Node24 -->
+<g id="node24" class="node">
+<title>Node24</title>
+<g id="a_node24"><a xlink:title=" ">
+<polygon fill="none" stroke="#bfbfbf" points="875,-252 875,-271 967,-271 967,-252 875,-252"/>
+<text text-anchor="middle" x="921" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se3.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node21&#45;&gt;Node24 -->
+<g id="edge31" class="edge">
+<title>Node21&#45;&gt;Node24</title>
+<path fill="none" stroke="midnightblue" d="M742.19,-313.48C783.77,-301.62 842.57,-284.86 881.23,-273.84"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="882.43,-277.14 891.08,-271.03 880.51,-270.4 882.43,-277.14"/>
 </g>
 </g>
 </svg>

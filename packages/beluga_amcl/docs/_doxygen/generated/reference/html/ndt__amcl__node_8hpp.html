@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;"/>
   </head>
   
   
@@ -493,35 +493,52 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a9180e3a5d1913cfd6e0fc19bd99dbcda"><td class="memItemLeft" align="right" valign="top"><a id="a9180e3a5d1913cfd6e0fc19bd99dbcda"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#a9180e3a5d1913cfd6e0fc19bd99dbcda">beluga_amcl::NDTMapRepresentation</a> = <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a6693d4baba7ebd78305bb38f5cb812b2">beluga::SparseValueGrid2</a>&lt; std::unordered_map&lt; Eigen::Vector2i, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a26305234e807524dd077b13ae21b1dfd">beluga::NDTCell2d</a>, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1detail_1_1CellHasher.html">beluga::detail::CellHasher</a>&lt; 2 &gt; &gt;&gt;</td></tr>
-<tr class="memdesc:a9180e3a5d1913cfd6e0fc19bd99dbcda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Underlying map representation for the NDT sensor model. <br /></td></tr>
-<tr class="separator:a9180e3a5d1913cfd6e0fc19bd99dbcda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2f60aaaa379de127fdcd685a9278183"><td class="memItemLeft" align="right" valign="top"><a id="aa2f60aaaa379de127fdcd685a9278183"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#aa2f60aaaa379de127fdcd685a9278183">beluga_amcl::RandomStateGenerator</a> = std::function&lt; std::function&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; NDTMapRepresentation &gt;::state_type()&gt;(const <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1TupleVector.html">beluga::TupleVector</a>&lt; std::tuple&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; NDTMapRepresentation &gt;::state_type, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt; &gt;)&gt;</td></tr>
-<tr class="memdesc:aa2f60aaaa379de127fdcd685a9278183"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of a particle-dependent random state generator. <br /></td></tr>
-<tr class="separator:aa2f60aaaa379de127fdcd685a9278183"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c4e3decd37d1378fb154ed095bfc0cd"><td class="memTemplParams" colspan="2"><a id="a5c4e3decd37d1378fb154ed095bfc0cd"></a>
+<tr class="memitem:a82dbb2d02fdc9998c479c6d5b3948283"><td class="memItemLeft" align="right" valign="top"><a id="a82dbb2d02fdc9998c479c6d5b3948283"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#a82dbb2d02fdc9998c479c6d5b3948283">beluga_amcl::NDTMapRepresentation</a> = <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a6693d4baba7ebd78305bb38f5cb812b2">beluga::SparseValueGrid2</a>&lt; std::unordered_map&lt; Eigen::Vector2i, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a26305234e807524dd077b13ae21b1dfd">beluga::NDTCell2d</a>, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1detail_1_1CellHasher.html">beluga::detail::CellHasher</a>&lt; 2 &gt; &gt;&gt;</td></tr>
+<tr class="memdesc:a82dbb2d02fdc9998c479c6d5b3948283"><td class="mdescLeft">&#160;</td><td class="mdescRight">Underlying map representation for the NDT sensor model. <br /></td></tr>
+<tr class="separator:a82dbb2d02fdc9998c479c6d5b3948283"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdbc8a9bd8694d5d2b63d83a43f7ca30"><td class="memItemLeft" align="right" valign="top"><a id="abdbc8a9bd8694d5d2b63d83a43f7ca30"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#abdbc8a9bd8694d5d2b63d83a43f7ca30">beluga_amcl::RandomStateGenerator</a> = std::function&lt; std::function&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; NDTMapRepresentation &gt;::state_type()&gt;(const <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1TupleVector.html">beluga::TupleVector</a>&lt; std::tuple&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; NDTMapRepresentation &gt;::state_type, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt; &gt;)&gt;</td></tr>
+<tr class="memdesc:abdbc8a9bd8694d5d2b63d83a43f7ca30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of a particle-dependent random state generator. <br /></td></tr>
+<tr class="separator:abdbc8a9bd8694d5d2b63d83a43f7ca30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9449c7945e85974867b990b2792d6648"><td class="memTemplParams" colspan="2"><a id="a9449c7945e85974867b990b2792d6648"></a>
 template&lt;class MotionModel , class ExecutionPolicy &gt; </td></tr>
-<tr class="memitem:a5c4e3decd37d1378fb154ed095bfc0cd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#a5c4e3decd37d1378fb154ed095bfc0cd">beluga_amcl::NdtAmcl</a> = <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">beluga::Amcl</a>&lt; MotionModel, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; NDTMapRepresentation &gt;, RandomStateGenerator, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>, std::tuple&lt; typename <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; NDTMapRepresentation &gt;::state_type, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt;, ExecutionPolicy &gt;</td></tr>
-<tr class="memdesc:a5c4e3decd37d1378fb154ed095bfc0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Partial specialization of the core AMCL pipeline for convinience. <br /></td></tr>
-<tr class="separator:a5c4e3decd37d1378fb154ed095bfc0cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf961b3af0fc4133f2717b7f4d9e3eb4"><td class="memItemLeft" align="right" valign="top"><a id="aaf961b3af0fc4133f2717b7f4d9e3eb4"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#aaf961b3af0fc4133f2717b7f4d9e3eb4">beluga_amcl::NdtAmclVariant</a> = std::variant&lt; NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>, std::execution::parallel_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>, std::execution::sequenced_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">beluga::DifferentialDriveModel2d</a>, std::execution::parallel_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">beluga::DifferentialDriveModel2d</a>, std::execution::sequenced_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a>, std::execution::parallel_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a>, std::execution::sequenced_policy &gt; &gt;</td></tr>
-<tr class="memdesc:aaf961b3af0fc4133f2717b7f4d9e3eb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">All combinations of supported NDT AMCL variants. <br /></td></tr>
-<tr class="separator:aaf961b3af0fc4133f2717b7f4d9e3eb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a901bcfb45a3ef88b5ad7568d5c938cc5"><td class="memItemLeft" align="right" valign="top"><a id="a901bcfb45a3ef88b5ad7568d5c938cc5"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#a901bcfb45a3ef88b5ad7568d5c938cc5">beluga_amcl::MotionModelVariant</a> = std::variant&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">beluga::DifferentialDriveModel2d</a>, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a> &gt;</td></tr>
-<tr class="memdesc:a901bcfb45a3ef88b5ad7568d5c938cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supported motion models. <br /></td></tr>
-<tr class="separator:a901bcfb45a3ef88b5ad7568d5c938cc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12b1affad11b043381e484449e040bc4"><td class="memItemLeft" align="right" valign="top"><a id="a12b1affad11b043381e484449e040bc4"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#a12b1affad11b043381e484449e040bc4">beluga_amcl::ExecutionPolicyVariant</a> = std::variant&lt; std::execution::sequenced_policy, std::execution::parallel_policy &gt;</td></tr>
-<tr class="memdesc:a12b1affad11b043381e484449e040bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supported execution policies. <br /></td></tr>
-<tr class="separator:a12b1affad11b043381e484449e040bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9449c7945e85974867b990b2792d6648"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#a9449c7945e85974867b990b2792d6648">beluga_amcl::NdtAmcl</a> = <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">beluga::Amcl</a>&lt; MotionModel, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; NDTMapRepresentation &gt;, RandomStateGenerator, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>, std::tuple&lt; typename <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; NDTMapRepresentation &gt;::state_type, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a> &gt;, ExecutionPolicy &gt;</td></tr>
+<tr class="memdesc:a9449c7945e85974867b990b2792d6648"><td class="mdescLeft">&#160;</td><td class="mdescRight">Partial specialization of the core AMCL pipeline for convinience. <br /></td></tr>
+<tr class="separator:a9449c7945e85974867b990b2792d6648"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6ba96a699dd60beedea43a64b5f3c2f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">beluga_amcl::NdtAmclVariant</a> = std::variant&lt; NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>, std::execution::parallel_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>, std::execution::sequenced_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">beluga::DifferentialDriveModel2d</a>, std::execution::parallel_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">beluga::DifferentialDriveModel2d</a>, std::execution::sequenced_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a>, std::execution::parallel_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a>, std::execution::sequenced_policy &gt; &gt;</td></tr>
+<tr class="memdesc:aa6ba96a699dd60beedea43a64b5f3c2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">All combinations of supported NDT AMCL variants.  <a href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">More...</a><br /></td></tr>
+<tr class="separator:aa6ba96a699dd60beedea43a64b5f3c2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35debd9cd28f41707bb122dc6f27736d"><td class="memItemLeft" align="right" valign="top"><a id="a35debd9cd28f41707bb122dc6f27736d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#a35debd9cd28f41707bb122dc6f27736d">beluga_amcl::MotionModelVariant</a> = std::variant&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">beluga::DifferentialDriveModel2d</a>, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1StationaryModel.html">beluga::StationaryModel</a>, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html">beluga::OmnidirectionalDriveModel</a> &gt;</td></tr>
+<tr class="memdesc:a35debd9cd28f41707bb122dc6f27736d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supported motion models. <br /></td></tr>
+<tr class="separator:a35debd9cd28f41707bb122dc6f27736d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20a6813586f56b33cebd9dbe32713d5e"><td class="memItemLeft" align="right" valign="top"><a id="a20a6813586f56b33cebd9dbe32713d5e"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__amcl__node_8hpp.html#a20a6813586f56b33cebd9dbe32713d5e">beluga_amcl::ExecutionPolicyVariant</a> = std::variant&lt; std::execution::sequenced_policy, std::execution::parallel_policy &gt;</td></tr>
+<tr class="memdesc:a20a6813586f56b33cebd9dbe32713d5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supported execution policies. <br /></td></tr>
+<tr class="separator:a20a6813586f56b33cebd9dbe32713d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>ROS 2 integration of the 2D NDT-AMCL algorithm. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="aa6ba96a699dd60beedea43a64b5f3c2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6ba96a699dd60beedea43a64b5f3c2f">&#9670;&nbsp;</a></span>NdtAmclVariant</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::variant&lt; NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9abfcaa4332ab9a79816a58bb4094dd4">beluga::DifferentialDriveModel3d</a>, std::execution::parallel_policy &gt;, NdtAmcl&lt; <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9abfcaa4332ab9a79816a58bb4094dd4">beluga::DifferentialDriveModel3d</a>, std::execution::sequenced_policy &gt; &gt; <a class="el" href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">beluga_amcl::NdtAmclVariant</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>All combinations of supported NDT AMCL variants. </p>
+<p>All combinations of supported 3D NDT AMCL variants. </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
@@ -577,7 +594,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;.
+  Last updated on &#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;.
   <br/>
 </p>
   </div>

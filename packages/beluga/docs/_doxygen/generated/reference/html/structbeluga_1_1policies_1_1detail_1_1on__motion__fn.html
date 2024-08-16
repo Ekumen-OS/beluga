@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Beluga: beluga::policies::detail::on_motion_fn Struct Reference &#8212; Beluga  documentation</title>
+    <title>Beluga: beluga::policies::detail::on_motion_fn&amp;lt; StateType &amp;gt; Struct Template Reference &#8212; Beluga  documentation</title>
   
   
   
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;"/>
   </head>
   
   
@@ -365,7 +365,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>on_motion_fn Struct Reference</h1>
+    <h1>on_motion_fn&lt; StateType &gt; Struct Template Reference</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -379,8 +379,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="on-motion-fn-struct-reference">
-<h1>on_motion_fn Struct Reference<a class="headerlink" href="#on-motion-fn-struct-reference" title="Link to this heading">#</a></h1>
+  <section id="on-motion-fn-lt-statetype-gt-struct-template-reference">
+<h1>on_motion_fn&amp;lt; StateType &amp;gt; Struct Template Reference<a class="headerlink" href="#on-motion-fn-lt-statetype-gt-struct-template-reference" title="Link to this heading">#</a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -389,7 +389,7 @@ document.write(`
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga: beluga::policies::detail::on_motion_fn Struct Reference</title>
+<title>Beluga: beluga::policies::detail::on_motion_fn&lt; StateType &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -438,7 +438,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga::policies::detail::on_motion_fn Struct Reference</div>  </div>
+<div class="title">beluga::policies::detail::on_motion_fn&lt; StateType &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -449,35 +449,37 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae508e9927bcb40dd34915237c7e840b6"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:ae508e9927bcb40dd34915237c7e840b6"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#ae508e9927bcb40dd34915237c7e840b6">operator()</a> (Scalar min_distance, Scalar min_angle) const</td></tr>
-<tr class="memdesc:ae508e9927bcb40dd34915237c7e840b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that creates the policy closure in SE2 space.  <a href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#ae508e9927bcb40dd34915237c7e840b6">More...</a><br /></td></tr>
-<tr class="separator:ae508e9927bcb40dd34915237c7e840b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d0a2d00f25799ca63b1e2244d5df179"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#a7d0a2d00f25799ca63b1e2244d5df179">operator()</a> (typename StateType::Scalar min_distance, typename StateType::Scalar min_angle) const</td></tr>
+<tr class="memdesc:a7d0a2d00f25799ca63b1e2244d5df179"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload that creates the policy closure in the state space.  <a href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#a7d0a2d00f25799ca63b1e2244d5df179">More...</a><br /></td></tr>
+<tr class="separator:a7d0a2d00f25799ca63b1e2244d5df179"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implementation detail for the <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html" title="Implementation detail for the on_motion_fn object.">on_motion_fn</a> object. </p>
+<div class="textblock"><h3>template&lt;class StateType = Sophus::SE2d&gt;<br />
+struct beluga::policies::detail::on_motion_fn&lt; StateType &gt;</h3>
+
+<p>Implementation detail for the <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html" title="Implementation detail for the on_motion_fn object.">on_motion_fn</a> object. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae508e9927bcb40dd34915237c7e840b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae508e9927bcb40dd34915237c7e840b6">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="a7d0a2d00f25799ca63b1e2244d5df179"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d0a2d00f25799ca63b1e2244d5df179">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Scalar &gt; </div>
+template&lt;class StateType  = Sophus::SE2d&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr auto beluga::policies::detail::on_motion_fn::operator() </td>
+          <td class="memname">constexpr auto <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html">beluga::policies::detail::on_motion_fn</a>&lt; StateType &gt;::operator() </td>
           <td>(</td>
-          <td class="paramtype">Scalar&#160;</td>
+          <td class="paramtype">typename StateType::Scalar&#160;</td>
           <td class="paramname"><em>min_distance</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Scalar&#160;</td>
+          <td class="paramtype">typename StateType::Scalar&#160;</td>
           <td class="paramname"><em>min_angle</em>&#160;</td>
         </tr>
         <tr>
@@ -493,7 +495,7 @@ template&lt;class Scalar &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Overload that creates the policy closure in SE2 space. </p>
+<p>Overload that creates the policy closure in the state space. </p>
 <p>This policy triggers an action based on motion. </p>
 
 </div>
@@ -557,7 +559,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;.
+  Last updated on &#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;.
   <br/>
 </p>
   </div>

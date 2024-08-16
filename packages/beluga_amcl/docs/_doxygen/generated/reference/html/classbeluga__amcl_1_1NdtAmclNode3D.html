@@ -1,0 +1,793 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga AMCL: beluga_amcl::NdtAmclNode3D Class Reference &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga_amcl/docs/_doxygen/generated/reference/html/classbeluga__amcl_1_1NdtAmclNode3D';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga/docs/index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_ros/docs/index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga_amcl/docs/_doxygen/generated/reference/html/classbeluga__amcl_1_1NdtAmclNode3D.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>NdtAmclNode3D Class Reference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="ndtamclnode3d-class-reference">
+<h1>NdtAmclNode3D Class Reference<a class="headerlink" href="#ndtamclnode3d-class-reference" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga AMCL: beluga_amcl::NdtAmclNode3D Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga AMCL
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>beluga_amcl</b></li><li class="navelem"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html">NdtAmclNode3D</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="classbeluga__amcl_1_1NdtAmclNode3D-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">beluga_amcl::NdtAmclNode3D Class Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>3D NDT AMCL as a ROS 2 composable lifecycle node.  
+ <a href="classbeluga__amcl_1_1NdtAmclNode3D.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="ndt__amcl__node__3d_8hpp_source.html">ndt_amcl_node_3d.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for beluga_amcl::NdtAmclNode3D:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classbeluga__amcl_1_1NdtAmclNode3D__inherit__graph.svg" width="234" height="187"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for beluga_amcl::NdtAmclNode3D:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classbeluga__amcl_1_1NdtAmclNode3D__coll__graph.svg" width="234" height="187"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a94d7462b4e71479b3b05505816fe52a7"><td class="memItemLeft" align="right" valign="top"><a id="a94d7462b4e71479b3b05505816fe52a7"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a94d7462b4e71479b3b05505816fe52a7">NdtAmclNode3D</a> (const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions{})</td></tr>
+<tr class="memdesc:a94d7462b4e71479b3b05505816fe52a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br /></td></tr>
+<tr class="separator:a94d7462b4e71479b3b05505816fe52a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classbeluga__amcl_1_1BaseAMCLNode"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classbeluga__amcl_1_1BaseAMCLNode')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html">beluga_amcl::BaseAMCLNode</a></td></tr>
+<tr class="memitem:afa50e522b77e0d6a9c2487d9391b7b36 inherit pub_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="afa50e522b77e0d6a9c2487d9391b7b36"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#afa50e522b77e0d6a9c2487d9391b7b36">BaseAMCLNode</a> (const std::string &amp;node_name=&quot;amcl&quot;, const std::string &amp;node_namespace=&quot;&quot;, const rclcpp::NodeOptions &amp;node_options=rclcpp::NodeOptions{})</td></tr>
+<tr class="memdesc:afa50e522b77e0d6a9c2487d9391b7b36 inherit pub_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor, following LifecycleNode signature. <br /></td></tr>
+<tr class="separator:afa50e522b77e0d6a9c2487d9391b7b36 inherit pub_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb92b76171374e8f42c2a4d24b330ddb inherit pub_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="abb92b76171374e8f42c2a4d24b330ddb"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#abb92b76171374e8f42c2a4d24b330ddb">~BaseAMCLNode</a> () override</td></tr>
+<tr class="memdesc:abb92b76171374e8f42c2a4d24b330ddb inherit pub_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for the base AMCL node. <br /></td></tr>
+<tr class="separator:abb92b76171374e8f42c2a4d24b330ddb inherit pub_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a4487791f4c97becabaabefdc43f7f8f1"><td class="memItemLeft" align="right" valign="top"><a id="a4487791f4c97becabaabefdc43f7f8f1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a4487791f4c97becabaabefdc43f7f8f1">do_activate</a> (const rclcpp_lifecycle::State &amp;) override</td></tr>
+<tr class="memdesc:a4487791f4c97becabaabefdc43f7f8f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state. <br /></td></tr>
+<tr class="separator:a4487791f4c97becabaabefdc43f7f8f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9622e984f3a63c7bc55d0ca73fd82c0e"><td class="memItemLeft" align="right" valign="top"><a id="a9622e984f3a63c7bc55d0ca73fd82c0e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a9622e984f3a63c7bc55d0ca73fd82c0e">do_deactivate</a> (const rclcpp_lifecycle::State &amp;) override</td></tr>
+<tr class="memdesc:a9622e984f3a63c7bc55d0ca73fd82c0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for lifecycle transitions from the ACTIVE state to the INACTIVE state. <br /></td></tr>
+<tr class="separator:a9622e984f3a63c7bc55d0ca73fd82c0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd9f25ffdf96391d8ce2dcb5acb485b7"><td class="memItemLeft" align="right" valign="top"><a id="acd9f25ffdf96391d8ce2dcb5acb485b7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#acd9f25ffdf96391d8ce2dcb5acb485b7">do_cleanup</a> (const rclcpp_lifecycle::State &amp;) override</td></tr>
+<tr class="memdesc:acd9f25ffdf96391d8ce2dcb5acb485b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for lifecycle transitions from the INACTIVE state to the UNCONFIGURED state. <br /></td></tr>
+<tr class="separator:acd9f25ffdf96391d8ce2dcb5acb485b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab64d055b834b1d3ddee53816df14356d"><td class="memItemLeft" align="right" valign="top"><a id="ab64d055b834b1d3ddee53816df14356d"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#ab64d055b834b1d3ddee53816df14356d">get_initial_estimate</a> () const -&gt; std::optional&lt; std::pair&lt; Sophus::SE3d, Sophus::Matrix6d &gt;&gt;</td></tr>
+<tr class="memdesc:ab64d055b834b1d3ddee53816df14356d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get initial pose estimate from parameters if set. <br /></td></tr>
+<tr class="separator:ab64d055b834b1d3ddee53816df14356d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a848fc41f049633c3d33cbc594fa0f299"><td class="memItemLeft" align="right" valign="top"><a id="a848fc41f049633c3d33cbc594fa0f299"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a848fc41f049633c3d33cbc594fa0f299">get_motion_model</a> () const -&gt; <a class="el" href="ndt__amcl__node_8hpp.html#a35debd9cd28f41707bb122dc6f27736d">MotionModelVariant</a></td></tr>
+<tr class="memdesc:a848fc41f049633c3d33cbc594fa0f299"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get motion model as per current parametrization. <br /></td></tr>
+<tr class="separator:a848fc41f049633c3d33cbc594fa0f299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9597475d2ddc084da7c508ec84f8ece"><td class="memItemLeft" align="right" valign="top"><a id="aa9597475d2ddc084da7c508ec84f8ece"></a>
+<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a>&lt; <a class="el" href="ndt__amcl__node_8hpp.html#a82dbb2d02fdc9998c479c6d5b3948283">NDTMapRepresentation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aa9597475d2ddc084da7c508ec84f8ece">get_sensor_model</a> () const</td></tr>
+<tr class="memdesc:aa9597475d2ddc084da7c508ec84f8ece"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get sensor model as per current parametrization. <br /></td></tr>
+<tr class="separator:aa9597475d2ddc084da7c508ec84f8ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab085a321ab818354958837508209f6b5"><td class="memItemLeft" align="right" valign="top"><a id="ab085a321ab818354958837508209f6b5"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#ab085a321ab818354958837508209f6b5">make_particle_filter</a> () const -&gt; std::unique_ptr&lt; <a class="el" href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">NdtAmclVariant</a> &gt;</td></tr>
+<tr class="memdesc:ab085a321ab818354958837508209f6b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiate particle filter given an initial occupancy grid map and the current parametrization. <br /></td></tr>
+<tr class="separator:ab085a321ab818354958837508209f6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd319c10a142c76c708301d42874f7b6"><td class="memItemLeft" align="right" valign="top"><a id="afd319c10a142c76c708301d42874f7b6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#afd319c10a142c76c708301d42874f7b6">do_periodic_timer_callback</a> () override</td></tr>
+<tr class="memdesc:afd319c10a142c76c708301d42874f7b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for periodic particle cloud updates. <br /></td></tr>
+<tr class="separator:afd319c10a142c76c708301d42874f7b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac6859100b952b8c3952acd6d9d494be"><td class="memItemLeft" align="right" valign="top"><a id="aac6859100b952b8c3952acd6d9d494be"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aac6859100b952b8c3952acd6d9d494be">laser_callback</a> (sensor_msgs::msg::PointCloud2::ConstSharedPtr)</td></tr>
+<tr class="memdesc:aac6859100b952b8c3952acd6d9d494be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for laser scan updates. <br /></td></tr>
+<tr class="separator:aac6859100b952b8c3952acd6d9d494be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae7eedffffc4a44d3044dea23607a918"><td class="memItemLeft" align="right" valign="top"><a id="aae7eedffffc4a44d3044dea23607a918"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aae7eedffffc4a44d3044dea23607a918">do_initial_pose_callback</a> (geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) override</td></tr>
+<tr class="memdesc:aae7eedffffc4a44d3044dea23607a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for pose (re) initialization. <br /></td></tr>
+<tr class="separator:aae7eedffffc4a44d3044dea23607a918"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c2ba756702b8f5010c31fc1fca659e1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a8c2ba756702b8f5010c31fc1fca659e1">initialize_from_estimate</a> (const std::pair&lt; Sophus::SE3d, Sophus::Matrix6d &gt; &amp;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">estimate</a>)</td></tr>
+<tr class="memdesc:a8c2ba756702b8f5010c31fc1fca659e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize particles from an estimated pose and covariance.  <a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a8c2ba756702b8f5010c31fc1fca659e1">More...</a><br /></td></tr>
+<tr class="separator:a8c2ba756702b8f5010c31fc1fca659e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classbeluga__amcl_1_1BaseAMCLNode')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html">beluga_amcl::BaseAMCLNode</a></td></tr>
+<tr class="memitem:a16cdce2884adb55d59ee585aa819bb5f inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a16cdce2884adb55d59ee585aa819bb5f"></a>
+CallbackReturn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a16cdce2884adb55d59ee585aa819bb5f">on_configure</a> (const rclcpp_lifecycle::State &amp;) override</td></tr>
+<tr class="memdesc:a16cdce2884adb55d59ee585aa819bb5f inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for lifecycle transitions from the UNCONFIGURED state to the INACTIVE state. <br /></td></tr>
+<tr class="separator:a16cdce2884adb55d59ee585aa819bb5f inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48dad9a24ae400e73026646e5753789a inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a48dad9a24ae400e73026646e5753789a"></a>
+CallbackReturn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a48dad9a24ae400e73026646e5753789a">on_activate</a> (const rclcpp_lifecycle::State &amp;) override</td></tr>
+<tr class="memdesc:a48dad9a24ae400e73026646e5753789a inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state. <br /></td></tr>
+<tr class="separator:a48dad9a24ae400e73026646e5753789a inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d5a3eec8c33e48097483a8c85d8d933 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a9d5a3eec8c33e48097483a8c85d8d933"></a>
+CallbackReturn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a9d5a3eec8c33e48097483a8c85d8d933">on_deactivate</a> (const rclcpp_lifecycle::State &amp;) override</td></tr>
+<tr class="memdesc:a9d5a3eec8c33e48097483a8c85d8d933 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for lifecycle transitions from the ACTIVE state to the INACTIVE state. <br /></td></tr>
+<tr class="separator:a9d5a3eec8c33e48097483a8c85d8d933 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4947ff1f6d3ea8369f1a2c392460896c inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a4947ff1f6d3ea8369f1a2c392460896c"></a>
+CallbackReturn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a4947ff1f6d3ea8369f1a2c392460896c">on_cleanup</a> (const rclcpp_lifecycle::State &amp;) override</td></tr>
+<tr class="memdesc:a4947ff1f6d3ea8369f1a2c392460896c inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for lifecycle transitions from the INACTIVE state to the UNCONFIGURED state. <br /></td></tr>
+<tr class="separator:a4947ff1f6d3ea8369f1a2c392460896c inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6943f1f5e17278589a83fe71165609a2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a6943f1f5e17278589a83fe71165609a2"></a>
+CallbackReturn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a6943f1f5e17278589a83fe71165609a2">on_shutdown</a> (const rclcpp_lifecycle::State &amp;) override</td></tr>
+<tr class="memdesc:a6943f1f5e17278589a83fe71165609a2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for lifecycle transitions from most states to the FINALIZED state. <br /></td></tr>
+<tr class="separator:a6943f1f5e17278589a83fe71165609a2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3da30216e2805f86a0a945e5daa9ca9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="aa3da30216e2805f86a0a945e5daa9ca9"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#aa3da30216e2805f86a0a945e5daa9ca9">get_execution_policy</a> () const -&gt; <a class="el" href="ndt__amcl__node_8hpp.html#a20a6813586f56b33cebd9dbe32713d5e">ExecutionPolicyVariant</a></td></tr>
+<tr class="memdesc:aa3da30216e2805f86a0a945e5daa9ca9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get execution policy from parameters. <br /></td></tr>
+<tr class="separator:aa3da30216e2805f86a0a945e5daa9ca9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9f2cea1a98d12277eb07454b4031af9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="ae9f2cea1a98d12277eb07454b4031af9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ae9f2cea1a98d12277eb07454b4031af9">periodic_timer_callback</a> ()</td></tr>
+<tr class="memdesc:ae9f2cea1a98d12277eb07454b4031af9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for the periodic particle updates. <br /></td></tr>
+<tr class="separator:ae9f2cea1a98d12277eb07454b4031af9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a092106befa33dc59582ee5d5c5576092 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a092106befa33dc59582ee5d5c5576092"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a092106befa33dc59582ee5d5c5576092">autostart_callback</a> ()</td></tr>
+<tr class="memdesc:a092106befa33dc59582ee5d5c5576092 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for the autostart timer. <br /></td></tr>
+<tr class="separator:a092106befa33dc59582ee5d5c5576092 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad36206a8f483715987d967136cdc8aa2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="ad36206a8f483715987d967136cdc8aa2"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ad36206a8f483715987d967136cdc8aa2">do_autostart_callback</a> ()</td></tr>
+<tr class="memdesc:ad36206a8f483715987d967136cdc8aa2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">User provided extra steps for the autostart process. <br /></td></tr>
+<tr class="separator:ad36206a8f483715987d967136cdc8aa2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a146afa75ee718c1aa089559ffa4a91e0 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a146afa75ee718c1aa089559ffa4a91e0"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a146afa75ee718c1aa089559ffa4a91e0">do_configure</a> ([[maybe_unused]] const rclcpp_lifecycle::State &amp;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>)</td></tr>
+<tr class="memdesc:a146afa75ee718c1aa089559ffa4a91e0 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra steps for the on_configure callback. Defaults to no-op. <br /></td></tr>
+<tr class="separator:a146afa75ee718c1aa089559ffa4a91e0 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a343f92f8ce9b16c388bc6b367372baa9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a343f92f8ce9b16c388bc6b367372baa9"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a343f92f8ce9b16c388bc6b367372baa9">do_deactivate</a> ([[maybe_unused]] const rclcpp_lifecycle::State &amp;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>)</td></tr>
+<tr class="memdesc:a343f92f8ce9b16c388bc6b367372baa9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra steps for the on_deactivate callback. Defaults to no-op. <br /></td></tr>
+<tr class="separator:a343f92f8ce9b16c388bc6b367372baa9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ae607902c8050454330ff45785c7247 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a2ae607902c8050454330ff45785c7247"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a2ae607902c8050454330ff45785c7247">do_shutdown</a> ([[maybe_unused]] const rclcpp_lifecycle::State &amp;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>)</td></tr>
+<tr class="memdesc:a2ae607902c8050454330ff45785c7247 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra steps for the on_shutdown callback. Defaults to no-op. <br /></td></tr>
+<tr class="separator:a2ae607902c8050454330ff45785c7247 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaad2145c3861651dd0bfca4b4fe91e73 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="aaad2145c3861651dd0bfca4b4fe91e73"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#aaad2145c3861651dd0bfca4b4fe91e73">do_cleanup</a> ([[maybe_unused]] const rclcpp_lifecycle::State &amp;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>)</td></tr>
+<tr class="memdesc:aaad2145c3861651dd0bfca4b4fe91e73 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra steps for the on_cleanup callback. Defaults to no-op. <br /></td></tr>
+<tr class="separator:aaad2145c3861651dd0bfca4b4fe91e73 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a4dc9c29b50af8b6ae2d38c3ed0dedf inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a0a4dc9c29b50af8b6ae2d38c3ed0dedf"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a0a4dc9c29b50af8b6ae2d38c3ed0dedf">do_activate</a> ([[maybe_unused]] const rclcpp_lifecycle::State &amp;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>)</td></tr>
+<tr class="memdesc:a0a4dc9c29b50af8b6ae2d38c3ed0dedf inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra steps for the on_activate callback. Defaults to no-op. <br /></td></tr>
+<tr class="separator:a0a4dc9c29b50af8b6ae2d38c3ed0dedf inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a788aa4698cfc1e1dd683b11e22cf5045 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a788aa4698cfc1e1dd683b11e22cf5045"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a788aa4698cfc1e1dd683b11e22cf5045">do_initial_pose_callback</a> ([[maybe_unused]] geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message)</td></tr>
+<tr class="memdesc:a788aa4698cfc1e1dd683b11e22cf5045 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra steps for (re)initialization messages. <br /></td></tr>
+<tr class="separator:a788aa4698cfc1e1dd683b11e22cf5045 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3a56093a25e45eaea077fa854bbaea7 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="ab3a56093a25e45eaea077fa854bbaea7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ab3a56093a25e45eaea077fa854bbaea7">initial_pose_callback</a> (geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message)</td></tr>
+<tr class="memdesc:ab3a56093a25e45eaea077fa854bbaea7 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for (re)initialization messages. <br /></td></tr>
+<tr class="separator:ab3a56093a25e45eaea077fa854bbaea7 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a53952270e195a2558bebfac6220a28cd"><td class="memItemLeft" align="right" valign="top"><a id="a53952270e195a2558bebfac6220a28cd"></a>
+std::unique_ptr&lt; message_filters::Subscriber&lt; sensor_msgs::msg::PointCloud2, rclcpp_lifecycle::LifecycleNode &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a53952270e195a2558bebfac6220a28cd">laser_scan_sub_</a></td></tr>
+<tr class="memdesc:a53952270e195a2558bebfac6220a28cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Laser scan updates subscription. <br /></td></tr>
+<tr class="separator:a53952270e195a2558bebfac6220a28cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bd805a2963d186cb28ea2bfa9b01883"><td class="memItemLeft" align="right" valign="top"><a id="a5bd805a2963d186cb28ea2bfa9b01883"></a>
+std::unique_ptr&lt; tf2_ros::MessageFilter&lt; sensor_msgs::msg::PointCloud2 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a5bd805a2963d186cb28ea2bfa9b01883">laser_scan_filter_</a></td></tr>
+<tr class="memdesc:a5bd805a2963d186cb28ea2bfa9b01883"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform synchronization filter for laser scan updates. <br /></td></tr>
+<tr class="separator:a5bd805a2963d186cb28ea2bfa9b01883"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e6457de98080183405cce40cedf270d"><td class="memItemLeft" align="right" valign="top"><a id="a9e6457de98080183405cce40cedf270d"></a>
+message_filters::Connection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a9e6457de98080183405cce40cedf270d">laser_scan_connection_</a></td></tr>
+<tr class="memdesc:a9e6457de98080183405cce40cedf270d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connection for laser scan updates filter and callback. <br /></td></tr>
+<tr class="separator:a9e6457de98080183405cce40cedf270d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeab8ac0dd6f94e4e6e31f9ceafce6239"><td class="memItemLeft" align="right" valign="top"><a id="aeab8ac0dd6f94e4e6e31f9ceafce6239"></a>
+std::unique_ptr&lt; <a class="el" href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">NdtAmclVariant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aeab8ac0dd6f94e4e6e31f9ceafce6239">particle_filter_</a></td></tr>
+<tr class="memdesc:aeab8ac0dd6f94e4e6e31f9ceafce6239"><td class="mdescLeft">&#160;</td><td class="mdescRight">Particle filter instance. <br /></td></tr>
+<tr class="separator:aeab8ac0dd6f94e4e6e31f9ceafce6239"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b78851c4fb56d364bb9f2de249c3c31"><td class="memItemLeft" align="right" valign="top"><a id="a0b78851c4fb56d364bb9f2de249c3c31"></a>
+std::optional&lt; std::pair&lt; Sophus::SE3d, Sophus::Matrix6d &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a0b78851c4fb56d364bb9f2de249c3c31">last_known_estimate_</a></td></tr>
+<tr class="memdesc:a0b78851c4fb56d364bb9f2de249c3c31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last known pose estimate, if any. <br /></td></tr>
+<tr class="separator:a0b78851c4fb56d364bb9f2de249c3c31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad497bfe6d02cd778bea7bbf39df314a8"><td class="memItemLeft" align="right" valign="top"><a id="ad497bfe6d02cd778bea7bbf39df314a8"></a>
+std::optional&lt; Sophus::SE3d &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#ad497bfe6d02cd778bea7bbf39df314a8">last_known_odom_transform_in_map_</a></td></tr>
+<tr class="memdesc:ad497bfe6d02cd778bea7bbf39df314a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last known map to odom correction estimate, if any. <br /></td></tr>
+<tr class="separator:ad497bfe6d02cd778bea7bbf39df314a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a5b2778e0526f85804a410881f107cf"><td class="memItemLeft" align="right" valign="top"><a id="a2a5b2778e0526f85804a410881f107cf"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a2a5b2778e0526f85804a410881f107cf">enable_tf_broadcast_</a> {false}</td></tr>
+<tr class="memdesc:a2a5b2778e0526f85804a410881f107cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether to broadcast transforms or not. <br /></td></tr>
+<tr class="separator:a2a5b2778e0526f85804a410881f107cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classbeluga__amcl_1_1BaseAMCLNode')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html">beluga_amcl::BaseAMCLNode</a></td></tr>
+<tr class="memitem:a7ba7d07827d5279a98bc572fc08df437 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a7ba7d07827d5279a98bc572fc08df437"></a>
+rclcpp_lifecycle::LifecyclePublisher&lt; geometry_msgs::msg::PoseArray &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a7ba7d07827d5279a98bc572fc08df437">particle_cloud_pub_</a></td></tr>
+<tr class="memdesc:a7ba7d07827d5279a98bc572fc08df437 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Particle cloud publisher. <br /></td></tr>
+<tr class="separator:a7ba7d07827d5279a98bc572fc08df437 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ce5b37032443c1651bcada26f77224f inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a3ce5b37032443c1651bcada26f77224f"></a>
+rclcpp_lifecycle::LifecyclePublisher&lt; visualization_msgs::msg::MarkerArray &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a3ce5b37032443c1651bcada26f77224f">particle_markers_pub_</a></td></tr>
+<tr class="memdesc:a3ce5b37032443c1651bcada26f77224f inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Particle markers publisher. <br /></td></tr>
+<tr class="separator:a3ce5b37032443c1651bcada26f77224f inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac95ec7145c7d97c802f2c7786c40fbf8 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="ac95ec7145c7d97c802f2c7786c40fbf8"></a>
+rclcpp_lifecycle::LifecyclePublisher&lt; geometry_msgs::msg::PoseWithCovarianceStamped &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ac95ec7145c7d97c802f2c7786c40fbf8">pose_pub_</a></td></tr>
+<tr class="memdesc:ac95ec7145c7d97c802f2c7786c40fbf8 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimated pose publisher. <br /></td></tr>
+<tr class="separator:ac95ec7145c7d97c802f2c7786c40fbf8 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a132faa2c69def19aa24a6bc3685506f3 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a132faa2c69def19aa24a6bc3685506f3"></a>
+std::unique_ptr&lt; bond::Bond &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a132faa2c69def19aa24a6bc3685506f3">bond_</a></td></tr>
+<tr class="memdesc:a132faa2c69def19aa24a6bc3685506f3 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node bond with the lifecycle manager. <br /></td></tr>
+<tr class="separator:a132faa2c69def19aa24a6bc3685506f3 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dd93a451948e793576070e5bc27e71d inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a7dd93a451948e793576070e5bc27e71d"></a>
+rclcpp::TimerBase::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a7dd93a451948e793576070e5bc27e71d">timer_</a></td></tr>
+<tr class="memdesc:a7dd93a451948e793576070e5bc27e71d inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timer for periodic particle cloud updates. <br /></td></tr>
+<tr class="separator:a7dd93a451948e793576070e5bc27e71d inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab00f2e2ab057b887af4135899b9087e5 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="ab00f2e2ab057b887af4135899b9087e5"></a>
+std::unique_ptr&lt; tf2_ros::Buffer &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ab00f2e2ab057b887af4135899b9087e5">tf_buffer_</a></td></tr>
+<tr class="memdesc:ab00f2e2ab057b887af4135899b9087e5 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms buffer. <br /></td></tr>
+<tr class="separator:ab00f2e2ab057b887af4135899b9087e5 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6ec10aa1a68ab40fa29d3eca640fa02 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="aa6ec10aa1a68ab40fa29d3eca640fa02"></a>
+std::unique_ptr&lt; tf2_ros::TransformBroadcaster &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#aa6ec10aa1a68ab40fa29d3eca640fa02">tf_broadcaster_</a></td></tr>
+<tr class="memdesc:aa6ec10aa1a68ab40fa29d3eca640fa02 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms broadcaster. <br /></td></tr>
+<tr class="separator:aa6ec10aa1a68ab40fa29d3eca640fa02 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38590b0e5b2b1e331ecb539f04d1b76d inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a38590b0e5b2b1e331ecb539f04d1b76d"></a>
+std::unique_ptr&lt; tf2_ros::TransformListener &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a38590b0e5b2b1e331ecb539f04d1b76d">tf_listener_</a></td></tr>
+<tr class="memdesc:a38590b0e5b2b1e331ecb539f04d1b76d inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms listener. <br /></td></tr>
+<tr class="separator:a38590b0e5b2b1e331ecb539f04d1b76d inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3cff77d78f464934b2b32e7c2045a48 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="ac3cff77d78f464934b2b32e7c2045a48"></a>
+rclcpp::TimerBase::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ac3cff77d78f464934b2b32e7c2045a48">autostart_timer_</a></td></tr>
+<tr class="memdesc:ac3cff77d78f464934b2b32e7c2045a48 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timer for node to configure and activate itself. <br /></td></tr>
+<tr class="separator:ac3cff77d78f464934b2b32e7c2045a48 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfe28d871258a991c2b228134ffce060 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="abfe28d871258a991c2b228134ffce060"></a>
+rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#abfe28d871258a991c2b228134ffce060">common_callback_group_</a></td></tr>
+<tr class="memdesc:abfe28d871258a991c2b228134ffce060 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common mutually exclusive callback group. <br /></td></tr>
+<tr class="separator:abfe28d871258a991c2b228134ffce060 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3be1c4638e6383411b140d59869f7c05 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a3be1c4638e6383411b140d59869f7c05"></a>
+rclcpp::SubscriptionOptions&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a3be1c4638e6383411b140d59869f7c05">common_subscription_options_</a></td></tr>
+<tr class="memdesc:a3be1c4638e6383411b140d59869f7c05 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common subscription options. <br /></td></tr>
+<tr class="separator:a3be1c4638e6383411b140d59869f7c05 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac21e0a5574bd3a743cc7be191f5f4c50 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="ac21e0a5574bd3a743cc7be191f5f4c50"></a>
+rclcpp::Subscription&lt; geometry_msgs::msg::PoseWithCovarianceStamped &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ac21e0a5574bd3a743cc7be191f5f4c50">initial_pose_sub_</a></td></tr>
+<tr class="memdesc:ac21e0a5574bd3a743cc7be191f5f4c50 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pose (re)initialization subscription. <br /></td></tr>
+<tr class="separator:ac21e0a5574bd3a743cc7be191f5f4c50 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>3D NDT AMCL as a ROS 2 composable lifecycle node. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8c2ba756702b8f5010c31fc1fca659e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c2ba756702b8f5010c31fc1fca659e1">&#9670;&nbsp;</a></span>initialize_from_estimate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool beluga_amcl::NdtAmclNode3D::initialize_from_estimate </td>
+          <td>(</td>
+          <td class="paramtype">const std::pair&lt; Sophus::SE3d, Sophus::Matrix6d &gt; &amp;&#160;</td>
+          <td class="paramname"><em>estimate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initialize particles from an estimated pose and covariance. </p>
+<p>If an exception occurs during the initialization, an error message is logged, and the initialization process is also aborted, returning false. If the initialization is successful, the TF broadcast is enabled.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">estimate</td><td>A pair representing the estimated pose and covariance for initialization. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the initialization is successful, false otherwise. </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/runner/work/beluga/beluga/beluga_amcl/include/beluga_amcl/<a class="el" href="ndt__amcl__node__3d_8hpp_source.html">ndt_amcl_node_3d.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

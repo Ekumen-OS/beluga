@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;"/>
   </head>
   
   
@@ -853,10 +853,10 @@ Sophus::SE3d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a992598bc475f99f59e5b32b06caf854b"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Sophus::Matrix3&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">estimate</a> (Poses &amp;&amp;poses)</td></tr>
 <tr class="memdesc:a992598bc475f99f59e5b32b06caf854b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">More...</a><br /></td></tr>
 <tr class="separator:a992598bc475f99f59e5b32b06caf854b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09258a5ebeedf13cedb52582bc9defb4"><td class="memTemplParams" colspan="2">template&lt;typename MeanDerived , typename CovarianceDerived , typename TransferFn &gt; </td></tr>
-<tr class="memitem:a09258a5ebeedf13cedb52582bc9defb4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a09258a5ebeedf13cedb52582bc9defb4">unscented_transform</a> (const Eigen::MatrixBase&lt; MeanDerived &gt; &amp;mean, const Eigen::MatrixBase&lt; CovarianceDerived &gt; &amp;covariance, TransferFn &amp;&amp;transfer_fn, std::optional&lt; typename MeanDerived::Scalar &gt; kappa=std::nullopt)</td></tr>
-<tr class="memdesc:a09258a5ebeedf13cedb52582bc9defb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the unscented transform, a mathematical function used to estimate the result of applying a given a possibly nonlinear transformation to a probability distribution that is characterized with mean and covariance. See <a href="https://en.wikipedia.org/wiki/Unscented_transform">https://en.wikipedia.org/wiki/Unscented_transform</a> for more information. Also see <a href="https://arxiv.org/pdf/2104.01958">https://arxiv.org/pdf/2104.01958</a> Equation (5) for more context on sigma points selection.  <a href="namespacebeluga.html#a09258a5ebeedf13cedb52582bc9defb4">More...</a><br /></td></tr>
-<tr class="separator:a09258a5ebeedf13cedb52582bc9defb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a565300534fff0e7c56b8ece60f9c0eb9"><td class="memTemplParams" colspan="2">template&lt;typename MeanDerived , typename CovarianceDerived , typename TransferFn , typename TransformedT  = std::result_of_t&lt;TransferFn(MeanDerived)&gt;, typename MeanFn  = detail::default_weighted_mean_fn, typename ResidualFn  = std::minus&lt;TransformedT&gt;&gt; </td></tr>
+<tr class="memitem:a565300534fff0e7c56b8ece60f9c0eb9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a565300534fff0e7c56b8ece60f9c0eb9">unscented_transform</a> (const Eigen::MatrixBase&lt; MeanDerived &gt; &amp;mean, const Eigen::MatrixBase&lt; CovarianceDerived &gt; &amp;covariance, TransferFn &amp;&amp;transfer_fn, std::optional&lt; typename MeanDerived::Scalar &gt; kappa=std::nullopt, MeanFn mean_fn=<a class="el" href="namespacebeluga.html#a4abc974473c43aaebe8a6a7bea10cd26">default_weighted_mean</a>, ResidualFn residual_fn=std::minus&lt; TransformedT &gt;{})</td></tr>
+<tr class="memdesc:a565300534fff0e7c56b8ece60f9c0eb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the unscented transform, a mathematical function used to estimate the result of applying a given a possibly nonlinear transformation to a probability distribution that is characterized with mean and covariance. See <a href="https://en.wikipedia.org/wiki/Unscented_transform">https://en.wikipedia.org/wiki/Unscented_transform</a> for more information. Also see <a href="https://arxiv.org/pdf/2104.01958">https://arxiv.org/pdf/2104.01958</a> Equation (5) for more context on sigma points selection.  <a href="namespacebeluga.html#a565300534fff0e7c56b8ece60f9c0eb9">More...</a><br /></td></tr>
+<tr class="separator:a565300534fff0e7c56b8ece60f9c0eb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a223b23ff16126a77c01a5c636bd4f51f"><td class="memItemLeft" align="right" valign="top"><a id="a223b23ff16126a77c01a5c636bd4f51f"></a>
 constexpr <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a223b23ff16126a77c01a5c636bd4f51f">operator|</a> (<a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a> lflag, <a class="el" href="namespacebeluga.html#af4335f481449a38c85a391979273825c">CircularArrayFeatureFlags</a> rflag)</td></tr>
 <tr class="memdesc:a223b23ff16126a77c01a5c636bd4f51f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitwise OR operator overload to combine two feature flags in a single mask-like flag. <br /></td></tr>
@@ -927,6 +927,10 @@ template&lt;class T , class TupleLike &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a4abc974473c43aaebe8a6a7bea10cd26"><td class="memItemLeft" align="right" valign="top"><a id="a4abc974473c43aaebe8a6a7bea10cd26"></a>
+constexpr <a class="el" href="structbeluga_1_1detail_1_1default__weighted__mean__fn.html">detail::default_weighted_mean_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a4abc974473c43aaebe8a6a7bea10cd26">default_weighted_mean</a></td></tr>
+<tr class="memdesc:a4abc974473c43aaebe8a6a7bea10cd26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object for computing a euclidean weighted mean of a vector of elements. <br /></td></tr>
+<tr class="separator:a4abc974473c43aaebe8a6a7bea10cd26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff8f47028f19c4ca9fbc4ef0473c8fdd"><td class="memItemLeft" align="right" valign="top"><a id="aff8f47028f19c4ca9fbc4ef0473c8fdd"></a>
 constexpr detail::make_policy_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#aff8f47028f19c4ca9fbc4ef0473c8fdd">make_policy</a></td></tr>
 <tr class="memdesc:aff8f47028f19c4ca9fbc4ef0473c8fdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make policy function objects. <br /></td></tr>
@@ -1868,13 +1872,13 @@ template&lt;typename T , std::size_t N, CircularArrayFeatureFlags F, CircularArr
 
 </div>
 </div>
-<a id="a09258a5ebeedf13cedb52582bc9defb4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09258a5ebeedf13cedb52582bc9defb4">&#9670;&nbsp;</a></span>unscented_transform()</h2>
+<a id="a565300534fff0e7c56b8ece60f9c0eb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a565300534fff0e7c56b8ece60f9c0eb9">&#9670;&nbsp;</a></span>unscented_transform()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename MeanDerived , typename CovarianceDerived , typename TransferFn &gt; </div>
+template&lt;typename MeanDerived , typename CovarianceDerived , typename TransferFn , typename TransformedT  = std::result_of_t&lt;TransferFn(MeanDerived)&gt;, typename MeanFn  = detail::default_weighted_mean_fn, typename ResidualFn  = std::minus&lt;TransformedT&gt;&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">auto beluga::unscented_transform </td>
@@ -1898,7 +1902,19 @@ template&lt;typename MeanDerived , typename CovarianceDerived , typename Transfe
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::optional&lt; typename MeanDerived::Scalar &gt;&#160;</td>
-          <td class="paramname"><em>kappa</em> = <code>std::nullopt</code>&#160;</td>
+          <td class="paramname"><em>kappa</em> = <code>std::nullopt</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">MeanFn&#160;</td>
+          <td class="paramname"><em>mean_fn</em> = <code><a class="el" href="namespacebeluga.html#a4abc974473c43aaebe8a6a7bea10cd26">default_weighted_mean</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ResidualFn&#160;</td>
+          <td class="paramname"><em>residual_fn</em> = <code>std::minus&lt;TransformedT&gt;{}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1914,6 +1930,9 @@ template&lt;typename MeanDerived , typename CovarianceDerived , typename Transfe
     <tr><td class="paramname">MeanDerived</td><td>Concrete Eigen dense type used for the mean. </td></tr>
     <tr><td class="paramname">CovarianceDerived</td><td>Concrete Eigen dense type used for the covariance. </td></tr>
     <tr><td class="paramname">TransferFn</td><td>Callable that maps a vector from input space to output space. Possibly non-linear. </td></tr>
+    <tr><td class="paramname">TransformedT</td><td>State representing the output space. Deduced from the transfer function. </td></tr>
+    <tr><td class="paramname">MeanFn</td><td>Callable that converts a vector of elements in the output space, and weights, to its mean in the output space. </td></tr>
+    <tr><td class="paramname">ResidualFn</td><td>Callable that computes a residual given two elements in the output space. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1921,8 +1940,10 @@ template&lt;typename MeanDerived , typename CovarianceDerived , typename Transfe
   <table class="params">
     <tr><td class="paramname">mean</td><td>Mean in the input space. </td></tr>
     <tr><td class="paramname">covariance</td><td>Covariance in the input space. </td></tr>
-    <tr><td class="paramname">transfer_fn</td><td>Callable that converts a vector from input space to output space. </td></tr>
+    <tr><td class="paramname">transfer_fn</td><td>Callable that converts a* vector from input space to output space. </td></tr>
     <tr><td class="paramname">kappa</td><td>Parameter used for sigma points selection. A sensible default will be used if not provided. </td></tr>
+    <tr><td class="paramname">mean_fn</td><td>Callable that converts a vector of elements in the output space, and weights, to its mean in the output space. A sensible default is provided for the trivial (euclidian) case. </td></tr>
+    <tr><td class="paramname">residual_fn</td><td>Callable that computes a residual given two elements in the output space.. A sensible default is provided for the trivial (euclidian) case. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2020,7 +2041,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;.
+  Last updated on &#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;.
   <br/>
 </p>
   </div>

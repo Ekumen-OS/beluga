@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;"/>
   </head>
   
   
@@ -524,7 +524,7 @@ $(function() {
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        execution_policy_{<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::move(execution_policy)},</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        spatial_hasher_{params_.spatial_resolution_x, params_.spatial_resolution_y, params_.spatial_resolution_theta},</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        random_probability_estimator_{params_.alpha_slow, params_.alpha_fast},</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        update_policy_{<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a>::policies::<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/on__motion_8hpp.html#a54bb57da3afb678567632c2c8362afb8">on_motion</a>(params_.update_min_d, params_.update_min_a)},</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        update_policy_{<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a>::policies::<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/on__motion_8hpp.html#a5a3cdd84aa621384e40a80b2fe395132">on_motion</a>&lt;<a class="code" href="namespaceSophus.html">Sophus</a>::SE2d&gt;(params_.update_min_d, params_.update_min_a)},</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        resample_policy_{<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a>::policies::<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/every__n_8hpp.html#afefa5c41804340c02566a357b4beb933">every_n</a>(params_.resample_interval)} {</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">if</span> (params_.<a class="code" href="structbeluga__ros_1_1AmclParams.html#ae70b06fe289b933af0de8d0556624225">selective_resampling</a>) {</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;      resample_policy_ = resample_policy_ &amp;&amp; beluga::policies::on_effective_size_drop;</div>
@@ -658,12 +658,13 @@ $(function() {
 <div class="ttc" id="aclassbeluga__ros_1_1OccupancyGrid_html"><div class="ttname"><a href="classbeluga__ros_1_1OccupancyGrid.html">beluga_ros::OccupancyGrid</a></div><div class="ttdoc">Thin wrapper type for 2D nav_msgs/OccupancyGrid messages.</div><div class="ttdef"><b>Definition:</b> occupancy_grid.hpp:47</div></div>
 <div class="ttc" id="aevery__n_8hpp_html_afefa5c41804340c02566a357b4beb933"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/every__n_8hpp.html#afefa5c41804340c02566a357b4beb933">every_n</a></div><div class="ttdeci">constexpr detail::every_n_fn every_n</div></div>
 <div class="ttc" id="alaser__scan_8hpp_html"><div class="ttname"><a href="laser__scan_8hpp.html">laser_scan.hpp</a></div><div class="ttdoc">Implementation of sensor_msgs/LaserScan wrapper type.</div></div>
+<div class="ttc" id="anamespaceSophus_html"><div class="ttname"><a href="namespaceSophus.html">Sophus</a></div><div class="ttdoc">Sophus namespace extension for message conversion function overload resolution (ADL enabled).</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:337</div></div>
 <div class="ttc" id="anamespacebeluga__ros_html"><div class="ttname"><a href="namespacebeluga__ros.html">beluga_ros</a></div><div class="ttdoc">The main Beluga ROS namespace.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:33</div></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a></div></div>
 <div class="ttc" id="anamespacebeluga_html_a9142e25bdd4e8cea7f524dc95afa78e5"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a9142e25bdd4e8cea7f524dc95afa78e5">beluga::DifferentialDriveModel2d</a></div><div class="ttdeci">DifferentialDriveModel&lt; Sophus::SE2d &gt; DifferentialDriveModel2d</div></div>
 <div class="ttc" id="anamespacebeluga_html_ae8a86e1cace0396fa3b777e6568f5e02"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#ae8a86e1cace0396fa3b777e6568f5e02">beluga::estimate</a></div><div class="ttdeci">std::pair&lt; Sophus::SE3&lt; Scalar &gt;, Sophus::Matrix6&lt; Scalar &gt; &gt; estimate(const Poses &amp;poses, const Weights &amp;weights)</div></div>
 <div class="ttc" id="aoccupancy__grid_8hpp_html"><div class="ttname"><a href="occupancy__grid_8hpp.html">occupancy_grid.hpp</a></div><div class="ttdoc">Implementation of nav_msgs/OccupancyGrid wrapper type.</div></div>
-<div class="ttc" id="aon__motion_8hpp_html_a54bb57da3afb678567632c2c8362afb8"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/on__motion_8hpp.html#a54bb57da3afb678567632c2c8362afb8">on_motion</a></div><div class="ttdeci">constexpr detail::on_motion_fn on_motion</div></div>
+<div class="ttc" id="aon__motion_8hpp_html_a5a3cdd84aa621384e40a80b2fe395132"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/on__motion_8hpp.html#a5a3cdd84aa621384e40a80b2fe395132">on_motion</a></div><div class="ttdeci">constexpr detail::on_motion_fn&lt; StateType &gt; on_motion</div></div>
 <div class="ttc" id="astructbeluga_1_1policy_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1policy.html">beluga::policy</a></div></div>
 <div class="ttc" id="astructbeluga_1_1spatial__hash_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1spatial__hash.html">beluga::spatial_hash</a></div></div>
 <div class="ttc" id="astructbeluga__ros_1_1AmclParams_html"><div class="ttname"><a href="structbeluga__ros_1_1AmclParams.html">beluga_ros::AmclParams</a></div><div class="ttdoc">Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:36</div></div>
@@ -737,7 +738,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;.
+  Last updated on &#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;.
   <br/>
 </p>
   </div>

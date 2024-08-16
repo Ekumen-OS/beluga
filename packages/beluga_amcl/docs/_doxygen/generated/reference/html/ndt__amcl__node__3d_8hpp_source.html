@@ -1,0 +1,668 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Beluga AMCL: /home/runner/work/beluga/beluga/beluga_amcl/include/beluga_amcl/ndt_amcl_node_3d.hpp Source File &#8212; Beluga  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=cc8b88f9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'packages/beluga_amcl/docs/_doxygen/generated/reference/html/ndt__amcl__node__3d_8hpp_source';</script>
+    <script src="../../../../../../../_static/custom.js?v=b6861115"></script>
+    <link rel="icon" href="../../../../../../../_static/logo_200x200.png"/>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo_with_name_light.png" class="logo__image only-light" alt="Beluga  documentation - Home"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo_with_name_dark.png" class="logo__image only-dark" alt="Beluga  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../index.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/key-concepts.html">Key concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/design-principles.html">Design principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../concepts/architecture.html">Architecture</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/using-beluga-amcl.html">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/extending-beluga.html">Extending Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/profiling-beluga.html">Profiling Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../guides/benchmarking-beluga.html">Benchmarking Beluga</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/particle-filtering.html">Primer on Particle Filtering with Beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../tutorials/nav2-integration.html">Using Beluga with Nav2</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga/docs/index.html">beluga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../beluga_ros/docs/index.html">beluga_ros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">beluga_amcl</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../roadmap/releases.html">Releases</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../resources/bibliography.html">Bibliography</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">About</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../about/contact.html">Contact</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Ekumen-OS/beluga" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/packages/beluga_amcl/docs/_doxygen/generated/reference/html/ndt__amcl__node__3d_8hpp_source.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>/home/runner/work/beluga/beluga/beluga_amcl/include/beluga_amcl/ndt_amcl_node_3d.hpp Source File</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="home-runner-work-beluga-beluga-beluga-amcl-include-beluga-amcl-ndt-amcl-node-3d-hpp-source-file">
+<h1>/home/runner/work/beluga/beluga/beluga_amcl/include/beluga_amcl/ndt_amcl_node_3d.hpp Source File<a class="headerlink" href="#home-runner-work-beluga-beluga-beluga-amcl-include-beluga-amcl-ndt-amcl-node-3d-hpp-source-file" title="Link to this heading">#</a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Beluga AMCL: /home/runner/work/beluga/beluga/beluga_amcl/include/beluga_amcl/ndt_amcl_node_3d.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Beluga AMCL
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Search');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_f707c9b3691f4881939017e70f463c1f.html">beluga_amcl</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">ndt_amcl_node_3d.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="ndt__amcl__node__3d_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2022-2024 Ekumen, Inc.</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// limitations under the License.</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/buffer.h&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/message_filter.h&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/transform_broadcaster.h&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/transform_listener.h&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;beluga/algorithm/amcl_core.hpp&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/beluga_8hpp.html">beluga/beluga.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;execution&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;sophus/types.hpp&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;variant&gt;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;geometry_msgs/msg/pose_array.hpp&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;geometry_msgs/msg/pose_with_covariance_stamped.hpp&gt;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;rclcpp_lifecycle/lifecycle_node.hpp&gt;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;sensor_msgs/msg/laser_scan.hpp&gt;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;sensor_msgs/msg/point_cloud2.hpp&gt;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &lt;std_srvs/srv/empty.hpp&gt;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/laser__scan_8hpp.html">beluga_ros/laser_scan.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;beluga_amcl/ros2_common.hpp&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &lt;message_filters/subscriber.h&gt;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">namespace </span>beluga_amcl {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">using</span> <a class="code" href="ndt__amcl__node_8hpp.html#a82dbb2d02fdc9998c479c6d5b3948283">NDTMapRepresentation</a> =</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid3&lt;std::unordered_map&lt;Eigen::Vector3i, beluga::NDTCell3d, beluga::detail::CellHasher&lt;3&gt;</a>&gt;&gt;;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="ndt__amcl__node__3d_8hpp.html#aeacd155c7f9687b6d5ff814f09714e58">   57</a></span>&#160;<span class="keyword">using</span> <a class="code" href="ndt__amcl__node__3d_8hpp.html#aeacd155c7f9687b6d5ff814f09714e58">StateType</a> = <span class="keyword">typename</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">beluga::NDTSensorModel&lt;NDTMapRepresentation&gt;::state_type</a>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">using</span> <a class="code" href="ndt__amcl__node_8hpp.html#abdbc8a9bd8694d5d2b63d83a43f7ca30">RandomStateGenerator</a> = std::function&lt;<a class="code" href="ndt__amcl__node__3d_8hpp.html#aeacd155c7f9687b6d5ff814f09714e58">StateType</a>()&gt;;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> MotionModel, <span class="keyword">class</span> ExecutionPolicy&gt;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">using</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">NdtAmcl</a> = <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">beluga::Amcl</a>&lt;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    MotionModel,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel&lt;NDTMapRepresentation&gt;</a>,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="ndt__amcl__node_8hpp.html#abdbc8a9bd8694d5d2b63d83a43f7ca30">RandomStateGenerator</a>,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    std::tuple&lt;StateType, beluga::Weight&gt;,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    ExecutionPolicy&gt;;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">using</span> <a class="code" href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">NdtAmclVariant</a> = std::variant&lt;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">NdtAmcl&lt;beluga::DifferentialDriveModel3d, std::execution::parallel_policy&gt;</a>,  <span class="comment">//</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">NdtAmcl&lt;beluga::DifferentialDriveModel3d, std::execution::sequenced_policy&gt;</a>&gt;;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">using</span> <a class="code" href="ndt__amcl__node_8hpp.html#a35debd9cd28f41707bb122dc6f27736d">MotionModelVariant</a> = std::variant&lt;beluga::DifferentialDriveModel3d&gt;;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html">   81</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html">NdtAmclNode3D</a> : <span class="keyword">public</span> <a class="code" href="classbeluga__amcl_1_1BaseAMCLNode.html">BaseAMCLNode</a> {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a94d7462b4e71479b3b05505816fe52a7">   84</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a94d7462b4e71479b3b05505816fe52a7">NdtAmclNode3D</a>(<span class="keyword">const</span> rclcpp::NodeOptions&amp; options = rclcpp::NodeOptions{});</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a4487791f4c97becabaabefdc43f7f8f1">   88</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a4487791f4c97becabaabefdc43f7f8f1">do_activate</a>(<span class="keyword">const</span> rclcpp_lifecycle::State&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a9622e984f3a63c7bc55d0ca73fd82c0e">   91</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a9622e984f3a63c7bc55d0ca73fd82c0e">do_deactivate</a>(<span class="keyword">const</span> rclcpp_lifecycle::State&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#acd9f25ffdf96391d8ce2dcb5acb485b7">   94</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#acd9f25ffdf96391d8ce2dcb5acb485b7">do_cleanup</a>(<span class="keyword">const</span> rclcpp_lifecycle::State&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#ab64d055b834b1d3ddee53816df14356d">   97</a></span>&#160;  <span class="keyword">auto</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#ab64d055b834b1d3ddee53816df14356d">get_initial_estimate</a>() const -&gt; <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::optional&lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::pair&lt;<a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespaceSophus.html">Sophus</a>::SE3d, <a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespaceSophus.html">Sophus</a>::Matrix6d&gt;&gt;;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a848fc41f049633c3d33cbc594fa0f299">  100</a></span>&#160;  auto <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a848fc41f049633c3d33cbc594fa0f299">get_motion_model</a>() const -&gt; <a class="code" href="ndt__amcl__node_8hpp.html#a35debd9cd28f41707bb122dc6f27736d">MotionModelVariant</a>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aa9597475d2ddc084da7c508ec84f8ece">  103</a></span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a>::NDTSensorModel&lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">NDTMapRepresentation</a>&gt; <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aa9597475d2ddc084da7c508ec84f8ece">get_sensor_model</a>() const;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#ab085a321ab818354958837508209f6b5">  106</a></span>&#160;  auto <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#ab085a321ab818354958837508209f6b5">make_particle_filter</a>() const -&gt; <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::unique_ptr&lt;<a class="code" href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">NdtAmclVariant</a>&gt;;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#afd319c10a142c76c708301d42874f7b6">  109</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#afd319c10a142c76c708301d42874f7b6">do_periodic_timer_callback</a>() override;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aac6859100b952b8c3952acd6d9d494be">  112</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aac6859100b952b8c3952acd6d9d494be">laser_callback</a>(sensor_msgs::msg::PointCloud2::ConstSharedPtr);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aae7eedffffc4a44d3044dea23607a918">  115</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aae7eedffffc4a44d3044dea23607a918">do_initial_pose_callback</a>(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) override;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a8c2ba756702b8f5010c31fc1fca659e1">  126</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a8c2ba756702b8f5010c31fc1fca659e1">initialize_from_estimate</a>(const <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::pair&lt;<a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespaceSophus.html">Sophus</a>::SE3d, <a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespaceSophus.html">Sophus</a>::Matrix6d&gt;&amp; estimate);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::unique_ptr&lt;message_filters::Subscriber&lt;sensor_msgs::msg::PointCloud2, rclcpp_lifecycle::LifecycleNode&gt;&gt;</div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a53952270e195a2558bebfac6220a28cd">  130</a></span>&#160;      <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a53952270e195a2558bebfac6220a28cd">laser_scan_sub_</a>;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a5bd805a2963d186cb28ea2bfa9b01883">  133</a></span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::unique_ptr&lt;tf2_ros::MessageFilter&lt;sensor_msgs::msg::PointCloud2&gt;&gt; <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a5bd805a2963d186cb28ea2bfa9b01883">laser_scan_filter_</a>;</div>
+<div class="line"><a name="l00135"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a9e6457de98080183405cce40cedf270d">  135</a></span>&#160;  message_filters::Connection <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a9e6457de98080183405cce40cedf270d">laser_scan_connection_</a>;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00138"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aeab8ac0dd6f94e4e6e31f9ceafce6239">  138</a></span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::unique_ptr&lt;<a class="code" href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">NdtAmclVariant</a>&gt; <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#aeab8ac0dd6f94e4e6e31f9ceafce6239">particle_filter_</a>;</div>
+<div class="line"><a name="l00140"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a0b78851c4fb56d364bb9f2de249c3c31">  140</a></span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::optional&lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::pair&lt;<a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespaceSophus.html">Sophus</a>::SE3d, <a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespaceSophus.html">Sophus</a>::Matrix6d&gt;&gt; <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a0b78851c4fb56d364bb9f2de249c3c31">last_known_estimate_</a>;</div>
+<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#ad497bfe6d02cd778bea7bbf39df314a8">  142</a></span>&#160;  <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::optional&lt;<a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespaceSophus.html">Sophus</a>::SE3d&gt; <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#ad497bfe6d02cd778bea7bbf39df314a8">last_known_odom_transform_in_map_</a>;</div>
+<div class="line"><a name="l00144"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a2a5b2778e0526f85804a410881f107cf">  144</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classbeluga__amcl_1_1NdtAmclNode3D.html#a2a5b2778e0526f85804a410881f107cf">enable_tf_broadcast_</a>{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;};</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;}  <span class="comment">// namespace beluga_amcl</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP</span></div>
+<div class="ttc" id="abeluga_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/beluga_8hpp.html">beluga.hpp</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1Amcl_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">beluga::Amcl</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_adb32c32e4342f012e9a98be93bd0c018"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">beluga::NDTSensorModel::state_type</a></div><div class="ttdeci">std::conditional_t&lt; ndt_cell_type::num_dim==2, Sophus::SE2&lt; typename ndt_cell_type::scalar_type &gt;, Sophus::SE3&lt; typename ndt_cell_type::scalar_type &gt; &gt; state_type</div></div>
+<div class="ttc" id="aclassbeluga_1_1SparseValueGrid_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a></div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1BaseAMCLNode_html"><div class="ttname"><a href="classbeluga__amcl_1_1BaseAMCLNode.html">beluga_amcl::BaseAMCLNode</a></div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:55</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html">beluga_amcl::NdtAmclNode3D</a></div><div class="ttdoc">3D NDT AMCL as a ROS 2 composable lifecycle node.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:81</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a0b78851c4fb56d364bb9f2de249c3c31"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a0b78851c4fb56d364bb9f2de249c3c31">beluga_amcl::NdtAmclNode3D::last_known_estimate_</a></div><div class="ttdeci">std::optional&lt; std::pair&lt; Sophus::SE3d, Sophus::Matrix6d &gt; &gt; last_known_estimate_</div><div class="ttdoc">Last known pose estimate, if any.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:140</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a2a5b2778e0526f85804a410881f107cf"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a2a5b2778e0526f85804a410881f107cf">beluga_amcl::NdtAmclNode3D::enable_tf_broadcast_</a></div><div class="ttdeci">bool enable_tf_broadcast_</div><div class="ttdoc">Whether to broadcast transforms or not.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:144</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a4487791f4c97becabaabefdc43f7f8f1"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a4487791f4c97becabaabefdc43f7f8f1">beluga_amcl::NdtAmclNode3D::do_activate</a></div><div class="ttdeci">void do_activate(const rclcpp_lifecycle::State &amp;) override</div><div class="ttdoc">Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a53952270e195a2558bebfac6220a28cd"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a53952270e195a2558bebfac6220a28cd">beluga_amcl::NdtAmclNode3D::laser_scan_sub_</a></div><div class="ttdeci">std::unique_ptr&lt; message_filters::Subscriber&lt; sensor_msgs::msg::PointCloud2, rclcpp_lifecycle::LifecycleNode &gt; &gt; laser_scan_sub_</div><div class="ttdoc">Laser scan updates subscription.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:130</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a5bd805a2963d186cb28ea2bfa9b01883"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a5bd805a2963d186cb28ea2bfa9b01883">beluga_amcl::NdtAmclNode3D::laser_scan_filter_</a></div><div class="ttdeci">std::unique_ptr&lt; tf2_ros::MessageFilter&lt; sensor_msgs::msg::PointCloud2 &gt; &gt; laser_scan_filter_</div><div class="ttdoc">Transform synchronization filter for laser scan updates.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:133</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a848fc41f049633c3d33cbc594fa0f299"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a848fc41f049633c3d33cbc594fa0f299">beluga_amcl::NdtAmclNode3D::get_motion_model</a></div><div class="ttdeci">auto get_motion_model() const -&gt; MotionModelVariant</div><div class="ttdoc">Get motion model as per current parametrization.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a8c2ba756702b8f5010c31fc1fca659e1"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a8c2ba756702b8f5010c31fc1fca659e1">beluga_amcl::NdtAmclNode3D::initialize_from_estimate</a></div><div class="ttdeci">bool initialize_from_estimate(const std::pair&lt; Sophus::SE3d, Sophus::Matrix6d &gt; &amp;estimate)</div><div class="ttdoc">Initialize particles from an estimated pose and covariance.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a94d7462b4e71479b3b05505816fe52a7"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a94d7462b4e71479b3b05505816fe52a7">beluga_amcl::NdtAmclNode3D::NdtAmclNode3D</a></div><div class="ttdeci">NdtAmclNode3D(const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions{})</div><div class="ttdoc">Constructor.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a9622e984f3a63c7bc55d0ca73fd82c0e"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a9622e984f3a63c7bc55d0ca73fd82c0e">beluga_amcl::NdtAmclNode3D::do_deactivate</a></div><div class="ttdeci">void do_deactivate(const rclcpp_lifecycle::State &amp;) override</div><div class="ttdoc">Callback for lifecycle transitions from the ACTIVE state to the INACTIVE state.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_a9e6457de98080183405cce40cedf270d"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#a9e6457de98080183405cce40cedf270d">beluga_amcl::NdtAmclNode3D::laser_scan_connection_</a></div><div class="ttdeci">message_filters::Connection laser_scan_connection_</div><div class="ttdoc">Connection for laser scan updates filter and callback.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:135</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_aa9597475d2ddc084da7c508ec84f8ece"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#aa9597475d2ddc084da7c508ec84f8ece">beluga_amcl::NdtAmclNode3D::get_sensor_model</a></div><div class="ttdeci">beluga::NDTSensorModel&lt; NDTMapRepresentation &gt; get_sensor_model() const</div><div class="ttdoc">Get sensor model as per current parametrization.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_aac6859100b952b8c3952acd6d9d494be"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#aac6859100b952b8c3952acd6d9d494be">beluga_amcl::NdtAmclNode3D::laser_callback</a></div><div class="ttdeci">void laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr)</div><div class="ttdoc">Callback for laser scan updates.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_aae7eedffffc4a44d3044dea23607a918"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#aae7eedffffc4a44d3044dea23607a918">beluga_amcl::NdtAmclNode3D::do_initial_pose_callback</a></div><div class="ttdeci">void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) override</div><div class="ttdoc">Callback for pose (re) initialization.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_ab085a321ab818354958837508209f6b5"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#ab085a321ab818354958837508209f6b5">beluga_amcl::NdtAmclNode3D::make_particle_filter</a></div><div class="ttdeci">auto make_particle_filter() const -&gt; std::unique_ptr&lt; NdtAmclVariant &gt;</div><div class="ttdoc">Instantiate particle filter given an initial occupancy grid map and the current parametrization.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_ab64d055b834b1d3ddee53816df14356d"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#ab64d055b834b1d3ddee53816df14356d">beluga_amcl::NdtAmclNode3D::get_initial_estimate</a></div><div class="ttdeci">auto get_initial_estimate() const -&gt; std::optional&lt; std::pair&lt; Sophus::SE3d, Sophus::Matrix6d &gt;&gt;</div><div class="ttdoc">Get initial pose estimate from parameters if set.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_acd9f25ffdf96391d8ce2dcb5acb485b7"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#acd9f25ffdf96391d8ce2dcb5acb485b7">beluga_amcl::NdtAmclNode3D::do_cleanup</a></div><div class="ttdeci">void do_cleanup(const rclcpp_lifecycle::State &amp;) override</div><div class="ttdoc">Callback for lifecycle transitions from the INACTIVE state to the UNCONFIGURED state.</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_ad497bfe6d02cd778bea7bbf39df314a8"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#ad497bfe6d02cd778bea7bbf39df314a8">beluga_amcl::NdtAmclNode3D::last_known_odom_transform_in_map_</a></div><div class="ttdeci">std::optional&lt; Sophus::SE3d &gt; last_known_odom_transform_in_map_</div><div class="ttdoc">Last known map to odom correction estimate, if any.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:142</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_aeab8ac0dd6f94e4e6e31f9ceafce6239"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#aeab8ac0dd6f94e4e6e31f9ceafce6239">beluga_amcl::NdtAmclNode3D::particle_filter_</a></div><div class="ttdeci">std::unique_ptr&lt; NdtAmclVariant &gt; particle_filter_</div><div class="ttdoc">Particle filter instance.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:138</div></div>
+<div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html_afd319c10a142c76c708301d42874f7b6"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html#afd319c10a142c76c708301d42874f7b6">beluga_amcl::NdtAmclNode3D::do_periodic_timer_callback</a></div><div class="ttdeci">void do_periodic_timer_callback() override</div><div class="ttdoc">Callback for periodic particle cloud updates.</div></div>
+<div class="ttc" id="alaser__scan_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/laser__scan_8hpp.html">laser_scan.hpp</a></div></div>
+<div class="ttc" id="anamespaceSophus_html"><div class="ttname"><a href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespaceSophus.html">Sophus</a></div></div>
+<div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html">beluga</a></div></div>
+<div class="ttc" id="anamespacebeluga_html_a7804cf035e3e2c218773a71ee9f3b0de"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a></div><div class="ttdeci">Numeric&lt; double, struct WeightTag &gt; Weight</div></div>
+<div class="ttc" id="andt__amcl__node_8hpp_html_a35debd9cd28f41707bb122dc6f27736d"><div class="ttname"><a href="ndt__amcl__node_8hpp.html#a35debd9cd28f41707bb122dc6f27736d">beluga_amcl::MotionModelVariant</a></div><div class="ttdeci">std::variant&lt; beluga::DifferentialDriveModel2d, beluga::StationaryModel, beluga::OmnidirectionalDriveModel &gt; MotionModelVariant</div><div class="ttdoc">Supported motion models.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node.hpp:94</div></div>
+<div class="ttc" id="andt__amcl__node_8hpp_html_a82dbb2d02fdc9998c479c6d5b3948283"><div class="ttname"><a href="ndt__amcl__node_8hpp.html#a82dbb2d02fdc9998c479c6d5b3948283">beluga_amcl::NDTMapRepresentation</a></div><div class="ttdeci">beluga::SparseValueGrid2&lt; std::unordered_map&lt; Eigen::Vector2i, beluga::NDTCell2d, beluga::detail::CellHasher&lt; 2 &gt; &gt;&gt; NDTMapRepresentation</div><div class="ttdoc">Underlying map representation for the NDT sensor model.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node.hpp:66</div></div>
+<div class="ttc" id="andt__amcl__node_8hpp_html_aa6ba96a699dd60beedea43a64b5f3c2f"><div class="ttname"><a href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">beluga_amcl::NdtAmclVariant</a></div><div class="ttdeci">std::variant&lt; NdtAmcl&lt; beluga::StationaryModel, std::execution::parallel_policy &gt;, NdtAmcl&lt; beluga::StationaryModel, std::execution::sequenced_policy &gt;, NdtAmcl&lt; beluga::DifferentialDriveModel2d, std::execution::parallel_policy &gt;, NdtAmcl&lt; beluga::DifferentialDriveModel2d, std::execution::sequenced_policy &gt;, NdtAmcl&lt; beluga::OmnidirectionalDriveModel, std::execution::parallel_policy &gt;, NdtAmcl&lt; beluga::OmnidirectionalDriveModel, std::execution::sequenced_policy &gt; &gt; NdtAmclVariant</div><div class="ttdoc">All combinations of supported NDT AMCL variants.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node.hpp:90</div></div>
+<div class="ttc" id="andt__amcl__node_8hpp_html_abdbc8a9bd8694d5d2b63d83a43f7ca30"><div class="ttname"><a href="ndt__amcl__node_8hpp.html#abdbc8a9bd8694d5d2b63d83a43f7ca30">beluga_amcl::RandomStateGenerator</a></div><div class="ttdeci">std::function&lt; std::function&lt; beluga::NDTSensorModel&lt; NDTMapRepresentation &gt;::state_type()&gt;(const beluga::TupleVector&lt; std::tuple&lt; beluga::NDTSensorModel&lt; NDTMapRepresentation &gt;::state_type, beluga::Weight &gt; &gt;)&gt; RandomStateGenerator</div><div class="ttdoc">Type of a particle-dependent random state generator.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node.hpp:70</div></div>
+<div class="ttc" id="andt__amcl__node__3d_8hpp_html_aeacd155c7f9687b6d5ff814f09714e58"><div class="ttname"><a href="ndt__amcl__node__3d_8hpp.html#aeacd155c7f9687b6d5ff814f09714e58">beluga_amcl::StateType</a></div><div class="ttdeci">typename beluga::NDTSensorModel&lt; NDTMapRepresentation &gt;::state_type StateType</div><div class="ttdoc">State type for the particles.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:57</div></div>
+<div class="ttc" id="astructstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ekumen Research
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 Ekumen, Inc..
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on &#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

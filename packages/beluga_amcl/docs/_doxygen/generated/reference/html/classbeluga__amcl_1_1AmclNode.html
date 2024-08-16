@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;"/>
   </head>
   
   
@@ -437,7 +437,6 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classbeluga__amcl_1_1AmclNode-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -516,10 +515,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a9f964e31e1d592f2909156d3deaa417e">do_periodic_timer_callback</a> () override</td></tr>
 <tr class="memdesc:a9f964e31e1d592f2909156d3deaa417e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for periodic particle cloud updates. <br /></td></tr>
 <tr class="separator:a9f964e31e1d592f2909156d3deaa417e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4234394f4df6d4a816ec3c2213f63618"><td class="memItemLeft" align="right" valign="top"><a id="a4234394f4df6d4a816ec3c2213f63618"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a4234394f4df6d4a816ec3c2213f63618">do_autostart_callback</a> () override</td></tr>
-<tr class="memdesc:a4234394f4df6d4a816ec3c2213f63618"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for node to configure and activate itself. <br /></td></tr>
-<tr class="separator:a4234394f4df6d4a816ec3c2213f63618"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a000ad7e3f576131d90d7ed66b94d652e"><td class="memItemLeft" align="right" valign="top"><a id="a000ad7e3f576131d90d7ed66b94d652e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a000ad7e3f576131d90d7ed66b94d652e">laser_callback</a> (sensor_msgs::msg::LaserScan::ConstSharedPtr)</td></tr>
 <tr class="memdesc:a000ad7e3f576131d90d7ed66b94d652e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for laser scan updates. <br /></td></tr>
@@ -563,6 +558,10 @@ CallbackReturn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 CallbackReturn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a6943f1f5e17278589a83fe71165609a2">on_shutdown</a> (const rclcpp_lifecycle::State &amp;) override</td></tr>
 <tr class="memdesc:a6943f1f5e17278589a83fe71165609a2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for lifecycle transitions from most states to the FINALIZED state. <br /></td></tr>
 <tr class="separator:a6943f1f5e17278589a83fe71165609a2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3da30216e2805f86a0a945e5daa9ca9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="aa3da30216e2805f86a0a945e5daa9ca9"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#aa3da30216e2805f86a0a945e5daa9ca9">get_execution_policy</a> () const -&gt; <a class="el" href="ndt__amcl__node_8hpp.html#a20a6813586f56b33cebd9dbe32713d5e">ExecutionPolicyVariant</a></td></tr>
+<tr class="memdesc:aa3da30216e2805f86a0a945e5daa9ca9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get execution policy from parameters. <br /></td></tr>
+<tr class="separator:aa3da30216e2805f86a0a945e5daa9ca9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9f2cea1a98d12277eb07454b4031af9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="ae9f2cea1a98d12277eb07454b4031af9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ae9f2cea1a98d12277eb07454b4031af9">periodic_timer_callback</a> ()</td></tr>
 <tr class="memdesc:ae9f2cea1a98d12277eb07454b4031af9 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for the periodic particle updates. <br /></td></tr>
@@ -571,6 +570,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a092106befa33dc59582ee5d5c5576092">autostart_callback</a> ()</td></tr>
 <tr class="memdesc:a092106befa33dc59582ee5d5c5576092 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for the autostart timer. <br /></td></tr>
 <tr class="separator:a092106befa33dc59582ee5d5c5576092 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad36206a8f483715987d967136cdc8aa2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="ad36206a8f483715987d967136cdc8aa2"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ad36206a8f483715987d967136cdc8aa2">do_autostart_callback</a> ()</td></tr>
+<tr class="memdesc:ad36206a8f483715987d967136cdc8aa2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">User provided extra steps for the autostart process. <br /></td></tr>
+<tr class="separator:ad36206a8f483715987d967136cdc8aa2 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a146afa75ee718c1aa089559ffa4a91e0 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a146afa75ee718c1aa089559ffa4a91e0"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a146afa75ee718c1aa089559ffa4a91e0">do_configure</a> ([[maybe_unused]] const rclcpp_lifecycle::State &amp;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>)</td></tr>
 <tr class="memdesc:a146afa75ee718c1aa089559ffa4a91e0 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra steps for the on_configure callback. Defaults to no-op. <br /></td></tr>
@@ -599,13 +602,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ab3a56093a25e45eaea077fa854bbaea7">initial_pose_callback</a> (geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message)</td></tr>
 <tr class="memdesc:ab3a56093a25e45eaea077fa854bbaea7 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for (re)initialization messages. <br /></td></tr>
 <tr class="separator:ab3a56093a25e45eaea077fa854bbaea7 inherit pro_methods_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
-Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:a42e551eeed6cef60935f05f76d9bb39e"><td class="memItemLeft" align="right" valign="top"><a id="a42e551eeed6cef60935f05f76d9bb39e"></a>
-static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a42e551eeed6cef60935f05f76d9bb39e">get_execution_policy</a> (std::string_view) -&gt; <a class="elRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">beluga_ros::Amcl::execution_policy_variant</a></td></tr>
-<tr class="memdesc:a42e551eeed6cef60935f05f76d9bb39e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get execution policy given its name. <br /></td></tr>
-<tr class="separator:a42e551eeed6cef60935f05f76d9bb39e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -826,7 +822,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;.
+  Last updated on &#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;.
   <br/>
 </p>
   </div>

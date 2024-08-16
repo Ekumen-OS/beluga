@@ -1,9 +1,13 @@
 <map id="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp" name="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/tf2_sophus.hpp">
-<area shape="rect" id="node1" title="Message conversion API overloads for Sophus types." alt="" coords="278,5,478,61"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,109,111,136"/>
-<area shape="rect" id="node3" title=" " alt="" coords="135,109,219,136"/>
-<area shape="rect" id="node4" title=" " alt="" coords="243,109,366,136"/>
-<area shape="rect" id="node5" title=" " alt="" coords="390,109,513,136"/>
-<area shape="rect" id="node6" title=" " alt="" coords="537,109,673,136"/>
-<area shape="rect" id="node7" href="$messages_8hpp_source.html" title=" " alt="" coords="697,109,888,136"/>
+<area shape="rect" id="node1" title="Message conversion API overloads for Sophus types." alt="" coords="718,5,918,61"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,117,111,143"/>
+<area shape="rect" id="node3" title=" " alt="" coords="135,117,219,143"/>
+<area shape="rect" id="node4" title=" " alt="" coords="243,109,447,151"/>
+<area shape="rect" id="node5" title=" " alt="" coords="471,117,696,143"/>
+<area shape="rect" id="node6" title=" " alt="" coords="720,117,783,143"/>
+<area shape="rect" id="node7" title=" " alt="" coords="807,117,965,143"/>
+<area shape="rect" id="node8" title=" " alt="" coords="989,117,1111,143"/>
+<area shape="rect" id="node9" title=" " alt="" coords="1135,117,1258,143"/>
+<area shape="rect" id="node10" title=" " alt="" coords="1282,117,1418,143"/>
+<area shape="rect" id="node11" href="$messages_8hpp_source.html" title=" " alt="" coords="1443,117,1633,143"/>
 </map>

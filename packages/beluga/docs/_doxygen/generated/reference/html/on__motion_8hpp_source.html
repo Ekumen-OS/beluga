@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;"/>
   </head>
   
   
@@ -455,88 +455,113 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_POLICIES_ON_MOTION_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_POLICIES_ON_MOTION_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;beluga/policies/policy.hpp&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>beluga::policies {</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;Eigen/src/Geometry/AngleAxis.h&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;beluga/policies/policy.hpp&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;sophus/se2.hpp&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;sophus/se3.hpp&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>beluga::policies {</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span>detail {</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Pose&gt;</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">   35</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base</a>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Pose&gt;</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">   37</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base</a>;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html">   42</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base</a>&lt;Sophus::SE2&lt;Scalar&gt;&gt; {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a7635bba21c07ecedbdc84a630e4fc69c">   49</a></span>&#160;  constexpr <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a7635bba21c07ecedbdc84a630e4fc69c">on_motion_policy_base</a>(Scalar min_distance, Scalar min_angle)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      : min_distance_(min_distance), min_angle_(min_angle) {}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html">   44</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base</a>&lt;Sophus::SE2&lt;Scalar&gt;&gt; {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a7635bba21c07ecedbdc84a630e4fc69c">   51</a></span>&#160;  constexpr <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a7635bba21c07ecedbdc84a630e4fc69c">on_motion_policy_base</a>(Scalar min_distance, Scalar min_angle)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      : min_distance_(min_distance), min_angle_(min_angle) {}</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ac36600763c7e6df543d8a35fca493dc6">   61</a></span>&#160;  constexpr <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ac36600763c7e6df543d8a35fca493dc6">operator()</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; prev, <span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; current) {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> delta = prev.inverse() * current;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> std::abs(delta.translation().x()) &gt; min_distance_ ||  <span class="comment">//</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;           std::abs(delta.translation().y()) &gt; min_distance_ ||  <span class="comment">//</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;           std::abs(delta.so2().log()) &gt; min_angle_;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  }</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  Scalar min_distance_{0.0};  </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  Scalar min_angle_{0.0};     </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;};</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Pose&gt;</div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html">   78</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html">on_motion_policy</a> : <span class="keyword">public</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base</a>&lt;Pose&gt; {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base&lt;Pose&gt;::on_motion_policy_base</a>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base&lt;Pose&gt;::operator</a>();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ac36600763c7e6df543d8a35fca493dc6">   63</a></span>&#160;  constexpr <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ac36600763c7e6df543d8a35fca493dc6">operator()</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; prev, <span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; current) {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> delta = prev.inverse() * current;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> delta.translation().norm() &gt; min_distance_ ||  <span class="comment">//</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;           std::abs(delta.so2().log()) &gt; min_angle_;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  Scalar min_distance_{0.0};  </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  Scalar min_angle_{0.0};     </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html">   79</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base</a>&lt;Sophus::SE3&lt;Scalar&gt;&gt; {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a13815a93b8b9f2754055b76325e55dac">   84</a></span>&#160;  constexpr <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a13815a93b8b9f2754055b76325e55dac">operator()</a>(<span class="keyword">const</span> Pose&amp; pose) {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">if</span> (!latest_pose_) {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      latest_pose_ = pose;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> moved = (*this)(*latest_pose_, pose);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">if</span> (moved) {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      latest_pose_ = pose;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">return</span> moved;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  std::optional&lt;Pose&gt; latest_pose_;  </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;};</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html">  103</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html">on_motion_fn</a> {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#ae508e9927bcb40dd34915237c7e840b6">  109</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#ae508e9927bcb40dd34915237c7e840b6">operator()</a>(Scalar min_distance, Scalar min_angle)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespacebeluga.html#aff8f47028f19c4ca9fbc4ef0473c8fdd">beluga::make_policy</a>(<a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html">on_motion_policy</a>&lt;Sophus::SE2&lt;Scalar&gt;&gt;{min_distance, min_angle});</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  }</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;};</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;}  <span class="comment">// namespace detail</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="on__motion_8hpp.html#a54bb57da3afb678567632c2c8362afb8">  121</a></span>&#160;<span class="keyword">inline</span> constexpr <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html">detail::on_motion_fn</a> <a class="code" href="on__motion_8hpp.html#a54bb57da3afb678567632c2c8362afb8">on_motion</a>;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}  <span class="comment">// namespace beluga::policies</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html#acf19bce8d58ff6dd5b5c86fd8a1e165f">   86</a></span>&#160;  constexpr <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html#acf19bce8d58ff6dd5b5c86fd8a1e165f">on_motion_policy_base</a>(Scalar min_distance, Scalar min_angle)</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      : min_distance_(min_distance), min_angle_(min_angle) {}</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html#a846f3781c0c1055bc1869b9b4aa032e0">   98</a></span>&#160;  constexpr <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html#a846f3781c0c1055bc1869b9b4aa032e0">operator()</a>(<span class="keyword">const</span> Sophus::SE3&lt;Scalar&gt;&amp; prev, <span class="keyword">const</span> Sophus::SE3&lt;Scalar&gt;&amp; current) {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> delta = prev.inverse() * current;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keyword">const</span> Eigen::AngleAxis&lt;Scalar&gt; angle_axis{delta.so3().unit_quaternion()};</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">return</span> delta.translation().norm() &gt; min_distance_ ||  <span class="comment">//</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;           std::abs(angle_axis.angle()) &gt; min_angle_;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  }</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  Scalar min_distance_{0.0};  </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  Scalar min_angle_{0.0};     </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;};</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Pose&gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html">  115</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html">on_motion_policy</a> : <span class="keyword">public</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base</a>&lt;Pose&gt; {</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base&lt;Pose&gt;::on_motion_policy_base</a>;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keyword">using</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">on_motion_policy_base&lt;Pose&gt;::operator</a>();</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a13815a93b8b9f2754055b76325e55dac">  121</a></span>&#160;  constexpr <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a13815a93b8b9f2754055b76325e55dac">operator()</a>(<span class="keyword">const</span> Pose&amp; pose) {</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">if</span> (!latest_pose_) {</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;      latest_pose_ = pose;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    }</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> moved = (*this)(*latest_pose_, pose);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordflow">if</span> (moved) {</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;      latest_pose_ = pose;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">return</span> moved;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  }</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;  std::optional&lt;Pose&gt; latest_pose_;  </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;};</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> StateType = Sophus::SE2d&gt;</div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html">  141</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html">on_motion_fn</a> {</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno"><a class="line" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#a7d0a2d00f25799ca63b1e2244d5df179">  146</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#a7d0a2d00f25799ca63b1e2244d5df179">operator()</a>(<span class="keyword">typename</span> StateType::Scalar min_distance, <span class="keyword">typename</span> StateType::Scalar min_angle)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespacebeluga.html#aff8f47028f19c4ca9fbc4ef0473c8fdd">beluga::make_policy</a>(<a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html">on_motion_policy&lt;StateType&gt;</a>{min_distance, min_angle});</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  }</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;};</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> StateType = Sophus::SE2d&gt;</div>
+<div class="line"><a name="l00161"></a><span class="lineno"><a class="line" href="on__motion_8hpp.html#a5a3cdd84aa621384e40a80b2fe395132">  161</a></span>&#160;<span class="keyword">inline</span> constexpr <a class="code" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html">detail::on_motion_fn&lt;StateType&gt;</a> <a class="code" href="on__motion_8hpp.html#a5a3cdd84aa621384e40a80b2fe395132">on_motion</a>;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;}  <span class="comment">// namespace beluga::policies</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacebeluga_html_aff8f47028f19c4ca9fbc4ef0473c8fdd"><div class="ttname"><a href="namespacebeluga.html#aff8f47028f19c4ca9fbc4ef0473c8fdd">beluga::make_policy</a></div><div class="ttdeci">constexpr detail::make_policy_fn make_policy</div><div class="ttdoc">Make policy function objects.</div><div class="ttdef"><b>Definition:</b> policy.hpp:42</div></div>
-<div class="ttc" id="aon__motion_8hpp_html_a54bb57da3afb678567632c2c8362afb8"><div class="ttname"><a href="on__motion_8hpp.html#a54bb57da3afb678567632c2c8362afb8">beluga::policies::on_motion</a></div><div class="ttdeci">constexpr detail::on_motion_fn on_motion</div><div class="ttdoc">Policy that triggers an action based on motion.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:121</div></div>
-<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__fn_html"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html">beluga::policies::detail::on_motion_fn</a></div><div class="ttdoc">Implementation detail for the on_motion_fn object.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:103</div></div>
-<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__fn_html_ae508e9927bcb40dd34915237c7e840b6"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#ae508e9927bcb40dd34915237c7e840b6">beluga::policies::detail::on_motion_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Scalar min_distance, Scalar min_angle) const</div><div class="ttdoc">Overload that creates the policy closure in SE2 space.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:109</div></div>
-<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4_html_a7635bba21c07ecedbdc84a630e4fc69c"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a7635bba21c07ecedbdc84a630e4fc69c">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE2&lt; Scalar &gt; &gt;::on_motion_policy_base</a></div><div class="ttdeci">constexpr on_motion_policy_base(Scalar min_distance, Scalar min_angle)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:49</div></div>
-<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4_html_ac36600763c7e6df543d8a35fca493dc6"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ac36600763c7e6df543d8a35fca493dc6">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE2&lt; Scalar &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr bool operator()(const Sophus::SE2&lt; Scalar &gt; &amp;prev, const Sophus::SE2&lt; Scalar &gt; &amp;current)</div><div class="ttdoc">Return true if motion has been detected.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:61</div></div>
-<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_html"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">beluga::policies::detail::on_motion_policy_base</a></div><div class="ttdoc">Primary template for the on_motion_policy_base class.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:35</div></div>
-<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy_html"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html">beluga::policies::detail::on_motion_policy</a></div><div class="ttdoc">Base implementation for the on_motion_policy algorithm.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:78</div></div>
-<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy_html_a13815a93b8b9f2754055b76325e55dac"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a13815a93b8b9f2754055b76325e55dac">beluga::policies::detail::on_motion_policy::operator()</a></div><div class="ttdeci">constexpr bool operator()(const Pose &amp;pose)</div><div class="ttdoc">Return true if motion has been detected.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:84</div></div>
+<div class="ttc" id="aon__motion_8hpp_html_a5a3cdd84aa621384e40a80b2fe395132"><div class="ttname"><a href="on__motion_8hpp.html#a5a3cdd84aa621384e40a80b2fe395132">beluga::policies::on_motion</a></div><div class="ttdeci">constexpr detail::on_motion_fn&lt; StateType &gt; on_motion</div><div class="ttdoc">Policy that triggers an action based on motion.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:161</div></div>
+<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__fn_html"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html">beluga::policies::detail::on_motion_fn</a></div><div class="ttdoc">Implementation detail for the on_motion_fn object.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:141</div></div>
+<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__fn_html_a7d0a2d00f25799ca63b1e2244d5df179"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#a7d0a2d00f25799ca63b1e2244d5df179">beluga::policies::detail::on_motion_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(typename StateType::Scalar min_distance, typename StateType::Scalar min_angle) const</div><div class="ttdoc">Overload that creates the policy closure in the state space.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:146</div></div>
+<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4_html_a7635bba21c07ecedbdc84a630e4fc69c"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a7635bba21c07ecedbdc84a630e4fc69c">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE2&lt; Scalar &gt; &gt;::on_motion_policy_base</a></div><div class="ttdeci">constexpr on_motion_policy_base(Scalar min_distance, Scalar min_angle)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:51</div></div>
+<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4_html_ac36600763c7e6df543d8a35fca493dc6"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ac36600763c7e6df543d8a35fca493dc6">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE2&lt; Scalar &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr bool operator()(const Sophus::SE2&lt; Scalar &gt; &amp;prev, const Sophus::SE2&lt; Scalar &gt; &amp;current)</div><div class="ttdoc">Return true if motion has been detected.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:63</div></div>
+<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4_html_a846f3781c0c1055bc1869b9b4aa032e0"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html#a846f3781c0c1055bc1869b9b4aa032e0">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE3&lt; Scalar &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr bool operator()(const Sophus::SE3&lt; Scalar &gt; &amp;prev, const Sophus::SE3&lt; Scalar &gt; &amp;current)</div><div class="ttdoc">Return true if motion has been detected.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:98</div></div>
+<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4_html_acf19bce8d58ff6dd5b5c86fd8a1e165f"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html#acf19bce8d58ff6dd5b5c86fd8a1e165f">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE3&lt; Scalar &gt; &gt;::on_motion_policy_base</a></div><div class="ttdeci">constexpr on_motion_policy_base(Scalar min_distance, Scalar min_angle)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:86</div></div>
+<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_html"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html">beluga::policies::detail::on_motion_policy_base</a></div><div class="ttdoc">Primary template for the on_motion_policy_base class.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:37</div></div>
+<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy_html"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html">beluga::policies::detail::on_motion_policy</a></div><div class="ttdoc">Base implementation for the on_motion_policy algorithm.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:115</div></div>
+<div class="ttc" id="astructbeluga_1_1policies_1_1detail_1_1on__motion__policy_html_a13815a93b8b9f2754055b76325e55dac"><div class="ttname"><a href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a13815a93b8b9f2754055b76325e55dac">beluga::policies::detail::on_motion_policy::operator()</a></div><div class="ttdeci">constexpr bool operator()(const Pose &amp;pose)</div><div class="ttdoc">Return true if motion has been detected.</div><div class="ttdef"><b>Definition:</b> on_motion.hpp:121</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -593,7 +618,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 13 15:57:45 2024 -0300, d23d446&#39;.
+  Last updated on &#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;.
   <br/>
 </p>
   </div>
