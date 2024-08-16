@@ -35,6 +35,7 @@ setup(
         'console_scripts': [
             'ply_to_ndt = beluga_tools.ply_to_ndt:main',
             'occupancy_grid_to_ndt = beluga_tools.occupancy_grid_to_ndt:main',
+            'scan_aggregator = beluga_tools.scan_aggregator:main',
         ]
     },
 )

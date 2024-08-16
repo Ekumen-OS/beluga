@@ -6,7 +6,7 @@
 
   <description>Set of miscellaneous tools to work with beluga.</description>
 
-  <maintainer email="serraramiro@ekumenlabs.com">Ramiro Serra</maintainer>
+  <maintainer email="serraramiro1@gmail.com">Ramiro Serra</maintainer>
 
   <license>Apache License 2.0</license>
 
@@ -21,7 +21,10 @@
   <exec_depend condition="$ROS_VERSION == 2">python3-numpy</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">python3-scipy</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">python-plyfile-pip</exec_depend>
-  <test_depend condition="$ROS_VERSION == 2">python3-pytest-cov</test_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-pytest-cov</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">python3-open3d</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">tf2_tools</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">rosbag2_py</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>
