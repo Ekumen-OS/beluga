@@ -37,7 +37,7 @@ def get_launch_arguments():
     return [
         DeclareLaunchArgument(
             name='localization_plugin',
-            default_value='beluga_amcl::NdtAmclNode',
+            default_value='beluga_amcl::NdtMclNode',
             description='Localization node plugin to use if composition is enabled. ',
         ),
         DeclareLaunchArgument(
@@ -90,9 +90,9 @@ def generate_launch_description(
         actions=[
             *get_node_with_arguments_declared_from_params_file(
                 package='beluga_amcl',
-                executable='ndt_amcl_node',
+                executable='ndt_mcl_node',
                 namespace='',
-                name='ndt_amcl',
+                name='ndt_mcl',
                 output='screen',
                 arguments=['--ros-args', '--log-level', 'info'],
                 prefix=localization_prefix,
@@ -100,7 +100,7 @@ def generate_launch_description(
                 extra_params={'map_path': localization_ndt_map},
             ),
             # Only used for map visualization in RVIZ, since the NDT map is loaded
-            # internally by the AMCL node.
+            # internally by the MCL node.
             Node(
                 package='nav2_map_server',
                 executable='map_server',
@@ -123,7 +123,7 @@ def generate_launch_description(
                 sigkill_timeout='20',
                 parameters=[
                     {'autostart': True},
-                    {'node_names': ['map_server', 'ndt_amcl']},
+                    {'node_names': ['map_server', 'ndt_mcl']},
                 ],
             ),
         ]
@@ -140,7 +140,7 @@ def generate_launch_description(
                     ComposableNode(
                         package='beluga_amcl',
                         plugin=localization_plugin,
-                        name='ndt_amcl',
+                        name='ndt_mcl',
                         parameters=[localization_params_file],
                     ),
                     ComposableNode(
@@ -157,7 +157,7 @@ def generate_launch_description(
                         name='lifecycle_manager_localization',
                         parameters=[
                             {'autostart': True},
-                            {'node_names': ['map_server', 'ndt_amcl']},
+                            {'node_names': ['map_server', 'ndt_mcl']},
                         ],
                     ),
                 ],

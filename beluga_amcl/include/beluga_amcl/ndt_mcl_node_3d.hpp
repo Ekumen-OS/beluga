@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP
-#define BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP
+#ifndef BELUGA_AMCL_NDT_MCL_NODE_3D_HPP
+#define BELUGA_AMCL_NDT_MCL_NODE_3D_HPP
 
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/message_filter.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 
-#include <beluga/algorithm/amcl_core.hpp>
 #include <beluga/beluga.hpp>
 
 #include <execution>
@@ -56,32 +55,28 @@ using NDTMapRepresentation =
 /// State type for the particles.
 using StateType = typename beluga::NDTSensorModel<NDTMapRepresentation>::state_type;
 
-/// Type of a particle-dependent random state generator.
-using RandomStateGenerator = std::function<StateType()>;
-
 /// Partial specialization of the core AMCL pipeline for convinience.
 template <class MotionModel, class ExecutionPolicy>
-using NdtAmcl = beluga::Amcl<
+using NdtMcl = beluga::Mcl<
     MotionModel,
     beluga::NDTSensorModel<NDTMapRepresentation>,
-    RandomStateGenerator,
     beluga::Weight,
     std::tuple<StateType, beluga::Weight>,
     ExecutionPolicy>;
 
 /// All combinations of supported 3D NDT AMCL variants.
-using NdtAmclVariant = std::variant<
-    NdtAmcl<beluga::DifferentialDriveModel3d, std::execution::parallel_policy>,  //
-    NdtAmcl<beluga::DifferentialDriveModel3d, std::execution::sequenced_policy>>;
+using NdtMcl3DVariant = std::variant<
+    NdtMcl<beluga::DifferentialDriveModel3d, std::execution::parallel_policy>,  //
+    NdtMcl<beluga::DifferentialDriveModel3d, std::execution::sequenced_policy>>;
 
 /// Supported motion models.
 using MotionModelVariant = std::variant<beluga::DifferentialDriveModel3d>;
 
-/// 3D NDT AMCL as a ROS 2 composable lifecycle node.
-class NdtAmclNode3D : public BaseAMCLNode {
+/// 3D NDT MCL as a ROS 2 composable lifecycle node.
+class NdtMclNode3D : public BaseMCLNode {
  public:
   /// Constructor.
-  explicit NdtAmclNode3D(const rclcpp::NodeOptions& options = rclcpp::NodeOptions{});
+  explicit NdtMclNode3D(const rclcpp::NodeOptions& options = rclcpp::NodeOptions{});
 
  protected:
   /// Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state.
@@ -103,7 +98,7 @@ class NdtAmclNode3D : public BaseAMCLNode {
   beluga::NDTSensorModel<NDTMapRepresentation> get_sensor_model() const;
 
   /// Instantiate particle filter given an initial occupancy grid map and the current parametrization.
-  auto make_particle_filter() const -> std::unique_ptr<NdtAmclVariant>;
+  auto make_particle_filter() const -> std::unique_ptr<NdtMcl3DVariant>;
 
   /// Callback for periodic particle cloud updates.
   void do_periodic_timer_callback() override;
@@ -135,7 +130,7 @@ class NdtAmclNode3D : public BaseAMCLNode {
   message_filters::Connection laser_scan_connection_;
 
   /// Particle filter instance.
-  std::unique_ptr<NdtAmclVariant> particle_filter_;
+  std::unique_ptr<NdtMcl3DVariant> particle_filter_;
   /// Last known pose estimate, if any.
   std::optional<std::pair<Sophus::SE3d, Sophus::Matrix6d>> last_known_estimate_;
   /// Last known map to odom correction estimate, if any.
@@ -146,4 +141,4 @@ class NdtAmclNode3D : public BaseAMCLNode {
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP
+#endif  // BELUGA_AMCL_NDT_MCL_NODE_3D_HPP

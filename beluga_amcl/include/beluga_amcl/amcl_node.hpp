@@ -46,7 +46,7 @@
 namespace beluga_amcl {
 
 /// 2D AMCL as a ROS 2 composable lifecycle node.
-class AmclNode : public BaseAMCLNode {
+class AmclNode : public BaseMCLNode {
  public:
   using rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
