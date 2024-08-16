@@ -176,22 +176,6 @@ AmclNode::~AmclNode() {
   on_shutdown(get_current_state());
 }
 
-void AmclNode::do_autostart_callback() {
-  using lifecycle_msgs::msg::State;
-  auto current_state = configure();
-  if (current_state.id() != State::PRIMARY_STATE_INACTIVE) {
-    RCLCPP_WARN(get_logger(), "Failed to auto configure, shutting down");
-    shutdown();
-  }
-  RCLCPP_WARN(get_logger(), "Auto configured successfully");
-  current_state = activate();
-  if (current_state.id() != State::PRIMARY_STATE_ACTIVE) {
-    RCLCPP_WARN(get_logger(), "Failed to auto activate, shutting down");
-    shutdown();
-  }
-  RCLCPP_INFO(get_logger(), "Auto activated successfully");
-}
-
 void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
   {
     map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
@@ -331,16 +315,6 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
   throw std::invalid_argument(std::string("Invalid sensor model: ") + std::string(name));
 }
 
-auto AmclNode::get_execution_policy(std::string_view name) -> beluga_ros::Amcl::execution_policy_variant {
-  if (name == "seq") {
-    return std::execution::seq;
-  }
-  if (name == "par") {
-    return std::execution::par;
-  }
-  throw std::invalid_argument("Execution policy must be seq or par.");
-}
-
 auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map) const
     -> std::unique_ptr<beluga_ros::Amcl> {
   auto params = beluga_ros::AmclParams{};
@@ -363,7 +337,7 @@ auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map)
       get_motion_model(get_parameter("robot_model_type").as_string()),       //
       get_sensor_model(get_parameter("laser_model_type").as_string(), map),  //
       params,                                                                //
-      get_execution_policy(get_parameter("execution_policy").as_string()));
+      get_execution_policy());
 }
 
 void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {

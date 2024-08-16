@@ -15,6 +15,7 @@
 #ifndef BELUGA_AMCL_ROS2_COMMON_HPP
 #define BELUGA_AMCL_ROS2_COMMON_HPP
 
+#include <execution>
 #include <rclcpp/node_options.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <rclcpp_lifecycle/state.hpp>
@@ -46,6 +47,8 @@ constexpr std::string_view kStationaryModelName = "stationary";
 constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::DifferentialMotionModel";
 /// String identifier for a omnidirectional model name.
 constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
+/// Supported execution policies.
+using ExecutionPolicyVariant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 
 /// Base AMCL lifecycle node, with some basic common functionalities, such as transform tree utilities, common
 /// publishers, subscribers, lifecycle related callbacks and configuration points, enabling extension by inheritance.
@@ -75,6 +78,9 @@ class BaseAMCLNode : public rclcpp_lifecycle::LifecycleNode {
 
   /// Callback for lifecycle transitions from most states to the FINALIZED state.
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State&) override;
+
+  /// Get execution policy from parameters.
+  auto get_execution_policy() const -> ExecutionPolicyVariant;
 
   /// Callback for the periodic particle updates.
   void periodic_timer_callback();

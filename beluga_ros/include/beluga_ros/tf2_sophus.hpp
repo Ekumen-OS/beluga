@@ -17,6 +17,10 @@
 
 #include <tf2/convert.h>
 #include <tf2/utils.h>
+#include <beluga/algorithm/unscented_transform.hpp>
+#include <beluga/eigen_compatibility.hpp>
+#include <cmath>
+#include <sophus/common.hpp>
 
 #if BELUGA_ROS_VERSION == 2
 #include <tf2_eigen/tf2_eigen.hpp>
@@ -38,6 +42,28 @@
  * \file
  * \brief Message conversion API overloads for `Sophus` types.
  */
+
+namespace detail {
+/// Converts a vector representing a tangent in se3 space, and returns a vector representing the same SE3 transform with
+/// extrinsic RPY parametrization.
+template <typename Scalar>
+inline Eigen::Vector<Scalar, 6> tangential_space_to_xyz_rpy(const Eigen::Vector<Scalar, 6>& tangent) {
+  // ROS covariances use extrinsic RPY parametrization, we need to convert to it from our tangent space
+  // representation. We use an unscented transform to apply such transform as it's non linear.
+  // See https://www.ros.org/reps/rep-0103.html#covariance-representation .
+  const auto se3 = Sophus::SE3<Scalar>::exp(tangent);
+  // Eigen's eulerAngles uses intrinsic rotations, but XYZ extrinsic rotation is the same as ZYX intrinsic rotation.
+  // See https://pages.github.berkeley.edu/EECS-106/fa21-site/assets/discussions/D1_Rotations_soln.pdf
+  // This gives (extrinsic) yaw, pitch, roll in that order.
+  const Eigen::Vector<Scalar, 3> euler_angles = se3.so3().matrix().eulerAngles(2, 1, 0);
+  Eigen::Vector<Scalar, 6> ret;
+  ret.template head<3>() = se3.translation();
+  ret[3] = euler_angles.z();
+  ret[4] = euler_angles.y();
+  ret[5] = euler_angles.x();
+  return ret;
+}
+}  // namespace detail
 
 /// `tf2` namespace extension for message conversion overload resolution.
 namespace tf2 {
@@ -242,6 +268,66 @@ inline Sophus::Matrix3<Scalar>& covarianceRowMajorToEigen(const Array<Scalar, 36
   out.coeffRef(2, 0) = in[30];
   out.coeffRef(2, 1) = in[31];
   out.coeffRef(2, 2) = in[35];
+  return out;
+}
+
+/// Converts an SE3 `pose` and its covariance to a ROS message.
+/// NOTE: Input covariance is expected to use tangent space parametrization, consistent with the one in beluga's \c
+/// estimation libraries.
+template <typename Scalar>
+inline beluga_ros::msg::PoseWithCovariance toMsg(
+    const Sophus::SE3<Scalar>& in,
+    const Eigen::Matrix<Scalar, 6, 6>& covariance) {
+  beluga_ros::msg::PoseWithCovariance out;
+  tf2::toMsg(in, out.pose);
+
+  // ROS covariances use extrinsic RPY parametrization, we need to convert to it from our tangent space
+  // representation. We use an unscented transform to apply such transform as it's non linear.
+  // See https://www.ros.org/reps/rep-0103.html#covariance-representation .
+
+  const auto& [base_pose_in_map_xyz_rpy, base_pose_covariance_xyz_rpy] = beluga::unscented_transform(
+      in.log(), covariance, detail::tangential_space_to_xyz_rpy<Scalar>, std::nullopt,
+      [](const std::vector<Eigen::Vector<Scalar, 6>>& samples, const std::vector<Scalar>& weights) {
+        Eigen::Vector<Scalar, 6> out = Eigen::Vector<Scalar, 6>::Zero();
+        Eigen::Vector<Scalar, 2> roll_aux = Eigen::Vector<Scalar, 2>::Zero();
+        Eigen::Vector<Scalar, 2> pitch_aux = Eigen::Vector<Scalar, 2>::Zero();
+        Eigen::Vector<Scalar, 2> yaw_aux = Eigen::Vector<Scalar, 2>::Zero();
+
+        for (const auto& [s, w] : ranges::views::zip(samples, weights)) {
+          out.template head<3>() += s.template head<3>() * w;
+          roll_aux.x() = std::sin(s[3]) * w;
+          roll_aux.y() = std::cos(s[3]) * w;
+          pitch_aux.x() = std::sin(s[4]) * w;
+          pitch_aux.y() = std::cos(s[4]) * w;
+          yaw_aux.x() = std::sin(s[5]) * w;
+          yaw_aux.y() = std::cos(s[5]) * w;
+        }
+
+        out[3] = std::atan2(roll_aux.x(), roll_aux.y());
+        out[4] = std::atan2(pitch_aux.x(), pitch_aux.y());
+        out[5] = std::atan2(yaw_aux.x(), yaw_aux.y());
+        return out;
+      },
+      [](const Eigen::Vector<Scalar, 6>& sample, const Eigen::Vector<Scalar, 6>& mean) {
+        Eigen::Vector<Scalar, 6> out;
+        const Sophus::SO3<Scalar> sample_so3(
+            Sophus::SO3<Scalar>::rotZ(sample[5]) * Sophus::SO3<Scalar>::rotY(sample[4]) *
+            Sophus::SO3<Scalar>::rotX(sample[3]));
+
+        const Sophus::SO3<Scalar> mean_so3(
+            Sophus::SO3<Scalar>::rotZ(mean[5]) * Sophus::SO3<Scalar>::rotY(mean[4]) *
+            Sophus::SO3<Scalar>::rotX(mean[3]));
+
+        const Sophus::SO3<Scalar> delta = mean_so3.inverse() * sample_so3;
+        const Eigen::AngleAxis<Scalar> angle_axis{delta.unit_quaternion()};
+        out.template head<3>() = sample.template head<3>() - mean.template head<3>();
+        out.template tail<3>() = angle_axis.axis() * angle_axis.angle();
+        return out;
+      });
+
+  // ROS covariance elements type is always double, and they're in RowMajor order.
+  Eigen::Map<Eigen::Matrix<double, 6, 6, Eigen::RowMajor>>(out.covariance.data()) =
+      base_pose_covariance_xyz_rpy.template cast<double>();
   return out;
 }
 

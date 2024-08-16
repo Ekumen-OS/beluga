@@ -17,6 +17,7 @@
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 
+#include "beluga_ros/messages.hpp"
 #include "beluga_ros/tf2_sophus.hpp"
 
 namespace {
@@ -69,6 +70,32 @@ TYPED_TEST(PoseConvertTest, ThereAndBackAgain) {
   tf2::fromMsg(message1, instance);
   tf2::toMsg(instance, message2);
   ASSERT_EQ(message1, message2);
+}
+
+template <typename T>
+class PoseWithCovarianceConvertTest : public testing::Test {
+ public:
+  using TypeParam = T;
+};
+
+using Sophus3DTypes = testing::Types<Sophus::SE3f, Sophus::SE3d>;
+
+TYPED_TEST_SUITE(PoseWithCovarianceConvertTest, Sophus3DTypes, );
+
+TYPED_TEST(PoseWithCovarianceConvertTest, Basic) {
+  using Covariance = Eigen::Matrix<typename TestFixture::TypeParam::Scalar, 6, 6>;
+  auto instance = typename TestFixture::TypeParam{};
+  const Covariance covariance = (Eigen::Vector<typename TestFixture::TypeParam::Scalar, 6>::Ones() * 1e-3).asDiagonal();
+  const beluga_ros::msg::PoseWithCovariance message = tf2::toMsg(instance, covariance);
+  ASSERT_DOUBLE_EQ(message.pose.position.x, 0.0);
+  ASSERT_DOUBLE_EQ(message.pose.position.y, 0.0);
+  ASSERT_DOUBLE_EQ(message.pose.position.z, 0.0);
+  ASSERT_DOUBLE_EQ(message.pose.orientation.x, 0.0);
+  ASSERT_DOUBLE_EQ(message.pose.orientation.y, 0.0);
+  ASSERT_DOUBLE_EQ(message.pose.orientation.z, 0.0);
+  ASSERT_DOUBLE_EQ(message.pose.orientation.w, 1.0);
+  ASSERT_FALSE(message.covariance.empty());
+  ASSERT_EQ(message.covariance.size(), 36);
 }
 
 }  // namespace

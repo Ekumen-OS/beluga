@@ -15,11 +15,11 @@
 #ifndef BELUGA_ALGORITHM_UNSCENTED_TRANSFORM_HPP
 #define BELUGA_ALGORITHM_UNSCENTED_TRANSFORM_HPP
 
-#include <Eigen/src/Core/util/Constants.h>
 #include <Eigen/Cholesky>
 #include <Eigen/Core>
 
 #include <algorithm>
+#include <functional>
 #include <numeric>
 #include <optional>
 #include <range/v3/numeric.hpp>
@@ -36,6 +36,23 @@
 #include "beluga/eigen_compatibility.hpp"
 namespace beluga {
 
+namespace detail {
+
+/// Templated functor to compute weighted mean for arbitrary. Assumes weights and vector's scalar types match.
+struct default_weighted_mean_fn {
+  /// Operator() overload for eigen types.
+  template <typename T, typename Scalar = typename T::Scalar>
+  T operator()(const std::vector<T>& samples, const std::vector<Scalar>& weights) const {
+    return std::transform_reduce(
+        samples.begin(), samples.end(), weights.begin(), T::Zero().eval(), std::plus<>{}, std::multiplies<>{});
+  }
+};
+
+}  // namespace detail
+
+/// Object for computing a euclidean weighted mean of a vector of elements.
+inline constexpr detail::default_weighted_mean_fn default_weighted_mean;
+
 /**
  * \brief Implements the unscented transform, a mathematical function used to estimate the result of applying a given
  *  a possibly nonlinear transformation to a probability distribution that is characterized with mean and covariance.
@@ -45,18 +62,34 @@ namespace beluga {
  * \tparam MeanDerived Concrete Eigen dense type used for the mean.
  * \tparam CovarianceDerived Concrete Eigen dense type used for the covariance.
  * \tparam TransferFn Callable that maps a vector from input space to output space. Possibly non-linear.
+ * \tparam TransformedT State representing the output space. Deduced from the transfer function.
+ * \tparam MeanFn Callable that converts a vector of elements in the output space, and weights, to its mean in the
+ * output space.
+ * \tparam ResidualFn Callable that computes a residual given two elements in the output space.
  * \param mean Mean in the input space.
  * \param covariance Covariance in the input space.
- * \param transfer_fn Callable that converts a vector from input space to output space.
+ * \param transfer_fn Callable that converts a* vector from input space to output space.
  * \param kappa Parameter used for sigma points selection. A sensible default will be used if not provided.
+ * \param mean_fn Callable that converts a vector of elements in the output space, and
+ * weights, to its mean in the output space. A sensible default is provided for the trivial (euclidian) case.
+ * \param residual_fn Callable that computes a residual given two elements in the output space.. A sensible default is
+ * provided for the trivial (euclidian) case.
  * \return A pair containing (mean, estimate) for the output space.
  */
-template <typename MeanDerived, typename CovarianceDerived, typename TransferFn>
+template <
+    typename MeanDerived,
+    typename CovarianceDerived,
+    typename TransferFn,
+    typename TransformedT = std::result_of_t<TransferFn(MeanDerived)>,
+    typename MeanFn = detail::default_weighted_mean_fn,
+    typename ResidualFn = std::minus<TransformedT>>
 auto unscented_transform(
     const Eigen::MatrixBase<MeanDerived>& mean,
     const Eigen::MatrixBase<CovarianceDerived>& covariance,
     TransferFn&& transfer_fn,
-    std::optional<typename MeanDerived::Scalar> kappa = std::nullopt) {
+    std::optional<typename MeanDerived::Scalar> kappa = std::nullopt,
+    MeanFn mean_fn = default_weighted_mean,
+    ResidualFn residual_fn = std::minus<TransformedT>{}) {
   using Scalar = typename MeanDerived::Scalar;
   static_assert(
       std::is_same_v<typename MeanDerived::Scalar, typename CovarianceDerived::Scalar>,
@@ -97,15 +130,13 @@ auto unscented_transform(
   constexpr int kNout = decltype(transfer_fn(mean))::RowsAtCompileTime;
   static_assert(decltype(transfer_fn(mean))::ColsAtCompileTime == 1, "Output mean should be a column vector");
 
-  const Eigen::Vector<Scalar, kNout> out_mean = std::transform_reduce(
-      transformed_sigma_points.begin(), transformed_sigma_points.end(), weights.begin(),
-      Eigen::Vector<Scalar, kNout>::Zero().eval(), std::plus<>{}, std::multiplies<>{});
+  const Eigen::Vector<Scalar, kNout> out_mean = mean_fn(transformed_sigma_points, weights);
 
   const Eigen::Matrix<Scalar, kNout, kNout> out_cov = std::transform_reduce(
       transformed_sigma_points.begin(), transformed_sigma_points.end(), weights.begin(),
       Eigen::Matrix<Scalar, kNout, kNout>::Zero().eval(), std::plus<>{},
       [&](const auto& sigma_point, const auto weight) {
-        const Eigen::Vector<Scalar, kNout> error = sigma_point - out_mean;
+        const Eigen::Vector<Scalar, kNout> error = residual_fn(sigma_point, out_mean);
         return (weight * (error * error.transpose())).eval();
       });
 
