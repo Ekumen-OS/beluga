@@ -26,9 +26,9 @@
 
 namespace {
 
-class MockAMCL : public beluga_amcl::BaseAMCLNode {
+class MockAMCL : public beluga_amcl::BaseMCLNode {
  public:
-  using beluga_amcl::BaseAMCLNode::BaseAMCLNode;
+  using beluga_amcl::BaseMCLNode::BaseMCLNode;
   MOCK_METHOD(void, do_activate, (const rclcpp_lifecycle::State& state), (override));
   MOCK_METHOD(void, do_configure, (const rclcpp_lifecycle::State& state), (override));
   MOCK_METHOD(void, do_shutdown, (const rclcpp_lifecycle::State& state), (override));
@@ -71,7 +71,7 @@ TEST_F(TestROS2Common, Activate) {
 
 TEST_F(TestROS2Common, CleanupDeactivateShutdownDefaults) {
   using ::testing::_;
-  auto amcl = std::make_shared<BaseAMCLNode>();
+  auto amcl = std::make_shared<BaseMCLNode>();
   amcl->configure();
   amcl->activate();
   amcl->deactivate();
@@ -107,7 +107,7 @@ TEST_F(TestROS2Common, Autostart) {
 
 TEST_F(TestROS2Common, AutostartDefault) {
   using namespace std::chrono_literals;
-  auto amcl = std::make_shared<BaseAMCLNode>(
+  auto amcl = std::make_shared<BaseMCLNode>(
       "amcl", "",
       rclcpp::NodeOptions{}
           .append_parameter_override("autostart", true)
@@ -119,7 +119,7 @@ TEST_F(TestROS2Common, PeriodicTimerDefault) {
   using namespace std::chrono_literals;
   using ::testing::_;
   auto amcl =
-      std::make_shared<BaseAMCLNode>("amcl", "", rclcpp::NodeOptions{}.append_parameter_override("autostart", false));
+      std::make_shared<BaseMCLNode>("amcl", "", rclcpp::NodeOptions{}.append_parameter_override("autostart", false));
   amcl->configure();
   amcl->activate();
   testing::spin_for(300ms, amcl);
@@ -159,7 +159,7 @@ TEST_F(TestROS2Common, InitialPoseCallbackDefault) {
   using ::testing::_;
   auto tester_node = std::make_shared<testing::TesterNode>();
   auto amcl =
-      std::make_shared<BaseAMCLNode>("amcl", "", rclcpp::NodeOptions{}.append_parameter_override("autostart", false));
+      std::make_shared<BaseMCLNode>("amcl", "", rclcpp::NodeOptions{}.append_parameter_override("autostart", false));
   amcl->configure();
   amcl->activate();
   tester_node->publish_default_initial_pose();

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_AMCL_NDT_AMCL_NODE_HPP
-#define BELUGA_AMCL_NDT_AMCL_NODE_HPP
+#ifndef BELUGA_AMCL_NDT_MCL_NODE_HPP
+#define BELUGA_AMCL_NDT_MCL_NODE_HPP
 
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/message_filter.h>
@@ -65,28 +65,23 @@ namespace beluga_amcl {
 using NDTMapRepresentation =
     beluga::SparseValueGrid2<std::unordered_map<Eigen::Vector2i, beluga::NDTCell2d, beluga::detail::CellHasher<2>>>;
 
-/// Type of a particle-dependent random state generator.
-using RandomStateGenerator = std::function<std::function<beluga::NDTSensorModel<NDTMapRepresentation>::state_type()>(
-    const beluga::TupleVector<std::tuple<beluga::NDTSensorModel<NDTMapRepresentation>::state_type, beluga::Weight>>)>;
-
 /// Partial specialization of the core AMCL pipeline for convinience.
 template <class MotionModel, class ExecutionPolicy>
-using NdtAmcl = beluga::Amcl<
+using NdtMcl = beluga::Mcl<
     MotionModel,
     beluga::NDTSensorModel<NDTMapRepresentation>,
-    RandomStateGenerator,
     beluga::Weight,
     std::tuple<typename beluga::NDTSensorModel<NDTMapRepresentation>::state_type, beluga::Weight>,
     ExecutionPolicy>;
 
 /// All combinations of supported NDT AMCL variants.
-using NdtAmclVariant = std::variant<
-    NdtAmcl<beluga::StationaryModel, std::execution::parallel_policy>,            //
-    NdtAmcl<beluga::StationaryModel, std::execution::sequenced_policy>,           //
-    NdtAmcl<beluga::DifferentialDriveModel2d, std::execution::parallel_policy>,   //
-    NdtAmcl<beluga::DifferentialDriveModel2d, std::execution::sequenced_policy>,  //
-    NdtAmcl<beluga::OmnidirectionalDriveModel, std::execution::parallel_policy>,  //
-    NdtAmcl<beluga::OmnidirectionalDriveModel, std::execution::sequenced_policy>  //
+using NdtMcl3DVariant = std::variant<
+    NdtMcl<beluga::StationaryModel, std::execution::parallel_policy>,            //
+    NdtMcl<beluga::StationaryModel, std::execution::sequenced_policy>,           //
+    NdtMcl<beluga::DifferentialDriveModel2d, std::execution::parallel_policy>,   //
+    NdtMcl<beluga::DifferentialDriveModel2d, std::execution::sequenced_policy>,  //
+    NdtMcl<beluga::OmnidirectionalDriveModel, std::execution::parallel_policy>,  //
+    NdtMcl<beluga::OmnidirectionalDriveModel, std::execution::sequenced_policy>  //
     >;
 
 /// Supported motion models.
@@ -97,10 +92,10 @@ using MotionModelVariant =
 using ExecutionPolicyVariant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 
 /// 2D NDT AMCL as a ROS 2 composable lifecycle node.
-class NdtAmclNode : public BaseAMCLNode {
+class NdtMclNode : public BaseMCLNode {
  public:
   /// Constructor.
-  explicit NdtAmclNode(const rclcpp::NodeOptions& options = rclcpp::NodeOptions{});
+  explicit NdtMclNode(const rclcpp::NodeOptions& options = rclcpp::NodeOptions{});
 
  protected:
   /// Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state.
@@ -122,7 +117,7 @@ class NdtAmclNode : public BaseAMCLNode {
   beluga::NDTSensorModel<NDTMapRepresentation> get_sensor_model() const;
 
   /// Instantiate particle filter given an initial occupancy grid map and the current parametrization.
-  auto make_particle_filter() const -> std::unique_ptr<NdtAmclVariant>;
+  auto make_particle_filter() const -> std::unique_ptr<NdtMcl3DVariant>;
 
   /// Callback for periodic particle cloud updates.
   void do_periodic_timer_callback() override;
@@ -154,7 +149,7 @@ class NdtAmclNode : public BaseAMCLNode {
   message_filters::Connection laser_scan_connection_;
 
   /// Particle filter instance.
-  std::unique_ptr<NdtAmclVariant> particle_filter_ = nullptr;
+  std::unique_ptr<NdtMcl3DVariant> particle_filter_ = nullptr;
   /// Last known pose estimate, if any.
   std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> last_known_estimate_ = std::nullopt;
   /// Last known map to odom correction estimate, if any.
@@ -165,4 +160,4 @@ class NdtAmclNode : public BaseAMCLNode {
 
 }  // namespace beluga_amcl
 
-#endif  // BELUGA_AMCL_NDT_AMCL_NODE_HPP
+#endif  // BELUGA_AMCL_NDT_MCL_NODE_HPP

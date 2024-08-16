@@ -17,8 +17,109 @@
 #include <rclcpp/publisher.hpp>
 
 namespace beluga_amcl {
+void declare_common_amcl_params(rclcpp_lifecycle::LifecycleNode& node) {
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Minimum allowed number of particles.";
+    descriptor.integer_range.resize(1);
+    descriptor.integer_range[0].from_value = 0;
+    descriptor.integer_range[0].to_value = std::numeric_limits<int>::max();
+    descriptor.integer_range[0].step = 1;
+    node.declare_parameter("min_particles", rclcpp::ParameterValue(500), descriptor);
+  }
 
-BaseAMCLNode::BaseAMCLNode(
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Maximum allowed number of particles.";
+    descriptor.integer_range.resize(1);
+    descriptor.integer_range[0].from_value = 0;
+    descriptor.integer_range[0].to_value = std::numeric_limits<int>::max();
+    descriptor.integer_range[0].step = 1;
+    node.declare_parameter("max_particles", rclcpp::ParameterValue(2000), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Exponential decay rate for the slow average weight filter, used in deciding when to recover "
+        "by adding random poses.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    node.declare_parameter("recovery_alpha_slow", rclcpp::ParameterValue(0.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Exponential decay rate for the fast average weight filter, used in deciding when to recover "
+        "by adding random poses.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    node.declare_parameter("recovery_alpha_fast", rclcpp::ParameterValue(0.0), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Maximum particle filter population error between the true distribution "
+        "and the estimated distribution. It is used in KLD resampling to limit the "
+        "allowed number of particles to the minimum necessary.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    node.declare_parameter("pf_err", rclcpp::ParameterValue(0.05), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Upper standard normal quantile for P, where P is the probability "
+        "that the error in the estimated distribution will be less than pf_err "
+        "in KLD resampling.";
+    node.declare_parameter("pf_z", rclcpp::ParameterValue(0.99), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Resolution in meters for the X axis used to divide the space in buckets for KLD resampling.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    node.declare_parameter("spatial_resolution_x", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Resolution in meters for the Y axis used to divide the space in buckets for KLD resampling.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    node.declare_parameter("spatial_resolution_y", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Resolution in radians for the theta axis to divide the space in buckets for KLD resampling.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 2 * Sophus::Constants<double>::pi();
+    descriptor.floating_point_range[0].step = 0;
+    node.declare_parameter(
+        "spatial_resolution_theta", rclcpp::ParameterValue(10 * Sophus::Constants<double>::pi() / 180), descriptor);
+  }
+}
+
+BaseMCLNode::BaseMCLNode(
     const std::string& node_name,
     const std::string& node_namespace,
     const rclcpp::NodeOptions& node_options)
@@ -58,107 +159,6 @@ BaseAMCLNode::BaseAMCLNode(
     descriptor.description = "Topic to subscribe to in order to receive the laser scan for localization.";
     this->declare_parameter("scan_topic", rclcpp::ParameterValue("scan"), descriptor);
   }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Minimum allowed number of particles.";
-    descriptor.integer_range.resize(1);
-    descriptor.integer_range[0].from_value = 0;
-    descriptor.integer_range[0].to_value = std::numeric_limits<int>::max();
-    descriptor.integer_range[0].step = 1;
-    this->declare_parameter("min_particles", rclcpp::ParameterValue(500), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Maximum allowed number of particles.";
-    descriptor.integer_range.resize(1);
-    descriptor.integer_range[0].from_value = 0;
-    descriptor.integer_range[0].to_value = std::numeric_limits<int>::max();
-    descriptor.integer_range[0].step = 1;
-    this->declare_parameter("max_particles", rclcpp::ParameterValue(2000), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description =
-        "Exponential decay rate for the slow average weight filter, used in deciding when to recover "
-        "by adding random poses.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
-    descriptor.floating_point_range[0].step = 0;
-    this->declare_parameter("recovery_alpha_slow", rclcpp::ParameterValue(0.0), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description =
-        "Exponential decay rate for the fast average weight filter, used in deciding when to recover "
-        "by adding random poses.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
-    descriptor.floating_point_range[0].step = 0;
-    this->declare_parameter("recovery_alpha_fast", rclcpp::ParameterValue(0.0), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description =
-        "Maximum particle filter population error between the true distribution "
-        "and the estimated distribution. It is used in KLD resampling to limit the "
-        "allowed number of particles to the minimum necessary.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 1;
-    descriptor.floating_point_range[0].step = 0;
-    this->declare_parameter("pf_err", rclcpp::ParameterValue(0.05), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description =
-        "Upper standard normal quantile for P, where P is the probability "
-        "that the error in the estimated distribution will be less than pf_err "
-        "in KLD resampling.";
-    this->declare_parameter("pf_z", rclcpp::ParameterValue(0.99), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description =
-        "Resolution in meters for the X axis used to divide the space in buckets for KLD resampling.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
-    descriptor.floating_point_range[0].step = 0;
-    this->declare_parameter("spatial_resolution_x", rclcpp::ParameterValue(0.5), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description =
-        "Resolution in meters for the Y axis used to divide the space in buckets for KLD resampling.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
-    descriptor.floating_point_range[0].step = 0;
-    this->declare_parameter("spatial_resolution_y", rclcpp::ParameterValue(0.5), descriptor);
-  }
-
-  {
-    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description =
-        "Resolution in radians for the theta axis to divide the space in buckets for KLD resampling.";
-    descriptor.floating_point_range.resize(1);
-    descriptor.floating_point_range[0].from_value = 0;
-    descriptor.floating_point_range[0].to_value = 2 * Sophus::Constants<double>::pi();
-    descriptor.floating_point_range[0].step = 0;
-    this->declare_parameter(
-        "spatial_resolution_theta", rclcpp::ParameterValue(10 * Sophus::Constants<double>::pi() / 180), descriptor);
-  }
-
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Number of filter updates required before resampling. ";
@@ -391,18 +391,18 @@ BaseAMCLNode::BaseAMCLNode(
 
   if (get_parameter("autostart").as_bool()) {
     auto autostart_delay = std::chrono::duration<double>(get_parameter("autostart_delay").as_double());
-    autostart_timer_ = create_wall_timer(autostart_delay, std::bind(&BaseAMCLNode::autostart_callback, this));
+    autostart_timer_ = create_wall_timer(autostart_delay, std::bind(&BaseMCLNode::autostart_callback, this));
   }
 }
 
-BaseAMCLNode::~BaseAMCLNode() {
+BaseMCLNode::~BaseMCLNode() {
   RCLCPP_INFO(get_logger(), "Destroying");
   // In case this lifecycle node wasn't properly shut down, do it here
   on_shutdown(get_current_state());
 }
 
 /// Callback for lifecycle transitions from the UNCONFIGURED state to the INACTIVE state.
-BaseAMCLNode::CallbackReturn BaseAMCLNode::on_configure(const rclcpp_lifecycle::State& state) {
+BaseMCLNode::CallbackReturn BaseMCLNode::on_configure(const rclcpp_lifecycle::State& state) {
   RCLCPP_INFO(get_logger(), "Configuring");
   particle_cloud_pub_ = create_publisher<geometry_msgs::msg::PoseArray>("particle_cloud", rclcpp::SensorDataQoS());
   particle_markers_pub_ =
@@ -412,7 +412,7 @@ BaseAMCLNode::CallbackReturn BaseAMCLNode::on_configure(const rclcpp_lifecycle::
   return CallbackReturn::SUCCESS;
 };
 
-BaseAMCLNode::CallbackReturn BaseAMCLNode::on_deactivate(const rclcpp_lifecycle::State& state) {
+BaseMCLNode::CallbackReturn BaseMCLNode::on_deactivate(const rclcpp_lifecycle::State& state) {
   RCLCPP_INFO(get_logger(), "Deactivating");
   particle_cloud_pub_->on_deactivate();
   particle_markers_pub_->on_deactivate();
@@ -426,7 +426,7 @@ BaseAMCLNode::CallbackReturn BaseAMCLNode::on_deactivate(const rclcpp_lifecycle:
   return CallbackReturn::SUCCESS;
 }
 
-BaseAMCLNode::CallbackReturn BaseAMCLNode::on_shutdown(const rclcpp_lifecycle::State& state) {
+BaseMCLNode::CallbackReturn BaseMCLNode::on_shutdown(const rclcpp_lifecycle::State& state) {
   using lifecycle_msgs::msg::State;
   RCLCPP_INFO(get_logger(), "Shutting down");
   if (state.id() == State::PRIMARY_STATE_ACTIVE) {
@@ -440,12 +440,12 @@ BaseAMCLNode::CallbackReturn BaseAMCLNode::on_shutdown(const rclcpp_lifecycle::S
   return CallbackReturn::SUCCESS;
 }
 
-rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAMCLNode::on_cleanup(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseMCLNode::on_cleanup(
     const rclcpp_lifecycle::State& state) {
   do_cleanup(state);
   return CallbackReturn::SUCCESS;
 }
-rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAMCLNode::on_activate(
+rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseMCLNode::on_activate(
     const rclcpp_lifecycle::State& state) {
   RCLCPP_INFO(get_logger(), "Activating");
   particle_cloud_pub_->on_activate();
@@ -454,13 +454,13 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
   {
     initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
         get_parameter("initial_pose_topic").as_string(), rclcpp::SystemDefaultsQoS(),
-        std::bind(&BaseAMCLNode::initial_pose_callback, this, std::placeholders::_1), common_subscription_options_);
+        std::bind(&BaseMCLNode::initial_pose_callback, this, std::placeholders::_1), common_subscription_options_);
     RCLCPP_INFO(get_logger(), "Subscribed to initial_pose_topic: %s", initial_pose_sub_->get_topic_name());
   }
   {
     using namespace std::chrono_literals;
     // TODO(alon): create a parameter for the timer rate?
-    timer_ = create_wall_timer(200ms, std::bind(&BaseAMCLNode::periodic_timer_callback, this), common_callback_group_);
+    timer_ = create_wall_timer(200ms, std::bind(&BaseMCLNode::periodic_timer_callback, this), common_callback_group_);
   }
 
   {
@@ -483,7 +483,7 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
   return CallbackReturn::SUCCESS;
 }
 
-void BaseAMCLNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
+void BaseMCLNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
   const auto global_frame_id = get_parameter("global_frame_id").as_string();
   if (message->header.frame_id != global_frame_id) {
     RCLCPP_WARN(
@@ -494,11 +494,11 @@ void BaseAMCLNode::initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceS
   do_initial_pose_callback(message);
 }
 
-void BaseAMCLNode::periodic_timer_callback() {
+void BaseMCLNode::periodic_timer_callback() {
   do_periodic_timer_callback();
 };
 
-void BaseAMCLNode::autostart_callback() {
+void BaseMCLNode::autostart_callback() {
   using lifecycle_msgs::msg::State;
   auto current_state = configure();
   if (current_state.id() != State::PRIMARY_STATE_INACTIVE) {
@@ -516,7 +516,7 @@ void BaseAMCLNode::autostart_callback() {
   autostart_timer_->cancel();
 }
 
-auto BaseAMCLNode::get_execution_policy() const -> ExecutionPolicyVariant {
+auto BaseMCLNode::get_execution_policy() const -> ExecutionPolicyVariant {
   const auto name = get_parameter("execution_policy").as_string();
   if (name == "seq") {
     return std::execution::seq;

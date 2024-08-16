@@ -37,6 +37,9 @@
 
 namespace beluga_amcl {
 
+/// Declares a set of common parameters for Adaptive Monte Carlo Localization nodes (AMCL).
+void declare_common_amcl_params(rclcpp_lifecycle::LifecycleNode& node);
+
 /// String identifier for a diff drive model.
 constexpr std::string_view kDifferentialModelName = "differential_drive";
 /// String identifier for a omnidirectional drive model.
@@ -50,18 +53,18 @@ constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotio
 /// Supported execution policies.
 using ExecutionPolicyVariant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 
-/// Base AMCL lifecycle node, with some basic common functionalities, such as transform tree utilities, common
+/// Base MCL lifecycle node, with some basic common functionalities, such as transform tree utilities, common
 /// publishers, subscribers, lifecycle related callbacks and configuration points, enabling extension by inheritance.
-class BaseAMCLNode : public rclcpp_lifecycle::LifecycleNode {
+class BaseMCLNode : public rclcpp_lifecycle::LifecycleNode {
  public:
   /// Constructor, following LifecycleNode signature.
-  explicit BaseAMCLNode(
+  explicit BaseMCLNode(
       const std::string& node_name = "amcl",
       const std::string& node_namespace = "",
       const rclcpp::NodeOptions& node_options = rclcpp::NodeOptions{});
 
   /// Destructor for the base AMCL node.
-  ~BaseAMCLNode() override;
+  ~BaseMCLNode() override;
 
  protected:
   /// Callback for lifecycle transitions from the UNCONFIGURED state to the INACTIVE state.

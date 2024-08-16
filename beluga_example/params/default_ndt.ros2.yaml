@@ -1,4 +1,4 @@
-ndt_amcl:
+ndt_mcl:
   ros__parameters:
     # Odometry motion model type.
     robot_model_type: nav2_amcl::DifferentialMotionModel
@@ -25,24 +25,8 @@ ndt_amcl:
     # The name of the topic where an initial pose can be published.
     # The particle filter will be reset using the provided pose with covariance.
     initial_pose_topic: initialpose
-    # Maximum number of particles that will be used.
-    max_particles: 2000
-    # Minimum number of particles that will be used.
-    min_particles: 500
-    # Error allowed by KLD criteria.
-    pf_err: 0.05
-    # KLD criteria parameter.
-    # Upper standard normal quantile for the probability that the error in the
-    # estimated distribution is less than pf_err.
-    pf_z: 3.0
-    # Fast exponential filter constant, used to filter the average particles weights.
-    # Random particles are added if the fast filter result is larger than the slow filter result
-    # allowing the particle filter to recover from a bad approximation.
-    recovery_alpha_fast: 0.1
-    # Slow exponential filter constant, used to filter the average particles weights.
-    # Random particles are added if the fast filter result is larger than the slow filter result
-    # allowing the particle filter to recover from a bad approximation.
-    recovery_alpha_slow: 0.001
+    # Number of particles that will be used.
+    num_particles: 1000
     # Resample will happen after the amount of updates specified here happen.
     resample_interval: 1
     # Minimum angle difference from last resample for resampling to happen again.

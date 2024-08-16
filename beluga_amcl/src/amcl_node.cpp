@@ -73,7 +73,8 @@ constexpr std::string_view kBeamSensorModelName = "beam";
 
 }  // namespace
 
-AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", "", options} {
+AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseMCLNode{"amcl", "", options} {
+  declare_common_amcl_params(*this);
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Topic to subscribe to in order to receive the map to localize on.";

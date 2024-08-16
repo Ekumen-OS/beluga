@@ -83,9 +83,9 @@ def generate_launch_description(
         actions=[
             *get_node_with_arguments_declared_from_params_file(
                 package='beluga_amcl',
-                executable='ndt_amcl_node_3d',
+                executable='ndt_mcl_node_3d',
                 namespace='',
-                name='ndt_amcl',
+                name='ndt_mcl',
                 output='screen',
                 arguments=['--ros-args', '--log-level', 'info'],
                 prefix=localization_prefix,
@@ -103,7 +103,7 @@ def generate_launch_description(
                 sigkill_timeout='20',
                 parameters=[
                     {'autostart': True},
-                    {'node_names': ['ndt_amcl']},
+                    {'node_names': ['ndt_mcl']},
                 ],
             ),
         ]
@@ -120,7 +120,7 @@ def generate_launch_description(
                     ComposableNode(
                         package='beluga_amcl',
                         plugin=localization_plugin,
-                        name='ndt_amcl',
+                        name='ndt_mcl',
                         parameters=[localization_params_file],
                     ),
                     ComposableNode(
@@ -129,7 +129,7 @@ def generate_launch_description(
                         name='lifecycle_manager_localization',
                         parameters=[
                             {'autostart': True},
-                            {'node_names': ['ndt_amcl']},
+                            {'node_names': ['ndt_mcl']},
                         ],
                     ),
                 ],
