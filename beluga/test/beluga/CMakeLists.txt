@@ -27,6 +27,7 @@ add_executable(
   algorithm/test_effective_sample_size.cpp
   algorithm/test_estimation.cpp
   algorithm/test_exponential_filter.cpp
+  algorithm/test_mcl_core.cpp
   algorithm/test_raycasting.cpp
   algorithm/test_thrun_recovery_probability_estimator.cpp
   algorithm/test_unscented_transform.cpp

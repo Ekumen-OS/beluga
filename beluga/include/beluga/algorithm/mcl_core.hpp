@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_ALGORITHM_AMCL_CORE_HPP
-#define BELUGA_ALGORITHM_AMCL_CORE_HPP
+#ifndef BELUGA_ALGORITHM_MCL_CORE_HPP
+#define BELUGA_ALGORITHM_MCL_CORE_HPP
 
 #include <execution>
 #include <optional>
@@ -26,18 +26,18 @@
 #include <range/v3/view/take_exactly.hpp>
 #include "beluga/actions.hpp"
 #include "beluga/algorithm/estimation.hpp"
-#include "beluga/algorithm/spatial_hash.hpp"
-#include "beluga/algorithm/thrun_recovery_probability_estimator.hpp"
 #include "beluga/containers/circular_array.hpp"
 #include "beluga/containers/tuple_vector.hpp"
-#include "beluga/policies.hpp"
+#include "beluga/policies/every_n.hpp"
+#include "beluga/policies/on_effective_size_drop.hpp"
+#include "beluga/policies/on_motion.hpp"
 #include "beluga/random/multivariate_normal_distribution.hpp"
-#include "beluga/views.hpp"
+#include "beluga/views/sample.hpp"
 
 namespace beluga {
 
-/// Struct containing parameters for the Adaptive Monte Carlo Localization (AMCL) implementation.
-struct AmclParams {
+/// Struct containing parameters for the Monte Carlo Localization (MCL) implementation.
+struct MclParams {
   /// Min distance in meters between updates.
   double update_min_d = 0.25;
   /// Min angular distance in radians between updates.
@@ -46,32 +46,14 @@ struct AmclParams {
   std::size_t resample_interval = 1UL;
   /// Whether to use selective resampling or not.
   bool selective_resampling = false;
-  /// Minimum number of particles in the filter at any point in time.
-  std::size_t min_particles = 500UL;
-  /// Maximum number of particles in the filter at any point in time.
-  std::size_t max_particles = 2000UL;
-  /// Used as part of the recovery mechanism when considering how many random particles to insert.
-  double alpha_slow = 0.001;
-  /// Used as part of the recovery mechanism when considering how many random particles to insert.
-  double alpha_fast = 0.1;
-  /// Used as part of the kld sampling mechanism.
-  double kld_epsilon = 0.05;
-  /// Used as part of the kld sampling mechanism.
-  double kld_z = 3.0;
+  /// Number of particles in the filter at any point in time.
+  std::size_t num_particles = 1000UL;
 };
 
-/// Implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm.
+/// Implementation of the Monte Carlo Localization (MCL) algorithm.
 /**
  * \tparam MotionModel Class representing a motion model. Must satisfy \ref MotionModelPage.
  * \tparam SensorModel Class representing a sensor model. Must satisfy \ref SensorModelPage.
- * \tparam RandomStateGenerator A callable able to produce random states, optionally based on the current particles
- * state.
- * Class 'T' is a valid RandomStateGenerator if given 't' a possibly const instance of 'T' any of the following
- * conditions are true:
- * - t can be called without arguments returning an instance of 'SensorModel::state_type'
- *   representing a random state.
- * - t can be called with `const beluga::TupleVector<ParticleType>&> returning a callable
- *   that can be called without arguments and return an instance of 'SensorModel::state_type'.
  * \tparam WeightT Type to represent a weight of a particle.
  * \tparam ParticleType Full particle type, containing state, weight and possibly
  * other information .
@@ -80,11 +62,10 @@ struct AmclParams {
 template <
     class MotionModel,
     class SensorModel,
-    class RandomStateGenerator,
     typename WeightT = beluga::Weight,
     class ParticleType = std::tuple<typename SensorModel::state_type, WeightT>,
     class ExecutionPolicy = std::execution::sequenced_policy>
-class Amcl {
+class Mcl {
   static_assert(
       std::is_same_v<ExecutionPolicy, std::execution::parallel_policy> or
       std::is_same_v<ExecutionPolicy, std::execution::sequenced_policy>);
@@ -93,38 +74,27 @@ class Amcl {
   using measurement_type = typename SensorModel::measurement_type;
   using state_type = typename SensorModel::state_type;
   using map_type = typename SensorModel::map_type;
-  using spatial_hasher_type = spatial_hash<state_type>;
-  using random_state_generator_type = RandomStateGenerator;
   using estimation_type =
       std::invoke_result_t<decltype(beluga::estimate<std::vector<state_type>>), std::vector<state_type>>;
 
  public:
-  /// Construct a AMCL instance.
+  /// Construct a MCL instance.
   /**
    * \param motion_model Motion model instance.
    * \param sensor_model Sensor model Instance.
-   * \param random_state_generator A callable able to produce random states, optionally based on the current particles
-   * state.
-   * \param spatial_hasher A spatial hasher instance capable of computing a hash out of a particle state.
-   * \param params Parameters for AMCL implementation.
+   * \param params Parameters for MCL implementation.
    * \param execution_policy Policy to use when processing particles.
    */
-  Amcl(
-      MotionModel motion_model,
+  Mcl(MotionModel motion_model,
       SensorModel sensor_model,
-      RandomStateGenerator random_state_generator,
-      spatial_hasher_type spatial_hasher,
-      const AmclParams& params = AmclParams{},
+      const MclParams& params = MclParams{},
       ExecutionPolicy execution_policy = std::execution::seq)
       : params_{params},
         motion_model_{std::move(motion_model)},
         sensor_model_{std::move(sensor_model)},
         execution_policy_{std::move(execution_policy)},
-        spatial_hasher_{std::move(spatial_hasher)},
-        random_probability_estimator_{params_.alpha_slow, params_.alpha_fast},
         update_policy_{beluga::policies::on_motion<state_type>(params_.update_min_d, params_.update_min_a)},
-        resample_policy_{beluga::policies::every_n(params_.resample_interval)},
-        random_state_generator_(std::move(random_state_generator)) {
+        resample_policy_{beluga::policies::every_n(params_.resample_interval)} {
     if (params_.selective_resampling) {
       resample_policy_ = resample_policy_ && beluga::policies::on_effective_size_drop;
     }
@@ -138,7 +108,7 @@ class Amcl {
   void initialize(Distribution distribution) {
     particles_ = beluga::views::sample(std::move(distribution)) |                    //
                  ranges::views::transform(beluga::make_from_state<particle_type>) |  //
-                 ranges::views::take_exactly(params_.max_particles) |                //
+                 ranges::views::take_exactly(params_.num_particles) |                //
                  ranges::to<beluga::TupleVector>;
     force_update_ = true;
   }
@@ -183,24 +153,9 @@ class Amcl {
                   beluga::actions::reweight(execution_policy_, sensor_model_(std::move(measurement))) |         //
                   beluga::actions::normalize(execution_policy_);
 
-    const double random_state_probability = random_probability_estimator_(particles_);
-
     if (resample_policy_(particles_)) {
-      auto random_state = ranges::compose(beluga::make_from_state<particle_type>, get_random_state_generator());
-
-      if (random_state_probability > 0.0) {
-        random_probability_estimator_.reset();
-      }
-
-      particles_ |= beluga::views::sample |
-                    beluga::views::random_intersperse(std::move(random_state), random_state_probability) |
-                    beluga::views::take_while_kld(
-                        spatial_hasher_,        //
-                        params_.min_particles,  //
-                        params_.max_particles,  //
-                        params_.kld_epsilon,    //
-                        params_.kld_z) |
-                    beluga::actions::assign;
+      particles_ |=
+          beluga::views::sample | ranges::views::take_exactly(params_.num_particles) | beluga::actions::assign;
     }
 
     force_update_ = false;
@@ -211,28 +166,16 @@ class Amcl {
   void force_update() { force_update_ = true; }
 
  private:
-  /// Gets a callable that will produce a random state.
-  [[nodiscard]] decltype(auto) get_random_state_generator() const {
-    if constexpr (std::is_invocable_v<random_state_generator_type>) {
-      return random_state_generator_;
-    } else {
-      return random_state_generator_(particles_);
-    }
-  }
   beluga::TupleVector<particle_type> particles_;
 
-  AmclParams params_;
+  MclParams params_;
 
   MotionModel motion_model_;
   SensorModel sensor_model_;
   ExecutionPolicy execution_policy_;
 
-  spatial_hasher_type spatial_hasher_;
-  beluga::ThrunRecoveryProbabilityEstimator random_probability_estimator_;
   beluga::any_policy<state_type> update_policy_;
   beluga::any_policy<decltype(particles_)> resample_policy_;
-
-  random_state_generator_type random_state_generator_;
 
   beluga::RollingWindow<state_type, 2> control_action_window_;
 
@@ -241,4 +184,4 @@ class Amcl {
 
 }  // namespace beluga
 
-#endif  // BELUGA_ALGORITHM_AMCL_CORE_HPP
+#endif  // BELUGA_ALGORITHM_MCL_CORE_HPP

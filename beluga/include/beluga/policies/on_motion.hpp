@@ -16,6 +16,7 @@
 #define BELUGA_POLICIES_ON_MOTION_HPP
 
 #include <Eigen/src/Geometry/AngleAxis.h>
+#include <Eigen/Core>
 #include <beluga/policies/policy.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
