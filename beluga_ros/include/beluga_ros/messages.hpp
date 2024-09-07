@@ -24,9 +24,7 @@
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include <sensor_msgs/msg/point_field.hpp>
-#include <sensor_msgs/point_cloud2_iterator.hpp>
-#include <sensor_msgs/point_field_conversion.hpp>
+#include <sensor_msgs/point_cloud2_iterator.hpp> 
 #include <std_msgs/msg/color_rgba.hpp>
 #include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
@@ -41,9 +39,7 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/PointCloud2.h>
-#include <sensor_msgs/PointField.h>
-#include <sensor_msgs/point_cloud2_iterator.h>
-#include <sensor_msgs/point_field_conversion.h>
+#include <sensor_msgs/point_cloud2_iterator.h> 
 #include <std_msgs/ColorRGBA.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
@@ -65,12 +61,11 @@ using LaserScan = sensor_msgs::msg::LaserScan;
 using LaserScanConstSharedPtr = LaserScan::ConstSharedPtr;
 using PointCloud2 = sensor_msgs::msg::PointCloud2;
 using PointCloud2ConstSharedPtr = PointCloud2::ConstSharedPtr;
-template <typename Scalar>
+template<typename Scalar>
 using PointCloud2ConstIterator = sensor_msgs::PointCloud2ConstIterator<Scalar>;
-template <typename Scalar>
+template<typename Scalar>
 using PointCloud2Iterator = sensor_msgs::PointCloud2Iterator<Scalar>;
 using PointCloud2Modifier = sensor_msgs::PointCloud2Modifier;
-using PointField = sensor_msgs::msg::PointField;
 using Marker = visualization_msgs::msg::Marker;
 using MarkerArray = visualization_msgs::msg::MarkerArray;
 using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
@@ -88,12 +83,8 @@ using LaserScan = sensor_msgs::LaserScan;
 using LaserScanConstSharedPtr = LaserScan::ConstPtr;
 using PointCloud2 = sensor_msgs::PointCloud2;
 using PointCloud2ConstSharedPtr = PointCloud2::ConstPtr;
-template <typename Scalar>
+template<typename Scalar>
 using PointCloud2ConstIterator = sensor_msgs::PointCloud2ConstIterator<Scalar>;
-template <typename Scalar>
-using PointCloud2Iterator = sensor_msgs::PointCloud2Iterator<Scalar>;
-using PointCloud2Modifier = sensor_msgs::PointCloud2Modifier;
-using PointField = sensor_msgs::PointField;
 using Marker = visualization_msgs::Marker;
 using MarkerArray = visualization_msgs::MarkerArray;
 using OccupancyGrid = nav_msgs::OccupancyGrid;

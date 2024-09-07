@@ -1,4 +1,4 @@
-// Copyright 2024 Ekumen, Inc.
+// Copyright 2023 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,80 +23,49 @@
 
 #include <sophus/se3.hpp>
 
-#include <Eigen/Dense>
-
-#include "beluga/eigen_compatibility.hpp"
-
 /**
  * \file
- * \brief Implementation of `sensor_msgs/PointCloud2` wrapper type for messages with memory-aligned strides.
- *
- * \details
- * The stride calculation ensures that the memory layout of the point cloud data is aligned with the size of the data
- * type used for iteration (`iteratorType`). To maintain proper memory alignment, the stride must satisfy the condition:
- *
- * `cloud_->point_step % sizeof(iteratorType) == 0`
- *
- * This condition guarantees that `point_step` is a multiple of the size of the `iteratorType`, ensuring efficient
- * access to each point in the cloud.
+ * \brief Implementation of `sensor_msgs/PointCloud2` wrapper type.
  */
 
 namespace beluga_ros {
 
 /// Thin wrapper type for 3D `sensor_msgs/PointCloud2` messages.
-template <typename T>
-class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
+class PointCloud2 : public beluga::BasePointCloud<PointCloud2> {
  public:
-  /// PointCloud type
-  using Scalar = T;
-
-  /// Check type is float or double
-  static_assert(
-      std::is_same_v<Scalar, float> || std::is_same_v<Scalar, double>,
-      "Pointcloud3 only supports float or double datatype");
+  /// Range type.
+  using Scalar = double;
 
   /// Constructor.
   ///
   /// \param cloud Point cloud message.
   /// \param origin Point cloud frame origin in the filter frame.
-  explicit PointCloud3(beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d origin = Sophus::SE3d())
-      : cloud_(std::move(cloud)), origin_(std::move(origin)) {
+  explicit PointCloud2(
+      beluga_ros::msg::PointCloud2ConstSharedPtr cloud,
+      Sophus::SE3d origin = Sophus::SE3d())
+      : cloud_(std::move(cloud)),
+        origin_(std::move(origin)),
+        iter_points_(*cloud_, "x") {
     assert(cloud_ != nullptr);
-    constexpr uint8_t fieldType = sensor_msgs::typeAsPointFieldType<T>::value;
-    // Check if point cloud is 3D
-    if (cloud_->fields.size() < 3) {
-      throw std::invalid_argument("PointCloud is not 3D");
-    }
-    // Check point cloud is XYZ... type
-    if (cloud_->fields.at(0).name != "x" || cloud_->fields.at(1).name != "y" || cloud_->fields.at(2).name != "z") {
-      throw std::invalid_argument("PointCloud not XYZ...");
-    }
-    // Check XYZ datatype is the same
-    if (cloud_->fields.at(0).datatype != fieldType || cloud_->fields.at(1).datatype != fieldType ||
-        cloud_->fields.at(2).datatype != fieldType) {
-      throw std::invalid_argument("XYZ datatype are not same");
-    }
-    // Check stride is divisible
-    if (cloud_->point_step % sizeof(Scalar) != 0) {
-      throw std::invalid_argument("Data is not memory-aligned");
-    }
-    stride_ = static_cast<int>(cloud_->point_step / sizeof(Scalar));
   }
 
   /// Get the point cloud frame origin in the filter frame.
   [[nodiscard]] const auto& origin() const { return origin_; }
 
-  /// Get the unorganized 3D point collection as an Eigen Map<Eigen::Matrix3X>.
+  /// Get point cloud view as a tuple.
   [[nodiscard]] auto points() const {
-    const beluga_ros::msg::PointCloud2ConstIterator<Scalar> iter_points(*cloud_, "x");
-    return Eigen::Map<const Eigen::Matrix3X<Scalar>, 0, Eigen::OuterStride<>>(
-        &iter_points[0], 3, cloud_->width * cloud_->height, stride_);
+    return ranges::views::iota(0, static_cast<int>(cloud_->width * cloud_->height)) |
+           ranges::views::transform([this](int i) {
+             return std::make_tuple(static_cast<Scalar>(iter_points_[3 * i + 0]), 
+                                    static_cast<Scalar>(iter_points_[3 * i + 1]),
+                                    static_cast<Scalar>(iter_points_[3 * i + 2]));
+           });
   }
 
  private:
   beluga_ros::msg::PointCloud2ConstSharedPtr cloud_;
-  int stride_;
   Sophus::SE3d origin_;
+  beluga_ros::msg::PointCloud2ConstIterator<float> iter_points_;
 };
 
 }  // namespace beluga_ros
