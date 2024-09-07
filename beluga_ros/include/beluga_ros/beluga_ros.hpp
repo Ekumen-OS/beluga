@@ -27,6 +27,7 @@
 
 #include <beluga_ros/amcl.hpp>
 #include <beluga_ros/laser_scan.hpp>
+#include <beluga_ros/point_cloud.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_eigen.hpp>
