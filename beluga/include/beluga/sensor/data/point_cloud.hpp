@@ -32,11 +32,11 @@ namespace beluga {
 /**
  * \page PointCloudPage Beluga named requirements: PointCloud
  *
- * A type `L` satisfies `PointCloud` requirements if given `l` a possibly
- * const instance of `L`:
- * - `L::Scalar` is defined and is a scalar type to be used for x, y and z coordinates values,
- * -  l.points()` returns a view of a point cloud,
- * - `l.origin()` returns the transform, of `Sophus::SE3d` type, from the global to local
+ * A type `P` satisfies `PointCloud` requirements if given `p` a possibly
+ * const instance of `P`:
+ * - `P::Scalar` is defined and is a scalar type to be used for x, y and z coordinates values,
+ * -  p.points()` returns a view to the unorganized 3D point collection,
+ * - `p.origin()` returns the transform, of `Sophus::SE3d` type, from the global to local
  *   frame in the sensor space;
  */
 
