@@ -47,3 +47,4 @@ target_link_libraries(test_point_cloud beluga_ros)
 ament_add_gmock(test_point_cloud test_point_cloud.cpp)
 target_compile_options(test_point_cloud PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_point_cloud beluga_ros)
+
