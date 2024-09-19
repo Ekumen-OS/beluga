@@ -41,15 +41,15 @@ namespace beluga_ros {
 /// Assumes an XYZ... type message.
 /// XYZ datafields must be the same type (float or double).
 /// Other datafields can be different types.
-template <uint8_t T = beluga_ros::msg::PointFieldF64>
+template <uint8_t T>
 class PointCloudSparse3 : public beluga::BasePointCloud<PointCloudSparse3<T>> {
  public:
   /// PointCloud data fields type
-  using iteratorType = typename DataType<T>::iteratorType;
+  using Scalar = typename sensor_msgs::pointFieldTypeAsType<T>::type;
 
   /// Check type is float or double
   static_assert(
-      std::is_same<iteratorType, float>::value || std::is_same<iteratorType, double>::value,
+      std::is_same<Scalar, float>::value || std::is_same<Scalar, double>::value,
       "PointcloudSparse3 only supports float or double datatype");
 
   /// Constructor.
@@ -75,10 +75,10 @@ class PointCloudSparse3 : public beluga::BasePointCloud<PointCloudSparse3<T>> {
 
   /// Get the unorganized 3D point collection as an Eigen Map<Eigen::Vector3>.
   [[nodiscard]] auto points() const {
-    beluga_ros::msg::PointCloud2ConstIterator<iteratorType> iter_points(*cloud_, "x");
+    beluga_ros::msg::PointCloud2ConstIterator<Scalar> iter_points(*cloud_, "x");
     return ranges::views::iota(0, static_cast<int>(cloud_->width * cloud_->height)) |
            ranges::views::transform([iter_points](int i) mutable {
-             return Eigen::Map<const Eigen::Vector3<iteratorType>>(&(iter_points + i)[0]);
+             return Eigen::Map<const Eigen::Vector3<Scalar>>(&(iter_points + i)[0]);
            });
   }
 
