@@ -21,6 +21,7 @@
 
 #include "beluga_ros/messages.hpp"
 #include "beluga_ros/point_cloud.hpp"
+#include "beluga_ros/point_cloud_sparse.hpp"
 
 namespace {
 
@@ -32,284 +33,450 @@ auto make_message() {
 #endif
 }
 
-TEST(TestPointCloud, XYZPointsUnorderedPC) {
+template <typename T, uint8_t U>
+auto make_pointcloud(
+    const int& fields,
+    const int& width,
+    const int& height,
+    const std::vector<Eigen::Vector3<T>>& point_data = {},
+    const bool empty = false) {
+  if (point_data.size() < static_cast<unsigned>(width * height) && !empty)
+    throw std::invalid_argument("Not enough points");
+
   auto message = make_message();
-  const auto origin = Sophus::SE3d{};
-  message->width = 1;   // Unordered point cloud
-  message->height = 5;  // Number of points
-  // Set the point fields to x, y and z
-  int fields = 3;
+
+  message->width = width;
+  message->height = height;
   message->fields.clear();
   message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
-  // Create data iterators
-  beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_y(*message, "y");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_z(*message, "z");
-  // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f, 2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f, 8.0f,
-                                         9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f};
-  // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
 
-    ++iter_x;
-    ++iter_y;
-    ++iter_z;
+  const std::vector<T> intensity_data = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9};
+
+  // XY pointclouds
+  if (fields == 2) {
+    // Set offset
+    int offset = 0;
+    offset = addPointField(*message, "x", 1, U, offset);
+    offset = addPointField(*message, "y", 1, U, offset);
+
+    // Set message params
+    message->point_step = offset;
+    message->row_step = message->width * message->point_step;
+    message->is_dense = true;
+    message->data.resize(message->point_step * message->width * message->height);
+
+    // Return empty pointcloud
+    if (empty)
+      return message;
+
+    // Create data iterators
+    beluga_ros::msg::PointCloud2Iterator<T> iter_x(*message, "x");
+    beluga_ros::msg::PointCloud2Iterator<T> iter_y(*message, "y");
+
+    // Fill the PointCloud2 message
+    for (const auto& point : point_data) {
+      *iter_x = point.x();
+      *iter_y = point.y();
+
+      ++iter_x;
+      ++iter_y;
+    }
   }
+
+  // XYZ pointclouds
+  else if (fields == 3) {
+    // Set offset
+    int offset = 0;
+    offset = addPointField(*message, "x", 1, U, offset);
+    offset = addPointField(*message, "y", 1, U, offset);
+    offset = addPointField(*message, "z", 1, U, offset);
+
+    // Set message params
+    message->point_step = offset;
+    message->row_step = message->width * message->point_step;
+    message->is_dense = true;
+    message->data.resize(message->point_step * message->width * message->height);
+
+    // Return empty pointcloud
+    if (empty)
+      return message;
+
+    // Create data iterators
+    beluga_ros::msg::PointCloud2Iterator<T> iter_x(*message, "x");
+    beluga_ros::msg::PointCloud2Iterator<T> iter_y(*message, "y");
+    beluga_ros::msg::PointCloud2Iterator<T> iter_z(*message, "z");
+
+    // Fill the PointCloud2 message
+    for (const auto& point : point_data) {
+      *iter_x = point.x();
+      *iter_y = point.y();
+      *iter_z = point.z();
+
+      ++iter_x;
+      ++iter_y;
+      ++iter_z;
+    }
+  }
+
+  // XYZI pointclouds
+  else if (fields == 4) {
+    // Set offset
+    int offset = 0;
+    offset = addPointField(*message, "x", 1, U, offset);
+    offset = addPointField(*message, "y", 1, U, offset);
+    offset = addPointField(*message, "z", 1, U, offset);
+    offset = addPointField(*message, "intensity", 1, U, offset);
+
+    // Set message params
+    message->point_step = offset;
+    message->row_step = message->width * message->point_step;
+    message->is_dense = true;
+    message->data.resize(message->point_step * message->width * message->height);
+
+    // Return empty pointcloud
+    if (empty)
+      return message;
+
+    // Create data iterators
+    beluga_ros::msg::PointCloud2Iterator<T> iter_x(*message, "x");
+    beluga_ros::msg::PointCloud2Iterator<T> iter_y(*message, "y");
+    beluga_ros::msg::PointCloud2Iterator<T> iter_z(*message, "z");
+    beluga_ros::msg::PointCloud2Iterator<T> iter_intensity(*message, "intensity");
+
+    // Fill the PointCloud2 message
+    int i = 0;
+    for (const auto& point : point_data) {
+      *iter_x = point.x();
+      *iter_y = point.y();
+      *iter_z = point.z();
+      *iter_intensity = intensity_data.at(i);
+
+      ++iter_x;
+      ++iter_y;
+      ++iter_z;
+      ++i;
+    }
+  }
+
+  // Error
+  else {
+    throw std::invalid_argument("Number of fields error");
+  }
+  return message;
+}
+
+TEST(TestPointCloud, XYZPointsUnorderedPC) {
+  const auto origin = Sophus::SE3d{};
+  // Define pointcloud params
+  int fields = 3;
+  int width = 1;
+  int height = 5;
+  // Create some raw data for the points
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F)
+  };
+  // clang-format on
+  // Create point cloud message
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
+
+  // Check aligned pointcloud
   auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
   auto map = cloud.points();
   // Check assert
-  for (int i = 0; i < map.cols(); ++i) {
-    for (int j = 0; j < map.rows(); ++j) {
-      ASSERT_EQ(map(j, i), point_data.at(3 * i + j));
-    }
+  for (unsigned i = 0; i < map.cols(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), map(0, i));
+    ASSERT_EQ(point_data.at(i).y(), map(1, i));
+    ASSERT_EQ(point_data.at(i).z(), map(2, i));
+  }
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
+    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
+    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
   }
 }
 
 TEST(TestPointCloud, XYZPointsOrderedPC) {
-  auto message = make_message();
   const auto origin = Sophus::SE3d{};
-  message->width = 3;   // Unordered point cloud
-  message->height = 3;  // Number of points
-  // Set the point fields to x, y and z
+  // Define pointcloud params
   int fields = 3;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
-  // Create data iterators
-  beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_y(*message, "y");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_z(*message, "z");
+  int width = 3;
+  int height = 3;
   // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f,  2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f,  8.0f,  9.0f,
-                                         10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f, 18.0f,
-                                         19.0f, 20.0f, 21.0f, 22.0f, 23.0f, 24.0f, 25.0f, 26.0f, 27.0f};
-  // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
+  const std::vector<Eigen::Vector3f> point_data = {
+      Eigen::Vector3f(1.0F, 2.0F, 3.0F),    Eigen::Vector3f(4.0F, 5.0F, 6.0F),    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+      Eigen::Vector3f(10.0F, 11.0F, 12.0F), Eigen::Vector3f(13.0F, 14.0F, 15.0F), Eigen::Vector3f(16.0F, 17.0F, 18.0F),
+      Eigen::Vector3f(19.0F, 20.0F, 21.0F), Eigen::Vector3f(22.0F, 23.0F, 24.0F), Eigen::Vector3f(25.0F, 26.0F, 27.0F)};
+  // Create point cloud message
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
 
-    ++iter_x;
-    ++iter_y;
-    ++iter_z;
-  }
+  // Check aligned pointcloud
   auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
   auto map = cloud.points();
   // Check assert
-  for (int i = 0; i < map.cols(); ++i) {
-    for (int j = 0; j < map.rows(); ++j) {
-      ASSERT_EQ(map(j, i), point_data.at(3 * i + j));
-    }
+  for (unsigned i = 0; i < map.cols(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), map(0, i));
+    ASSERT_EQ(point_data.at(i).y(), map(1, i));
+    ASSERT_EQ(point_data.at(i).z(), map(2, i));
+  }
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
+    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
+    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
   }
 }
 
 TEST(TestPointCloud, XYZIPointsUnorderedPC) {
-  auto message = make_message();
   const auto origin = Sophus::SE3d{};
-  message->width = 1;   // Unordered point cloud
-  message->height = 5;  // Number of points
-  // Set the point fields to x, y, z and intensity
+  // Define pointcloud params
   int fields = 4;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
-  // Create data iterators
-  beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_y(*message, "y");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_z(*message, "z");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_intensity(*message, "intensity");
+  int width = 1;
+  int height = 5;
   // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f, 2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f, 8.0f,
-                                         9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f};
-  const std::vector<float> intensity_data = {1.1f, 2.2f, 3.3f, 4.4f, 5.5f};
-  // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
-    *iter_intensity = intensity_data.at(i);
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F)
+  };
+  // clang-format on
+  // Create point cloud message
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
 
-    ++iter_x;
-    ++iter_y;
-    ++iter_z;
-    ++iter_intensity;
-  }
+  // Check aligned pointcloud
   auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
   auto map = cloud.points();
   // Check assert
-  for (int i = 0; i < map.cols(); ++i) {
-    for (int j = 0; j < map.rows(); ++j) {
-      ASSERT_EQ(map(j, i), point_data.at(3 * i + j));
-    }
+  for (unsigned i = 0; i < map.cols(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), map(0, i));
+    ASSERT_EQ(point_data.at(i).y(), map(1, i));
+    ASSERT_EQ(point_data.at(i).z(), map(2, i));
+  }
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
+    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
+    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
   }
 }
 
 TEST(TestPointCloud, XYZIPointsOrderedPC) {
-  auto message = make_message();
   const auto origin = Sophus::SE3d{};
-  message->width = 3;  // Ordered point cloud
-  message->height = 3;
-  // Set the point fields to x, y, z and intensity
+  // Define pointcloud params
   int fields = 4;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
-  // Create data iterators
-  beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_y(*message, "y");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_z(*message, "z");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_intensity(*message, "intensity");
+  int width = 3;
+  int height = 3;
   // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f,  2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f,  8.0f,  9.0f,
-                                         10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f, 18.0f,
-                                         19.0f, 20.0f, 21.0f, 22.0f, 23.0f, 24.0f, 25.0f, 26.0f, 27.0f};
-  const std::vector<float> intensity_data = {1.1f, 2.2f, 3.3f, 4.4f, 5.5f, 6.6f, 7.7f, 8.8f, 9.9f};
-  // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
-    *iter_intensity = intensity_data.at(i);
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F),
+    Eigen::Vector3f(16.0F, 17.0F, 18.0F),
+    Eigen::Vector3f(19.0F, 20.0F, 21.0F),
+    Eigen::Vector3f(22.0F, 23.0F, 24.0F),
+    Eigen::Vector3f(25.0F, 26.0F, 27.0F)
+  };
+  // clang-format on
+  // Create point cloud message
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
 
-    ++iter_x;
-    ++iter_y;
-    ++iter_z;
-    ++iter_intensity;
-  }
+  // Check aligned pointcloud
   auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
   auto map = cloud.points();
   // Check assert
-  for (int i = 0; i < map.cols(); ++i) {
-    for (int j = 0; j < map.rows(); ++j) {
-      ASSERT_EQ(map(j, i), point_data.at(3 * i + j));
-    }
+  for (unsigned i = 0; i < map.cols(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), map(0, i));
+    ASSERT_EQ(point_data.at(i).y(), map(1, i));
+    ASSERT_EQ(point_data.at(i).z(), map(2, i));
+  }
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
+    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
+    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
   }
 }
 
 TEST(TestPointCloud, XYZIDoublePC) {
-  auto message = make_message();
   const auto origin = Sophus::SE3d{};
-  message->width = 1;   // Unordered point cloud
-  message->height = 5;  // Number of points
-  // Set the point fields to x, y, z and intensity
+  // Define pointcloud params
   int fields = 4;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF64, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF64, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF64, offset);
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF64, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
-  // Create data iterators
-  beluga_ros::msg::PointCloud2Iterator<double> iter_x(*message, "x");
-  beluga_ros::msg::PointCloud2Iterator<double> iter_y(*message, "y");
-  beluga_ros::msg::PointCloud2Iterator<double> iter_z(*message, "z");
-  beluga_ros::msg::PointCloud2Iterator<double> iter_intensity(*message, "intensity");
+  int width = 1;
+  int height = 5;
   // Create some raw data for the points
-  const std::vector<double> point_data = {1.0, 2.0,  3.0,  4.0,  5.0,  6.0,  7.0, 8.0,
-                                          9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0};
-  const std::vector<double> intensity_data = {1.1, 2.2, 3.3, 4.4, 5.5};
-  // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
-    *iter_intensity = intensity_data.at(i);
+  // clang-format off
+  const std::vector<Eigen::Vector3d> point_data = {
+    Eigen::Vector3d(1.0, 2.0, 3.0),
+    Eigen::Vector3d(4.0, 5.0, 6.0),
+    Eigen::Vector3d(7.0, 8.0, 9.0),
+    Eigen::Vector3d(10.0, 11.0, 12.0),
+    Eigen::Vector3d(13.0, 14.0, 15.0)
+  };
+  // clang-format on
+  // Create point cloud message
+  const auto message = make_pointcloud<double, beluga_ros::msg::PointFieldF64>(fields, width, height, point_data);
 
-    ++iter_x;
-    ++iter_y;
-    ++iter_z;
-    ++iter_intensity;
-  }
+  // Check aligned pointcloud
   auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF64>(message, origin);
   auto map = cloud.points();
   // Check assert
-  for (int i = 0; i < map.cols(); ++i) {
-    for (int j = 0; j < map.rows(); ++j) {
-      ASSERT_EQ(map(j, i), point_data.at(3 * i + j));
-    }
+  for (unsigned i = 0; i < map.cols(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), map(0, i));
+    ASSERT_EQ(point_data.at(i).y(), map(1, i));
+    ASSERT_EQ(point_data.at(i).z(), map(2, i));
+  }
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF64>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
+    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
+    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
   }
 }
 
 TEST(TestPointCloud, XYZPointsEmptyUnorderedPC) {
-  auto message = make_message();
   const auto origin = Sophus::SE3d{};
-  message->width = 1;   // Unordered point cloud
-  message->height = 5;  // Number of points
-  // Set the point fields to x, y and z
+  // Define pointcloud params
   int fields = 3;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
+  int width = 1;
+  int height = 5;
+  const std::vector<Eigen::Vector3f>& point_data = {};
+  bool empty = true;
+  // Create point cloud message
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data, empty);
 
+  // Check aligned pointcloud
   auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
   auto map = cloud.points();
   // Check assert
-  for (int i = 0; i < map.cols(); ++i) {
-    for (int j = 0; j < map.rows(); ++j) {
-      ASSERT_EQ(map(j, i), message->data.at(3 * i + j));
-    }
+  for (unsigned i = 0; i < map.cols(); ++i) {
+    ASSERT_EQ(message->data.at(3 * i + 0), map(0, i));
+    ASSERT_EQ(message->data.at(3 * i + 1), map(1, i));
+    ASSERT_EQ(message->data.at(3 * i + 2), map(2, i));
+  }
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(message->data.at(3 * i + 0), vector.at(i).x());
+    ASSERT_EQ(message->data.at(3 * i + 1), vector.at(i).y());
+    ASSERT_EQ(message->data.at(3 * i + 2), vector.at(i).z());
   }
 }
 
 TEST(TestPointCloud, XYZIPointsEmptyUnorderedPC) {
+  const auto origin = Sophus::SE3d{};
+  // Define pointcloud params
+  int fields = 4;
+  int width = 1;
+  int height = 5;
+  const std::vector<Eigen::Vector3f>& point_data = {};
+  bool empty = true;
+  // Create point cloud message
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data, empty);
+
+  // Check aligned pointcloud
+  auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto map = cloud.points();
+  // Check assert
+  for (unsigned i = 0; i < map.cols(); ++i) {
+    ASSERT_EQ(message->data.at(3 * i + 0), map(0, i));
+    ASSERT_EQ(message->data.at(3 * i + 1), map(1, i));
+    ASSERT_EQ(message->data.at(3 * i + 2), map(2, i));
+  }
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(message->data.at(3 * i + 0), vector.at(i).x());
+    ASSERT_EQ(message->data.at(3 * i + 1), vector.at(i).y());
+    ASSERT_EQ(message->data.at(3 * i + 2), vector.at(i).z());
+  }
+}
+
+TEST(TestPointCloud, 2DUnorderedPC) {
+  const auto origin = Sophus::SE3d{};
+  // Define pointcloud params
+  int fields = 2;
+  int width = 1;
+  int height = 5;
+  // Create some raw data for the points
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F)
+  };
+  // clang-format on
+  // Create point cloud message
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
+  // Check assert aligned pointcloud
+  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  // Check assert sparse pointcloud
+  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+}
+
+TEST(TestPointCloud, 2DOrderedPC) {
+  const auto origin = Sophus::SE3d{};
+  // Define pointcloud params
+  int fields = 2;
+  int width = 2;
+  int height = 2;
+  // Create some raw data for the points
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F)
+  };
+  // clang-format on
+  // Create point cloud message
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
+  // Check assert aligned pointcloud
+  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  // Check assert sparse pointcloud
+  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+}
+
+TEST(TestPointCloud, EmptyFieldsPC) {
   auto message = make_message();
   const auto origin = Sophus::SE3d{};
   message->width = 1;   // Unordered point cloud
@@ -318,26 +485,44 @@ TEST(TestPointCloud, XYZIPointsEmptyUnorderedPC) {
   int fields = 4;
   message->fields.clear();
   message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
   message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
+  // Check assert aligned pointcloud
+  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  // Check assert sparse pointcloud
+  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+}
 
-  auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
-  auto map = cloud.points();
-  // Check assert
-  for (int i = 0; i < map.cols(); ++i) {
-    for (int j = 0; j < map.rows(); ++j) {
-      ASSERT_EQ(map(j, i), message->data.at(3 * i + j));
-    }
-  }
+TEST(TestPointCloud, WrongTypePC) {
+  const auto origin = Sophus::SE3d{};
+  // Define pointcloud params
+  int fields = 4;
+  int width = 1;
+  int height = 5;
+  // Create some raw data for the points
+  // clang-format off
+  const std::vector<Eigen::Vector3d> point_data = {
+    Eigen::Vector3d(1.0, 2.0, 3.0),
+    Eigen::Vector3d(4.0, 5.0, 6.0),
+    Eigen::Vector3d(7.0, 8.0, 9.0),
+    Eigen::Vector3d(10.0, 11.0, 12.0),
+    Eigen::Vector3d(13.0, 14.0, 15.0)
+  };
+  // clang-format on
+  // Create point cloud message
+  const auto message = make_pointcloud<double, beluga_ros::msg::PointFieldF64>(fields, width, height, point_data);
+  // Check assert aligned pointcloud
+  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  // Check assert sparse pointcloud
+  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+}
+
+TEST(TestPointCloud, VoidPC) {
+  const auto origin = Sophus::SE3d{};
+  auto message = make_message();
+  // Check assert aligned pointcloud
+  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  // Check assert sparse pointcloud
+  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, IXYZPC) {
@@ -366,14 +551,21 @@ TEST(TestPointCloud, IXYZPC) {
   beluga_ros::msg::PointCloud2Iterator<float> iter_z(*message, "z");
   beluga_ros::msg::PointCloud2Iterator<float> iter_intensity(*message, "intensity");
   // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f, 2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f, 8.0f,
-                                         9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f};
-  const std::vector<float> intensity_data = {1.1f, 2.2f, 3.3f, 4.4f, 5.5f};
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F)
+  };
+  // clang-format on
+  const std::vector<float> intensity_data = {1.1F, 2.2F, 3.3F, 4.4F, 5.5F};
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
+  for (unsigned i = 0; i < point_data.size(); ++i) {
+    *iter_x = point_data.at(i).x();
+    *iter_y = point_data.at(i).y();
+    *iter_z = point_data.at(i).z();
     *iter_intensity = intensity_data.at(i);
 
     ++iter_x;
@@ -381,8 +573,10 @@ TEST(TestPointCloud, IXYZPC) {
     ++iter_z;
     ++iter_intensity;
   }
-  // Check assert
+  // Check assert aligned pointcloud
   ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  // Check assert sparse pointcloud
+  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, ZXYIPC) {
@@ -411,14 +605,21 @@ TEST(TestPointCloud, ZXYIPC) {
   beluga_ros::msg::PointCloud2Iterator<float> iter_z(*message, "z");
   beluga_ros::msg::PointCloud2Iterator<float> iter_intensity(*message, "intensity");
   // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f, 2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f, 8.0f,
-                                         9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f};
-  const std::vector<float> intensity_data = {1.1f, 2.2f, 3.3f, 4.4f, 5.5f};
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F)
+  };
+  // clang-format on
+  const std::vector<float> intensity_data = {1.1F, 2.2F, 3.3F, 4.4F, 5.5F};
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
+  for (unsigned i = 0; i < point_data.size(); ++i) {
+    *iter_x = point_data.at(i).x();
+    *iter_y = point_data.at(i).y();
+    *iter_z = point_data.at(i).z();
     *iter_intensity = intensity_data.at(i);
 
     ++iter_x;
@@ -426,168 +627,10 @@ TEST(TestPointCloud, ZXYIPC) {
     ++iter_z;
     ++iter_intensity;
   }
-  /// Check assert
+  // Check assert aligned pointcloud
   ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
-}
-
-TEST(TestPointCloud, 2DUnorderedPC) {
-  auto message = make_message();
-  const auto origin = Sophus::SE3d{};
-  message->width = 1;   // Unordered point cloud
-  message->height = 5;  // Number of points
-  // Set the point fields to x and y
-  int fields = 2;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
-  // Create data iterators
-  beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_y(*message, "y");
-  // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f, 2.0f, 4.0f, 5.0f, 7.0f, 8.0f, 10.0f, 11.0f, 12.0f, 13.0f};
-  // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 2; ++i) {
-    *iter_x = point_data.at(2 * i + 0);
-    *iter_y = point_data.at(2 * i + 1);
-
-    ++iter_x;
-    ++iter_y;
-  }
-  // Check assert
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
-}
-
-TEST(TestPointCloud, 2DOrderedPC) {
-  auto message = make_message();
-  const auto origin = Sophus::SE3d{};
-  message->width = 2;  // Ordered point cloud
-  message->height = 2;
-  // Set the point fields to x and y
-  int fields = 2;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
-  // Create data iterators
-  beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
-  beluga_ros::msg::PointCloud2Iterator<float> iter_y(*message, "y");
-  // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f, 2.0f, 4.0f, 5.0f, 7.0f, 8.0f, 10.0f, 11.0f, 12.0f, 13.0f};
-  // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 2; ++i) {
-    *iter_x = point_data.at(2 * i + 0);
-    *iter_y = point_data.at(2 * i + 1);
-
-    ++iter_x;
-    ++iter_y;
-  }
-  // Check assert
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
-}
-
-TEST(TestPointCloud, EmptyFieldsPC) {
-  auto message = make_message();
-  const auto origin = Sophus::SE3d{};
-  message->width = 1;   // Unordered point cloud
-  message->height = 4;  // Number of points
-  // Set the point fields to x, y, z and intensity
-  int fields = 4;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  message->is_dense = true;
-  // Check assert
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
-}
-
-TEST(TestPointCloud, NotDensePC) {
-  auto message = make_message();
-  const auto origin = Sophus::SE3d{};
-  message->width = 1;   // Unordered point cloud
-  message->height = 4;  // Number of points
-  // Set the point fields to x, y, z and intensity
-  int fields = 4;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = false;
-  message->data.resize(message->point_step * message->width * message->height);
-  // Check assert
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
-}
-
-TEST(TestPointCloud, WrongTypePC) {
-  auto message = make_message();
-  const auto origin = Sophus::SE3d{};
-  message->width = 1;   // Unordered point cloud
-  message->height = 5;  // Number of points
-  // Set the point fields to x, y, z and intensity
-  int fields = 4;
-  message->fields.clear();
-  message->fields.reserve(fields);
-  // Set offset
-  int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF64, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF64, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF64, offset);
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF64, offset);
-  // Set message params
-  message->point_step = offset;
-  message->row_step = message->width * message->point_step;
-  message->is_dense = true;
-  message->data.resize(message->point_step * message->width * message->height);
-  // Create data iterators
-  beluga_ros::msg::PointCloud2Iterator<double> iter_x(*message, "x");
-  beluga_ros::msg::PointCloud2Iterator<double> iter_y(*message, "y");
-  beluga_ros::msg::PointCloud2Iterator<double> iter_z(*message, "z");
-  beluga_ros::msg::PointCloud2Iterator<double> iter_intensity(*message, "intensity");
-  // Create some raw data for the points
-  const std::vector<double> point_data = {1.0, 2.0,  3.0,  4.0,  5.0,  6.0,  7.0, 8.0,
-                                          9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0};
-  const std::vector<double> intensity_data = {1.1, 2.2, 3.3, 4.4, 5.5};
-  // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
-    *iter_intensity = intensity_data.at(i);
-
-    ++iter_x;
-    ++iter_y;
-    ++iter_z;
-    ++iter_intensity;
-  }
-  // Check assert
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
-}
-
-TEST(TestPointCloud, VoidPC) {
-  auto message = make_message();
-  const auto origin = Sophus::SE3d{};
-  // Check assert
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  // Check assert sparse pointcloud
+  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, Velodyne) {
@@ -620,16 +663,23 @@ TEST(TestPointCloud, Velodyne) {
   beluga_ros::msg::PointCloud2Iterator<std::uint16_t> iter_ring(*message, "ring");
   beluga_ros::msg::PointCloud2Iterator<float> iter_time(*message, "time");
   // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f, 2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f, 8.0f,
-                                         9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f};
-  const std::vector<float> intensity_data = {1.1f, 2.2f, 3.3f, 4.4f, 5.5f};
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F)
+  };
+  // clang-format on
+  const std::vector<float> intensity_data = {1.1F, 2.2F, 3.3F, 4.4F, 5.5F};
   const std::vector<std::uint16_t> ring_data = {1, 2, 3, 4, 5};
-  const std::vector<float> time_data = {0.1f, 0.2f, 0.3f, 0.4f, 0.5f};
+  const std::vector<float> time_data = {0.1F, 0.2F, 0.3F, 0.4F, 0.5F};
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
+  for (unsigned i = 0; i < point_data.size(); ++i) {
+    *iter_x = point_data.at(i).x();
+    *iter_y = point_data.at(i).y();
+    *iter_z = point_data.at(i).z();
     *iter_intensity = intensity_data.at(i);
     *iter_ring = ring_data.at(i);
     *iter_time = time_data.at(i);
@@ -641,8 +691,18 @@ TEST(TestPointCloud, Velodyne) {
     ++iter_ring;
     ++iter_time;
   }
-  // Check assert
+  // Check assert aligned pointcloud
   ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
+    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
+    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  }
 }
 
 TEST(TestPointCloud, Robosense) {
@@ -675,16 +735,23 @@ TEST(TestPointCloud, Robosense) {
   beluga_ros::msg::PointCloud2Iterator<std::uint16_t> iter_ring(*message, "ring");
   beluga_ros::msg::PointCloud2Iterator<double> iter_time(*message, "time");
   // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f, 2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f, 8.0f,
-                                         9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f};
-  const std::vector<float> intensity_data = {1.1f, 2.2f, 3.3f, 4.4f, 5.5f};
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F)
+  };
+  // clang-format on
+  const std::vector<float> intensity_data = {1.1F, 2.2F, 3.3F, 4.4F, 5.5F};
   const std::vector<std::uint16_t> ring_data = {1, 2, 3, 4, 5};
   const std::vector<double> time_data = {0.1, 0.2, 0.3, 0.4, 0.5};
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
+  for (unsigned i = 0; i < point_data.size(); ++i) {
+    *iter_x = point_data.at(i).x();
+    *iter_y = point_data.at(i).y();
+    *iter_z = point_data.at(i).z();
     *iter_intensity = intensity_data.at(i);
     *iter_ring = ring_data.at(i);
     *iter_time = time_data.at(i);
@@ -696,7 +763,18 @@ TEST(TestPointCloud, Robosense) {
     ++iter_ring;
     ++iter_time;
   }
+  // Check assert aligned pointcloud
   ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
+    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
+    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  }
 }
 
 TEST(TestPointCloud, Ouster) {
@@ -736,9 +814,16 @@ TEST(TestPointCloud, Ouster) {
   beluga_ros::msg::PointCloud2Iterator<std::uint16_t> iter_ambient(*message, "ambient");
   beluga_ros::msg::PointCloud2Iterator<std::uint32_t> iter_range(*message, "range");
   // Create some raw data for the points
-  const std::vector<float> point_data = {1.0f, 2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f, 8.0f,
-                                         9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f};
-  const std::vector<float> intensity_data = {1.1f, 2.2f, 3.3f, 4.4f, 5.5f};
+  // clang-format off
+  const std::vector<Eigen::Vector3f> point_data = {
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F)
+  };
+  // clang-format on
+  const std::vector<float> intensity_data = {1.1F, 2.2F, 3.3F, 4.4F, 5.5F};
   const std::vector<std::uint32_t> time_data = {1, 2, 3, 4, 5};
   const std::vector<std::uint16_t> reflectivity_data = {10, 9, 8, 7, 6};
   const std::vector<std::uint8_t> ring_data = {11, 12, 13, 14, 15};
@@ -746,10 +831,10 @@ TEST(TestPointCloud, Ouster) {
   const std::vector<std::uint32_t> range_data = {21, 22, 23, 24, 25};
 
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size() / 3; ++i) {
-    *iter_x = point_data.at(3 * i + 0);
-    *iter_y = point_data.at(3 * i + 1);
-    *iter_z = point_data.at(3 * i + 2);
+  for (unsigned i = 0; i < point_data.size(); ++i) {
+    *iter_x = point_data.at(i).x();
+    *iter_y = point_data.at(i).y();
+    *iter_z = point_data.at(i).z();
     *iter_intensity = intensity_data.at(i);
     *iter_time = time_data.at(i);
     *iter_reflectivity = reflectivity_data.at(i);
@@ -767,7 +852,18 @@ TEST(TestPointCloud, Ouster) {
     ++iter_ambient;
     ++iter_range;
   }
+  // Check assert aligned pointcloud
   ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+
+  // Check sparse pointcloud
+  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto vector = cloud_sparse.points();
+  // Check assert
+  for (unsigned i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
+    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
+    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  }
 }
 
 }  // namespace
