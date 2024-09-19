@@ -19,6 +19,10 @@
 
 #include <range/v3/range/conversion.hpp>
 
+#if BELUGA_ROS_VERSION == 1
+#include <boost/smart_ptr.hpp>
+#endif
+
 #include "beluga_ros/messages.hpp"
 #include "beluga_ros/point_cloud.hpp"
 #include "beluga_ros/point_cloud_sparse.hpp"
@@ -35,9 +39,9 @@ auto make_message() {
 
 template <typename T, uint8_t U>
 auto make_pointcloud(
-    const int& fields,
-    const int& width,
-    const int& height,
+    const unsigned int& fields,
+    const unsigned int& width,
+    const unsigned int& height,
     const std::vector<Eigen::Vector3<T>>& point_data = {},
     const bool empty = false) {
   if (point_data.size() < static_cast<unsigned>(width * height) && !empty)
@@ -50,12 +54,14 @@ auto make_pointcloud(
   message->fields.clear();
   message->fields.reserve(fields);
 
-  const std::vector<T> intensity_data = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9};
+  const std::vector<T> intensity_data = {static_cast<T>(1.1), static_cast<T>(2.2), static_cast<T>(3.3),
+                                         static_cast<T>(4.4), static_cast<T>(5.5), static_cast<T>(6.6),
+                                         static_cast<T>(7.7), static_cast<T>(8.8), static_cast<T>(9.9)};
 
   // XY pointclouds
   if (fields == 2) {
     // Set offset
-    int offset = 0;
+    unsigned int offset = 0;
     offset = addPointField(*message, "x", 1, U, offset);
     offset = addPointField(*message, "y", 1, U, offset);
 
@@ -86,7 +92,7 @@ auto make_pointcloud(
   // XYZ pointclouds
   else if (fields == 3) {
     // Set offset
-    int offset = 0;
+    unsigned int offset = 0;
     offset = addPointField(*message, "x", 1, U, offset);
     offset = addPointField(*message, "y", 1, U, offset);
     offset = addPointField(*message, "z", 1, U, offset);
@@ -121,7 +127,7 @@ auto make_pointcloud(
   // XYZI pointclouds
   else if (fields == 4) {
     // Set offset
-    int offset = 0;
+    unsigned int offset = 0;
     offset = addPointField(*message, "x", 1, U, offset);
     offset = addPointField(*message, "y", 1, U, offset);
     offset = addPointField(*message, "z", 1, U, offset);
@@ -168,9 +174,9 @@ auto make_pointcloud(
 TEST(TestPointCloud, XYZPointsUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 3;
-  int width = 1;
-  int height = 5;
+  unsigned int fields = 3;
+  unsigned int width = 1;
+  unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -208,9 +214,9 @@ TEST(TestPointCloud, XYZPointsUnorderedPC) {
 TEST(TestPointCloud, XYZPointsOrderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 3;
-  int width = 3;
-  int height = 3;
+  unsigned int fields = 3;
+  unsigned int width = 3;
+  unsigned int height = 3;
   // Create some raw data for the points
   const std::vector<Eigen::Vector3f> point_data = {
       Eigen::Vector3f(1.0F, 2.0F, 3.0F),    Eigen::Vector3f(4.0F, 5.0F, 6.0F),    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
@@ -243,9 +249,9 @@ TEST(TestPointCloud, XYZPointsOrderedPC) {
 TEST(TestPointCloud, XYZIPointsUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 4;
-  int width = 1;
-  int height = 5;
+  unsigned int fields = 4;
+  unsigned int width = 1;
+  unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -283,9 +289,9 @@ TEST(TestPointCloud, XYZIPointsUnorderedPC) {
 TEST(TestPointCloud, XYZIPointsOrderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 4;
-  int width = 3;
-  int height = 3;
+  unsigned int fields = 4;
+  unsigned int width = 3;
+  unsigned int height = 3;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -327,9 +333,9 @@ TEST(TestPointCloud, XYZIPointsOrderedPC) {
 TEST(TestPointCloud, XYZIDoublePC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 4;
-  int width = 1;
-  int height = 5;
+  unsigned int fields = 4;
+  unsigned int width = 1;
+  unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3d> point_data = {
@@ -367,9 +373,9 @@ TEST(TestPointCloud, XYZIDoublePC) {
 TEST(TestPointCloud, XYZPointsEmptyUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 3;
-  int width = 1;
-  int height = 5;
+  unsigned int fields = 3;
+  unsigned int width = 1;
+  unsigned int height = 5;
   const std::vector<Eigen::Vector3f>& point_data = {};
   bool empty = true;
   // Create point cloud message
@@ -399,9 +405,9 @@ TEST(TestPointCloud, XYZPointsEmptyUnorderedPC) {
 TEST(TestPointCloud, XYZIPointsEmptyUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 4;
-  int width = 1;
-  int height = 5;
+  unsigned int fields = 4;
+  unsigned int width = 1;
+  unsigned int height = 5;
   const std::vector<Eigen::Vector3f>& point_data = {};
   bool empty = true;
   // Create point cloud message
@@ -431,9 +437,9 @@ TEST(TestPointCloud, XYZIPointsEmptyUnorderedPC) {
 TEST(TestPointCloud, 2DUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 2;
-  int width = 1;
-  int height = 5;
+  unsigned int fields = 2;
+  unsigned int width = 1;
+  unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -455,9 +461,9 @@ TEST(TestPointCloud, 2DUnorderedPC) {
 TEST(TestPointCloud, 2DOrderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 2;
-  int width = 2;
-  int height = 2;
+  unsigned int fields = 2;
+  unsigned int width = 2;
+  unsigned int height = 2;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -495,9 +501,9 @@ TEST(TestPointCloud, EmptyFieldsPC) {
 TEST(TestPointCloud, WrongTypePC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  int fields = 4;
-  int width = 1;
-  int height = 5;
+  unsigned int fields = 4;
+  unsigned int width = 1;
+  unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3d> point_data = {
@@ -531,11 +537,11 @@ TEST(TestPointCloud, IXYZPC) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields to x, y, z and intensity
-  int fields = 4;
+  unsigned int fields = 4;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
-  int offset = 0;
+  unsigned int offset = 0;
   offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
@@ -585,11 +591,11 @@ TEST(TestPointCloud, ZXYIPC) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields to x, y, z and intensity
-  int fields = 4;
+  unsigned int fields = 4;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
-  int offset = 0;
+  unsigned int offset = 0;
   offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
@@ -639,11 +645,11 @@ TEST(TestPointCloud, Velodyne) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields as velodyne
-  int fields = 6;
+  unsigned int fields = 6;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
-  int offset = 0;
+  unsigned int offset = 0;
   offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
@@ -711,11 +717,11 @@ TEST(TestPointCloud, Robosense) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields as robosense
-  int fields = 6;
+  unsigned int fields = 6;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
-  int offset = 0;
+  unsigned int offset = 0;
   offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
@@ -783,11 +789,11 @@ TEST(TestPointCloud, Ouster) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields as ouster
-  int fields = 9;
+  unsigned int fields = 9;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
-  int offset = 0;
+  unsigned int offset = 0;
   offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
   offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
