@@ -41,34 +41,18 @@
 
 namespace beluga_ros {
 
-template <uint8_t T>
-struct DataType;
-
-template <>
-struct DataType<beluga_ros::msg::PointFieldF32> {
-  using iteratorType = float;
-  using eigenType = const Eigen::Matrix3Xf;
-};
-
-template <>
-struct DataType<beluga_ros::msg::PointFieldF64> {
-  using iteratorType = double;
-  using eigenType = const Eigen::Matrix3Xd;
-};
-
 /// Thin wrapper type for 3D `sensor_msgs/PointCloud2` messages.
 /// Assumes an XYZ... type message.
 /// All datafields must be the same type (float or double).
-template <uint8_t T = beluga_ros::msg::PointFieldF64>
+template <uint8_t T>
 class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
  public:
   /// PointCloud data fields type
-  using iteratorType = typename DataType<T>::iteratorType;
-  using eigenType = typename DataType<T>::eigenType;
+  using Scalar = typename sensor_msgs::pointFieldTypeAsType<T>::type;
 
   /// Check type is float or double
   static_assert(
-      std::is_same<iteratorType, float>::value || std::is_same<iteratorType, double>::value,
+      std::is_same<Scalar, float>::value || std::is_same<Scalar, double>::value,
       "Pointcloud3 only supports float or double datatype");
 
   /// Constructor.
@@ -88,9 +72,9 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
     if (cloud_->fields.at(0).datatype != T || cloud_->fields.at(1).datatype != T || cloud_->fields.at(2).datatype != T)
       throw std::invalid_argument("XYZ datatype are not same");
     // verificar q el stride sea entero => throw
-    if (cloud_->point_step % sizeof(iteratorType) != 0)
+    if (cloud_->point_step % sizeof(Scalar) != 0)
       throw std::invalid_argument("Data is not memory-aligned");
-    stride_ = static_cast<int>(cloud_->point_step / sizeof(iteratorType));
+    stride_ = static_cast<int>(cloud_->point_step / sizeof(Scalar));
   }
 
   /// Get the point cloud frame origin in the filter frame.
@@ -98,8 +82,8 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
 
   /// Get the unorganized 3D point collection as an Eigen Map<Eigen::Matrix3X>.
   [[nodiscard]] auto points() const {
-    beluga_ros::msg::PointCloud2ConstIterator<iteratorType> iter_points(*cloud_, "x");
-    Eigen::Map<eigenType, 0, Eigen::OuterStride<>> map(
+    beluga_ros::msg::PointCloud2ConstIterator<Scalar> iter_points(*cloud_, "x");
+    Eigen::Map<const Eigen::Matrix3X<Scalar>, 0, Eigen::OuterStride<>> map(
         &iter_points[0], 3, cloud_->width * cloud_->height, Eigen::OuterStride<>(stride_));
     return map;
   }
