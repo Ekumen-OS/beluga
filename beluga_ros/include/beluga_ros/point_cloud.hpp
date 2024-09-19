@@ -27,7 +27,16 @@
 
 /**
  * \file
- * \brief Implementation of `sensor_msgs/PointCloud2` wrapper type.
+ * \brief Implementation of `sensor_msgs/PointCloud2` wrapper type for messages with with memory-aligned strides.
+ *
+ * \details
+ * The stride calculation ensures that the memory layout of the point cloud data is aligned with the size of the data
+ * type used for iteration (`iteratorType`). To maintain proper memory alignment, the stride must satisfy the condition:
+ *
+ * `cloud_->point_step % sizeof(iteratorType) == 0`
+ *
+ * This condition guarantees that `point_step` is a multiple of the size of the `iteratorType`, ensuring efficient
+ * access to each point in the cloud.
  */
 
 namespace beluga_ros {
@@ -49,8 +58,7 @@ struct DataType<beluga_ros::msg::PointFieldF64> {
 
 /// Thin wrapper type for 3D `sensor_msgs/PointCloud2` messages.
 /// Assumes an XYZ... type message.
-/// Each field must have the same datatype.
-/// The point cloud can't have invalid values, i.e., it must be dense.
+/// All datafields must be the same type (float or double).
 template <uint8_t T = beluga_ros::msg::PointFieldF64>
 class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
  public:
@@ -69,37 +77,36 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
   /// \param origin Point cloud frame origin in the filter frame.
   explicit PointCloud3(beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d origin = Sophus::SE3d())
       : cloud_(std::move(cloud)), origin_(std::move(origin)) {
-    // Check there are not invalid values
-    if (!cloud_->is_dense)
-      throw std::invalid_argument("PointCloud is not dense");
+    assert(cloud_ != nullptr);
     // Check if point cloud is 3D
     if (cloud_->fields.size() < 3)
       throw std::invalid_argument("PointCloud is not 3D");
     // Check point cloud is XYZ... type
-    if (cloud_->fields.at(0).name != "x" && cloud_->fields.at(1).name != "y" && cloud_->fields.at(2).name != "z")
+    if (cloud_->fields.at(0).name != "x" || cloud_->fields.at(1).name != "y" || cloud_->fields.at(2).name != "z")
       throw std::invalid_argument("PointCloud not XYZ...");
-    // Check all datatype is the same
-    if (!std::all_of(
-            cloud_->fields.begin(), cloud_->fields.end(), [&](const auto& field) { return field.datatype == T; })) {
-      throw std::invalid_argument("Fields do not match pointcloud datatype");
-    }
-    assert(cloud_ != nullptr);
+    // Check XYZ datatype is the same
+    if (cloud_->fields.at(0).datatype != T || cloud_->fields.at(1).datatype != T || cloud_->fields.at(2).datatype != T)
+      throw std::invalid_argument("XYZ datatype are not same");
+    // verificar q el stride sea entero => throw
+    if (cloud_->point_step % sizeof(iteratorType) != 0)
+      throw std::invalid_argument("Data is not memory-aligned");
+    stride_ = static_cast<int>(cloud_->point_step / sizeof(iteratorType));
   }
 
   /// Get the point cloud frame origin in the filter frame.
   [[nodiscard]] const auto& origin() const { return origin_; }
 
-  /// Get the unorganized 3D point collection as an Eigen Map.
+  /// Get the unorganized 3D point collection as an Eigen Map<Eigen::Matrix3X>.
   [[nodiscard]] auto points() const {
-    beluga_ros::msg::PointCloud2ConstIterator<iteratorType> iterPoints(*cloud_, "x");
-    int stride_step = static_cast<int>((cloud_->point_step + sizeof(iteratorType) - 1) / sizeof(iteratorType));
+    beluga_ros::msg::PointCloud2ConstIterator<iteratorType> iter_points(*cloud_, "x");
     Eigen::Map<eigenType, 0, Eigen::OuterStride<>> map(
-        &iterPoints[0], 3, cloud_->width * cloud_->height, Eigen::OuterStride<>(stride_step));
+        &iter_points[0], 3, cloud_->width * cloud_->height, Eigen::OuterStride<>(stride_));
     return map;
   }
 
  private:
   beluga_ros::msg::PointCloud2ConstSharedPtr cloud_;
+  int stride_;
   Sophus::SE3d origin_;
 };
 
