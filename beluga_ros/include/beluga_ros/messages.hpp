@@ -94,6 +94,9 @@ using PointCloud2 = sensor_msgs::PointCloud2;
 using PointCloud2ConstSharedPtr = PointCloud2::ConstPtr;
 template <typename Scalar>
 using PointCloud2ConstIterator = sensor_msgs::PointCloud2ConstIterator<Scalar>;
+template <typename Scalar>
+using PointCloud2Iterator = sensor_msgs::PointCloud2Iterator<Scalar>;
+using PointCloud2Modifier = sensor_msgs::PointCloud2Modifier;
 constexpr uint8_t PointFieldU8 = sensor_msgs::PointField::UINT8;
 constexpr uint8_t PointFieldU16 = sensor_msgs::PointField::UINT16;
 constexpr uint8_t PointFieldU32 = sensor_msgs::PointField::UINT32;
