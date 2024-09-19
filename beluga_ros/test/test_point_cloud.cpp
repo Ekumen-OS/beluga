@@ -23,6 +23,8 @@
 #include <boost/smart_ptr.hpp>
 #endif
 
+#include <Eigen/Dense>
+
 #include "beluga_ros/messages.hpp"
 #include "beluga_ros/point_cloud.hpp"
 #include "beluga_ros/point_cloud_sparse.hpp"
