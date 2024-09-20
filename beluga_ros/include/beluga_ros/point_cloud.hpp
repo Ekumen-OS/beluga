@@ -25,6 +25,8 @@
 
 #include <Eigen/Dense>
 
+#include "beluga/eigen_compatibility.hpp"
+
 /**
  * \file
  * \brief Implementation of `sensor_msgs/PointCloud2` wrapper type for messages with with memory-aligned strides.
@@ -71,7 +73,7 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
     // Check XYZ datatype is the same
     if (cloud_->fields.at(0).datatype != T || cloud_->fields.at(1).datatype != T || cloud_->fields.at(2).datatype != T)
       throw std::invalid_argument("XYZ datatype are not same");
-    // verificar q el stride sea entero => throw
+    // Check stride is divisible
     if (cloud_->point_step % sizeof(Scalar) != 0)
       throw std::invalid_argument("Data is not memory-aligned");
     stride_ = static_cast<int>(cloud_->point_step / sizeof(Scalar));

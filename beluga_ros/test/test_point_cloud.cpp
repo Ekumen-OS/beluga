@@ -25,6 +25,7 @@
 
 #include <Eigen/Dense>
 
+#include "beluga/eigen_compatibility.hpp"
 #include "beluga_ros/messages.hpp"
 #include "beluga_ros/point_cloud.hpp"
 #include "beluga_ros/point_cloud_sparse.hpp"
@@ -220,10 +221,19 @@ TEST(TestPointCloud, XYZPointsOrderedPC) {
   unsigned int width = 3;
   unsigned int height = 3;
   // Create some raw data for the points
+  // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
-      Eigen::Vector3f(1.0F, 2.0F, 3.0F),    Eigen::Vector3f(4.0F, 5.0F, 6.0F),    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
-      Eigen::Vector3f(10.0F, 11.0F, 12.0F), Eigen::Vector3f(13.0F, 14.0F, 15.0F), Eigen::Vector3f(16.0F, 17.0F, 18.0F),
-      Eigen::Vector3f(19.0F, 20.0F, 21.0F), Eigen::Vector3f(22.0F, 23.0F, 24.0F), Eigen::Vector3f(25.0F, 26.0F, 27.0F)};
+    Eigen::Vector3f(1.0F, 2.0F, 3.0F),
+    Eigen::Vector3f(4.0F, 5.0F, 6.0F),
+    Eigen::Vector3f(7.0F, 8.0F, 9.0F),
+    Eigen::Vector3f(10.0F, 11.0F, 12.0F),
+    Eigen::Vector3f(13.0F, 14.0F, 15.0F),
+    Eigen::Vector3f(16.0F, 17.0F, 18.0F),
+    Eigen::Vector3f(19.0F, 20.0F, 21.0F),
+    Eigen::Vector3f(22.0F, 23.0F, 24.0F),
+    Eigen::Vector3f(25.0F, 26.0F, 27.0F)
+  };
+  // clang-format on
   // Create point cloud message
   const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
 
