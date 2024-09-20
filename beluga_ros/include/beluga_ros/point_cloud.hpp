@@ -76,6 +76,7 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
     // Check stride is divisible
     if (cloud_->point_step % sizeof(Scalar) != 0)
       throw std::invalid_argument("Data is not memory-aligned");
+    // stride_ = static_cast<int>(cloud_->point_step / sizeof(Scalar));
     stride_ = static_cast<int>(cloud_->point_step / sizeof(Scalar));
   }
 
@@ -86,7 +87,7 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
   [[nodiscard]] auto points() const {
     beluga_ros::msg::PointCloud2ConstIterator<Scalar> iter_points(*cloud_, "x");
     Eigen::Map<const Eigen::Matrix3X<Scalar>, 0, Eigen::OuterStride<>> map(
-        &iter_points[0], 3, cloud_->width * cloud_->height, Eigen::OuterStride<>(stride_));
+        &iter_points[0], 3, cloud_->width * cloud_->height, stride_);
     return map;
   }
 
