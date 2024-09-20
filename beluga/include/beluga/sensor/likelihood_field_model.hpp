@@ -120,19 +120,17 @@ class LikelihoodFieldModel {
       const auto unknown_space_occupancy_prob = 1. / params_.max_laser_distance;
       // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
       // See https://github.com/Ekumen-OS/beluga/issues/153
-      const auto unknown_space_occupancy_likelihood_cubed =
-          unknown_space_occupancy_prob * unknown_space_occupancy_prob * unknown_space_occupancy_prob;
       return std::transform_reduce(
           points.cbegin(), points.cend(), 1.0, std::plus{},
-          [this, x_offset, y_offset, cos_theta, sin_theta,
-           unknown_space_occupancy_likelihood_cubed](const auto& point) {
+          [this, x_offset, y_offset, cos_theta, sin_theta, unknown_space_occupancy_prob](const auto& point) {
             // Transform the end point of the laser to the grid local coordinate system.
             // Not using Eigen/Sophus because they make the routine x10 slower.
             // See `benchmark_likelihood_field_model.cpp` for reference.
             const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
             const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
-            // for performance, we store the likelihood already elevated to the cube
-            return likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_likelihood_cubed);
+
+            const auto cubed = [](auto pz) { return pz * pz * pz; };
+            return cubed(likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob));
           });
     };
   }
@@ -150,19 +148,18 @@ class LikelihoodFieldModel {
 
  private:
   param_type params_;
-  ValueGrid2<double> likelihood_field_;
+  ValueGrid2<float> likelihood_field_;
   Sophus::SE2d world_to_likelihood_field_transform_;
 
-  static ValueGrid2<double> make_likelihood_field(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid) {
-    const auto squared_distance = [&grid,
-                                   squared_max_distance = params.max_obstacle_distance * params.max_obstacle_distance](
-                                      std::size_t first, std::size_t second) {
-      return std::min((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm(), squared_max_distance);
+  static ValueGrid2<float> make_likelihood_field(const LikelihoodFieldModelParam& params, const OccupancyGrid& grid) {
+    const auto squared_distance = [&grid](std::size_t first, std::size_t second) {
+      return static_cast<float>((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm());
     };
 
-    const auto neighborhood = [&grid](std::size_t index) { return grid.neighborhood4(index); };
-
-    const auto distance_map = nearest_obstacle_distance_map(grid.obstacle_data(), squared_distance, neighborhood);
+    const auto squared_max_distance = static_cast<float>(params.max_obstacle_distance * params.max_obstacle_distance);
+    const auto truncate_to_max_distance = [squared_max_distance](auto squared_distance) {
+      return std::min(squared_distance, squared_max_distance);
+    };
 
     const auto to_likelihood = [amplitude =
                                     params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi())),
@@ -173,13 +170,16 @@ class LikelihoodFieldModel {
       return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
     };
 
-    // we store the likelihood elevated to the cube to save a few runtime computations
-    // when calculating the importance weight
-    const auto to_the_cube = [](auto likelihood) { return likelihood * likelihood * likelihood; };
+    const auto neighborhood = [&grid](std::size_t index) { return grid.neighborhood4(index); };
 
-    auto likelihood_data = distance_map | ranges::views::transform(to_likelihood) |
-                           ranges::views::transform(to_the_cube) | ranges::to<std::vector>;
-    return ValueGrid2<double>{std::move(likelihood_data), grid.width(), grid.resolution()};
+    // determine distances to obstacles and calculate likelihood values in-place
+    // to minimize memory usage when dealing with large maps
+    auto likelihood_values = nearest_obstacle_distance_map(grid.obstacle_data(), squared_distance, neighborhood);
+    std::transform(
+        likelihood_values.begin(), likelihood_values.end(), likelihood_values.begin(), truncate_to_max_distance);
+    std::transform(likelihood_values.begin(), likelihood_values.end(), likelihood_values.begin(), to_likelihood);
+
+    return ValueGrid2<float>{std::move(likelihood_values), grid.width(), grid.resolution()};
   }
 };
 
