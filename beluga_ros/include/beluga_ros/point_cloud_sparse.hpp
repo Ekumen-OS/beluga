@@ -25,6 +25,8 @@
 
 #include <Eigen/Dense>
 
+#include "beluga/eigen_compatibility.hpp"
+
 /**
  * \file
  * \brief Implementation of `sensor_msgs/PointCloud2` wrapper type for messages without alignment constraints on the
