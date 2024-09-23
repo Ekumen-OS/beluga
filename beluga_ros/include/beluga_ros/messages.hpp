@@ -70,11 +70,7 @@ using PointCloud2ConstIterator = sensor_msgs::PointCloud2ConstIterator<Scalar>;
 template <typename Scalar>
 using PointCloud2Iterator = sensor_msgs::PointCloud2Iterator<Scalar>;
 using PointCloud2Modifier = sensor_msgs::PointCloud2Modifier;
-constexpr uint8_t PointFieldU8 = sensor_msgs::msg::PointField::UINT8;
-constexpr uint8_t PointFieldU16 = sensor_msgs::msg::PointField::UINT16;
-constexpr uint8_t PointFieldU32 = sensor_msgs::msg::PointField::UINT32;
-constexpr uint8_t PointFieldF32 = sensor_msgs::msg::PointField::FLOAT32;
-constexpr uint8_t PointFieldF64 = sensor_msgs::msg::PointField::FLOAT64;
+using PointField = sensor_msgs::msg::PointField;
 using Marker = visualization_msgs::msg::Marker;
 using MarkerArray = visualization_msgs::msg::MarkerArray;
 using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
@@ -97,11 +93,7 @@ using PointCloud2ConstIterator = sensor_msgs::PointCloud2ConstIterator<Scalar>;
 template <typename Scalar>
 using PointCloud2Iterator = sensor_msgs::PointCloud2Iterator<Scalar>;
 using PointCloud2Modifier = sensor_msgs::PointCloud2Modifier;
-constexpr uint8_t PointFieldU8 = sensor_msgs::PointField::UINT8;
-constexpr uint8_t PointFieldU16 = sensor_msgs::PointField::UINT16;
-constexpr uint8_t PointFieldU32 = sensor_msgs::PointField::UINT32;
-constexpr uint8_t PointFieldF32 = sensor_msgs::PointField::FLOAT32;
-constexpr uint8_t PointFieldF64 = sensor_msgs::PointField::FLOAT64;
+using PointField = sensor_msgs::PointField;
 using Marker = visualization_msgs::Marker;
 using MarkerArray = visualization_msgs::MarkerArray;
 using OccupancyGrid = nav_msgs::OccupancyGrid;
