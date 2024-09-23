@@ -117,9 +117,7 @@ class LikelihoodFieldModel {
       const auto y_offset = transform.translation().y();
       const auto cos_theta = transform.so2().unit_complex().x();
       const auto sin_theta = transform.so2().unit_complex().y();
-      const auto unknown_space_occupancy_prob = 1. / params_.max_laser_distance;
-      // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
-      // See https://github.com/Ekumen-OS/beluga/issues/153
+      const auto unknown_space_occupancy_prob = static_cast<float>(1. / params_.max_laser_distance);
       return std::transform_reduce(
           points.cbegin(), points.cend(), 1.0, std::plus{},
           [this, x_offset, y_offset, cos_theta, sin_theta, unknown_space_occupancy_prob](const auto& point) {
@@ -128,9 +126,11 @@ class LikelihoodFieldModel {
             // See `benchmark_likelihood_field_model.cpp` for reference.
             const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
             const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
-
-            const auto cubed = [](auto pz) { return pz * pz * pz; };
-            return cubed(likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob));
+            const auto pz =
+                static_cast<double>(likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob));
+            // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
+            // See https://github.com/Ekumen-OS/beluga/issues/153
+            return pz * pz * pz;
           });
     };
   }
