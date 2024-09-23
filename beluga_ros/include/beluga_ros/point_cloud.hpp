@@ -65,18 +65,22 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
       : cloud_(std::move(cloud)), origin_(std::move(origin)) {
     assert(cloud_ != nullptr);
     // Check if point cloud is 3D
-    if (cloud_->fields.size() < 3)
+    if (cloud_->fields.size() < 3) {
       throw std::invalid_argument("PointCloud is not 3D");
+    }
     // Check point cloud is XYZ... type
-    if (cloud_->fields.at(0).name != "x" || cloud_->fields.at(1).name != "y" || cloud_->fields.at(2).name != "z")
+    if (cloud_->fields.at(0).name != "x" || cloud_->fields.at(1).name != "y" || cloud_->fields.at(2).name != "z") {
       throw std::invalid_argument("PointCloud not XYZ...");
+    }
     // Check XYZ datatype is the same
-    if (cloud_->fields.at(0).datatype != T || cloud_->fields.at(1).datatype != T || cloud_->fields.at(2).datatype != T)
+    if (cloud_->fields.at(0).datatype != T || cloud_->fields.at(1).datatype != T ||
+        cloud_->fields.at(2).datatype != T) {
       throw std::invalid_argument("XYZ datatype are not same");
+    }
     // Check stride is divisible
-    if (cloud_->point_step % sizeof(Scalar) != 0)
+    if (cloud_->point_step % sizeof(Scalar) != 0) {
       throw std::invalid_argument("Data is not memory-aligned");
-    // stride_ = static_cast<int>(cloud_->point_step / sizeof(Scalar));
+    }
     stride_ = static_cast<int>(cloud_->point_step / sizeof(Scalar));
   }
 
@@ -86,9 +90,8 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
   /// Get the unorganized 3D point collection as an Eigen Map<Eigen::Matrix3X>.
   [[nodiscard]] auto points() const {
     beluga_ros::msg::PointCloud2ConstIterator<Scalar> iter_points(*cloud_, "x");
-    Eigen::Map<const Eigen::Matrix3X<Scalar>, 0, Eigen::OuterStride<>> map(
+    return Eigen::Map<const Eigen::Matrix3X<Scalar>, 0, Eigen::OuterStride<>>(
         &iter_points[0], 3, cloud_->width * cloud_->height, stride_);
-    return map;
   }
 
  private:
