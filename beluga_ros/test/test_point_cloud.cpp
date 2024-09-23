@@ -28,7 +28,7 @@
 #include "beluga/eigen_compatibility.hpp"
 #include "beluga_ros/messages.hpp"
 #include "beluga_ros/point_cloud.hpp"
-#include "beluga_ros/point_cloud_sparse.hpp"
+#include "beluga_ros/sparse_point_cloud.hpp"
 
 namespace {
 
@@ -43,8 +43,8 @@ auto make_message() {
 template <typename T, uint8_t U>
 auto make_pointcloud(
     typename std::vector<T>::size_type& fields,
-    const unsigned int& width,
-    const unsigned int& height,
+    const unsigned int width,
+    const unsigned int height,
     const std::vector<Eigen::Vector3<T>>& point_data = {},
     const bool empty = false) {
   if (point_data.size() < static_cast<unsigned>(width * height) && !empty)
@@ -191,11 +191,11 @@ TEST(TestPointCloud, XYZPointsUnorderedPC) {
   };
   // clang-format on
   // Create point cloud message
-  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data);
 
   // Check aligned pointcloud
-  auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
-  auto map = cloud.points();
+  const auto cloud = beluga_ros::PointCloud3<float>(message, origin);
+  const auto map = cloud.points();
   // Check assert
   for (unsigned i = 0; i < map.cols(); ++i) {
     ASSERT_EQ(point_data.at(i).x(), map(0, i));
@@ -204,13 +204,11 @@ TEST(TestPointCloud, XYZPointsUnorderedPC) {
   }
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<float>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
-    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
-    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  for (size_t i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i), vector.at(i));
   }
 }
 
@@ -235,11 +233,11 @@ TEST(TestPointCloud, XYZPointsOrderedPC) {
   };
   // clang-format on
   // Create point cloud message
-  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data);
 
   // Check aligned pointcloud
-  auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
-  auto map = cloud.points();
+  const auto cloud = beluga_ros::PointCloud3<float>(message, origin);
+  const auto map = cloud.points();
   // Check assert
   for (unsigned i = 0; i < map.cols(); ++i) {
     ASSERT_EQ(point_data.at(i).x(), map(0, i));
@@ -248,13 +246,11 @@ TEST(TestPointCloud, XYZPointsOrderedPC) {
   }
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  auto cloud_sparse = beluga_ros::SparsePointCloud3<float>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
-    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
-    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  for (size_t i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i), vector.at(i));
   }
 }
 
@@ -275,11 +271,11 @@ TEST(TestPointCloud, XYZIPointsUnorderedPC) {
   };
   // clang-format on
   // Create point cloud message
-  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data);
 
   // Check aligned pointcloud
-  auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
-  auto map = cloud.points();
+  const auto cloud = beluga_ros::PointCloud3<float>(message, origin);
+  const auto map = cloud.points();
   // Check assert
   for (unsigned i = 0; i < map.cols(); ++i) {
     ASSERT_EQ(point_data.at(i).x(), map(0, i));
@@ -288,13 +284,11 @@ TEST(TestPointCloud, XYZIPointsUnorderedPC) {
   }
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<float>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
-    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
-    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  for (size_t i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i), vector.at(i));
   }
 }
 
@@ -319,11 +313,11 @@ TEST(TestPointCloud, XYZIPointsOrderedPC) {
   };
   // clang-format on
   // Create point cloud message
-  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data);
 
   // Check aligned pointcloud
-  auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
-  auto map = cloud.points();
+  const auto cloud = beluga_ros::PointCloud3<float>(message, origin);
+  const auto map = cloud.points();
   // Check assert
   for (unsigned i = 0; i < map.cols(); ++i) {
     ASSERT_EQ(point_data.at(i).x(), map(0, i));
@@ -332,13 +326,11 @@ TEST(TestPointCloud, XYZIPointsOrderedPC) {
   }
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<float>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
-    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
-    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  for (size_t i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i), vector.at(i));
   }
 }
 
@@ -359,11 +351,11 @@ TEST(TestPointCloud, XYZIDoublePC) {
   };
   // clang-format on
   // Create point cloud message
-  const auto message = make_pointcloud<double, beluga_ros::msg::PointFieldF64>(fields, width, height, point_data);
+  const auto message = make_pointcloud<double, beluga_ros::msg::PointField::FLOAT64>(fields, width, height, point_data);
 
   // Check aligned pointcloud
-  auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF64>(message, origin);
-  auto map = cloud.points();
+  const auto cloud = beluga_ros::PointCloud3<double>(message, origin);
+  const auto map = cloud.points();
   // Check assert
   for (unsigned i = 0; i < map.cols(); ++i) {
     ASSERT_EQ(point_data.at(i).x(), map(0, i));
@@ -372,13 +364,11 @@ TEST(TestPointCloud, XYZIDoublePC) {
   }
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF64>(message, origin);
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<double>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
-    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
-    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  for (size_t i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i), vector.at(i));
   }
 }
 
@@ -391,11 +381,12 @@ TEST(TestPointCloud, XYZPointsEmptyUnorderedPC) {
   const std::vector<Eigen::Vector3f>& point_data = {};
   bool empty = true;
   // Create point cloud message
-  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data, empty);
+  const auto message =
+      make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data, empty);
 
   // Check aligned pointcloud
-  auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
-  auto map = cloud.points();
+  const auto cloud = beluga_ros::PointCloud3<float>(message, origin);
+  const auto map = cloud.points();
   // Check assert
   for (unsigned i = 0; i < map.cols(); ++i) {
     ASSERT_EQ(message->data.at(3 * i + 0), map(0, i));
@@ -404,10 +395,10 @@ TEST(TestPointCloud, XYZPointsEmptyUnorderedPC) {
   }
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<float>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
+  for (size_t i = 0; i < vector.size(); ++i) {
     ASSERT_EQ(message->data.at(3 * i + 0), vector.at(i).x());
     ASSERT_EQ(message->data.at(3 * i + 1), vector.at(i).y());
     ASSERT_EQ(message->data.at(3 * i + 2), vector.at(i).z());
@@ -423,11 +414,12 @@ TEST(TestPointCloud, XYZIPointsEmptyUnorderedPC) {
   const std::vector<Eigen::Vector3f>& point_data = {};
   bool empty = true;
   // Create point cloud message
-  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data, empty);
+  const auto message =
+      make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data, empty);
 
   // Check aligned pointcloud
-  auto cloud = beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin);
-  auto map = cloud.points();
+  const auto cloud = beluga_ros::PointCloud3<float>(message, origin);
+  const auto map = cloud.points();
   // Check assert
   for (unsigned i = 0; i < map.cols(); ++i) {
     ASSERT_EQ(message->data.at(3 * i + 0), map(0, i));
@@ -436,10 +428,10 @@ TEST(TestPointCloud, XYZIPointsEmptyUnorderedPC) {
   }
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<float>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
+  for (size_t i = 0; i < vector.size(); ++i) {
     ASSERT_EQ(message->data.at(3 * i + 0), vector.at(i).x());
     ASSERT_EQ(message->data.at(3 * i + 1), vector.at(i).y());
     ASSERT_EQ(message->data.at(3 * i + 2), vector.at(i).z());
@@ -463,11 +455,11 @@ TEST(TestPointCloud, 2DUnorderedPC) {
   };
   // clang-format on
   // Create point cloud message
-  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data);
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
   // Check assert sparse pointcloud
-  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::SparsePointCloud3<float>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, 2DOrderedPC) {
@@ -487,11 +479,11 @@ TEST(TestPointCloud, 2DOrderedPC) {
   };
   // clang-format on
   // Create point cloud message
-  const auto message = make_pointcloud<float, beluga_ros::msg::PointFieldF32>(fields, width, height, point_data);
+  const auto message = make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data);
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
   // Check assert sparse pointcloud
-  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::SparsePointCloud3<float>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, EmptyFieldsPC) {
@@ -505,9 +497,9 @@ TEST(TestPointCloud, EmptyFieldsPC) {
   message->fields.reserve(fields);
   message->is_dense = true;
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
   // Check assert sparse pointcloud
-  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::SparsePointCloud3<float>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, WrongTypePC) {
@@ -527,20 +519,20 @@ TEST(TestPointCloud, WrongTypePC) {
   };
   // clang-format on
   // Create point cloud message
-  const auto message = make_pointcloud<double, beluga_ros::msg::PointFieldF64>(fields, width, height, point_data);
+  const auto message = make_pointcloud<double, beluga_ros::msg::PointField::FLOAT64>(fields, width, height, point_data);
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
   // Check assert sparse pointcloud
-  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::SparsePointCloud3<float>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, VoidPC) {
   const auto origin = Sophus::SE3d{};
   auto message = make_message();
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
   // Check assert sparse pointcloud
-  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::SparsePointCloud3<float>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, IXYZPC) {
@@ -554,10 +546,10 @@ TEST(TestPointCloud, IXYZPC) {
   message->fields.reserve(fields);
   // Set offset
   int offset = 0;
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
+  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointField::FLOAT32, offset);
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
@@ -580,7 +572,7 @@ TEST(TestPointCloud, IXYZPC) {
   // clang-format on
   const std::vector<float> intensity_data = {1.1F, 2.2F, 3.3F, 4.4F, 5.5F};
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size(); ++i) {
+  for (size_t i = 0; i < point_data.size(); ++i) {
     *iter_x = point_data.at(i).x();
     *iter_y = point_data.at(i).y();
     *iter_z = point_data.at(i).z();
@@ -592,9 +584,9 @@ TEST(TestPointCloud, IXYZPC) {
     ++iter_intensity;
   }
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
   // Check assert sparse pointcloud
-  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::SparsePointCloud3<float>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, ZXYIPC) {
@@ -608,10 +600,10 @@ TEST(TestPointCloud, ZXYIPC) {
   message->fields.reserve(fields);
   // Set offset
   int offset = 0;
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
+  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointField::FLOAT32, offset);
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
@@ -634,7 +626,7 @@ TEST(TestPointCloud, ZXYIPC) {
   // clang-format on
   const std::vector<float> intensity_data = {1.1F, 2.2F, 3.3F, 4.4F, 5.5F};
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size(); ++i) {
+  for (size_t i = 0; i < point_data.size(); ++i) {
     *iter_x = point_data.at(i).x();
     *iter_y = point_data.at(i).y();
     *iter_z = point_data.at(i).z();
@@ -646,9 +638,9 @@ TEST(TestPointCloud, ZXYIPC) {
     ++iter_intensity;
   }
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
   // Check assert sparse pointcloud
-  ASSERT_THROW(beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::SparsePointCloud3<float>(message, origin), std::invalid_argument);
 }
 
 TEST(TestPointCloud, Velodyne) {
@@ -662,12 +654,12 @@ TEST(TestPointCloud, Velodyne) {
   message->fields.reserve(fields);
   // Set offset
   int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "ring", 1, beluga_ros::msg::PointFieldU16, offset);
-  offset = addPointField(*message, "time", 1, beluga_ros::msg::PointFieldF32, offset);
+  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "ring", 1, beluga_ros::msg::PointField::UINT16, offset);
+  offset = addPointField(*message, "time", 1, beluga_ros::msg::PointField::FLOAT32, offset);
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
@@ -694,7 +686,7 @@ TEST(TestPointCloud, Velodyne) {
   const std::vector<std::uint16_t> ring_data = {1, 2, 3, 4, 5};
   const std::vector<float> time_data = {0.1F, 0.2F, 0.3F, 0.4F, 0.5F};
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size(); ++i) {
+  for (size_t i = 0; i < point_data.size(); ++i) {
     *iter_x = point_data.at(i).x();
     *iter_y = point_data.at(i).y();
     *iter_z = point_data.at(i).z();
@@ -710,16 +702,14 @@ TEST(TestPointCloud, Velodyne) {
     ++iter_time;
   }
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<float>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
-    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
-    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  for (size_t i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i), vector.at(i));
   }
 }
 
@@ -734,12 +724,12 @@ TEST(TestPointCloud, Robosense) {
   message->fields.reserve(fields);
   // Set offset
   int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "ring", 1, beluga_ros::msg::PointFieldU16, offset);
-  offset = addPointField(*message, "time", 1, beluga_ros::msg::PointFieldF64, offset);
+  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "ring", 1, beluga_ros::msg::PointField::UINT16, offset);
+  offset = addPointField(*message, "time", 1, beluga_ros::msg::PointField::FLOAT64, offset);
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
@@ -766,7 +756,7 @@ TEST(TestPointCloud, Robosense) {
   const std::vector<std::uint16_t> ring_data = {1, 2, 3, 4, 5};
   const std::vector<double> time_data = {0.1, 0.2, 0.3, 0.4, 0.5};
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size(); ++i) {
+  for (size_t i = 0; i < point_data.size(); ++i) {
     *iter_x = point_data.at(i).x();
     *iter_y = point_data.at(i).y();
     *iter_z = point_data.at(i).z();
@@ -782,16 +772,14 @@ TEST(TestPointCloud, Robosense) {
     ++iter_time;
   }
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<float>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
-    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
-    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  for (size_t i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i), vector.at(i));
   }
 }
 
@@ -806,16 +794,16 @@ TEST(TestPointCloud, Ouster) {
   message->fields.reserve(fields);
   // Set offset
   int offset = 0;
-  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointFieldF32, offset);
+  offset = addPointField(*message, "x", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "y", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "z", 1, beluga_ros::msg::PointField::FLOAT32, offset);
   offset += 4;
-  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointFieldF32, offset);
-  offset = addPointField(*message, "t", 1, beluga_ros::msg::PointFieldU32, offset);
-  offset = addPointField(*message, "reflectivity", 1, beluga_ros::msg::PointFieldU16, offset);
-  offset = addPointField(*message, "ring", 1, beluga_ros::msg::PointFieldU8, offset);
-  offset = addPointField(*message, "ambient", 1, beluga_ros::msg::PointFieldU16, offset);
-  offset = addPointField(*message, "range", 1, beluga_ros::msg::PointFieldU32, offset);
+  offset = addPointField(*message, "intensity", 1, beluga_ros::msg::PointField::FLOAT32, offset);
+  offset = addPointField(*message, "t", 1, beluga_ros::msg::PointField::UINT32, offset);
+  offset = addPointField(*message, "reflectivity", 1, beluga_ros::msg::PointField::UINT16, offset);
+  offset = addPointField(*message, "ring", 1, beluga_ros::msg::PointField::UINT8, offset);
+  offset = addPointField(*message, "ambient", 1, beluga_ros::msg::PointField::UINT16, offset);
+  offset = addPointField(*message, "range", 1, beluga_ros::msg::PointField::UINT32, offset);
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
@@ -849,7 +837,7 @@ TEST(TestPointCloud, Ouster) {
   const std::vector<std::uint32_t> range_data = {21, 22, 23, 24, 25};
 
   // Fill the PointCloud2 message
-  for (unsigned i = 0; i < point_data.size(); ++i) {
+  for (size_t i = 0; i < point_data.size(); ++i) {
     *iter_x = point_data.at(i).x();
     *iter_y = point_data.at(i).y();
     *iter_z = point_data.at(i).z();
@@ -871,16 +859,14 @@ TEST(TestPointCloud, Ouster) {
     ++iter_range;
   }
   // Check assert aligned pointcloud
-  ASSERT_THROW(beluga_ros::PointCloud3<beluga_ros::msg::PointFieldF32>(message, origin), std::invalid_argument);
+  ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
 
   // Check sparse pointcloud
-  auto cloud_sparse = beluga_ros::PointCloudSparse3<beluga_ros::msg::PointFieldF32>(message, origin);
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<float>(message, origin);
   auto vector = cloud_sparse.points();
   // Check assert
-  for (unsigned i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i).x(), vector.at(i).x());
-    ASSERT_EQ(point_data.at(i).y(), vector.at(i).y());
-    ASSERT_EQ(point_data.at(i).z(), vector.at(i).z());
+  for (size_t i = 0; i < vector.size(); ++i) {
+    ASSERT_EQ(point_data.at(i), vector.at(i));
   }
 }
 

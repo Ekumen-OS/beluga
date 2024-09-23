@@ -46,11 +46,11 @@ namespace beluga_ros {
 /// Thin wrapper type for 3D `sensor_msgs/PointCloud2` messages.
 /// Assumes an XYZ... type message.
 /// All datafields must be the same type (float or double).
-template <uint8_t T>
+template <typename T>
 class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
  public:
-  /// PointCloud data fields type
-  using Scalar = typename sensor_msgs::pointFieldTypeAsType<T>::type;
+  /// PointCloud type
+  using Scalar = T;
 
   /// Check type is float or double
   static_assert(
@@ -64,6 +64,7 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
   explicit PointCloud3(beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d origin = Sophus::SE3d())
       : cloud_(std::move(cloud)), origin_(std::move(origin)) {
     assert(cloud_ != nullptr);
+    constexpr uint8_t fieldType = sensor_msgs::typeAsPointFieldType<T>::value;
     // Check if point cloud is 3D
     if (cloud_->fields.size() < 3) {
       throw std::invalid_argument("PointCloud is not 3D");
@@ -73,8 +74,8 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
       throw std::invalid_argument("PointCloud not XYZ...");
     }
     // Check XYZ datatype is the same
-    if (cloud_->fields.at(0).datatype != T || cloud_->fields.at(1).datatype != T ||
-        cloud_->fields.at(2).datatype != T) {
+    if (cloud_->fields.at(0).datatype != fieldType || cloud_->fields.at(1).datatype != fieldType ||
+        cloud_->fields.at(2).datatype != fieldType) {
       throw std::invalid_argument("XYZ datatype are not same");
     }
     // Check stride is divisible
