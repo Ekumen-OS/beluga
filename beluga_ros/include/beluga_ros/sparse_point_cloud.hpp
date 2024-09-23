@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_ROS_SPARSE_POINT_CLOUD_HPP
-#define BELUGA_ROS_SPARSE_POINT_CLOUD_HPP
+#ifndef BELUGA_ROS_POINT_CLOUD_SPARSE_HPP
+#define BELUGA_ROS_POINT_CLOUD_SPARSE_HPP
 
 #include <range/v3/view/iota.hpp>
 
-#include <beluga/sensor/data/sparse_point_cloud.hpp>
+#include <beluga/sensor/data/point_cloud.hpp>
 #include <beluga/views/take_evenly.hpp>
 #include <beluga_ros/messages.hpp>
 
@@ -43,15 +43,15 @@ namespace beluga_ros {
 /// Assumes an XYZ... type message.
 /// XYZ datafields must be the same type (float or double).
 /// Other datafields can be different types.
-template <typename T>
-class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<T>> {
+template <uint8_t T>
+class SparsePointCloud3 : public beluga::BasePointCloud<SparsePointCloud3<T>> {
  public:
-  /// PointCloud type
-  using Scalar = T;
+  /// PointCloud data fields type
+  using Scalar = typename sensor_msgs::pointFieldTypeAsType<T>::type;
 
   /// Check type is float or double
   static_assert(
-      std::is_same_v<Scalar, float> || std::is_same_v<Scalar, double>,
+      std::is_same<Scalar, float>::value || std::is_same<Scalar, double>::value,
       "PointcloudSparse3 only supports float or double datatype");
 
   /// Constructor.
@@ -61,7 +61,6 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
   explicit SparsePointCloud3(beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d origin = Sophus::SE3d())
       : cloud_(std::move(cloud)), origin_(std::move(origin)) {
     assert(cloud_ != nullptr);
-    constexpr uint8_t fieldType = sensor_msgs::typeAsPointFieldType<T>::value;
     // Check if point cloud is 3D
     if (cloud_->fields.size() < 3) {
       throw std::invalid_argument("PointCloud is not 3D");
@@ -71,8 +70,8 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
       throw std::invalid_argument("PointCloud not XYZ...");
     }
     // Check XYZ datatype is the same
-    if (cloud_->fields.at(0).datatype != fieldType || cloud_->fields.at(1).datatype != fieldType ||
-        cloud_->fields.at(2).datatype != fieldType) {
+    if (cloud_->fields.at(0).datatype != T || cloud_->fields.at(1).datatype != T ||
+        cloud_->fields.at(2).datatype != T) {
       throw std::invalid_argument("XYZ datatype are not same");
     }
   }
@@ -96,4 +95,4 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
 
 }  // namespace beluga_ros
 
-#endif  // BELUGA_ROS_SPARSE_POINT_CLOUD_HPP
+#endif  // BELUGA_ROS_POINT_CLOUD_SPARSE_HPP
