@@ -103,7 +103,7 @@
 <g id="a_node7"><a xlink:href="classbeluga_1_1ValueGrid2.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="681,-49.5 681,-79.5 790,-79.5 790,-49.5 681,-49.5"/>
 <text text-anchor="start" x="689" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::ValueGrid2</text>
-<text text-anchor="middle" x="735.5" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double &gt;</text>
+<text text-anchor="middle" x="735.5" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; float &gt;</text>
 </a>
 </g>
 </g>

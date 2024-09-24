@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Mon Sep 23 12:13:39 2024 -0300, 5493d4b&#39;"/>
   </head>
   
   
@@ -508,64 +508,64 @@ $(function() {
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> y_offset = transform.translation().y();</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> cos_theta = transform.so2().unit_complex().x();</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> sin_theta = transform.so2().unit_complex().y();</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> unknown_space_occupancy_prob = 1. / params_.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a7d71848306f0d0e2a6601b240ff847b1">max_laser_distance</a>;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      <span class="comment">// TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;      <span class="comment">// See https://github.com/Ekumen-OS/beluga/issues/153</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> unknown_space_occupancy_likelihood_cubed =</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;          unknown_space_occupancy_prob * unknown_space_occupancy_prob * unknown_space_occupancy_prob;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="keywordflow">return</span> std::transform_reduce(</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;          points.cbegin(), points.cend(), 1.0, std::plus{},</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;          [<span class="keyword">this</span>, x_offset, y_offset, cos_theta, sin_theta,</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;           unknown_space_occupancy_likelihood_cubed](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; point) {</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="comment">// Transform the end point of the laser to the grid local coordinate system.</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="comment">// Not using Eigen/Sophus because they make the routine x10 slower.</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="comment">// See `benchmark_likelihood_field_model.cpp` for reference.</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <span class="comment">// for performance, we store the likelihood already elevated to the cube</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            return likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_likelihood_cubed);</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;          });</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    };</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;  }</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> unknown_space_occupancy_prob = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(1. / params_.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a7d71848306f0d0e2a6601b240ff847b1">max_laser_distance</a>);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      <span class="keywordflow">return</span> std::transform_reduce(</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;          points.cbegin(), points.cend(), 1.0, std::plus{},</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;          [<span class="keyword">this</span>, x_offset, y_offset, cos_theta, sin_theta, unknown_space_occupancy_prob](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; point) {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            <span class="comment">// Transform the end point of the laser to the grid local coordinate system.</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            <span class="comment">// Not using Eigen/Sophus because they make the routine x10 slower.</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            <span class="comment">// See `benchmark_likelihood_field_model.cpp` for reference.</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            const auto pz =</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                static_cast&lt;double&gt;(likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob));</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="comment">// TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="comment">// See https://github.com/Ekumen-OS/beluga/issues/153</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            return pz * pz * pz;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;          });</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    };</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;  }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
-<div class="line"><a name="l00146"></a><span class="lineno"><a class="line" href="classbeluga_1_1LikelihoodFieldModel.html#a50b821ffef95880ca8104905d3589848">  146</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga_1_1LikelihoodFieldModel.html#a50b821ffef95880ca8104905d3589848">update_map</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1LikelihoodFieldModel.html#a4c9a3e4f644ddec25557c4fa7c294539">map_type</a>&amp; grid) {</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    likelihood_field_ = make_likelihood_field(params_, grid);</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    world_to_likelihood_field_transform_ = grid.origin().inverse();</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;  }</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;  <a class="code" href="classbeluga_1_1LikelihoodFieldModel.html#a38e5f120969fabe7ddd1f8a525f34ea9">param_type</a> params_;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;  <a class="code" href="classbeluga_1_1ValueGrid2.html">ValueGrid2&lt;double&gt;</a> likelihood_field_;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;  Sophus::SE2d world_to_likelihood_field_transform_;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;  <span class="keyword">static</span> <a class="code" href="classbeluga_1_1ValueGrid2.html">ValueGrid2&lt;double&gt;</a> make_likelihood_field(<span class="keyword">const</span> <a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html">LikelihoodFieldModelParam</a>&amp; params, <span class="keyword">const</span> OccupancyGrid&amp; grid) {</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> squared_distance = [&amp;grid,</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                                   squared_max_distance = params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a3e34aea5149234747783753e5f905c70">max_obstacle_distance</a> * params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a3e34aea5149234747783753e5f905c70">max_obstacle_distance</a>](</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;                                      std::size_t first, std::size_t second) {</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;      <span class="keywordflow">return</span> std::min((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm(), squared_max_distance);</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    };</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> neighborhood = [&amp;grid](std::size_t index) { <span class="keywordflow">return</span> grid.neighborhood4(index); };</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> distance_map = <a class="code" href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">nearest_obstacle_distance_map</a>(grid.obstacle_data(), squared_distance, neighborhood);</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> to_likelihood = [amplitude =</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;                                    params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a7e6a0b030c19affed49e1cedd62c0a19">z_hit</a> / (params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db">sigma_hit</a> * std::sqrt(2 * Sophus::Constants&lt;double&gt;::pi())),</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;                                two_squared_sigma = 2 * params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db">sigma_hit</a> * params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db">sigma_hit</a>,</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;                                offset = params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#afa2159cd7558ed4d70416cfa35575ed1">z_random</a> / params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a7d71848306f0d0e2a6601b240ff847b1">max_laser_distance</a>](<span class="keywordtype">double</span> squared_distance) {</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      assert(two_squared_sigma &gt; 0.0);</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;      assert(amplitude &gt; 0.0);</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;      <span class="keywordflow">return</span> amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    };</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="comment">// we store the likelihood elevated to the cube to save a few runtime computations</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="comment">// when calculating the importance weight</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> to_the_cube = [](<span class="keyword">auto</span> likelihood) { <span class="keywordflow">return</span> likelihood * likelihood * likelihood; };</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keyword">auto</span> likelihood_data = distance_map | ranges::views::transform(to_likelihood) |</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;                           ranges::views::transform(to_the_cube) | ranges::to&lt;std::vector&gt;;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordflow">return</span> ValueGrid2&lt;double&gt;{std::move(likelihood_data), grid.width(), grid.resolution()};</div>
+<div class="line"><a name="l00144"></a><span class="lineno"><a class="line" href="classbeluga_1_1LikelihoodFieldModel.html#a50b821ffef95880ca8104905d3589848">  144</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classbeluga_1_1LikelihoodFieldModel.html#a50b821ffef95880ca8104905d3589848">update_map</a>(<span class="keyword">const</span> <a class="code" href="classbeluga_1_1LikelihoodFieldModel.html#a4c9a3e4f644ddec25557c4fa7c294539">map_type</a>&amp; grid) {</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    likelihood_field_ = make_likelihood_field(params_, grid);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    world_to_likelihood_field_transform_ = grid.origin().inverse();</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;  }</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;  <a class="code" href="classbeluga_1_1LikelihoodFieldModel.html#a38e5f120969fabe7ddd1f8a525f34ea9">param_type</a> params_;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;  <a class="code" href="classbeluga_1_1ValueGrid2.html">ValueGrid2&lt;float&gt;</a> likelihood_field_;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;  Sophus::SE2d world_to_likelihood_field_transform_;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;  <span class="keyword">static</span> <a class="code" href="classbeluga_1_1ValueGrid2.html">ValueGrid2&lt;float&gt;</a> make_likelihood_field(<span class="keyword">const</span> <a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html">LikelihoodFieldModelParam</a>&amp; params, <span class="keyword">const</span> OccupancyGrid&amp; grid) {</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> squared_distance = [&amp;grid](std::size_t first, std::size_t second) {</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm());</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    };</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> squared_max_distance = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a3e34aea5149234747783753e5f905c70">max_obstacle_distance</a> * params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a3e34aea5149234747783753e5f905c70">max_obstacle_distance</a>);</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> truncate_to_max_distance = [squared_max_distance](<span class="keyword">auto</span> squared_distance) {</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;      <span class="keywordflow">return</span> std::min(squared_distance, squared_max_distance);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    };</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> to_likelihood = [amplitude =</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                                    params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a7e6a0b030c19affed49e1cedd62c0a19">z_hit</a> / (params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db">sigma_hit</a> * std::sqrt(2 * Sophus::Constants&lt;double&gt;::pi())),</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                                two_squared_sigma = 2 * params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db">sigma_hit</a> * params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#ac322142dfdd27adf71a216948df220db">sigma_hit</a>,</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                                offset = params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#afa2159cd7558ed4d70416cfa35575ed1">z_random</a> / params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelParam.html#a7d71848306f0d0e2a6601b240ff847b1">max_laser_distance</a>](<span class="keywordtype">double</span> squared_distance) {</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;      assert(two_squared_sigma &gt; 0.0);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      assert(amplitude &gt; 0.0);</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      <span class="keywordflow">return</span> amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    };</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> neighborhood = [&amp;grid](std::size_t index) { <span class="keywordflow">return</span> grid.neighborhood4(index); };</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="comment">// determine distances to obstacles and calculate likelihood values in-place</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="comment">// to minimize memory usage when dealing with large maps</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keyword">auto</span> likelihood_values = <a class="code" href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">nearest_obstacle_distance_map</a>(grid.obstacle_data(), squared_distance, neighborhood);</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    std::transform(</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        likelihood_values.begin(), likelihood_values.end(), likelihood_values.begin(), truncate_to_max_distance);</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    std::transform(likelihood_values.begin(), likelihood_values.end(), likelihood_values.begin(), to_likelihood);</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordflow">return</span> ValueGrid2&lt;float&gt;{std::move(likelihood_values), grid.width(), grid.resolution()};</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;  }</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;};</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
@@ -578,11 +578,11 @@ $(function() {
 <div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html_a4b2067a91263de5cfeadd58a919d961d"><div class="ttname"><a href="classbeluga_1_1LikelihoodFieldModel.html#a4b2067a91263de5cfeadd58a919d961d">beluga::LikelihoodFieldModel::state_type</a></div><div class="ttdeci">Sophus::SE2d state_type</div><div class="ttdoc">State type of a particle.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model.hpp:81</div></div>
 <div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html_a4c9a3e4f644ddec25557c4fa7c294539"><div class="ttname"><a href="classbeluga_1_1LikelihoodFieldModel.html#a4c9a3e4f644ddec25557c4fa7c294539">beluga::LikelihoodFieldModel::map_type</a></div><div class="ttdeci">OccupancyGrid map_type</div><div class="ttdoc">Map representation type.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model.hpp:87</div></div>
 <div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html_a4e671cb4d418b19c3fc317ba0115d68d"><div class="ttname"><a href="classbeluga_1_1LikelihoodFieldModel.html#a4e671cb4d418b19c3fc317ba0115d68d">beluga::LikelihoodFieldModel::LikelihoodFieldModel</a></div><div class="ttdeci">LikelihoodFieldModel(const param_type &amp;params, const map_type &amp;grid)</div><div class="ttdoc">Constructs a LikelihoodFieldModel instance.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model.hpp:99</div></div>
-<div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html_a50b821ffef95880ca8104905d3589848"><div class="ttname"><a href="classbeluga_1_1LikelihoodFieldModel.html#a50b821ffef95880ca8104905d3589848">beluga::LikelihoodFieldModel::update_map</a></div><div class="ttdeci">void update_map(const map_type &amp;grid)</div><div class="ttdoc">Update the sensor model with a new occupancy grid map.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model.hpp:146</div></div>
+<div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html_a50b821ffef95880ca8104905d3589848"><div class="ttname"><a href="classbeluga_1_1LikelihoodFieldModel.html#a50b821ffef95880ca8104905d3589848">beluga::LikelihoodFieldModel::update_map</a></div><div class="ttdeci">void update_map(const map_type &amp;grid)</div><div class="ttdoc">Update the sensor model with a new occupancy grid map.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model.hpp:144</div></div>
 <div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html_aa497e6673cb94c6204fc4f7ff3ac6da9"><div class="ttname"><a href="classbeluga_1_1LikelihoodFieldModel.html#aa497e6673cb94c6204fc4f7ff3ac6da9">beluga::LikelihoodFieldModel::measurement_type</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; double, double &gt; &gt; measurement_type</div><div class="ttdoc">Measurement type of the sensor: a point cloud for the range finder.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model.hpp:85</div></div>
 <div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html_aab72d2a994246eb6ca892f53b9275dfb"><div class="ttname"><a href="classbeluga_1_1LikelihoodFieldModel.html#aab72d2a994246eb6ca892f53b9275dfb">beluga::LikelihoodFieldModel::operator()</a></div><div class="ttdeci">auto operator()(measurement_type &amp;&amp;points) const</div><div class="ttdoc">Returns a state weighting function conditioned on 2D lidar hits.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model.hpp:113</div></div>
 <div class="ttc" id="aclassbeluga_1_1LikelihoodFieldModel_html_af2e987224f34d5be18fbd97b456a6ac6"><div class="ttname"><a href="classbeluga_1_1LikelihoodFieldModel.html#af2e987224f34d5be18fbd97b456a6ac6">beluga::LikelihoodFieldModel::likelihood_field</a></div><div class="ttdeci">const auto &amp; likelihood_field() const</div><div class="ttdoc">Returns the likelihood field, constructed from the provided map.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model.hpp:105</div></div>
-<div class="ttc" id="aclassbeluga_1_1ValueGrid2_html"><div class="ttname"><a href="classbeluga_1_1ValueGrid2.html">beluga::ValueGrid2&lt; double &gt;</a></div></div>
+<div class="ttc" id="aclassbeluga_1_1ValueGrid2_html"><div class="ttname"><a href="classbeluga_1_1ValueGrid2.html">beluga::ValueGrid2&lt; float &gt;</a></div></div>
 <div class="ttc" id="adistance__map_8hpp_html"><div class="ttname"><a href="distance__map_8hpp.html">distance_map.hpp</a></div><div class="ttdoc">Implementation of algorithm to calculate distance from obstacles.</div></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
 <div class="ttc" id="anamespacebeluga_html_a3356c1b099bda88b4dfda8ff230bac88"><div class="ttname"><a href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">beluga::nearest_obstacle_distance_map</a></div><div class="ttdeci">auto nearest_obstacle_distance_map(Range &amp;&amp;obstacle_map, DistanceFunction &amp;&amp;distance_function, NeighborsFunction &amp;&amp;neighbors_function)</div><div class="ttdoc">Returns a map where the value of each cell is the distance to the nearest obstacle.</div><div class="ttdef"><b>Definition:</b> distance_map.hpp:54</div></div>
@@ -651,7 +651,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Fri Aug 16 11:59:18 2024 -0300, d96a927&#39;.
+  Last updated on &#39;Mon Sep 23 12:13:39 2024 -0300, 5493d4b&#39;.
   <br/>
 </p>
   </div>
