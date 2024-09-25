@@ -71,7 +71,7 @@ auto make_pointcloud(
     // Set message params
     message->point_step = static_cast<unsigned int>(offset);
     message->row_step = message->width * message->point_step;
-    message->is_dense = true;
+    message->is_dense = static_cast<decltype(message->is_dense)>(true);
     message->data.resize(message->point_step * message->width * message->height);
 
     // Return empty pointcloud
@@ -103,7 +103,7 @@ auto make_pointcloud(
     // Set message params
     message->point_step = static_cast<unsigned int>(offset);
     message->row_step = message->width * message->point_step;
-    message->is_dense = true;
+    message->is_dense = static_cast<decltype(message->is_dense)>(true);
     message->data.resize(message->point_step * message->width * message->height);
 
     // Return empty pointcloud
@@ -139,7 +139,7 @@ auto make_pointcloud(
     // Set message params
     message->point_step = static_cast<unsigned int>(offset);
     message->row_step = message->width * message->point_step;
-    message->is_dense = true;
+    message->is_dense = static_cast<decltype(message->is_dense)>(true);
     message->data.resize(message->point_step * message->width * message->height);
 
     // Return empty pointcloud
@@ -495,7 +495,7 @@ TEST(TestPointCloud, EmptyFieldsPC) {
   std::vector<float>::size_type fields = 4;
   message->fields.clear();
   message->fields.reserve(fields);
-  message->is_dense = true;
+  message->is_dense = static_cast<decltype(message->is_dense)>(true);
   // Check assert aligned pointcloud
   ASSERT_THROW(beluga_ros::PointCloud3<float>(message, origin), std::invalid_argument);
   // Check assert sparse pointcloud
@@ -553,7 +553,7 @@ TEST(TestPointCloud, IXYZPC) {
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
-  message->is_dense = true;
+  message->is_dense = static_cast<decltype(message->is_dense)>(true);
   message->data.resize(message->point_step * message->width * message->height);
   // Create data iterators
   beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
@@ -607,7 +607,7 @@ TEST(TestPointCloud, ZXYIPC) {
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
-  message->is_dense = true;
+  message->is_dense = static_cast<decltype(message->is_dense)>(true);
   message->data.resize(message->point_step * message->width * message->height);
   // Create data iterators
   beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
@@ -663,7 +663,7 @@ TEST(TestPointCloud, Velodyne) {
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
-  message->is_dense = true;
+  message->is_dense = static_cast<decltype(message->is_dense)>(true);
   message->data.resize(message->point_step * message->width * message->height);
   // Create data iterators
   beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
@@ -733,7 +733,7 @@ TEST(TestPointCloud, Robosense) {
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
-  message->is_dense = true;
+  message->is_dense = static_cast<decltype(message->is_dense)>(true);
   message->data.resize(message->point_step * message->width * message->height);
   // Create data iterators
   beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
@@ -807,7 +807,7 @@ TEST(TestPointCloud, Ouster) {
   // Set message params
   message->point_step = static_cast<unsigned int>(offset);
   message->row_step = message->width * message->point_step;
-  message->is_dense = true;
+  message->is_dense = static_cast<decltype(message->is_dense)>(true);
   message->data.resize(message->point_step * message->width * message->height);
   // Create data iterators
   beluga_ros::msg::PointCloud2Iterator<float> iter_x(*message, "x");
