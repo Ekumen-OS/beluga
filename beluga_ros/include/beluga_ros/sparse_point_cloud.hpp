@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_ROS_POINT_CLOUD_SPARSE_HPP
-#define BELUGA_ROS_POINT_CLOUD_SPARSE_HPP
+#ifndef BELUGA_ROS_SPARSE_POINT_CLOUD_HPP
+#define BELUGA_ROS_SPARSE_POINT_CLOUD_HPP
 
 #include <range/v3/view/iota.hpp>
 
-#include <beluga/sensor/data/point_cloud.hpp>
+#include <beluga/sensor/data/sparse_point_cloud.hpp>
 #include <beluga/views/take_evenly.hpp>
 #include <beluga_ros/messages.hpp>
 
@@ -44,7 +44,7 @@ namespace beluga_ros {
 /// XYZ datafields must be the same type (float or double).
 /// Other datafields can be different types.
 template <typename T>
-class SparsePointCloud3 : public beluga::BasePointCloud<SparsePointCloud3<T>> {
+class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<T>> {
  public:
   /// PointCloud type
   using Scalar = T;
@@ -96,4 +96,4 @@ class SparsePointCloud3 : public beluga::BasePointCloud<SparsePointCloud3<T>> {
 
 }  // namespace beluga_ros
 
-#endif  // BELUGA_ROS_POINT_CLOUD_SPARSE_HPP
+#endif  // BELUGA_ROS_SPARSE_POINT_CLOUD_HPP
