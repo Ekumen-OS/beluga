@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_DATA_POINT_CLOUD_HPP
-#define BELUGA_SENSOR_DATA_POINT_CLOUD_HPP
+#ifndef BELUGA_SENSOR_DATA_SPARSE_POINT_CLOUD_HPP
+#define BELUGA_SENSOR_DATA_SPARSE_POINT_CLOUD_HPP
 
 #include <cmath>
 
@@ -23,28 +23,28 @@
 
 /**
  * \file
- * \brief Implementation of a point cloud interface with memory-aligned data.
+ * \brief Implementation of a sparse point cloud interface without memory-aligned data.
  *
  * \details
  * Assumes data is aligned as X, Y, Z, other datafields .
- * All datafields are the same type (float or double).
- * The result of the data stide division by the type of data must be an integer.
+ * Only X, Y & Z must be the same type (float or double).
+ * Other datafields can be different types.
  */
 
 namespace beluga {
 
 /**
- * \page PointCloudPage Beluga named requirements: PointCloud
+ * \page SparsePointCloudPage Beluga named requirements: PointCloud
  *
  * A type `P` satisfies `PointCloud` requirements if given `p` a possibly
  * const instance of `P`:
  * - `P::Scalar` is defined and is a scalar type to be used for x, y and z coordinates values,
- * -  p.points()` returns a view to the unorganized 3D point collection of `Eigen::Map<Eigen::Matrix3X>` type,
+ * -  p.points()` returns a view to the unorganized 3D point collection of `Eigen::Map<Eigen::Vector3>` type,
  * - `p.origin()` returns the transform, of `Sophus::SE3d` type, from the global to local
  *   frame in the sensor space;
  */
 
-/// Point Cloud 3D base type.
+/// Sparse Point Cloud 3D base type.
 /**
  * When instantiated, it satisfies \ref PointCloudPage.
  *
@@ -53,7 +53,7 @@ namespace beluga {
  * as described in \ref PointCloudPage.
  */
 template <typename Derived>
-class BasePointCloud : public ciabatta::ciabatta_top<Derived> {};
+class BaseSparsePointCloud : public ciabatta::ciabatta_top<Derived> {};
 
 }  // namespace beluga
 
