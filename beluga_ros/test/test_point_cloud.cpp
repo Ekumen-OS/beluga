@@ -208,7 +208,7 @@ TEST(TestPointCloud, XYZPointsUnorderedPC) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i), vector.at(i));
+    ASSERT_EQ(point_data.at(i), vector.at(static_cast<unsigned int>(i)));
   }
 }
 
@@ -250,7 +250,7 @@ TEST(TestPointCloud, XYZPointsOrderedPC) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i), vector.at(i));
+    ASSERT_EQ(point_data.at(i), vector.at(static_cast<unsigned int>(i)));
   }
 }
 
@@ -288,7 +288,7 @@ TEST(TestPointCloud, XYZIPointsUnorderedPC) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i), vector.at(i));
+    ASSERT_EQ(point_data.at(i), vector.at(static_cast<unsigned int>(i)));
   }
 }
 
@@ -330,7 +330,7 @@ TEST(TestPointCloud, XYZIPointsOrderedPC) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i), vector.at(i));
+    ASSERT_EQ(point_data.at(i), vector.at(static_cast<unsigned int>(i)));
   }
 }
 
@@ -368,7 +368,7 @@ TEST(TestPointCloud, XYZIDoublePC) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i), vector.at(i));
+    ASSERT_EQ(point_data.at(i), vector.at(static_cast<unsigned int>(i)));
   }
 }
 
@@ -399,9 +399,9 @@ TEST(TestPointCloud, XYZPointsEmptyUnorderedPC) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(message->data.at(3 * i + 0), vector.at(i).x());
-    ASSERT_EQ(message->data.at(3 * i + 1), vector.at(i).y());
-    ASSERT_EQ(message->data.at(3 * i + 2), vector.at(i).z());
+    ASSERT_EQ(message->data.at(3 * i + 0), vector.at(static_cast<unsigned int>(i)).x());
+    ASSERT_EQ(message->data.at(3 * i + 1), vector.at(static_cast<unsigned int>(i)).y());
+    ASSERT_EQ(message->data.at(3 * i + 2), vector.at(static_cast<unsigned int>(i)).z());
   }
 }
 
@@ -432,9 +432,9 @@ TEST(TestPointCloud, XYZIPointsEmptyUnorderedPC) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(message->data.at(3 * i + 0), vector.at(i).x());
-    ASSERT_EQ(message->data.at(3 * i + 1), vector.at(i).y());
-    ASSERT_EQ(message->data.at(3 * i + 2), vector.at(i).z());
+    ASSERT_EQ(message->data.at(3 * i + 0), vector.at(static_cast<unsigned int>(i)).x());
+    ASSERT_EQ(message->data.at(3 * i + 1), vector.at(static_cast<unsigned int>(i)).y());
+    ASSERT_EQ(message->data.at(3 * i + 2), vector.at(static_cast<unsigned int>(i)).z());
   }
 }
 
@@ -709,7 +709,7 @@ TEST(TestPointCloud, Velodyne) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i), vector.at(i));
+    ASSERT_EQ(point_data.at(i), vector.at(static_cast<unsigned int>(i)));
   }
 }
 
@@ -779,7 +779,7 @@ TEST(TestPointCloud, Robosense) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i), vector.at(i));
+    ASSERT_EQ(point_data.at(i), vector.at(static_cast<unsigned int>(i)));
   }
 }
 
@@ -866,7 +866,7 @@ TEST(TestPointCloud, Ouster) {
   auto vector = cloud_sparse.points();
   // Check assert
   for (size_t i = 0; i < vector.size(); ++i) {
-    ASSERT_EQ(point_data.at(i), vector.at(i));
+    ASSERT_EQ(point_data.at(i), vector.at(static_cast<unsigned int>(i)));
   }
 }
 
