@@ -29,7 +29,7 @@
 
 /**
  * \file
- * \brief Implementation of `sensor_msgs/PointCloud2` wrapper type for messages with with memory-aligned strides.
+ * \brief Implementation of `sensor_msgs/PointCloud2` wrapper type for messages with memory-aligned strides.
  *
  * \details
  * The stride calculation ensures that the memory layout of the point cloud data is aligned with the size of the data
@@ -44,8 +44,6 @@
 namespace beluga_ros {
 
 /// Thin wrapper type for 3D `sensor_msgs/PointCloud2` messages.
-/// Assumes an XYZ... type message.
-/// All datafields must be the same type (float or double).
 template <typename T>
 class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
  public:
