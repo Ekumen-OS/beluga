@@ -61,6 +61,7 @@ RUN apt-get update \
     python3-colcon-lcov-result \
     python3-colcon-mixin \
     python3-pip \
+    libopenvdb-dev \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
