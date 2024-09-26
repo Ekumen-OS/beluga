@@ -51,7 +51,7 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
 
   /// Check type is float or double
   static_assert(
-      std::is_same<Scalar, float>::value || std::is_same<Scalar, double>::value,
+      std::is_same_v<Scalar, float> || std::is_same_v<Scalar, double>,
       "PointcloudSparse3 only supports float or double datatype");
 
   /// Constructor.
