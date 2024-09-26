@@ -52,7 +52,7 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
 
   /// Check type is float or double
   static_assert(
-      std::is_same<Scalar, float>::value || std::is_same<Scalar, double>::value,
+      std::is_same_v<Scalar, float> || std::is_same_v<Scalar, double>,
       "Pointcloud3 only supports float or double datatype");
 
   /// Constructor.
@@ -88,7 +88,7 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
 
   /// Get the unorganized 3D point collection as an Eigen Map<Eigen::Matrix3X>.
   [[nodiscard]] auto points() const {
-    beluga_ros::msg::PointCloud2ConstIterator<Scalar> iter_points(*cloud_, "x");
+    const beluga_ros::msg::PointCloud2ConstIterator<Scalar> iter_points(*cloud_, "x");
     return Eigen::Map<const Eigen::Matrix3X<Scalar>, 0, Eigen::OuterStride<>>(
         &iter_points[0], 3, cloud_->width * cloud_->height, stride_);
   }

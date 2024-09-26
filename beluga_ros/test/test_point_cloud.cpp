@@ -42,7 +42,7 @@ auto make_message() {
 
 template <typename T, uint8_t U>
 auto make_pointcloud(
-    typename std::vector<T>::size_type& fields,
+    const typename std::vector<T>::size_type& fields,
     const unsigned int width,
     const unsigned int height,
     const std::vector<Eigen::Vector3<T>>& point_data = {},
@@ -163,6 +163,7 @@ auto make_pointcloud(
       ++iter_x;
       ++iter_y;
       ++iter_z;
+      ++iter_intensity;
       ++i;
     }
   }
@@ -177,9 +178,9 @@ auto make_pointcloud(
 TEST(TestPointCloud, XYZPointsUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<float>::size_type fields = 3;
-  unsigned int width = 1;
-  unsigned int height = 5;
+  const std::vector<float>::size_type fields = 3;
+  const unsigned int width = 1;
+  const unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -215,9 +216,9 @@ TEST(TestPointCloud, XYZPointsUnorderedPC) {
 TEST(TestPointCloud, XYZPointsOrderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<float>::size_type fields = 3;
-  unsigned int width = 3;
-  unsigned int height = 3;
+  const std::vector<float>::size_type fields = 3;
+  const unsigned int width = 3;
+  const unsigned int height = 3;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -257,9 +258,9 @@ TEST(TestPointCloud, XYZPointsOrderedPC) {
 TEST(TestPointCloud, XYZIPointsUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<float>::size_type fields = 4;
-  unsigned int width = 1;
-  unsigned int height = 5;
+  const std::vector<float>::size_type fields = 4;
+  const unsigned int width = 1;
+  const unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -295,9 +296,9 @@ TEST(TestPointCloud, XYZIPointsUnorderedPC) {
 TEST(TestPointCloud, XYZIPointsOrderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<float>::size_type fields = 4;
-  unsigned int width = 3;
-  unsigned int height = 3;
+  const std::vector<float>::size_type fields = 4;
+  const unsigned int width = 3;
+  const unsigned int height = 3;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -337,9 +338,9 @@ TEST(TestPointCloud, XYZIPointsOrderedPC) {
 TEST(TestPointCloud, XYZIDoublePC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<double>::size_type fields = 4;
-  unsigned int width = 1;
-  unsigned int height = 5;
+  const std::vector<double>::size_type fields = 4;
+  const unsigned int width = 1;
+  const unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3d> point_data = {
@@ -375,11 +376,11 @@ TEST(TestPointCloud, XYZIDoublePC) {
 TEST(TestPointCloud, XYZPointsEmptyUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<float>::size_type fields = 3;
-  unsigned int width = 1;
-  unsigned int height = 5;
+  const std::vector<float>::size_type fields = 3;
+  const unsigned int width = 1;
+  const unsigned int height = 5;
   const std::vector<Eigen::Vector3f>& point_data = {};
-  bool empty = true;
+  const bool empty = true;
   // Create point cloud message
   const auto message =
       make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data, empty);
@@ -408,11 +409,11 @@ TEST(TestPointCloud, XYZPointsEmptyUnorderedPC) {
 TEST(TestPointCloud, XYZIPointsEmptyUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<float>::size_type fields = 4;
-  unsigned int width = 1;
-  unsigned int height = 5;
+  const std::vector<float>::size_type fields = 4;
+  const unsigned int width = 1;
+  const unsigned int height = 5;
   const std::vector<Eigen::Vector3f>& point_data = {};
-  bool empty = true;
+  const bool empty = true;
   // Create point cloud message
   const auto message =
       make_pointcloud<float, beluga_ros::msg::PointField::FLOAT32>(fields, width, height, point_data, empty);
@@ -441,9 +442,9 @@ TEST(TestPointCloud, XYZIPointsEmptyUnorderedPC) {
 TEST(TestPointCloud, 2DUnorderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<float>::size_type fields = 2;
-  unsigned int width = 1;
-  unsigned int height = 5;
+  const std::vector<float>::size_type fields = 2;
+  const unsigned int width = 1;
+  const unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -465,9 +466,9 @@ TEST(TestPointCloud, 2DUnorderedPC) {
 TEST(TestPointCloud, 2DOrderedPC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<float>::size_type fields = 2;
-  unsigned int width = 2;
-  unsigned int height = 2;
+  const std::vector<float>::size_type fields = 2;
+  const unsigned int width = 2;
+  const unsigned int height = 2;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3f> point_data = {
@@ -492,7 +493,7 @@ TEST(TestPointCloud, EmptyFieldsPC) {
   message->width = 1;   // Unordered point cloud
   message->height = 4;  // Number of points
   // Set the point fields to x, y, z and intensity
-  std::vector<float>::size_type fields = 4;
+  const std::vector<float>::size_type fields = 4;
   message->fields.clear();
   message->fields.reserve(fields);
   message->is_dense = static_cast<decltype(message->is_dense)>(true);
@@ -505,9 +506,9 @@ TEST(TestPointCloud, EmptyFieldsPC) {
 TEST(TestPointCloud, WrongTypePC) {
   const auto origin = Sophus::SE3d{};
   // Define pointcloud params
-  std::vector<double>::size_type fields = 4;
-  unsigned int width = 1;
-  unsigned int height = 5;
+  const std::vector<double>::size_type fields = 4;
+  const unsigned int width = 1;
+  const unsigned int height = 5;
   // Create some raw data for the points
   // clang-format off
   const std::vector<Eigen::Vector3d> point_data = {
@@ -541,7 +542,7 @@ TEST(TestPointCloud, IXYZPC) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields to x, y, z and intensity
-  std::vector<float>::size_type fields = 4;
+  const std::vector<float>::size_type fields = 4;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
@@ -595,7 +596,7 @@ TEST(TestPointCloud, ZXYIPC) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields to x, y, z and intensity
-  std::vector<float>::size_type fields = 4;
+  const std::vector<float>::size_type fields = 4;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
@@ -649,7 +650,7 @@ TEST(TestPointCloud, Velodyne) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields as velodyne
-  std::vector<float>::size_type fields = 6;
+  const std::vector<float>::size_type fields = 6;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
@@ -719,7 +720,7 @@ TEST(TestPointCloud, Robosense) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields as robosense
-  std::vector<float>::size_type fields = 6;
+  const std::vector<float>::size_type fields = 6;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
@@ -789,7 +790,7 @@ TEST(TestPointCloud, Ouster) {
   message->width = 1;   // Unordered point cloud
   message->height = 5;  // Number of points
   // Set the point fields as ouster
-  std::vector<float>::size_type fields = 9;
+  const std::vector<float>::size_type fields = 9;
   message->fields.clear();
   message->fields.reserve(fields);
   // Set offset
