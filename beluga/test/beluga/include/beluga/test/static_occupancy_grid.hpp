@@ -24,17 +24,29 @@
 
 namespace beluga::testing {
 
-template <std::size_t Rows, std::size_t Cols>
-class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, Cols>> {
- public:
-  struct ValueTraits {
-    [[nodiscard]] bool is_free(bool value) const { return !value; }
-    [[nodiscard]] bool is_unknown(bool) const { return false; }
-    [[nodiscard]] bool is_occupied(bool value) const { return value; }
-  };
+template <class T = bool>
+struct ValueTraits {
+  [[nodiscard]] bool is_free(T value) const { return !value; }
+  [[nodiscard]] bool is_unknown(T) const { return false; }
+  [[nodiscard]] bool is_occupied(T value) const { return value; }
+};
 
+template <>
+struct ValueTraits<std::int8_t> {
+  static constexpr std::int8_t kFreeValue = 0;
+  static constexpr std::int8_t kUnknownValue = -1;
+  static constexpr std::int8_t kOccupiedValue = 100;
+
+  [[nodiscard]] static bool is_free(std::int8_t value) { return value == kFreeValue; }
+  [[nodiscard]] static bool is_unknown(std::int8_t value) { return value == kUnknownValue; }
+  [[nodiscard]] static bool is_occupied(std::int8_t value) { return value == kOccupiedValue; }
+};
+
+template <std::size_t Rows, std::size_t Cols, class T = bool>
+class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, Cols, T>> {
+ public:
   explicit StaticOccupancyGrid(
-      std::array<bool, Rows * Cols> array,
+      std::array<T, Rows * Cols> array,
       double resolution = 1.0,
       const Sophus::SE2d& origin = Sophus::SE2d{})
       : grid_{array}, origin_(origin), resolution_{resolution} {}
@@ -49,10 +61,10 @@ class StaticOccupancyGrid : public BaseOccupancyGrid2<StaticOccupancyGrid<Rows, 
   [[nodiscard]] std::size_t height() const { return Rows; }
   [[nodiscard]] double resolution() const { return resolution_; }
 
-  [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
+  [[nodiscard]] auto value_traits() const { return ValueTraits<T>{}; }
 
  private:
-  std::array<bool, Rows * Cols> grid_;
+  std::array<T, Rows * Cols> grid_;
   Sophus::SE2d origin_;
   double resolution_;
 };

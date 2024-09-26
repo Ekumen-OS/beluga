@@ -18,6 +18,7 @@ add_executable(
   test_beluga
   actions/test_assign.cpp
   actions/test_normalize.cpp
+  actions/test_overlay.cpp
   actions/test_propagate.cpp
   actions/test_reweight.cpp
   algorithm/raycasting/test_bresenham.cpp
@@ -51,6 +52,7 @@ add_executable(
   sensor/test_beam_model.cpp
   sensor/test_bearing_sensor_model.cpp
   sensor/test_landmark_sensor_model.cpp
+  sensor/test_lfm_with_unknown_space.cpp
   sensor/test_likelihood_field_model.cpp
   sensor/test_ndt_model.cpp
   test_3d_embedding.cpp
