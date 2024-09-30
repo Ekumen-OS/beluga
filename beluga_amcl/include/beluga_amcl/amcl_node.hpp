@@ -19,7 +19,11 @@
 #include <optional>
 #include <utility>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcpp"
 #include <message_filters/subscriber.h>
+#pragma GCC diagnostic pop
+
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/message_filter.h>
 #include <tf2_ros/transform_broadcaster.h>
