@@ -40,7 +40,12 @@
 #include <Eigen/Core>
 #include <sophus/se2.hpp>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcpp"
 #include <message_filters/subscriber.h>
+#pragma GCC diagnostic pop
+
+#include <rclcpp/version.h>
 #include <bondcpp/bond.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
@@ -201,29 +206,29 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
   }
 
-  {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    // Ignore deprecated declaration warning to support Humble.
-    // Message: use rclcpp::QoS instead of rmw_qos_profile_t
-    global_localization_server_ = create_service<std_srvs::srv::Empty>(
-        "reinitialize_global_localization",
-        std::bind(
-            &AmclNode::global_localization_callback, this, std::placeholders::_1, std::placeholders::_2,
-            std::placeholders::_3),
-        rmw_qos_profile_services_default, common_callback_group_);
-    RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
+  const auto common_service_qos = [] {
+    if constexpr (RCLCPP_VERSION_GTE(17, 0, 0)) {
+      return rclcpp::ServicesQoS();
+    } else {
+      return rmw_qos_profile_services_default;
+    }
+  }();
 
-    nomotion_update_server_ = create_service<std_srvs::srv::Empty>(
-        "request_nomotion_update",
-        std::bind(
-            &AmclNode::nomotion_update_callback, this, std::placeholders::_1, std::placeholders::_2,
-            std::placeholders::_3),
-        rmw_qos_profile_services_default, common_callback_group_);
-    RCLCPP_INFO(get_logger(), "Created request_nomotion_update service");
+  global_localization_server_ = create_service<std_srvs::srv::Empty>(
+      "reinitialize_global_localization",
+      std::bind(
+          &AmclNode::global_localization_callback, this, std::placeholders::_1, std::placeholders::_2,
+          std::placeholders::_3),
+      common_service_qos, common_callback_group_);
+  RCLCPP_INFO(get_logger(), "Created reinitialize_global_localization service");
 
-#pragma GCC diagnostic pop
-  }
+  nomotion_update_server_ = create_service<std_srvs::srv::Empty>(
+      "request_nomotion_update",
+      std::bind(
+          &AmclNode::nomotion_update_callback, this, std::placeholders::_1, std::placeholders::_2,
+          std::placeholders::_3),
+      common_service_qos, common_callback_group_);
+  RCLCPP_INFO(get_logger(), "Created request_nomotion_update service");
 }
 
 void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
