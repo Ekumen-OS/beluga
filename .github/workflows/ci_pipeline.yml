@@ -142,6 +142,7 @@ jobs:
         with:
           name: docs
           path: ./docs/_build/html/
+          include-hidden-files: true
           retention-days: 7
 
   deploy-docs:
