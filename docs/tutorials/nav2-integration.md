@@ -29,7 +29,6 @@ Since `beluga_amcl` is feature-wise compatible with `nav2_amcl` (as thoroughly d
 :::{figure} ../_images/nav2_to_beluga_code_migration.gif
 :alt: Using the `beluga_amcl` component instead of `nav2_amcl`'s.
 :align: center
-:scale: 150%
 
 Loading `beluga_amcl` composable node, instead of `nav2_amcl`'s.
 :::
