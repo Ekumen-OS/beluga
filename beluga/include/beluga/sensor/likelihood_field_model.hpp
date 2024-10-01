@@ -181,20 +181,19 @@ class LikelihoodFieldModel {
 
     // determine distances to obstacles and calculate likelihood values in-place
     // to minimize memory usage when dealing with large maps
-    auto likelihood_values = nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood);
+    auto distance_map = nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood);
 
     if (params.model_unknown_space) {
       const double inverse_max_distance = 1 / params.max_laser_distance;
       const double background_distance = -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
 
-      likelihood_values |= beluga::actions::overlay(grid.unknown_mask(), background_distance);
+      distance_map |= beluga::actions::overlay(grid.unknown_mask(), background_distance);
     }
 
-    std::transform(
-        likelihood_values.begin(), likelihood_values.end(), likelihood_values.begin(), truncate_to_max_distance);
-    std::transform(likelihood_values.begin(), likelihood_values.end(), likelihood_values.begin(), to_likelihood);
+    std::transform(distance_map.begin(), distance_map.end(), distance_map.begin(), truncate_to_max_distance);
+    std::transform(distance_map.begin(), distance_map.end(), distance_map.begin(), to_likelihood);
 
-    return ValueGrid2<float>{std::move(likelihood_values), grid.width(), grid.resolution()};
+    return ValueGrid2<float>{std::move(distance_map), grid.width(), grid.resolution()};
   }
 };
 

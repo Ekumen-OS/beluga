@@ -24,11 +24,14 @@
 
 namespace beluga::testing {
 
-template <class T = bool>
-struct ValueTraits {
-  [[nodiscard]] bool is_free(T value) const { return !value; }
-  [[nodiscard]] bool is_unknown(T) const { return false; }
-  [[nodiscard]] bool is_occupied(T value) const { return value; }
+template <class T>
+struct ValueTraits;
+
+template <>
+struct ValueTraits<bool> {
+  [[nodiscard]] static bool is_free(bool value) { return !value; }
+  [[nodiscard]] static bool is_unknown(bool) { return false; }
+  [[nodiscard]] static bool is_occupied(bool value) { return value; }
 };
 
 template <>

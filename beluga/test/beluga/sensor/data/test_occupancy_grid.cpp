@@ -94,8 +94,7 @@ TEST(OccupancyGrid2, ObstacleMask) {
 TEST(OccupancyGrid2, UnknownMask) {
   const auto grid = StaticOccupancyGrid<5, 2, std::int8_t>{{-1, -1, -1, -1, 0, 0, 0, 0, 100, 100}};
 
-  const auto expected_unknown_mask =
-      std::vector<bool>{true, true, true, true, false, false, false, false, false, false};
+  const auto expected_unknown_mask = std::vector{true, true, true, true, false, false, false, false, false, false};
 // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=111118
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"

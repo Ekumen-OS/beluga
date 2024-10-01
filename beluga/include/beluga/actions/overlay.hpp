@@ -50,7 +50,8 @@ struct overlay_base_fn {
       std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0,
       std::enable_if_t<ranges::range<Range>, int> = 0,
       std::enable_if_t<ranges::range<MaskRange>, int> = 0>
-  constexpr auto operator()(ExecutionPolicy&& policy, Range& range, MaskRange& mask, Mask mask_value) const -> Range& {
+  constexpr auto operator()(ExecutionPolicy&& policy, Range& range, const MaskRange& mask, const Mask& mask_value) const
+      -> Range& {
     auto map = range | ranges::views::common;
 
     std::transform(
@@ -73,8 +74,9 @@ struct overlay_base_fn {
       std::enable_if_t<std::is_execution_policy_v<ExecutionPolicy>, int> = 0,
       std::enable_if_t<ranges::range<Range>, int> = 0,
       std::enable_if_t<ranges::range<MaskRange>, int> = 0>
-  constexpr auto operator()(Range&& range, MaskRange& mask, Mask mask_value, ExecutionPolicy policy) const -> Range& {
-    return (*this)(std::move(policy), std::forward<Range>(range), mask, mask_value);
+  constexpr auto operator()(Range&& range, MaskRange&& mask, const Mask& mask_value, ExecutionPolicy policy) const
+      -> Range& {
+    return (*this)(std::move(policy), std::forward<Range>(range), std::forward<MaskRange>(mask), std::move(mask_value));
   }
 
   /// Overload that returns an action closure to compose with other actions.
@@ -86,7 +88,7 @@ struct overlay_base_fn {
       std::enable_if_t<ranges::range<MaskRange>, int> = 0>
   constexpr auto operator()(ExecutionPolicy policy, MaskRange&& mask, const Mask& mask_value) const {
     return ranges::make_action_closure(
-        ranges::bind_back(overlay_base_fn{}, std::forward<MaskRange>(mask), mask_value, std::move(policy)));
+        ranges::bind_back(overlay_base_fn{}, std::forward<MaskRange>(mask), std::move(mask_value), std::move(policy)));
   }
 };
 
@@ -101,14 +103,16 @@ struct overlay_fn : public overlay_base_fn {
       class Mask = ranges::range_value_t<Range>,
       std::enable_if_t<ranges::range<Range>, int> = 0,
       std::enable_if_t<ranges::range<MaskRange>, int> = 0>
-  constexpr auto operator()(Range&& range, MaskRange& mask, Mask mask_value) const -> Range& {
-    return (*this)(std::execution::seq, std::forward<Range>(range), mask, mask_value);
+  constexpr auto operator()(Range&& range, MaskRange&& mask, const Mask& mask_value) const -> Range& {
+    return (*this)(
+        std::execution::seq, std::forward<Range>(range), std::forward<MaskRange>(mask), std::move(mask_value));
   }
 
   /// Overload that returns an action closure to compose with other actions.
   template <class MaskRange, class Mask, std::enable_if_t<ranges::range<MaskRange>, int> = 0>
   constexpr auto operator()(MaskRange&& mask, const Mask& mask_value) const {
-    return ranges::make_action_closure(ranges::bind_back(overlay_fn{}, std::forward<MaskRange>(mask), mask_value));
+    return ranges::make_action_closure(
+        ranges::bind_back(overlay_fn{}, std::forward<MaskRange>(mask), std::move(mask_value)));
   }
 };
 
