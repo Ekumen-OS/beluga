@@ -54,13 +54,9 @@ TEST(LikelihoodFieldModel, LikelihoodField) {
   const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto sensor_model = UUT{params, grid};
 
-  // the likelihood field model includes an optimization that stores the likelihood elevated to the cube
-  auto expected_cubed_likelihood =
-      expected_likelihood_field | ranges::views::transform([](auto v) { return v * v * v; }) | ranges::to<std::vector>;
-
   ASSERT_THAT(
       sensor_model.likelihood_field().data(),
-      testing::Pointwise(testing::DoubleNear(0.003), expected_cubed_likelihood));
+      testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
 }
 
 TEST(LikelihoodFieldModel, ImportanceWeight) {

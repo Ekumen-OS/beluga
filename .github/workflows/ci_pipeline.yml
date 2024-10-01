@@ -48,6 +48,7 @@ jobs:
       - name: Install debian packages
         run: >-
           sudo apt-get update && sudo apt-get install -y \
+            gcovr \
             git \
             lcov \
             python3-colcon-common-extensions \
@@ -101,6 +102,10 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: ./src/beluga/tools/run-clang-tidy.sh
 
+      - name: Enforce code coverage
+        working-directory: ${{ github.workspace }}
+        run: ./src/beluga/tools/check-code-coverage.sh
+
       - name: Upload code coverage report
         uses: codecov/codecov-action@v3
         with:
@@ -109,7 +114,7 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
-        if: ${{ matrix.upload_artifacts }}
+        if: ${{ matrix.upload_artifacts && !github.event.pull_request.head.repo.fork }}
 
   build-docs:
     needs: build-test
@@ -142,6 +147,7 @@ jobs:
         with:
           name: docs
           path: ./docs/_build/html/
+          include-hidden-files: true
           retention-days: 7
 
   deploy-docs:

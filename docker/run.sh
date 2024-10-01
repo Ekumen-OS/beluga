@@ -66,18 +66,11 @@ while [[ "$1" != "" ]]; do
     esac
 done
 
-DEV_CONTAINER_NAME=beluga_dev
-
 # Kill the container JIC it already exists, if building, to ensure we don't attach to an old container.
-[[ "$BUILD" = true ]] && docker compose build dev && docker rm -f $DEV_CONTAINER_NAME  2>/dev/null
+[[ "$BUILD" = true ]] && docker compose build dev && docker compose rm -fs dev 2>/dev/null
 
-# Check if the container exists
-if docker ps -a --format '{{.Names}}' | grep -q $DEV_CONTAINER_NAME; then
-    # Attach to the container if it is running
-    echo "Found dev container running, attaching to it..."
-else
-    echo "Container '$DEV_CONTAINER_NAME' does not exist or is not running, proceeding to run it."
-    PRIVILEGED_CONTAINER=$PRIVILEGED_CONTAINER USERID=$(id -u) GROUPID=$(id -g) docker compose run --rm --detach --name $DEV_CONTAINER_NAME  dev
-fi
+# Start up dev container in the background (a no-op if configuration has not changed).
+PRIVILEGED_CONTAINER=$PRIVILEGED_CONTAINER USERID=$(id -u) GROUPID=$(id -g) docker compose up --detach dev
 
-docker exec -it $DEV_CONTAINER_NAME /ros_entrypoint.sh /bin/bash
+# Enter shell within dev container.
+docker compose exec dev /bin/bash

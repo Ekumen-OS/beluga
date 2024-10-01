@@ -40,7 +40,10 @@
 #include <beluga_ros/laser_scan.hpp>
 #include "beluga_amcl/ros2_common.hpp"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcpp"
 #include <message_filters/subscriber.h>
+#pragma GCC diagnostic pop
 
 /**
  * \file
