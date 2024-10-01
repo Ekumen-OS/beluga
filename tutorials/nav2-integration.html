@@ -56,7 +56,7 @@
     <link rel="prev" title="Primer on Particle Filtering with Beluga" href="particle-filtering.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Oct 1 13:48:51 2024 -0300, 73ae4d4&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 1 13:49:24 2024 -0300, cb790ad&#39;"/>
   </head>
   
   
@@ -378,15 +378,12 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-workspace">Create the workspace</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beluga-demo-nav2-package">beluga_demo_nav2 package</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-beluga-demo">Clone beluga_demo</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explanation">Explanation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bring-the-code">Bring the code</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-beluga-demos-repository">Clone <code class="docutils literal notranslate"><span class="pre">beluga-demos</span></code> repository</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-beluga-demo-nav2-integration-package">Check  <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2_integration</span></code> package</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-example">Run the example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-code">Run the code</a></li>
 </ul>
             </nav>
         </div>
@@ -400,85 +397,67 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="using-beluga-with-nav2">
 <h1>Using Beluga with Nav2<a class="headerlink" href="#using-beluga-with-nav2" title="Link to this heading">#</a></h1>
-<figure class="align-default">
-<img alt="Short video of the integration of beluga_amcl with nav2." src="../_images/beluga_nav2.gif" />
-</figure>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p><a class="reference external" href="https://docs.nav2.org/index.html">Nav2</a> is a ROS 2 framework that includes several components for robot navigation. One of these components is the localization system, typically <a class="reference external" href="https://github.com/ros-navigation/navigation2/tree/humble/nav2_amcl"><code class="docutils literal notranslate"><span class="pre">nav2_amcl</span></code></a>.</p>
-<p>This tutorial will demonstrate how to use <a class="reference internal" href="../packages/beluga_amcl/docs/index.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code></span></a> in place for <code class="docutils literal notranslate"><span class="pre">nav2_amcl</span></code>.</p>
-<p>To keep it simple, we have built this tutorial on top of the <a class="reference external" href="https://docs.nav2.org/getting_started/index.html#">Nav2 Getting Started Guide</a>. We will use the same simulated <a class="reference external" href="https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/">TurtleBot 3</a> robot and environment.</p>
+<p>This tutorial will demonstrate how to use <a class="reference internal" href="../packages/beluga_amcl/docs/index.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code></span></a> instead of <code class="docutils literal notranslate"><span class="pre">nav2_amcl</span></code> for a simulated TurtleBot 3 on ROS 2 Humble. You may also try Beluga on other supported ROS 2 versions, with different types of robots.</p>
 </section>
-<section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>This tutorial targets ROS 2 Humble.</p>
-</div>
-<p>Install <a class="reference external" href="https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html">ROS 2 Humble</a>, <a class="reference internal" href="../getting-started/installation.html"><span class="std std-doc">Beluga</span></a>, and <a class="reference external" href="https://docs.nav2.org/getting_started/index.html#installation">Nav2</a>.</p>
-</section>
-<section id="create-the-workspace">
-<h2>Create the workspace<a class="headerlink" href="#create-the-workspace" title="Link to this heading">#</a></h2>
-<p>Since we are using ROS 2, we need to create a workspace. Open a terminal and run the following command:</p>
+<section id="bring-the-code">
+<h2>Bring the code<a class="headerlink" href="#bring-the-code" title="Link to this heading">#</a></h2>
+<section id="clone-beluga-demos-repository">
+<h3>Clone <code class="docutils literal notranslate"><span class="pre">beluga-demos</span></code> repository<a class="headerlink" href="#clone-beluga-demos-repository" title="Link to this heading">#</a></h3>
+<p>The <a class="reference external" href="https://github.com/Ekumen-OS/beluga-demos">beluga-demos</a> public repository contains the <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2_integration</span></code> package, among others.</p>
+<p>Clone it into a workspace:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/beluga_demo_ws/src
-</pre></div>
-</div>
-</section>
-<section id="beluga-demo-nav2-package">
-<h2>beluga_demo_nav2 package<a class="headerlink" href="#beluga-demo-nav2-package" title="Link to this heading">#</a></h2>
-<section id="clone-beluga-demo">
-<h3>Clone beluga_demo<a class="headerlink" href="#clone-beluga-demo" title="Link to this heading">#</a></h3>
-<p>The <a class="reference external" href="https://github.com/Ekumen-OS/beluga-demos">beluga_demo</a> is a public repository where you can find the <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2</span></code> package, among others.</p>
-<p>Clone the <a class="reference external" href="https://github.com/Ekumen-OS/beluga-demos"><code class="docutils literal notranslate"><span class="pre">Ekumen-OS/beluga-demos</span></code></a> repository in your workspace:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/beluga_demo_ws/src
+<span class="nb">cd</span><span class="w"> </span>~/beluga_demo_ws/src
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ekumen-OS/beluga-demos.git
 </pre></div>
 </div>
 <p>For this tutorial, we will only use the <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2</span></code> package in that repository. This package contains all the necessary files to launch the simulation.</p>
 </section>
-<section id="explanation">
-<h3>Explanation<a class="headerlink" href="#explanation" title="Link to this heading">#</a></h3>
+<section id="check-beluga-demo-nav2-integration-package">
+<h3>Check  <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2_integration</span></code> package<a class="headerlink" href="#check-beluga-demo-nav2-integration-package" title="Link to this heading">#</a></h3>
 <p>Since <code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code> is feature-wise compatible with <code class="docutils literal notranslate"><span class="pre">nav2_amcl</span></code> (as thoroughly discussed in the <a class="reference internal" href="../packages/beluga_amcl/docs/ros2-reference.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code> ROS 2 reference page</span></a>), we can just swap <code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code> for <code class="docutils literal notranslate"><span class="pre">nav2_amcl</span></code>:</p>
 <figure class="align-center" id="id1">
-<img alt="beluga_amcl component in beluga_nav2_launch.py from beluga_demo_nav2 package." src="../_images/beluga_amcl.png" />
+<img alt="Using the `beluga_amcl` component instead of `nav2_amcl`'s." src="../_images/nav2_to_beluga_code_migration.gif" />
 <figcaption>
-<p><span class="caption-text">Loading <code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code> composable node, provided by the <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2</span></code> package.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-text">Loading <code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code> composable node, instead of <code class="docutils literal notranslate"><span class="pre">nav2_amcl</span></code>’s.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id2">
-<img alt="nav2_amcl component in localization_launch.py from nav2_bringup package." src="../_images/nav2_amcl.png" />
-<figcaption>
-<p><span class="caption-text">Loading of <code class="docutils literal notranslate"><span class="pre">nav2_amcl</span></code> composable node, provided by the <code class="docutils literal notranslate"><span class="pre">nav2_bringup</span></code> package.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>That is what the <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2</span></code> package does. Even the same parameter file can be used unchanged, though <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2</span></code> does apply a few minimal changes to better configure <code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code>, as explained in its reference page.</p>
+<p>That is what the <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2_integration</span></code> package does. Even the same parameter file can be used without changes, though the <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2_integration</span></code> does apply a few minimal changes to better configure <code class="docutils literal notranslate"><span class="pre">beluga_amcl</span></code>, as explained in its reference page.</p>
 </section>
 </section>
-<section id="run-the-example">
-<h2>Run the example<a class="headerlink" href="#run-the-example" title="Link to this heading">#</a></h2>
-<p>Build the workspace:</p>
+<section id="run-the-code">
+<h2>Run the code<a class="headerlink" href="#run-the-code" title="Link to this heading">#</a></h2>
+<p>To keep things as simple as possible, the <code class="docutils literal notranslate"><span class="pre">beluga-demos</span></code> repository comes with a containerized environment for demo execution:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>beluga-demos
+./docker/run.sh
+</pre></div>
+</div>
+<p>Once inside, you can build all demos with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>demo_build
+</pre></div>
+</div>
+<p>You can also make do without containers. You will have to install <a class="reference external" href="https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html">ROS 2 Humble</a> and <code class="docutils literal notranslate"><span class="pre">rosdep</span> <span class="pre">install</span></code> demo dependencies before you can <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code> it:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/opt/ros/humble/setup.bash
 <span class="nb">cd</span><span class="w"> </span>~/beluga_demo_ws
-colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install<span class="w"> </span>--packages-up-to<span class="w"> </span>beluga_demo_nav2
+rosdep<span class="w"> </span>install<span class="w"> </span>-i<span class="w"> </span>-y<span class="w"> </span>--from-path<span class="w"> </span>src
+colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install<span class="w"> </span>--packages-up-to<span class="w"> </span>beluga_demo_nav2_integration
 </pre></div>
 </div>
-<p>Launch the system:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>install/local_setup.bash
-ros2<span class="w"> </span>launch<span class="w"> </span>beluga_demo_nav2<span class="w"> </span>bringup_launch.py
+<p>After building, you can launch the demo with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>install/setup.bash
+ros2<span class="w"> </span>launch<span class="w"> </span>beluga_demo_nav2_integration<span class="w"> </span>demo_office_navigation.launch.py
 </pre></div>
 </div>
-<p>You should see <code class="docutils literal notranslate"><span class="pre">rviz2</span></code> open with a map loaded and the robot initialized in an incorrect position. You should also see Gazebo open with both TurtleBot 3 world and robot spawned.</p>
-<img alt="beluga_amcl component in beluga_nav2_launch.py from beluga_demo_nav2 package." class="align-center" src="../_images/beluga_nav2_rviz.png" />
-<img alt="beluga_amcl component in beluga_nav2_launch.py from beluga_demo_nav2 package." class="align-center" src="../_images/beluga_nav2_gazebo.png" />
+<p>This is equivalent to the <code class="docutils literal notranslate"><span class="pre">nav2_integration_demo</span></code> command that is available within the <code class="docutils literal notranslate"><span class="pre">beluga-demos</span></code> container.</p>
+<p>You should see Gazebo open up an office scenario with a TurtleBot in it. You should also see <code class="docutils literal notranslate"><span class="pre">rviz2</span></code> open with the corresponding map loaded.</p>
+<img alt="Gazebo simulation of a robot navigating using Nav2 and Beluga AMCL" class="align-center" src="../_images/beluga_nav2_demo.gif" />
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
 <p>If the robot is not spawned in gazebo, check the <code class="docutils literal notranslate"><span class="pre">GAZEBO_MODEL_PATH</span></code> environment variable set in the <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2_launch.py</span></code> file.</p>
 </div>
-<p>You can use <code class="docutils literal notranslate"><span class="pre">rviz2</span></code> tools to set the correct initial pose of the robot and to navigate the robot around the map.</p>
-</section>
-<section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
-<p>This tutorial integrates Beluga and Nav2 for a simulated TurtleBot 3 on ROS 2 Humble. You may also try using Beluga on other supported ROS 2 versions, with different types of robots.</p>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">rviz2</span></code> tools to navigate the robot around the map.</p>
 </section>
 </section>
 
@@ -528,15 +507,12 @@ ros2<span class="w"> </span>launch<span class="w"> </span>beluga_demo_nav2<span 
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-workspace">Create the workspace</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beluga-demo-nav2-package">beluga_demo_nav2 package</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-beluga-demo">Clone beluga_demo</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explanation">Explanation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bring-the-code">Bring the code</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-beluga-demos-repository">Clone <code class="docutils literal notranslate"><span class="pre">beluga-demos</span></code> repository</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-beluga-demo-nav2-integration-package">Check  <code class="docutils literal notranslate"><span class="pre">beluga_demo_nav2_integration</span></code> package</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-example">Run the example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-code">Run the code</a></li>
 </ul>
   </nav></div>
 
@@ -570,7 +546,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Oct 1 13:48:51 2024 -0300, 73ae4d4&#39;.
+  Last updated on &#39;Tue Oct 1 13:49:24 2024 -0300, cb790ad&#39;.
   <br/>
 </p>
   </div>
