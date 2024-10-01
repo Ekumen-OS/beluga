@@ -115,6 +115,17 @@ TEST(TestAmcl, UpdateWithParticles) {
   ASSERT_TRUE(estimate.has_value());
 }
 
+TEST(TestAmcl, UpdateWithParticlesWithMotion) {
+  auto amcl = make_amcl();
+  ASSERT_EQ(amcl.particles().size(), 0);
+  amcl.initialize_from_map();
+  ASSERT_EQ(amcl.particles().size(), 50UL);
+  auto estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
+  ASSERT_TRUE(estimate.has_value());
+  estimate = amcl.update(Sophus::SE2d{0.0, {1.0, 0.0}}, make_dummy_laser_scan());
+  ASSERT_TRUE(estimate.has_value());
+}
+
 TEST(TestAmcl, UpdateWithParticlesNoMotion) {
   auto amcl = make_amcl();
   ASSERT_EQ(amcl.particles().size(), 0);

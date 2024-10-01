@@ -33,6 +33,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     -Werror
     -Wpedantic)
 endif()
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+  add_compile_options(-fno-inline)
+endif()
 
 set(ROS_VERSION $ENV{ROS_VERSION})
 set(ROS_VERSION $ENV{ROS_VERSION})

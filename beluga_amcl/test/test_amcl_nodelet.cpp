@@ -111,6 +111,8 @@ class Tester {
     laser_scan_publisher_ = nh_.advertise<sensor_msgs::LaserScan>("scan", 1);
 
     global_localization_client_ = nh_.serviceClient<std_srvs::Empty>("global_localization");
+
+    nomotion_update_client_ = nh_.serviceClient<std_srvs::Empty>("request_nomotion_update");
   }
 
   void create_pose_subscriber() {
@@ -120,7 +122,7 @@ class Tester {
 
   void pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& message) { latest_pose_ = *message; }
 
-  const auto& latest_pose() const { return latest_pose_; }
+  auto& latest_pose() { return latest_pose_; }
 
   void create_particle_cloud_subscriber() {
     particle_cloud_subscriber_ = nh_.subscribe<geometry_msgs::PoseArray>(
@@ -241,6 +243,16 @@ class Tester {
     return global_localization_client_.call(srv);
   }
 
+  template <class Rep, class Period>
+  bool wait_for_nomotion_update_service(const std::chrono::duration<Rep, Period>& timeout) {
+    return nomotion_update_client_.waitForExistence(ros::Duration(std::chrono::duration<double>(timeout).count()));
+  }
+
+  bool request_nomotion_update() {
+    std_srvs::Empty srv;
+    return nomotion_update_client_.call(srv);
+  }
+
  private:
   static bool static_map_callback(nav_msgs::GetMap::Request&, nav_msgs::GetMap::Response& response) {
     response.map = make_dummy_map();
@@ -267,6 +279,7 @@ class Tester {
   tf2_ros::TransformListener tf_listener_;
 
   ros::ServiceClient global_localization_client_;
+  ros::ServiceClient nomotion_update_client_;
 };
 
 /// Base node fixture class with common utilities.
@@ -279,13 +292,12 @@ class BaseTestFixture : public T {
     tester_ = std::make_shared<Tester>();
   }
 
-  void TearDown() override {}
-
   bool wait_for_initialization() {
     return spin_until([this] { return amcl_nodelet_->is_initialized(); }, 1000ms);
   }
 
   bool wait_for_pose_estimate() {
+    tester_->latest_pose().reset();
     return spin_until([this] { return tester_->latest_pose().has_value(); }, 1000ms);
   }
 
@@ -299,6 +311,13 @@ class BaseTestFixture : public T {
       return false;
     }
     return tester_->request_global_localization();
+  }
+
+  bool request_nomotion_update() {
+    if (!tester_->wait_for_nomotion_update_service(500ms)) {
+      return false;
+    }
+    return tester_->request_nomotion_update();
   }
 
  protected:
@@ -549,6 +568,24 @@ TEST_F(TestFixture, FirstMapOnly) {
     ASSERT_NEAR(pose.translation().y(), 29.0, 0.01);
     ASSERT_NEAR(pose.so2().log(), -0.4, 0.01);
   }
+}
+
+TEST_F(TestFixture, CanForcePoseEstimate) {
+  beluga_amcl::AmclConfig config;
+  EXPECT_TRUE(amcl_nodelet_->default_config(config));
+  config.set_initial_pose = false;
+  EXPECT_TRUE(amcl_nodelet_->set(config));
+  tester_->publish_map();
+  EXPECT_TRUE(request_global_localization());
+  EXPECT_TRUE(wait_for_initialization());
+  tester_->create_pose_subscriber();
+  tester_->publish_laser_scan();
+  EXPECT_TRUE(wait_for_pose_estimate());
+  EXPECT_TRUE(tester_->can_transform("map", "odom"));
+  EXPECT_TRUE(request_nomotion_update());
+  tester_->publish_laser_scan();
+  EXPECT_TRUE(wait_for_pose_estimate());
+  EXPECT_TRUE(tester_->can_transform("map", "odom"));
 }
 
 TEST_F(TestFixture, KeepCurrentEstimate) {
