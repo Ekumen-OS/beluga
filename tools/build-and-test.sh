@@ -65,7 +65,8 @@ LCOV_CONFIG_PATH=${SCRIPT_PATH}/../.lcovrc
 echo ::group::Test
 colcon lcov-result \
     --initial \
-    --lcov-config-file ${LCOV_CONFIG_PATH}
+    --lcov-config-file ${LCOV_CONFIG_PATH} \
+    --packages-select ${ROS_PACKAGES}
 colcon test \
     --packages-select ${ROS_PACKAGES} \
     --event-handlers console_cohesion+ \
