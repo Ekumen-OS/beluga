@@ -28,6 +28,7 @@ TEST(TestMessages, Instantiation) {
   [[maybe_unused]] auto msg7 = beluga_ros::msg::Pose{};
   [[maybe_unused]] auto msg8 = beluga_ros::msg::PoseArray{};
   [[maybe_unused]] auto msg9 = beluga_ros::msg::Transform{};
+  [[maybe_unused]] auto msg10 = beluga_ros::msg::PointCloud2{};
 }
 
 TEST(TestMessages, Stamping) {

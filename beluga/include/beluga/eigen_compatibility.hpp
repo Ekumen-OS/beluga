@@ -22,6 +22,10 @@ namespace Eigen {  // NOLINT(readability-identifier-naming)
 /// Type alias for single-column matrices, available starting Eigen 3.4
 template <typename Scalar, int Dims>
 using Vector = Eigen::Matrix<Scalar, Dims, 1>;
+template <typename Scalar>
+using Vector3 = Eigen::Matrix<Scalar, 3, 1>;
+template <typename Scalar>
+using Matrix3X = Eigen::Matrix<Scalar, 3, Eigen::Dynamic>;
 }  // namespace Eigen
 #endif
 
