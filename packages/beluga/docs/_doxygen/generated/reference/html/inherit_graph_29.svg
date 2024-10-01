@@ -8,9 +8,9 @@
  viewBox="0.00 0.00 270.00 110.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 106)">
 <title>Graphical Class Hierarchy</title>
-<!-- Node37 -->
+<!-- Node39 -->
 <g id="node1" class="node">
-<title>Node37</title>
+<title>Node39</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="none" stroke="#bfbfbf" points="0,-41.5 0,-60.5 89,-60.5 89,-41.5 0,-41.5"/>
 <text text-anchor="middle" x="44.5" y="-48.5" font-family="Helvetica,sans-Serif" font-size="10.00">std::false_type</text>
@@ -28,15 +28,15 @@
 </a>
 </g>
 </g>
-<!-- Node37&#45;&gt;Node0 -->
+<!-- Node39&#45;&gt;Node0 -->
 <g id="edge1" class="edge">
-<title>Node37&#45;&gt;Node0</title>
+<title>Node39&#45;&gt;Node0</title>
 <path fill="none" stroke="midnightblue" d="M99.22,-61.96C107.6,-63.67 116.36,-65.46 125,-67.22"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="99.7,-58.49 89.21,-59.92 98.31,-65.35 99.7,-58.49"/>
 </g>
-<!-- Node39 -->
+<!-- Node41 -->
 <g id="node3" class="node">
-<title>Node39</title>
+<title>Node41</title>
 <g id="a_node3"><a xlink:href="structbeluga_1_1has__single__element.html" target="_top" xlink:title="Meta&#45;function that returns true if there is a single element of type T in the tuple&#45;like type.">
 <polygon fill="none" stroke="black" points="126.5,-0.5 126.5,-41.5 260.5,-41.5 260.5,-0.5 126.5,-0.5"/>
 <text text-anchor="start" x="134.5" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::has_single</text>
@@ -45,9 +45,9 @@
 </a>
 </g>
 </g>
-<!-- Node37&#45;&gt;Node39 -->
+<!-- Node39&#45;&gt;Node41 -->
 <g id="edge2" class="edge">
-<title>Node37&#45;&gt;Node39</title>
+<title>Node39&#45;&gt;Node41</title>
 <path fill="none" stroke="midnightblue" d="M99.03,-40.08C107.91,-38.26 117.22,-36.36 126.37,-34.5"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="98.3,-36.65 89.21,-42.08 99.7,-43.51 98.3,-36.65"/>
 </g>

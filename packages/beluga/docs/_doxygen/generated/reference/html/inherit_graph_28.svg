@@ -8,9 +8,9 @@
  viewBox="0.00 0.00 327.00 165.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 161.5)">
 <title>Graphical Class Hierarchy</title>
-<!-- Node116 -->
+<!-- Node118 -->
 <g id="node1" class="node">
-<title>Node116</title>
+<title>Node118</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="none" stroke="#bfbfbf" points="0,-77.5 0,-96.5 84,-96.5 84,-77.5 0,-77.5"/>
 <text text-anchor="middle" x="42" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00">std::true_type</text>
@@ -29,15 +29,15 @@
 </a>
 </g>
 </g>
-<!-- Node116&#45;&gt;Node0 -->
+<!-- Node118&#45;&gt;Node0 -->
 <g id="edge1" class="edge">
-<title>Node116&#45;&gt;Node0</title>
+<title>Node118&#45;&gt;Node0</title>
 <path fill="none" stroke="midnightblue" d="M90.99,-99.03C109.42,-103.65 130.82,-109.02 150.77,-114.02"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="91.63,-95.58 81.08,-96.55 89.93,-102.37 91.63,-95.58"/>
 </g>
-<!-- Node118 -->
+<!-- Node120 -->
 <g id="node3" class="node">
-<title>Node118</title>
+<title>Node120</title>
 <g id="a_node3"><a xlink:href="structbeluga_1_1has__single__element_3_01T_00_01TupleLike_3_01Args_8_8_8_01_4_00_01std_1_1enable74bb370853b4969c8155f7c3b3c0dd64.html" target="_top" xlink:title="has_single_element specialization for tuples.">
 <polygon fill="none" stroke="black" points="120,-0.5 120,-85.5 319,-85.5 319,-0.5 120,-0.5"/>
 <text text-anchor="start" x="128" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::has_single</text>
@@ -50,9 +50,9 @@
 </a>
 </g>
 </g>
-<!-- Node116&#45;&gt;Node118 -->
+<!-- Node118&#45;&gt;Node120 -->
 <g id="edge2" class="edge">
-<title>Node116&#45;&gt;Node118</title>
+<title>Node118&#45;&gt;Node120</title>
 <path fill="none" stroke="midnightblue" d="M90.95,-74.98C99.98,-72.71 109.73,-70.27 119.68,-67.78"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="89.93,-71.63 81.08,-77.45 91.63,-78.42 89.93,-71.63"/>
 </g>
