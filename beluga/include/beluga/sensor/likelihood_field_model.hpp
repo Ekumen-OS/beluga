@@ -24,6 +24,7 @@
 #include <beluga/algorithm/distance_map.hpp>
 #include <beluga/sensor/data/occupancy_grid.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
+#include <range/v3/action/transform.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
@@ -173,7 +174,7 @@ class LikelihoodFieldModel {
 
     const double offset = params.z_random / params.max_laser_distance;
 
-    const auto to_likelihood = [=](double squared_distance) {
+    const auto to_likelihood = [amplitude, two_squared_sigma, offset](double squared_distance) {
       return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
     };
 
@@ -190,10 +191,11 @@ class LikelihoodFieldModel {
       distance_map |= beluga::actions::overlay(grid.unknown_mask(), background_distance);
     }
 
-    std::transform(distance_map.begin(), distance_map.end(), distance_map.begin(), truncate_to_max_distance);
-    std::transform(distance_map.begin(), distance_map.end(), distance_map.begin(), to_likelihood);
+    auto likelihood_values = std::move(distance_map) |                               //
+                             ranges::actions::transform(truncate_to_max_distance) |  //
+                             ranges::actions::transform(to_likelihood);
 
-    return ValueGrid2<float>{std::move(distance_map), grid.width(), grid.resolution()};
+    return ValueGrid2<float>{std::move(likelihood_values), grid.width(), grid.resolution()};
   }
 };
 
