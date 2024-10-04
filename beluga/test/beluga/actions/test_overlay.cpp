@@ -132,4 +132,15 @@ TEST(OverlayAction, ParallelExecutionPolicy) {
   ASSERT_THAT(input, ::testing::Pointwise(::testing::Eq(), expected_output));
 }
 
+TEST(OverlayAction, Temporary) {
+  auto input = std::vector{1, 2, 3, 4, 5, 6, 7, 8, 9};
+  auto action = beluga::actions::overlay(std::vector{false, false, false, true, false, true, false, false, false}, 5);
+
+  input |= action;
+
+  const auto expected_output = std::vector{1, 2, 3, 5, 5, 5, 7, 8, 9};
+
+  ASSERT_THAT(input, ::testing::Pointwise(::testing::Eq(), expected_output));
+}
+
 }  // namespace
