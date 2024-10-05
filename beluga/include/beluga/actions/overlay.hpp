@@ -53,6 +53,7 @@ struct overlay_base_fn {
   constexpr auto operator()(ExecutionPolicy&& policy, Range& range, MaskRange&& mask, Mask&& mask_value) const
       -> Range& {
     auto map = range | ranges::views::common;
+    const auto converted_mask_value = static_cast<ranges::range_value_t<Range>>(mask_value);
 
     std::transform(
         policy,            //
@@ -60,7 +61,9 @@ struct overlay_base_fn {
         std::end(map),     //
         std::begin(mask),  //
         std::begin(map),   //
-        [&mask_value](const auto& base_value, bool flag) { return flag ? mask_value : base_value; });
+        [&converted_mask_value](const auto& base_value, bool flag) {
+          return flag ? converted_mask_value : base_value;
+        });
 
     return range;
   }
