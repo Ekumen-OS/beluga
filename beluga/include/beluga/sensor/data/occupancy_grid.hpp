@@ -68,7 +68,8 @@ namespace beluga {
  *   `g.coordinates_for(r, f)` returns a range of embedding space coordinates in the
  *   corresponding frame as `Eigen::Vector2d` values;
  * - `g.free_cells()` returns a range of `std::size_t` indices to free grid cells;
- * - `g.obstacle_data()` returns a range of `bool` values, representing grid cell occupancy;
+ * - `g.obstacle_mask()` returns a range of `bool` values, representing grid cell occupancy;
+ * - `g.unknown_mask()` returns a range of `bool` values, representing the unkwnown space of the grid cells;
  */
 
 /// Occupancy 2D grid base type.
@@ -174,11 +175,19 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
            ranges::views::transform([](const auto& tuple) { return std::get<0>(tuple); });
   }
 
-  /// Retrieves grid data using true booleans for obstacles.
-  [[nodiscard]] auto obstacle_data() const {
+  /// Retrieves a mask over occupied cells in the grid.
+  [[nodiscard]] auto obstacle_mask() const {
     return this->self().data() |
            ranges::views::transform([value_traits = this->self().value_traits()](const auto& value) {
              return value_traits.is_occupied(value);
+           });
+  }
+
+  /// Retrieves a mask over unknown cells in the grid.
+  [[nodiscard]] auto unknown_mask() const {
+    return this->self().data() |
+           ranges::views::transform([value_traits = this->self().value_traits()](const auto& value) {
+             return value_traits.is_unknown(value);
            });
   }
 };

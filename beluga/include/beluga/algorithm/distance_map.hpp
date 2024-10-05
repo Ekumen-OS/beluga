@@ -41,7 +41,7 @@ namespace beluga {
  *  (std::size_t) -> NeighborsT, where NeighborsT is a
  *    [Range](https://en.cppreference.com/w/cpp/ranges/range)
  *    with value type std::size_t.
- * \param obstacle_map A map that represents obstacles in an environment.
+ * \param obstacle_mask A mask that represents obstacles in an environment.
  *  If the value of a cell is True, the cell has an obstacle.
  * \param distance_function Given the indexes of two cells in the map i and j,
  *  obstacle_map(i, j) must return the distance between the two cells.
@@ -52,7 +52,7 @@ namespace beluga {
  */
 template <class Range, class DistanceFunction, class NeighborsFunction>
 auto nearest_obstacle_distance_map(
-    Range&& obstacle_map,
+    Range&& obstacle_mask,
     DistanceFunction&& distance_function,
     NeighborsFunction&& neighbors_function) {
   struct IndexPair {
@@ -61,15 +61,15 @@ auto nearest_obstacle_distance_map(
   };
 
   using DistanceType = std::invoke_result_t<DistanceFunction, std::size_t, std::size_t>;
-  auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_map));
-  auto visited = std::vector<bool>(ranges::size(obstacle_map), false);
+  auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_mask));
+  auto visited = std::vector<bool>(ranges::size(obstacle_mask), false);
 
   auto compare = [&distance_map](const IndexPair& first, const IndexPair& second) {
     return distance_map[first.index] > distance_map[second.index];
   };
   auto queue = std::priority_queue<IndexPair, std::vector<IndexPair>, decltype(compare)>{compare};
 
-  for (auto [index, is_obstacle] : ranges::views::enumerate(obstacle_map)) {
+  for (auto [index, is_obstacle] : ranges::views::enumerate(obstacle_mask)) {
     if (is_obstacle) {
       visited[index] = true;
       distance_map[index] = 0;

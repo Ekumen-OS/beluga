@@ -20,9 +20,11 @@
 #include <random>
 #include <vector>
 
+#include <beluga/actions/overlay.hpp>
 #include <beluga/algorithm/distance_map.hpp>
 #include <beluga/sensor/data/occupancy_grid.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
+#include <range/v3/action/transform.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
@@ -58,6 +60,8 @@ struct LikelihoodFieldModelParam {
    * Used to calculate the probability of the obstacle being hit.
    */
   double sigma_hit = 0.2;
+  /// Whether to model unknown space or assume it free.
+  bool model_unknown_space = false;
 };
 
 /// Likelihood field sensor model for range finders.
@@ -161,12 +165,16 @@ class LikelihoodFieldModel {
       return std::min(squared_distance, squared_max_distance);
     };
 
-    const auto to_likelihood = [amplitude =
-                                    params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi())),
-                                two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit,
-                                offset = params.z_random / params.max_laser_distance](double squared_distance) {
-      assert(two_squared_sigma > 0.0);
-      assert(amplitude > 0.0);
+    /// Pre-computed variables
+    const double two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit;
+    assert(two_squared_sigma > 0.0);
+
+    const double amplitude = params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()));
+    assert(amplitude > 0.0);
+
+    const double offset = params.z_random / params.max_laser_distance;
+
+    const auto to_likelihood = [amplitude, two_squared_sigma, offset](double squared_distance) {
       return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
     };
 
@@ -174,10 +182,18 @@ class LikelihoodFieldModel {
 
     // determine distances to obstacles and calculate likelihood values in-place
     // to minimize memory usage when dealing with large maps
-    auto likelihood_values = nearest_obstacle_distance_map(grid.obstacle_data(), squared_distance, neighborhood);
-    std::transform(
-        likelihood_values.begin(), likelihood_values.end(), likelihood_values.begin(), truncate_to_max_distance);
-    std::transform(likelihood_values.begin(), likelihood_values.end(), likelihood_values.begin(), to_likelihood);
+    auto distance_map = nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood);
+
+    if (params.model_unknown_space) {
+      const double inverse_max_distance = 1 / params.max_laser_distance;
+      const double background_distance = -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
+
+      distance_map |= beluga::actions::overlay(grid.unknown_mask(), background_distance);
+    }
+
+    auto likelihood_values = std::move(distance_map) |                               //
+                             ranges::actions::transform(truncate_to_max_distance) |  //
+                             ranges::actions::transform(to_likelihood);
 
     return ValueGrid2<float>{std::move(likelihood_values), grid.width(), grid.resolution()};
   }

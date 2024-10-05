@@ -56,16 +56,10 @@ BENCHMARK_CAPTURE(BM_Bresenham2i, Modified, beluga::Bresenham2i::kModified)
 
 using beluga::testing::StaticOccupancyGrid;
 
-template <std::size_t Rows, std::size_t Cols>
-class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>> {
+template <std::size_t Rows, std::size_t Cols, class T = bool>
+class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols, T>> {
  public:
-  struct ValueTraits {
-    [[nodiscard]] bool is_free(bool value) const { return !value; }
-    [[nodiscard]] bool is_unknown(bool) const { return false; }
-    [[nodiscard]] bool is_occupied(bool value) const { return value; }
-  };
-
-  explicit BaselineGrid(std::initializer_list<bool>, double resolution) : resolution_{resolution} {
+  explicit BaselineGrid(std::initializer_list<T>, double resolution) : resolution_{resolution} {
     std::fill(std::begin(data()), std::end(data()), false);
   }
 
@@ -79,12 +73,12 @@ class BaselineGrid : public beluga::BaseOccupancyGrid2<BaselineGrid<Rows, Cols>>
   [[nodiscard]] std::size_t height() const { return Rows; }
   [[nodiscard]] double resolution() const { return resolution_; }
 
-  [[nodiscard]] auto value_traits() const { return ValueTraits{}; }
+  [[nodiscard]] auto value_traits() const { return beluga::testing::ValueTraits<T>{}; }
 
  private:
   double resolution_;
   Sophus::SE2d origin_;
-  std::array<bool, Rows * Cols> grid_;
+  std::array<T, Rows * Cols> grid_;
   static constexpr std::size_t kWidth = Cols;
   static constexpr std::size_t kHeight = Rows;
 };
@@ -101,7 +95,7 @@ const auto kBearingLabels = std::array{
     "Diagonal",
 };
 
-template <template <std::size_t, std::size_t> class Grid>
+template <template <std::size_t, std::size_t, class T = bool> class Grid>
 void BM_RayCasting2d_BaselineRaycast(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
@@ -156,7 +150,7 @@ BENCHMARK_TEMPLATE(BM_RayCasting2d_BaselineRaycast, StaticOccupancyGrid)
     ->Args({2, 1024})
     ->Complexity();
 
-template <template <std::size_t, std::size_t> class Grid>
+template <template <std::size_t, std::size_t, class T = bool> class Grid>
 void BM_RayCasting2d(benchmark::State& state) {
   constexpr double kMaxRange = 100.0;
   constexpr double kResolution = 0.05;
