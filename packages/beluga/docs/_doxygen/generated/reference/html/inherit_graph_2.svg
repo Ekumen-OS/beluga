@@ -11,20 +11,20 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="structbeluga_1_1actions_1_1detail_1_1propagate__base__fn.html" target="_top" xlink:title="Implementation detail for a propagate range adaptor object.">
+<g id="a_node1"><a xlink:href="structbeluga_1_1actions_1_1detail_1_1overlay__base__fn.html" target="_top" xlink:title="Implementation detail for an overlay range adaptor object.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-30.5 125,-30.5 125,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::actions::detail</text>
-<text text-anchor="middle" x="62.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::propagate_base_fn</text>
+<text text-anchor="middle" x="62.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::overlay_base_fn</text>
 </a>
 </g>
 </g>
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="structbeluga_1_1actions_1_1detail_1_1propagate__fn.html" target="_top" xlink:title="Implementation detail for a propagate range adaptor object with a default execution policy.">
+<g id="a_node2"><a xlink:href="structbeluga_1_1actions_1_1detail_1_1overlay__fn.html" target="_top" xlink:title="Implementation detail for an overlay range adaptor object with a default execution policy.">
 <polygon fill="none" stroke="black" points="161,-0.5 161,-30.5 286,-30.5 286,-0.5 161,-0.5"/>
 <text text-anchor="start" x="169" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::actions::detail</text>
-<text text-anchor="middle" x="223.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::propagate_fn</text>
+<text text-anchor="middle" x="223.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::overlay_fn</text>
 </a>
 </g>
 </g>

@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Oct 1 17:57:36 2024 -0300, 3135ee3&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Sat Oct 5 14:05:32 2024 -0500, 64026d9&#39;"/>
   </head>
   
   
@@ -450,7 +450,8 @@ $(function() {
 <li>given possibly const grid cell index <code>i</code> of <code>std::size_t</code> type and frame <code>f</code>, <code>g.coordinates_at(i, f)</code> returns embedding space coordinates in the corresponding frame as an <code>Eigen::Vector2d</code> value;</li>
 <li>given a possibly const range <code>r</code> of grid cell coordinates or indices and frame <code>f</code>, <code>g.coordinates_for(r, f)</code> returns a range of embedding space coordinates in the corresponding frame as <code>Eigen::Vector2d</code> values;</li>
 <li><code>g.free_cells()</code> returns a range of <code>std::size_t</code> indices to free grid cells;</li>
-<li><code>g.obstacle_data()</code> returns a range of <code>bool</code> values, representing grid cell occupancy; </li>
+<li><code>g.obstacle_mask()</code> returns a range of <code>bool</code> values, representing grid cell occupancy;</li>
+<li><code>g.unknown_mask()</code> returns a range of <code>bool</code> values, representing the unkwnown space of the grid cells; </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -509,7 +510,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Oct 1 17:57:36 2024 -0300, 3135ee3&#39;.
+  Last updated on &#39;Sat Oct 5 14:05:32 2024 -0500, 64026d9&#39;.
   <br/>
 </p>
   </div>

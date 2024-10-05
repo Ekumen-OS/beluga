@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Oct 1 17:57:36 2024 -0300, 3135ee3&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Sat Oct 5 14:05:32 2024 -0500, 64026d9&#39;"/>
   </head>
   
   
@@ -466,8 +466,8 @@ $(function() {
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, <span class="keyword">class</span> DistanceFunction, <span class="keyword">class</span> NeighborsFunction&gt;</div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">   54</a></span>&#160;<span class="keyword">auto</span> <a class="code" href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">nearest_obstacle_distance_map</a>(</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    Range&amp;&amp; obstacle_map,</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="namespacebeluga.html#ac408d5ea2b04b0330cefd231bc018e20">   54</a></span>&#160;<span class="keyword">auto</span> <a class="code" href="namespacebeluga.html#ac408d5ea2b04b0330cefd231bc018e20">nearest_obstacle_distance_map</a>(</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    Range&amp;&amp; obstacle_mask,</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    DistanceFunction&amp;&amp; distance_function,</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    NeighborsFunction&amp;&amp; neighbors_function) {</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">struct </span>IndexPair {</div>
@@ -476,15 +476,15 @@ $(function() {
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  };</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">using</span> DistanceType = std::invoke_result_t&lt;DistanceFunction, std::size_t, std::size_t&gt;;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">auto</span> distance_map = std::vector&lt;DistanceType&gt;(ranges::size(obstacle_map));</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">auto</span> visited = std::vector&lt;bool&gt;(ranges::size(obstacle_map), <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">auto</span> distance_map = std::vector&lt;DistanceType&gt;(ranges::size(obstacle_mask));</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">auto</span> visited = std::vector&lt;bool&gt;(ranges::size(obstacle_mask), <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">auto</span> compare = [&amp;distance_map](<span class="keyword">const</span> IndexPair&amp; first, <span class="keyword">const</span> IndexPair&amp; second) {</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">return</span> distance_map[first.index] &gt; distance_map[second.index];</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  };</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keyword">auto</span> queue = std::priority_queue&lt;IndexPair, std::vector&lt;IndexPair&gt;, decltype(compare)&gt;{compare};</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> [index, is_obstacle] : ranges::views::enumerate(obstacle_map)) {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> [index, is_obstacle] : ranges::views::enumerate(obstacle_mask)) {</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">if</span> (is_obstacle) {</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      visited[index] = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      distance_map[index] = 0;</div>
@@ -511,7 +511,7 @@ $(function() {
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
-<div class="ttc" id="anamespacebeluga_html_a3356c1b099bda88b4dfda8ff230bac88"><div class="ttname"><a href="namespacebeluga.html#a3356c1b099bda88b4dfda8ff230bac88">beluga::nearest_obstacle_distance_map</a></div><div class="ttdeci">auto nearest_obstacle_distance_map(Range &amp;&amp;obstacle_map, DistanceFunction &amp;&amp;distance_function, NeighborsFunction &amp;&amp;neighbors_function)</div><div class="ttdoc">Returns a map where the value of each cell is the distance to the nearest obstacle.</div><div class="ttdef"><b>Definition:</b> distance_map.hpp:54</div></div>
+<div class="ttc" id="anamespacebeluga_html_ac408d5ea2b04b0330cefd231bc018e20"><div class="ttname"><a href="namespacebeluga.html#ac408d5ea2b04b0330cefd231bc018e20">beluga::nearest_obstacle_distance_map</a></div><div class="ttdeci">auto nearest_obstacle_distance_map(Range &amp;&amp;obstacle_mask, DistanceFunction &amp;&amp;distance_function, NeighborsFunction &amp;&amp;neighbors_function)</div><div class="ttdoc">Returns a map where the value of each cell is the distance to the nearest obstacle.</div><div class="ttdef"><b>Definition:</b> distance_map.hpp:54</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -568,7 +568,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Oct 1 17:57:36 2024 -0300, 3135ee3&#39;.
+  Last updated on &#39;Sat Oct 5 14:05:32 2024 -0500, 64026d9&#39;.
   <br/>
 </p>
   </div>
