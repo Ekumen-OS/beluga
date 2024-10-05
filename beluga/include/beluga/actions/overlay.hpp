@@ -46,7 +46,7 @@ struct overlay_base_fn {
       class ExecutionPolicy,
       class Range,
       class MaskRange,
-      class Mask = ranges::range_value_t<Range>,
+      class Mask,
       std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0,
       std::enable_if_t<ranges::range<Range>, int> = 0,
       std::enable_if_t<ranges::range<MaskRange>, int> = 0>
@@ -70,7 +70,7 @@ struct overlay_base_fn {
       class ExecutionPolicy,
       class Range,
       class MaskRange,
-      class Mask = ranges::range_value_t<Range>,
+      class Mask,
       std::enable_if_t<std::is_execution_policy_v<ExecutionPolicy>, int> = 0,
       std::enable_if_t<ranges::range<Range>, int> = 0,
       std::enable_if_t<ranges::range<MaskRange>, int> = 0>
@@ -101,7 +101,7 @@ struct overlay_fn : public overlay_base_fn {
   template <
       class Range,
       class MaskRange,
-      class Mask = ranges::range_value_t<Range>,
+      class Mask,
       std::enable_if_t<ranges::range<Range>, int> = 0,
       std::enable_if_t<ranges::range<MaskRange>, int> = 0>
   constexpr auto operator()(Range&& range, MaskRange&& mask, Mask&& mask_value) const -> Range& {

@@ -187,8 +187,9 @@ class LikelihoodFieldModel {
     if (params.model_unknown_space) {
       const double inverse_max_distance = 1 / params.max_laser_distance;
       const double background_distance = -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
+      const auto mask_value = static_cast<ranges::range_value_t<decltype(distance_map)>>(background_distance);
 
-      distance_map |= beluga::actions::overlay(grid.unknown_mask(), background_distance);
+      distance_map |= beluga::actions::overlay(grid.unknown_mask(), mask_value);
     }
 
     auto likelihood_values = std::move(distance_map) |                               //
