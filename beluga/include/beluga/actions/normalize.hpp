@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <execution>
+#include <optional>
 
 #include <range/v3/action/action.hpp>
 #include <range/v3/numeric/accumulate.hpp>
@@ -34,119 +35,105 @@ namespace beluga::actions {
 
 namespace detail {
 
-/// Implementation detail for a normalize range adaptor object.
-struct normalize_base_fn {
-  /// Overload that implements the normalize algorithm.
-  /**
-   * \tparam ExecutionPolicy An [execution policy](https://en.cppreference.com/w/cpp/algorithm/execution_policy_tag_t).
-   * \tparam Range An [input range](https://en.cppreference.com/w/cpp/ranges/input_range).
-   * \param policy The execution policy to use.
-   * \param range An existing range to apply this action to.
-   * \param factor The normalization factor.
-   */
+/// \cond detail
+
+template <class ExecutionPolicy = std::execution::sequenced_policy>
+struct normalize_closure {
+ public:
+  static_assert(std::is_execution_policy_v<ExecutionPolicy>);
+
+  constexpr normalize_closure() noexcept : policy_{std::execution::seq} {}
+
+  constexpr explicit normalize_closure(ExecutionPolicy policy) : policy_{std::move(policy)} {}
+
+  constexpr explicit normalize_closure(double factor) noexcept : policy_{std::execution::seq}, factor_{factor} {}
+
+  constexpr normalize_closure(ExecutionPolicy policy, double factor) : policy_{std::move(policy)}, factor_{factor} {}
+
+  template <class Range>
+  constexpr auto operator()(Range& range) const -> Range& {
+    static_assert(ranges::forward_range<Range>);
+
+    auto weights = std::invoke([&range]() {
+      if constexpr (beluga::is_particle_range_v<Range>) {
+        return range | beluga::views::weights | ranges::views::common;
+      } else {
+        return range | ranges::views::common;
+      }
+    });
+
+    const double factor = std::invoke([this, weights]() {
+      if (factor_.has_value()) {
+        return factor_.value();
+      }
+
+      return ranges::accumulate(weights, 0.0);  // The default normalization factor is the total sum of weights.
+    });
+
+    if (std::abs(factor - 1.0) < std::numeric_limits<double>::epsilon()) {
+      return range;  // No change.
+    }
+
+    std::transform(
+        policy_,          //
+        weights.begin(),  //
+        weights.end(),    //
+        weights.begin(),  //
+        [factor](const auto w) { return w / factor; });
+
+    return range;
+  }
+
+ private:
+  ExecutionPolicy policy_{};
+  std::optional<double> factor_;
+};
+
+struct normalize_fn {
   template <
       class ExecutionPolicy,
       class Range,
       std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0,
       std::enable_if_t<ranges::range<Range>, int> = 0>
   constexpr auto operator()(ExecutionPolicy&& policy, Range& range, double factor) const -> Range& {
-    if (std::abs(factor - 1.0) < std::numeric_limits<double>::epsilon()) {
-      return range;  // No change.
-    }
-
-    auto weights = [&range]() {
-      if constexpr (beluga::is_particle_range_v<Range>) {
-        return range | beluga::views::weights | ranges::views::common;
-      } else {
-        return range | ranges::views::common;
-      }
-    }();
-
-    std::transform(
-        policy,               //
-        std::begin(weights),  //
-        std::end(weights),    //
-        std::begin(weights),  //
-        [factor](const auto w) { return w / factor; });
-    return range;
+    return normalize_closure{std::forward<ExecutionPolicy>(policy), factor}(range);
   }
 
-  /// Overload that uses a default normalization factor.
-  /**
-   * The default normalization factor is the total sum of weights.
-   */
   template <
       class ExecutionPolicy,
       class Range,
       std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0,
       std::enable_if_t<ranges::range<Range>, int> = 0>
   constexpr auto operator()(ExecutionPolicy&& policy, Range& range) const -> Range& {
-    auto weights = [&range]() {
-      if constexpr (beluga::is_particle_range_v<Range>) {
-        return range | beluga::views::weights | ranges::views::common;
-      } else {
-        return range | ranges::views::common;
-      }
-    }();
-
-    const double total_weight = ranges::accumulate(weights, 0.0);
-    return (*this)(std::forward<ExecutionPolicy>(policy), range, total_weight);
+    return normalize_closure{std::forward<ExecutionPolicy>(policy)}(range);
   }
 
-  /// Overload that re-orders arguments from an action closure.
-  template <
-      class Range,
-      class ExecutionPolicy,
-      std::enable_if_t<ranges::range<Range>, int> = 0,
-      std::enable_if_t<std::is_execution_policy_v<ExecutionPolicy>, int> = 0>
-  constexpr auto operator()(Range&& range, double factor, ExecutionPolicy policy) const -> Range& {
-    return (*this)(std::move(policy), std::forward<Range>(range), factor);
+  template <class Range, std::enable_if_t<ranges::range<Range>, int> = 0>
+  constexpr auto operator()(Range& range, double factor) const -> Range& {
+    return normalize_closure{factor}(range);
   }
 
-  /// Overload that re-orders arguments from an action closure.
-  template <
-      class Range,
-      class ExecutionPolicy,
-      std::enable_if_t<ranges::range<Range>, int> = 0,
-      std::enable_if_t<std::is_execution_policy_v<ExecutionPolicy>, int> = 0>
-  constexpr auto operator()(Range&& range, ExecutionPolicy policy) const -> Range& {
-    return (*this)(std::move(policy), std::forward<Range>(range));
+  template <class Range, std::enable_if_t<ranges::range<Range>, int> = 0>
+  constexpr auto operator()(Range& range) const -> Range& {
+    return normalize_closure{}(range);
   }
 
-  /// Overload that returns an action closure to compose with other actions.
-  template <class ExecutionPolicy, std::enable_if_t<std::is_execution_policy_v<ExecutionPolicy>, int> = 0>
-  constexpr auto operator()(ExecutionPolicy policy, double factor) const {
-    return ranges::make_action_closure(ranges::bind_back(normalize_base_fn{}, factor, std::move(policy)));
+  template <class ExecutionPolicy, std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0>
+  constexpr auto operator()(ExecutionPolicy&& policy, double factor) const {
+    return ranges::actions::action_closure{normalize_closure{std::forward<ExecutionPolicy>(policy), factor}};
   }
 
-  /// Overload that returns an action closure to compose with other actions.
-  template <class ExecutionPolicy, std::enable_if_t<std::is_execution_policy_v<ExecutionPolicy>, int> = 0>
-  constexpr auto operator()(ExecutionPolicy policy) const {
-    return ranges::make_action_closure(ranges::bind_back(normalize_base_fn{}, std::move(policy)));
+  template <class ExecutionPolicy, std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0>
+  constexpr auto operator()(ExecutionPolicy&& policy) const {
+    return ranges::actions::action_closure{normalize_closure{std::forward<ExecutionPolicy>(policy)}};
   }
+
+  constexpr auto operator()(double factor) const { return ranges::actions::action_closure{normalize_closure{factor}}; }
+
+  constexpr auto operator()() const { return ranges::actions::action_closure{normalize_closure{}}; }
 };
 
-/// Implementation detail for a normalize range adaptor object with a default execution policy.
-struct normalize_fn : public normalize_base_fn {
-  using normalize_base_fn::operator();
-
-  /// Overload that defines a default execution policy.
-  template <class Range, std::enable_if_t<ranges::range<Range>, int> = 0>
-  constexpr auto operator()(Range&& range, double factor) const -> Range& {
-    return (*this)(std::execution::seq, std::forward<Range>(range), factor);
-  }
-
-  /// Overload that defines a default execution policy.
-  template <class Range, std::enable_if_t<ranges::range<Range>, int> = 0>
-  constexpr auto operator()(Range&& range) const -> Range& {
-    return (*this)(std::execution::seq, std::forward<Range>(range));
-  }
-
-  /// Overload that returns an action closure to compose with other actions.
-  constexpr auto operator()(double factor) const {
-    return ranges::make_action_closure(ranges::bind_back(normalize_fn{}, factor));
-  }
-};
+/// \endcond
 
 }  // namespace detail
 
