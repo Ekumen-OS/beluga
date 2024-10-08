@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Sat Oct 5 14:05:32 2024 -0500, 64026d9&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 8 06:15:02 2024 -0600, 9795c41&#39;"/>
   </head>
   
   
@@ -465,60 +465,152 @@ $(function() {
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>detail {</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html">   34</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html">take_evenly_fn</a> {  <span class="comment">// NOLINT(readability-identifier-naming)</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range&gt;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html#a9bb994c8fa05025ae524c7722fa07f6e">   46</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html#a9bb994c8fa05025ae524c7722fa07f6e">operator()</a>(Range&amp;&amp; range, std::size_t count)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> std::size_t size = ranges::size(range);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> filter_function = [size, count](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; pair) {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      <span class="keywordflow">if</span> ((size == 0UL) || (count == 0UL)) {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      <span class="keywordflow">if</span> (count &gt; size) {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> [index, _] = pair;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      <span class="keywordflow">if</span> (count == 1UL) {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">return</span> index == 0UL;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <span class="keywordflow">if</span> ((index == 0UL) || (index == size - 1UL)) {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keyword">const</span> std::size_t m0 = (index - 1UL) * (count - 1UL) / (size - 1UL);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      <span class="keyword">const</span> std::size_t m1 = index * (count - 1UL) / (size - 1UL);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      <span class="keywordflow">return</span> m0 != m1;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    };</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// `cache1` ensures that views prior to `filter` in the pipeline are iterated exactly once.</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">// This is needed because filter needs to dereference the input iterator twice.</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">return</span> ranges::views::enumerate(range) | ranges::views::cache1 | ranges::views::filter(filter_function) |</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;           beluga::views::elements&lt;1&gt;;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html#a4a4a8d66dac05efa567c87a497727502">   86</a></span>&#160;  constexpr <span class="keyword">auto</span> <a class="code" href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html#a4a4a8d66dac05efa567c87a497727502">operator()</a>(std::size_t count)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> ranges::make_view_closure(ranges::bind_back(<a class="code" href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html">take_evenly_fn</a>{}, count));</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;};</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}  <span class="comment">// namespace detail</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="take__evenly_8hpp.html#a3a1974ebc32182c400cf9d9db40af4a4">  102</a></span>&#160;<span class="keyword">inline</span> constexpr <a class="code" href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html">detail::take_evenly_fn</a> <a class="code" href="take__evenly_8hpp.html#a3a1974ebc32182c400cf9d9db40af4a4">take_evenly</a>;  <span class="comment">// NOLINT(readability-identifier-naming)</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}  <span class="comment">// namespace beluga::views</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Range&gt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">struct </span>take_evenly_view : <span class="keyword">public</span> ranges::view_facade&lt;take_evenly_view&lt;Range&gt;, ranges::finite&gt; {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  static_assert(ranges::view_&lt;Range&gt;);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  static_assert(ranges::forward_range&lt;Range&gt;);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  static_assert(ranges::sized_range&lt;Range&gt;);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  constexpr take_evenly_view() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  constexpr take_evenly_view(Range range, std::size_t count)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      : range_{std::move(range)}, count_{count}, size_{ranges::size(range_)} {}</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  [[nodiscard]] constexpr std::size_t size()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">if</span> (size_ == 0U) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keywordflow">return</span> 0U;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">if</span> (count_ &gt; size_) {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="keywordflow">return</span> size_;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> count_;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  }</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">friend</span> ranges::range_access;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keyword">struct </span>cursor {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;   <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    cursor() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    constexpr cursor(<span class="keyword">const</span> take_evenly_view* view, std::size_t pos)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        : view_{view}, pos_{pos}, it_{ranges::begin(view_-&gt;range_)} {}</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    [[nodiscard]] constexpr decltype(<span class="keyword">auto</span>) read()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *it_; }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    [[nodiscard]] constexpr <span class="keywordtype">bool</span> equal(<span class="keyword">const</span> cursor&amp; other)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> view_ == other.view_ &amp;&amp; pos_ == other.pos_; }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    [[nodiscard]] constexpr <span class="keywordtype">bool</span> equal(<span class="keyword">const</span> ranges::default_sentinel_t&amp;)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="keywordflow">return</span> pos_ &gt;= view_-&gt;count_ || pos_ &gt;= view_-&gt;size_;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    constexpr <span class="keywordtype">void</span> next() {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keyword">const</span> std::size_t new_pos = pos_ + 1;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      ranges::advance(it_, view_-&gt;compute_offset(pos_, new_pos));</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      pos_ = new_pos;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">class </span>T = Range,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        std::enable_if_t&lt;std::is_same_v&lt;T, Range&gt; &amp;&amp; ranges::bidirectional_range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    constexpr <span class="keywordtype">void</span> prev() {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      <span class="keyword">const</span> std::size_t new_pos = pos_ - 1;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      ranges::advance(it_, view_-&gt;compute_offset(pos_, new_pos));</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      pos_ = new_pos;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keyword">class </span>T = Range,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        std::enable_if_t&lt;std::is_same_v&lt;T, Range&gt; &amp;&amp; ranges::random_access_range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    constexpr <span class="keywordtype">void</span> advance(std::ptrdiff_t distance) {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> new_pos = <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(pos_) + distance);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      ranges::advance(it_, view_-&gt;compute_offset(pos_, new_pos));</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      pos_ = new_pos;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keyword">class </span>T = Range,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        std::enable_if_t&lt;std::is_same_v&lt;T, Range&gt; &amp;&amp; ranges::random_access_range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    [[nodiscard]] constexpr std::ptrdiff_t distance_to(<span class="keyword">const</span> cursor&amp; other)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(other.pos_) - <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(pos_);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keyword">class </span>T = Range,</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        std::enable_if_t&lt;std::is_same_v&lt;T, Range&gt; &amp;&amp; ranges::random_access_range&lt;Range&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    [[nodiscard]] constexpr std::ptrdiff_t distance_to(<span class="keyword">const</span> ranges::default_sentinel_t&amp;)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(view_-&gt;count_) - <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(pos_);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;   <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keyword">const</span> take_evenly_view* view_;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    std::size_t pos_;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    ranges::iterator_t&lt;Range&gt; it_;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  };</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  [[nodiscard]] constexpr <span class="keyword">auto</span> begin_cursor()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cursor{<span class="keyword">this</span>, 0U}; }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  [[nodiscard]] constexpr <span class="keyword">auto</span> end_cursor() const noexcept { <span class="keywordflow">return</span> ranges::default_sentinel_t{}; }</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  [[nodiscard]] constexpr std::ptrdiff_t compute_offset(std::size_t pos)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    assert(pos &lt;= count_);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordflow">if</span> (pos == 0U) {</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;      <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    }</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">if</span> (count_ == 1U) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(size_);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keyword">const</span> std::ptrdiff_t a = <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(pos) * (<span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(size_) - 1);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keyword">const</span> std::ptrdiff_t b = <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(count_) - 1;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="keywordflow">return</span> a / b + ((a % b == 0) ? 0 : 1);</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;  }</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;  [[nodiscard]] constexpr std::ptrdiff_t compute_offset(std::size_t current, std::size_t target)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordflow">if</span> (count_ &gt; size_) {</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(target) - <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(current);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    }</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">return</span> compute_offset(target) - compute_offset(current);</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  }</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;  Range range_;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;  std::size_t count_;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;  std::size_t size_;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;};</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Range&gt;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;take_evenly_view(Range&amp;&amp; range, std::size_t max) -&gt; take_evenly_view&lt;ranges::views::all_t&lt;Range&gt;&gt;;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="keyword">struct </span>take_evenly_fn {</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range&gt;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;  constexpr <span class="keyword">auto</span> operator()(Range&amp;&amp; range, std::size_t count)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordflow">return</span> take_evenly_view{std::forward&lt;Range&gt;(range), count};</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  }</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;  constexpr <span class="keyword">auto</span> operator()(std::size_t count)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keywordflow">return</span> ranges::make_view_closure(ranges::bind_back(take_evenly_fn{}, count));</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  }</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;};</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
+<div class="line"><a name="l00182"></a><span class="lineno"><a class="line" href="take__evenly_8hpp.html#a3a1974ebc32182c400cf9d9db40af4a4">  182</a></span>&#160;<span class="keyword">inline</span> constexpr detail::take_evenly_fn <a class="code" href="take__evenly_8hpp.html#a3a1974ebc32182c400cf9d9db40af4a4">take_evenly</a>;</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;}  <span class="comment">// namespace beluga::views</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aelements_8hpp_html"><div class="ttname"><a href="elements_8hpp.html">elements.hpp</a></div><div class="ttdoc">Implementation of the C++20's std::views::elements view.</div></div>
-<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1take__evenly__fn_html"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html">beluga::views::detail::take_evenly_fn</a></div><div class="ttdoc">Implementation detail for a take_evenly range adaptor object.</div><div class="ttdef"><b>Definition:</b> take_evenly.hpp:34</div></div>
-<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1take__evenly__fn_html_a4a4a8d66dac05efa567c87a497727502"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html#a4a4a8d66dac05efa567c87a497727502">beluga::views::detail::take_evenly_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(std::size_t count) const</div><div class="ttdoc">Overload that returns a view closure to compose with other views.</div><div class="ttdef"><b>Definition:</b> take_evenly.hpp:86</div></div>
-<div class="ttc" id="astructbeluga_1_1views_1_1detail_1_1take__evenly__fn_html_a9bb994c8fa05025ae524c7722fa07f6e"><div class="ttname"><a href="structbeluga_1_1views_1_1detail_1_1take__evenly__fn.html#a9bb994c8fa05025ae524c7722fa07f6e">beluga::views::detail::take_evenly_fn::operator()</a></div><div class="ttdeci">constexpr auto operator()(Range &amp;&amp;range, std::size_t count) const</div><div class="ttdoc">Overload that implements the take_evenly algorithm.</div><div class="ttdef"><b>Definition:</b> take_evenly.hpp:46</div></div>
-<div class="ttc" id="atake__evenly_8hpp_html_a3a1974ebc32182c400cf9d9db40af4a4"><div class="ttname"><a href="take__evenly_8hpp.html#a3a1974ebc32182c400cf9d9db40af4a4">beluga::views::take_evenly</a></div><div class="ttdeci">constexpr detail::take_evenly_fn take_evenly</div><div class="ttdef"><b>Definition:</b> take_evenly.hpp:102</div></div>
+<div class="ttc" id="atake__evenly_8hpp_html_a3a1974ebc32182c400cf9d9db40af4a4"><div class="ttname"><a href="take__evenly_8hpp.html#a3a1974ebc32182c400cf9d9db40af4a4">beluga::views::take_evenly</a></div><div class="ttdeci">constexpr detail::take_evenly_fn take_evenly</div><div class="ttdef"><b>Definition:</b> take_evenly.hpp:182</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -575,7 +667,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Sat Oct 5 14:05:32 2024 -0500, 64026d9&#39;.
+  Last updated on &#39;Tue Oct 8 06:15:02 2024 -0600, 9795c41&#39;.
   <br/>
 </p>
   </div>

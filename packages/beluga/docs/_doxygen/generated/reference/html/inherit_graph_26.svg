@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="classbeluga_1_1DifferentialDriveModel.html" target="_top" xlink:title="Sampled odometry model for a differential drive.">
+<g id="a_node1"><a xlink:href="structbeluga_1_1DifferentialDriveModelParam.html" target="_top" xlink:title="Parameters to construct a DifferentialDriveModel instance.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-30.5 137,-30.5 137,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::DifferentialDrive</text>
-<text text-anchor="middle" x="68.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">Model&lt; StateType &gt;</text>
+<text text-anchor="middle" x="68.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">ModelParam</text>
 </a>
 </g>
 </g>
