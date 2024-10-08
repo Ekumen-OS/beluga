@@ -30,63 +30,143 @@ namespace beluga::views {
 
 namespace detail {
 
-/// Implementation detail for a take_evenly range adaptor object.
-struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
-  /// Overload that implements the take_evenly algorithm.
-  /**
-   * \tparam Range A [sized range](https://en.cppreference.com/w/cpp/ranges/sized_range).
-   * \param range Source range from where to take elements.
-   * \param count Number of elements to take.
-   *
-   * If `count` or the range size are zero, it returns an empty range.
-   * If `count` is greater than the range size, it returns all the elements.
-   * The first and last elements of the range are always included.
-   */
-  template <class Range>
-  constexpr auto operator()(Range&& range, std::size_t count) const {
-    const std::size_t size = ranges::size(range);
+/// \cond detail
 
-    const auto filter_function = [size, count](const auto& pair) {
-      if ((size == 0UL) || (count == 0UL)) {
-        return false;
-      }
+template <class Range>
+struct take_evenly_view : public ranges::view_facade<take_evenly_view<Range>, ranges::finite> {
+ public:
+  static_assert(ranges::view_<Range>);
+  static_assert(ranges::forward_range<Range>);
+  static_assert(ranges::sized_range<Range>);
 
-      if (count > size) {
-        return true;
-      }
+  constexpr take_evenly_view() = default;
 
-      const auto [index, _] = pair;
-      if (count == 1UL) {
-        return index == 0UL;
-      }
+  constexpr take_evenly_view(Range range, std::size_t count)
+      : range_{std::move(range)}, count_{count}, size_{ranges::size(range_)} {}
 
-      if ((index == 0UL) || (index == size - 1UL)) {
-        return true;
-      }
+  [[nodiscard]] constexpr std::size_t size() const {
+    if (size_ == 0U) {
+      return 0U;
+    }
 
-      const std::size_t m0 = (index - 1UL) * (count - 1UL) / (size - 1UL);
-      const std::size_t m1 = index * (count - 1UL) / (size - 1UL);
-      return m0 != m1;
-    };
+    if (count_ > size_) {
+      return size_;
+    }
 
-    // `cache1` ensures that views prior to `filter` in the pipeline are iterated exactly once.
-    // This is needed because filter needs to dereference the input iterator twice.
-    return ranges::views::enumerate(range) | ranges::views::cache1 | ranges::views::filter(filter_function) |
-           beluga::views::elements<1>;
+    return count_;
   }
 
-  /// Overload that returns a view closure to compose with other views.
-  /**
-   * \param count Number of elements to take.
-   *
-   * If `count` or the range size are zero, it returns an empty range.
-   * If `count` is greater than the range size, it returns all the elements.
-   * The first and last elements of the range are always included.
-   */
+ private:
+  friend ranges::range_access;
+
+  struct cursor {
+   public:
+    cursor() = default;
+
+    constexpr cursor(const take_evenly_view* view, std::size_t pos)
+        : view_{view}, pos_{pos}, it_{ranges::begin(view_->range_)} {}
+
+    [[nodiscard]] constexpr decltype(auto) read() const { return *it_; }
+
+    [[nodiscard]] constexpr bool equal(const cursor& other) const { return view_ == other.view_ && pos_ == other.pos_; }
+
+    [[nodiscard]] constexpr bool equal(const ranges::default_sentinel_t&) const {
+      return pos_ >= view_->count_ || pos_ >= view_->size_;
+    }
+
+    constexpr void next() {
+      const std::size_t new_pos = pos_ + 1;
+      ranges::advance(it_, view_->compute_offset(pos_, new_pos));
+      pos_ = new_pos;
+    }
+
+    template <
+        class T = Range,
+        std::enable_if_t<std::is_same_v<T, Range> && ranges::bidirectional_range<Range>, int> = 0>
+    constexpr void prev() {
+      const std::size_t new_pos = pos_ - 1;
+      ranges::advance(it_, view_->compute_offset(pos_, new_pos));
+      pos_ = new_pos;
+    }
+
+    template <
+        class T = Range,
+        std::enable_if_t<std::is_same_v<T, Range> && ranges::random_access_range<Range>, int> = 0>
+    constexpr void advance(std::ptrdiff_t distance) {
+      const auto new_pos = static_cast<std::size_t>(static_cast<std::ptrdiff_t>(pos_) + distance);
+      ranges::advance(it_, view_->compute_offset(pos_, new_pos));
+      pos_ = new_pos;
+    }
+
+    template <
+        class T = Range,
+        std::enable_if_t<std::is_same_v<T, Range> && ranges::random_access_range<Range>, int> = 0>
+    [[nodiscard]] constexpr std::ptrdiff_t distance_to(const cursor& other) const {
+      return static_cast<std::ptrdiff_t>(other.pos_) - static_cast<std::ptrdiff_t>(pos_);
+    }
+
+    template <
+        class T = Range,
+        std::enable_if_t<std::is_same_v<T, Range> && ranges::random_access_range<Range>, int> = 0>
+    [[nodiscard]] constexpr std::ptrdiff_t distance_to(const ranges::default_sentinel_t&) const {
+      return static_cast<std::ptrdiff_t>(view_->count_) - static_cast<std::ptrdiff_t>(pos_);
+    }
+
+   private:
+    const take_evenly_view* view_;
+    std::size_t pos_;
+
+    ranges::iterator_t<Range> it_;
+  };
+
+  [[nodiscard]] constexpr auto begin_cursor() const { return cursor{this, 0U}; }
+
+  [[nodiscard]] constexpr auto end_cursor() const noexcept { return ranges::default_sentinel_t{}; }
+
+  [[nodiscard]] constexpr std::ptrdiff_t compute_offset(std::size_t pos) const {
+    assert(pos <= count_);
+
+    if (pos == 0U) {
+      return 0;
+    }
+
+    if (count_ == 1U) {
+      return static_cast<std::ptrdiff_t>(size_);
+    }
+
+    const std::ptrdiff_t a = static_cast<std::ptrdiff_t>(pos) * (static_cast<std::ptrdiff_t>(size_) - 1);
+    const std::ptrdiff_t b = static_cast<std::ptrdiff_t>(count_) - 1;
+    return a / b + ((a % b == 0) ? 0 : 1);
+  }
+
+  [[nodiscard]] constexpr std::ptrdiff_t compute_offset(std::size_t current, std::size_t target) const {
+    if (count_ > size_) {
+      return static_cast<std::ptrdiff_t>(target) - static_cast<std::ptrdiff_t>(current);
+    }
+
+    return compute_offset(target) - compute_offset(current);
+  }
+
+  Range range_;
+  std::size_t count_;
+  std::size_t size_;
+};
+
+template <class Range>
+take_evenly_view(Range&& range, std::size_t max) -> take_evenly_view<ranges::views::all_t<Range>>;
+
+struct take_evenly_fn {
+  template <class Range>
+  constexpr auto operator()(Range&& range, std::size_t count) const {
+    return take_evenly_view{std::forward<Range>(range), count};
+  }
+
   constexpr auto operator()(std::size_t count) const {
     return ranges::make_view_closure(ranges::bind_back(take_evenly_fn{}, count));
   }
 };
+
+/// \endcond
 
 }  // namespace detail
 
@@ -97,9 +177,9 @@ struct take_evenly_fn {  // NOLINT(readability-identifier-naming)
  * elements evenly spaced over the source range.
  * If `count` or the range size are zero, it returns an empty range.
  * If `count` is greater than the range size, it returns all the elements.
- * The first and last elements of the range are always included.
+ * The first element of the range is always included.
  */
-inline constexpr detail::take_evenly_fn take_evenly;  // NOLINT(readability-identifier-naming)
+inline constexpr detail::take_evenly_fn take_evenly;
 
 }  // namespace beluga::views
 
