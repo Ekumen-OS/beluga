@@ -51,7 +51,7 @@ struct normalize_closure {
   constexpr normalize_closure(ExecutionPolicy policy, double factor) : policy_{std::move(policy)}, factor_{factor} {}
 
   template <class Range>
-  constexpr auto operator()(Range& range) const {
+  constexpr auto operator()(Range& range) const -> Range& {
     static_assert(ranges::forward_range<Range>);
 
     auto weights = std::invoke([&range]() {
@@ -146,7 +146,7 @@ struct normalize_fn {
  * If none is specified, the default normalization factor corresponds to the total sum of weights
  * in the given range.
  */
-inline constexpr detail::normalize_fn normalize;
+inline constexpr ranges::actions::action_closure<detail::normalize_fn> normalize;
 
 }  // namespace beluga::actions
 

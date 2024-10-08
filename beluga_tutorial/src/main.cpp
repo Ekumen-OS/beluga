@@ -223,7 +223,7 @@ int run(const std::filesystem::path& path) {
     record.prediction = particles;
 
     particles |= beluga::actions::reweight(std::execution::seq, sensor_model) |  //
-                 beluga::actions::normalize() |                                  //
+                 beluga::actions::normalize |                                    //
                  beluga::views::sample |                                         //
                  ranges::views::take_exactly(parameters.number_of_particles) |   //
                  beluga::actions::assign;

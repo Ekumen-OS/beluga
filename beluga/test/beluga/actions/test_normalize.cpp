@@ -50,7 +50,7 @@ TEST(NormalizeAction, DefaultFactor) {
 
 TEST(NormalizeAction, DefaultFactorAndExecutionPolicy) {
   auto input = std::vector{std::make_tuple(5, beluga::Weight(4.0))};
-  input |= beluga::actions::normalize();
+  input |= beluga::actions::normalize;
   ASSERT_EQ(input.front(), std::make_tuple(5, 1.0));
 }
 
