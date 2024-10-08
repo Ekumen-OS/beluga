@@ -15,7 +15,6 @@
 #ifndef BELUGA_ALGORITHM_ESTIMATION_HPP
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
-#include <Eigen/src/Core/util/Meta.h>
 #include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/iterator/operations.hpp>
 #include <range/v3/numeric/accumulate.hpp>
