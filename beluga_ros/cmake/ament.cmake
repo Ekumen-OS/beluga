@@ -23,23 +23,26 @@ find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
-add_library(beluga_ros INTERFACE)
+add_library(beluga_ros)
+target_sources(beluga_ros PRIVATE src/amcl.cpp)
 target_include_directories(
-  beluga_ros INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                       $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(beluga_ros INTERFACE beluga::beluga)
+  beluga_ros PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                    $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+target_link_libraries(beluga_ros PUBLIC beluga::beluga)
 ament_target_dependencies(
   beluga_ros
-  INTERFACE geometry_msgs
-            nav_msgs
-            sensor_msgs
-            std_msgs
-            tf2
-            tf2_eigen
-            tf2_geometry_msgs
-            visualization_msgs)
-target_compile_definitions(beluga_ros INTERFACE BELUGA_ROS_VERSION=2)
-target_compile_features(beluga_ros INTERFACE cxx_std_17)
+  PUBLIC geometry_msgs
+         nav_msgs
+         sensor_msgs
+         std_msgs
+         tf2
+         tf2_eigen
+         tf2_geometry_msgs
+         visualization_msgs)
+target_compile_definitions(beluga_ros PUBLIC BELUGA_ROS_VERSION=2)
+target_compile_features(beluga_ros PUBLIC cxx_std_17)
+
+set_target_properties(beluga_ros PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 ament_export_dependencies(
   beluga

@@ -34,20 +34,28 @@ catkin_package(
     visualization_msgs
   DEPENDS beluga
   INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
   CFG_EXTRAS ${PROJECT_NAME}-extras.cmake.in)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 add_definitions(${catkin_DEFINITIONS})
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME})
+target_sources(${PROJECT_NAME} PRIVATE src/amcl.cpp)
 target_include_directories(
-  ${PROJECT_NAME}
-  INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(${PROJECT_NAME} INTERFACE beluga::beluga
-                                                ${catkin_LIBRARIES})
-target_compile_definitions(${PROJECT_NAME} INTERFACE BELUGA_ROS_VERSION=1)
-target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
+  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+target_link_libraries(${PROJECT_NAME} PUBLIC beluga::beluga ${catkin_LIBRARIES})
+target_compile_definitions(${PROJECT_NAME} PUBLIC BELUGA_ROS_VERSION=1)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+install(
+  TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

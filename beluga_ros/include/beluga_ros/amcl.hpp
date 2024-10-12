@@ -19,11 +19,22 @@
 #include <utility>
 #include <variant>
 
-#include <beluga/beluga.hpp>
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/take_exactly.hpp>
+
+#include <sophus/se2.hpp>
+
+#include <beluga/algorithm/spatial_hash.hpp>
+#include <beluga/algorithm/thrun_recovery_probability_estimator.hpp>
+#include <beluga/containers.hpp>
+#include <beluga/motion.hpp>
+#include <beluga/policies.hpp>
+#include <beluga/random.hpp>
+#include <beluga/sensor.hpp>
+#include <beluga/views/sample.hpp>
+
 #include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
-
-#include <range/v3/view/take_exactly.hpp>
 
 /**
  * \file
@@ -116,21 +127,8 @@ class Amcl {
       beluga_ros::OccupancyGrid map,
       motion_model_variant motion_model,
       sensor_model_variant sensor_model,
-      const AmclParams& params = AmclParams(),
-      execution_policy_variant execution_policy = std::execution::seq)
-      : params_{params},
-        map_distribution_{map},
-        motion_model_{std::move(motion_model)},
-        sensor_model_{std::move(sensor_model)},
-        execution_policy_{std::move(execution_policy)},
-        spatial_hasher_{params_.spatial_resolution_x, params_.spatial_resolution_y, params_.spatial_resolution_theta},
-        random_probability_estimator_{params_.alpha_slow, params_.alpha_fast},
-        update_policy_{beluga::policies::on_motion<Sophus::SE2d>(params_.update_min_d, params_.update_min_a)},
-        resample_policy_{beluga::policies::every_n(params_.resample_interval)} {
-    if (params_.selective_resampling) {
-      resample_policy_ = resample_policy_ && beluga::policies::on_effective_size_drop;
-    }
-  }
+      const AmclParams& params,
+      execution_policy_variant execution_policy);
 
   /// Returns a reference to the current set of particles.
   [[nodiscard]] const auto& particles() const { return particles_; }
@@ -157,10 +155,7 @@ class Amcl {
   void initialize_from_map() { initialize(std::ref(map_distribution_)); }
 
   /// Update the map used for localization.
-  void update_map(beluga_ros::OccupancyGrid map) {
-    map_distribution_ = beluga::MultivariateUniformDistribution{map};
-    std::visit([&](auto& sensor_model) { sensor_model.update_map(std::move(map)); }, sensor_model_);
-  }
+  void update_map(beluga_ros::OccupancyGrid map);
 
   /// Update particles based on motion and sensor information.
   /**
@@ -176,55 +171,7 @@ class Amcl {
    *         or std::nullopt if no update was performed.
    */
   auto update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan)
-      -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
-    if (particles_.empty()) {
-      return std::nullopt;
-    }
-
-    if (!update_policy_(base_pose_in_odom) && !force_update_) {
-      return std::nullopt;
-    }
-
-    // TODO(nahuel): Remove this once we update the measurement type.
-    auto measurement = laser_scan.points_in_cartesian_coordinates() |  //
-                       ranges::views::transform([&laser_scan](const auto& p) {
-                         const auto result = laser_scan.origin() * Sophus::Vector3d{p.x(), p.y(), 0};
-                         return std::make_pair(result.x(), result.y());
-                       }) |
-                       ranges::to<std::vector>;
-
-    std::visit(
-        [&, this](auto& policy, auto& motion_model, auto& sensor_model) {
-          particles_ |=
-              beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_in_odom)) |  //
-              beluga::actions::reweight(policy, sensor_model(std::move(measurement))) |                        //
-              beluga::actions::normalize(policy);
-        },
-        execution_policy_, motion_model_, sensor_model_);
-
-    const double random_state_probability = random_probability_estimator_(particles_);
-
-    if (resample_policy_(particles_)) {
-      auto random_state = ranges::compose(beluga::make_from_state<particle_type>, std::ref(map_distribution_));
-
-      if (random_state_probability > 0.0) {
-        random_probability_estimator_.reset();
-      }
-
-      particles_ |= beluga::views::sample |
-                    beluga::views::random_intersperse(std::move(random_state), random_state_probability) |
-                    beluga::views::take_while_kld(
-                        spatial_hasher_,        //
-                        params_.min_particles,  //
-                        params_.max_particles,  //
-                        params_.kld_epsilon,    //
-                        params_.kld_z) |
-                    beluga::actions::assign;
-    }
-
-    force_update_ = false;
-    return beluga::estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
-  }
+      -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
 
   /// Force a manual update of the particles on the next iteration of the filter.
   void force_update() { force_update_ = true; }
