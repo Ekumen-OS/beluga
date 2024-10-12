@@ -15,6 +15,7 @@
 #ifndef BELUGA_ALGORITHM_SPATIAL_HASH_HPP
 #define BELUGA_ALGORITHM_SPATIAL_HASH_HPP
 
+#include <Eigen/Core>
 #include <cmath>
 #include <cstdint>
 #include <limits>
