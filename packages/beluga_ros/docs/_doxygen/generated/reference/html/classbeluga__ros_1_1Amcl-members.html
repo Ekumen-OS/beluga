@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon Oct 14 09:34:38 2024 -0300, d72302b&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Mon Oct 14 06:45:44 2024 -0600, 6f13c9f&#39;"/>
   </head>
   
   
@@ -441,7 +441,7 @@ $(function() {
 
 <p>This is the complete list of members for <a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#afa212077f1c1f8a75fccb2f706741628">Amcl</a>(beluga_ros::OccupancyGrid map, motion_model_variant motion_model, sensor_model_variant sensor_model, const AmclParams &amp;params=AmclParams(), execution_policy_variant execution_policy=std::execution::seq)</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#afce70040561b6e357f0a49e5b9ff150a">Amcl</a>(beluga_ros::OccupancyGrid map, motion_model_variant motion_model, sensor_model_variant sensor_model, const AmclParams &amp;params, execution_policy_variant execution_policy)</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#a57cc8a88b38595c3f9dbaf7c89ddd0cc">execution_policy_variant</a> typedef</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#affa59f4a974b8d047bda4463a92c8d46">force_update</a>()</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#acddd3fde9c76db51abc0639adee47257">initialize</a>(Distribution distribution)</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
@@ -451,8 +451,8 @@ $(function() {
   <tr><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#aa586ffdda4cddc4d4f030618e05fc227">particle_type</a> typedef</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#a978000a10d56de7f709ecd526dbc61f2">particles</a>() const</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#aaa2f9ea60afb2d085a4e0db60676c73f">sensor_model_variant</a> typedef</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#af2c63feaade169e2aed88f46bd493c15">update</a>(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan) -&gt; std::optional&lt; std::pair&lt; Sophus::SE2d, Sophus::Matrix3d &gt;&gt;</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#a7d8c6b65cf6cc0d0b958c8290d46c378">update_map</a>(beluga_ros::OccupancyGrid map)</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#af2c63feaade169e2aed88f46bd493c15">update</a>(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan) -&gt; std::optional&lt; std::pair&lt; Sophus::SE2d, Sophus::Matrix3d &gt;&gt;</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html#a7d8c6b65cf6cc0d0b958c8290d46c378">update_map</a>(beluga_ros::OccupancyGrid map)</td><td class="entry"><a class="el" href="classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -509,7 +509,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Oct 14 09:34:38 2024 -0300, d72302b&#39;.
+  Last updated on &#39;Mon Oct 14 06:45:44 2024 -0600, 6f13c9f&#39;.
   <br/>
 </p>
   </div>
