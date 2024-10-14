@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Using Beluga AMCL on an AMR &#8212; Beluga  documentation</title>
+    <title>Using Beluga AMCL &#8212; Beluga  documentation</title>
   
   
   
@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=cc8b88f9" />
@@ -41,7 +41,7 @@
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
@@ -56,7 +56,7 @@
     <link rel="prev" title="Architecture" href="../concepts/architecture.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Oct 8 06:14:20 2024 -0600, 00de1ab&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Mon Oct 14 09:34:38 2024 -0300, d72302b&#39;"/>
   </head>
   
   
@@ -185,7 +185,7 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Using Beluga AMCL on an AMR</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Using Beluga AMCL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extending-beluga.html">Extending Beluga</a></li>
 <li class="toctree-l1"><a class="reference internal" href="profiling-beluga.html">Profiling Beluga</a></li>
 <li class="toctree-l1"><a class="reference internal" href="benchmarking-beluga.html">Benchmarking Beluga</a></li>
@@ -354,7 +354,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -365,11 +367,24 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Using Beluga AMCL on an AMR</h1>
+    <h1>Using Beluga AMCL</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-things-up">Setting things up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping-the-environment">Mapping the environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuring-beluga-amcl">Configuring Beluga AMCL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-beluga-amcl">Running Beluga AMCL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -379,9 +394,178 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="using-beluga-amcl-on-an-amr">
-<h1>Using Beluga AMCL on an AMR<a class="headerlink" href="#using-beluga-amcl-on-an-amr" title="Link to this heading">#</a></h1>
-<p>Coming soon!</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="using-beluga-amcl">
+<h1>Using Beluga AMCL<a class="headerlink" href="#using-beluga-amcl" title="Link to this heading">#</a></h1>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<p>Before we jump in, let’s make sure you’ve got everything you need:</p>
+<ul class="simple">
+<li><p><strong>Hardware Requirements:</strong></p>
+<ul>
+<li><p><strong>Processor:</strong> a dual-core x86-64 CPU should be enough to handle real-time localization.</p></li>
+<li><p><strong>Memory:</strong> at least 2 GB of RAM to comfortably run ROS 2 and AMCL, plus other tasks.</p></li>
+<li><p><strong>Storage:</strong> ensure you have around 4 GB of free storage for ROS 2 and mapping data.</p></li>
+<li><p><strong>Sensors:</strong></p>
+<ul>
+<li><p><strong>2D LiDAR:</strong> scans are essential for localization as Beluga AMCL uses them to match against a known map.</p></li>
+<li><p><strong>Odometry:</strong> some ego-motion estimation is also necessary (e.g. wheel encoder-based odometry).</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Software Requirements:</strong></p>
+<ul>
+<li><p><strong>OS:</strong> you can use either Ubuntu 22.04 LTS (Jammy Jellyfish) or Ubuntu 20.04 LTS (Focal Fossa).</p></li>
+<li><p><strong>ROS 2:</strong> you can use either ROS 2 Humble Hawksbill or ROS 2 Jazzy Jalisco.</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Most localization and SLAM packages in ROS 2 that take 2D LiDAR scans expect them published as <code class="docutils literal notranslate"><span class="pre">sensor_msgs/LaserScan</span></code> messages over the <code class="docutils literal notranslate"><span class="pre">/scan</span></code> topic. Likewise, these packages also expect odometry broadcasted as <code class="docutils literal notranslate"><span class="pre">odom</span></code> to <code class="docutils literal notranslate"><span class="pre">base_link</span></code> transforms over <code class="docutils literal notranslate"><span class="pre">tf</span></code>. That is the case for Beluga AMCL as well. Make sure your system follows this convention before using Beluga AMCL, or take the necessary steps to <a class="reference internal" href="../packages/beluga_amcl/docs/ros2-reference.html#parameters"><span class="std std-ref">reconfigure Beluga AMCL</span></a> to match your own conventions.</p>
+</div>
+</section>
+<section id="setting-things-up">
+<h2>Setting things up<a class="headerlink" href="#setting-things-up" title="Link to this heading">#</a></h2>
+<ol class="arabic">
+<li><p><strong>Install Beluga</strong> by following <a class="reference internal" href="../getting-started/installation.html"><span class="doc std std-doc">its installation guide</span></a>.</p></li>
+<li><p><strong>Install additional packages</strong> like <a class="reference external" href="https://github.com/SteveMacenski/slam_toolbox">SLAM Toolbox</a> and the <a class="reference external" href="https://github.com/ros-navigation/navigation2/tree/main/nav2_map_server">Nav2 <code class="docutils literal notranslate"><span class="pre">map_server</span></code></a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ros-<span class="si">${</span><span class="nv">ROS_DISTRO</span><span class="si">}</span>-slam-toolbox<span class="w"> </span>ros-<span class="si">${</span><span class="nv">ROS_DISTRO</span><span class="si">}</span>-map-server
+</pre></div>
+</div>
+<p>You will need these for mapping work.</p>
+</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Remember to source your ROS 2 environment to use it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/opt/ros/<span class="si">${</span><span class="nv">ROS_DISTRO</span><span class="si">}</span>/setup.bash
+</pre></div>
+</div>
+</div>
+</section>
+<section id="mapping-the-environment">
+<h2>Mapping the environment<a class="headerlink" href="#mapping-the-environment" title="Link to this heading">#</a></h2>
+<p>Before the robot can localize using Beluga AMCL, we need a map of the environment. Here’s how you can create one:</p>
+<ol class="arabic">
+<li><p><strong>Launch SLAM Toolbox</strong>, a widely adopted SLAM system:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>slam_toolbox<span class="w"> </span>online_async_launch.py
+</pre></div>
+</div>
+</li>
+<li><p><strong>Drive the robot around</strong>, and make sure you cover all the areas you want included in the map. As the robot moves, SLAM Toolbox will incrementally build a map. You can visualize this using Rviz:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>rviz2<span class="w"> </span>rviz2
+</pre></div>
+</div>
+<p>Make sure to add the <code class="docutils literal notranslate"><span class="pre">Map</span></code> display and point it to the <code class="docutils literal notranslate"><span class="pre">/map</span></code> topic using a transient local durability policy.</p>
+</li>
+<li><p><strong>Save the map</strong> when you are satisfied with coverage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>nav2_map_server<span class="w"> </span>map_saver_cli<span class="w"> </span>-f<span class="w"> </span>~/map
+</pre></div>
+</div>
+<p>This will create two files: <code class="docutils literal notranslate"><span class="pre">map.yaml</span></code> and <code class="docutils literal notranslate"><span class="pre">map.pgm</span></code>, which represent the map’s metadata and image, respectively.</p>
+</li>
+</ol>
+</section>
+<section id="configuring-beluga-amcl">
+<h2>Configuring Beluga AMCL<a class="headerlink" href="#configuring-beluga-amcl" title="Link to this heading">#</a></h2>
+<p>Let’s put everything together in one cohesive configuration.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>editor<span class="w"> </span>beluga.launch.xml
+</pre></div>
+</div>
+<p>Here’s a sample <code class="docutils literal notranslate"><span class="pre">launch</span></code> file in XML format you can use:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;launch&gt;</span>
+<span class="w">    </span><span class="nt">&lt;arg</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;map_path&quot;</span><span class="w"> </span><span class="na">description=</span><span class="s">&quot;Path to you map.yaml file.&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+
+<span class="w">    </span><span class="cm">&lt;!-- Load map --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">pkg=</span><span class="s">&quot;nav2_map_server&quot;</span><span class="w"> </span><span class="na">exec=</span><span class="s">&quot;map_server&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;map_server&quot;</span><span class="w"> </span><span class="na">output=</span><span class="s">&quot;screen&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;yaml_filename&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;$(var map_path)&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/node&gt;</span>
+
+<span class="w">    </span><span class="cm">&lt;!-- Start AMCL --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">pkg=</span><span class="s">&quot;beluga&quot;</span><span class="w"> </span><span class="na">exec=</span><span class="s">&quot;amcl&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;amcl&quot;</span><span class="w"> </span><span class="na">output=</span><span class="s">&quot;screen&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;use_sim_time&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;false&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;min_particles&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;500&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;max_particles&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;2000&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;kld_err&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.05&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;odom_alpha1&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.2&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;odom_alpha2&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.2&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;odom_alpha3&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.2&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;odom_alpha4&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.2&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;z_hit&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.95&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;z_rand&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.05&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;laser_likelihood_max_dist&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;2.0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;laser_model_type&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;likelihood_field&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/node&gt;</span>
+<span class="nt">&lt;/launch&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="running-beluga-amcl">
+<h2>Running Beluga AMCL<a class="headerlink" href="#running-beluga-amcl" title="Link to this heading">#</a></h2>
+<p>Now, it’s time to run Beluga on your robot!</p>
+<ol class="arabic">
+<li><p><strong>Launch your system</strong> and your custom launch file alongside with it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>beluga.launch.xml
+</pre></div>
+</div>
+</li>
+<li><p><strong>Verify your robot is properly localized</strong> using <code class="docutils literal notranslate"><span class="pre">rviz2</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>rviz2<span class="w"> </span>rviz2
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">map</span></code> as your global fixed frame. Use the <code class="docutils literal notranslate"><span class="pre">Map</span></code> and <code class="docutils literal notranslate"><span class="pre">LaserScan</span></code> displays to assess your robot localization. If scans and map do not line up, use the <code class="docutils literal notranslate"><span class="pre">2D</span> <span class="pre">Pose</span> <span class="pre">Estimate</span></code> tool to reset your robot pose. You can also use <code class="docutils literal notranslate"><span class="pre">PoseArray</span></code> and <code class="docutils literal notranslate"><span class="pre">MarkerArray</span></code> displays to visualize the particle cloud. When moving, it should quickly converge near the robot’s true pose.</p>
+</li>
+<li><p><strong>Tweak Beluga AMCL as necessary</strong> if localization isn’t as accurate as expected. For example, you can:</p>
+<ul class="simple">
+<li><p><strong>Adjust the number of particles</strong>. If localization is unstable (e.g., the robot’s position jumps), consider increasing the minimum number of particles (<code class="docutils literal notranslate"><span class="pre">min_particles</span></code>) to improve the pose estimate. If localization is slow (especially in large environments), consider lowering the maximum number of particles (<code class="docutils literal notranslate"><span class="pre">max_particles</span></code>) to reduce the computational load.</p></li>
+<li><p><strong>Tune the odometry noise model</strong>. If your odometry source is noisy and localization drifts, consider updating <code class="docutils literal notranslate"><span class="pre">odom_alpha1</span></code> thru <code class="docutils literal notranslate"><span class="pre">odom_alpha5</span></code> to better reflect that noise.</p></li>
+<li><p><strong>Tune the sensor model</strong>. If you LiDAR is noisy, consider increasing <code class="docutils literal notranslate"><span class="pre">z_rand</span></code> to account for bad range measurements.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<p>Some common issues you may find along the way include:</p>
+<ol class="arabic simple">
+<li><p><strong>Beluga AMCL fails to converge</strong></p>
+<ul class="simple">
+<li><p><strong>Symptom:</strong> the particle cloud doesn’t cluster around the robot’s true pose.</p></li>
+<li><p><strong>Possible causes:</strong></p>
+<ul>
+<li><p>Incorrect LiDAR or odometry data.</p></li>
+<li><p>Map doesn’t match the actual environment.</p></li>
+</ul>
+</li>
+<li><p><strong>Crosschecks:</strong></p>
+<ul>
+<li><p>Verify the <code class="docutils literal notranslate"><span class="pre">/scan</span></code> topic data is correct using <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">topic</span> <span class="pre">echo</span> <span class="pre">/scan</span></code>.</p></li>
+<li><p>Verify the <code class="docutils literal notranslate"><span class="pre">odom</span></code> to <code class="docutils literal notranslate"><span class="pre">base_link</span></code> transforms are correct using <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">run</span> <span class="pre">tf2_ros</span> <span class="pre">tf2_echo</span> <span class="pre">odom</span> <span class="pre">base_link</span></code>.</p></li>
+<li><p>Check the map matches the actual environment.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Robot’s estimated pose is inaccurate</strong></p>
+<ul class="simple">
+<li><p><strong>Symptom:</strong> the robot’s displayed pose doesn’t match its actual pose.</p></li>
+<li><p><strong>Possible causes:</strong></p>
+<ul>
+<li><p>Odometry drift.</p></li>
+<li><p>Incorrect transformations between frames.</p></li>
+</ul>
+</li>
+<li><p><strong>Crosschecks:</strong></p>
+<ul>
+<li><p>Calibrate your robot’s odometry.</p></li>
+<li><p>Ensure all <code class="docutils literal notranslate"><span class="pre">tf</span></code> frames are correctly defined.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</section>
 </section>
 
 
@@ -420,6 +604,26 @@ document.write(`
             
             
               
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-things-up">Setting things up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping-the-environment">Mapping the environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuring-beluga-amcl">Configuring Beluga AMCL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-beluga-amcl">Running Beluga AMCL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -448,7 +652,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Oct 8 06:14:20 2024 -0600, 00de1ab&#39;.
+  Last updated on &#39;Mon Oct 14 09:34:38 2024 -0300, d72302b&#39;.
   <br/>
 </p>
   </div>
