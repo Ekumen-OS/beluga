@@ -82,7 +82,7 @@ TEST_P(MultivariateNormalDistributionWithParam, DistributionCovarianceAndMean) {
   const auto mean = Eigen::Vector2d{sum / sequence.size()};
   ASSERT_NEAR(mean(0), expected_mean(0), kTolerance);
   ASSERT_NEAR(mean(1), expected_mean(1), kTolerance);
-  const auto covariance = beluga::calculate_covariance(sequence, mean);
+  const auto covariance = beluga::covariance(sequence, mean);
   ASSERT_NEAR(covariance(0, 0), expected_covariance(0, 0), kTolerance);
   ASSERT_NEAR(covariance(0, 1), expected_covariance(0, 1), kTolerance);
   ASSERT_NEAR(covariance(1, 0), expected_covariance(1, 0), kTolerance);

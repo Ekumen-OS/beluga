@@ -89,8 +89,7 @@ class Amcl {
   using map_type = typename SensorModel::map_type;
   using spatial_hasher_type = spatial_hash<state_type>;
   using random_state_generator_type = RandomStateGenerator;
-  using estimation_type =
-      std::invoke_result_t<decltype(beluga::estimate<std::vector<state_type>>), std::vector<state_type>>;
+  using estimation_type = std::invoke_result_t<beluga::detail::estimate_fn, std::vector<state_type>>;
 
  public:
   /// Construct a AMCL instance.

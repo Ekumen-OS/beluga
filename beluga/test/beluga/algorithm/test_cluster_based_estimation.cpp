@@ -333,8 +333,7 @@ TEST_F(ClusterBasedEstimationDetailTesting, ClusterEstimation) {
 
   const auto particles = ranges::views::zip(states, weights, clusters);
 
-  auto cluster_0_particles =
-      particles | ranges::views::cache1 | ranges::views::filter([](const auto& p) { return std::get<2>(p) == 0; });
+  auto cluster_0_particles = particles | ranges::views::filter([](const auto& p) { return std::get<2>(p) == 0; });
 
   auto cluster_0_states = cluster_0_particles | beluga::views::elements<0>;
   auto cluster_0_weights = cluster_0_particles | beluga::views::elements<1>;
