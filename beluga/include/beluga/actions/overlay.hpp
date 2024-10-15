@@ -30,18 +30,46 @@ namespace beluga::actions {
 
 namespace detail {
 
-/// Implementation detail for an overlay range adaptor object.
-struct overlay_base_fn {
-  /// Overload that implements an overlay of a value in a range.
-  /**
-   * \tparam ExecutionPolicy An [execution policy](https://en.cppreference.com/w/cpp/algorithm/execution_policy_tag_t).
-   * \tparam Range An [input range](https://en.cppreference.com/w/cpp/ranges/input_range).
-   * \tparam MaskRange An [input range](https://en.cppreference.com/w/cpp/ranges/input_range).
-   * \param policy The execution policy to use.
-   * \param range An existing range to apply this action to.
-   * \param mask The mask where the values will be overlaid.
-   * \param mask_value The value to be overlaid.
-   */
+///\cond detail
+
+template <class MaskRange, class Mask, class ExecutionPolicy = std::execution::sequenced_policy>
+struct overlay_closure {
+ public:
+  static_assert(std::is_execution_policy_v<ExecutionPolicy>);
+  static_assert(ranges::range<MaskRange>);
+
+  constexpr overlay_closure(MaskRange mask, Mask mask_value)
+      : policy_{std::execution::seq}, mask_(std::move(mask)), mask_value_(std::move(mask_value)) {}
+
+  constexpr explicit overlay_closure(ExecutionPolicy policy, MaskRange mask, Mask mask_value)
+      : policy_(std::move(policy)), mask_(std::move(mask)), mask_value_(std::move(mask_value)) {}
+
+  template <class Range>
+  constexpr auto operator()(Range& range) const -> Range& {
+    static_assert(ranges::range<Range>);
+    auto map = range | ranges::views::common;
+    const auto converted_mask_value = static_cast<ranges::range_value_t<Range>>(mask_value_);
+
+    std::transform(
+        policy_,            //
+        std::begin(map),    //
+        std::end(map),      //
+        std::begin(mask_),  //
+        std::begin(map),    //
+        [&converted_mask_value](const auto& base_value, bool flag) {
+          return flag ? converted_mask_value : base_value;
+        });
+
+    return range;
+  }
+
+ private:
+  ExecutionPolicy policy_{};
+  MaskRange mask_{};
+  Mask mask_value_{};
+};
+
+struct overlay_fn {
   template <
       class ExecutionPolicy,
       class Range,
@@ -52,73 +80,39 @@ struct overlay_base_fn {
       std::enable_if_t<ranges::range<MaskRange>, int> = 0>
   constexpr auto operator()(ExecutionPolicy&& policy, Range& range, MaskRange&& mask, Mask&& mask_value) const
       -> Range& {
-    auto map = range | ranges::views::common;
-    const auto converted_mask_value = static_cast<ranges::range_value_t<Range>>(mask_value);
-
-    std::transform(
-        policy,            //
-        std::begin(map),   //
-        std::end(map),     //
-        std::begin(mask),  //
-        std::begin(map),   //
-        [&converted_mask_value](const auto& base_value, bool flag) {
-          return flag ? converted_mask_value : base_value;
-        });
-
-    return range;
+    return overlay_closure{
+        std::forward<ExecutionPolicy>(policy), std::forward<MaskRange>(mask), std::forward<Mask>(mask_value)}(range);
   }
 
-  /// Overload that re-orders arguments from an action closure.
-  template <
-      class ExecutionPolicy,
-      class Range,
-      class MaskRange,
-      class Mask,
-      std::enable_if_t<std::is_execution_policy_v<ExecutionPolicy>, int> = 0,
-      std::enable_if_t<ranges::range<Range>, int> = 0,
-      std::enable_if_t<ranges::range<MaskRange>, int> = 0>
-  constexpr auto operator()(Range&& range, MaskRange&& mask, Mask&& mask_value, ExecutionPolicy policy) const
-      -> Range& {
-    return (*this)(
-        std::move(policy), std::forward<Range>(range), std::forward<MaskRange>(mask), std::forward<Mask>(mask_value));
-  }
-
-  /// Overload that returns an action closure to compose with other actions.
-  template <
-      class ExecutionPolicy,
-      class MaskRange,
-      class Mask,
-      std::enable_if_t<std::is_execution_policy_v<ExecutionPolicy>, int> = 0,
-      std::enable_if_t<ranges::range<MaskRange>, int> = 0>
-  constexpr auto operator()(ExecutionPolicy policy, MaskRange&& mask, Mask&& mask_value) const {
-    return ranges::make_action_closure(ranges::bind_back(
-        overlay_base_fn{}, std::forward<MaskRange>(mask), std::forward<Mask>(mask_value), std::move(policy)));
-  }
-};
-
-/// Implementation detail for an overlay range adaptor object with a default execution policy.
-struct overlay_fn : public overlay_base_fn {
-  using overlay_base_fn::operator();
-
-  /// Overload that defines a default execution policy.
   template <
       class Range,
       class MaskRange,
       class Mask,
       std::enable_if_t<ranges::range<Range>, int> = 0,
       std::enable_if_t<ranges::range<MaskRange>, int> = 0>
-  constexpr auto operator()(Range&& range, MaskRange&& mask, Mask&& mask_value) const -> Range& {
-    return (*this)(
-        std::execution::seq, std::forward<Range>(range), std::forward<MaskRange>(mask), std::forward<Mask>(mask_value));
+  constexpr auto operator()(Range& range, MaskRange&& mask, Mask&& mask_value) const -> Range& {
+    return overlay_closure{std::forward<MaskRange>(mask), std::forward<Mask>(mask_value)}(range);
   }
 
-  /// Overload that returns an action closure to compose with other actions.
+  template <
+      class ExecutionPolicy,
+      class MaskRange,
+      class Mask,
+      std::enable_if_t<std::is_execution_policy_v<ExecutionPolicy>, int> = 0,
+      std::enable_if_t<ranges::range<MaskRange>, int> = 0>
+  constexpr auto operator()(ExecutionPolicy&& policy, MaskRange&& mask, Mask&& mask_value) const {
+    return ranges::actions::action_closure{overlay_closure{
+        std::forward<ExecutionPolicy>(policy), std::forward<MaskRange>(mask), std::forward<Mask>(mask_value)}};
+  }
+
   template <class MaskRange, class Mask, std::enable_if_t<ranges::range<MaskRange>, int> = 0>
   constexpr auto operator()(MaskRange&& mask, Mask&& mask_value) const {
-    return ranges::make_action_closure(
-        ranges::bind_back(overlay_fn{}, std::forward<MaskRange>(mask), std::forward<Mask>(mask_value)));
+    return ranges::actions::action_closure{
+        overlay_closure{std::forward<MaskRange>(mask), std::forward<Mask>(mask_value)}};
   }
 };
+
+/// \endcond
 
 }  // namespace detail
 
