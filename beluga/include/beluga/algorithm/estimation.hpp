@@ -45,7 +45,7 @@ struct mean_fn {
       class Weights,
       class Projection = ranges::identity,
       class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
-      class = std::enable_if_t<std::is_base_of_v<Eigen::MatrixBase<Value>, Value>>>
+      std::enable_if_t<std::is_base_of_v<Eigen::MatrixBase<Value>, Value>, int> = 0>
   auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const {
     static_assert(ranges::input_range<Values>);
     static_assert(ranges::input_range<Weights>);
@@ -77,7 +77,7 @@ struct mean_fn {
       class Weights,
       class Projection = ranges::identity,
       class Scalar = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
-      class = std::enable_if_t<std::is_floating_point_v<Scalar>>>
+      std::enable_if_t<std::is_floating_point_v<Scalar>, int> = 0>
   auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const -> Scalar {
     return (*this)(
         std::forward<Values>(values), std::forward<Weights>(normalized_weights),
@@ -92,7 +92,7 @@ struct mean_fn {
       class Projection = ranges::identity,
       class Value = std::decay_t<ranges::range_value_t<Values>>,
       class Scalar = typename Value::Scalar,
-      class = std::enable_if_t<std::is_base_of_v<Sophus::SO2Base<Value>, Value>>>
+      std::enable_if_t<std::is_base_of_v<Sophus::SO2Base<Value>, Value>, int> = 0>
   auto operator()(Values&&, Weights&&, Projection = {}) const -> Value = delete;  // not-implemented
 
   template <
@@ -124,7 +124,7 @@ struct mean_fn {
       class Projection = ranges::identity,
       class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class Scalar = typename Value::Scalar,
-      class = std::enable_if_t<std::is_base_of_v<Eigen::QuaternionBase<Value>, Value>>>
+      std::enable_if_t<std::is_base_of_v<Eigen::QuaternionBase<Value>, Value>, int> = 0>
   auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const
       -> Eigen::Quaternion<Scalar> {
     static_assert(ranges::input_range<Values>);
@@ -170,7 +170,7 @@ struct mean_fn {
       class Projection = ranges::identity,
       class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class Scalar = typename Value::Scalar,
-      class = std::enable_if_t<std::is_base_of_v<Sophus::SO3Base<Value>, Value>>>
+      std::enable_if_t<std::is_base_of_v<Sophus::SO3Base<Value>, Value>, int> = 0>
   auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const
       -> Sophus::SO3<Scalar> {
     return {(*this)(
@@ -184,7 +184,7 @@ struct mean_fn {
       class Projection = ranges::identity,
       class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class Scalar = typename Value::Scalar,
-      class = std::enable_if_t<std::is_base_of_v<Sophus::SE3Base<Value>, Value>>>
+      std::enable_if_t<std::is_base_of_v<Sophus::SE3Base<Value>, Value>, int> = 0>
   auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const
       -> Sophus::SE3<Scalar> {
     static_assert(ranges::forward_range<Values>);   // must allow multi-pass
@@ -233,60 +233,21 @@ struct covariance_fn {
       class Weights,
       class Projection = ranges::identity,
       class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
-      class = std::enable_if_t<std::disjunction_v<
-          std::is_floating_point<Value>,
-          std::is_base_of<Eigen::MatrixBase<Value>, Value>,
-          std::is_base_of<Sophus::SE2Base<Value>, Value>,
-          std::is_base_of<Sophus::SE3Base<Value>, Value>>>>
-  auto operator()(Values&& values, Weights&& normalized_weights, const Value& mean, Projection projection = {}) const {
+      std::enable_if_t<std::is_base_of_v<Eigen::MatrixBase<Value>, Value>, int> = 0>
+  auto operator()(
+      Values&& values,
+      Weights&& normalized_weights,
+      const typename Value::PlainMatrix& mean,
+      Projection projection = {}) const {
     static_assert(ranges::input_range<Values>);
-    static_assert(ranges::forward_range<Weights>);  // must allow multi-pass
+    static_assert(ranges::input_range<Weights>);
 
-    // Calculate the averaging factor for the weighted covariance estimate.
-    // See https://en.wikipedia.org/wiki/Sample_mean_and_covariance#Weighted_samples
-
-    auto accumulator = std::invoke([]() {
-      if constexpr (std::is_floating_point_v<Value>) {
-        return Value{0};
-      } else if constexpr (std::is_base_of_v<Eigen::MatrixBase<Value>, Value>) {
-        constexpr int M = Value::RowsAtCompileTime;
-        constexpr int N = Value::ColsAtCompileTime;
-        static_assert(N == 1);
-        using Scalar = typename Value::Scalar;
-        return Eigen::Matrix<Scalar, M, M>::Zero().eval();
-      } else /* Sophus' Lie type */ {
-        // For SE3 estimates, we represent the estimate as a noiseless pose and covariance in se3,
-        // the tangent space of the SE3 manifold.
-        //
-        // Users may perform the appropriate conversions to get the covariance matrix into their parametrization of
-        // interest.
-        //
-        // This reasoning is based on "Characterizing the Uncertainty of Jointly Distributed Poses in the Lie
-        // Algebra" by Mangelson et al. (https://robots.et.byu.edu/jmangelson/pubs/2020/mangelson2020tro.pdf).
-        //
-        // See section III. E) "Defining Random Variables over Poses" for more context.
-        return Value::Adjoint::Zero().eval();
-      }
-    });
-
-    auto aggregate = std::invoke([mean]() {
-      if constexpr (std::is_floating_point_v<Value>) {
-        return [mean](auto& accumulator, const auto& value, auto weight) {
-          const auto centered = value - mean;
-          accumulator += weight * centered * centered;
-        };
-      } else if constexpr (std::is_base_of_v<Eigen::MatrixBase<Value>, Value>) {
-        return [mean](auto& accumulator, const auto& value, auto weight) {
-          const auto centered = value - mean;
-          accumulator.noalias() += weight * centered * centered.transpose();
-        };
-      } else /* Sophus' Lie type */ {
-        return [inverse_mean = mean.inverse()](auto& accumulator, const auto& value, auto weight) {
-          const auto centered = (inverse_mean * value).log();
-          accumulator.noalias() += weight * centered * centered.transpose();
-        };
-      }
-    });
+    constexpr int M = Value::RowsAtCompileTime;
+    constexpr int N = Value::ColsAtCompileTime;
+    static_assert(N == 1);
+    using Scalar = typename Value::Scalar;
+    auto accumulator = Eigen::Matrix<Scalar, M, M>::Zero().eval();
+    auto squared_weight_sum = Scalar{0.0};
 
     auto it = ranges::begin(values);
     const auto last = ranges::end(values);
@@ -296,21 +257,106 @@ struct covariance_fn {
     assert(weights_it != ranges::end(normalized_weights));
 
     for (; it != last; ++weights_it, ++it) {
-      aggregate(accumulator, projection(*it), *weights_it);
+      const auto& value = projection(*it);
+      const auto weight = *weights_it;
+      const auto centered = value - mean;
+      accumulator.noalias() += weight * centered * centered.transpose();
+      squared_weight_sum += weight * weight;
     }
 
     assert(weights_it == ranges::end(normalized_weights));
+    assert(squared_weight_sum < 1.0);
 
-    if constexpr (std::is_floating_point_v<Value>) {
-      const auto non_zero_weight_count =
-          static_cast<Value>(ranges::count_if(normalized_weights, [](auto w) { return w != 0; }));
-      accumulator *= non_zero_weight_count / (non_zero_weight_count - 1);
-    } else /* Sophus' Lie type or Eigen's Matrix type */ {
-      const auto squared_weight_sum =
-          ranges::accumulate(normalized_weights, 0.0, std::plus<>{}, [](auto w) { return w * w; });
-      accumulator /= (1.0 - squared_weight_sum);
+    accumulator /= (1.0 - squared_weight_sum);
+    return accumulator;
+  }
+
+  template <
+      class Values,
+      class Weights,
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
+      std::enable_if_t<std::is_floating_point_v<Value>, int> = 0>
+  auto operator()(Values&& values, Weights&& normalized_weights, Value mean, Projection projection = {}) const {
+    static_assert(ranges::input_range<Values>);
+    static_assert(ranges::input_range<Weights>);
+
+    auto accumulator = Value{0};
+    auto non_zero_weight_count = Value{0};
+
+    auto it = ranges::begin(values);
+    const auto last = ranges::end(values);
+    auto weights_it = ranges::begin(normalized_weights);
+
+    assert(it != last);
+    assert(weights_it != ranges::end(normalized_weights));
+
+    for (; it != last; ++weights_it, ++it) {
+      const auto& value = projection(*it);
+      const auto weight = *weights_it;
+      const auto centered = value - mean;
+      accumulator += weight * centered * centered;
+
+      if (weight != 0) {
+        non_zero_weight_count += 1;
+      }
     }
 
+    assert(weights_it == ranges::end(normalized_weights));
+    assert(non_zero_weight_count > 1);
+
+    accumulator *= non_zero_weight_count / (non_zero_weight_count - 1);
+    return accumulator;
+  }
+
+  template <
+      class Values,
+      class Weights,
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
+      std::enable_if_t<
+          std::disjunction_v<
+              std::is_base_of<Sophus::SE2Base<Value>, Value>,
+              std::is_base_of<Sophus::SE3Base<Value>, Value>>,
+          int> = 0>
+  auto operator()(Values&& values, Weights&& normalized_weights, const Value& mean, Projection projection = {}) const {
+    static_assert(ranges::input_range<Values>);
+    static_assert(ranges::input_range<Weights>);
+
+    // For SE3 estimates, we represent the estimate as a noiseless pose and covariance in se3,
+    // the tangent space of the SE3 manifold.
+    //
+    // Users may perform the appropriate conversions to get the covariance matrix into their parametrization of
+    // interest.
+    //
+    // This reasoning is based on "Characterizing the Uncertainty of Jointly Distributed Poses in the Lie
+    // Algebra" by Mangelson et al. (https://robots.et.byu.edu/jmangelson/pubs/2020/mangelson2020tro.pdf).
+    //
+    // See section III. E) "Defining Random Variables over Poses" for more context.
+    auto accumulator = Value::Adjoint::Zero().eval();
+    auto squared_weight_sum = typename Value::Scalar{0.0};
+
+    auto it = ranges::begin(values);
+    const auto last = ranges::end(values);
+    auto weights_it = ranges::begin(normalized_weights);
+
+    assert(it != last);
+    assert(weights_it != ranges::end(normalized_weights));
+
+    const auto inverse_mean = mean.inverse();
+
+    for (; it != last; ++weights_it, ++it) {
+      const auto& value = projection(*it);
+      const auto weight = *weights_it;
+      const auto centered = (inverse_mean * value).log();
+      accumulator.noalias() += weight * centered * centered.transpose();
+      squared_weight_sum += weight * weight;
+    }
+
+    assert(weights_it == ranges::end(normalized_weights));
+    assert(squared_weight_sum < 1.0);
+
+    accumulator /= (1.0 - squared_weight_sum);
     return accumulator;
   }
 
@@ -319,10 +365,12 @@ struct covariance_fn {
       class Weights,
       class Projection = ranges::identity,
       class Value = std::decay_t<ranges::range_value_t<Values>>,
-      class = std::enable_if_t<std::disjunction_v<
-          std::is_base_of<Eigen::QuaternionBase<Value>, Value>,
-          std::is_base_of<Sophus::SO2Base<Value>, Value>,
-          std::is_base_of<Sophus::SO3Base<Value>, Value>>>>
+      std::enable_if_t<
+          std::disjunction_v<
+              std::is_base_of<Eigen::QuaternionBase<Value>, Value>,
+              std::is_base_of<Sophus::SO2Base<Value>, Value>,
+              std::is_base_of<Sophus::SO3Base<Value>, Value>>,
+          int> = 0>
   auto operator()(Values&&, Weights&&, const Value&, Projection = {}) const -> Value = delete;  // not-implemented
 
   template <
