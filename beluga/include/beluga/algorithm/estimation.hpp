@@ -305,6 +305,9 @@ struct covariance_fn {
     assert(weights_it == ranges::end(normalized_weights));
     assert(non_zero_weight_count > 1);
 
+    // Apply Bessel's correction for weighted statistical variance.
+    // See https://en.wikipedia.org/wiki/Bessel%27s_correction and
+    // https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weighvar.pdf.
     accumulator *= non_zero_weight_count / (non_zero_weight_count - 1);
     return accumulator;
   }
