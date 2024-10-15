@@ -56,7 +56,7 @@
     <link rel="prev" title="Architecture" href="../concepts/architecture.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Oct 15 11:37:52 2024 -0600, 0df4da0&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 15 18:57:22 2024 -0300, 4db60cf&#39;"/>
   </head>
   
   
@@ -483,20 +483,7 @@ document.write(`
 <span class="w">    </span><span class="nt">&lt;/node&gt;</span>
 
 <span class="w">    </span><span class="cm">&lt;!-- Start AMCL --&gt;</span>
-<span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">pkg=</span><span class="s">&quot;beluga&quot;</span><span class="w"> </span><span class="na">exec=</span><span class="s">&quot;amcl&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;amcl&quot;</span><span class="w"> </span><span class="na">output=</span><span class="s">&quot;screen&quot;</span><span class="nt">&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;use_sim_time&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;false&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;min_particles&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;500&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;max_particles&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;2000&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;kld_err&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.05&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;odom_alpha1&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.2&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;odom_alpha2&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.2&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;odom_alpha3&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.2&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;odom_alpha4&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.2&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;z_hit&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.95&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;z_rand&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0.05&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;laser_likelihood_max_dist&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;2.0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;laser_model_type&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;likelihood_field&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;/node&gt;</span>
+<span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">pkg=</span><span class="s">&quot;beluga&quot;</span><span class="w"> </span><span class="na">exec=</span><span class="s">&quot;amcl&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;amcl&quot;</span><span class="w"> </span><span class="na">output=</span><span class="s">&quot;screen&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/launch&gt;</span>
 </pre></div>
 </div>
@@ -542,6 +529,7 @@ document.write(`
 <ul>
 <li><p>Verify the <code class="docutils literal notranslate"><span class="pre">/scan</span></code> topic data is correct using <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">topic</span> <span class="pre">echo</span> <span class="pre">/scan</span></code>.</p></li>
 <li><p>Verify the <code class="docutils literal notranslate"><span class="pre">odom</span></code> to <code class="docutils literal notranslate"><span class="pre">base_link</span></code> transforms are correct using <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">run</span> <span class="pre">tf2_ros</span> <span class="pre">tf2_echo</span> <span class="pre">odom</span> <span class="pre">base_link</span></code>.</p></li>
+<li><p>Verify the <code class="docutils literal notranslate"><span class="pre">base_link</span></code> to <code class="docutils literal notranslate"><span class="pre">lidar</span></code> transforms are correct using <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">run</span> <span class="pre">tf2_ros</span> <span class="pre">tf2_echo</span> <span class="pre">base_link</span> <span class="pre">lidar</span></code>.</p></li>
 <li><p>Check the map matches the actual environment.</p></li>
 </ul>
 </li>
@@ -554,12 +542,14 @@ document.write(`
 <ul>
 <li><p>Odometry drift.</p></li>
 <li><p>Incorrect transformations between frames.</p></li>
+<li><p>Blurry or distorted map.</p></li>
 </ul>
 </li>
 <li><p><strong>Crosschecks:</strong></p>
 <ul>
 <li><p>Calibrate your robot’s odometry.</p></li>
 <li><p>Ensure all <code class="docutils literal notranslate"><span class="pre">tf</span></code> frames are correctly defined.</p></li>
+<li><p><a class="reference internal" href="#mapping-the-environment">Map the environment</a> again.</p></li>
 </ul>
 </li>
 </ul>
@@ -652,7 +642,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Oct 15 11:37:52 2024 -0600, 0df4da0&#39;.
+  Last updated on &#39;Tue Oct 15 18:57:22 2024 -0300, 4db60cf&#39;.
   <br/>
 </p>
   </div>

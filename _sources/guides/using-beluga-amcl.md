@@ -68,13 +68,13 @@ Before the robot can localize using Beluga AMCL, we need a map of the environmen
 
 ## Configuring Beluga AMCL
 
-Let’s put everything together in one cohesive configuration.
+Let's put everything together in one cohesive configuration.
 
 ```bash
 editor beluga.launch.xml
 ```
 
-Here’s a sample `launch` file in XML format you can use:
+Here's a sample `launch` file in XML format you can use:
 
 ```xml
 <launch>
@@ -86,26 +86,13 @@ Here’s a sample `launch` file in XML format you can use:
     </node>
 
     <!-- Start AMCL -->
-    <node pkg="beluga" exec="amcl" name="amcl" output="screen">
-        <param name="use_sim_time" value="false" />
-        <param name="min_particles" value="500" />
-        <param name="max_particles" value="2000" />
-        <param name="kld_err" value="0.05" />
-        <param name="odom_alpha1" value="0.2" />
-        <param name="odom_alpha2" value="0.2" />
-        <param name="odom_alpha3" value="0.2" />
-        <param name="odom_alpha4" value="0.2" />
-        <param name="z_hit" value="0.95" />
-        <param name="z_rand" value="0.05" />
-        <param name="laser_likelihood_max_dist" value="2.0" />
-        <param name="laser_model_type" value="likelihood_field" />
-    </node>
+    <node pkg="beluga" exec="amcl" name="amcl" output="screen"/>
 </launch>
 ```
 
 ## Running Beluga AMCL
 
-Now, it’s time to run Beluga on your robot!
+Now, it's time to run Beluga on your robot!
 
 1. **Launch your system** and your custom launch file alongside with it:
 
@@ -121,9 +108,9 @@ Now, it’s time to run Beluga on your robot!
 
     Use `map` as your global fixed frame. Use the `Map` and `LaserScan` displays to assess your robot localization. If scans and map do not line up, use the `2D Pose Estimate` tool to reset your robot pose. You can also use `PoseArray` and `MarkerArray` displays to visualize the particle cloud. When moving, it should quickly converge near the robot's true pose.
 
-3. **Tweak Beluga AMCL as necessary** if localization isn’t as accurate as expected. For example, you can:
+3. **Tweak Beluga AMCL as necessary** if localization isn't as accurate as expected. For example, you can:
 
-   - **Adjust the number of particles**. If localization is unstable (e.g., the robot’s position jumps), consider increasing the minimum number of particles (`min_particles`) to improve the pose estimate. If localization is slow (especially in large environments), consider lowering the maximum number of particles (`max_particles`) to reduce the computational load.
+   - **Adjust the number of particles**. If localization is unstable (e.g., the robot's position jumps), consider increasing the minimum number of particles (`min_particles`) to improve the pose estimate. If localization is slow (especially in large environments), consider lowering the maximum number of particles (`max_particles`) to reduce the computational load.
    - **Tune the odometry noise model**. If your odometry source is noisy and localization drifts, consider updating `odom_alpha1` thru `odom_alpha5` to better reflect that noise.
    - **Tune the sensor model**. If you LiDAR is noisy, consider increasing `z_rand` to account for bad range measurements.
 
@@ -140,6 +127,7 @@ Some common issues you may find along the way include:
    - **Crosschecks:**
      - Verify the `/scan` topic data is correct using `ros2 topic echo /scan`.
      - Verify the `odom` to `base_link` transforms are correct using `ros2 run tf2_ros tf2_echo odom base_link`.
+     - Verify the `base_link` to `lidar` transforms are correct using `ros2 run tf2_ros tf2_echo base_link lidar`.
      - Check the map matches the actual environment.
 
 2. **Robot's estimated pose is inaccurate**
@@ -148,6 +136,8 @@ Some common issues you may find along the way include:
    - **Possible causes:**
      - Odometry drift.
      - Incorrect transformations between frames.
+     - Blurry or distorted map.
    - **Crosschecks:**
      - Calibrate your robot's odometry.
      - Ensure all `tf` frames are correctly defined.
+     - [Map the environment](#mapping-the-environment) again.
