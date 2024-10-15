@@ -281,7 +281,7 @@ struct covariance_fn {
     static_assert(ranges::input_range<Weights>);
 
     auto accumulator = Value{0};
-    auto non_zero_weight_count = Value{0};
+    auto squared_weight_sum = Value{0};
 
     auto it = ranges::begin(values);
     const auto last = ranges::end(values);
@@ -295,19 +295,13 @@ struct covariance_fn {
       const auto weight = *weights_it;
       const auto centered = value - mean;
       accumulator += weight * centered * centered;
-
-      if (weight != 0) {
-        non_zero_weight_count += 1;
-      }
+      squared_weight_sum += weight * weight;
     }
 
     assert(weights_it == ranges::end(normalized_weights));
-    assert(non_zero_weight_count > 1);
+    assert(squared_weight_sum < 1.0);
 
-    // Apply Bessel's correction for weighted statistical variance.
-    // See https://en.wikipedia.org/wiki/Bessel%27s_correction and
-    // https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weighvar.pdf.
-    accumulator *= non_zero_weight_count / (non_zero_weight_count - 1);
+    accumulator /= (1.0 - squared_weight_sum);
     return accumulator;
   }
 
@@ -325,7 +319,7 @@ struct covariance_fn {
     static_assert(ranges::input_range<Values>);
     static_assert(ranges::input_range<Weights>);
 
-    // For SE3 estimates, we represent the estimate as a noiseless pose and covariance in se3,
+    // For SE3 (and SE2) estimates, we represent the estimate as a noiseless pose and covariance in se3,
     // the tangent space of the SE3 manifold.
     //
     // Users may perform the appropriate conversions to get the covariance matrix into their parametrization of

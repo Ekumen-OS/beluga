@@ -265,7 +265,7 @@ TEST_F(ScalarEstimation, NonUniformWeightOverload) {
   const auto standard_deviation = std::sqrt(variance);
   constexpr double kTolerance = 0.001;
   ASSERT_NEAR(mean, 4.300, kTolerance);
-  ASSERT_NEAR(standard_deviation, 2.026, kTolerance);
+  ASSERT_NEAR(standard_deviation, 2.055, kTolerance);
 }
 
 TEST_F(PoseCovarianceEstimation, MultiVariateNormalSE3) {
