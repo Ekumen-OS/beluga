@@ -15,7 +15,6 @@
 #ifndef BELUGA_ALGORITHM_ESTIMATION_HPP
 #define BELUGA_ALGORITHM_ESTIMATION_HPP
 
-#include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/transform.hpp>
