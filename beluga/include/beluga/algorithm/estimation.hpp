@@ -54,7 +54,7 @@ struct mean_fn {
     constexpr int N = Value::ColsAtCompileTime;
     static_assert(N == 1);
     using Scalar = typename Value::Scalar;
-    auto result = Sophus::Vector<Scalar, M>::Zero().eval();
+    auto accumulator = Sophus::Vector<Scalar, M>::Zero().eval();
 
     auto it = ranges::begin(values);
     const auto last = ranges::end(values);
@@ -64,12 +64,12 @@ struct mean_fn {
     assert(weights_it != ranges::end(normalized_weights));
 
     for (; it != last; ++weights_it, ++it) {
-      result += *weights_it * projection(*it);
+      accumulator += *weights_it * projection(*it);
     }
 
     assert(weights_it == ranges::end(normalized_weights));
 
-    return result;
+    return accumulator;
   }
 
   template <
@@ -245,7 +245,7 @@ struct covariance_fn {
     // Calculate the averaging factor for the weighted covariance estimate.
     // See https://en.wikipedia.org/wiki/Sample_mean_and_covariance#Weighted_samples
 
-    auto result = std::invoke([]() {
+    auto accumulator = std::invoke([]() {
       if constexpr (std::is_floating_point_v<Value>) {
         return Value{0};
       } else if constexpr (std::is_base_of_v<Eigen::MatrixBase<Value>, Value>) {
@@ -271,19 +271,19 @@ struct covariance_fn {
 
     auto aggregate = std::invoke([mean]() {
       if constexpr (std::is_floating_point_v<Value>) {
-        return [mean](auto& result, const auto& value, auto weight) {
+        return [mean](auto& accumulator, const auto& value, auto weight) {
           const auto centered = value - mean;
-          result += weight * centered * centered;
+          accumulator += weight * centered * centered;
         };
       } else if constexpr (std::is_base_of_v<Eigen::MatrixBase<Value>, Value>) {
-        return [mean](auto& result, const auto& value, auto weight) {
+        return [mean](auto& accumulator, const auto& value, auto weight) {
           const auto centered = value - mean;
-          result.noalias() += weight * centered * centered.transpose();
+          accumulator.noalias() += weight * centered * centered.transpose();
         };
       } else /* Sophus' Lie type */ {
-        return [inverse_mean = mean.inverse()](auto& result, const auto& value, auto weight) {
+        return [inverse_mean = mean.inverse()](auto& accumulator, const auto& value, auto weight) {
           const auto centered = (inverse_mean * value).log();
-          result.noalias() += weight * centered * centered.transpose();
+          accumulator.noalias() += weight * centered * centered.transpose();
         };
       }
     });
@@ -296,7 +296,7 @@ struct covariance_fn {
     assert(weights_it != ranges::end(normalized_weights));
 
     for (; it != last; ++weights_it, ++it) {
-      aggregate(result, projection(*it), *weights_it);
+      aggregate(accumulator, projection(*it), *weights_it);
     }
 
     assert(weights_it == ranges::end(normalized_weights));
@@ -304,14 +304,14 @@ struct covariance_fn {
     if constexpr (std::is_floating_point_v<Value>) {
       const auto non_zero_weight_count =
           static_cast<Value>(ranges::count_if(normalized_weights, [](auto w) { return w != 0; }));
-      result *= non_zero_weight_count / (non_zero_weight_count - 1);
+      accumulator *= non_zero_weight_count / (non_zero_weight_count - 1);
     } else /* Sophus' Lie type or Eigen's Matrix type */ {
       const auto squared_weight_sum =
           ranges::accumulate(normalized_weights, 0.0, std::plus<>{}, [](auto w) { return w * w; });
-      result /= (1.0 - squared_weight_sum);
+      accumulator /= (1.0 - squared_weight_sum);
     }
 
-    return result;
+    return accumulator;
   }
 
   template <
