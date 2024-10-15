@@ -29,6 +29,7 @@
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/cache1.hpp>
+#include <range/v3/view/common.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/zip.hpp>

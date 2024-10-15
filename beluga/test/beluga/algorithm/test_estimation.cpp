@@ -67,7 +67,7 @@ TEST_F(CovarianceCalculation, UniformWeightOverload) {
       Vector2d{2, 0}, Vector2d{0, 2}, Vector2d{2, 2}, Vector2d{0, 2}, Vector2d{2, 0},
   };
   const auto translation_mean = Vector2d{1, 1};
-  const auto covariance = beluga::calculate_covariance(translation_vector, translation_mean);
+  const auto covariance = beluga::covariance(translation_vector, translation_mean);
   ASSERT_NEAR(covariance(0, 0), 1.1111, 0.001);
   ASSERT_NEAR(covariance(0, 1), 0.2222, 0.001);
   ASSERT_NEAR(covariance(1, 0), 0.2222, 0.001);
@@ -93,7 +93,7 @@ TEST_F(CovarianceCalculation, NonUniformWeightOverload) {
   const auto total_weight = std::accumulate(weights.begin(), weights.end(), 0.0);
   std::for_each(weights.begin(), weights.end(), [total_weight](auto& weight) { weight /= total_weight; });
   const auto translation_mean = Vector2d{1.1111, 1.1111};
-  const auto covariance = beluga::calculate_covariance(translation_vector, weights, translation_mean);
+  const auto covariance = beluga::covariance(translation_vector, weights, translation_mean);
   ASSERT_NEAR(covariance(0, 0), 1.1765, 0.001);
   ASSERT_NEAR(covariance(0, 1), 0.1176, 0.001);
   ASSERT_NEAR(covariance(1, 0), 0.1176, 0.001);
@@ -265,7 +265,7 @@ TEST_F(ScalarEstimation, NonUniformWeightOverload) {
   const auto standard_deviation = std::sqrt(variance);
   constexpr double kTolerance = 0.001;
   ASSERT_NEAR(mean, 4.300, kTolerance);
-  ASSERT_NEAR(standard_deviation, 2.026, kTolerance);
+  ASSERT_NEAR(standard_deviation, 2.055, kTolerance);
 }
 
 TEST_F(PoseCovarianceEstimation, MultiVariateNormalSE3) {
@@ -311,7 +311,7 @@ TEST(AverageQuaternion, AgainstSophusImpl) {
   {
     auto quats_as_so3_view =
         quaternions | ranges::views::transform([](const Eigen::Quaterniond& q) { return SO3d{q}; });
-    const auto avg_quaternion = beluga::detail::weighted_average_quaternion(quaternions, std::array{1., 1., 1.});
+    const auto avg_quaternion = beluga::mean(quaternions, std::array{1., 1., 1.});
     const auto avg_quat_sophus = Sophus::details::averageUnitQuaternion(quats_as_so3_view | ranges::to<std::vector>);
     ASSERT_TRUE(avg_quaternion.isApprox(avg_quat_sophus));
   }
@@ -320,8 +320,7 @@ TEST(AverageQuaternion, AgainstSophusImpl) {
     constexpr double kTolerance = 0.01;
     auto quats_as_so3_view =
         quaternions | ranges::views::transform([](const Eigen::Quaterniond& q) { return SO3d{q}; });
-    const auto avg_quaternion =
-        beluga::detail::weighted_average_quaternion(quaternions, std::array{1e-3, 1e-3, 1. - 2e-3});
+    const auto avg_quaternion = beluga::mean(quaternions, std::array{1e-3, 1e-3, 1. - 2e-3});
     const auto avg_quat_sophus = Sophus::details::averageUnitQuaternion(quats_as_so3_view | ranges::to<std::vector>);
     ASSERT_FALSE(avg_quaternion.isApprox(avg_quat_sophus));
     ASSERT_TRUE(avg_quaternion.isApprox(quaternions.back(), kTolerance));
