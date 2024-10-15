@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon Oct 14 06:45:44 2024 -0600, 6f13c9f&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 15 11:37:52 2024 -0600, 0df4da0&#39;"/>
   </head>
   
   
@@ -496,8 +496,8 @@ $(function() {
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keyword">static</span> constexpr <span class="keywordtype">double</span> kMinVariance = 1e-5;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  Eigen::Map&lt;const Eigen::Matrix&lt;Scalar, NDim, Eigen::Dynamic&gt;&gt; points_view(</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>Scalar*<span class="keyword">&gt;</span>(points.data()), NDim, <span class="keyword">static_cast&lt;</span>int64_t<span class="keyword">&gt;</span>(points.size()));</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">const</span> Eigen::Vector&lt;Scalar, NDim&gt; mean = points_view.rowwise().mean();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">const</span> Eigen::Matrix&lt;Scalar, NDim, Eigen::Dynamic&gt; centered = points_view.colwise() - mean;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">const</span> Eigen::Vector&lt;Scalar, NDim&gt; <a class="code" href="namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">mean</a> = points_view.rowwise().mean();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">const</span> Eigen::Matrix&lt;Scalar, NDim, Eigen::Dynamic&gt; centered = points_view.colwise() - <a class="code" href="namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">mean</a>;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="comment">// Use sample covariance.</span></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  Eigen::Matrix&lt;Scalar, NDim, Eigen::Dynamic&gt; cov =</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      (centered * centered.transpose()) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(points_view.cols() - 1);</div>
@@ -506,7 +506,7 @@ $(function() {
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keywordflow">if</span> constexpr (NDim == 3) {</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    cov(2, 2) = std::max(cov(2, 2), kMinVariance);</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keywordflow">return</span> NDTCell&lt;NDim, Scalar&gt;{mean, cov};</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keywordflow">return</span> NDTCell&lt;NDim, Scalar&gt;{<a class="code" href="namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">mean</a>, cov};</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">template</span> &lt;<span class="keywordtype">int</span> NDim, <span class="keyword">typename</span> Scalar = <span class="keywordtype">double</span>&gt;</div>
@@ -710,6 +710,7 @@ $(function() {
 <div class="ttc" id="aclassbeluga_1_1SparseValueGrid_html"><div class="ttname"><a href="classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a></div><div class="ttdoc">Generic N dimensional sparse value regular grid.</div><div class="ttdef"><b>Definition:</b> sparse_value_grid.hpp:46</div></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
 <div class="ttc" id="anamespacebeluga_html_a706431bba3d6cfb1ee0690221f3a9af9"><div class="ttname"><a href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">beluga::state</a></div><div class="ttdeci">constexpr state_detail::state_fn state</div><div class="ttdoc">Customization point object for accessing the state of a particle.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:163</div></div>
+<div class="ttc" id="anamespacebeluga_html_a90ea4f1947f9abe8d6b00d73269afc02"><div class="ttname"><a href="namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">beluga::mean</a></div><div class="ttdeci">constexpr detail::mean_fn mean</div><div class="ttdoc">Calculate the weighted mean (or average) of a range of values.</div><div class="ttdef"><b>Definition:</b> estimation.hpp:223</div></div>
 <div class="ttc" id="asparse__value__grid_8hpp_html"><div class="ttname"><a href="sparse__value__grid_8hpp.html">sparse_value_grid.hpp</a></div><div class="ttdoc">Implementation of generic sparse value regular grid.</div></div>
 <div class="ttc" id="astructbeluga_1_1NDTCell_html"><div class="ttname"><a href="structbeluga_1_1NDTCell.html">beluga::NDTCell</a></div><div class="ttdoc">Representation for a cell of a N dimensional NDT cell.</div><div class="ttdef"><b>Definition:</b> ndt_cell.hpp:36</div></div>
 <div class="ttc" id="astructbeluga_1_1NDTModelParam_html"><div class="ttname"><a href="structbeluga_1_1NDTModelParam.html">beluga::NDTModelParam</a></div><div class="ttdoc">Parameters used to construct a NDTSensorModel instance.</div><div class="ttdef"><b>Definition:</b> ndt_sensor_model.hpp:147</div></div>
@@ -775,7 +776,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Oct 14 06:45:44 2024 -0600, 6f13c9f&#39;.
+  Last updated on &#39;Tue Oct 15 11:37:52 2024 -0600, 0df4da0&#39;.
   <br/>
 </p>
   </div>

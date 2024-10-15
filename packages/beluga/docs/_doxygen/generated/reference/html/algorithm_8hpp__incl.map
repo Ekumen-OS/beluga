@@ -1,52 +1,52 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/algorithm.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/algorithm.hpp">
-<area shape="rect" id="node1" title="Includes all beluga algorithms." alt="" coords="1136,5,1329,61"/>
-<area shape="rect" id="node2" href="$cluster__based__estimation_8hpp.html" title="Implementation of a cluster&#45;based estimation algorithm." alt="" coords="2030,117,2211,158"/>
-<area shape="rect" id="node19" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="910,221,1144,247"/>
-<area shape="rect" id="node32" href="$spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="3943,213,4124,255"/>
-<area shape="rect" id="node37" href="$distance__map_8hpp.html" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="3322,117,3514,158"/>
-<area shape="rect" id="node39" href="$effective__sample__size_8hpp.html" title="Implementation of an algorithm to calculate the effective sample size (ESS)." alt="" coords="64,117,259,158"/>
-<area shape="rect" id="node42" href="$exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="468,213,682,255"/>
-<area shape="rect" id="node43" href="$raycasting_8hpp.html" title="Implementation of raycasting algorithms." alt="" coords="4093,124,4326,151"/>
-<area shape="rect" id="node49" href="$thrun__recovery__probability__estimator_8hpp_source.html" title=" " alt="" coords="344,109,515,165"/>
-<area shape="rect" id="node50" href="$unscented__transform_8hpp_source.html" title=" " alt="" coords="1130,117,1334,158"/>
-<area shape="rect" id="node3" title=" " alt="" coords="1516,221,1602,247"/>
-<area shape="rect" id="node4" title=" " alt="" coords="2016,221,2091,247"/>
-<area shape="rect" id="node5" title=" " alt="" coords="3352,221,3414,247"/>
-<area shape="rect" id="node6" title=" " alt="" coords="1868,221,1992,247"/>
-<area shape="rect" id="node7" title=" " alt="" coords="3920,310,3980,337"/>
-<area shape="rect" id="node8" title=" " alt="" coords="1678,221,1741,247"/>
-<area shape="rect" id="node9" title=" " alt="" coords="2115,213,2262,255"/>
-<area shape="rect" id="node10" title=" " alt="" coords="2286,213,2432,255"/>
-<area shape="rect" id="node11" title=" " alt="" coords="308,310,552,337"/>
-<area shape="rect" id="node12" title=" " alt="" coords="1269,221,1492,247"/>
-<area shape="rect" id="node13" title=" " alt="" coords="2456,221,2648,247"/>
-<area shape="rect" id="node14" title=" " alt="" coords="2673,221,2848,247"/>
-<area shape="rect" id="node15" title=" " alt="" coords="2872,221,3046,247"/>
-<area shape="rect" id="node16" title=" " alt="" coords="2019,310,2184,337"/>
-<area shape="rect" id="node17" title=" " alt="" coords="3487,310,3610,337"/>
-<area shape="rect" id="node18" title=" " alt="" coords="2208,310,2344,337"/>
-<area shape="rect" id="node36" title=" " alt="" coords="3071,213,3226,255"/>
-<area shape="rect" id="node20" title=" " alt="" coords="1049,303,1189,344"/>
-<area shape="rect" id="node21" title=" " alt="" coords="1214,303,1360,344"/>
-<area shape="rect" id="node22" title=" " alt="" coords="1384,310,1616,337"/>
-<area shape="rect" id="node23" title=" " alt="" coords="2682,310,2878,337"/>
-<area shape="rect" id="node24" title=" " alt="" coords="3014,310,3232,337"/>
-<area shape="rect" id="node25" title=" " alt="" coords="675,310,878,337"/>
-<area shape="rect" id="node26" title=" " alt="" coords="1640,310,1811,337"/>
-<area shape="rect" id="node27" title=" " alt="" coords="1835,303,1995,344"/>
-<area shape="rect" id="node28" title=" " alt="" coords="72,310,283,337"/>
-<area shape="rect" id="node29" title=" " alt="" coords="3312,310,3435,337"/>
-<area shape="rect" id="node30" title=" " alt="" coords="902,310,1024,337"/>
-<area shape="rect" id="node31" title=" " alt="" coords="576,310,651,337"/>
-<area shape="rect" id="node33" title=" " alt="" coords="4088,310,4150,337"/>
-<area shape="rect" id="node34" title=" " alt="" coords="4232,310,4299,337"/>
-<area shape="rect" id="node35" title=" " alt="" coords="4004,310,4063,337"/>
-<area shape="rect" id="node38" title=" " alt="" coords="3650,221,3868,247"/>
-<area shape="rect" id="node40" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="27,213,171,255"/>
-<area shape="rect" id="node41" href="$particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="196,221,392,247"/>
-<area shape="rect" id="node44" title=" " alt="" coords="3540,221,3626,247"/>
-<area shape="rect" id="node45" href="$bresenham_8hpp.html" title="Implementation of Bresenham&#45;like raytracing algorithms." alt="" coords="4346,213,4551,255"/>
-<area shape="rect" id="node46" title=" " alt="" coords="4554,310,4716,337"/>
-<area shape="rect" id="node47" title=" " alt="" coords="4378,303,4524,344"/>
-<area shape="rect" id="node48" title=" " alt="" coords="4148,221,4271,247"/>
+<area shape="rect" id="node1" title="Includes all beluga algorithms." alt="" coords="1739,5,1932,61"/>
+<area shape="rect" id="node2" href="$cluster__based__estimation_8hpp.html" title="Implementation of a cluster&#45;based estimation algorithm." alt="" coords="3710,117,3891,158"/>
+<area shape="rect" id="node20" href="$estimation_8hpp.html" title="Implementation of algorithms that allow calculating the estimated state of a particle filter." alt="" coords="5113,221,5347,247"/>
+<area shape="rect" id="node27" href="$spatial__hash_8hpp.html" title="Implementation of a spatial hash for N dimensional states." alt="" coords="5371,213,5553,255"/>
+<area shape="rect" id="node33" href="$distance__map_8hpp.html" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="2233,117,2425,158"/>
+<area shape="rect" id="node37" href="$effective__sample__size_8hpp.html" title="Implementation of an algorithm to calculate the effective sample size (ESS)." alt="" coords="697,117,891,158"/>
+<area shape="rect" id="node40" href="$exponential__filter_8hpp.html" title="Implementation of an exponential filter." alt="" coords="5,213,220,255"/>
+<area shape="rect" id="node41" href="$raycasting_8hpp.html" title="Implementation of raycasting algorithms." alt="" coords="1109,124,1343,151"/>
+<area shape="rect" id="node48" href="$thrun__recovery__probability__estimator_8hpp_source.html" title=" " alt="" coords="309,109,479,165"/>
+<area shape="rect" id="node49" href="$unscented__transform_8hpp_source.html" title=" " alt="" coords="1733,117,1937,158"/>
+<area shape="rect" id="node3" title=" " alt="" coords="3428,221,3515,247"/>
+<area shape="rect" id="node4" title=" " alt="" coords="1474,221,1549,247"/>
+<area shape="rect" id="node5" title=" " alt="" coords="3539,221,3601,247"/>
+<area shape="rect" id="node6" title=" " alt="" coords="4793,221,4917,247"/>
+<area shape="rect" id="node7" title=" " alt="" coords="1857,310,1917,337"/>
+<area shape="rect" id="node8" title=" " alt="" coords="2216,221,2279,247"/>
+<area shape="rect" id="node9" title=" " alt="" coords="4942,213,5089,255"/>
+<area shape="rect" id="node10" title=" " alt="" coords="3727,213,3874,255"/>
+<area shape="rect" id="node11" title=" " alt="" coords="1263,310,1507,337"/>
+<area shape="rect" id="node12" title=" " alt="" coords="2764,221,2987,247"/>
+<area shape="rect" id="node13" title=" " alt="" coords="3898,221,4090,247"/>
+<area shape="rect" id="node14" title=" " alt="" coords="3011,221,3214,247"/>
+<area shape="rect" id="node15" title=" " alt="" coords="4165,221,4340,247"/>
+<area shape="rect" id="node16" title=" " alt="" coords="4364,221,4539,247"/>
+<area shape="rect" id="node17" title=" " alt="" coords="3238,221,3403,247"/>
+<area shape="rect" id="node18" title=" " alt="" coords="4615,310,4738,337"/>
+<area shape="rect" id="node19" title=" " alt="" coords="4257,310,4393,337"/>
+<area shape="rect" id="node32" title=" " alt="" coords="4614,213,4769,255"/>
+<area shape="rect" id="node21" title=" " alt="" coords="5126,303,5286,344"/>
+<area shape="rect" id="node22" title=" " alt="" coords="1531,310,1742,337"/>
+<area shape="rect" id="node23" title=" " alt="" coords="5310,310,5433,337"/>
+<area shape="rect" id="node24" title=" " alt="" coords="4862,310,4985,337"/>
+<area shape="rect" id="node25" title=" " alt="" coords="3149,310,3223,337"/>
+<area shape="rect" id="node26" title=" " alt="" coords="5009,310,5101,337"/>
+<area shape="rect" id="node28" title=" " alt="" coords="5619,310,5681,337"/>
+<area shape="rect" id="node29" title=" " alt="" coords="1766,310,1833,337"/>
+<area shape="rect" id="node30" title=" " alt="" coords="5457,310,5515,337"/>
+<area shape="rect" id="node31" title=" " alt="" coords="5540,310,5595,337"/>
+<area shape="rect" id="node34" title=" " alt="" coords="2544,221,2740,247"/>
+<area shape="rect" id="node35" title=" " alt="" coords="1973,221,2191,247"/>
+<area shape="rect" id="node36" title=" " alt="" coords="2303,221,2520,247"/>
+<area shape="rect" id="node38" href="$particle__traits_8hpp.html" title="Implementation of traits for particle types, see the Particle named requirements." alt="" coords="517,213,661,255"/>
+<area shape="rect" id="node39" href="$particles_8hpp.html" title="Implementation of views related to particle ranges." alt="" coords="296,221,492,247"/>
+<area shape="rect" id="node42" title=" " alt="" coords="1314,221,1399,247"/>
+<area shape="rect" id="node43" href="$bresenham_8hpp.html" title="Implementation of Bresenham&#45;like raytracing algorithms." alt="" coords="786,213,991,255"/>
+<area shape="rect" id="node44" title=" " alt="" coords="802,310,965,337"/>
+<area shape="rect" id="node45" title=" " alt="" coords="629,303,775,344"/>
+<area shape="rect" id="node47" title=" " alt="" coords="1066,221,1189,247"/>
+<area shape="rect" id="node46" title=" " alt="" coords="1068,310,1160,337"/>
+<area shape="rect" id="node50" title=" " alt="" coords="1725,221,1847,247"/>
 </map>

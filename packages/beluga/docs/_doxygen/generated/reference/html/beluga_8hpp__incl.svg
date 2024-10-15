@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 2942;
+var viewWidth = 3295;
 var viewHeight = 508;
 var sectionId = 'dynsection-0';
 </script>
@@ -58,10 +58,10 @@ var sectionId = 'dynsection-0';
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title="Includes all the Beluga API.">
-<polygon fill="#bfbfbf" stroke="black" points="1708.83,-458.5 1708.83,-499.5 1853.83,-499.5 1853.83,-458.5 1708.83,-458.5"/>
-<text text-anchor="start" x="1716.83" y="-487.5" font-family="Helvetica,sans-Serif" font-size="10.00">/home/runner/work/beluga</text>
-<text text-anchor="start" x="1716.83" y="-476.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/beluga/include</text>
-<text text-anchor="middle" x="1781.33" y="-465.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/beluga.hpp</text>
+<polygon fill="#bfbfbf" stroke="black" points="2146,-458.5 2146,-499.5 2291,-499.5 2291,-458.5 2146,-458.5"/>
+<text text-anchor="start" x="2154" y="-487.5" font-family="Helvetica,sans-Serif" font-size="10.00">/home/runner/work/beluga</text>
+<text text-anchor="start" x="2154" y="-476.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/beluga/include</text>
+<text text-anchor="middle" x="2218.5" y="-465.5" font-family="Helvetica,sans-Serif" font-size="10.00">/beluga/beluga.hpp</text>
 </a>
 </g>
 </g>
@@ -69,1046 +69,1052 @@ var sectionId = 'dynsection-0';
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:href="actions_8hpp.html" target="_top" xlink:title="Implementation of useful range actions.">
-<polygon fill="none" stroke="black" points="764.83,-341 764.83,-360 873.83,-360 873.83,-341 764.83,-341"/>
-<text text-anchor="middle" x="819.33" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions.hpp</text>
+<polygon fill="none" stroke="black" points="2145,-341 2145,-360 2254,-360 2254,-341 2145,-341"/>
+<text text-anchor="middle" x="2199.5" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node2 -->
 <g id="edge1" class="edge">
 <title>Node1&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M1708.63,-468.44C1527.2,-444.58 1056.69,-382.71 884.06,-360.01"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="884.48,-356.54 874.11,-358.7 883.56,-363.48 884.48,-356.54"/>
+<path fill="none" stroke="midnightblue" d="M2215.53,-458.23C2211.93,-434.23 2205.89,-394.02 2202.34,-370.41"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2205.77,-369.66 2200.82,-360.29 2198.85,-370.7 2205.77,-369.66"/>
 </g>
 <!-- Node15 -->
 <g id="node6" class="node">
 <title>Node15</title>
 <g id="a_node6"><a xlink:href="primitives_8hpp.html" target="_top" xlink:title="Implementation of library primitives to abstract member access.">
-<polygon fill="none" stroke="black" points="1254.83,-129 1254.83,-148 1377.83,-148 1377.83,-129 1254.83,-129"/>
-<text text-anchor="middle" x="1316.33" y="-136" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/primitives.hpp</text>
+<polygon fill="none" stroke="black" points="2073,-129 2073,-148 2196,-148 2196,-129 2073,-129"/>
+<text text-anchor="middle" x="2134.5" y="-136" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/primitives.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node15 -->
-<g id="edge74" class="edge">
+<g id="edge75" class="edge">
 <title>Node1&#45;&gt;Node15</title>
-<path fill="none" stroke="midnightblue" d="M1708.48,-474.3C1434.54,-459.64 477.54,-401.37 392.33,-299 280.35,-164.46 1008.56,-143.4 1244.38,-140.11"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1244.61,-143.61 1254.56,-139.98 1244.52,-136.61 1244.61,-143.61"/>
+<path fill="none" stroke="midnightblue" d="M2145.66,-475.32C1856.93,-464.24 808.5,-419.32 808.5,-351.5 808.5,-351.5 808.5,-351.5 808.5,-277 808.5,-230.77 825.28,-212.78 865.5,-190 917.8,-160.38 1801.95,-144.58 2062.68,-140.55"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2062.85,-144.04 2072.8,-140.39 2062.74,-137.04 2062.85,-144.04"/>
 </g>
 <!-- Node31 -->
 <g id="node15" class="node">
 <title>Node31</title>
 <g id="a_node15"><a xlink:href="algorithm_8hpp.html" target="_top" xlink:title="Includes all beluga algorithms.">
-<polygon fill="none" stroke="black" points="1608.83,-341 1608.83,-360 1729.83,-360 1729.83,-341 1608.83,-341"/>
-<text text-anchor="middle" x="1669.33" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm.hpp</text>
+<polygon fill="none" stroke="black" points="1138,-341 1138,-360 1259,-360 1259,-341 1138,-341"/>
+<text text-anchor="middle" x="1198.5" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node31 -->
 <g id="edge24" class="edge">
 <title>Node1&#45;&gt;Node31</title>
-<path fill="none" stroke="midnightblue" d="M1763.83,-458.23C1741.8,-433.36 1704.37,-391.08 1683.85,-367.9"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1686.36,-365.46 1677.11,-360.29 1681.12,-370.1 1686.36,-365.46"/>
+<path fill="none" stroke="midnightblue" d="M2145.96,-469C1957.7,-445.66 1455.23,-383.34 1269.12,-360.26"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1269.53,-356.78 1259.18,-359.02 1268.67,-363.73 1269.53,-356.78"/>
 </g>
-<!-- Node76 -->
+<!-- Node72 -->
 <g id="node25" class="node">
-<title>Node76</title>
+<title>Node72</title>
 <g id="a_node25"><a xlink:href="containers_8hpp.html" target="_top" xlink:title="Implementation of efficient containers.">
-<polygon fill="none" stroke="black" points="2752.83,-402.5 2752.83,-421.5 2877.83,-421.5 2877.83,-402.5 2752.83,-402.5"/>
-<text text-anchor="middle" x="2815.33" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/containers.hpp</text>
+<polygon fill="none" stroke="black" points="2266,-402.5 2266,-421.5 2391,-421.5 2391,-402.5 2266,-402.5"/>
+<text text-anchor="middle" x="2328.5" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/containers.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node76 -->
-<g id="edge44" class="edge">
-<title>Node1&#45;&gt;Node76</title>
-<path fill="none" stroke="midnightblue" d="M1854.04,-473.43C2043.84,-461.5 2552.7,-429.51 2742.57,-417.57"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2742.96,-421.06 2752.72,-416.94 2742.52,-414.07 2742.96,-421.06"/>
+<!-- Node1&#45;&gt;Node72 -->
+<g id="edge45" class="edge">
+<title>Node1&#45;&gt;Node72</title>
+<path fill="none" stroke="midnightblue" d="M2251.5,-458.5C2268.69,-448.34 2289.31,-436.16 2304.89,-426.95"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2307.03,-429.75 2313.86,-421.65 2303.47,-423.73 2307.03,-429.75"/>
 </g>
-<!-- Node83 -->
+<!-- Node79 -->
 <g id="node28" class="node">
-<title>Node83</title>
+<title>Node79</title>
 <g id="a_node28"><a xlink:href="type__traits_8hpp.html" target="_top" xlink:title="Includes all Beluga type traits.">
-<polygon fill="none" stroke="black" points="2340.33,-268.5 2340.33,-287.5 2466.33,-287.5 2466.33,-268.5 2340.33,-268.5"/>
-<text text-anchor="middle" x="2403.33" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/type_traits.hpp</text>
+<polygon fill="none" stroke="black" points="2774.5,-268.5 2774.5,-287.5 2900.5,-287.5 2900.5,-268.5 2774.5,-268.5"/>
+<text text-anchor="middle" x="2837.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/type_traits.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node83 -->
-<g id="edge87" class="edge">
-<title>Node1&#45;&gt;Node83</title>
-<path fill="none" stroke="midnightblue" d="M1854.03,-467.72C1942.58,-453.32 2095.21,-422.34 2215.33,-366 2236.66,-355.99 2237.61,-346.22 2258.33,-335 2293.07,-316.17 2335.52,-300.56 2365.48,-290.64"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2366.71,-293.93 2375.13,-287.5 2364.54,-287.27 2366.71,-293.93"/>
-</g>
-<!-- Node89 -->
-<g id="node29" class="node">
-<title>Node89</title>
-<g id="a_node29"><a xlink:href="motion_8hpp.html" target="_top" xlink:title="Includes all Beluga motion models.">
-<polygon fill="none" stroke="black" points="2798.33,-196 2798.33,-215 2906.33,-215 2906.33,-196 2798.33,-196"/>
-<text text-anchor="middle" x="2852.33" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/motion.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node1&#45;&gt;Node89 -->
-<g id="edge52" class="edge">
-<title>Node1&#45;&gt;Node89</title>
-<path fill="none" stroke="midnightblue" d="M1854.17,-476.55C2094.02,-471.48 2846.1,-453.15 2887.33,-422 2949.05,-375.36 2890.1,-266.11 2863.67,-223.73"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2866.49,-221.64 2858.16,-215.1 2860.59,-225.41 2866.49,-221.64"/>
-</g>
-<!-- Node95 -->
-<g id="node33" class="node">
-<title>Node95</title>
-<g id="a_node33"><a xlink:href="policies_8hpp.html" target="_top" xlink:title="Implementation of useful policies.">
-<polygon fill="none" stroke="black" points="146.83,-402.5 146.83,-421.5 257.83,-421.5 257.83,-402.5 146.83,-402.5"/>
-<text text-anchor="middle" x="202.33" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node1&#45;&gt;Node95 -->
-<g id="edge64" class="edge">
-<title>Node1&#45;&gt;Node95</title>
-<path fill="none" stroke="midnightblue" d="M1708.6,-475.01C1442.29,-464.04 522.66,-426.19 268.1,-415.71"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="268.03,-412.2 257.9,-415.29 267.74,-419.2 268.03,-412.2"/>
-</g>
-<!-- Node101 -->
-<g id="node38" class="node">
-<title>Node101</title>
-<g id="a_node38"><a xlink:href="random_8hpp.html" target="_top" xlink:title="Includes all Beluga random distributions.">
-<polygon fill="none" stroke="black" points="1768.83,-402.5 1768.83,-421.5 1879.83,-421.5 1879.83,-402.5 1768.83,-402.5"/>
-<text text-anchor="middle" x="1824.33" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/random.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node1&#45;&gt;Node101 -->
-<g id="edge75" class="edge">
-<title>Node1&#45;&gt;Node101</title>
-<path fill="none" stroke="midnightblue" d="M1794.23,-458.5C1800.19,-449.49 1807.2,-438.89 1812.96,-430.19"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1816,-431.92 1818.6,-421.65 1810.17,-428.06 1816,-431.92"/>
-</g>
-<!-- Node111 -->
-<g id="node41" class="node">
-<title>Node111</title>
-<g id="a_node41"><a xlink:href="sensor_8hpp.html" target="_top" xlink:title="Includes all Beluga sensor models and their interfaces.">
-<polygon fill="none" stroke="black" points="2286.83,-402.5 2286.83,-421.5 2391.83,-421.5 2391.83,-402.5 2286.83,-402.5"/>
-<text text-anchor="middle" x="2339.33" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node1&#45;&gt;Node111 -->
-<g id="edge78" class="edge">
-<title>Node1&#45;&gt;Node111</title>
-<path fill="none" stroke="midnightblue" d="M1853.99,-469.54C1964.39,-456.68 2172.51,-432.43 2276.65,-420.3"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2277.18,-423.76 2286.7,-419.13 2276.37,-416.81 2277.18,-423.76"/>
-</g>
-<!-- Node130 -->
-<g id="node47" class="node">
-<title>Node130</title>
-<g id="a_node47"><a xlink:href="views_8hpp.html" target="_top" xlink:title="Implementation of useful container views.">
-<polygon fill="none" stroke="red" points="1488.33,-341 1488.33,-360 1590.33,-360 1590.33,-341 1488.33,-341"/>
-<text text-anchor="middle" x="1539.33" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node1&#45;&gt;Node130 -->
+<!-- Node1&#45;&gt;Node79 -->
 <g id="edge88" class="edge">
-<title>Node1&#45;&gt;Node130</title>
-<path fill="none" stroke="midnightblue" d="M1743.78,-458.37C1693.92,-432.31 1607.19,-386.97 1564.51,-364.66"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1566.1,-361.55 1555.62,-360.02 1562.86,-367.75 1566.1,-361.55"/>
+<title>Node1&#45;&gt;Node79</title>
+<path fill="none" stroke="midnightblue" d="M2291.28,-478.1C2401.58,-475.11 2614.25,-456.81 2765.5,-366 2793.96,-348.91 2816.26,-316.38 2828.11,-296.3"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2831.18,-297.99 2833.07,-287.57 2825.09,-294.54 2831.18,-297.99"/>
+</g>
+<!-- Node85 -->
+<g id="node29" class="node">
+<title>Node85</title>
+<g id="a_node29"><a xlink:href="motion_8hpp.html" target="_top" xlink:title="Includes all Beluga motion models.">
+<polygon fill="none" stroke="black" points="2792.5,-196 2792.5,-215 2900.5,-215 2900.5,-196 2792.5,-196"/>
+<text text-anchor="middle" x="2846.5" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/motion.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node85 -->
+<g id="edge53" class="edge">
+<title>Node1&#45;&gt;Node85</title>
+<path fill="none" stroke="midnightblue" d="M2291.15,-474.98C2499.3,-465.55 3086.23,-433.15 3137.5,-366 3203.31,-279.81 3015.02,-234.13 2910.71,-215.99"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2911.03,-212.5 2900.59,-214.27 2909.86,-219.4 2911.03,-212.5"/>
+</g>
+<!-- Node91 -->
+<g id="node33" class="node">
+<title>Node91</title>
+<g id="a_node33"><a xlink:href="policies_8hpp.html" target="_top" xlink:title="Implementation of useful policies.">
+<polygon fill="none" stroke="black" points="217,-402.5 217,-421.5 328,-421.5 328,-402.5 217,-402.5"/>
+<text text-anchor="middle" x="272.5" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node91 -->
+<g id="edge65" class="edge">
+<title>Node1&#45;&gt;Node91</title>
+<path fill="none" stroke="midnightblue" d="M2145.77,-475.57C1836.52,-465.24 633.27,-425.05 338.13,-415.19"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="338.13,-411.69 328.02,-414.85 337.9,-418.69 338.13,-411.69"/>
+</g>
+<!-- Node97 -->
+<g id="node38" class="node">
+<title>Node97</title>
+<g id="a_node38"><a xlink:href="random_8hpp.html" target="_top" xlink:title="Includes all Beluga random distributions.">
+<polygon fill="none" stroke="black" points="648,-402.5 648,-421.5 759,-421.5 759,-402.5 648,-402.5"/>
+<text text-anchor="middle" x="703.5" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/random.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node97 -->
+<g id="edge76" class="edge">
+<title>Node1&#45;&gt;Node97</title>
+<path fill="none" stroke="midnightblue" d="M2145.8,-476.66C1936.02,-472.48 1311.6,-457.71 794.5,-422 786.39,-421.44 777.89,-420.74 769.47,-419.99"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="769.56,-416.48 759.28,-419.04 768.92,-423.45 769.56,-416.48"/>
+</g>
+<!-- Node107 -->
+<g id="node41" class="node">
+<title>Node107</title>
+<g id="a_node41"><a xlink:href="sensor_8hpp.html" target="_top" xlink:title="Includes all Beluga sensor models and their interfaces.">
+<polygon fill="none" stroke="black" points="2818,-402.5 2818,-421.5 2923,-421.5 2923,-402.5 2818,-402.5"/>
+<text text-anchor="middle" x="2870.5" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node107 -->
+<g id="edge79" class="edge">
+<title>Node1&#45;&gt;Node107</title>
+<path fill="none" stroke="midnightblue" d="M2291.36,-471.63C2401.33,-461.86 2616.26,-442.18 2798.5,-422 2801.53,-421.66 2804.64,-421.31 2807.77,-420.95"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2808.31,-424.41 2817.83,-419.76 2807.49,-417.46 2808.31,-424.41"/>
+</g>
+<!-- Node126 -->
+<g id="node47" class="node">
+<title>Node126</title>
+<g id="a_node47"><a xlink:href="views_8hpp.html" target="_top" xlink:title="Implementation of useful container views.">
+<polygon fill="none" stroke="red" points="2504.5,-341 2504.5,-360 2606.5,-360 2606.5,-341 2504.5,-341"/>
+<text text-anchor="middle" x="2555.5" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node126 -->
+<g id="edge89" class="edge">
+<title>Node1&#45;&gt;Node126</title>
+<path fill="none" stroke="midnightblue" d="M2223.26,-458.19C2228.57,-440.58 2238.96,-415.58 2257.5,-402 2294.19,-375.12 2417.83,-361.49 2493.84,-355.49"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2494.53,-358.95 2504.24,-354.69 2494,-351.97 2494.53,-358.95"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node">
 <title>Node3</title>
 <g id="a_node3"><a xlink:href="assign_8hpp.html" target="_top" xlink:title="Implementation of the assign range adaptor object.">
-<polygon fill="none" stroke="red" points="401.83,-268.5 401.83,-287.5 544.83,-287.5 544.83,-268.5 401.83,-268.5"/>
-<text text-anchor="middle" x="473.33" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions/assign.hpp</text>
+<polygon fill="none" stroke="red" points="2025,-268.5 2025,-287.5 2168,-287.5 2168,-268.5 2025,-268.5"/>
+<text text-anchor="middle" x="2096.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions/assign.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node3 -->
 <g id="edge2" class="edge">
 <title>Node2&#45;&gt;Node3</title>
-<path fill="none" stroke="midnightblue" d="M769.64,-340.95C716.07,-331.52 628.39,-315.49 553.33,-299 541.09,-296.31 527.88,-293.12 515.78,-290.09"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="516.48,-286.66 505.92,-287.6 514.76,-293.45 516.48,-286.66"/>
+<path fill="none" stroke="midnightblue" d="M2186.87,-340.86C2169.65,-329.07 2138.57,-307.79 2117.73,-293.53"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2119.46,-290.48 2109.23,-287.72 2115.51,-296.25 2119.46,-290.48"/>
 </g>
 <!-- Node8 -->
 <g id="node4" class="node">
 <title>Node8</title>
 <g id="a_node4"><a xlink:href="normalize_8hpp.html" target="_top" xlink:title="Implementation of the normalize range adaptor object.">
-<polygon fill="none" stroke="red" points="953.83,-268.5 953.83,-287.5 1114.83,-287.5 1114.83,-268.5 953.83,-268.5"/>
-<text text-anchor="middle" x="1034.33" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions/normalize.hpp</text>
+<polygon fill="none" stroke="red" points="2398,-268.5 2398,-287.5 2559,-287.5 2559,-268.5 2398,-268.5"/>
+<text text-anchor="middle" x="2478.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions/normalize.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node8 -->
 <g id="edge3" class="edge">
 <title>Node2&#45;&gt;Node8</title>
-<path fill="none" stroke="midnightblue" d="M845.26,-341C883.6,-328.42 955.51,-304.84 998.75,-290.67"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="999.89,-293.98 1008.3,-287.53 997.71,-287.32 999.89,-293.98"/>
+<path fill="none" stroke="midnightblue" d="M2233.15,-341C2283.64,-328.24 2378.98,-304.15 2434.79,-290.05"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2435.89,-293.38 2444.73,-287.53 2434.17,-286.59 2435.89,-293.38"/>
 </g>
 <!-- Node27 -->
 <g id="node13" class="node">
 <title>Node27</title>
 <g id="a_node13"><a xlink:href="propagate_8hpp.html" target="_top" xlink:title="Implementation of the propagate range adaptor object.">
-<polygon fill="none" stroke="red" points="562.83,-268.5 562.83,-287.5 723.83,-287.5 723.83,-268.5 562.83,-268.5"/>
-<text text-anchor="middle" x="643.33" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions/propagate.hpp</text>
+<polygon fill="none" stroke="red" points="1846,-268.5 1846,-287.5 2007,-287.5 2007,-268.5 1846,-268.5"/>
+<text text-anchor="middle" x="1926.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions/propagate.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node27 -->
 <g id="edge17" class="edge">
 <title>Node2&#45;&gt;Node27</title>
-<path fill="none" stroke="midnightblue" d="M798.1,-341C767.18,-328.61 709.57,-305.54 674.03,-291.3"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="675.22,-288 664.63,-287.53 672.61,-294.5 675.22,-288"/>
+<path fill="none" stroke="midnightblue" d="M2166.57,-341C2117.17,-328.24 2023.88,-304.15 1969.27,-290.05"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1970.1,-286.65 1959.55,-287.53 1968.35,-293.42 1970.1,-286.65"/>
 </g>
 <!-- Node29 -->
 <g id="node14" class="node">
 <title>Node29</title>
 <g id="a_node14"><a xlink:href="reweight_8hpp.html" target="_top" xlink:title="Implementation of the reweight range adaptor object.">
-<polygon fill="none" stroke="red" points="741.83,-268.5 741.83,-287.5 896.83,-287.5 896.83,-268.5 741.83,-268.5"/>
-<text text-anchor="middle" x="819.33" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions/reweight.hpp</text>
+<polygon fill="none" stroke="red" points="2225,-268.5 2225,-287.5 2380,-287.5 2380,-268.5 2225,-268.5"/>
+<text text-anchor="middle" x="2302.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/actions/reweight.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node29 -->
 <g id="edge21" class="edge">
 <title>Node2&#45;&gt;Node29</title>
-<path fill="none" stroke="midnightblue" d="M819.33,-340.86C819.33,-330.18 819.33,-311.72 819.33,-297.73"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="822.83,-297.72 819.33,-287.72 815.83,-297.72 822.83,-297.72"/>
+<path fill="none" stroke="midnightblue" d="M2212.13,-340.86C2229.35,-329.07 2260.43,-307.79 2281.27,-293.53"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2283.49,-296.25 2289.77,-287.72 2279.54,-290.48 2283.49,-296.25"/>
 </g>
 <!-- Node14 -->
 <g id="node5" class="node">
 <title>Node14</title>
 <g id="a_node5"><a xlink:href="particle__traits_8hpp.html" target="_top" xlink:title="Implementation of traits for particle types, see the Particle named requirements.">
-<polygon fill="none" stroke="red" points="1262.33,-190.5 1262.33,-220.5 1370.33,-220.5 1370.33,-190.5 1262.33,-190.5"/>
-<text text-anchor="start" x="1270.33" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/type_traits</text>
-<text text-anchor="middle" x="1316.33" y="-197.5" font-family="Helvetica,sans-Serif" font-size="10.00">/particle_traits.hpp</text>
+<polygon fill="none" stroke="red" points="2248.5,-190.5 2248.5,-220.5 2356.5,-220.5 2356.5,-190.5 2248.5,-190.5"/>
+<text text-anchor="start" x="2256.5" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/type_traits</text>
+<text text-anchor="middle" x="2302.5" y="-197.5" font-family="Helvetica,sans-Serif" font-size="10.00">/particle_traits.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node8&#45;&gt;Node14 -->
 <g id="edge4" class="edge">
 <title>Node8&#45;&gt;Node14</title>
-<path fill="none" stroke="midnightblue" d="M1068.34,-268.5C1113.74,-257.15 1195.03,-236.82 1252.13,-222.55"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1253.29,-225.87 1262.14,-220.05 1251.59,-219.08 1253.29,-225.87"/>
+<path fill="none" stroke="midnightblue" d="M2457.27,-268.5C2430.11,-257.62 2382.36,-238.49 2347.06,-224.35"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2348.05,-220.98 2337.47,-220.51 2345.45,-227.47 2348.05,-220.98"/>
 </g>
 <!-- Node25 -->
 <g id="node12" class="node">
 <title>Node25</title>
 <g id="a_node12"><a xlink:href="particles_8hpp.html" target="_top" xlink:title="Implementation of views related to particle ranges.">
-<polygon fill="none" stroke="red" points="1028.83,-196 1028.83,-215 1175.83,-215 1175.83,-196 1028.83,-196"/>
-<text text-anchor="middle" x="1102.33" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views/particles.hpp</text>
+<polygon fill="none" stroke="red" points="2075,-196 2075,-215 2222,-215 2222,-196 2075,-196"/>
+<text text-anchor="middle" x="2148.5" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views/particles.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node8&#45;&gt;Node25 -->
 <g id="edge15" class="edge">
 <title>Node8&#45;&gt;Node25</title>
-<path fill="none" stroke="midnightblue" d="M1042.67,-268.36C1053.58,-257.04 1072.91,-237 1086.61,-222.79"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1089.5,-224.84 1093.92,-215.22 1084.46,-219.98 1089.5,-224.84"/>
+<path fill="none" stroke="midnightblue" d="M2440.85,-268.41C2425.01,-264.83 2406.37,-260.66 2389.5,-257 2324.37,-242.86 2249.18,-227.21 2200.34,-217.14"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2200.84,-213.67 2190.34,-215.07 2199.42,-220.52 2200.84,-213.67"/>
 </g>
 <!-- Node14&#45;&gt;Node15 -->
 <g id="edge5" class="edge">
 <title>Node14&#45;&gt;Node15</title>
-<path fill="none" stroke="midnightblue" d="M1316.33,-190.4C1316.33,-181.06 1316.33,-168.71 1316.33,-158.52"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1319.83,-158.19 1316.33,-148.19 1312.83,-158.19 1319.83,-158.19"/>
+<path fill="none" stroke="midnightblue" d="M2266.05,-190.4C2236.18,-178.84 2194.35,-162.66 2165.94,-151.66"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2167.08,-148.35 2156.49,-148.01 2164.55,-154.88 2167.08,-148.35"/>
 </g>
 <!-- Node21 -->
 <g id="node10" class="node">
 <title>Node21</title>
 <g id="a_node10"><a xlink:href="tuple__traits_8hpp.html" target="_top" xlink:title="Implementation of traits for tuple&#45;like types.">
-<polygon fill="none" stroke="red" points="2333.83,-56.5 2333.83,-86.5 2438.83,-86.5 2438.83,-56.5 2333.83,-56.5"/>
-<text text-anchor="start" x="2341.83" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/type_traits</text>
-<text text-anchor="middle" x="2386.33" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">/tuple_traits.hpp</text>
+<polygon fill="none" stroke="red" points="2621,-56.5 2621,-86.5 2726,-86.5 2726,-56.5 2621,-56.5"/>
+<text text-anchor="start" x="2629" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/type_traits</text>
+<text text-anchor="middle" x="2673.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">/tuple_traits.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node14&#45;&gt;Node21 -->
 <g id="edge14" class="edge">
 <title>Node14&#45;&gt;Node21</title>
-<path fill="none" stroke="midnightblue" d="M1370.45,-199.54C1404.54,-196.52 1449.49,-192.73 1489.33,-190 1639.41,-179.72 2024.66,-207.33 2165.33,-154 2186.03,-146.15 2184.6,-133.05 2204.33,-123 2241.85,-103.89 2287.53,-91.24 2323.74,-83.38"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2324.62,-86.77 2333.68,-81.29 2323.18,-79.92 2324.62,-86.77"/>
+<path fill="none" stroke="midnightblue" d="M2341.85,-190.5C2410.03,-166.24 2549.93,-116.46 2624.37,-89.98"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2625.74,-93.21 2633.99,-86.56 2623.4,-86.61 2625.74,-93.21"/>
 </g>
 <!-- Node16 -->
 <g id="node7" class="node">
 <title>Node16</title>
 <g id="a_node7"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="2443.83,-0.5 2443.83,-19.5 2484.83,-19.5 2484.83,-0.5 2443.83,-0.5"/>
-<text text-anchor="middle" x="2464.33" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">tuple</text>
+<polygon fill="none" stroke="#bfbfbf" points="2783,-0.5 2783,-19.5 2824,-19.5 2824,-0.5 2783,-0.5"/>
+<text text-anchor="middle" x="2803.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">tuple</text>
 </a>
 </g>
 </g>
 <!-- Node15&#45;&gt;Node16 -->
 <g id="edge6" class="edge">
 <title>Node15&#45;&gt;Node16</title>
-<path fill="none" stroke="midnightblue" d="M1378.04,-133.21C1429.86,-127.71 1504.77,-115.23 1564.33,-87 1584.02,-77.67 1581.99,-63.85 1602.33,-56 1681.02,-25.64 2287.97,-13.88 2433.19,-11.48"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2433.64,-14.97 2443.58,-11.31 2433.53,-7.97 2433.64,-14.97"/>
+<path fill="none" stroke="midnightblue" d="M2145.22,-128.95C2157.78,-118.93 2179.19,-101.81 2197.5,-87 2214.45,-73.29 2215.27,-64.12 2235.5,-56 2334.36,-16.32 2668.92,-11.56 2772.6,-11.04"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2772.73,-14.54 2782.72,-11 2772.71,-7.54 2772.73,-14.54"/>
 </g>
 <!-- Node17 -->
 <g id="node8" class="node">
 <title>Node17</title>
 <g id="a_node8"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="1705.83,-0.5 1705.83,-19.5 1774.83,-19.5 1774.83,-0.5 1705.83,-0.5"/>
-<text text-anchor="middle" x="1740.33" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">type_traits</text>
+<polygon fill="none" stroke="#bfbfbf" points="1828,-0.5 1828,-19.5 1897,-19.5 1897,-0.5 1828,-0.5"/>
+<text text-anchor="middle" x="1862.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">type_traits</text>
 </a>
 </g>
 </g>
 <!-- Node15&#45;&gt;Node17 -->
 <g id="edge7" class="edge">
 <title>Node15&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M1328.63,-128.96C1342.74,-119.08 1366.48,-102.24 1386.33,-87 1403.62,-73.73 1404.36,-64.75 1424.33,-56 1472.08,-35.08 1620.33,-20.6 1695.56,-14.4"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1695.99,-17.88 1705.68,-13.58 1695.43,-10.9 1695.99,-17.88"/>
+<path fill="none" stroke="midnightblue" d="M2072.95,-132.7C2007.1,-126.31 1908.45,-112.69 1881.5,-87 1866.08,-72.3 1862.41,-47.12 1861.9,-29.8"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1865.4,-29.75 1861.92,-19.74 1858.4,-29.74 1865.4,-29.75"/>
 </g>
 <!-- Node18 -->
 <g id="node9" class="node">
 <title>Node18</title>
 <g id="a_node9"><a xlink:href="strongly__typed__numeric_8hpp.html" target="_top" xlink:title="Implementation of a strongly typed numeric helper.">
-<polygon fill="none" stroke="red" points="1079.33,-56.5 1079.33,-86.5 1237.33,-86.5 1237.33,-56.5 1079.33,-56.5"/>
-<text text-anchor="start" x="1087.33" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/type_traits</text>
-<text text-anchor="middle" x="1158.33" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">/strongly_typed_numeric.hpp</text>
+<polygon fill="none" stroke="red" points="1890.5,-56.5 1890.5,-86.5 2048.5,-86.5 2048.5,-56.5 1890.5,-56.5"/>
+<text text-anchor="start" x="1898.5" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/type_traits</text>
+<text text-anchor="middle" x="1969.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">/strongly_typed_numeric.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node15&#45;&gt;Node18 -->
 <g id="edge8" class="edge">
 <title>Node15&#45;&gt;Node18</title>
-<path fill="none" stroke="midnightblue" d="M1295.35,-128.87C1271.64,-119.12 1232.39,-102.97 1201.96,-90.45"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1203.01,-87.1 1192.43,-86.53 1200.34,-93.57 1203.01,-87.1"/>
+<path fill="none" stroke="midnightblue" d="M2112.59,-128.87C2087.72,-119.07 2046.49,-102.83 2014.66,-90.29"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2015.7,-86.94 2005.11,-86.53 2013.13,-93.45 2015.7,-86.94"/>
 </g>
 <!-- Node15&#45;&gt;Node21 -->
 <g id="edge10" class="edge">
 <title>Node15&#45;&gt;Node21</title>
-<path fill="none" stroke="midnightblue" d="M1378.09,-133.75C1566.66,-122.29 2133.6,-87.85 2323.54,-76.31"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2323.87,-79.8 2333.63,-75.7 2323.44,-72.81 2323.87,-79.8"/>
+<path fill="none" stroke="midnightblue" d="M2196.07,-130.08C2299.39,-117.62 2506.56,-92.63 2610.7,-80.07"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2611.24,-83.53 2620.75,-78.86 2610.4,-76.58 2611.24,-83.53"/>
 </g>
 <!-- Node23 -->
 <g id="node11" class="node">
 <title>Node23</title>
 <g id="a_node11"><a xlink:href="forward__like_8hpp_source.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="1255.33,-56.5 1255.33,-86.5 1377.33,-86.5 1377.33,-56.5 1255.33,-56.5"/>
-<text text-anchor="start" x="1263.33" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/utility/forward</text>
-<text text-anchor="middle" x="1316.33" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">_like.hpp</text>
+<polygon fill="none" stroke="black" points="2066.5,-56.5 2066.5,-86.5 2188.5,-86.5 2188.5,-56.5 2066.5,-56.5"/>
+<text text-anchor="start" x="2074.5" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/utility/forward</text>
+<text text-anchor="middle" x="2127.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">_like.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node15&#45;&gt;Node23 -->
 <g id="edge13" class="edge">
 <title>Node15&#45;&gt;Node23</title>
-<path fill="none" stroke="midnightblue" d="M1316.33,-128.73C1316.33,-120.54 1316.33,-107.92 1316.33,-96.71"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1319.83,-96.59 1316.33,-86.59 1312.83,-96.59 1319.83,-96.59"/>
+<path fill="none" stroke="midnightblue" d="M2133.56,-128.73C2132.67,-120.54 2131.31,-107.92 2130.11,-96.71"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2133.57,-96.16 2129.02,-86.59 2126.61,-96.91 2133.57,-96.16"/>
 </g>
 <!-- Node18&#45;&gt;Node17 -->
 <g id="edge9" class="edge">
 <title>Node18&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M1237.44,-57.19C1240.44,-56.77 1243.41,-56.37 1246.33,-56 1411.53,-34.89 1609.04,-20 1695.78,-13.97"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1696.06,-17.46 1705.8,-13.28 1695.58,-10.48 1696.06,-17.46"/>
+<path fill="none" stroke="midnightblue" d="M1944.14,-56.4C1926.83,-46.77 1904.02,-34.09 1886.92,-24.58"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1888.51,-21.46 1878.07,-19.66 1885.11,-27.58 1888.51,-21.46"/>
 </g>
 <!-- Node21&#45;&gt;Node16 -->
 <g id="edge11" class="edge">
 <title>Node21&#45;&gt;Node16</title>
-<path fill="none" stroke="midnightblue" d="M2404.81,-56.4C2416.85,-47.22 2432.53,-35.26 2444.77,-25.92"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2447.15,-28.51 2452.98,-19.66 2442.9,-22.94 2447.15,-28.51"/>
+<path fill="none" stroke="midnightblue" d="M2704.31,-56.4C2725.83,-46.55 2754.34,-33.5 2775.27,-23.92"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2776.95,-27 2784.58,-19.66 2774.03,-20.64 2776.95,-27"/>
 </g>
 <!-- Node21&#45;&gt;Node17 -->
 <g id="edge12" class="edge">
 <title>Node21&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M2333.74,-65.66C2209.74,-54.24 1900.87,-25.79 1785.1,-15.12"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1785.11,-11.61 1774.83,-14.18 1784.47,-18.58 1785.11,-11.61"/>
+<path fill="none" stroke="midnightblue" d="M2620.98,-62.48C2604.24,-60.12 2585.62,-57.73 2568.5,-56 2319.31,-30.89 2019.14,-17.23 1907.33,-12.71"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1907.23,-9.2 1897.1,-12.3 1906.95,-16.2 1907.23,-9.2"/>
 </g>
 <!-- Node25&#45;&gt;Node15 -->
 <g id="edge16" class="edge">
 <title>Node25&#45;&gt;Node15</title>
-<path fill="none" stroke="midnightblue" d="M1130.74,-195.87C1168.74,-184.33 1236.21,-163.84 1278.48,-151"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1279.58,-154.32 1288.13,-148.06 1277.55,-147.62 1279.58,-154.32"/>
+<path fill="none" stroke="midnightblue" d="M2146.61,-195.73C2144.53,-186.09 2141.13,-170.3 2138.46,-157.91"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2141.89,-157.17 2136.36,-148.13 2135.04,-158.64 2141.89,-157.17"/>
 </g>
 <!-- Node27&#45;&gt;Node14 -->
 <g id="edge19" class="edge">
 <title>Node27&#45;&gt;Node14</title>
-<path fill="none" stroke="midnightblue" d="M676.08,-268.47C692.81,-264.42 713.54,-259.84 732.33,-257 931.58,-226.83 983.7,-240 1184.33,-221 1206.42,-218.91 1230.56,-216.34 1252.09,-213.95"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1252.55,-217.42 1262.1,-212.83 1251.77,-210.46 1252.55,-217.42"/>
+<path fill="none" stroke="midnightblue" d="M1962.76,-268.49C1979.13,-264.76 1998.75,-260.46 2016.5,-257 2111.6,-238.48 2136.24,-238.7 2231.5,-221 2233.71,-220.59 2235.96,-220.17 2238.23,-219.73"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2239.12,-223.12 2248.27,-217.78 2237.78,-216.25 2239.12,-223.12"/>
 </g>
 <!-- Node27&#45;&gt;Node17 -->
 <g id="edge18" class="edge">
 <title>Node27&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M655.46,-268.29C704.38,-233.69 893.05,-105.51 1070.33,-56 1188.53,-22.99 1565.51,-13.84 1695.64,-11.63"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1695.72,-15.13 1705.66,-11.47 1695.61,-8.13 1695.72,-15.13"/>
+<path fill="none" stroke="midnightblue" d="M1922.3,-268.18C1909.9,-241.58 1873.57,-159.56 1861.5,-87 1858.29,-67.71 1859.13,-45.28 1860.41,-29.81"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1863.93,-29.8 1861.41,-19.51 1856.96,-29.12 1863.93,-29.8"/>
 </g>
 <!-- Node27&#45;&gt;Node25 -->
 <g id="edge20" class="edge">
 <title>Node27&#45;&gt;Node25</title>
-<path fill="none" stroke="midnightblue" d="M678.27,-268.42C694.62,-264.6 714.4,-260.23 732.33,-257 829.98,-239.4 943.12,-224.79 1018.32,-215.89"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1019.15,-219.32 1028.67,-214.67 1018.33,-212.37 1019.15,-219.32"/>
+<path fill="none" stroke="midnightblue" d="M1953.28,-268.5C1992.95,-255.9 2067.43,-232.24 2112.04,-218.08"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2113.16,-221.4 2121.63,-215.03 2111.04,-214.73 2113.16,-221.4"/>
 </g>
 <!-- Node29&#45;&gt;Node14 -->
 <g id="edge22" class="edge">
 <title>Node29&#45;&gt;Node14</title>
-<path fill="none" stroke="midnightblue" d="M870.98,-268.45C893.49,-264.8 920.19,-260.57 944.33,-257 1052.09,-241.07 1177.71,-224.41 1251.93,-214.77"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1252.59,-218.21 1262.06,-213.46 1251.69,-211.27 1252.59,-218.21"/>
+<path fill="none" stroke="midnightblue" d="M2302.5,-268.36C2302.5,-259.05 2302.5,-243.83 2302.5,-230.81"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2306,-230.58 2302.5,-220.58 2299,-230.58 2306,-230.58"/>
 </g>
 <!-- Node29&#45;&gt;Node25 -->
 <g id="edge23" class="edge">
 <title>Node29&#45;&gt;Node25</title>
-<path fill="none" stroke="midnightblue" d="M853.46,-268.5C904.78,-255.71 1001.79,-231.55 1058.34,-217.46"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1059.21,-220.85 1068.07,-215.03 1057.52,-214.06 1059.21,-220.85"/>
+<path fill="none" stroke="midnightblue" d="M2283.92,-268.5C2257.22,-256.27 2207.75,-233.63 2176.57,-219.35"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2177.69,-216.01 2167.14,-215.03 2174.78,-222.38 2177.69,-216.01"/>
 </g>
 <!-- Node32 -->
 <g id="node16" class="node">
 <title>Node32</title>
 <g id="a_node16"><a xlink:href="cluster__based__estimation_8hpp.html" target="_top" xlink:title="Implementation of a cluster&#45;based estimation algorithm.">
-<polygon fill="none" stroke="red" points="1754.33,-263 1754.33,-293 1890.33,-293 1890.33,-263 1754.33,-263"/>
-<text text-anchor="start" x="1762.33" y="-281" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/cluster</text>
-<text text-anchor="middle" x="1822.33" y="-270" font-family="Helvetica,sans-Serif" font-size="10.00">_based_estimation.hpp</text>
+<polygon fill="none" stroke="red" points="950.5,-263 950.5,-293 1086.5,-293 1086.5,-263 950.5,-263"/>
+<text text-anchor="start" x="958.5" y="-281" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/cluster</text>
+<text text-anchor="middle" x="1018.5" y="-270" font-family="Helvetica,sans-Serif" font-size="10.00">_based_estimation.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node31&#45;&gt;Node32 -->
 <g id="edge25" class="edge">
 <title>Node31&#45;&gt;Node32</title>
-<path fill="none" stroke="midnightblue" d="M1687.78,-341C1711.19,-330.21 1752.19,-311.32 1782.8,-297.21"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1784.31,-300.37 1791.93,-293.01 1781.38,-294.01 1784.31,-300.37"/>
+<path fill="none" stroke="midnightblue" d="M1176.79,-341C1148.89,-330.07 1099.76,-310.83 1063.61,-296.67"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1064.85,-293.39 1054.26,-293.01 1062.29,-299.91 1064.85,-293.39"/>
 </g>
 <!-- Node43 -->
 <g id="node17" class="node">
 <title>Node43</title>
 <g id="a_node17"><a xlink:href="estimation_8hpp.html" target="_top" xlink:title="Implementation of algorithms that allow calculating the estimated state of a particle filter.">
-<polygon fill="none" stroke="red" points="1716.33,-196 1716.33,-215 1892.33,-215 1892.33,-196 1716.33,-196"/>
-<text text-anchor="middle" x="1804.33" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/estimation.hpp</text>
+<polygon fill="none" stroke="red" points="874.5,-196 874.5,-215 1050.5,-215 1050.5,-196 874.5,-196"/>
+<text text-anchor="middle" x="962.5" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/estimation.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node31&#45;&gt;Node43 -->
-<g id="edge34" class="edge">
+<g id="edge35" class="edge">
 <title>Node31&#45;&gt;Node43</title>
-<path fill="none" stroke="midnightblue" d="M1675.58,-340.92C1688.01,-324.07 1717.1,-285.8 1745.33,-257 1757.78,-244.29 1773.07,-231.27 1784.97,-221.63"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1787.31,-224.24 1792.94,-215.26 1782.94,-218.77 1787.31,-224.24"/>
+<path fill="none" stroke="midnightblue" d="M1137.76,-347.78C1061.52,-344.19 937.2,-333.13 908.5,-299 896.49,-284.71 901.07,-274.12 908.5,-257 914.96,-242.12 928.19,-229.63 939.94,-220.79"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="941.97,-223.65 948.12,-215.02 937.93,-217.93 941.97,-223.65"/>
 </g>
-<!-- Node54 -->
+<!-- Node48 -->
 <g id="node18" class="node">
-<title>Node54</title>
+<title>Node48</title>
 <g id="a_node18"><a xlink:href="spatial__hash_8hpp.html" target="_top" xlink:title="Implementation of a spatial hash for N dimensional states.">
-<polygon fill="none" stroke="red" points="1910.33,-190.5 1910.33,-220.5 2046.33,-220.5 2046.33,-190.5 1910.33,-190.5"/>
-<text text-anchor="start" x="1918.33" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/spatial</text>
-<text text-anchor="middle" x="1978.33" y="-197.5" font-family="Helvetica,sans-Serif" font-size="10.00">_hash.hpp</text>
+<polygon fill="none" stroke="red" points="1106.5,-190.5 1106.5,-220.5 1242.5,-220.5 1242.5,-190.5 1106.5,-190.5"/>
+<text text-anchor="start" x="1114.5" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/spatial</text>
+<text text-anchor="middle" x="1174.5" y="-197.5" font-family="Helvetica,sans-Serif" font-size="10.00">_hash.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node31&#45;&gt;Node54 -->
-<g id="edge37" class="edge">
-<title>Node31&#45;&gt;Node54</title>
-<path fill="none" stroke="midnightblue" d="M1709.81,-340.95C1774.72,-327.2 1895.23,-301.45 1899.33,-299 1927.89,-281.88 1951.23,-250.76 1964.96,-229.38"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1968.1,-230.95 1970.4,-220.61 1962.15,-227.26 1968.1,-230.95"/>
+<!-- Node31&#45;&gt;Node48 -->
+<g id="edge38" class="edge">
+<title>Node31&#45;&gt;Node48</title>
+<path fill="none" stroke="midnightblue" d="M1181.73,-340.89C1167.26,-332.42 1147.35,-318.01 1138.5,-299 1130.62,-282.08 1132.81,-274.78 1138.5,-257 1141.76,-246.8 1147.92,-236.9 1154.24,-228.62"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1157.16,-230.58 1160.76,-220.61 1151.73,-226.15 1157.16,-230.58"/>
+</g>
+<!-- Node52 -->
+<g id="node19" class="node">
+<title>Node52</title>
+<g id="a_node19"><a xlink:href="distance__map_8hpp.html" target="_top" xlink:title="Implementation of algorithm to calculate distance from obstacles.">
+<polygon fill="none" stroke="red" points="1490.5,-263 1490.5,-293 1634.5,-293 1634.5,-263 1490.5,-263"/>
+<text text-anchor="start" x="1498.5" y="-281" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/distance</text>
+<text text-anchor="middle" x="1562.5" y="-270" font-family="Helvetica,sans-Serif" font-size="10.00">_map.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node31&#45;&gt;Node52 -->
+<g id="edge31" class="edge">
+<title>Node31&#45;&gt;Node52</title>
+<path fill="none" stroke="midnightblue" d="M1252.17,-341C1309.24,-331.71 1402.05,-315.88 1481.5,-299 1486.81,-297.87 1492.31,-296.64 1497.82,-295.37"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1498.78,-298.74 1507.71,-293.04 1497.18,-291.93 1498.78,-298.74"/>
+</g>
+<!-- Node56 -->
+<g id="node20" class="node">
+<title>Node56</title>
+<g id="a_node20"><a xlink:href="effective__sample__size_8hpp.html" target="_top" xlink:title="Implementation of an algorithm to calculate the effective sample size (ESS).">
+<polygon fill="none" stroke="red" points="1326.5,-263 1326.5,-293 1472.5,-293 1472.5,-263 1326.5,-263"/>
+<text text-anchor="start" x="1334.5" y="-281" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/effective</text>
+<text text-anchor="middle" x="1399.5" y="-270" font-family="Helvetica,sans-Serif" font-size="10.00">_sample_size.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node31&#45;&gt;Node56 -->
+<g id="edge32" class="edge">
+<title>Node31&#45;&gt;Node56</title>
+<path fill="none" stroke="midnightblue" d="M1222.75,-341C1254.09,-330 1309.46,-310.58 1349.89,-296.4"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1351.29,-299.62 1359.57,-293.01 1348.97,-293.01 1351.29,-299.62"/>
+</g>
+<!-- Node57 -->
+<g id="node21" class="node">
+<title>Node57</title>
+<g id="a_node21"><a xlink:href="exponential__filter_8hpp.html" target="_top" xlink:title="Implementation of an exponential filter.">
+<polygon fill="none" stroke="black" points="1261,-190.5 1261,-220.5 1422,-220.5 1422,-190.5 1261,-190.5"/>
+<text text-anchor="start" x="1269" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/exponential</text>
+<text text-anchor="middle" x="1341.5" y="-197.5" font-family="Helvetica,sans-Serif" font-size="10.00">_filter.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node31&#45;&gt;Node57 -->
+<g id="edge36" class="edge">
+<title>Node31&#45;&gt;Node57</title>
+<path fill="none" stroke="midnightblue" d="M1191.51,-340.97C1178.14,-323.54 1151.89,-283.28 1171.5,-257 1182.02,-242.9 1217.01,-231.33 1252.54,-222.84"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1253.6,-226.18 1262.55,-220.52 1252.02,-219.36 1253.6,-226.18"/>
 </g>
 <!-- Node58 -->
-<g id="node19" class="node">
+<g id="node22" class="node">
 <title>Node58</title>
-<g id="a_node19"><a xlink:href="distance__map_8hpp.html" target="_top" xlink:title="Implementation of algorithm to calculate distance from obstacles.">
-<polygon fill="none" stroke="red" points="2178.33,-263 2178.33,-293 2322.33,-293 2322.33,-263 2178.33,-263"/>
-<text text-anchor="start" x="2186.33" y="-281" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/distance</text>
-<text text-anchor="middle" x="2250.33" y="-270" font-family="Helvetica,sans-Serif" font-size="10.00">_map.hpp</text>
+<g id="a_node22"><a xlink:href="raycasting_8hpp.html" target="_top" xlink:title="Implementation of raycasting algorithms.">
+<polygon fill="none" stroke="red" points="1653,-268.5 1653,-287.5 1828,-287.5 1828,-268.5 1653,-268.5"/>
+<text text-anchor="middle" x="1740.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/raycasting.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node31&#45;&gt;Node58 -->
-<g id="edge30" class="edge">
+<g id="edge37" class="edge">
 <title>Node31&#45;&gt;Node58</title>
-<path fill="none" stroke="midnightblue" d="M1705.7,-340.98C1716.18,-338.76 1727.67,-336.56 1738.33,-335 1928.53,-307.18 1979.64,-330.14 2169.33,-299 2175.61,-297.97 2182.13,-296.7 2188.61,-295.31"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2189.74,-298.64 2198.73,-293.04 2188.2,-291.81 2189.74,-298.64"/>
+<path fill="none" stroke="midnightblue" d="M1259.2,-344.36C1345.08,-336.7 1506.83,-320.8 1643.5,-299 1659.66,-296.42 1677.21,-293 1692.88,-289.71"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1693.82,-293.09 1702.87,-287.58 1692.36,-286.24 1693.82,-293.09"/>
 </g>
-<!-- Node60 -->
-<g id="node20" class="node">
-<title>Node60</title>
-<g id="a_node20"><a xlink:href="effective__sample__size_8hpp.html" target="_top" xlink:title="Implementation of an algorithm to calculate the effective sample size (ESS).">
-<polygon fill="none" stroke="red" points="1292.33,-263 1292.33,-293 1438.33,-293 1438.33,-263 1292.33,-263"/>
-<text text-anchor="start" x="1300.33" y="-281" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/effective</text>
-<text text-anchor="middle" x="1365.33" y="-270" font-family="Helvetica,sans-Serif" font-size="10.00">_sample_size.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node31&#45;&gt;Node60 -->
-<g id="edge31" class="edge">
-<title>Node31&#45;&gt;Node60</title>
-<path fill="none" stroke="midnightblue" d="M1630.78,-340.92C1586.47,-331.02 1511.58,-314.14 1447.33,-299 1442.46,-297.85 1437.43,-296.66 1432.38,-295.44"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1433.19,-292.04 1422.65,-293.1 1431.55,-298.84 1433.19,-292.04"/>
-</g>
-<!-- Node61 -->
-<g id="node21" class="node">
-<title>Node61</title>
-<g id="a_node21"><a xlink:href="exponential__filter_8hpp.html" target="_top" xlink:title="Implementation of an exponential filter.">
-<polygon fill="none" stroke="black" points="1498.83,-190.5 1498.83,-220.5 1659.83,-220.5 1659.83,-190.5 1498.83,-190.5"/>
-<text text-anchor="start" x="1506.83" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/exponential</text>
-<text text-anchor="middle" x="1579.33" y="-197.5" font-family="Helvetica,sans-Serif" font-size="10.00">_filter.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node31&#45;&gt;Node61 -->
-<g id="edge35" class="edge">
-<title>Node31&#45;&gt;Node61</title>
-<path fill="none" stroke="midnightblue" d="M1666.36,-340.87C1660.31,-323.93 1645.51,-285.5 1626.33,-257 1619.47,-246.81 1610.56,-236.67 1602.34,-228.19"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1604.61,-225.51 1595.07,-220.9 1599.66,-230.45 1604.61,-225.51"/>
-</g>
-<!-- Node62 -->
-<g id="node22" class="node">
-<title>Node62</title>
-<g id="a_node22"><a xlink:href="raycasting_8hpp.html" target="_top" xlink:title="Implementation of raycasting algorithms.">
-<polygon fill="none" stroke="red" points="1984.83,-268.5 1984.83,-287.5 2159.83,-287.5 2159.83,-268.5 1984.83,-268.5"/>
-<text text-anchor="middle" x="2072.33" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/raycasting.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node31&#45;&gt;Node62 -->
-<g id="edge36" class="edge">
-<title>Node31&#45;&gt;Node62</title>
-<path fill="none" stroke="midnightblue" d="M1708.3,-340.93C1718.08,-338.89 1728.57,-336.78 1738.33,-335 1840.98,-316.26 1867.55,-317.04 1970.33,-299 1986.66,-296.13 2004.4,-292.75 2020.45,-289.59"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2021.58,-292.93 2030.71,-287.55 2020.22,-286.06 2021.58,-292.93"/>
-</g>
-<!-- Node68 -->
+<!-- Node64 -->
 <g id="node23" class="node">
-<title>Node68</title>
+<title>Node64</title>
 <g id="a_node23"><a xlink:href="thrun__recovery__probability__estimator_8hpp_source.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="red" points="1456.33,-257.5 1456.33,-298.5 1584.33,-298.5 1584.33,-257.5 1456.33,-257.5"/>
-<text text-anchor="start" x="1464.33" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/thrun</text>
-<text text-anchor="start" x="1464.33" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">_recovery_probability</text>
-<text text-anchor="middle" x="1520.33" y="-264.5" font-family="Helvetica,sans-Serif" font-size="10.00">_estimator.hpp</text>
+<polygon fill="none" stroke="red" points="1180.5,-257.5 1180.5,-298.5 1308.5,-298.5 1308.5,-257.5 1180.5,-257.5"/>
+<text text-anchor="start" x="1188.5" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/thrun</text>
+<text text-anchor="start" x="1188.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">_recovery_probability</text>
+<text text-anchor="middle" x="1244.5" y="-264.5" font-family="Helvetica,sans-Serif" font-size="10.00">_estimator.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node31&#45;&gt;Node68 -->
-<g id="edge38" class="edge">
-<title>Node31&#45;&gt;Node68</title>
-<path fill="none" stroke="midnightblue" d="M1651.35,-341C1631.54,-331.62 1598.77,-316.11 1570.96,-302.96"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1572.28,-299.71 1561.75,-298.6 1569.29,-306.04 1572.28,-299.71"/>
+<!-- Node31&#45;&gt;Node64 -->
+<g id="edge39" class="edge">
+<title>Node31&#45;&gt;Node64</title>
+<path fill="none" stroke="midnightblue" d="M1204.14,-340.86C1209.62,-332.45 1218.25,-319.23 1226.13,-307.16"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1229.14,-308.95 1231.67,-298.66 1223.28,-305.12 1229.14,-308.95"/>
 </g>
-<!-- Node69 -->
+<!-- Node65 -->
 <g id="node24" class="node">
-<title>Node69</title>
+<title>Node65</title>
 <g id="a_node24"><a xlink:href="unscented__transform_8hpp_source.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="red" points="1611.83,-56.5 1611.83,-86.5 1764.83,-86.5 1764.83,-56.5 1611.83,-56.5"/>
-<text text-anchor="start" x="1619.83" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/unscented</text>
-<text text-anchor="middle" x="1688.33" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">_transform.hpp</text>
+<polygon fill="none" stroke="red" points="1035,-56.5 1035,-86.5 1188,-86.5 1188,-56.5 1035,-56.5"/>
+<text text-anchor="start" x="1043" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/algorithm/unscented</text>
+<text text-anchor="middle" x="1111.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">_transform.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node31&#45;&gt;Node69 -->
-<g id="edge42" class="edge">
-<title>Node31&#45;&gt;Node69</title>
-<path fill="none" stroke="midnightblue" d="M1669.92,-340.91C1672.47,-303.67 1682.63,-155.53 1686.67,-96.73"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1690.17,-96.75 1687.36,-86.53 1683.19,-96.27 1690.17,-96.75"/>
+<!-- Node31&#45;&gt;Node65 -->
+<g id="edge43" class="edge">
+<title>Node31&#45;&gt;Node65</title>
+<path fill="none" stroke="midnightblue" d="M1137.78,-346.23C1069.79,-341.14 965.87,-328.63 941.5,-299 872.6,-215.25 1032.32,-247.1 1059.5,-221 1094.38,-187.52 1105.88,-129.35 1109.66,-96.63"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1113.16,-96.89 1110.67,-86.59 1106.19,-96.19 1113.16,-96.89"/>
 </g>
 <!-- Node32&#45;&gt;Node43 -->
 <g id="edge26" class="edge">
 <title>Node32&#45;&gt;Node43</title>
-<path fill="none" stroke="midnightblue" d="M1818.68,-262.73C1815.92,-251.89 1812.08,-236.88 1809.08,-225.1"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1812.46,-224.22 1806.6,-215.39 1805.68,-225.95 1812.46,-224.22"/>
+<path fill="none" stroke="midnightblue" d="M1007.17,-262.73C998.11,-251.34 985.41,-235.34 975.86,-223.32"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="978.52,-221.05 969.56,-215.39 973.04,-225.4 978.52,-221.05"/>
 </g>
-<!-- Node32&#45;&gt;Node54 -->
-<g id="edge27" class="edge">
-<title>Node32&#45;&gt;Node54</title>
-<path fill="none" stroke="midnightblue" d="M1853.52,-262.9C1877.75,-251.95 1911.55,-236.68 1937.86,-224.79"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1939.52,-227.88 1947.19,-220.57 1936.63,-221.5 1939.52,-227.88"/>
-</g>
-<!-- Node54&#45;&gt;Node16 -->
+<!-- Node32&#45;&gt;Node48 -->
 <g id="edge28" class="edge">
-<title>Node54&#45;&gt;Node16</title>
-<path fill="none" stroke="midnightblue" d="M1978.8,-190.2C1980.21,-171.94 1985.43,-140.62 2004.33,-123 2068.01,-63.62 2341.34,-25.82 2433.7,-14.55"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2434.28,-18 2443.79,-13.33 2433.45,-11.05 2434.28,-18"/>
+<title>Node32&#45;&gt;Node48</title>
+<path fill="none" stroke="midnightblue" d="M1049.69,-262.9C1073.93,-251.95 1107.72,-236.68 1134.04,-224.79"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1135.69,-227.88 1143.36,-220.57 1132.81,-221.5 1135.69,-227.88"/>
 </g>
-<!-- Node54&#45;&gt;Node17 -->
+<!-- Node43&#45;&gt;Node17 -->
+<g id="edge27" class="edge">
+<title>Node43&#45;&gt;Node17</title>
+<path fill="none" stroke="midnightblue" d="M963.2,-195.86C965.83,-169.54 977.68,-90.04 1026.5,-56 1091.54,-10.65 1653.1,-9.92 1817.48,-10.69"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1817.7,-14.19 1827.72,-10.74 1817.74,-7.19 1817.7,-14.19"/>
+</g>
+<!-- Node48&#45;&gt;Node16 -->
 <g id="edge29" class="edge">
-<title>Node54&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M1955.55,-190.41C1922.56,-169.58 1860.22,-128.51 1812.33,-87 1790.54,-68.12 1768.11,-43.45 1754.2,-27.43"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1756.57,-24.81 1747.4,-19.5 1751.26,-29.37 1756.57,-24.81"/>
+<title>Node48&#45;&gt;Node16</title>
+<path fill="none" stroke="midnightblue" d="M1242.9,-191.2C1246.14,-190.75 1249.35,-190.35 1252.5,-190 1673.76,-143.14 1784.64,-204.33 2205.5,-154 2354.1,-136.23 2392.16,-130.01 2535.5,-87 2570.83,-76.4 2577.33,-67.15 2612.5,-56 2668.16,-38.35 2734.9,-24.16 2772.94,-16.71"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2773.72,-20.13 2782.87,-14.79 2772.39,-13.26 2773.72,-20.13"/>
 </g>
-<!-- Node60&#45;&gt;Node14 -->
-<g id="edge32" class="edge">
-<title>Node60&#45;&gt;Node14</title>
-<path fill="none" stroke="midnightblue" d="M1355.41,-262.73C1348.7,-253.08 1339.7,-240.13 1332.03,-229.09"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1334.81,-226.96 1326.23,-220.75 1329.06,-230.95 1334.81,-226.96"/>
+<!-- Node48&#45;&gt;Node17 -->
+<g id="edge30" class="edge">
+<title>Node48&#45;&gt;Node17</title>
+<path fill="none" stroke="midnightblue" d="M1224.53,-190.43C1354.93,-153.75 1703.32,-55.77 1822.14,-22.35"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1823.26,-25.67 1831.94,-19.6 1821.36,-18.93 1823.26,-25.67"/>
 </g>
-<!-- Node60&#45;&gt;Node25 -->
+<!-- Node56&#45;&gt;Node14 -->
 <g id="edge33" class="edge">
-<title>Node60&#45;&gt;Node25</title>
-<path fill="none" stroke="midnightblue" d="M1313.05,-262.99C1263.47,-249.7 1189.94,-229.98 1144.14,-217.71"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1144.81,-214.26 1134.24,-215.05 1142.99,-221.02 1144.81,-214.26"/>
+<title>Node56&#45;&gt;Node14</title>
+<path fill="none" stroke="midnightblue" d="M1450.38,-262.99C1460.62,-260.63 1471.35,-258.47 1481.5,-257 1811.78,-209.24 1900.37,-262.51 2231.5,-221 2233.73,-220.72 2236,-220.41 2238.28,-220.07"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2239.06,-223.49 2248.37,-218.45 2237.94,-216.58 2239.06,-223.49"/>
 </g>
-<!-- Node68&#45;&gt;Node14 -->
-<g id="edge40" class="edge">
-<title>Node68&#45;&gt;Node14</title>
-<path fill="none" stroke="midnightblue" d="M1463.77,-257.46C1433.37,-246.95 1396.19,-234.1 1366.78,-223.93"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1367.71,-220.56 1357.12,-220.6 1365.43,-227.17 1367.71,-220.56"/>
+<!-- Node56&#45;&gt;Node25 -->
+<g id="edge34" class="edge">
+<title>Node56&#45;&gt;Node25</title>
+<path fill="none" stroke="midnightblue" d="M1451.73,-262.91C1461.57,-260.64 1471.8,-258.54 1481.5,-257 1689.49,-223.99 1937.5,-212.41 2064.47,-208.46"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2064.62,-211.95 2074.51,-208.15 2064.41,-204.96 2064.62,-211.95"/>
 </g>
-<!-- Node68&#45;&gt;Node25 -->
+<!-- Node64&#45;&gt;Node14 -->
 <g id="edge41" class="edge">
-<title>Node68&#45;&gt;Node25</title>
-<path fill="none" stroke="midnightblue" d="M1455.94,-258.9C1453.04,-258.23 1450.16,-257.59 1447.33,-257 1358.95,-238.5 1256.43,-224.41 1186.26,-215.88"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1186.49,-212.38 1176.14,-214.66 1185.65,-219.33 1186.49,-212.38"/>
+<title>Node64&#45;&gt;Node14</title>
+<path fill="none" stroke="midnightblue" d="M1308.81,-258.52C1311.74,-257.96 1314.64,-257.44 1317.5,-257 1719.26,-194.89 1827.91,-269.83 2231.5,-221 2233.73,-220.73 2236,-220.43 2238.29,-220.1"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2239.05,-223.52 2248.38,-218.49 2237.95,-216.61 2239.05,-223.52"/>
 </g>
-<!-- Node68&#45;&gt;Node61 -->
-<g id="edge39" class="edge">
-<title>Node68&#45;&gt;Node61</title>
-<path fill="none" stroke="midnightblue" d="M1536.76,-257.36C1544.18,-248.5 1552.97,-238 1560.63,-228.84"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1563.55,-230.81 1567.28,-220.89 1558.18,-226.31 1563.55,-230.81"/>
+<!-- Node64&#45;&gt;Node25 -->
+<g id="edge42" class="edge">
+<title>Node64&#45;&gt;Node25</title>
+<path fill="none" stroke="midnightblue" d="M1308.83,-258.6C1311.75,-258.01 1314.65,-257.47 1317.5,-257 1588.1,-212.21 1914.14,-206.07 2064.74,-205.9"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2064.84,-209.4 2074.84,-205.89 2064.84,-202.4 2064.84,-209.4"/>
 </g>
-<!-- Node69&#45;&gt;Node17 -->
-<g id="edge43" class="edge">
-<title>Node69&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M1700.65,-56.4C1708.28,-47.66 1718.12,-36.41 1726.09,-27.3"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1728.82,-29.49 1732.76,-19.66 1723.54,-24.88 1728.82,-29.49"/>
+<!-- Node64&#45;&gt;Node57 -->
+<g id="edge40" class="edge">
+<title>Node64&#45;&gt;Node57</title>
+<path fill="none" stroke="midnightblue" d="M1271.52,-257.36C1284.67,-247.8 1300.46,-236.33 1313.72,-226.69"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1315.97,-229.38 1322,-220.67 1311.86,-223.72 1315.97,-229.38"/>
 </g>
-<!-- Node77 -->
+<!-- Node65&#45;&gt;Node17 -->
+<g id="edge44" class="edge">
+<title>Node65&#45;&gt;Node17</title>
+<path fill="none" stroke="midnightblue" d="M1188.34,-64.41C1344.18,-52.07 1693.13,-24.42 1817.45,-14.57"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1818.05,-18.03 1827.74,-13.75 1817.49,-11.05 1818.05,-18.03"/>
+</g>
+<!-- Node73 -->
 <g id="node26" class="node">
-<title>Node77</title>
+<title>Node73</title>
 <g id="a_node26"><a xlink:href="circular__array_8hpp.html" target="_top" xlink:title="Implementation of a generic circular array container.">
-<polygon fill="none" stroke="red" points="2012.83,-123.5 2012.83,-153.5 2155.83,-153.5 2155.83,-123.5 2012.83,-123.5"/>
-<text text-anchor="start" x="2020.83" y="-141.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/containers/circular</text>
-<text text-anchor="middle" x="2084.33" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00">_array.hpp</text>
+<polygon fill="none" stroke="red" points="790,-123.5 790,-153.5 933,-153.5 933,-123.5 790,-123.5"/>
+<text text-anchor="start" x="798" y="-141.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/containers/circular</text>
+<text text-anchor="middle" x="861.5" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00">_array.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node76&#45;&gt;Node77 -->
-<g id="edge45" class="edge">
-<title>Node76&#45;&gt;Node77</title>
-<path fill="none" stroke="midnightblue" d="M2842.61,-402.45C2859.62,-395.55 2880.15,-383.97 2890.33,-366 2897.12,-354.01 2898.84,-345.83 2890.33,-335 2845,-277.36 2361.45,-187.66 2165.8,-153.42"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2166.32,-149.96 2155.86,-151.69 2165.11,-156.86 2166.32,-149.96"/>
-</g>
-<!-- Node82 -->
-<g id="node27" class="node">
-<title>Node82</title>
-<g id="a_node27"><a xlink:href="tuple__vector_8hpp.html" target="_top" xlink:title="Implementation of a tuple of containers.">
-<polygon fill="none" stroke="red" points="2749.83,-335.5 2749.83,-365.5 2880.83,-365.5 2880.83,-335.5 2749.83,-335.5"/>
-<text text-anchor="start" x="2757.83" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/containers/tuple</text>
-<text text-anchor="middle" x="2815.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_vector.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node76&#45;&gt;Node82 -->
-<g id="edge47" class="edge">
-<title>Node76&#45;&gt;Node82</title>
-<path fill="none" stroke="midnightblue" d="M2815.33,-402.48C2815.33,-395.47 2815.33,-385.19 2815.33,-375.7"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2818.83,-375.52 2815.33,-365.52 2811.83,-375.52 2818.83,-375.52"/>
-</g>
-<!-- Node77&#45;&gt;Node17 -->
+<!-- Node72&#45;&gt;Node73 -->
 <g id="edge46" class="edge">
-<title>Node77&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M2069.37,-123.23C2049.09,-104.71 2010.92,-72.79 1972.33,-56 1910.81,-29.24 1833.24,-18.31 1785.21,-13.9"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1785.4,-10.4 1775.13,-13.03 1784.8,-17.38 1785.4,-10.4"/>
+<title>Node72&#45;&gt;Node73</title>
+<path fill="none" stroke="midnightblue" d="M2265.73,-410.65C2051.69,-409.14 1351.51,-401.55 1129.5,-366 1023.1,-348.97 976.34,-371.36 896.5,-299 858.59,-264.64 856.74,-199.46 858.94,-163.99"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="862.46,-163.84 859.76,-153.59 855.49,-163.29 862.46,-163.84"/>
 </g>
-<!-- Node82&#45;&gt;Node16 -->
+<!-- Node78 -->
+<g id="node27" class="node">
+<title>Node78</title>
+<g id="a_node27"><a xlink:href="tuple__vector_8hpp.html" target="_top" xlink:title="Implementation of a tuple of containers.">
+<polygon fill="none" stroke="red" points="2625,-335.5 2625,-365.5 2756,-365.5 2756,-335.5 2625,-335.5"/>
+<text text-anchor="start" x="2633" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/containers/tuple</text>
+<text text-anchor="middle" x="2690.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_vector.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node72&#45;&gt;Node78 -->
 <g id="edge48" class="edge">
-<title>Node82&#45;&gt;Node16</title>
-<path fill="none" stroke="midnightblue" d="M2839.12,-335.48C2873.85,-313.02 2934.33,-265.44 2934.33,-206.5 2934.33,-206.5 2934.33,-206.5 2934.33,-137.5 2934.33,-46.3 2600.16,-18.96 2495.37,-12.63"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2495.32,-9.12 2485.13,-12.03 2494.91,-16.11 2495.32,-9.12"/>
+<title>Node72&#45;&gt;Node78</title>
+<path fill="none" stroke="midnightblue" d="M2386.87,-402.47C2442.72,-394.16 2529.58,-380.88 2614.59,-366.12"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2615.42,-369.53 2624.67,-364.36 2614.22,-362.63 2615.42,-369.53"/>
 </g>
-<!-- Node82&#45;&gt;Node83 -->
+<!-- Node73&#45;&gt;Node17 -->
+<g id="edge47" class="edge">
+<title>Node73&#45;&gt;Node17</title>
+<path fill="none" stroke="midnightblue" d="M875.71,-123.39C896.18,-104.09 936.08,-70.26 977.5,-56 1057.2,-28.56 1649.06,-15.12 1817.75,-11.82"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1817.85,-15.32 1827.78,-11.63 1817.71,-8.32 1817.85,-15.32"/>
+</g>
+<!-- Node78&#45;&gt;Node16 -->
 <g id="edge49" class="edge">
-<title>Node82&#45;&gt;Node83</title>
-<path fill="none" stroke="midnightblue" d="M2749.58,-336.51C2746.79,-336 2744.03,-335.49 2741.33,-335 2646.4,-317.84 2536.1,-299.95 2468,-289.14"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2468.28,-285.64 2457.85,-287.53 2467.18,-292.55 2468.28,-285.64"/>
+<title>Node78&#45;&gt;Node16</title>
+<path fill="none" stroke="midnightblue" d="M2756.27,-340.63C2911.27,-318.85 3286.5,-260.54 3286.5,-206.5 3286.5,-206.5 3286.5,-206.5 3286.5,-137.5 3286.5,-43.64 2940.85,-18.05 2834.36,-12.4"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2834.42,-8.9 2824.25,-11.88 2834.06,-15.89 2834.42,-8.9"/>
 </g>
-<!-- Node83&#45;&gt;Node14 -->
+<!-- Node78&#45;&gt;Node79 -->
 <g id="edge50" class="edge">
-<title>Node83&#45;&gt;Node14</title>
-<path fill="none" stroke="midnightblue" d="M2377.98,-268.43C2364.33,-264.21 2347.09,-259.49 2331.33,-257 1961.36,-198.49 1863.14,-244.65 1489.33,-221 1453.36,-218.72 1413.26,-215.41 1380.72,-212.53"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1380.71,-209.01 1370.44,-211.61 1380.09,-215.98 1380.71,-209.01"/>
+<title>Node78&#45;&gt;Node79</title>
+<path fill="none" stroke="midnightblue" d="M2719.89,-335.4C2746.34,-322.72 2784.88,-304.23 2810.55,-291.92"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2812.2,-295.01 2819.71,-287.53 2809.18,-288.7 2812.2,-295.01"/>
 </g>
-<!-- Node83&#45;&gt;Node21 -->
+<!-- Node79&#45;&gt;Node14 -->
 <g id="edge51" class="edge">
-<title>Node83&#45;&gt;Node21</title>
-<path fill="none" stroke="midnightblue" d="M2402.62,-268.47C2400.19,-239.28 2392.16,-142.65 2388.36,-96.91"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2391.82,-96.37 2387.51,-86.7 2384.85,-96.95 2391.82,-96.37"/>
+<title>Node79&#45;&gt;Node14</title>
+<path fill="none" stroke="midnightblue" d="M2794.24,-268.5C2774.01,-264.69 2749.57,-260.32 2727.5,-257 2600,-237.85 2450.1,-221.46 2366.73,-212.89"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2366.95,-209.39 2356.65,-211.85 2366.24,-216.36 2366.95,-209.39"/>
+</g>
+<!-- Node79&#45;&gt;Node21 -->
+<g id="edge52" class="edge">
+<title>Node79&#45;&gt;Node21</title>
+<path fill="none" stroke="midnightblue" d="M2813.28,-268.49C2756.7,-248.06 2618.69,-194.9 2593.5,-154 2586.28,-142.27 2586.85,-135.07 2593.5,-123 2600.91,-109.56 2613.57,-99.2 2626.66,-91.47"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2628.62,-94.39 2635.73,-86.53 2625.27,-88.24 2628.62,-94.39"/>
+</g>
+<!-- Node86 -->
+<g id="node30" class="node">
+<title>Node86</title>
+<g id="a_node30"><a xlink:href="differential__drive__model_8hpp.html" target="_top" xlink:title="Implementation of a differential drive odometry motion model.">
+<polygon fill="none" stroke="red" points="2602,-123.5 2602,-153.5 2745,-153.5 2745,-123.5 2602,-123.5"/>
+<text text-anchor="start" x="2610" y="-141.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/motion/differential</text>
+<text text-anchor="middle" x="2673.5" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00">_drive_model.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node85&#45;&gt;Node86 -->
+<g id="edge54" class="edge">
+<title>Node85&#45;&gt;Node86</title>
+<path fill="none" stroke="midnightblue" d="M2823.53,-195.87C2797.34,-186.03 2753.85,-169.69 2720.42,-157.13"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2721.43,-153.77 2710.84,-153.53 2718.97,-160.32 2721.43,-153.77"/>
+</g>
+<!-- Node89 -->
+<g id="node31" class="node">
+<title>Node89</title>
+<g id="a_node31"><a xlink:href="omnidirectional__drive__model_8hpp.html" target="_top" xlink:title="Implementation of an omnidirectional drive odometry motion model.">
+<polygon fill="none" stroke="red" points="2763,-123.5 2763,-153.5 2930,-153.5 2930,-123.5 2763,-123.5"/>
+<text text-anchor="start" x="2771" y="-141.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/motion/omnidirectional</text>
+<text text-anchor="middle" x="2846.5" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00">_drive_model.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node85&#45;&gt;Node89 -->
+<g id="edge58" class="edge">
+<title>Node85&#45;&gt;Node89</title>
+<path fill="none" stroke="midnightblue" d="M2846.5,-195.73C2846.5,-187.54 2846.5,-174.92 2846.5,-163.71"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2850,-163.59 2846.5,-153.59 2843,-163.59 2850,-163.59"/>
 </g>
 <!-- Node90 -->
-<g id="node30" class="node">
-<title>Node90</title>
-<g id="a_node30"><a xlink:href="differential__drive__model_8hpp.html" target="_top" xlink:title="Implementation of a differential drive odometry motion model.">
-<polygon fill="none" stroke="red" points="2604.83,-123.5 2604.83,-153.5 2747.83,-153.5 2747.83,-123.5 2604.83,-123.5"/>
-<text text-anchor="start" x="2612.83" y="-141.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/motion/differential</text>
-<text text-anchor="middle" x="2676.33" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00">_drive_model.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node89&#45;&gt;Node90 -->
-<g id="edge53" class="edge">
-<title>Node89&#45;&gt;Node90</title>
-<path fill="none" stroke="midnightblue" d="M2828.96,-195.87C2802.32,-186.03 2758.07,-169.69 2724.06,-157.13"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2724.9,-153.71 2714.31,-153.53 2722.48,-160.28 2724.9,-153.71"/>
-</g>
-<!-- Node93 -->
-<g id="node31" class="node">
-<title>Node93</title>
-<g id="a_node31"><a xlink:href="omnidirectional__drive__model_8hpp.html" target="_top" xlink:title="Implementation of an omnidirectional drive odometry motion model.">
-<polygon fill="none" stroke="red" points="2419.83,-123.5 2419.83,-153.5 2586.83,-153.5 2586.83,-123.5 2419.83,-123.5"/>
-<text text-anchor="start" x="2427.83" y="-141.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/motion/omnidirectional</text>
-<text text-anchor="middle" x="2503.33" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00">_drive_model.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node89&#45;&gt;Node93 -->
-<g id="edge57" class="edge">
-<title>Node89&#45;&gt;Node93</title>
-<path fill="none" stroke="midnightblue" d="M2813.18,-195.93C2803.74,-193.92 2793.68,-191.84 2784.33,-190 2721.37,-177.63 2650.24,-164.86 2595.29,-155.26"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2595.68,-151.77 2585.23,-153.5 2594.48,-158.67 2595.68,-151.77"/>
-</g>
-<!-- Node94 -->
 <g id="node32" class="node">
-<title>Node94</title>
+<title>Node90</title>
 <g id="a_node32"><a xlink:href="stationary__model_8hpp.html" target="_top" xlink:title="Implementation of a stationary motion model.">
-<polygon fill="none" stroke="red" points="2766.33,-123.5 2766.33,-153.5 2906.33,-153.5 2906.33,-123.5 2766.33,-123.5"/>
-<text text-anchor="start" x="2774.33" y="-141.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/motion/stationary</text>
-<text text-anchor="middle" x="2836.33" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model.hpp</text>
+<polygon fill="none" stroke="red" points="2948.5,-123.5 2948.5,-153.5 3088.5,-153.5 3088.5,-123.5 2948.5,-123.5"/>
+<text text-anchor="start" x="2956.5" y="-141.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/motion/stationary</text>
+<text text-anchor="middle" x="3018.5" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node89&#45;&gt;Node94 -->
+<!-- Node85&#45;&gt;Node90 -->
+<g id="edge62" class="edge">
+<title>Node85&#45;&gt;Node90</title>
+<path fill="none" stroke="midnightblue" d="M2869.34,-195.87C2895.37,-186.03 2938.61,-169.69 2971.85,-157.13"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2973.26,-160.34 2981.38,-153.53 2970.79,-153.79 2973.26,-160.34"/>
+</g>
+<!-- Node86&#45;&gt;Node16 -->
+<g id="edge55" class="edge">
+<title>Node86&#45;&gt;Node16</title>
+<path fill="none" stroke="midnightblue" d="M2692.32,-123.42C2704.95,-113.67 2721.74,-100.13 2735.5,-87 2755.6,-67.81 2776.61,-43.59 2789.86,-27.71"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2792.7,-29.78 2796.37,-19.84 2787.3,-25.32 2792.7,-29.78"/>
+</g>
+<!-- Node86&#45;&gt;Node17 -->
+<g id="edge57" class="edge">
+<title>Node86&#45;&gt;Node17</title>
+<path fill="none" stroke="midnightblue" d="M2656.05,-123.49C2631.05,-104.32 2582.81,-70.64 2535.5,-56 2417.73,-19.56 2038.44,-12.62 1907.47,-11.31"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1907.42,-7.8 1897.39,-11.21 1907.36,-14.8 1907.42,-7.8"/>
+</g>
+<!-- Node86&#45;&gt;Node21 -->
+<g id="edge56" class="edge">
+<title>Node86&#45;&gt;Node21</title>
+<path fill="none" stroke="midnightblue" d="M2673.5,-123.4C2673.5,-115.64 2673.5,-105.81 2673.5,-96.86"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2677,-96.58 2673.5,-86.58 2670,-96.58 2677,-96.58"/>
+</g>
+<!-- Node89&#45;&gt;Node16 -->
+<g id="edge59" class="edge">
+<title>Node89&#45;&gt;Node16</title>
+<path fill="none" stroke="midnightblue" d="M2841.73,-123.48C2833.93,-100.51 2818.42,-54.89 2809.74,-29.37"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2813.02,-28.13 2806.49,-19.79 2806.39,-30.38 2813.02,-28.13"/>
+</g>
+<!-- Node89&#45;&gt;Node17 -->
+<g id="edge60" class="edge">
+<title>Node89&#45;&gt;Node17</title>
+<path fill="none" stroke="midnightblue" d="M2833.03,-123.39C2813.59,-104.11 2775.58,-70.29 2735.5,-56 2657.26,-28.11 2074.37,-15.01 1907.19,-11.8"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1907.09,-8.3 1897.02,-11.61 1906.95,-15.3 1907.09,-8.3"/>
+</g>
+<!-- Node89&#45;&gt;Node21 -->
 <g id="edge61" class="edge">
-<title>Node89&#45;&gt;Node94</title>
-<path fill="none" stroke="midnightblue" d="M2850.17,-195.73C2848.13,-187.46 2844.98,-174.66 2842.2,-163.37"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2845.58,-162.46 2839.8,-153.59 2838.79,-164.14 2845.58,-162.46"/>
+<title>Node89&#45;&gt;Node21</title>
+<path fill="none" stroke="midnightblue" d="M2808.96,-123.4C2783,-113.64 2748.28,-100.59 2720.48,-90.15"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2721.56,-86.82 2710.97,-86.58 2719.1,-93.37 2721.56,-86.82"/>
 </g>
 <!-- Node90&#45;&gt;Node16 -->
-<g id="edge54" class="edge">
+<g id="edge63" class="edge">
 <title>Node90&#45;&gt;Node16</title>
-<path fill="none" stroke="midnightblue" d="M2652.83,-123.48C2611.92,-99.07 2528.12,-49.06 2487.46,-24.81"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2489.17,-21.75 2478.79,-19.63 2485.58,-27.76 2489.17,-21.75"/>
-</g>
-<!-- Node90&#45;&gt;Node17 -->
-<g id="edge56" class="edge">
-<title>Node90&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M2635.13,-123.43C2607.94,-113.85 2571.67,-100.49 2540.33,-87 2511.66,-74.66 2507.49,-64 2477.33,-56 2345.54,-21.07 1923.94,-13.12 1785.12,-11.43"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1784.9,-7.93 1774.86,-11.31 1784.82,-14.93 1784.9,-7.93"/>
+<path fill="none" stroke="midnightblue" d="M2994.67,-123.48C2953.18,-99.07 2868.19,-49.06 2826.96,-24.81"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2828.56,-21.68 2818.17,-19.63 2825.01,-27.72 2828.56,-21.68"/>
 </g>
 <!-- Node90&#45;&gt;Node21 -->
-<g id="edge55" class="edge">
+<g id="edge64" class="edge">
 <title>Node90&#45;&gt;Node21</title>
-<path fill="none" stroke="midnightblue" d="M2613.76,-123.48C2565,-112.55 2497.62,-97.45 2448.87,-86.52"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2449.6,-83.09 2439.07,-84.32 2448.06,-89.92 2449.6,-83.09"/>
+<path fill="none" stroke="midnightblue" d="M2948.27,-124.27C2886.06,-112.55 2796.09,-95.6 2736.25,-84.32"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2736.65,-80.84 2726.18,-82.42 2735.36,-87.72 2736.65,-80.84"/>
 </g>
-<!-- Node93&#45;&gt;Node16 -->
-<g id="edge58" class="edge">
-<title>Node93&#45;&gt;Node16</title>
-<path fill="none" stroke="midnightblue" d="M2499.93,-123.24C2495.92,-106.88 2488.85,-79.29 2481.33,-56 2478.44,-47.05 2474.8,-37.26 2471.63,-29.11"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2474.78,-27.55 2467.84,-19.54 2468.27,-30.12 2474.78,-27.55"/>
+<!-- Node92 -->
+<g id="node34" class="node">
+<title>Node92</title>
+<g id="a_node34"><a xlink:href="every__n_8hpp.html" target="_top" xlink:title="Defines a policy for triggering an action every N calls.">
+<polygon fill="none" stroke="black" points="123,-335.5 123,-365.5 244,-365.5 244,-335.5 123,-335.5"/>
+<text text-anchor="start" x="131" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/every</text>
+<text text-anchor="middle" x="183.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_n.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node91&#45;&gt;Node92 -->
+<g id="edge66" class="edge">
+<title>Node91&#45;&gt;Node92</title>
+<path fill="none" stroke="midnightblue" d="M259.75,-402.48C247.58,-394.34 228.81,-381.79 212.94,-371.18"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="214.73,-368.17 204.48,-365.52 210.84,-373.99 214.73,-368.17"/>
+</g>
+<!-- Node93 -->
+<g id="node35" class="node">
+<title>Node93</title>
+<g id="a_node35"><a xlink:href="policy_8hpp_source.html" target="_top" xlink:title=" ">
+<polygon fill="none" stroke="black" points="201.5,-268.5 201.5,-287.5 343.5,-287.5 343.5,-268.5 201.5,-268.5"/>
+<text text-anchor="middle" x="272.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/policy.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node91&#45;&gt;Node93 -->
+<g id="edge74" class="edge">
+<title>Node91&#45;&gt;Node93</title>
+<path fill="none" stroke="midnightblue" d="M272.5,-402.34C272.5,-381.17 272.5,-326.45 272.5,-297.53"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="276,-297.52 272.5,-287.52 269,-297.52 276,-297.52"/>
+</g>
+<!-- Node94 -->
+<g id="node36" class="node">
+<title>Node94</title>
+<g id="a_node36"><a xlink:href="on__effective__size__drop_8hpp.html" target="_top" xlink:title="Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric.">
+<polygon fill="none" stroke="red" points="301,-335.5 301,-365.5 438,-365.5 438,-335.5 301,-335.5"/>
+<text text-anchor="start" x="309" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/on</text>
+<text text-anchor="middle" x="369.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_effective_size_drop.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node91&#45;&gt;Node94 -->
+<g id="edge69" class="edge">
+<title>Node91&#45;&gt;Node94</title>
+<path fill="none" stroke="midnightblue" d="M286.4,-402.48C299.78,-394.27 320.5,-381.56 337.9,-370.88"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="339.94,-373.74 346.64,-365.52 336.28,-367.77 339.94,-373.74"/>
+</g>
+<!-- Node95 -->
+<g id="node37" class="node">
+<title>Node95</title>
+<g id="a_node37"><a xlink:href="on__motion_8hpp.html" target="_top" xlink:title="Defines a policy for triggering an action based on motion.">
+<polygon fill="none" stroke="red" points="0,-335.5 0,-365.5 105,-365.5 105,-335.5 0,-335.5"/>
+<text text-anchor="start" x="8" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/on</text>
+<text text-anchor="middle" x="52.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_motion.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node91&#45;&gt;Node95 -->
+<g id="edge72" class="edge">
+<title>Node91&#45;&gt;Node95</title>
+<path fill="none" stroke="midnightblue" d="M240.98,-402.48C207.98,-393.55 155.32,-379.31 114.04,-368.14"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="114.92,-364.76 104.35,-365.52 113.09,-371.51 114.92,-364.76"/>
+</g>
+<!-- Node92&#45;&gt;Node93 -->
+<g id="edge67" class="edge">
+<title>Node92&#45;&gt;Node93</title>
+<path fill="none" stroke="midnightblue" d="M201.51,-335.23C216.46,-323.39 237.67,-306.59 253.01,-294.44"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="255.61,-296.85 261.27,-287.89 251.26,-291.36 255.61,-296.85"/>
 </g>
 <!-- Node93&#45;&gt;Node17 -->
-<g id="edge59" class="edge">
+<g id="edge68" class="edge">
 <title>Node93&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M2498.34,-123.3C2490.8,-104.23 2474.54,-71.02 2448.33,-56 2390.99,-23.14 1932.14,-13.75 1785.33,-11.57"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1784.95,-8.07 1774.91,-11.42 1784.85,-15.07 1784.95,-8.07"/>
+<path fill="none" stroke="midnightblue" d="M290.9,-268.49C366.24,-234.12 659.29,-105.08 915.5,-56 1091.68,-22.25 1654.35,-13.35 1817.66,-11.45"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1817.88,-14.95 1827.84,-11.33 1817.8,-7.95 1817.88,-14.95"/>
 </g>
-<!-- Node93&#45;&gt;Node21 -->
-<g id="edge60" class="edge">
-<title>Node93&#45;&gt;Node21</title>
-<path fill="none" stroke="midnightblue" d="M2477.94,-123.4C2461.15,-114.07 2438.94,-101.73 2420.59,-91.53"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2422.11,-88.37 2411.66,-86.58 2418.71,-94.49 2422.11,-88.37"/>
+<!-- Node94&#45;&gt;Node56 -->
+<g id="edge70" class="edge">
+<title>Node94&#45;&gt;Node56</title>
+<path fill="none" stroke="midnightblue" d="M438.27,-336.04C441.05,-335.66 443.8,-335.31 446.5,-335 831.44,-291.03 933.86,-353.17 1317.5,-299 1324.32,-298.04 1331.41,-296.75 1338.43,-295.3"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1339.61,-298.62 1348.62,-293.06 1338.11,-291.78 1339.61,-298.62"/>
 </g>
-<!-- Node94&#45;&gt;Node16 -->
-<g id="edge62" class="edge">
-<title>Node94&#45;&gt;Node16</title>
-<path fill="none" stroke="midnightblue" d="M2795.1,-123.48C2719.68,-97.83 2561.16,-43.93 2494.68,-21.32"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2495.43,-17.88 2484.83,-17.97 2493.17,-24.51 2495.43,-17.88"/>
+<!-- Node94&#45;&gt;Node93 -->
+<g id="edge71" class="edge">
+<title>Node94&#45;&gt;Node93</title>
+<path fill="none" stroke="midnightblue" d="M349.87,-335.23C333.34,-323.22 309.76,-306.08 292.99,-293.89"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="294.6,-290.74 284.46,-287.69 290.49,-296.4 294.6,-290.74"/>
 </g>
-<!-- Node94&#45;&gt;Node21 -->
-<g id="edge63" class="edge">
-<title>Node94&#45;&gt;Node21</title>
-<path fill="none" stroke="midnightblue" d="M2766.14,-124.44C2763.17,-123.95 2760.22,-123.46 2757.33,-123 2649.27,-105.74 2522.91,-89.34 2449.04,-80.14"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2449.33,-76.65 2438.97,-78.89 2448.46,-83.59 2449.33,-76.65"/>
-</g>
-<!-- Node96 -->
-<g id="node34" class="node">
-<title>Node96</title>
-<g id="a_node34"><a xlink:href="every__n_8hpp.html" target="_top" xlink:title="Defines a policy for triggering an action every N calls.">
-<polygon fill="none" stroke="black" points="141.83,-335.5 141.83,-365.5 262.83,-365.5 262.83,-335.5 141.83,-335.5"/>
-<text text-anchor="start" x="149.83" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/every</text>
-<text text-anchor="middle" x="202.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_n.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node95&#45;&gt;Node96 -->
-<g id="edge65" class="edge">
-<title>Node95&#45;&gt;Node96</title>
-<path fill="none" stroke="midnightblue" d="M202.33,-402.48C202.33,-395.47 202.33,-385.19 202.33,-375.7"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="205.83,-375.52 202.33,-365.52 198.83,-375.52 205.83,-375.52"/>
-</g>
-<!-- Node97 -->
-<g id="node35" class="node">
-<title>Node97</title>
-<g id="a_node35"><a xlink:href="policy_8hpp_source.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="131.33,-268.5 131.33,-287.5 273.33,-287.5 273.33,-268.5 131.33,-268.5"/>
-<text text-anchor="middle" x="202.33" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/policy.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node95&#45;&gt;Node97 -->
+<!-- Node95&#45;&gt;Node93 -->
 <g id="edge73" class="edge">
-<title>Node95&#45;&gt;Node97</title>
-<path fill="none" stroke="midnightblue" d="M146.56,-405.63C95.78,-399.44 26.22,-387.29 9.33,-366 -26.37,-321.02 53.38,-298.54 120.97,-287.85"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="121.9,-291.25 131.26,-286.29 120.85,-284.33 121.9,-291.25"/>
+<title>Node95&#45;&gt;Node93</title>
+<path fill="none" stroke="midnightblue" d="M96.23,-335.49C137.18,-322.36 197.67,-302.98 236.07,-290.67"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="237.35,-293.94 245.8,-287.55 235.21,-287.27 237.35,-293.94"/>
 </g>
 <!-- Node98 -->
-<g id="node36" class="node">
-<title>Node98</title>
-<g id="a_node36"><a xlink:href="on__effective__size__drop_8hpp.html" target="_top" xlink:title="Defines a policy for triggering an action based on the Effective Sample Size (ESS) metric.">
-<polygon fill="none" stroke="red" points="280.83,-335.5 280.83,-365.5 417.83,-365.5 417.83,-335.5 280.83,-335.5"/>
-<text text-anchor="start" x="288.83" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/on</text>
-<text text-anchor="middle" x="349.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_effective_size_drop.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node95&#45;&gt;Node98 -->
-<g id="edge68" class="edge">
-<title>Node95&#45;&gt;Node98</title>
-<path fill="none" stroke="midnightblue" d="M223.39,-402.48C244.69,-393.85 278.26,-380.26 305.39,-369.29"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="306.73,-372.52 314.68,-365.52 304.1,-366.03 306.73,-372.52"/>
-</g>
-<!-- Node99 -->
-<g id="node37" class="node">
-<title>Node99</title>
-<g id="a_node37"><a xlink:href="on__motion_8hpp.html" target="_top" xlink:title="Defines a policy for triggering an action based on motion.">
-<polygon fill="none" stroke="red" points="18.83,-335.5 18.83,-365.5 123.83,-365.5 123.83,-335.5 18.83,-335.5"/>
-<text text-anchor="start" x="26.83" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/policies/on</text>
-<text text-anchor="middle" x="71.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_motion.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node95&#45;&gt;Node99 -->
-<g id="edge71" class="edge">
-<title>Node95&#45;&gt;Node99</title>
-<path fill="none" stroke="midnightblue" d="M183.56,-402.48C164.82,-393.96 135.44,-380.62 111.44,-369.72"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="112.75,-366.47 102.2,-365.52 109.86,-372.85 112.75,-366.47"/>
-</g>
-<!-- Node96&#45;&gt;Node97 -->
-<g id="edge66" class="edge">
-<title>Node96&#45;&gt;Node97</title>
-<path fill="none" stroke="midnightblue" d="M202.33,-335.23C202.33,-324.5 202.33,-309.69 202.33,-297.96"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="205.83,-297.89 202.33,-287.89 198.83,-297.89 205.83,-297.89"/>
-</g>
-<!-- Node97&#45;&gt;Node17 -->
-<g id="edge67" class="edge">
-<title>Node97&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M214.74,-268.45C240.5,-251.08 302.16,-211.5 359.33,-190 622.38,-91.05 698.88,-94.17 977.33,-56 1248.19,-18.87 1577.28,-12.36 1695.43,-11.23"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1695.57,-14.73 1705.54,-11.14 1695.51,-7.73 1695.57,-14.73"/>
-</g>
-<!-- Node98&#45;&gt;Node60 -->
-<g id="edge69" class="edge">
-<title>Node98&#45;&gt;Node60</title>
-<path fill="none" stroke="midnightblue" d="M418.16,-347.4C604.42,-341.47 1115.5,-323.41 1282.33,-299 1289.13,-298.01 1296.18,-296.72 1303.19,-295.27"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1304.34,-298.6 1313.36,-293.05 1302.85,-291.76 1304.34,-298.6"/>
-</g>
-<!-- Node98&#45;&gt;Node97 -->
-<g id="edge70" class="edge">
-<title>Node98&#45;&gt;Node97</title>
-<path fill="none" stroke="midnightblue" d="M319.93,-335.4C293.48,-322.72 254.94,-304.23 229.28,-291.92"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="230.65,-288.7 220.12,-287.53 227.62,-295.01 230.65,-288.7"/>
-</g>
-<!-- Node99&#45;&gt;Node97 -->
-<g id="edge72" class="edge">
-<title>Node99&#45;&gt;Node97</title>
-<path fill="none" stroke="midnightblue" d="M97.52,-335.4C120.78,-322.89 154.53,-304.72 177.4,-292.42"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="179.32,-295.35 186.47,-287.53 176.01,-289.19 179.32,-295.35"/>
-</g>
-<!-- Node102 -->
 <g id="node39" class="node">
-<title>Node102</title>
+<title>Node98</title>
 <g id="a_node39"><a xlink:href="multivariate__normal__distribution_8hpp.html" target="_top" xlink:title="Implementation of a multivariate normal distribution.">
-<polygon fill="none" stroke="red" points="1918.83,-335.5 1918.83,-365.5 2071.83,-365.5 2071.83,-335.5 1918.83,-335.5"/>
-<text text-anchor="start" x="1926.83" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/random/multivariate</text>
-<text text-anchor="middle" x="1995.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_normal_distribution.hpp</text>
+<polygon fill="none" stroke="red" points="456,-335.5 456,-365.5 609,-365.5 609,-335.5 456,-335.5"/>
+<text text-anchor="start" x="464" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/random/multivariate</text>
+<text text-anchor="middle" x="532.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_normal_distribution.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node101&#45;&gt;Node102 -->
-<g id="edge76" class="edge">
-<title>Node101&#45;&gt;Node102</title>
-<path fill="none" stroke="midnightblue" d="M1848.83,-402.48C1873.93,-393.74 1913.69,-379.91 1945.45,-368.86"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1946.73,-372.11 1955.03,-365.52 1944.43,-365.5 1946.73,-372.11"/>
-</g>
-<!-- Node104 -->
-<g id="node40" class="node">
-<title>Node104</title>
-<g id="a_node40"><a xlink:href="multivariate__uniform__distribution_8hpp.html" target="_top" xlink:title="Implementation of a multivariate uniform distribution for SE(2) and SE(3) spaces.">
-<polygon fill="none" stroke="red" points="1747.83,-335.5 1747.83,-365.5 1900.83,-365.5 1900.83,-335.5 1747.83,-335.5"/>
-<text text-anchor="start" x="1755.83" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/random/multivariate</text>
-<text text-anchor="middle" x="1824.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_uniform_distribution.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node101&#45;&gt;Node104 -->
+<!-- Node97&#45;&gt;Node98 -->
 <g id="edge77" class="edge">
-<title>Node101&#45;&gt;Node104</title>
-<path fill="none" stroke="midnightblue" d="M1824.33,-402.48C1824.33,-395.47 1824.33,-385.19 1824.33,-375.7"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1827.83,-375.52 1824.33,-365.52 1820.83,-375.52 1827.83,-375.52"/>
+<title>Node97&#45;&gt;Node98</title>
+<path fill="none" stroke="midnightblue" d="M679,-402.48C653.89,-393.74 614.14,-379.91 582.38,-368.86"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="583.4,-365.5 572.8,-365.52 581.1,-372.11 583.4,-365.5"/>
 </g>
-<!-- Node112 -->
-<g id="node42" class="node">
-<title>Node112</title>
-<g id="a_node42"><a xlink:href="beam__model_8hpp.html" target="_top" xlink:title="Implementation of a beam sensor model for range finders.">
-<polygon fill="none" stroke="red" points="2090.33,-335.5 2090.33,-365.5 2206.33,-365.5 2206.33,-335.5 2090.33,-335.5"/>
-<text text-anchor="start" x="2098.33" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/beam</text>
-<text text-anchor="middle" x="2148.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model.hpp</text>
+<!-- Node100 -->
+<g id="node40" class="node">
+<title>Node100</title>
+<g id="a_node40"><a xlink:href="multivariate__uniform__distribution_8hpp.html" target="_top" xlink:title="Implementation of a multivariate uniform distribution for SE(2) and SE(3) spaces.">
+<polygon fill="none" stroke="red" points="627,-335.5 627,-365.5 780,-365.5 780,-335.5 627,-335.5"/>
+<text text-anchor="start" x="635" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/random/multivariate</text>
+<text text-anchor="middle" x="703.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_uniform_distribution.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node111&#45;&gt;Node112 -->
-<g id="edge79" class="edge">
-<title>Node111&#45;&gt;Node112</title>
-<path fill="none" stroke="midnightblue" d="M2311.96,-402.48C2283.68,-393.66 2238.75,-379.67 2203.12,-368.57"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2203.93,-365.16 2193.34,-365.52 2201.85,-371.84 2203.93,-365.16"/>
+<!-- Node97&#45;&gt;Node100 -->
+<g id="edge78" class="edge">
+<title>Node97&#45;&gt;Node100</title>
+<path fill="none" stroke="midnightblue" d="M703.5,-402.48C703.5,-395.47 703.5,-385.19 703.5,-375.7"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="707,-375.52 703.5,-365.52 700,-375.52 707,-375.52"/>
+</g>
+<!-- Node108 -->
+<g id="node42" class="node">
+<title>Node108</title>
+<g id="a_node42"><a xlink:href="beam__model_8hpp.html" target="_top" xlink:title="Implementation of a beam sensor model for range finders.">
+<polygon fill="none" stroke="red" points="1945.5,-335.5 1945.5,-365.5 2061.5,-365.5 2061.5,-335.5 1945.5,-335.5"/>
+<text text-anchor="start" x="1953.5" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/beam</text>
+<text text-anchor="middle" x="2003.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node107&#45;&gt;Node108 -->
+<g id="edge80" class="edge">
+<title>Node107&#45;&gt;Node108</title>
+<path fill="none" stroke="midnightblue" d="M2817.93,-408.63C2697.33,-403.02 2391.56,-387.71 2136.5,-366 2115.42,-364.21 2092.5,-361.85 2071.72,-359.56"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2072.03,-356.08 2061.71,-358.45 2071.26,-363.04 2072.03,-356.08"/>
+</g>
+<!-- Node109 -->
+<g id="node43" class="node">
+<title>Node109</title>
+<g id="a_node43"><a xlink:href="bearing__sensor__model_8hpp.html" target="_top" xlink:title="Implementation of a discrete landmark bearing sensor model.">
+<polygon fill="none" stroke="red" points="2813,-335.5 2813,-365.5 2938,-365.5 2938,-335.5 2813,-335.5"/>
+<text text-anchor="start" x="2821" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/bearing</text>
+<text text-anchor="middle" x="2875.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_sensor_model.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node107&#45;&gt;Node109 -->
+<g id="edge82" class="edge">
+<title>Node107&#45;&gt;Node109</title>
+<path fill="none" stroke="midnightblue" d="M2871.22,-402.48C2871.8,-395.47 2872.67,-385.19 2873.47,-375.7"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2876.97,-375.78 2874.32,-365.52 2870,-375.19 2876.97,-375.78"/>
 </g>
 <!-- Node113 -->
-<g id="node43" class="node">
-<title>Node113</title>
-<g id="a_node43"><a xlink:href="bearing__sensor__model_8hpp.html" target="_top" xlink:title="Implementation of a discrete landmark bearing sensor model.">
-<polygon fill="none" stroke="red" points="2300.83,-335.5 2300.83,-365.5 2425.83,-365.5 2425.83,-335.5 2300.83,-335.5"/>
-<text text-anchor="start" x="2308.83" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/bearing</text>
-<text text-anchor="middle" x="2363.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_sensor_model.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node111&#45;&gt;Node113 -->
-<g id="edge81" class="edge">
-<title>Node111&#45;&gt;Node113</title>
-<path fill="none" stroke="midnightblue" d="M2342.77,-402.48C2345.65,-395.32 2349.92,-384.75 2353.81,-375.08"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2357.18,-376.11 2357.67,-365.52 2350.68,-373.49 2357.18,-376.11"/>
-</g>
-<!-- Node117 -->
 <g id="node44" class="node">
-<title>Node117</title>
+<title>Node113</title>
 <g id="a_node44"><a xlink:href="landmark__sensor__model_8hpp.html" target="_top" xlink:title="Implementation of a discrete landmark sensor model.">
-<polygon fill="none" stroke="red" points="2444.33,-335.5 2444.33,-365.5 2578.33,-365.5 2578.33,-335.5 2444.33,-335.5"/>
-<text text-anchor="start" x="2452.33" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/landmark</text>
-<text text-anchor="middle" x="2511.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_sensor_model.hpp</text>
+<polygon fill="none" stroke="red" points="2994.5,-335.5 2994.5,-365.5 3128.5,-365.5 3128.5,-335.5 2994.5,-335.5"/>
+<text text-anchor="start" x="3002.5" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/landmark</text>
+<text text-anchor="middle" x="3061.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_sensor_model.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node111&#45;&gt;Node117 -->
-<g id="edge82" class="edge">
-<title>Node111&#45;&gt;Node117</title>
-<path fill="none" stroke="midnightblue" d="M2363.97,-402.48C2389.23,-393.74 2429.21,-379.91 2461.16,-368.86"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2462.48,-372.1 2470.79,-365.52 2460.2,-365.48 2462.48,-372.1"/>
+<!-- Node107&#45;&gt;Node113 -->
+<g id="edge83" class="edge">
+<title>Node107&#45;&gt;Node113</title>
+<path fill="none" stroke="midnightblue" d="M2897.87,-402.48C2926.15,-393.66 2971.08,-379.67 3006.7,-368.57"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="3007.98,-371.84 3016.49,-365.52 3005.9,-365.16 3007.98,-371.84"/>
+</g>
+<!-- Node114 -->
+<g id="node45" class="node">
+<title>Node114</title>
+<g id="a_node45"><a xlink:href="likelihood__field__model_8hpp.html" target="_top" xlink:title="Implementation of a likelihood field sensor model for range finders.">
+<polygon fill="none" stroke="red" points="1663,-335.5 1663,-365.5 1798,-365.5 1798,-335.5 1663,-335.5"/>
+<text text-anchor="start" x="1671" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/likelihood</text>
+<text text-anchor="middle" x="1730.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_field_model.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node107&#45;&gt;Node114 -->
+<g id="edge84" class="edge">
+<title>Node107&#45;&gt;Node114</title>
+<path fill="none" stroke="midnightblue" d="M2817.81,-408.87C2675.59,-403.03 2271.96,-385.88 1936.5,-366 1894.12,-363.49 1846.87,-360.2 1808.32,-357.39"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1808.43,-353.88 1798.21,-356.64 1807.92,-360.87 1808.43,-353.88"/>
 </g>
 <!-- Node118 -->
-<g id="node45" class="node">
-<title>Node118</title>
-<g id="a_node45"><a xlink:href="likelihood__field__model_8hpp.html" target="_top" xlink:title="Implementation of a likelihood field sensor model for range finders.">
-<polygon fill="none" stroke="red" points="2596.83,-335.5 2596.83,-365.5 2731.83,-365.5 2731.83,-335.5 2596.83,-335.5"/>
-<text text-anchor="start" x="2604.83" y="-353.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/likelihood</text>
-<text text-anchor="middle" x="2664.33" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">_field_model.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node111&#45;&gt;Node118 -->
-<g id="edge83" class="edge">
-<title>Node111&#45;&gt;Node118</title>
-<path fill="none" stroke="midnightblue" d="M2386.89,-402.47C2434.68,-393.87 2510.73,-380.13 2586.52,-366.14"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2587.53,-369.52 2596.73,-364.26 2586.26,-362.63 2587.53,-369.52"/>
-</g>
-<!-- Node122 -->
 <g id="node46" class="node">
-<title>Node122</title>
+<title>Node118</title>
 <g id="a_node46"><a xlink:href="ndt__sensor__model_8hpp_source.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="red" points="1821.83,-56.5 1821.83,-86.5 1962.83,-86.5 1962.83,-56.5 1821.83,-56.5"/>
-<text text-anchor="start" x="1829.83" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/ndt_sensor</text>
-<text text-anchor="middle" x="1892.33" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model.hpp</text>
+<polygon fill="none" stroke="red" points="2385,-56.5 2385,-86.5 2526,-86.5 2526,-56.5 2385,-56.5"/>
+<text text-anchor="start" x="2393" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/ndt_sensor</text>
+<text text-anchor="middle" x="2455.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node111&#45;&gt;Node122 -->
-<g id="edge85" class="edge">
-<title>Node111&#45;&gt;Node122</title>
-<path fill="none" stroke="midnightblue" d="M2326.91,-402.3C2307.47,-387.63 2273.9,-357.41 2292.33,-335 2344.98,-270.98 2422.67,-363.02 2475.33,-299 2487.18,-284.58 2487.03,-271.54 2475.33,-257 2441.74,-215.27 2053.19,-175.95 2004.33,-154 1970.29,-138.71 1936.36,-112.01 1914.92,-93.35"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1917.15,-90.65 1907.34,-86.64 1912.5,-95.89 1917.15,-90.65"/>
-</g>
-<!-- Node112&#45;&gt;Node62 -->
-<g id="edge80" class="edge">
-<title>Node112&#45;&gt;Node62</title>
-<path fill="none" stroke="midnightblue" d="M2132.95,-335.23C2120.3,-323.5 2102.41,-306.9 2089.34,-294.78"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2091.63,-292.13 2081.91,-287.89 2086.87,-297.26 2091.63,-292.13"/>
-</g>
-<!-- Node118&#45;&gt;Node58 -->
-<g id="edge84" class="edge">
-<title>Node118&#45;&gt;Node58</title>
-<path fill="none" stroke="midnightblue" d="M2596.75,-336.59C2593.57,-336.04 2590.41,-335.51 2587.33,-335 2473.95,-316.36 2444.14,-320.8 2331.33,-299 2325.59,-297.89 2319.64,-296.63 2313.7,-295.3"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2314.28,-291.85 2303.75,-293.01 2312.71,-298.67 2314.28,-291.85"/>
-</g>
-<!-- Node122&#45;&gt;Node17 -->
+<!-- Node107&#45;&gt;Node118 -->
 <g id="edge86" class="edge">
-<title>Node122&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M1856.31,-56.4C1830.69,-46.37 1796.6,-33.03 1772.02,-23.4"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1773.03,-20.04 1762.44,-19.66 1770.48,-26.56 1773.03,-20.04"/>
+<title>Node107&#45;&gt;Node118</title>
+<path fill="none" stroke="midnightblue" d="M2898.87,-402.49C2916.25,-395.65 2937.1,-384.13 2947.5,-366 2968.92,-328.67 2912.76,-259.73 2909.5,-257 2864.88,-219.57 2838.99,-238.69 2783.5,-221 2698.19,-193.8 2674.66,-191.83 2593.5,-154 2554.53,-135.83 2512.32,-109.9 2484.99,-92.2"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2486.6,-89.07 2476.31,-86.53 2482.77,-94.93 2486.6,-89.07"/>
+</g>
+<!-- Node108&#45;&gt;Node58 -->
+<g id="edge81" class="edge">
+<title>Node108&#45;&gt;Node58</title>
+<path fill="none" stroke="midnightblue" d="M1951.23,-335.49C1901.65,-322.2 1828.11,-302.48 1782.31,-290.21"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1782.98,-286.76 1772.41,-287.55 1781.17,-293.52 1782.98,-286.76"/>
+</g>
+<!-- Node114&#45;&gt;Node52 -->
+<g id="edge85" class="edge">
+<title>Node114&#45;&gt;Node52</title>
+<path fill="none" stroke="midnightblue" d="M1696.91,-335.4C1670.58,-324.36 1633.77,-308.91 1605.33,-296.97"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1606.61,-293.72 1596.04,-293.07 1603.9,-300.17 1606.61,-293.72"/>
+</g>
+<!-- Node118&#45;&gt;Node17 -->
+<g id="edge87" class="edge">
+<title>Node118&#45;&gt;Node17</title>
+<path fill="none" stroke="midnightblue" d="M2384.89,-57.34C2381.72,-56.86 2378.58,-56.41 2375.5,-56 2203.11,-32.87 1996.47,-18.9 1907.19,-13.54"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1907.34,-10.04 1897.15,-12.94 1906.92,-17.03 1907.34,-10.04"/>
+</g>
+<!-- Node126&#45;&gt;Node25 -->
+<g id="edge92" class="edge">
+<title>Node126&#45;&gt;Node25</title>
+<path fill="none" stroke="midnightblue" d="M2504.29,-346.67C2421.8,-341.32 2263.96,-327.6 2216.5,-299 2201.2,-289.78 2173.97,-248.1 2159.03,-223.95"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2161.82,-221.81 2153.62,-215.1 2155.85,-225.46 2161.82,-221.81"/>
+</g>
+<!-- Node127 -->
+<g id="node48" class="node">
+<title>Node127</title>
+<g id="a_node48"><a xlink:href="elements_8hpp.html" target="_top" xlink:title="Implementation of the C++20&#39;s std::views::elements view.">
+<polygon fill="none" stroke="red" points="3107,-129 3107,-148 3258,-148 3258,-129 3107,-129"/>
+<text text-anchor="middle" x="3182.5" y="-136" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views/elements.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node126&#45;&gt;Node127 -->
+<g id="edge90" class="edge">
+<title>Node126&#45;&gt;Node127</title>
+<path fill="none" stroke="midnightblue" d="M2588.6,-340.92C2597.61,-338.78 2607.39,-336.64 2616.5,-335 2745.63,-311.79 2785.19,-340.96 2909.5,-299 3012.92,-264.09 3120.4,-187.18 3163.22,-154.58"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="3165.56,-157.19 3171.36,-148.32 3161.3,-151.64 3165.56,-157.19"/>
+</g>
+<!-- Node128 -->
+<g id="node49" class="node">
+<title>Node128</title>
+<g id="a_node49"><a xlink:href="random__intersperse_8hpp.html" target="_top" xlink:title="Implementation of a random_intersperse range adaptor object.">
+<polygon fill="none" stroke="red" points="2244.5,-56.5 2244.5,-86.5 2366.5,-86.5 2366.5,-56.5 2244.5,-56.5"/>
+<text text-anchor="start" x="2252.5" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views/random</text>
+<text text-anchor="middle" x="2305.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">_intersperse.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node126&#45;&gt;Node128 -->
+<g id="edge93" class="edge">
+<title>Node126&#45;&gt;Node128</title>
+<path fill="none" stroke="midnightblue" d="M2588.44,-340.91C2637.17,-328.06 2723.23,-304.7 2727.5,-299 2738.69,-284.06 2739.51,-271.29 2727.5,-257 2667.7,-185.85 2607.55,-256.13 2521.5,-221 2443.95,-189.33 2366.24,-126.43 2328.7,-93.58"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2330.7,-90.67 2320.89,-86.67 2326.06,-95.92 2330.7,-90.67"/>
+</g>
+<!-- Node130 -->
+<g id="node50" class="node">
+<title>Node130</title>
+<g id="a_node50"><a xlink:href="sample_8hpp.html" target="_top" xlink:title="Implementation of a sample (with replacement) range adaptor object.">
+<polygon fill="none" stroke="red" points="2577,-268.5 2577,-287.5 2718,-287.5 2718,-268.5 2577,-268.5"/>
+<text text-anchor="middle" x="2647.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views/sample.hpp</text>
+</a>
+</g>
+</g>
+<!-- Node126&#45;&gt;Node130 -->
+<g id="edge95" class="edge">
+<title>Node126&#45;&gt;Node130</title>
+<path fill="none" stroke="midnightblue" d="M2566.78,-340.86C2582.02,-329.17 2609.43,-308.17 2628.03,-293.92"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2630.32,-296.58 2636.13,-287.72 2626.06,-291.02 2630.32,-296.58"/>
+</g>
+<!-- Node127&#45;&gt;Node16 -->
+<g id="edge91" class="edge">
+<title>Node127&#45;&gt;Node16</title>
+<path fill="none" stroke="midnightblue" d="M3156.75,-128.9C3089.1,-106.33 2906.59,-45.41 2833.94,-21.16"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2834.64,-17.7 2824.04,-17.86 2832.42,-24.34 2834.64,-17.7"/>
+</g>
+<!-- Node128&#45;&gt;Node17 -->
+<g id="edge94" class="edge">
+<title>Node128&#45;&gt;Node17</title>
+<path fill="none" stroke="midnightblue" d="M2244.37,-62.29C2154.07,-50.16 1987.14,-27.74 1907.31,-17.02"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="1907.47,-13.51 1897.1,-15.65 1906.54,-20.45 1907.47,-13.51"/>
+</g>
+<!-- Node130&#45;&gt;Node14 -->
+<g id="edge96" class="edge">
+<title>Node130&#45;&gt;Node14</title>
+<path fill="none" stroke="midnightblue" d="M2615.7,-268.48C2601.33,-264.76 2584.11,-260.45 2568.5,-257 2499.95,-241.83 2420.83,-227.17 2366.82,-217.59"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2367.15,-214.09 2356.7,-215.8 2365.94,-220.99 2367.15,-214.09"/>
 </g>
 <!-- Node130&#45;&gt;Node25 -->
-<g id="edge91" class="edge">
+<g id="edge97" class="edge">
 <title>Node130&#45;&gt;Node25</title>
-<path fill="none" stroke="midnightblue" d="M1488.26,-349.03C1350.8,-347.22 980.8,-338.7 944.33,-299 931.7,-285.25 933.32,-272.08 944.33,-257 961.72,-233.18 990.49,-220.34 1018.74,-213.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1019.68,-216.88 1028.7,-211.32 1018.18,-210.04 1019.68,-216.88"/>
-</g>
-<!-- Node131 -->
-<g id="node48" class="node">
-<title>Node131</title>
-<g id="a_node48"><a xlink:href="elements_8hpp.html" target="_top" xlink:title="Implementation of the C++20&#39;s std::views::elements view.">
-<polygon fill="none" stroke="red" points="2212.83,-129 2212.83,-148 2363.83,-148 2363.83,-129 2212.83,-129"/>
-<text text-anchor="middle" x="2288.33" y="-136" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views/elements.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node130&#45;&gt;Node131 -->
-<g id="edge89" class="edge">
-<title>Node130&#45;&gt;Node131</title>
-<path fill="none" stroke="midnightblue" d="M1571.56,-340.97C1580.51,-338.81 1590.26,-336.63 1599.33,-335 1731.49,-311.19 1771.41,-339.89 1899.33,-299 1936.46,-287.13 1940.89,-273.24 1976.33,-257 2073.82,-212.32 2193.62,-170.76 2252.37,-151.22"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2253.55,-154.51 2261.94,-148.05 2251.35,-147.87 2253.55,-154.51"/>
-</g>
-<!-- Node132 -->
-<g id="node49" class="node">
-<title>Node132</title>
-<g id="a_node49"><a xlink:href="random__intersperse_8hpp.html" target="_top" xlink:title="Implementation of a random_intersperse range adaptor object.">
-<polygon fill="none" stroke="red" points="1433.33,-56.5 1433.33,-86.5 1555.33,-86.5 1555.33,-56.5 1433.33,-56.5"/>
-<text text-anchor="start" x="1441.33" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views/random</text>
-<text text-anchor="middle" x="1494.33" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">_intersperse.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node130&#45;&gt;Node132 -->
-<g id="edge92" class="edge">
-<title>Node130&#45;&gt;Node132</title>
-<path fill="none" stroke="midnightblue" d="M1553.71,-340.98C1566.81,-332.29 1585.3,-317.49 1593.33,-299 1600.76,-281.88 1604.15,-272.21 1593.33,-257 1564.96,-217.16 1517.7,-260.84 1489.33,-221 1463.11,-184.19 1475.12,-128.21 1485.31,-96.54"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1488.72,-97.39 1488.64,-86.8 1482.1,-95.13 1488.72,-97.39"/>
-</g>
-<!-- Node134 -->
-<g id="node50" class="node">
-<title>Node134</title>
-<g id="a_node50"><a xlink:href="sample_8hpp.html" target="_top" xlink:title="Implementation of a sample (with replacement) range adaptor object.">
-<polygon fill="none" stroke="red" points="1132.83,-268.5 1132.83,-287.5 1273.83,-287.5 1273.83,-268.5 1132.83,-268.5"/>
-<text text-anchor="middle" x="1203.33" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views/sample.hpp</text>
-</a>
-</g>
-</g>
-<!-- Node130&#45;&gt;Node134 -->
-<g id="edge94" class="edge">
-<title>Node130&#45;&gt;Node134</title>
-<path fill="none" stroke="midnightblue" d="M1492.47,-340.99C1441.02,-331.47 1356.05,-315.25 1283.33,-299 1271.1,-296.27 1257.89,-293.07 1245.79,-290.04"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1246.49,-286.6 1235.93,-287.55 1244.77,-293.39 1246.49,-286.6"/>
-</g>
-<!-- Node131&#45;&gt;Node16 -->
-<g id="edge90" class="edge">
-<title>Node131&#45;&gt;Node16</title>
-<path fill="none" stroke="midnightblue" d="M2289.88,-128.75C2293.29,-112.15 2302.96,-75.97 2325.33,-56 2355.71,-28.87 2402.66,-18.07 2433.45,-13.79"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="2434.11,-17.23 2443.61,-12.53 2433.25,-10.29 2434.11,-17.23"/>
-</g>
-<!-- Node132&#45;&gt;Node17 -->
-<g id="edge93" class="edge">
-<title>Node132&#45;&gt;Node17</title>
-<path fill="none" stroke="midnightblue" d="M1552.31,-56.47C1596.18,-45.86 1655.53,-31.51 1695.73,-21.79"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1696.62,-25.17 1705.52,-19.42 1694.97,-18.37 1696.62,-25.17"/>
-</g>
-<!-- Node134&#45;&gt;Node14 -->
-<g id="edge95" class="edge">
-<title>Node134&#45;&gt;Node14</title>
-<path fill="none" stroke="midnightblue" d="M1217.18,-268.36C1233.97,-257.88 1262.75,-239.93 1284.99,-226.05"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1287.13,-228.84 1293.77,-220.58 1283.43,-222.9 1287.13,-228.84"/>
-</g>
-<!-- Node134&#45;&gt;Node25 -->
-<g id="edge96" class="edge">
-<title>Node134&#45;&gt;Node25</title>
-<path fill="none" stroke="midnightblue" d="M1190.94,-268.36C1174.06,-256.57 1143.58,-235.29 1123.15,-221.03"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="1125.02,-218.07 1114.81,-215.22 1121.01,-223.81 1125.02,-218.07"/>
+<path fill="none" stroke="midnightblue" d="M2617.7,-268.41C2603,-264.44 2584.93,-259.96 2568.5,-257 2423.74,-230.89 2385.29,-240.58 2239.5,-221 2229.75,-219.69 2219.43,-218.17 2209.38,-216.62"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="2209.87,-213.16 2199.45,-215.07 2208.79,-220.07 2209.87,-213.16"/>
 </g>
 </g>
 </svg>

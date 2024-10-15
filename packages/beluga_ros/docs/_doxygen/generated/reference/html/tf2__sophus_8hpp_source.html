@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon Oct 14 06:45:44 2024 -0600, 6f13c9f&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 15 11:37:52 2024 -0600, 0df4da0&#39;"/>
   </head>
   
   
@@ -651,7 +651,7 @@ $(function() {
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  <span class="comment">// See https://www.ros.org/reps/rep-0103.html#covariance-representation .</span></div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
 <div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; [base_pose_in_map_xyz_rpy, base_pose_covariance_xyz_rpy] = <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a565300534fff0e7c56b8ece60f9c0eb9">beluga::unscented_transform</a>(</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;      in.log(), covariance, detail::tangential_space_to_xyz_rpy&lt;Scalar&gt;, std::nullopt,</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;      in.log(), <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a1e097971cc6bc315081bc0a2b7b587f1">covariance</a>, detail::tangential_space_to_xyz_rpy&lt;Scalar&gt;, std::nullopt,</div>
 <div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;      [](<span class="keyword">const</span> std::vector&lt;Eigen::Vector&lt;Scalar, 6&gt;&gt;&amp; samples, <span class="keyword">const</span> std::vector&lt;Scalar&gt;&amp; <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/particles_8hpp.html#a77f6a442f88b44e322efa2f32eb184b5">weights</a>) {</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        Eigen::Vector&lt;Scalar, 6&gt; out = Eigen::Vector&lt;Scalar, 6&gt;::Zero();</div>
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        Eigen::Vector&lt;Scalar, 2&gt; roll_aux = Eigen::Vector&lt;Scalar, 2&gt;::Zero();</div>
@@ -673,7 +673,7 @@ $(function() {
 <div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        out[5] = std::atan2(yaw_aux.x(), yaw_aux.y());</div>
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        <span class="keywordflow">return</span> out;</div>
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;      },</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;      [](<span class="keyword">const</span> Eigen::Vector&lt;Scalar, 6&gt;&amp; <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sample_8hpp.html#ae310f2a179ad1f2f1ffdce1df33d84d3">sample</a>, <span class="keyword">const</span> Eigen::Vector&lt;Scalar, 6&gt;&amp; mean) {</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;      [](<span class="keyword">const</span> Eigen::Vector&lt;Scalar, 6&gt;&amp; <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sample_8hpp.html#ae310f2a179ad1f2f1ffdce1df33d84d3">sample</a>, <span class="keyword">const</span> Eigen::Vector&lt;Scalar, 6&gt;&amp; <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">mean</a>) {</div>
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        Eigen::Vector&lt;Scalar, 6&gt; out;</div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        <span class="keyword">const</span> Sophus::SO3&lt;Scalar&gt; sample_so3(</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;            Sophus::SO3&lt;Scalar&gt;::rotZ(sample[5]) * Sophus::SO3&lt;Scalar&gt;::rotY(sample[4]) *</div>
@@ -685,7 +685,7 @@ $(function() {
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        <span class="keyword">const</span> Sophus::SO3&lt;Scalar&gt; delta = mean_so3.inverse() * sample_so3;</div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="keyword">const</span> Eigen::AngleAxis&lt;Scalar&gt; angle_axis{delta.unit_quaternion()};</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        out.template head&lt;3&gt;() = <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sample_8hpp.html#ae310f2a179ad1f2f1ffdce1df33d84d3">sample</a>.template head&lt;3&gt;() - mean.template head&lt;3&gt;();</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        out.template head&lt;3&gt;() = <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sample_8hpp.html#ae310f2a179ad1f2f1ffdce1df33d84d3">sample</a>.template head&lt;3&gt;() - <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">mean</a>.template head&lt;3&gt;();</div>
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        out.template tail&lt;3&gt;() = angle_axis.axis() * angle_axis.angle();</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        <span class="keywordflow">return</span> out;</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;      });</div>
@@ -736,7 +736,9 @@ $(function() {
 <div class="ttc" id="anamespaceSophus_html"><div class="ttname"><a href="namespaceSophus.html">Sophus</a></div><div class="ttdoc">Sophus namespace extension for message conversion function overload resolution (ADL enabled).</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:337</div></div>
 <div class="ttc" id="anamespaceSophus_html_a3a8cd23b674364e3312d842e8ecc9c15"><div class="ttname"><a href="namespaceSophus.html#a3a8cd23b674364e3312d842e8ecc9c15">Sophus::toMsg</a></div><div class="ttdeci">beluga_ros::msg::Transform toMsg(const Sophus::SE2&lt; Scalar &gt; &amp;pose)</div><div class="ttdoc">Converts an SE2 pose to a geometry_msgs/Transform message.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:341</div></div>
 <div class="ttc" id="anamespaceSophus_html_a7c54d773fcaa635dc4c00ff079521c69"><div class="ttname"><a href="namespaceSophus.html#a7c54d773fcaa635dc4c00ff079521c69">Sophus::fromMsg</a></div><div class="ttdeci">void fromMsg(const beluga_ros::msg::Transform &amp;message, Sophus::SE2&lt; Scalar &gt; &amp;pose)</div><div class="ttdoc">Extracts an SE2 pose from a geometry_msgs/Transform message.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:353</div></div>
+<div class="ttc" id="anamespacebeluga_html_a1e097971cc6bc315081bc0a2b7b587f1"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a1e097971cc6bc315081bc0a2b7b587f1">covariance</a></div><div class="ttdeci">constexpr detail::covariance_fn covariance</div></div>
 <div class="ttc" id="anamespacebeluga_html_a565300534fff0e7c56b8ece60f9c0eb9"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a565300534fff0e7c56b8ece60f9c0eb9">beluga::unscented_transform</a></div><div class="ttdeci">auto unscented_transform(const Eigen::MatrixBase&lt; MeanDerived &gt; &amp;mean, const Eigen::MatrixBase&lt; CovarianceDerived &gt; &amp;covariance, TransferFn &amp;&amp;transfer_fn, std::optional&lt; typename MeanDerived::Scalar &gt; kappa=std::nullopt, MeanFn mean_fn=default_weighted_mean, ResidualFn residual_fn=std::minus&lt; TransformedT &gt;{})</div></div>
+<div class="ttc" id="anamespacebeluga_html_a90ea4f1947f9abe8d6b00d73269afc02"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">mean</a></div><div class="ttdeci">constexpr detail::mean_fn mean</div></div>
 <div class="ttc" id="anamespacetf2_html"><div class="ttname"><a href="namespacetf2.html">tf2</a></div><div class="ttdoc">tf2 namespace extension for message conversion overload resolution.</div><div class="ttdef"><b>Definition:</b> tf2_eigen.hpp:38</div></div>
 <div class="ttc" id="anamespacetf2_html_a566dca2143ff3a8cddb13ee0fa9cfc23"><div class="ttname"><a href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a></div><div class="ttdeci">beluga_ros::msg::Point toMsg(const Eigen::Matrix&lt; Scalar, 2, 1 &gt; &amp;in)</div><div class="ttdoc">Converts an Eigen Vector2 type to a Point message.</div><div class="ttdef"><b>Definition:</b> tf2_eigen.hpp:46</div></div>
 <div class="ttc" id="anamespacetf2_html_ab5b19c7fe5425ac099422ea142b7b459"><div class="ttname"><a href="namespacetf2.html#ab5b19c7fe5425ac099422ea142b7b459">tf2::fromMsg</a></div><div class="ttdeci">void fromMsg(const beluga_ros::msg::Transform &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</div><div class="ttdoc">Converts a Transform message type to a Sophus SE2 type.</div><div class="ttdef"><b>Definition:</b> tf2_sophus.hpp:165</div></div>
@@ -801,7 +803,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Oct 14 06:45:44 2024 -0600, 6f13c9f&#39;.
+  Last updated on &#39;Tue Oct 15 11:37:52 2024 -0600, 0df4da0&#39;.
   <br/>
 </p>
   </div>

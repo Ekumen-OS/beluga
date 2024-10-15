@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon Oct 14 06:45:44 2024 -0600, 6f13c9f&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 15 11:37:52 2024 -0600, 0df4da0&#39;"/>
   </head>
   
   
@@ -832,35 +832,8 @@ Sophus::SE3d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a879996e3d483a908a7d5f706ac303b88"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a879996e3d483a908a7d5f706ac303b88">effective_sample_size</a> (Range &amp;&amp;range)</td></tr>
 <tr class="memdesc:a879996e3d483a908a7d5f706ac303b88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the ESS of a given a range of weights.  <a href="namespacebeluga.html#a879996e3d483a908a7d5f706ac303b88">More...</a><br /></td></tr>
 <tr class="separator:a879996e3d483a908a7d5f706ac303b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcec94ef6e5c1effabe7cced2982d8ae"><td class="memTemplParams" colspan="2">template&lt;class Range , class WeightsRange , class Scalar &gt; </td></tr>
-<tr class="memitem:adcec94ef6e5c1effabe7cced2982d8ae"><td class="memTemplItemLeft" align="right" valign="top">Sophus::Matrix2&lt; Scalar &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#adcec94ef6e5c1effabe7cced2982d8ae">calculate_covariance</a> (Range &amp;&amp;range, WeightsRange &amp;&amp;normalized_weights, const Sophus::Vector2&lt; Scalar &gt; &amp;mean)</td></tr>
-<tr class="memdesc:adcec94ef6e5c1effabe7cced2982d8ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the covariance of a range given its mean and the weights of each element.  <a href="namespacebeluga.html#adcec94ef6e5c1effabe7cced2982d8ae">More...</a><br /></td></tr>
-<tr class="separator:adcec94ef6e5c1effabe7cced2982d8ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6556fb20721eaea6b5a2d4b86ce603b8"><td class="memTemplParams" colspan="2">template&lt;class Range , class Scalar &gt; </td></tr>
-<tr class="memitem:a6556fb20721eaea6b5a2d4b86ce603b8"><td class="memTemplItemLeft" align="right" valign="top">Sophus::Matrix2&lt; Scalar &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a6556fb20721eaea6b5a2d4b86ce603b8">calculate_covariance</a> (Range &amp;&amp;range, const Sophus::Vector2&lt; Scalar &gt; &amp;mean)</td></tr>
-<tr class="separator:a6556fb20721eaea6b5a2d4b86ce603b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8a86e1cace0396fa3b777e6568f5e02"><td class="memTemplParams" colspan="2">template&lt;class Poses , class Weights , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ae8a86e1cace0396fa3b777e6568f5e02"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE3&lt; Scalar &gt;, Sophus::Matrix6&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#ae8a86e1cace0396fa3b777e6568f5e02">estimate</a> (const Poses &amp;poses, const Weights &amp;weights)</td></tr>
-<tr class="memdesc:ae8a86e1cace0396fa3b777e6568f5e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#ae8a86e1cace0396fa3b777e6568f5e02">More...</a><br /></td></tr>
-<tr class="separator:ae8a86e1cace0396fa3b777e6568f5e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f8114604160ec3d3fd272f183f621f3"><td class="memTemplParams" colspan="2">template&lt;class Poses , class Weights , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a3f8114604160ec3d3fd272f183f621f3"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Sophus::Matrix3&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a3f8114604160ec3d3fd272f183f621f3">estimate</a> (Poses &amp;&amp;poses, Weights &amp;&amp;weights)</td></tr>
-<tr class="memdesc:a3f8114604160ec3d3fd272f183f621f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a3f8114604160ec3d3fd272f183f621f3">More...</a><br /></td></tr>
-<tr class="separator:a3f8114604160ec3d3fd272f183f621f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a249b73c891cd88fee740fcc632b655b5"><td class="memTemplParams" colspan="2">template&lt;class Scalars , class Weights , class Scalar  = ranges::range_value_t&lt;Scalars&gt;, typename  = std::enable_if_t&lt;std::is_arithmetic_v&lt;Scalar&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a249b73c891cd88fee740fcc632b655b5"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Scalar, Scalar &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a249b73c891cd88fee740fcc632b655b5">estimate</a> (Scalars &amp;&amp;scalars, Weights &amp;&amp;weights)</td></tr>
-<tr class="memdesc:a249b73c891cd88fee740fcc632b655b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes mean and variance of a range of weighted scalars.  <a href="namespacebeluga.html#a249b73c891cd88fee740fcc632b655b5">More...</a><br /></td></tr>
-<tr class="separator:a249b73c891cd88fee740fcc632b655b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15f9f2960c89942dd6509401e23fdd48"><td class="memTemplParams" colspan="2">template&lt;class Poses , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a15f9f2960c89942dd6509401e23fdd48"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE3&lt; Scalar &gt;, Sophus::Matrix6&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a15f9f2960c89942dd6509401e23fdd48">estimate</a> (const Poses &amp;poses)</td></tr>
-<tr class="memdesc:a15f9f2960c89942dd6509401e23fdd48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a15f9f2960c89942dd6509401e23fdd48">More...</a><br /></td></tr>
-<tr class="separator:a15f9f2960c89942dd6509401e23fdd48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a992598bc475f99f59e5b32b06caf854b"><td class="memTemplParams" colspan="2">template&lt;class Poses , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a992598bc475f99f59e5b32b06caf854b"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; Sophus::SE2&lt; Scalar &gt;, Sophus::Matrix3&lt; Scalar &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">estimate</a> (Poses &amp;&amp;poses)</td></tr>
-<tr class="memdesc:a992598bc475f99f59e5b32b06caf854b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair consisting of the estimated mean pose and its covariance.  <a href="namespacebeluga.html#a992598bc475f99f59e5b32b06caf854b">More...</a><br /></td></tr>
-<tr class="separator:a992598bc475f99f59e5b32b06caf854b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a565300534fff0e7c56b8ece60f9c0eb9"><td class="memTemplParams" colspan="2">template&lt;typename MeanDerived , typename CovarianceDerived , typename TransferFn , typename TransformedT  = std::result_of_t&lt;TransferFn(MeanDerived)&gt;, typename MeanFn  = detail::default_weighted_mean_fn, typename ResidualFn  = std::minus&lt;TransformedT&gt;&gt; </td></tr>
-<tr class="memitem:a565300534fff0e7c56b8ece60f9c0eb9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a565300534fff0e7c56b8ece60f9c0eb9">unscented_transform</a> (const Eigen::MatrixBase&lt; MeanDerived &gt; &amp;mean, const Eigen::MatrixBase&lt; CovarianceDerived &gt; &amp;covariance, TransferFn &amp;&amp;transfer_fn, std::optional&lt; typename MeanDerived::Scalar &gt; kappa=std::nullopt, MeanFn mean_fn=<a class="el" href="namespacebeluga.html#a4abc974473c43aaebe8a6a7bea10cd26">default_weighted_mean</a>, ResidualFn residual_fn=std::minus&lt; TransformedT &gt;{})</td></tr>
+<tr class="memitem:a565300534fff0e7c56b8ece60f9c0eb9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a565300534fff0e7c56b8ece60f9c0eb9">unscented_transform</a> (const Eigen::MatrixBase&lt; MeanDerived &gt; &amp;<a class="el" href="namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">mean</a>, const Eigen::MatrixBase&lt; CovarianceDerived &gt; &amp;<a class="el" href="namespacebeluga.html#a1e097971cc6bc315081bc0a2b7b587f1">covariance</a>, TransferFn &amp;&amp;transfer_fn, std::optional&lt; typename MeanDerived::Scalar &gt; kappa=std::nullopt, MeanFn mean_fn=<a class="el" href="namespacebeluga.html#a4abc974473c43aaebe8a6a7bea10cd26">default_weighted_mean</a>, ResidualFn residual_fn=std::minus&lt; TransformedT &gt;{})</td></tr>
 <tr class="memdesc:a565300534fff0e7c56b8ece60f9c0eb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the unscented transform, a mathematical function used to estimate the result of applying a given a possibly nonlinear transformation to a probability distribution that is characterized with mean and covariance. See <a href="https://en.wikipedia.org/wiki/Unscented_transform">https://en.wikipedia.org/wiki/Unscented_transform</a> for more information. Also see <a href="https://arxiv.org/pdf/2104.01958">https://arxiv.org/pdf/2104.01958</a> Equation (5) for more context on sigma points selection.  <a href="namespacebeluga.html#a565300534fff0e7c56b8ece60f9c0eb9">More...</a><br /></td></tr>
 <tr class="separator:a565300534fff0e7c56b8ece60f9c0eb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a223b23ff16126a77c01a5c636bd4f51f"><td class="memItemLeft" align="right" valign="top"><a id="a223b23ff16126a77c01a5c636bd4f51f"></a>
@@ -933,6 +906,15 @@ template&lt;class T , class TupleLike &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a90ea4f1947f9abe8d6b00d73269afc02"><td class="memItemLeft" align="right" valign="top">constexpr detail::mean_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">mean</a></td></tr>
+<tr class="memdesc:a90ea4f1947f9abe8d6b00d73269afc02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the weighted mean (or average) of a range of values.  <a href="namespacebeluga.html#a90ea4f1947f9abe8d6b00d73269afc02">More...</a><br /></td></tr>
+<tr class="separator:a90ea4f1947f9abe8d6b00d73269afc02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e097971cc6bc315081bc0a2b7b587f1"><td class="memItemLeft" align="right" valign="top">constexpr detail::covariance_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a1e097971cc6bc315081bc0a2b7b587f1">covariance</a></td></tr>
+<tr class="memdesc:a1e097971cc6bc315081bc0a2b7b587f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the weighted covariance of a range of values.  <a href="namespacebeluga.html#a1e097971cc6bc315081bc0a2b7b587f1">More...</a><br /></td></tr>
+<tr class="separator:a1e097971cc6bc315081bc0a2b7b587f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcaef1243abc9e2f60cd62d0e625a6de"><td class="memItemLeft" align="right" valign="top">constexpr detail::estimate_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#adcaef1243abc9e2f60cd62d0e625a6de">estimate</a></td></tr>
+<tr class="memdesc:adcaef1243abc9e2f60cd62d0e625a6de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the estimate (mean and covariance) of a range of values.  <a href="namespacebeluga.html#adcaef1243abc9e2f60cd62d0e625a6de">More...</a><br /></td></tr>
+<tr class="separator:adcaef1243abc9e2f60cd62d0e625a6de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4abc974473c43aaebe8a6a7bea10cd26"><td class="memItemLeft" align="right" valign="top"><a id="a4abc974473c43aaebe8a6a7bea10cd26"></a>
 constexpr <a class="el" href="structbeluga_1_1detail_1_1default__weighted__mean__fn.html">detail::default_weighted_mean_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a4abc974473c43aaebe8a6a7bea10cd26">default_weighted_mean</a></td></tr>
 <tr class="memdesc:a4abc974473c43aaebe8a6a7bea10cd26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object for computing a euclidean weighted mean of a vector of elements. <br /></td></tr>
@@ -1030,106 +1012,6 @@ template&lt;typename T , std::size_t N&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a6556fb20721eaea6b5a2d4b86ce603b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6556fb20721eaea6b5a2d4b86ce603b8">&#9670;&nbsp;</a></span>calculate_covariance() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Range , class Scalar &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">Sophus::Matrix2&lt;Scalar&gt; beluga::calculate_covariance </td>
-          <td>(</td>
-          <td class="paramtype">Range &amp;&amp;&#160;</td>
-          <td class="paramname"><em>range</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Sophus::Vector2&lt; Scalar &gt; &amp;&#160;</td>
-          <td class="paramname"><em>mean</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Convenience overload that calculates the covariance of a range given its mean for the case where all samples have the same weight. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Sophus::Vector2&lt;Scalar&gt;</code>. </td></tr>
-    <tr><td class="paramname">Scalar</td><td>A scalar type, e.g. double or float. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">range</td><td>Range to be used to calculate the covariance. </td></tr>
-    <tr><td class="paramname">mean</td><td>The previously calculated mean of range. The value must be correct for the resulting covariance to be correct. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The calculated covariance, as a <code>Sophus::Matrix2&lt;Scalar&gt;</code>. </dd></dl>
-
-</div>
-</div>
-<a id="adcec94ef6e5c1effabe7cced2982d8ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adcec94ef6e5c1effabe7cced2982d8ae">&#9670;&nbsp;</a></span>calculate_covariance() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Range , class WeightsRange , class Scalar &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">Sophus::Matrix2&lt;Scalar&gt; beluga::calculate_covariance </td>
-          <td>(</td>
-          <td class="paramtype">Range &amp;&amp;&#160;</td>
-          <td class="paramname"><em>range</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">WeightsRange &amp;&amp;&#160;</td>
-          <td class="paramname"><em>normalized_weights</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Sophus::Vector2&lt; Scalar &gt; &amp;&#160;</td>
-          <td class="paramname"><em>mean</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Calculates the covariance of a range given its mean and the weights of each element. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Range</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Sophus::Vector2&lt;Scalar&gt;</code>. </td></tr>
-    <tr><td class="paramname">WeightsRange</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Scalar</code>. </td></tr>
-    <tr><td class="paramname">Scalar</td><td>A scalar type, e.g. double or float. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">range</td><td>Range to be used to calculate the covariance. </td></tr>
-    <tr><td class="paramname">normalized_weights</td><td>Range with the normalized (total weight 1.0) weights of the samples in 'range'. </td></tr>
-    <tr><td class="paramname">mean</td><td>The previously calculated mean of range. The value must be correct for the resulting covariance to be correct. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The calculated covariance, as a <code>Sophus::Matrix2&lt;Scalar&gt;</code>. </dd></dl>
-
-</div>
-</div>
 <a id="a283a211c0e9ec8ad0a71140d11b96b94"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a283a211c0e9ec8ad0a71140d11b96b94">&#9670;&nbsp;</a></span>cluster_based_estimate()</h2>
 
@@ -1219,234 +1101,6 @@ template&lt;class Range , std::enable_if_t&lt;!is_particle_range_v&lt; Range &gt
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a15f9f2960c89942dd6509401e23fdd48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15f9f2960c89942dd6509401e23fdd48">&#9670;&nbsp;</a></span>estimate() <span class="overload">[1/5]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Poses , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::pair&lt;Sophus::SE3&lt;Scalar&gt;, Sophus::Matrix6&lt;Scalar&gt; &gt; beluga::estimate </td>
-          <td>(</td>
-          <td class="paramtype">const Poses &amp;&#160;</td>
-          <td class="paramname"><em>poses</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a pair consisting of the estimated mean pose and its covariance. </p>
-<p>Given a range of poses, computes the estimated pose by averaging the translation and rotation parts. Computes the covariance matrix of the translation and rotation parts to create a 6x6 covariance matrix, assuming all the poses are equally weighted.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Poses</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Sophus::SE3&lt;Scalar&gt;</code>. </td></tr>
-    <tr><td class="paramname">Weights</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Scalar</code>. </td></tr>
-    <tr><td class="paramname">Pose</td><td>The pose value type of the given range. </td></tr>
-    <tr><td class="paramname">Scalar</td><td>A scalar type, e.g. double or float. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">poses</td><td>3D poses to estimate mean and covariances from, equally. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The estimated pose and its 6x6 covariance matrix. </dd></dl>
-
-</div>
-</div>
-<a id="ae8a86e1cace0396fa3b777e6568f5e02"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8a86e1cace0396fa3b777e6568f5e02">&#9670;&nbsp;</a></span>estimate() <span class="overload">[2/5]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Poses , class Weights , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::pair&lt;Sophus::SE3&lt;Scalar&gt;, Sophus::Matrix6&lt;Scalar&gt; &gt; beluga::estimate </td>
-          <td>(</td>
-          <td class="paramtype">const Poses &amp;&#160;</td>
-          <td class="paramname"><em>poses</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Weights &amp;&#160;</td>
-          <td class="paramname"><em>weights</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a pair consisting of the estimated mean pose and its covariance. </p>
-<p>Given a range of poses, computes the estimated pose by averaging the translation and rotation parts. Computes the covariance matrix of the translation and rotation parts to create a 6x6 covariance matrix. NOTE: We represent this estimate as a <code>large</code> noiseless SE3 pose and a covariance in se3, the tangent space of the SE3 manifold. Users may perform the appropriate conversions to get the covariance matrix into their parametrization of interest. This reasoning is based on "Characterizing the Uncertainty of Jointly
-Distributed Poses in the Lie Algebra" by Mangelson et al. (<a href="https://robots.et.byu.edu/jmangelson/pubs/2020/mangelson2020tro.pdf">https://robots.et.byu.edu/jmangelson/pubs/2020/mangelson2020tro.pdf</a>). See section III. E) "Defining Random Variables
-over Poses" for more context.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Poses</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Sophus::SE3&lt;Scalar&gt;</code>. </td></tr>
-    <tr><td class="paramname">Weights</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Scalar</code>. </td></tr>
-    <tr><td class="paramname">Pose</td><td>The pose value type of the given range. </td></tr>
-    <tr><td class="paramname">Scalar</td><td>A scalar type, e.g. double or float. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">poses</td><td>3D poses to estimate mean and covariances from. </td></tr>
-    <tr><td class="paramname">weights</td><td>Weights for the poses with matching indices. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The estimated pose and its 6x6 covariance matrix. </dd></dl>
-
-</div>
-</div>
-<a id="a992598bc475f99f59e5b32b06caf854b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a992598bc475f99f59e5b32b06caf854b">&#9670;&nbsp;</a></span>estimate() <span class="overload">[3/5]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Poses , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::pair&lt;Sophus::SE2&lt;Scalar&gt;, Sophus::Matrix3&lt;Scalar&gt; &gt; beluga::estimate </td>
-          <td>(</td>
-          <td class="paramtype">Poses &amp;&amp;&#160;</td>
-          <td class="paramname"><em>poses</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a pair consisting of the estimated mean pose and its covariance. </p>
-<p>Given a range of poses, computes the estimated pose by averaging the translation and rotation parts, assuming all poses are equally weighted. Computes the covariance matrix of the translation parts and the circular variance of the rotation angles to create a 3x3 covariance matrix. It does not take into account the particle weights. This is appropriate for use with filter update cycles that resample the particle set at every iteration, since in that case the belief is fully represented by the spatial distribution of the particles, and the particle weights provide no additional information.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Poses</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Sophus::SE2&lt;Scalar&gt;</code>. </td></tr>
-    <tr><td class="paramname">Pose</td><td>The pose value type of the given range. </td></tr>
-    <tr><td class="paramname">Scalar</td><td>A scalar type, e.g. double or float. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">poses</td><td>Poses of equally weighted 2D poses. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The estimated pose and its 3x3 covariance matrix. </dd></dl>
-
-</div>
-</div>
-<a id="a3f8114604160ec3d3fd272f183f621f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f8114604160ec3d3fd272f183f621f3">&#9670;&nbsp;</a></span>estimate() <span class="overload">[4/5]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Poses , class Weights , class Pose  = ranges::range_value_t&lt;Poses&gt;, class Scalar  = typename Pose::Scalar, typename  = std::enable_if_t&lt;std::is_same_v&lt;Pose, typename Sophus::SE2&lt;Scalar&gt;&gt;&gt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::pair&lt;Sophus::SE2&lt;Scalar&gt;, Sophus::Matrix3&lt;Scalar&gt; &gt; beluga::estimate </td>
-          <td>(</td>
-          <td class="paramtype">Poses &amp;&amp;&#160;</td>
-          <td class="paramname"><em>poses</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Weights &amp;&amp;&#160;</td>
-          <td class="paramname"><em>weights</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a pair consisting of the estimated mean pose and its covariance. </p>
-<p>Given a range of poses, computes the estimated pose by averaging the translation and rotation parts. Computes the covariance matrix of the translation parts and the circular variance of the rotation angles to create a 3x3 covariance matrix. It does not take into account the particle weights.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Poses</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Sophus::SE2&lt;Scalar&gt;</code>. </td></tr>
-    <tr><td class="paramname">Weights</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Scalar</code>. </td></tr>
-    <tr><td class="paramname">Pose</td><td>The pose value type of the given range. </td></tr>
-    <tr><td class="paramname">Scalar</td><td>A scalar type, e.g. double or float. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">poses</td><td>Poses of equally weighted 2D poses. </td></tr>
-    <tr><td class="paramname">weights</td><td>Poses of equally weighted 2D poses. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The estimated pose and its 3x3 covariance matrix. </dd></dl>
-
-</div>
-</div>
-<a id="a249b73c891cd88fee740fcc632b655b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a249b73c891cd88fee740fcc632b655b5">&#9670;&nbsp;</a></span>estimate() <span class="overload">[5/5]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Scalars , class Weights , class Scalar  = ranges::range_value_t&lt;Scalars&gt;, typename  = std::enable_if_t&lt;std::is_arithmetic_v&lt;Scalar&gt;&gt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::pair&lt;Scalar, Scalar&gt; beluga::estimate </td>
-          <td>(</td>
-          <td class="paramtype">Scalars &amp;&amp;&#160;</td>
-          <td class="paramname"><em>scalars</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Weights &amp;&amp;&#160;</td>
-          <td class="paramname"><em>weights</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Computes mean and variance of a range of weighted scalars. </p>
-<p>Given a range of scalars, computes the scalar mean and variance.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Scalars</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>std::vector&lt;Scalar&gt;</code>. </td></tr>
-    <tr><td class="paramname">Weights</td><td>A <a href="https://en.cppreference.com/w/cpp/ranges/sized_range">sized range</a> type whose value type is <code>Scalar</code>. </td></tr>
-    <tr><td class="paramname">Scalar</td><td>The scalar value type of the given range of Scalars. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">scalars</td><td>Range of scalars. </td></tr>
-    <tr><td class="paramname">weights</td><td>Range of weights. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The estimated mean and variance. </dd></dl>
 
 </div>
 </div>
@@ -1958,6 +1612,60 @@ template&lt;typename MeanDerived , typename CovarianceDerived , typename Transfe
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a1e097971cc6bc315081bc0a2b7b587f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e097971cc6bc315081bc0a2b7b587f1">&#9670;&nbsp;</a></span>covariance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr detail::covariance_fn beluga::covariance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculate the weighted covariance of a range of values. </p>
+<p>The inputs are a range of values, a range of corresponding weights, the pre-computed mean, and an optional projection function to convert to the right value-type.</p>
+<p>It supports floating-point numbers, vectors, and Lie group elements like SE2 and SE3.</p>
+<p>For Lie group elements, the function computes covariance in the tangent space, representing the uncertainty of poses on the Lie manifold. Users may perform the appropriate conversions to get the covariance matrix into their parametrization of interest.</p>
+<p>The weights are assumed to already be normalized. Non-normalized weights will yield incorrect results. </p>
+
+</div>
+</div>
+<a id="adcaef1243abc9e2f60cd62d0e625a6de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcaef1243abc9e2f60cd62d0e625a6de">&#9670;&nbsp;</a></span>estimate</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr detail::estimate_fn beluga::estimate</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculate the estimate (mean and covariance) of a range of values. </p>
+<p>The inputs are a range of values and a range of corresponding weights. It supports floating-point numbers, vectors, and Lie group elements like SE2 and SE3.</p>
+<p>The function does not assume that the input weights are normalized. It normalizes the weights while iterating, which might have a performance impact. Specifically, the function has to iterate over the weights multiple times (e.g., once to compute the mean, and again to compute the covariance). The normalization factor is computed once, but division for normalizing the weights is performed each time a weight is accessed. </p>
+
+</div>
+</div>
 <a id="a30ab9d2dd17389ef5260b264329a463f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a30ab9d2dd17389ef5260b264329a463f">&#9670;&nbsp;</a></span>make_from_state</h2>
 
@@ -1988,6 +1696,33 @@ template&lt;class Particle &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a90ea4f1947f9abe8d6b00d73269afc02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90ea4f1947f9abe8d6b00d73269afc02">&#9670;&nbsp;</a></span>mean</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr detail::mean_fn beluga::mean</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculate the weighted mean (or average) of a range of values. </p>
+<p>The inputs are a range of values, a range of corresponding weights, and an optional projection function to convert to the right value-type.</p>
+<p>It supports floating-point numbers, vectors, quaternions, and Lie group elements like SE2 and SE3.</p>
+<p>The weights are assumed to already be normalized. Non-normalized weights will yield incorrect results. </p>
 
 </div>
 </div>
@@ -2047,7 +1782,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Oct 14 06:45:44 2024 -0600, 6f13c9f&#39;.
+  Last updated on &#39;Tue Oct 15 11:37:52 2024 -0600, 0df4da0&#39;.
   <br/>
 </p>
   </div>
