@@ -266,7 +266,7 @@ struct covariance_fn {
     assert(weights_it == ranges::end(normalized_weights));
     assert(squared_weight_sum < 1.0);
 
-    accumulator /= (1.0 - squared_weight_sum);
+    accumulator /= (1.0 - squared_weight_sum);  // apply the correction factor to yield an unbiased estimator
     return accumulator;
   }
 
@@ -301,7 +301,7 @@ struct covariance_fn {
     assert(weights_it == ranges::end(normalized_weights));
     assert(squared_weight_sum < 1.0);
 
-    accumulator /= (1.0 - squared_weight_sum);
+    accumulator /= (1.0 - squared_weight_sum);  // apply the correction factor to yield an unbiased estimator
     return accumulator;
   }
 
@@ -352,7 +352,7 @@ struct covariance_fn {
     assert(weights_it == ranges::end(normalized_weights));
     assert(squared_weight_sum < 1.0);
 
-    accumulator /= (1.0 - squared_weight_sum);
+    accumulator /= (1.0 - squared_weight_sum);  // apply the correction factor to yield an unbiased estimator
     return accumulator;
   }
 
