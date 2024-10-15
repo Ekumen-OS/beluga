@@ -43,10 +43,10 @@ struct mean_fn {
   template <
       class Values,
       class Weights,
-      class Proj = ranges::identity,
-      class Value = std::decay_t<std::invoke_result_t<Proj, ranges::range_value_t<Values>>>,
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class = std::enable_if_t<std::is_base_of_v<Eigen::MatrixBase<Value>, Value>>>
-  auto operator()(Values&& values, Weights&& normalized_weights, Proj proj = {}) const {
+  auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const {
     static_assert(ranges::input_range<Values>);
     static_assert(ranges::input_range<Weights>);
 
@@ -64,7 +64,7 @@ struct mean_fn {
     assert(weights_it != ranges::end(normalized_weights));
 
     for (; it != last; ++weights_it, ++it) {
-      result += *weights_it * proj(*it);
+      result += *weights_it * projection(*it);
     }
 
     assert(weights_it == ranges::end(normalized_weights));
@@ -75,39 +75,42 @@ struct mean_fn {
   template <
       class Values,
       class Weights,
-      class Proj = ranges::identity,
-      class Scalar = std::decay_t<std::invoke_result_t<Proj, ranges::range_value_t<Values>>>,
+      class Projection = ranges::identity,
+      class Scalar = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class = std::enable_if_t<std::is_floating_point_v<Scalar>>>
-  auto operator()(Values&& values, Weights&& normalized_weights, Proj proj = {}) const -> Scalar {
+  auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const -> Scalar {
     return (*this)(
         std::forward<Values>(values), std::forward<Weights>(normalized_weights),
-        [proj = std::move(proj)](const auto& value) { return Sophus::Vector<Scalar, 1>(proj(value)); })(0);
+        [projection = std::move(projection)](const auto& value) {
+          return Sophus::Vector<Scalar, 1>(projection(value));
+        })(0);
   }
 
   template <
       class Values,
       class Weights,
-      class Proj = ranges::identity,
+      class Projection = ranges::identity,
       class Value = std::decay_t<ranges::range_value_t<Values>>,
       class Scalar = typename Value::Scalar,
       class = std::enable_if_t<std::is_base_of_v<Sophus::SO2Base<Value>, Value>>>
-  auto operator()(Values&&, Weights&&, Proj = {}) const -> Value = delete;  // not-implemented
+  auto operator()(Values&&, Weights&&, Projection = {}) const -> Value = delete;  // not-implemented
 
   template <
       class Values,
       class Weights,
-      class Proj = ranges::identity,
-      class Value = std::decay_t<std::invoke_result_t<Proj, ranges::range_value_t<Values>>>,
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class Scalar = typename Value::Scalar,
       class = std::enable_if_t<std::is_base_of_v<Sophus::SE2Base<Value>, Value>>>
-  auto operator()(Values&& values, Weights&& normalized_weights, Proj proj = {}) const -> Sophus::SE2<Scalar> {
+  auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const
+      -> Sophus::SE2<Scalar> {
     // Compute the average of all the coefficients of the SE2 group elements and construct a new SE2 element. Notice
     // that after averaging the complex representation of the orientation the resulting complex is not on the unit
     // circle. This is expected and the value will be renormalized before returning.
     Sophus::Vector4<Scalar> mean_vector = (*this)(
         std::forward<Values>(values), std::forward<Weights>(normalized_weights),
-        [proj = std::move(proj)](const auto& value) {
-          return Eigen::Map<const Sophus::Vector4<Scalar>>{proj(value).data()};
+        [projection = std::move(projection)](const auto& value) {
+          return Eigen::Map<const Sophus::Vector4<Scalar>>{projection(value).data()};
         });
 
     Eigen::Map<Sophus::SE2<Scalar>> mean{mean_vector.data()};
@@ -118,11 +121,12 @@ struct mean_fn {
   template <
       class Values,
       class Weights,
-      class Proj = ranges::identity,
-      class Value = std::decay_t<std::invoke_result_t<Proj, ranges::range_value_t<Values>>>,
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class Scalar = typename Value::Scalar,
       class = std::enable_if_t<std::is_base_of_v<Eigen::QuaternionBase<Value>, Value>>>
-  auto operator()(Values&& values, Weights&& normalized_weights, Proj proj = {}) const -> Eigen::Quaternion<Scalar> {
+  auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const
+      -> Eigen::Quaternion<Scalar> {
     static_assert(ranges::input_range<Values>);
     static_assert(ranges::sized_range<Values>);
 
@@ -143,7 +147,7 @@ struct mean_fn {
     assert(weights_it != ranges::end(normalized_weights));
 
     for (int index = 0; index < size; ++index, ++weights_it, ++it) {
-      matrix.col(index) = *weights_it * proj(*it).coeffs();
+      matrix.col(index) = *weights_it * projection(*it).coeffs();
     }
 
     assert(it == ranges::end(values));
@@ -163,42 +167,44 @@ struct mean_fn {
   template <
       class Values,
       class Weights,
-      class Proj = ranges::identity,
-      class Value = std::decay_t<std::invoke_result_t<Proj, ranges::range_value_t<Values>>>,
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class Scalar = typename Value::Scalar,
       class = std::enable_if_t<std::is_base_of_v<Sophus::SO3Base<Value>, Value>>>
-  auto operator()(Values&& values, Weights&& normalized_weights, Proj proj = {}) const -> Sophus::SO3<Scalar> {
+  auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const
+      -> Sophus::SO3<Scalar> {
     return {(*this)(
         std::forward<Values>(values), std::forward<Weights>(normalized_weights),
-        [proj = std::move(proj)](const auto& value) { return proj(value).unit_quaternion(); })};
+        [projection = std::move(projection)](const auto& value) { return projection(value).unit_quaternion(); })};
   }
 
   template <
       class Values,
       class Weights,
-      class Proj = ranges::identity,
-      class Value = std::decay_t<std::invoke_result_t<Proj, ranges::range_value_t<Values>>>,
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class Scalar = typename Value::Scalar,
       class = std::enable_if_t<std::is_base_of_v<Sophus::SE3Base<Value>, Value>>>
-  auto operator()(Values&& values, Weights&& normalized_weights, Proj proj = {}) const -> Sophus::SE3<Scalar> {
+  auto operator()(Values&& values, Weights&& normalized_weights, Projection projection = {}) const
+      -> Sophus::SE3<Scalar> {
     static_assert(ranges::forward_range<Values>);   // must allow multi-pass
     static_assert(ranges::forward_range<Weights>);  // must allow multi-pass
 
     return {
-        (*this)(values, normalized_weights, [&proj](const auto& value) { return proj(value).unit_quaternion(); }),
-        (*this)(values, normalized_weights, [&proj](const auto& value) { return proj(value).translation(); })};
+        (*this)(values, normalized_weights, [&projection](const auto& v) { return projection(v).unit_quaternion(); }),
+        (*this)(values, normalized_weights, [&projection](const auto& v) { return projection(v).translation(); })};
   }
 
   template <
       class Values,
-      class Proj = ranges::identity,
-      class Value = std::decay_t<std::invoke_result_t<Proj, ranges::range_value_t<Values>>>>
-  auto operator()(Values&& values, Proj proj = {}) const {
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>>
+  auto operator()(Values&& values, Projection projection = {}) const {
     using Scalar = typename Value::Scalar;
     static_assert(ranges::sized_range<Values>);
     const auto size = ranges::size(values);
     auto weights = ranges::views::repeat_n(1.0 / static_cast<Scalar>(size), static_cast<std::ptrdiff_t>(size));
-    return (*this)(std::forward<Values>(values), std::move(weights), std::move(proj));
+    return (*this)(std::forward<Values>(values), std::move(weights), std::move(projection));
   }
 };
 
@@ -225,14 +231,14 @@ struct covariance_fn {
   template <
       class Values,
       class Weights,
-      class Proj = ranges::identity,
-      class Value = std::decay_t<std::invoke_result_t<Proj, ranges::range_value_t<Values>>>,
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>,
       class = std::enable_if_t<std::disjunction_v<
           std::is_floating_point<Value>,
           std::is_base_of<Eigen::MatrixBase<Value>, Value>,
           std::is_base_of<Sophus::SE2Base<Value>, Value>,
           std::is_base_of<Sophus::SE3Base<Value>, Value>>>>
-  auto operator()(Values&& values, Weights&& normalized_weights, const Value& mean, Proj proj = {}) const {
+  auto operator()(Values&& values, Weights&& normalized_weights, const Value& mean, Projection projection = {}) const {
     static_assert(ranges::input_range<Values>);
     static_assert(ranges::forward_range<Weights>);  // must allow multi-pass
 
@@ -290,7 +296,7 @@ struct covariance_fn {
     assert(weights_it != ranges::end(normalized_weights));
 
     for (; it != last; ++weights_it, ++it) {
-      aggregate(result, proj(*it), *weights_it);
+      aggregate(result, projection(*it), *weights_it);
     }
 
     assert(weights_it == ranges::end(normalized_weights));
@@ -311,23 +317,23 @@ struct covariance_fn {
   template <
       class Values,
       class Weights,
-      class Proj = ranges::identity,
+      class Projection = ranges::identity,
       class Value = std::decay_t<ranges::range_value_t<Values>>,
       class = std::enable_if_t<std::disjunction_v<
           std::is_base_of<Eigen::QuaternionBase<Value>, Value>,
           std::is_base_of<Sophus::SO2Base<Value>, Value>,
           std::is_base_of<Sophus::SO3Base<Value>, Value>>>>
-  auto operator()(Values&&, Weights&&, const Value&, Proj = {}) const -> Value = delete;  // not-implemented
+  auto operator()(Values&&, Weights&&, const Value&, Projection = {}) const -> Value = delete;  // not-implemented
 
   template <
       class Values,
-      class Proj = ranges::identity,
-      class Value = std::decay_t<std::invoke_result_t<Proj, ranges::range_value_t<Values>>>>
-  auto operator()(Values&& values, const Value& mean, Proj proj = {}) const {
+      class Projection = ranges::identity,
+      class Value = std::decay_t<std::invoke_result_t<Projection, ranges::range_value_t<Values>>>>
+  auto operator()(Values&& values, const Value& mean, Projection projection = {}) const {
     static_assert(ranges::sized_range<Values>);
     const auto size = ranges::size(values);
     auto weights = ranges::views::repeat_n(1.0 / static_cast<double>(size), static_cast<std::ptrdiff_t>(size));
-    return (*this)(std::forward<Values>(values), std::move(weights), mean, std::move(proj));
+    return (*this)(std::forward<Values>(values), std::move(weights), mean, std::move(projection));
   }
 };
 
