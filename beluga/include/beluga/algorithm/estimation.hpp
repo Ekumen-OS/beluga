@@ -54,7 +54,7 @@ struct mean_fn {
     constexpr int N = Value::ColsAtCompileTime;
     static_assert(N == 1);
     using Scalar = typename Value::Scalar;
-    Sophus::Vector<Scalar, M> result = Sophus::Vector<Scalar, M>::Zero();
+    auto result = Sophus::Vector<Scalar, M>::Zero().eval();
 
     auto it = ranges::begin(values);
     const auto last = ranges::end(values);
@@ -138,7 +138,7 @@ struct mean_fn {
     // See https://ntrs.nasa.gov/api/citations/20070017872/downloads/20070017872.pdf equation (13).
 
     const auto size = static_cast<int>(ranges::size(values));
-    Eigen::Matrix<Scalar, 4, Eigen::Dynamic> matrix(4, size);
+    auto matrix = Eigen::Matrix<Scalar, 4, Eigen::Dynamic>(4, size);
 
     auto weights_it = ranges::begin(normalized_weights);
     auto it = ranges::begin(values);
@@ -153,7 +153,7 @@ struct mean_fn {
     assert(it == ranges::end(values));
     assert(weights_it == ranges::end(normalized_weights));
 
-    const Eigen::SelfAdjointEigenSolver<Eigen::Matrix<Scalar, 4, 4>> solver{matrix * matrix.transpose()};
+    const auto solver = Eigen::SelfAdjointEigenSolver<Eigen::Matrix<Scalar, 4, 4>>{matrix * matrix.transpose()};
     assert(solver.info() == Eigen::Success);
 
     // This is not the same as `result{solver.eigenvectors().col(3).real()}`.
@@ -404,8 +404,8 @@ struct estimate_fn {
       return Eigen::Map<const Sophus::Vector4<Scalar>>{value.data()};
     });
 
-    Sophus::SE2<Scalar> mean = Eigen::Map<const Sophus::SE2<Scalar>>{mean_vector.data()};
-    Sophus::Matrix3<Scalar> covariance = Sophus::Matrix3<Scalar>::Zero();
+    auto mean = Sophus::SE2<Scalar>{Eigen::Map<const Sophus::SE2<Scalar>>{mean_vector.data()}};
+    auto covariance = Sophus::Matrix3<Scalar>::Zero().eval();
 
     // Compute the covariance of the translation part.
     covariance.template topLeftCorner<2, 2>() = beluga::covariance(
