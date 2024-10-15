@@ -505,10 +505,12 @@ struct estimate_fn {
 /// Calculate the estimate (mean and covariance) of a range of values.
 /**
  * The inputs are a range of values and a range of corresponding weights.
- *
  * It supports floating-point numbers, vectors, and Lie group elements like SE2 and SE3.
  *
- * It normalizes the weights before computing the mean and covariance.
+ * The function does not assume that the input weights are normalized. It normalizes the weights while iterating,
+ * which might have a performance impact. Specifically, the function has to iterate over the weights multiple times
+ * (e.g., once to compute the mean, and again to compute the covariance). The normalization factor is computed once, but
+ * division for normalizing the weights is performed each time a weight is accessed.
  */
 inline constexpr detail::estimate_fn estimate;
 
