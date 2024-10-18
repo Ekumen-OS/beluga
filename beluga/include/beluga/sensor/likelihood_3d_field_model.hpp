@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_HPP
-#define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_HPP
+#ifndef BELUGA_SENSOR_LIKELIHOOD_3D_FIELD_MODEL_HPP
+#define BELUGA_SENSOR_LIKELIHOOD_3D_FIELD_MODEL_HPP
 
 #include <algorithm>
 #include <cmath>
@@ -107,7 +107,12 @@ class Likelihood3DFieldModel {
    *  for particle states.
    */
   explicit Likelihood3DFieldModel(const param_type& params, const map_type& map)
-      : params_{params}, likelihood_field_map_{std::move(map)} {}
+      : params_{params}, likelihood_field_map_{std::move(map)} {
+    // encontrar el punto mas cercano usnado
+    // probar esto sacarlo dela funcion
+    // DualGridSmpler
+    looker.create(likelihood_field_map_);
+  }
 
   /// Returns the likelihood field, constructed from the provided map.
   [[nodiscard]] const auto& likelihood_field() const { return likelihood_field_map_; }
@@ -120,44 +125,20 @@ class Likelihood3DFieldModel {
    */
   [[nodiscard]] auto operator()(measurement_type&& points) const {
     return [this, points = std::move(points)](const state_type& state) -> weight_type {
-      // State is a particle
-      // by multiplying by world_to_likelihood_field_transform_ we are calculate the transform from robot to world
-      likelihood_field_map_.getTransform();
-      const auto transform = state;
-
-      // robot position in world coordinates
-      const auto x_offset = transform.translation().x();
-      const auto y_offset = transform.translation().y();
-      const auto z_offset = transform.translation().z();
-
-      // robot orientation in world coordinates
-      const auto cos_theta = transform.so2().unit_complex().x();
-      const auto sin_theta = transform.so2().unit_complex().y();
-
+      // map already in world coordinates
       const auto unknown_space_occupancy_prob = static_cast<float>(1. / params_.max_laser_distance);
 
       return std::transform_reduce(
           points.cbegin(), points.cend(), 1.0, std::plus{},
-          [this, x_offset, y_offset, z_offset, cos_theta, sin_theta, unknown_space_occupancy_prob](const auto& point) {
-            // Transform the end point of the laser to the grid local coordinate system.
+          [this, state, unknown_space_occupancy_prob](const auto& point) {
+            const auto result = state * point;
 
-            const auto x = point.x * cos_theta - point.y * sin_theta + x_offset;
-            const auto y = point.x * sin_theta + point.y * cos_theta + y_offset;
-            const auto z = point.z + z_offset;
-
-            // encontrar el punto mas cercano usnado
-            // probar esto sacarlo dela funcion
-            // DualGridaAmpler
-            Openvdb::ClosestSurfacePoint<GRID TYPE> looker;
-            looker.create(grid);
             std::vector<float> distances;
             std::vector<Vec3R> points;
             // output list of closest surface point distances
-            looker.search(points, distances);
+            // looker.search(points, distances);
 
-            const auto pz = static_cast<double>
-
-                            return pz * pz * pz;
+            return 0.1;
           });
     };
   }
@@ -174,6 +155,7 @@ class Likelihood3DFieldModel {
   param_type params_;
   T likelihood_field_map_;
   Sophus::SE3d world_to_likelihood_field_map_transform_;
+  Openvdb::ClosestSurfacePoint<map_type> looker;
 };
 
 }  // namespace beluga
