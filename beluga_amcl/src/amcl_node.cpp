@@ -64,6 +64,7 @@
 #include <beluga/sensor/likelihood_field_model.hpp>
 #include <beluga/sensor/likelihood_field_prob_model.hpp>
 #include <beluga_ros/amcl.hpp>
+#include <beluga_ros/likelihood_field.hpp>
 #include <beluga_ros/messages.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
@@ -121,6 +122,12 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
     descriptor.floating_point_range[0].to_value = 1;
     descriptor.floating_point_range[0].step = 0;
     declare_parameter("z_rand", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Whether to model unknown space or assume it free.";
+    declare_parameter("model_unknown_space", false, descriptor);
   }
 
   {
@@ -313,6 +320,7 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
     params.z_hit = get_parameter("z_hit").as_double();
     params.z_random = get_parameter("z_rand").as_double();
     params.sigma_hit = get_parameter("sigma_hit").as_double();
+    params.model_unknown_space = get_parameter("model_unknown_space").as_bool();
     return beluga::LikelihoodFieldModel{params, beluga_ros::OccupancyGrid{map}};
   }
   if (name == kLikelihoodFieldProbModelName) {
@@ -430,6 +438,13 @@ void AmclNode::do_periodic_timer_callback() {
     beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
     particle_markers_pub_->publish(message);
+  }
+
+  if (likelihood_field_pub_->get_subscription_count() > 0) {
+    auto message = beluga_ros::msg::OccupancyGrid{};
+    beluga_ros::assign_likelihood_field(particle_filter_->get_likelihood_field(), message);
+    beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
+    likelihood_field_pub_->publish(message);
   }
 }
 

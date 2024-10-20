@@ -734,6 +734,8 @@ INSTANTIATE_TEST_SUITE_P(
         rclcpp::Parameter("z_hit", 2.0),
         rclcpp::Parameter("z_rand", -1.0),
         rclcpp::Parameter("z_rand", 2.0),
+        rclcpp::Parameter("model_unknown_space", false),
+        rclcpp::Parameter("model_unknown_space", true),
         rclcpp::Parameter("z_max", -1.0),
         rclcpp::Parameter("z_max", 2.0),
         rclcpp::Parameter("z_short", -1.0),
