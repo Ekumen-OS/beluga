@@ -1,6 +1,6 @@
 @PACKAGE_INIT@
 
-#list(APPEND CMAKE_MODULE_PATH "/usr/local/lib/cmake/OpenVDB")
+list(APPEND CMAKE_MODULE_PATH "/usr/local/lib/cmake/OpenVDB")
 
 include(CMakeFindDependencyMacro)
 find_dependency(Eigen3 REQUIRED NO_MODULE)

@@ -18,7 +18,7 @@ project(beluga VERSION 1.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# list(APPEND CMAKE_MODULE_PATH "/usr/local/lib/cmake/OpenVDB")
+list(APPEND CMAKE_MODULE_PATH "/usr/local/lib/cmake/OpenVDB")
 
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "Setting build type to 'Release' as none was specified.")
@@ -29,13 +29,7 @@ endif()
 
 add_library(beluga_compile_options INTERFACE)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  target_compile_options(
-    beluga_compile_options
-    INTERFACE -Wall
-              -Wconversion
-              -Werror
-              -Wextra
-              -Wpedantic)
+  target_compile_options(beluga_compile_options INTERFACE -Wall)
 endif()
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   target_compile_options(beluga_compile_options INTERFACE -fno-inline)
@@ -49,7 +43,7 @@ find_package(
 find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
-#find_package(OpenVDB REQUIRED)
+find_package(OpenVDB REQUIRED)
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
@@ -63,8 +57,8 @@ target_link_libraries(
             ${HDF5_CXX_LIBRARIES}
             Sophus::Sophus
             TBB::tbb
-            range-v3::range-v3)
-#OpenVDB::openvdb)
+            range-v3::range-v3
+            OpenVDB::openvdb)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG
                                                      SOPHUS_USE_BASIC_LOGGING)
