@@ -20,14 +20,16 @@
 #include <random>
 #include <vector>
 
-#include <beluga/algorithm/distance_map.hpp>
-#include <beluga/sensor/data/occupancy_grid.hpp>
-#include <beluga/sensor/data/value_grid.hpp>
+#include <openvdb/openvdb.h>
+#include <openvdb/tools/VolumeToSpheres.h>
+
+#include <Eigen/Core>
+
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
-#include <sophus/se2.hpp>
-#include <sophus/so2.hpp>
+#include <sophus/se3.hpp>
+#include <sophus/so3.hpp>
 
 /**
  * \file
@@ -73,89 +75,86 @@ struct Likelihood3DFieldModelParam {
  *
  * \note This class satisfies \ref SensorModelPage.
  *
- * \tparam OccupancyGrid Type representing an occupancy grid.
- *  It must satisfy \ref OccupancyGrid2Page.
+ * \tparam OpenVDB grid type.
  */
-template <typename T, class U>
+template <typename GridT, typename U>
 class Likelihood3DFieldModel {
  public:
   /// State type of a particle.
-  // planar movement but add Z
   using state_type = Sophus::SE3d;
 
   /// Weight type of the particle.
   using weight_type = double;
 
-  /// Measurement type of the sensor: a point cloud for the XXXXXXXXXXX.
+  /// Measurement type given by the interface.
   using measurement_type = U;
 
   /// Map representation type.
-  // openvdb, algo asi
-  using map_type = T;
+  using map_type = GridT;
 
   /// Parameter type that the constructor uses to configure the likelihood field model.
-  // nombre? Likelihood3DFieldModel?? el modelo es el mismo solo que los ptos son 3d
-  // pero el modelo sigue siendo 2D
-  using param_type = Likelihood3DFieldModel;
+  using param_type = Likelihood3DFieldModelParam;
 
   /// Constructs a Likelihood3DFieldModel instance.
   /**
    * \param params Parameters to configure this instance.
    *  See beluga::Likelihood3DFieldModelParam for details.
-   * \param grid Occupancy grid representing the static map that the sensor model
+   * \param grid Narrow band Level set grid representing the static map that the sensor model
    *  uses to compute a likelihood field for lidar hits and compute importance weights
    *  for particle states.
+   *  Currently only supports OpenVDB Level sets.
    */
-  explicit Likelihood3DFieldModel(const param_type& params, const map_type& map)
-      : params_{params}, likelihood_field_map_{std::move(map)} {
-    // encontrar el punto mas cercano usnado
-    // probar esto sacarlo dela funcion
-    // DualGridSmpler
-    looker.create(likelihood_field_map_);
+  explicit Likelihood3DFieldModel(const param_type& params, const map_type& grid)
+      : params_{params},
+        looker_{openvdb::tools::ClosestSurfacePoint<map_type>::create(grid)},
+        squared_sigma_{params.sigma_hit * params.sigma_hit},
+        amplitude_{params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()))},
+        offset_{params.z_random / params.max_laser_distance} {
+    /// Pre-computed parameters
+    assert(squared_sigma_ > 0.0);
+    assert(amplitude_ > 0.0);
+    // Remember this OpenVDB DualGridSmpler
   }
 
-  /// Returns the likelihood field, constructed from the provided map.
-  [[nodiscard]] const auto& likelihood_field() const { return likelihood_field_map_; }
-
-  /// Returns a state weighting function conditioned on 2D lidar hits.
+  /// Returns a state weighting function conditioned on 3D lidar hits.
   /**
-   * \param points 2D lidar hit points in the reference frame of particle states.
+   * \param measurement 3D lidar measurement containing the hit points and the transform to the origin.
    * \return a state weighting function satisfying \ref StateWeightingFunctionPage
    *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
-  [[nodiscard]] auto operator()(measurement_type&& points) const {
-    return [this, points = std::move(points)](const state_type& state) -> weight_type {
-      // map already in world coordinates
-      const auto unknown_space_occupancy_prob = static_cast<float>(1. / params_.max_laser_distance);
+  [[nodiscard]] auto operator()(measurement_type&& measurement) const {
+    const size_t pointcloud_size = measurement.points().size();
+    // Transform each point from the sensor frame to the origin frame
+    return [this,
+            points = std::move(measurement.origin() * measurement.points())](const state_type& state) -> weight_type {
+      std::vector<float> nb_distances;
+      std::vector<openvdb::Vec3R> vdb_points;
+      vdb_points.resize(pointcloud_size);
 
+      // Transform each point to every particle state
+      std::transform(points.cbegin(), points.cend(), vdb_points.begin(), [this, state](const auto& point) {
+        // OpenVDB grid already in world coordinates
+        const Eigen::Vector3d point_in_state_frame = state * point;
+        return openvdb::Vec3R{point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()};
+      });
+
+      // Extract the distance to the closest surface for each point
+      looker_.search(vdb_points, nb_distances);
+
+      // Calculates the probality based on the distance
       return std::transform_reduce(
-          points.cbegin(), points.cend(), 1.0, std::plus{},
-          [this, state, unknown_space_occupancy_prob](const auto& point) {
-            const auto result = state * point;
-
-            std::vector<float> distances;
-            std::vector<Vec3R> points;
-            // output list of closest surface point distances
-            // looker.search(points, distances);
-
-            return 0.1;
+          nb_distances.cbegin(), nb_distances.cend(), 1.0, std::plus{}, [this](const auto& distance) {
+            return amplitude_ * std::exp(-(distance * distance) / squared_sigma_) + offset_;
           });
     };
   }
 
-  /// Update the sensor model with a new occupancy grid map.
-  /**
-   * This method re-computes the underlying likelihood field.
-   *
-   * \param grid New occupancy grid representing the static map.
-   */
-  void update_map(const map_type& map) { likelihood_field_map_{std::move(map)}; }
-
  private:
   param_type params_;
-  T likelihood_field_map_;
-  Sophus::SE3d world_to_likelihood_field_map_transform_;
-  Openvdb::ClosestSurfacePoint<map_type> looker;
+  typename openvdb::tools::ClosestSurfacePoint<map_type>::Ptr looker_;
+  const double squared_sigma_;
+  const double amplitude_;
+  const double offset_;
 };
 
 }  // namespace beluga
