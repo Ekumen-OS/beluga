@@ -81,15 +81,13 @@ TEST(Likelihood3DFieldModel, Likelihood3DField) {
   auto map = make_map<openvdb::FloatGrid, openvdb::math::Vec3s>(voxel_size, world_points);
 
   const auto params = beluga::Likelihood3DFieldModelParam{voxel_size, 2.0, 20.0, 0.5, 0.5, 0.2};
-  const auto pointcloud_measurement =
-      beluga::testing::SparsePointCloud3{std::vector<Eigen::Vector3<float>>{{1.0F, 1.0F, 1.0F}}};
+  auto pointcloud_measurement =
+      beluga::testing::SparsePointCloud3<float>{std::vector<Eigen::Vector3<float>>{{1.0F, 1.0F, 1.0F}}};
   auto sensor_model =
       beluga::Likelihood3DFieldModel<openvdb::FloatGrid, beluga::testing::SparsePointCloud3<float>>{params, *map};
 
-  auto asd = sensor_model(std::move(pointcloud_measurement));
-  /*ASSERT_THAT(
-      sensor_model(pointcloud_measurement),
-      testing::Pointwise(testing::DoubleNear(0.003), 1.0));*/
+  auto state_weighting_function = sensor_model(std::move(pointcloud_measurement));
+  ASSERT_NEAR(1.0, state_weighting_function(Sophus::SE3d{}), 0.03);
 }
 
 }  // namespace

@@ -125,21 +125,26 @@ class Likelihood3DFieldModel {
   [[nodiscard]] auto operator()(measurement_type&& measurement) const {
     const size_t pointcloud_size = measurement.points().size();
     // Transform each point from the sensor frame to the origin frame
-    return [this,
-            points = std::move(measurement.origin() * measurement.points())](const state_type& state) -> weight_type {
+    auto transformed_points =
+        ranges::views::all(measurement.points()) | ranges::views::transform([&](const auto& point) {
+          return measurement.origin() * point.template cast<double>();
+        });
+
+    return [this, pointcloud_size, points = std::move(transformed_points)](const state_type& state) -> weight_type {
       std::vector<float> nb_distances;
       std::vector<openvdb::Vec3R> vdb_points;
       vdb_points.resize(pointcloud_size);
 
       // Transform each point to every particle state
-      std::transform(points.cbegin(), points.cend(), vdb_points.begin(), [this, state](const auto& point) {
-        // OpenVDB grid already in world coordinates
-        const Eigen::Vector3d point_in_state_frame = state * point;
-        return openvdb::Vec3R{point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()};
-      });
+      std::transform(
+          points.begin(), points.end(), vdb_points.begin(), [this, pointcloud_size, state](const auto& point) {
+            // OpenVDB grid already in world coordinates
+            const Eigen::Vector3d point_in_state_frame = state * point;
+            return openvdb::Vec3R{point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()};
+          });
 
       // Extract the distance to the closest surface for each point
-      looker_.search(vdb_points, nb_distances);
+      looker_->search(vdb_points, nb_distances);
 
       // Calculates the probality based on the distance
       return std::transform_reduce(
