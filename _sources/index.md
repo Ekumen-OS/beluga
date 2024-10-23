@@ -110,7 +110,13 @@ about/contact
 
 Beluga is an open source toolkit for Monte Carlo Localization (MCL), with a strong focus on code quality and performance.
 
-:::{figure} ./_images/beluga_andino.gif
+:::{figure} ./_images/beluga_turtlebot2_demo.gif
+:alt: Short video of a Turtlebot 2 running Beluga.
+
+Beluga AMCL running on an Turtlebot 2 robot (Raspberry Pi 4B).
+:::
+
+:::{figure} ./_images/beluga_andino_demo.gif
 :alt: Short video of Andino running Beluga.
 
 Beluga AMCL running on an [Andino](https://github.com/Ekumen-OS/andino) robot (Raspberry Pi 4B).
