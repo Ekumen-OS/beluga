@@ -18,11 +18,8 @@
 #include <utility>
 #include <vector>
 
-#include <openvdb/math/Mat.h>
 #include <openvdb/openvdb.h>
 #include <openvdb/tools/Diagnostics.h>
-#include <openvdb/tools/LevelSetSphere.h>
-#include <openvdb/tools/LevelSetTracker.h>
 #include <openvdb/tools/TopologyToLevelSet.h>
 
 #include <range/v3/range/conversion.hpp>
@@ -37,12 +34,14 @@ namespace {
 template <typename GridT, typename T>
 auto make_map(const double voxel_size, const std::vector<T>& world_points) {
   // Create the grid
-  typename GridT::Ptr grid = openvdb::createLevelSet<GridT>(voxel_size);
+  typename GridT::Ptr grid = openvdb::FloatGrid::create();
+  grid->setTransform(openvdb::math::Transform::createLinearTransform(voxel_size));
+
   // Get an accessor for coordinate-based access to voxels
   typename GridT::Accessor accessor = grid->getAccessor();
 
   // Fill the grid
-  const openvdb::math::Transform transform;
+  const openvdb::math::Transform& transform = grid->transform();
   for (const auto& point : world_points) {
     // Transform to index world
     const openvdb::math::Coord ijk = transform.worldToIndexCellCentered(point);
@@ -52,25 +51,18 @@ auto make_map(const double voxel_size, const std::vector<T>& world_points) {
     accessor.setActiveState(ijk);
   }
 
-  // Prune the grid
-  // Set voxels that are outside the narrow band to the background value and prune the grid
-  openvdb::tools::LevelSetTracker<GridT> pruner(*grid);
-  pruner.setTrimming(openvdb::tools::lstrack::TrimMode::kAll);
-  pruner.prune();
-
   // Check grid
   openvdb::tools::CheckLevelSet<GridT> checker(*grid);
   // Check inactive values have a magnitude equal to the background value
   assert(checker.checkInactiveValues() == "");
 
   // Associate metadata
-  // just a terminal command to remember
-  // vdb_print -l pcdgrid.vdb
   grid->setName("map");
-  grid->setGridClass(openvdb::GridClass::GRID_LEVEL_SET);
-  grid->setIsInWorldSpace(true);  // not quite sure!
 
-  return grid;
+  // Transform to levelset
+  typename GridT::Ptr grid_levelset = openvdb::tools::topologyToLevelSet(*grid, 1, 0, 0, 0);
+
+  return grid_levelset;
 }
 
 TEST(Likelihood3DFieldModel, Likelihood3DField) {
@@ -82,7 +74,7 @@ TEST(Likelihood3DFieldModel, Likelihood3DField) {
 
   const auto params = beluga::Likelihood3DFieldModelParam{voxel_size, 2.0, 20.0, 0.5, 0.5, 0.2};
   auto pointcloud_measurement =
-      beluga::testing::SparsePointCloud3<float>{std::vector<Eigen::Vector3<float>>{{1.0F, 1.0F, 1.0F}}};
+      beluga::testing::SparsePointCloud3<float>{std::vector<Eigen::Vector3<float>>{{1.1F, 1.0F, 1.0F}}};
   auto sensor_model =
       beluga::Likelihood3DFieldModel<openvdb::FloatGrid, beluga::testing::SparsePointCloud3<float>>{params, *map};
 
