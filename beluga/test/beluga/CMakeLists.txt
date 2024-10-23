@@ -52,7 +52,7 @@ add_executable(
   sensor/test_beam_model.cpp
   sensor/test_bearing_sensor_model.cpp
   sensor/test_landmark_sensor_model.cpp
-  sensor/test_lfm_with_unknown_space.cpp
+  sensor/test_likelihood_3d_field_model.cpp
   sensor/test_likelihood_field_model.cpp
   sensor/test_ndt_model.cpp
   test_3d_embedding.cpp
