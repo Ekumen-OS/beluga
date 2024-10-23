@@ -29,7 +29,13 @@ endif()
 
 add_library(beluga_compile_options INTERFACE)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  target_compile_options(beluga_compile_options INTERFACE -Wall)
+  target_compile_options(
+    beluga_compile_options
+    INTERFACE -Wall
+              -Wconversion
+              -Werror
+              -Wextra
+              -Wpedantic)
 endif()
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   target_compile_options(beluga_compile_options INTERFACE -fno-inline)

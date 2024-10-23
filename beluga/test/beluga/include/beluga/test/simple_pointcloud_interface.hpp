@@ -31,9 +31,8 @@ class SparsePointCloud3 {
 
   /// Get the unorganized 3D point collection as an Eigen Map<Eigen::Vector3>.
   [[nodiscard]] auto points() const {
-    return ranges::views::iota(0, static_cast<int>(points_.size())) | ranges::views::transform([this](int i) {
-             return Eigen::Map<const Eigen::Vector3<T>>(points_.data()->data());
-           });
+    return ranges::views::iota(0, static_cast<int>(points_.size())) |
+           ranges::views::transform([this](int i) { return Eigen::Map<const Eigen::Vector3<T>>(points_[i].data()); });
   }
 
  private:
