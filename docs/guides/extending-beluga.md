@@ -24,7 +24,7 @@ When implementing a motion model, you need to ensure it meets a number of requir
 - It must specify the `control_type` it accepts, typically representing velocities or other actions influencing the state.
 - It must be callable that accepts a control action and returns a function that predicts the next state based on a given control input. This returned function must satisfy the [`StateSamplingFunction` requirements](https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/MotionModelPage.html).
 
-### Sample implementatino
+### Example Code
 
 Below is a sample implementation of a velocity-based motion model that predicts the robot’s next state based on linear and angular velocities, with noise to account for uncertainty:
 
@@ -133,11 +133,11 @@ The `operator()` function returns a lambda. This lambda predicts the next state 
 ```
 The translation is updated based on the noisy linear velocity and the current orientation. The orientation (`so2`) is updated using the exponential map to handle the angular update.
 
-### Next steps
+### Next Steps
 
 For a real-world implementation, see [`beluga::OmnidirectionalDriveModel`](https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html)'s' implementation.
 
-## Implementing sensor models
+## Implementing Sensor Models
 
 Sensor models in Beluga are responsible for assessing how likely it is that a given particle's state matches observed sensor data. By assigning weights to particles based on sensor data, sensor models play a crucial role in filtering out unlikely states and refining the robot's estimated position. For a deeper understanding of these, you may revisit Beluga's [key concepts](../concepts/key-concepts) too.
 
@@ -150,7 +150,7 @@ When implementing a sensor model in Beluga, you need to ensure it meets a number
 - It must list a `measurement_type` as the format of the sensor data, and for this you may want to look at [sensor data abstractions]()https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/dir_876c246173b27422a95ea0c3c06ba40d.html).
 - It must be a callable (`operator()`) that accepts a sensor measurement and returns a function compliant with the [`StateWeightingFunction` requirements](https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/SensorModelPage.html). This function calculates the weight of a particle’s state given the measurement.
 
-### Sample implementation
+### Example Code
 
 Below is an example of a simple range sensor model. This model calculates the likelihood of each particle’s state based on sensor measurements of distance from the origin:
 
@@ -259,7 +259,7 @@ For a real-world implementation, see [`beluga::LikelihoodFieldModel`](https://ek
 
 Estimation algorithms in Beluga are responsible for synthesizing the most likely estimate of a robot's state from a set of weighted particles. Statistical location and dispersion measures such as sampled means and variances are typical.
 
-Estimation algorithms are but one application of the [_niebloid_ concept](https://en.cppreference.com/w/Template:cpp/ranges/niebloid) in Beluga. While this section focuses on estimation algorithms, it is worth noting that niebloids are used more broadly across the library as a sane approach to customization.
+Estimation algorithms are implemented as functions that take a particle range as input. In this library, instead of implementing them as free functions, we implement them as [_niebloids_](https://en.cppreference.com/w/Template:cpp/ranges/niebloid) (global instances of function objects that disable ADL). While this section focuses on estimation algorithms, it is worth noting that niebloids are used more broadly across the library as a sane approach to customization.
 
 ### Key Considerations
 To build a robust estimation algorithm that integrates well with Beluga:
@@ -267,13 +267,16 @@ To build a robust estimation algorithm that integrates well with Beluga:
 - The algorithm must work with a set of particle states and their corresponding weights, which encode each particle's probability during estimation.
 - The algorithm should be implemented using a niebloid construct.
 
-### Sample implementation.
+### Example Code
 
 The following example demonstrates how to implement a scalar median estimation algorithm using a niebloid:
 
 ```cpp
 #include <algorithm>
 #include <numeric>
+#include <functional>
+#include <range/v3/algorithms/sort.hpp>
+#include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/view/zip.hpp>
 #include <vector>
 
@@ -296,11 +299,13 @@ struct weighted_median_fn {
     for (auto&& [value, weight] : ranges::views::zip(values, weights)) {
       sorted_pairs.emplace_back(projection(value), weight);
     }
-    std::sort(sorted_pairs.begin(), sorted_pairs.end(), [](const auto& a, const auto& b) { return a.first < b.first; };);
+    ranges::sort(sorted_pairs, std::less{}, [](const auto& pair) { return pair.first; });
 
     // Find the median based on cumulative weights.
     auto cumulative_weight = WeightType{0};
-    auto half_total_weight = std::accumulate(weights.begin(), weights.end(), WeightType{0}) / 2;
+    auto half_total_weight = 0.5 * ranges::accumulate(
+      sorted_pairs, WeightType{0}, std::plus{},
+      [](const auto& pair) { return pair.second; });
 
     for (const auto& [projected_value, weight] : sorted_pairs) {
       cumulative_weight += weight;
@@ -327,13 +332,15 @@ Let's break down the code to highlight the implementation techniques:
 ```cpp
 #include <algorithm>
 #include <numeric>
+#include <range/v3/algorithms/sort.hpp>
+#include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/view/zip.hpp>
 #include <vector>
 ```
 
 We begin by including the required headers:
 - `<algorithm>` and `<numeric>` for sorting and accumulating operations.
-- `<range/v3/view/zip.hpp>` for zipping ranges of values and weights.
+- `<range/v3/*>` for zipping values and weights, sorting values, and summing weights.
 - `<vector>` for storing the sorted pairs of values and weights.
 
 ```cpp
@@ -361,13 +368,15 @@ The `weighted_median_fn` struct is defined, focusing on the scalar median comput
     for (auto&& [value, weight] : ranges::views::zip(values, weights)) {
       sorted_pairs.emplace_back(projection(value), weight);
     }
-    std::sort(sorted_pairs.begin(), sorted_pairs.end(), [](const auto& a, const auto& b) { return a.first < b.first; };);
+    ranges::sort(sorted_pairs, std::less{}, [](const auto& pair) { return pair.first; });
 ```
 Values and weights are zipped together. The projection is applied to each value, and they are stored with their weights in `sorted_pairs`. These pairs are then sorted based on the projected value using `std::sort`.
 
 ```cpp
     auto cumulative_weight = WeightType{0};
-    auto half_total_weight = std::accumulate(weights.begin(), weights.end(), WeightType{0}) / 2;
+    auto half_total_weight = 0.5 * ranges::accumulate(
+      sorted_pairs, WeightType{0}, std::plus{},
+      [](const auto& pair) { return pair.second; });
 
     for (const auto& [projected_value, weight] : sorted_pairs) {
       cumulative_weight += weight;
@@ -397,6 +406,6 @@ inline constexpr detail::weighted_mean_fn weighted_median;
 
 The `weighted_median` niebloid is instantiated.
 
-### Next steps
+### Next Steps
 
 For a real-world implementation, see [`beluga/algorithm/estimation.hpp`](https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/estimation_8hpp.html) content.
