@@ -60,7 +60,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
-    <meta name="docbuild:last-update" content="&#39;Wed Oct 23 10:28:02 2024 -0300, 655b0d6&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Oct 25 11:00:39 2024 -0300, 08e682f&#39;"/>
   </head>
   
   
@@ -335,7 +335,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -351,6 +353,32 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-motion-models">Implementing Motion Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-considerations">Key Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-code">Example Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-sensor-models">Implementing Sensor Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Key Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Example Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Next steps</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-estimation-algorithms">Implementing Estimation Algorithms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Key Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Example Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -362,7 +390,395 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="extending-beluga">
 <h1>Extending Beluga<a class="headerlink" href="#extending-beluga" title="Link to this heading">#</a></h1>
-<p>Coming soon!</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<p>To effectively extend the Beluga library, you should be comfortable with:</p>
+<ul class="simple">
+<li><p>C++ programming, especially template programming</p></li>
+<li><p>Probability and statistical estimation techniques</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You may also want to take a look at the <a class="reference internal" href="../concepts/design-principles.html"><span class="doc std std-doc">design principles</span></a> and <a class="reference internal" href="../concepts/architecture.html"><span class="doc std std-doc">architecture concepts</span></a> that Beluga was built upon before jumping to code.</p>
+</div>
+<p>To set up a development environment, follow Beluga <a class="reference internal" href="../getting-started/installation.html"><span class="doc std std-doc">installation instructions</span></a> first. In particular, Beluga <a class="reference external" href="https://github.com/Ekumen-OS/beluga/blob/main/DEVELOPING.md">development workflows</a> may come in handy when contributing back to the library.</p>
+</section>
+<section id="implementing-motion-models">
+<h2>Implementing Motion Models<a class="headerlink" href="#implementing-motion-models" title="Link to this heading">#</a></h2>
+<p>Motion models in Beluga define how a robot’s state evolves over time based on control inputs. These models are crucial for state prediction, allowing the particle filter to estimate the robot’s future position as it moves through its environment. For a deeper understanding of these, you may revisit Beluga’s <a class="reference internal" href="../concepts/key-concepts.html"><span class="doc std std-doc">key concepts</span></a>.</p>
+<section id="key-considerations">
+<h3>Key Considerations<a class="headerlink" href="#key-considerations" title="Link to this heading">#</a></h3>
+<p>When implementing a motion model, you need to ensure it meets a number of requirements:</p>
+<ul class="simple">
+<li><p>It must define a <code class="docutils literal notranslate"><span class="pre">state_type</span></code> that represents the particle’s state, often as a pose using structures like <code class="docutils literal notranslate"><span class="pre">Sophus::SE2d</span></code>.</p></li>
+<li><p>It must specify the <code class="docutils literal notranslate"><span class="pre">control_type</span></code> it accepts, typically representing velocities or other actions influencing the state.</p></li>
+<li><p>It must be callable that accepts a control action and returns a function that predicts the next state based on a given control input. This returned function must satisfy the <a class="reference external" href="https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/MotionModelPage.html"><code class="docutils literal notranslate"><span class="pre">StateSamplingFunction</span></code> requirements</a>.</p></li>
+</ul>
+</section>
+<section id="example-code">
+<h3>Example Code<a class="headerlink" href="#example-code" title="Link to this heading">#</a></h3>
+<p>Below is a sample implementation of a velocity-based motion model that predicts the robot’s next state based on linear and angular velocities, with noise to account for uncertainty:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;random&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;beluga/motion.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Eigen/Dense&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sophus/se2.hpp&gt;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">beluga</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Example of a simple velocity-based motion model using Sophus and Eigen.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VelocityMotionModel</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">       </span><span class="c1">// Represents the particle&#39;s state as SE(2) pose.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">control_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">;</span><span class="w">  </span><span class="c1">// Represents control input: [linear_velocity, angular_velocity].</span>
+
+<span class="w">  </span><span class="c1">// Constructor to initialize noise parameters for linear and angular velocities.</span>
+<span class="w">  </span><span class="n">VelocityMotionModel</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">linear_stddev</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">angular_stddev</span><span class="p">)</span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">linear_noise_</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="n">linear_stddev</span><span class="p">},</span><span class="w"> </span><span class="n">angular_noise_</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="n">angular_stddev</span><span class="p">}</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">  </span><span class="c1">// Callable function to produce a StateSamplingFunction based on a control input.</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="k">const</span><span class="w"> </span><span class="n">control_type</span><span class="o">&amp;</span><span class="w"> </span><span class="n">control</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Returns a lambda satisfying the StateSamplingFunction requirements.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">control</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">state_type</span><span class="o">&amp;</span><span class="w"> </span><span class="n">current_state</span><span class="p">,</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">rng</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Sample noisy velocities using Gaussian distributions.</span>
+<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">noisy_linear_velocity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">control</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">linear_noise_</span><span class="p">(</span><span class="n">rng</span><span class="p">);</span>
+<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">noisy_angular_velocity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">control</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">angular_noise_</span><span class="p">(</span><span class="n">rng</span><span class="p">);</span>
+
+<span class="w">      </span><span class="c1">// Predict the next state using noisy control and SE(2) transformations.</span>
+<span class="w">      </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="w"> </span><span class="n">next_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_state</span><span class="p">;</span>
+<span class="w">      </span><span class="n">next_state</span><span class="p">.</span><span class="n">translation</span><span class="p">()</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">(</span>
+<span class="w">          </span><span class="n">noisy_linear_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">current_state</span><span class="p">.</span><span class="n">angle</span><span class="p">()),</span>
+<span class="w">          </span><span class="n">noisy_linear_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">current_state</span><span class="p">.</span><span class="n">angle</span><span class="p">()));</span>
+<span class="w">      </span><span class="n">next_state</span><span class="p">.</span><span class="n">so2</span><span class="p">()</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SO2d</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="n">noisy_angular_velocity</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">next_state</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w"> </span><span class="k">private</span><span class="o">:</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">linear_noise_</span><span class="p">;</span><span class="w">  </span><span class="c1">// Noise for linear velocity.</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">angular_noise_</span><span class="p">;</span><span class="w">  </span><span class="c1">// Noise for angular velocity.</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace beluga</span>
+</pre></div>
+</div>
+<p>Let’s break down the code to highlight the implementation techniques:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;random&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;beluga/motion.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Eigen/Dense&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sophus/se2.hpp&gt;</span>
+</pre></div>
+</div>
+<p>We start by including the necessary headers:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;random&gt;</span></code> for pseudo-random noise generation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Eigen</span></code> for vector and matrix operations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Sophus</span></code> for handling Lie group elements like SE(2).</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span><span class="w"> </span><span class="nn">beluga</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Example of a simple velocity-based motion model using Sophus and Eigen.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VelocityMotionModel</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">       </span><span class="c1">// Represents the particle&#39;s state as SE(2) pose.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">control_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">;</span><span class="w">  </span><span class="c1">// Represents control input: [linear_velocity, angular_velocity].</span>
+</pre></div>
+</div>
+<p>Here, the <code class="docutils literal notranslate"><span class="pre">VelocityMotionModel</span></code> class is defined. <code class="docutils literal notranslate"><span class="pre">state_type</span></code> is specified as <code class="docutils literal notranslate"><span class="pre">Sophus::SE2d</span></code>, a common representation of the robot’s 2D pose, and <code class="docutils literal notranslate"><span class="pre">control_type</span></code> is defined as <code class="docutils literal notranslate"><span class="pre">Eigen::Vector2d</span></code>, consisting of linear and angular velocities.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Constructor to initialize noise parameters for linear and angular velocities.</span>
+<span class="w">  </span><span class="n">VelocityMotionModel</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">linear_stddev</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">angular_stddev</span><span class="p">)</span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">linear_noise_</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="n">linear_stddev</span><span class="p">},</span><span class="w"> </span><span class="n">angular_noise_</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="n">angular_stddev</span><span class="p">}</span><span class="w"> </span><span class="p">{}</span>
+</pre></div>
+</div>
+<p>The constructor initializes the model with standard deviations for the linear and angular velocity noise. <code class="docutils literal notranslate"><span class="pre">linear_noise_</span></code> and <code class="docutils literal notranslate"><span class="pre">angular_noise_</span></code> are normal distributions centered at <code class="docutils literal notranslate"><span class="pre">0.0</span></code> with standard deviations specified by parameters.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Callable function to produce a StateSamplingFunction based on a control input.</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="k">const</span><span class="w"> </span><span class="n">control_type</span><span class="o">&amp;</span><span class="w"> </span><span class="n">control</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Returns a lambda satisfying the StateSamplingFunction requirements.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">control</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">state_type</span><span class="o">&amp;</span><span class="w"> </span><span class="n">current_state</span><span class="p">,</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">rng</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Sample noisy velocities using Gaussian distributions.</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">noisy_linear_velocity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">control</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">sample_noise</span><span class="p">(</span><span class="n">linear_noise_</span><span class="p">,</span><span class="w"> </span><span class="n">rng</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">noisy_angular_velocity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">control</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">sample_noise</span><span class="p">(</span><span class="n">angular_noise_</span><span class="p">,</span><span class="w"> </span><span class="n">rng</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">operator()</span></code> function returns a lambda. This lambda predicts the next state given a current state and a random number generator.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="c1">// Predict the next state using noisy control and SE(2) transformations.</span>
+<span class="w">      </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="w"> </span><span class="n">next_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_state</span><span class="p">;</span>
+<span class="w">      </span><span class="n">next_state</span><span class="p">.</span><span class="n">translation</span><span class="p">()</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">(</span>
+<span class="w">          </span><span class="n">noisy_linear_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">current_state</span><span class="p">.</span><span class="n">angle</span><span class="p">()),</span>
+<span class="w">          </span><span class="n">noisy_linear_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">current_state</span><span class="p">.</span><span class="n">angle</span><span class="p">()));</span>
+<span class="w">      </span><span class="n">next_state</span><span class="p">.</span><span class="n">so2</span><span class="p">()</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SO2d</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="n">noisy_angular_velocity</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">next_state</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The translation is updated based on the noisy linear velocity and the current orientation. The orientation (<code class="docutils literal notranslate"><span class="pre">so2</span></code>) is updated using the exponential map to handle the angular update.</p>
+</section>
+<section id="next-steps">
+<h3>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h3>
+<p>For a real-world implementation, see <a class="reference external" href="https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1OmnidirectionalDriveModel.html"><code class="docutils literal notranslate"><span class="pre">beluga::OmnidirectionalDriveModel</span></code></a>’s’ implementation.</p>
+</section>
+</section>
+<section id="implementing-sensor-models">
+<h2>Implementing Sensor Models<a class="headerlink" href="#implementing-sensor-models" title="Link to this heading">#</a></h2>
+<p>Sensor models in Beluga are responsible for assessing how likely it is that a given particle’s state matches observed sensor data. By assigning weights to particles based on sensor data, sensor models play a crucial role in filtering out unlikely states and refining the robot’s estimated position. For a deeper understanding of these, you may revisit Beluga’s <a class="reference internal" href="../concepts/key-concepts.html"><span class="doc std std-doc">key concepts</span></a> too.</p>
+<section id="id1">
+<h3>Key Considerations<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>When implementing a sensor model in Beluga, you need to ensure it meets a number of requirements:</p>
+<ul class="simple">
+<li><p>It must define a <code class="docutils literal notranslate"><span class="pre">state_type</span></code> that represents the particle’s state, often as a pose using structures like <code class="docutils literal notranslate"><span class="pre">Sophus::SE2d</span></code>.</p></li>
+<li><p>It must specify a <code class="docutils literal notranslate"><span class="pre">weight_type</span></code>, typically a numerical type, representing the weight calculated for each particle.</p></li>
+<li><p>It must list a <code class="docutils literal notranslate"><span class="pre">measurement_type</span></code> as the format of the sensor data, and for this you may want to look at <a class="reference internal" href="#"><span class="xref myst">sensor data abstractions</span></a>https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/dir_876c246173b27422a95ea0c3c06ba40d.html).</p></li>
+<li><p>It must be a callable (<code class="docutils literal notranslate"><span class="pre">operator()</span></code>) that accepts a sensor measurement and returns a function compliant with the <a class="reference external" href="https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/SensorModelPage.html"><code class="docutils literal notranslate"><span class="pre">StateWeightingFunction</span></code> requirements</a>. This function calculates the weight of a particle’s state given the measurement.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>Example Code<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>Below is an example of a simple range sensor model. This model calculates the likelihood of each particle’s state based on sensor measurements of distance from the origin:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cmath&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;random&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;beluga/sensor.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Eigen/Dense&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sophus/se2.hpp&gt;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">beluga</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Example of a simple range-based sensor model.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RangeSensorModel</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents the particle&#39;s state as SE(2) pose.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">weight_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">;</span><span class="w">             </span><span class="c1">// Particle weight, based on measurement likelihood.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">measurement_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents a distance measurement.</span>
+
+<span class="w">  </span><span class="c1">// Constructor to initialize sensor noise parameters.</span>
+<span class="w">  </span><span class="n">RangeSensorModel</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">sensor_stddev</span><span class="p">)</span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">sensor_noise_</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="n">sensor_stddev</span><span class="p">}</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">  </span><span class="c1">// Callable function to produce a StateWeightingFunction based on a measurement.</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">measurement_type</span><span class="w"> </span><span class="n">measurement</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Returns a lambda satisfying the StateWeightingFunction requirements.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">measurement</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">state_type</span><span class="o">&amp;</span><span class="w"> </span><span class="n">current_state</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">weight_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Calculate the expected sensor position based on the robot&#39;s pose.</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">expected_measurement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_state</span><span class="p">.</span><span class="n">translation</span><span class="p">().</span><span class="n">norm</span><span class="p">();</span>
+
+<span class="w">      </span><span class="c1">// Calculate weight based on a Gaussian kernel.</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="mf">-0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">((</span><span class="n">expected_measurement</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">measurement</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sensor_noise_</span><span class="p">.</span><span class="n">stddev</span><span class="p">(),</span><span class="w"> </span><span class="mi">2</span><span class="p">));</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w"> </span><span class="k">private</span><span class="o">:</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sensor_noise_</span><span class="p">;</span><span class="w">  </span><span class="c1">// Noise for sensor measurement.</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace beluga</span>
+</pre></div>
+</div>
+<p>Let’s break down the code to highlight the implementation techniques:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cmath&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;random&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;beluga/sensor.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Eigen/Dense&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sophus/se2.hpp&gt;</span>
+</pre></div>
+</div>
+<p>The required headers are included:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;cmath&gt;</span></code> for mathematical functions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;random&gt;</span></code> for handling noise in measurements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Eigen</span></code> and <code class="docutils literal notranslate"><span class="pre">Sophus</span></code> for linear algebra and pose handling.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span><span class="w"> </span><span class="nn">beluga</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Example of a simple range-based sensor model.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RangeSensorModel</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents the particle&#39;s state as SE(2) pose.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">weight_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">;</span><span class="w">             </span><span class="c1">// Particle weight, based on measurement likelihood.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">measurement_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents a distance measurement.</span>
+</pre></div>
+</div>
+<p>Here, the <code class="docutils literal notranslate"><span class="pre">RangeSensorModel</span></code> class is defined. <code class="docutils literal notranslate"><span class="pre">state_type</span></code> is specified as <code class="docutils literal notranslate"><span class="pre">Sophus::SE2d</span></code>, representing the robot’s pose; <code class="docutils literal notranslate"><span class="pre">weight_type</span></code> is a <code class="docutils literal notranslate"><span class="pre">double</span></code>, indicating the computed weight for each particle; and <code class="docutils literal notranslate"><span class="pre">measurement_type</span></code> is <code class="docutils literal notranslate"><span class="pre">double</span></code>, representing the sensor measurement.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Constructor to initialize sensor noise parameters.</span>
+<span class="w">  </span><span class="n">RangeSensorModel</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">sensor_stddev</span><span class="p">)</span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">sensor_noise_</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="n">sensor_stddev</span><span class="p">}</span><span class="w"> </span><span class="p">{}</span>
+</pre></div>
+</div>
+<p>The constructor initializes a normal distribution, <code class="docutils literal notranslate"><span class="pre">sensor_noise_</span></code>, to simulate measurement noise. This distribution is centered at <code class="docutils literal notranslate"><span class="pre">0.0</span></code> with a standard deviation defined by <code class="docutils literal notranslate"><span class="pre">sensor_stddev</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Callable function to produce a StateWeightingFunction based on a measurement.</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">measurement_type</span><span class="w"> </span><span class="n">measurement</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Returns a lambda satisfying the StateWeightingFunction requirements.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">measurement</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">state_type</span><span class="o">&amp;</span><span class="w"> </span><span class="n">current_state</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">weight_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Calculate the expected sensor position based on the robot&#39;s pose.</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">expected_measurement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_state</span><span class="p">.</span><span class="n">translation</span><span class="p">().</span><span class="n">norm</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">operator()</span></code> function returns a lambda. This lambda calculates the weight of a particle based on the error between the expected and actual measurements.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="c1">// Compute the distance between the expected and actual measurement.</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">expected_measurement</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">measurement</span><span class="p">).</span><span class="n">norm</span><span class="p">();</span>
+
+<span class="w">      </span><span class="c1">// Calculate weight based on Gaussian likelihood.</span>
+<span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="mf">-0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">distance</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sensor_noise_</span><span class="p">.</span><span class="n">stddev</span><span class="p">(),</span><span class="w"> </span><span class="mi">2</span><span class="p">));</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">weight</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>A Gaussian kernel is used to compute the weight, assigning higher values to states closer to the measurement.</p>
+</section>
+<section id="id3">
+<h3>Next steps<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>For a real-world implementation, see <a class="reference external" href="https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1LikelihoodFieldModel.html"><code class="docutils literal notranslate"><span class="pre">beluga::LikelihoodFieldModel</span></code></a>’s’ implementation.</p>
+</section>
+</section>
+<section id="implementing-estimation-algorithms">
+<h2>Implementing Estimation Algorithms<a class="headerlink" href="#implementing-estimation-algorithms" title="Link to this heading">#</a></h2>
+<p>Estimation algorithms in Beluga are responsible for synthesizing the most likely estimate of a robot’s state from a set of weighted particles. Statistical location and dispersion measures such as sampled means and variances are typical.</p>
+<p>Estimation algorithms are implemented as functions that take a particle range as input. In this library, instead of implementing them as free functions, we implement them as <a class="reference external" href="https://en.cppreference.com/w/Template:cpp/ranges/niebloid"><em>niebloids</em></a> (global instances of function objects that disable ADL). While this section focuses on estimation algorithms, it is worth noting that niebloids are used more broadly across the library as a sane approach to customization.</p>
+<section id="id4">
+<h3>Key Considerations<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>To build a robust estimation algorithm that integrates well with Beluga:</p>
+<ul class="simple">
+<li><p>The algorithm must work with a set of particle states and their corresponding weights, which encode each particle’s probability during estimation.</p></li>
+<li><p>The algorithm should be implemented using a niebloid construct.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>Example Code<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>The following example demonstrates how to implement a scalar median estimation algorithm using a niebloid:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;numeric&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;functional&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/algorithms/sort.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/numeric/accumulate.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/view/zip.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">beluga</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">detail</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Example of a niebloid for calculating the median of weighted scalar values.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">weighted_median_fn</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Operator to compute the median for scalar values.</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">Values</span><span class="p">,</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Weights</span><span class="p">,</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Projection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">identity</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">Values</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">Weights</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="n">Projection</span><span class="w"> </span><span class="n">projection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">WeightType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">decay_t</span><span class="o">&lt;</span><span class="n">ranges</span><span class="o">::</span><span class="n">range_value_t</span><span class="o">&lt;</span><span class="n">Weights</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">ValueType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">decay_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">invoke_result_t</span><span class="o">&lt;</span><span class="n">Projection</span><span class="p">,</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">range_value_t</span><span class="o">&lt;</span><span class="n">Values</span><span class="o">&gt;&gt;&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static_assert</span><span class="p">(</span><span class="n">ranges</span><span class="o">::</span><span class="n">input_range</span><span class="o">&lt;</span><span class="n">Values</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">static_assert</span><span class="p">(</span><span class="n">ranges</span><span class="o">::</span><span class="n">input_range</span><span class="o">&lt;</span><span class="n">Weights</span><span class="o">&gt;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Zip values with weights and sort them based on the projected value.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ValueType</span><span class="p">,</span><span class="w"> </span><span class="n">WeightType</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">sorted_pairs</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">[</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">weight</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">weights</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">sorted_pairs</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">projection</span><span class="p">(</span><span class="n">value</span><span class="p">),</span><span class="w"> </span><span class="n">weight</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">ranges</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">sorted_pairs</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">less</span><span class="p">{},</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">pair</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">pair</span><span class="p">.</span><span class="n">first</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// Find the median based on cumulative weights.</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">cumulative_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WeightType</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">half_total_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">accumulate</span><span class="p">(</span>
+<span class="w">      </span><span class="n">sorted_pairs</span><span class="p">,</span><span class="w"> </span><span class="n">WeightType</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="p">{},</span>
+<span class="w">      </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">pair</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">pair</span><span class="p">.</span><span class="n">second</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="p">[</span><span class="n">projected_value</span><span class="p">,</span><span class="w"> </span><span class="n">weight</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sorted_pairs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">cumulative_weight</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">weight</span><span class="p">;</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cumulative_weight</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">half_total_weight</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">projected_value</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Fallback: return the last value in case no median found (should not happen with correct weights).</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sorted_pairs</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">first</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace detail</span>
+
+<span class="c1">// A niebloid instance to compute the median.</span>
+<span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="n">detail</span><span class="o">::</span><span class="n">weighted_median_fn</span><span class="w"> </span><span class="n">weighted_median</span><span class="p">;</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace beluga</span>
+</pre></div>
+</div>
+<p>Let’s break down the code to highlight the implementation techniques:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;numeric&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/algorithms/sort.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/numeric/accumulate.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;range/v3/view/zip.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+</pre></div>
+</div>
+<p>We begin by including the required headers:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;algorithm&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;numeric&gt;</span></code> for sorting and accumulating operations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;range/v3/*&gt;</span></code> for zipping values and weights, sorting values, and summing weights.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;vector&gt;</span></code> for storing the sorted pairs of values and weights.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span><span class="w"> </span><span class="nn">beluga</span><span class="w"> </span><span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">detail</span><span class="w"> </span><span class="p">{</span>
+</pre></div>
+</div>
+<p>The implementation is structured within the <code class="docutils literal notranslate"><span class="pre">beluga</span></code> and <code class="docutils literal notranslate"><span class="pre">detail</span></code> namespaces, consistent with the library’s organization.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Example of a niebloid for calculating the median of weighted scalar values.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">weighted_median_fn</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Operator to compute the median for scalar values.</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">Values</span><span class="p">,</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Weights</span><span class="p">,</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Projection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">identity</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">Values</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">Weights</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="n">Projection</span><span class="w"> </span><span class="n">projection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">WeightType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">decay_t</span><span class="o">&lt;</span><span class="n">ranges</span><span class="o">::</span><span class="n">range_value_t</span><span class="o">&lt;</span><span class="n">Weights</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">ValueType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">decay_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">invoke_result_t</span><span class="o">&lt;</span><span class="n">Projection</span><span class="p">,</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">range_value_t</span><span class="o">&lt;</span><span class="n">Values</span><span class="o">&gt;&gt;&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static_assert</span><span class="p">(</span><span class="n">ranges</span><span class="o">::</span><span class="n">input_range</span><span class="o">&lt;</span><span class="n">Values</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">static_assert</span><span class="p">(</span><span class="n">ranges</span><span class="o">::</span><span class="n">input_range</span><span class="o">&lt;</span><span class="n">Weights</span><span class="o">&gt;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">weighted_median_fn</span></code> struct is defined, focusing on the scalar median computation. The <code class="docutils literal notranslate"><span class="pre">operator()</span></code> function handles ranges of values and weights. Note the optional <code class="docutils literal notranslate"><span class="pre">projection</span></code>, allowing value transformation before processing. The result type of the projection may differ from the original values, requiring the use of <code class="docutils literal notranslate"><span class="pre">std::decay_t</span></code> to manage type adjustments.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="c1">// Zip values with weights and sort them based on the projected value.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ValueType</span><span class="p">,</span><span class="w"> </span><span class="n">WeightType</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">sorted_pairs</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">[</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">weight</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">views</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">weights</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">sorted_pairs</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">projection</span><span class="p">(</span><span class="n">value</span><span class="p">),</span><span class="w"> </span><span class="n">weight</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">ranges</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">sorted_pairs</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">less</span><span class="p">{},</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">pair</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">pair</span><span class="p">.</span><span class="n">first</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+</div>
+<p>Values and weights are zipped together. The projection is applied to each value, and they are stored with their weights in <code class="docutils literal notranslate"><span class="pre">sorted_pairs</span></code>. These pairs are then sorted based on the projected value using <code class="docutils literal notranslate"><span class="pre">std::sort</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">cumulative_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WeightType</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">half_total_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ranges</span><span class="o">::</span><span class="n">accumulate</span><span class="p">(</span>
+<span class="w">      </span><span class="n">sorted_pairs</span><span class="p">,</span><span class="w"> </span><span class="n">WeightType</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="p">{},</span>
+<span class="w">      </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">pair</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">pair</span><span class="p">.</span><span class="n">second</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="p">[</span><span class="n">projected_value</span><span class="p">,</span><span class="w"> </span><span class="n">weight</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sorted_pairs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">cumulative_weight</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">weight</span><span class="p">;</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cumulative_weight</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">half_total_weight</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">projected_value</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The median is calculated using cumulative weights. The algorithm iterates through the sorted pairs, summing the weights. When the cumulative weight exceeds half the total, the median value is identified.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="c1">// Fallback: return the last value in case no median found (should not happen with correct weights).</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sorted_pairs</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">first</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>A fallback mechanism is provided for when and if no median is found due to an anomaly in the weights.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">}</span><span class="w">  </span><span class="c1">// namespace detail</span>
+
+<span class="c1">// A niebloid instance to compute the median.</span>
+<span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="n">detail</span><span class="o">::</span><span class="n">weighted_mean_fn</span><span class="w"> </span><span class="n">weighted_median</span><span class="p">;</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace beluga</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">weighted_median</span></code> niebloid is instantiated.</p>
+</section>
+<section id="id6">
+<h3>Next Steps<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>For a real-world implementation, see <a class="reference external" href="https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/estimation_8hpp.html"><code class="docutils literal notranslate"><span class="pre">beluga/algorithm/estimation.hpp</span></code></a> content.</p>
+</section>
+</section>
 </section>
 
 
@@ -401,6 +817,40 @@
             
             
               
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-motion-models">Implementing Motion Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-considerations">Key Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-code">Example Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-sensor-models">Implementing Sensor Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Key Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Example Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Next steps</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-estimation-algorithms">Implementing Estimation Algorithms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Key Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Example Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -429,7 +879,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Oct 23 10:28:02 2024 -0300, 655b0d6&#39;.
+  Last updated on &#39;Fri Oct 25 11:00:39 2024 -0300, 08e682f&#39;.
   <br/>
 </p>
   </div>
