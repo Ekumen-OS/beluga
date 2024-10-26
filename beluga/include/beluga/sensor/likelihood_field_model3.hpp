@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_LIKELIHOOD_3D_FIELD_MODEL_HPP
-#define BELUGA_SENSOR_LIKELIHOOD_3D_FIELD_MODEL_HPP
+#ifndef BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL3_HPP
+#define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL3_HPP
 
 #include <algorithm>
 #include <cmath>
@@ -38,13 +38,11 @@
 
 namespace beluga {
 
-/// Parameters used to construct a Likelihood3DFieldModel instance.
+/// Parameters used to construct a LikelihoodFieldModel3 instance.
 /**
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4, particularly Table 6.3.
  */
-struct Likelihood3DFieldModelParam {
-  /// Voxel size in meters.
-  double voxel_size = 0.07;
+struct LikelihoodFieldModel3Param {
   /// Maximum distance to obstacle.
   /**
    * When creating a distance map, if the distance to an obstacle is higher than the value specified here,
@@ -77,8 +75,8 @@ struct Likelihood3DFieldModelParam {
  *
  * \tparam OpenVDB grid type.
  */
-template <typename GridT, typename U>
-class Likelihood3DFieldModel {
+template <typename GridT, typename PointCloud>
+class LikelihoodFieldModel3 {
  public:
   /// State type of a particle.
   using state_type = Sophus::SE3d;
@@ -87,13 +85,13 @@ class Likelihood3DFieldModel {
   using weight_type = double;
 
   /// Measurement type given by the interface.
-  using measurement_type = U;
+  using measurement_type = PointCloud;
 
   /// Map representation type.
   using map_type = GridT;
 
   /// Parameter type that the constructor uses to configure the likelihood field model.
-  using param_type = Likelihood3DFieldModelParam;
+  using param_type = LikelihoodFieldModel3Param;
 
   /// Constructs a Likelihood3DFieldModel instance.
   /**
@@ -104,16 +102,16 @@ class Likelihood3DFieldModel {
    *  for particle states.
    *  Currently only supports OpenVDB Level sets.
    */
-  explicit Likelihood3DFieldModel(const param_type& params, const map_type& grid)
+  explicit LikelihoodFieldModel3(const param_type& params, const map_type& grid)
       : params_{params},
         looker_{openvdb::tools::ClosestSurfacePoint<map_type>::create(grid)},
-        squared_sigma_{params.sigma_hit * params.sigma_hit},
+        two_squared_sigma_{2 * params.sigma_hit * params.sigma_hit},
         amplitude_{params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()))},
         offset_{params.z_random / params.max_laser_distance} {
+    openvdb::initialize();
     /// Pre-computed parameters
-    assert(squared_sigma_ > 0.0);
+    assert(two_squared_sigma_ > 0.0);
     assert(amplitude_ > 0.0);
-    // Remember this OpenVDB DualGridSmpler
   }
 
   /// Returns a state weighting function conditioned on 3D lidar hits.
@@ -133,15 +131,14 @@ class Likelihood3DFieldModel {
     return [this, pointcloud_size, points = std::move(transformed_points)](const state_type& state) -> weight_type {
       std::vector<float> nb_distances;
       std::vector<openvdb::Vec3R> vdb_points;
-      vdb_points.resize(pointcloud_size);
+      vdb_points.reserve(pointcloud_size);
 
       // Transform each point to every particle state
-      std::transform(
-          points.begin(), points.end(), vdb_points.begin(), [this, pointcloud_size, state](const auto& point) {
-            // OpenVDB grid already in world coordinates
-            const Eigen::Vector3d point_in_state_frame = state * point;
-            return openvdb::Vec3R{point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()};
-          });
+      std::transform(points.begin(), points.end(), std::back_inserter(vdb_points), [this, state](const auto& point) {
+        // OpenVDB grid already in world coordinates
+        const Eigen::Vector3d point_in_state_frame = state * point;
+        return openvdb::Vec3R{point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()};
+      });
 
       // Extract the distance to the closest surface for each point
       looker_->search(vdb_points, nb_distances);
@@ -149,7 +146,7 @@ class Likelihood3DFieldModel {
       // Calculates the probality based on the distance
       return std::transform_reduce(
           nb_distances.cbegin(), nb_distances.cend(), 1.0, std::plus{}, [this](const auto& distance) {
-            return amplitude_ * std::exp(-(distance * distance) / squared_sigma_) + offset_;
+            return amplitude_ * std::exp(-(distance * distance) / two_squared_sigma_) + offset_;
           });
     };
   }
@@ -157,7 +154,7 @@ class Likelihood3DFieldModel {
  private:
   param_type params_;
   typename openvdb::tools::ClosestSurfacePoint<map_type>::Ptr looker_;
-  const double squared_sigma_;
+  const double two_squared_sigma_;
   const double amplitude_;
   const double offset_;
 };

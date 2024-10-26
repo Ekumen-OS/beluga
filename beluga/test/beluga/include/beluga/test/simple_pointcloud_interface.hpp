@@ -21,24 +21,24 @@
 namespace beluga::testing {
 
 template <typename T>
-class SparsePointCloud3 {
+class SimpleSparsePointCloud3 {
  public:
-  explicit SparsePointCloud3(std::vector<Eigen::Vector3<T>> points, Sophus::SE3d origin = Sophus::SE3d{})
+  explicit SimpleSparsePointCloud3(std::vector<Eigen::Vector3<T>> points, Sophus::SE3d origin = Sophus::SE3d{})
       : points_(std::move(points)), origin_(std::move(origin)) {}
 
   /// Get the point cloud frame origin in the filter frame.
   [[nodiscard]] const auto& origin() const { return origin_; }
 
-  /// Get the unorganized 3D point collection as an Eigen Map<Eigen::Vector3>.
-  [[nodiscard]] auto points() const {
-    return ranges::views::iota(0, static_cast<int>(points_.size())) |
-           ranges::views::transform([this](int i) { return Eigen::Map<const Eigen::Vector3<T>>(points_[i].data()); });
-  }
+  /// Get the 3D points collection.
+  [[nodiscard]] auto& points() const { return points_; }
 
  private:
   std::vector<Eigen::Vector3<T>> points_;
   Sophus::SE3d origin_;
 };
+
+using SimpleSparsePointCloud3d = SimpleSparsePointCloud3<double>;
+using SimpleSparsePointCloud3f = SimpleSparsePointCloud3<float>;
 
 }  // namespace beluga::testing
 
