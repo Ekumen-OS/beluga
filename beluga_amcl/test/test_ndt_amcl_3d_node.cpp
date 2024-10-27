@@ -206,7 +206,7 @@ TEST_P(TestInitializationWithModel, ParticleCount) {
 
   ASSERT_TRUE(wait_for_initialization());
 
-  std::visit([](const auto& pf) { ASSERT_EQ(pf.particles().size(), 10UL); }, *ndt_amcl_node_->particle_filter());
+  ASSERT_EQ(ndt_amcl_node_->particle_filter()->particles().size(), 10UL);
 }
 
 class TestNode : public BaseNodeFixture<::testing::Test> {};
@@ -370,26 +370,6 @@ TEST_F(TestNode, InvalidMotionModel) {
   ndt_amcl_node_->configure();
   ndt_amcl_node_->activate();
   ASSERT_FALSE(wait_for_initialization());
-}
-TEST_F(TestNode, InvalidExecutionPolicy) {
-  ndt_amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "non_existing_policy"});
-  ndt_amcl_node_->configure();
-  ndt_amcl_node_->activate();
-  ASSERT_FALSE(wait_for_initialization());
-}
-
-TEST_F(TestNode, SequentialExecutionPolicy) {
-  ndt_amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "seq"});
-  ndt_amcl_node_->configure();
-  ndt_amcl_node_->activate();
-  ASSERT_TRUE(wait_for_initialization());
-}
-
-TEST_F(TestNode, ParallelExecutionPolicy) {
-  ndt_amcl_node_->set_parameter(rclcpp::Parameter{"execution_policy", "par"});
-  ndt_amcl_node_->configure();
-  ndt_amcl_node_->activate();
-  ASSERT_TRUE(wait_for_initialization());
 }
 
 TEST_F(TestNode, InitialPoseBeforeInitialize) {

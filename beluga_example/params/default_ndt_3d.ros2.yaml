@@ -35,14 +35,6 @@ ndt_amcl:
     # Upper standard normal quantile for the probability that the error in the
     # estimated distribution is less than pf_err.
     pf_z: 3.0
-    # Fast exponential filter constant, used to filter the average particles weights.
-    # Random particles are added if the fast filter result is larger than the slow filter result
-    # allowing the particle filter to recover from a bad approximation.
-    recovery_alpha_fast: 0.1
-    # Slow exponential filter constant, used to filter the average particles weights.
-    # Random particles are added if the fast filter result is larger than the slow filter result
-    # allowing the particle filter to recover from a bad approximation.
-    recovery_alpha_slow: 0.001
     # Resample will happen after the amount of updates specified here happen.
     resample_interval: 1
     # Minimum angle difference from last resample for resampling to happen again.
@@ -57,9 +49,6 @@ ndt_amcl:
     tf_broadcast: true
     # Transform tolerance allowed.
     transform_tolerance: 1.0
-    # Execution policy used to apply the motion update and importance weight steps.
-    # Valid options: "seq", "par".
-    execution_policy: par
     # Whether to set initial pose based on parameters.
     # When enabled, particles will be initialized with the specified pose coordinates and covariance.
     set_initial_pose: true

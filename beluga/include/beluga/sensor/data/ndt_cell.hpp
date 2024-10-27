@@ -33,7 +33,7 @@ namespace beluga {
 
 /// Representation for a cell of a N dimensional NDT cell.
 template <int NDim, typename Scalar = double>
-struct NDTCell {
+struct NdtCell {
   static_assert(std::is_floating_point_v<Scalar>, "Scalar template parameter should be a floating point.");
   /// Number of dimensions of the cell's translation.
   static constexpr int num_dim = NDim;
@@ -46,7 +46,7 @@ struct NDTCell {
 
   /// Get the L2 likelihood at measurement, scaled by d1 and d2. It assumes the measurement is pre-transformed
   /// into the same frame as this cell instance.
-  [[nodiscard]] double likelihood_at(const NDTCell& measurement, double d1 = 1.0, double d2 = 1.0) const {
+  [[nodiscard]] double likelihood_at(const NdtCell& measurement, double d1 = 1.0, double d2 = 1.0) const {
     const Eigen::Vector<Scalar, NDim> error = measurement.mean - mean;
     const double rhs =
         std::exp((-d2 / 2.0) * error.transpose() * (measurement.covariance + covariance).inverse() * error);
@@ -54,36 +54,36 @@ struct NDTCell {
   }
 
   /// Ostream overload mostly for debugging purposes.
-  friend std::ostream& operator<<(std::ostream& os, const NDTCell& cell) {
+  friend std::ostream& operator<<(std::ostream& os, const NdtCell& cell) {
     os << "Mean \n" << cell.mean.transpose() << " \n\nCovariance: \n" << cell.covariance;
     return os;
   }
 
   /// Transform the normal distribution according to tf, both mean and covariance.
-  friend NDTCell operator*(const Sophus::SE2<scalar_type>& tf, const NDTCell& ndt_cell) {
+  friend NdtCell operator*(const Sophus::SE2<scalar_type>& tf, const NdtCell& ndt_cell) {
     static_assert(num_dim == 2, "Cannot transform a non 2D NDT Cell with a SE2 transform.");
     const Eigen::Vector2d uij = tf * ndt_cell.mean;
     const Eigen::Matrix2Xd cov = tf.so2().matrix() * ndt_cell.covariance * tf.so2().matrix().transpose();
-    return NDTCell{uij, cov};
+    return NdtCell{uij, cov};
   }
 
   /// Transform the normal distribution according to tf, both mean and covariance.
-  friend NDTCell operator*(const Sophus::SE3<scalar_type>& tf, const NDTCell& ndt_cell) {
+  friend NdtCell operator*(const Sophus::SE3<scalar_type>& tf, const NdtCell& ndt_cell) {
     static_assert(num_dim == 3, "Cannot transform a non 3D NDT Cell with a SE3 transform.");
     const Eigen::Vector3d uij = tf * ndt_cell.mean;
     const Eigen::Matrix3Xd cov = tf.so3().matrix() * ndt_cell.covariance * tf.so3().matrix().transpose();
-    return NDTCell{uij, cov};
+    return NdtCell{uij, cov};
   }
 };
 
 /// Convenience alias for a 2D NDT cell with double representation.
-using NDTCell2d = NDTCell<2, double>;
+using NdtCell2d = NdtCell<2, double>;
 /// Convenience alias for a 2D NDT cell with float representation.
-using NDTCell2f = NDTCell<2, float>;
+using NdtCell2f = NdtCell<2, float>;
 /// Convenience alias for a 3D NDT cell with double representation.
-using NDTCell3d = NDTCell<3, double>;
+using NdtCell3d = NdtCell<3, double>;
 /// Convenience alias for a 3D NDT cell with float representation.
-using NDTCell3f = NDTCell<3, float>;
+using NdtCell3f = NdtCell<3, float>;
 
 }  // namespace beluga
 

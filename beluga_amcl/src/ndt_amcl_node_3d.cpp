@@ -12,71 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <sensor_msgs/msg/detail/point_cloud2__struct.h>
-#include <sensor_msgs/msg/point_cloud2.h>
-#include <beluga/algorithm/unscented_transform.hpp>
 #include <chrono>
-#include <cstddef>
-#include <execution>
 #include <functional>
 #include <memory>
 #include <optional>
-#include <range/v3/view/zip.hpp>
-#include <rclcpp/duration.hpp>
-#include <sensor_msgs/point_cloud2_iterator.hpp>
-#include <sophus/se3.hpp>
 #include <stdexcept>
 #include <string>
-#include <string_view>
 #include <utility>
-#include <variant>
 #include <vector>
 
-#include <range/v3/range/conversion.hpp>
-#include <range/v3/view/transform.hpp>
-
-#include <Eigen/Core>
-#include <sophus/types.hpp>
-
-#include <Eigen/src/Core/Matrix.h>
-#include <tf2/convert.h>
-#include <tf2/exceptions.h>
-#include <tf2/time.h>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/buffer_interface.h>
-#include <tf2_ros/create_timer_ros.h>
-#include <tf2_ros/message_filter.h>
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/transform_listener.h>
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcpp"
-#include <message_filters/subscriber.h>
-#pragma GCC diagnostic pop
-
-#include <bondcpp/bond.hpp>
-#include <rclcpp/rclcpp.hpp>
-#include <rclcpp_lifecycle/lifecycle_node.hpp>
-
-#include <geometry_msgs/msg/pose_array.hpp>
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <lifecycle_msgs/msg/state.hpp>
-#include <sensor_msgs/msg/laser_scan.hpp>
-#include <sensor_msgs/msg/point_cloud2.hpp>
-
-#include <beluga/algorithm/amcl_core.hpp>
-#include <beluga/algorithm/estimation.hpp>
-#include <beluga/algorithm/spatial_hash.hpp>
-#include <beluga/motion/differential_drive_model.hpp>
-
-#include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga/sensor/ndt_sensor_model.hpp>
-#include <beluga/views/particles.hpp>
-#include <beluga_ros/messages.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
-#include "beluga_amcl/ndt_amcl_node_3d.hpp"
-#include "beluga_amcl/ros2_common.hpp"
+
+#include <beluga_amcl/ndt_amcl_node_3d.hpp>
 
 namespace beluga_amcl {
 
@@ -224,62 +172,51 @@ auto NdtAmclNode3D::get_initial_estimate() const -> std::optional<std::pair<Soph
   return std::make_pair(pose, covariance);
 }
 
-auto NdtAmclNode3D::get_motion_model() const -> MotionModelVariant {
+auto NdtAmclNode3D::get_motion_model() const -> beluga::DifferentialDriveModel3d {
   const auto name = get_parameter("robot_model_type").as_string();
-  if (name == kDifferentialModelName || name == kDifferentialModelName) {
+  if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
     auto params = beluga::DifferentialDriveModelParam{};
     params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
     params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
     params.translation_noise_from_translation = get_parameter("alpha3").as_double();
     params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
-    return beluga::DifferentialDriveModel<Sophus::SE3d>{params};
+    return beluga::DifferentialDriveModel3d{params};
   }
   throw std::invalid_argument(std::string("Invalid motion model: ") + name);
 }
 
-beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode3D::get_sensor_model() const {
-  auto params = beluga::NDTModelParam3d{};
+auto NdtAmclNode3D::get_sensor_model() const -> beluga::NdtSensorModel<NdtMap> {
+  auto params = beluga::NdtModelParam3d{};
   params.minimum_likelihood = get_parameter("minimum_likelihood").as_double();
   params.d1 = get_parameter("d1").as_double();
   params.d2 = get_parameter("d2").as_double();
   const auto map_path = get_parameter("map_path").as_string();
   RCLCPP_INFO(get_logger(), "Loading map from %s.", map_path.c_str());
 
-  return beluga::NDTSensorModel<NDTMapRepresentation>{
-      params, beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string())};
+  return beluga::NdtSensorModel<NdtMap>{
+      params, beluga::io::load_from_hdf5<NdtMap>(get_parameter("map_path").as_string())};
 }
-auto NdtAmclNode3D::make_particle_filter() const -> std::unique_ptr<NdtAmclVariant> {
-  auto amcl = std::visit(
-      [this](auto motion_model, auto execution_policy) -> NdtAmclVariant {
-        auto params = beluga::AmclParams{};
-        params.update_min_d = get_parameter("update_min_d").as_double();
-        params.update_min_a = get_parameter("update_min_a").as_double();
-        params.resample_interval = static_cast<std::size_t>(get_parameter("resample_interval").as_int());
-        params.selective_resampling = get_parameter("selective_resampling").as_bool();
-        params.min_particles = static_cast<std::size_t>(get_parameter("min_particles").as_int());
-        params.max_particles = static_cast<std::size_t>(get_parameter("max_particles").as_int());
-        params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
-        params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
-        params.kld_epsilon = get_parameter("pf_err").as_double();
-        params.kld_z = get_parameter("pf_z").as_double();
 
-        auto hasher = beluga::spatial_hash<Sophus::SE3d>(
-            get_parameter("spatial_resolution_x").as_double(), get_parameter("spatial_resolution_theta").as_double());
+auto NdtAmclNode3D::make_particle_filter() const -> std::unique_ptr<beluga_amcl::NdtAmcl> {
+  auto params = beluga::AmclParams{};
+  params.update_min_d = get_parameter("update_min_d").as_double();
+  params.update_min_a = get_parameter("update_min_a").as_double();
+  params.resample_interval = static_cast<std::size_t>(get_parameter("resample_interval").as_int());
+  params.selective_resampling = get_parameter("selective_resampling").as_bool();
+  params.min_particles = static_cast<std::size_t>(get_parameter("min_particles").as_int());
+  params.max_particles = static_cast<std::size_t>(get_parameter("max_particles").as_int());
+  params.kld_epsilon = get_parameter("pf_err").as_double();
+  params.kld_z = get_parameter("pf_z").as_double();
 
-        // We don't support randomly sampling from NDT maps, so we enforce a non-adaptive filter.
-        assert(params.min_particles == params.max_particles);
-        RandomStateGenerator random_state_maker = []() { return Sophus::SE3d{}; };
+  auto hasher = beluga::spatial_hash<Sophus::SE3d>(
+      get_parameter("spatial_resolution_x").as_double(),  //
+      get_parameter("spatial_resolution_theta").as_double());
 
-        return beluga::Amcl(
-            std::move(motion_model),
-            get_sensor_model(),             //
-            std::move(random_state_maker),  //
-            std::move(hasher),              //
-            params,                         //
-            execution_policy);
-      },
-      get_motion_model(), get_execution_policy());
-  return std::make_unique<NdtAmclVariant>(std::move(amcl));
+  return std::make_unique<beluga_amcl::NdtAmcl>(
+      get_motion_model(),
+      get_sensor_model(),  //
+      std::move(hasher),   //
+      params);
 }
 
 void NdtAmclNode3D::do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr message) {
@@ -299,14 +236,11 @@ void NdtAmclNode3D::do_periodic_timer_callback() {
   if (particle_cloud_pub_->get_subscription_count() == 0) {
     return;
   }
-  std::visit(
-      [this](const auto& particle_filter) {
-        auto message = beluga_ros::msg::PoseArray{};
-        beluga_ros::assign_particle_cloud(particle_filter.particles(), message);
-        beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
-        particle_cloud_pub_->publish(message);
-      },
-      *particle_filter_);
+
+  auto message = beluga_ros::msg::PoseArray{};
+  beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
+  beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
+  particle_cloud_pub_->publish(message);
 }
 
 // TODO(alon): Wouldn't it be better in the callback of each message to simply receive
@@ -357,13 +291,7 @@ void NdtAmclNode3D::laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr
   };
 
   RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Processing %ld points.", measurement.size());
-  const auto new_estimate = std::visit(
-      [base_pose_in_odom, measurement = measurement](auto& particle_filter) {
-        return particle_filter.update(
-            base_pose_in_odom,  //
-            std::move(measurement));
-      },
-      *particle_filter_);
+  const auto new_estimate = particle_filter_->update(base_pose_in_odom, std::move(measurement));
 
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
@@ -373,11 +301,9 @@ void NdtAmclNode3D::laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr
     last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
     last_known_estimate_ = new_estimate;
 
-    const auto num_particles =
-        std::visit([](const auto& particle_filter) { return particle_filter.particles().size(); }, *particle_filter_);
-
     RCLCPP_INFO(
-        get_logger(), "Particle filter update iteration stats: %ld particles - %.3fms", num_particles,
+        get_logger(), "Particle filter update iteration stats: %ld particles - %.3fms",  //
+        particle_filter_->particles().size(),                                            //
         std::chrono::duration<double, std::milli>(update_duration).count());
   }
 
@@ -428,9 +354,7 @@ bool NdtAmclNode3D::initialize_from_estimate(const std::pair<Sophus::SE3d, Sophu
   }
 
   try {
-    std::visit(
-        [estimate](auto& particle_filter) { particle_filter.initialize(estimate.first, estimate.second); },
-        *particle_filter_);
+    particle_filter_->initialize(estimate.first, estimate.second);
   } catch (const std::runtime_error& error) {
     RCLCPP_ERROR(get_logger(), "Could not initialize particles: %s", error.what());
     return false;
@@ -438,13 +362,13 @@ bool NdtAmclNode3D::initialize_from_estimate(const std::pair<Sophus::SE3d, Sophu
 
   enable_tf_broadcast_ = true;
 
-  const auto num_particles =
-      std::visit([](const auto& particle_filter) { return particle_filter.particles().size(); }, *particle_filter_);
-
   const auto& pose = estimate.first;
   RCLCPP_INFO(
-      get_logger(), "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, z=%g", num_particles,
-      pose.translation().x(), pose.translation().y(), pose.translation().z());
+      get_logger(), "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, z=%g",
+      particle_filter_->particles().size(),  //
+      pose.translation().x(),                //
+      pose.translation().y(),                //
+      pose.translation().z());
 
   return true;
 }

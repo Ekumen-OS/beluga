@@ -20,6 +20,7 @@
  * \brief Includes all beluga algorithms.
  */
 
+#include <beluga/algorithm/amcl_core.hpp>
 #include <beluga/algorithm/cluster_based_estimation.hpp>
 #include <beluga/algorithm/distance_map.hpp>
 #include <beluga/algorithm/effective_sample_size.hpp>

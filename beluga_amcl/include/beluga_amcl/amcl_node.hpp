@@ -19,28 +19,17 @@
 #include <optional>
 #include <utility>
 
+#include <tf2_ros/message_filter.h>
+
+#include <std_srvs/srv/empty.hpp>
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcpp"
 #include <message_filters/subscriber.h>
 #pragma GCC diagnostic pop
 
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/message_filter.h>
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/transform_listener.h>
-#include <bondcpp/bond.hpp>
-#include <rclcpp_lifecycle/lifecycle_node.hpp>
-
-#include <geometry_msgs/msg/pose_array.hpp>
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <nav_msgs/msg/occupancy_grid.hpp>
-#include <sensor_msgs/msg/laser_scan.hpp>
-#include <std_srvs/srv/empty.hpp>
-#include <visualization_msgs/msg/marker_array.hpp>
-
-#include <beluga/beluga.hpp>
+#include <beluga_amcl/ros2_common.hpp>
 #include <beluga_ros/amcl.hpp>
-#include "beluga_amcl/ros2_common.hpp"
 
 /**
  * \file

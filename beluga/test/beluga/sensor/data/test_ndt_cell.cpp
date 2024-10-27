@@ -32,23 +32,23 @@ Eigen::Matrix2Xd get_diagonal_covariance(double x_var = 0.5, double y_var = 0.8)
 
 }  // namespace
 
-TEST(NDTCellTests, Product) {
+TEST(NdtCellTests, Product) {
   {
-    const NDTCell2d cell{Eigen::Vector2d{1, 2}, get_diagonal_covariance()};
+    const NdtCell2d cell{Eigen::Vector2d{1, 2}, get_diagonal_covariance()};
     const Sophus::SE2d tf{};
     const auto transformed = tf * cell;
     ASSERT_TRUE(cell.mean.isApprox(transformed.mean));
     ASSERT_TRUE(cell.covariance.isApprox(transformed.covariance));
   }
   {
-    const NDTCell2d cell{Eigen::Vector2d{1, 2}, get_diagonal_covariance()};
+    const NdtCell2d cell{Eigen::Vector2d{1, 2}, get_diagonal_covariance()};
     const Sophus::SE2d tf{Sophus::SO2d{}, Eigen::Vector2d{1, 2}};
     const auto transformed = tf * cell;
     ASSERT_TRUE(cell.mean.isApprox(transformed.mean - Eigen::Vector2d{1, 2}));
     ASSERT_TRUE(cell.covariance.isApprox(transformed.covariance));
   }
   {
-    const NDTCell2d cell{Eigen::Vector2d{1, 2}, get_diagonal_covariance()};
+    const NdtCell2d cell{Eigen::Vector2d{1, 2}, get_diagonal_covariance()};
     const Sophus::SE2d tf{Sophus::SO2d{Sophus::Constants<double>::pi() / 2}, Eigen::Vector2d::Zero()};
 
     Eigen::Matrix<double, 2, 2> expected_transformed_cov;
@@ -62,8 +62,8 @@ TEST(NDTCellTests, Product) {
   }
 }
 
-TEST(NDTCellTests, Ostream) {
-  const NDTCell2d cell{Eigen::Vector2d{1, 2}, get_diagonal_covariance()};
+TEST(NdtCellTests, Ostream) {
+  const NdtCell2d cell{Eigen::Vector2d{1, 2}, get_diagonal_covariance()};
   std::stringstream ss;
   ss << cell;
   ASSERT_GT(ss.str().size(), 0);

@@ -34,19 +34,19 @@ Eigen::Matrix2Xd get_diagonal_covariance_2d(double x_var = 0.5, double y_var = 0
   return Eigen::Vector2d{x_var, y_var}.asDiagonal();
 }
 
-using sparse_grid_2d_t = SparseValueGrid2<std::unordered_map<Eigen::Vector2i, NDTCell2d, detail::CellHasher<2>>>;
-using sparse_grid_3d_t = SparseValueGrid3<std::unordered_map<Eigen::Vector3i, NDTCell3d, detail::CellHasher<3>>>;
+using sparse_grid_2d_t = SparseValueGrid2<std::unordered_map<Eigen::Vector2i, NdtCell2d, detail::CellHasher<2>>>;
+using sparse_grid_3d_t = SparseValueGrid3<std::unordered_map<Eigen::Vector3i, NdtCell3d, detail::CellHasher<3>>>;
 }  // namespace
 
-TEST(NDTSensorModel2DTests, CanConstruct) {
-  NDTSensorModel{NDTModelParam2d{}, sparse_grid_2d_t{}};
+TEST(NdtSensorModel2DTests, CanConstruct) {
+  NdtSensorModel{NdtModelParam2d{}, sparse_grid_2d_t{}};
 }
 
-TEST(NDTSensorModel2DTests, MinLikelihood) {
+TEST(NdtSensorModel2DTests, MinLikelihood) {
   constexpr double kMinimumLikelihood = 1e-6;
 
-  const NDTModelParam2d param{kMinimumLikelihood};
-  const NDTSensorModel model{param, sparse_grid_2d_t{}};
+  const NdtModelParam2d param{kMinimumLikelihood};
+  const NdtSensorModel model{param, sparse_grid_2d_t{}};
 
   for (const auto& val : {
            Eigen::Vector2d{0.1, 0.1},
@@ -63,7 +63,7 @@ TEST(NDTSensorModel2DTests, MinLikelihood) {
   }
 }
 
-TEST(NDTSensorModel2DTests, Likelihoood) {
+TEST(NdtSensorModel2DTests, Likelihoood) {
   typename sparse_grid_2d_t::map_type map;
   {
     Eigen::Array<double, 2, 2> cov;
@@ -72,7 +72,7 @@ TEST(NDTSensorModel2DTests, Likelihoood) {
            0.0, 0.3;
     // clang-format on
     const Eigen::Vector2d mean(0.5, 0.5);
-    map[Eigen::Vector2i(0, 0)] = NDTCell2d{mean, cov};
+    map[Eigen::Vector2i(0, 0)] = NdtCell2d{mean, cov};
   }
   {
     Eigen::Array<double, 2, 2> cov;
@@ -81,13 +81,13 @@ TEST(NDTSensorModel2DTests, Likelihoood) {
            0.0, 0.5;
     // clang-format on
     const Eigen::Vector2d mean(1.5, 1.5);
-    map[Eigen::Vector2i(1, 1)] = NDTCell2d{mean, cov};
+    map[Eigen::Vector2i(1, 1)] = NdtCell2d{mean, cov};
   }
   sparse_grid_2d_t grid{std::move(map), 1.0};
 
   constexpr double kMinimumLikelihood = 1e-6;
-  const NDTModelParam2d param{kMinimumLikelihood};
-  const NDTSensorModel model{param, std::move(grid)};
+  const NdtModelParam2d param{kMinimumLikelihood};
+  const NdtSensorModel model{param, std::move(grid)};
 
   EXPECT_DOUBLE_EQ(model.likelihood_at({{0.5, 0.5}, get_diagonal_covariance_2d()}), 1.3678794411714423);
   EXPECT_DOUBLE_EQ(model.likelihood_at({{0.8, 0.5}, get_diagonal_covariance_2d()}), 1.4307317817730123);
@@ -98,7 +98,7 @@ TEST(NDTSensorModel2DTests, Likelihoood) {
   EXPECT_DOUBLE_EQ(model.likelihood_at({{1.5, 1.8}, get_diagonal_covariance_2d()}), 1.1669230426687498);
 }
 
-TEST(NDTSensorModel2DTests, FitPoints) {
+TEST(NdtSensorModel2DTests, FitPoints) {
   {
     const std::vector meas{
         Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2}, Eigen::Vector2d{0.1, 0.2},
@@ -121,7 +121,7 @@ TEST(NDTSensorModel2DTests, FitPoints) {
   }
 }
 
-TEST(NDTSensorModel2DTests, ToCellsNotEnoughPointsInCell) {
+TEST(NdtSensorModel2DTests, ToCellsNotEnoughPointsInCell) {
   constexpr double kMapResolution = 0.5;
   const std::vector map_data{
       Eigen::Vector2d{0.1, 0.2},
@@ -132,7 +132,7 @@ TEST(NDTSensorModel2DTests, ToCellsNotEnoughPointsInCell) {
   ASSERT_EQ(cells.size(), 0UL);
 }
 
-TEST(NDTSensorModel3DTests, ToCellsNotEnoughPointsInCell) {
+TEST(NdtSensorModel3DTests, ToCellsNotEnoughPointsInCell) {
   constexpr double kMapResolution = 0.5;
   const std::vector map_data{
       Eigen::Vector3d{0.1, 0.2, 0.0},
@@ -143,7 +143,7 @@ TEST(NDTSensorModel3DTests, ToCellsNotEnoughPointsInCell) {
   ASSERT_EQ(cells.size(), 0UL);
 }
 
-TEST(NDTSensorModel3DTests, FitPoints) {
+TEST(NdtSensorModel3DTests, FitPoints) {
   {
     const std::vector meas{
         Eigen::Vector3d{0.1, 0.2, 0.3}, Eigen::Vector3d{0.1, 0.2, 0.3}, Eigen::Vector3d{0.1, 0.2, 0.3},
@@ -167,7 +167,7 @@ TEST(NDTSensorModel3DTests, FitPoints) {
   }
 }
 
-TEST(NDTSensorModel3DTests, SensorModel) {
+TEST(NdtSensorModel3DTests, SensorModel) {
   constexpr double kMapResolution = 0.5;
   const std::vector map_data{
       Eigen::Vector3d{0.1, 0.2, 0.0},  Eigen::Vector3d{0.112, 0.22, 0.1}, Eigen::Vector3d{0.15, 0.23, 0.1},
@@ -182,7 +182,7 @@ TEST(NDTSensorModel3DTests, SensorModel) {
   }
 
   std::vector perfect_measurement = map_data;
-  const NDTSensorModel model{{}, sparse_grid_3d_t{map_cells_data, kMapResolution}};
+  const NdtSensorModel model{{}, sparse_grid_3d_t{map_cells_data, kMapResolution}};
   auto state_weighing_fn = model(std::move(perfect_measurement));
 
   {
@@ -210,7 +210,7 @@ TEST(NDTSensorModel3DTests, SensorModel) {
   ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE3d{Sophus::SO3d{}, Eigen::Vector3d{0, 0, 1.0}}), 1.0);
 }
 
-TEST(NDTSensorModel2DTests, SensorModel) {
+TEST(NdtSensorModel2DTests, SensorModel) {
   constexpr double kMapResolution = 0.5;
   const std::vector map_data{
       Eigen::Vector2d{0.1, 0.2},  Eigen::Vector2d{0.112, 0.22}, Eigen::Vector2d{0.15, 0.23},
@@ -223,7 +223,7 @@ TEST(NDTSensorModel2DTests, SensorModel) {
     map_cells_data[(cell.mean.array() / kMapResolution).cast<int>()] = cell;
   }
   std::vector perfect_measurement = map_data;
-  const NDTSensorModel model{{}, sparse_grid_2d_t{map_cells_data, kMapResolution}};
+  const NdtSensorModel model{{}, sparse_grid_2d_t{map_cells_data, kMapResolution}};
   auto state_weighing_fn = model(std::move(perfect_measurement));
   // This is a perfect hit, so we should expect weight to be 1 + num_cells == 2.
   ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE2d{}), 2);
@@ -235,20 +235,20 @@ TEST(NDTSensorModel2DTests, SensorModel) {
   ASSERT_DOUBLE_EQ(state_weighing_fn(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{-10, -10}}), 1.0);
 }
 
-TEST(NDTSensorModel2DTests, LoadFromHDF5HappyPath) {
+TEST(NdtSensorModel2DTests, LoadFromHDF5HappyPath) {
   const auto ndt_map_representation = io::load_from_hdf5<sparse_grid_2d_t>("./test_data/turtlebot3_world.hdf5");
   ASSERT_EQ(ndt_map_representation.size(), 30UL);
 }
 
-TEST(NDTSensorModel2DTests, LoadFromHDF5NonExistingFile) {
+TEST(NdtSensorModel2DTests, LoadFromHDF5NonExistingFile) {
   ASSERT_THROW(io::load_from_hdf5<sparse_grid_2d_t>("bad_file.hdf5"), std::invalid_argument);
 }
 
-TEST(NDTSensorModel3DTests, LoadFromHDF5NonExistingFile) {
+TEST(NdtSensorModel3DTests, LoadFromHDF5NonExistingFile) {
   ASSERT_THROW(io::load_from_hdf5<sparse_grid_3d_t>("bad_file.hdf5"), std::invalid_argument);
 }
 
-TEST(NDTSensorModel3DTests, LoadFromHDF5HappyPath) {
+TEST(NdtSensorModel3DTests, LoadFromHDF5HappyPath) {
   const auto ndt_map_representation = io::load_from_hdf5<sparse_grid_3d_t>("./test_data/sample_3d_ndt_map.hdf5");
   ASSERT_EQ(ndt_map_representation.size(), 398);
 }

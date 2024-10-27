@@ -32,9 +32,9 @@
 #include <sophus/se3.hpp>
 #include <sophus/so2.hpp>
 
+#include <beluga/eigen_compatibility.hpp>
 #include <beluga/sensor/data/ndt_cell.hpp>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
-#include "beluga/eigen_compatibility.hpp"
 
 namespace beluga {
 
@@ -57,7 +57,7 @@ struct CellHasher {
 
 /// Fit a vector of points to an NDT cell, by computing its mean and covariance.
 template <int NDim, typename Scalar = double>
-inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Vector<Scalar, NDim>>& points) {
+inline NdtCell<NDim, Scalar> fit_points(const std::vector<Eigen::Vector<Scalar, NDim>>& points) {
   static constexpr double kMinVariance = 1e-5;
   Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic>> points_view(
       reinterpret_cast<const Scalar*>(points.data()), NDim, static_cast<int64_t>(points.size()));
@@ -71,14 +71,14 @@ inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Vector<Scalar, 
   if constexpr (NDim == 3) {
     cov(2, 2) = std::max(cov(2, 2), kMinVariance);
   }
-  return NDTCell<NDim, Scalar>{mean, cov};
+  return NdtCell<NDim, Scalar>{mean, cov};
 }
 
 /// Given a number of N dimensional points and a resolution, constructs a vector of NDT cells, by clusterizing the
 /// points using 'resolution' and fitting a normal distribution to each of the resulting clusters if they contain a
 /// minimum number of points in them.
 template <int NDim, typename Scalar = double>
-inline std::vector<NDTCell<NDim, Scalar>> to_cells(
+inline std::vector<NdtCell<NDim, Scalar>> to_cells(
     const std::vector<Eigen::Vector<Scalar, NDim>>& points,
     const double resolution) {
   static constexpr int kMinPointsPerCell = 5;
@@ -86,7 +86,7 @@ inline std::vector<NDTCell<NDim, Scalar>> to_cells(
   const Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic>> points_view(
       reinterpret_cast<const Scalar*>(points.data()), NDim, static_cast<int64_t>(points.size()));
 
-  std::vector<NDTCell<NDim, Scalar>> ret;
+  std::vector<NdtCell<NDim, Scalar>> ret;
   ret.reserve(static_cast<size_t>(points_view.cols()) / kMinPointsPerCell);
 
   std::unordered_map<Eigen::Vector<int, NDim>, std::vector<Eigen::Vector<Scalar, NDim>>, CellHasher<NDim>> cell_grid;
@@ -142,9 +142,9 @@ get_default_neighbors_kernel() {
 
 }  // namespace detail
 
-/// Parameters used to construct a NDTSensorModel instance.
+/// Parameters used to construct a NdtSensorModel instance.
 template <int NDim>
-struct NDTModelParam {
+struct NdtModelParam {
   static_assert(NDim == 2 or NDim == 3, "Only 2D or 3D is supported for the NDT sensor model.");
   /// Likelihood for measurements that lie inside cells that are not present in the map.
   double minimum_likelihood = 0;
@@ -158,10 +158,10 @@ struct NDTModelParam {
 };
 
 /// Convenience alias for a 2d parameters struct for the NDT sensor model.
-using NDTModelParam2d = NDTModelParam<2>;
+using NdtModelParam2d = NdtModelParam<2>;
 
 /// Convenience alias for a 3d parameters struct for the NDT sensor model.
-using NDTModelParam3d = NDTModelParam<3>;
+using NdtModelParam3d = NdtModelParam<3>;
 /// NDT sensor model for range finders.
 /**
  * This class satisfies \ref SensorModelPage.
@@ -169,7 +169,7 @@ using NDTModelParam3d = NDTModelParam<3>;
  * \tparam SparseGridT Type representing a sparse NDT grid, as a specialization of 'beluga::SparseValueGrid'.
  */
 template <typename SparseGridT>
-class NDTSensorModel {
+class NdtSensorModel {
  public:
   /// NDT Cell type.
   using ndt_cell_type = typename SparseGridT::mapped_type;
@@ -189,16 +189,16 @@ class NDTSensorModel {
   /// Map representation type.
   using map_type = SparseGridT;
   /// Parameter type that the constructor uses to configure the NDT sensor model.
-  using param_type = NDTModelParam<ndt_cell_type::num_dim>;
+  using param_type = NdtModelParam<ndt_cell_type::num_dim>;
 
-  /// Constructs a NDTSensorModel instance.
+  /// Constructs a NdtSensorModel instance.
   /**
    * \param params Parameters to configure this instance.
-   *  See beluga::NDTModelParam for details.
+   *  See beluga::NdtModelParam for details.
    * \param cells_data Sparse grid representing an NDT map, used for calculating importance weights for the different
    * particles.
    */
-  NDTSensorModel(param_type params, SparseGridT cells_data)
+  NdtSensorModel(param_type params, SparseGridT cells_data)
       : params_{std::move(params)}, cells_data_{std::move(cells_data)} {
     assert(params_.minimum_likelihood >= 0);
   }
@@ -233,8 +233,8 @@ class NDTSensorModel {
   }
 
  private:
-  const param_type params_;
-  const SparseGridT cells_data_;
+  param_type params_;
+  SparseGridT cells_data_;
 };
 
 namespace io {
@@ -247,18 +247,18 @@ namespace io {
 ///   of the cell.
 /// - "covariances": (NUM_CELLS, 2 / 3, 2 / 3) Contains the covariance for each cell.
 ///
-///  \tparam NDTMapRepresentation A specialized SparseValueGrid (see sensor/data/sparse_value_grid.hpp), where
-///  mapped_type == NDTCell2d / NDTCell3d, that will represent the NDT map as a mapping from 2D / 3D cells to NDTCells.
-template <typename NDTMapRepresentationT>
-NDTMapRepresentationT load_from_hdf5(const std::filesystem::path& path_to_hdf5_file) {
+///  \tparam NdtMap A specialized SparseValueGrid (see sensor/data/sparse_value_grid.hpp), where
+///  mapped_type == NdtCell2d / NdtCell3d, that will represent the NDT map as a mapping from 2D / 3D cells to NdtCells.
+template <typename NdtMap>
+NdtMap load_from_hdf5(const std::filesystem::path& path_to_hdf5_file) {
   static_assert(
-      std::is_same_v<typename NDTMapRepresentationT::mapped_type, NDTCell2d> or
-      std::is_same_v<typename NDTMapRepresentationT::mapped_type, NDTCell3d>);
+      std::is_same_v<typename NdtMap::mapped_type, NdtCell2d> or
+      std::is_same_v<typename NdtMap::mapped_type, NdtCell3d>);
   static_assert(
-      std::is_same_v<typename NDTMapRepresentationT::key_type, Eigen::Vector2i> or
-      std::is_same_v<typename NDTMapRepresentationT::key_type, Eigen::Vector3i>);
+      std::is_same_v<typename NdtMap::key_type, Eigen::Vector2i> or
+      std::is_same_v<typename NdtMap::key_type, Eigen::Vector3i>);
 
-  constexpr int kNumDim = NDTMapRepresentationT::key_type::RowsAtCompileTime;
+  constexpr int kNumDim = NdtMap::key_type::RowsAtCompileTime;
   if (!std::filesystem::exists(path_to_hdf5_file) || std::filesystem::is_directory(path_to_hdf5_file)) {
     std::stringstream ss;
     ss << "Couldn't find a valid HDF5 file at " << path_to_hdf5_file;
@@ -293,15 +293,15 @@ NDTMapRepresentationT load_from_hdf5(const std::filesystem::path& path_to_hdf5_f
 
   resolution_dataset.read(&resolution, H5::PredType::NATIVE_DOUBLE);
 
-  typename NDTMapRepresentationT::map_type map{};
+  typename NdtMap::map_type map{};
 
   // Note: Ranges::zip_view doesn't seem to work in old Eigen.
   for (size_t i = 0; i < covariances.size(); ++i) {
     map[cells_matrix.col(static_cast<Eigen::Index>(i))] =
-        NDTCell<kNumDim, double>{means_matrix.col(static_cast<Eigen::Index>(i)), covariances.at(i)};
+        NdtCell<kNumDim, double>{means_matrix.col(static_cast<Eigen::Index>(i)), covariances.at(i)};
   }
 
-  return NDTMapRepresentationT{std::move(map), resolution};
+  return NdtMap{std::move(map), resolution};
 }
 
 }  // namespace io

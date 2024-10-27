@@ -13,61 +13,20 @@
 // limitations under the License.
 
 #include <chrono>
-#include <cstddef>
-#include <execution>
 #include <functional>
-#include <limits>
 #include <memory>
 #include <optional>
-#include <ratio>
 #include <stdexcept>
 #include <string>
-#include <string_view>
-#include <tuple>
 #include <utility>
-
-#include <tf2/convert.h>
-#include <tf2/exceptions.h>
-#include <tf2/time.h>
-
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/buffer_interface.h>
-#include <tf2_ros/create_timer_ros.h>
-#include <tf2_ros/message_filter.h>
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/transform_listener.h>
-
-#include <Eigen/Core>
-#include <sophus/se2.hpp>
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcpp"
-#include <message_filters/subscriber.h>
-#pragma GCC diagnostic pop
+#include <vector>
 
 #include <rclcpp/version.h>
-#include <bondcpp/bond.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <rclcpp_lifecycle/lifecycle_node.hpp>
 
-#include <geometry_msgs/msg/pose_array.hpp>
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <lifecycle_msgs/msg/state.hpp>
-#include <nav_msgs/msg/occupancy_grid.hpp>
-#include <sensor_msgs/msg/laser_scan.hpp>
-#include <std_srvs/srv/empty.hpp>
-
-#include <beluga/motion/differential_drive_model.hpp>
-#include <beluga/motion/omnidirectional_drive_model.hpp>
-#include <beluga/motion/stationary_model.hpp>
-#include <beluga/sensor/beam_model.hpp>
-#include <beluga/sensor/likelihood_field_model.hpp>
-#include <beluga_ros/amcl.hpp>
-#include <beluga_ros/messages.hpp>
+#include <beluga_amcl/amcl_node.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
-#include "beluga_amcl/amcl_node.hpp"
-#include "beluga_amcl/ros2_common.hpp"
 
 namespace beluga_amcl {
 

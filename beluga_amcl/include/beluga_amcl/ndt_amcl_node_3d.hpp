@@ -15,35 +15,26 @@
 #ifndef BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP
 #define BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP
 
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/message_filter.h>
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/transform_listener.h>
-
-#include <beluga/algorithm/amcl_core.hpp>
-#include <beluga/beluga.hpp>
-
-#include <execution>
 #include <functional>
 #include <optional>
-#include <sophus/types.hpp>
 #include <tuple>
-#include <variant>
 
-#include <geometry_msgs/msg/pose_array.hpp>
+#include <tf2_ros/message_filter.h>
+
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <rclcpp_lifecycle/lifecycle_node.hpp>
-#include <sensor_msgs/msg/laser_scan.hpp>
-#include <sensor_msgs/msg/point_cloud2.hpp>
-#include <std_srvs/srv/empty.hpp>
-
-#include <beluga_ros/laser_scan.hpp>
-#include "beluga_amcl/ros2_common.hpp"
+#include <sophus/types.hpp>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcpp"
 #include <message_filters/subscriber.h>
 #pragma GCC diagnostic pop
+
+#include <beluga/algorithm/amcl_core.hpp>
+#include <beluga/motion/differential_drive_model.hpp>
+#include <beluga/sensor/data/sparse_value_grid.hpp>
+#include <beluga/sensor/ndt_sensor_model.hpp>
+#include <beluga_amcl/ros2_common.hpp>
+#include <beluga_ros/laser_scan.hpp>
 
 /**
  * \file
@@ -53,32 +44,14 @@
 namespace beluga_amcl {
 
 /// Underlying map representation for the NDT sensor model.
-using NDTMapRepresentation =
-    beluga::SparseValueGrid3<std::unordered_map<Eigen::Vector3i, beluga::NDTCell3d, beluga::detail::CellHasher<3>>>;
+using NdtMap =
+    beluga::SparseValueGrid3<std::unordered_map<Eigen::Vector3i, beluga::NdtCell3d, beluga::detail::CellHasher<3>>>;
 
-/// State type for the particles.
-using StateType = typename beluga::NDTSensorModel<NDTMapRepresentation>::state_type;
-
-/// Type of a particle-dependent random state generator.
-using RandomStateGenerator = std::function<StateType()>;
-
-/// Partial specialization of the core AMCL pipeline for convinience.
-template <class MotionModel, class ExecutionPolicy>
+/// Instantiatiation of the core AMCL pipeline with the NDT sensor model.
 using NdtAmcl = beluga::Amcl<
-    MotionModel,
-    beluga::NDTSensorModel<NDTMapRepresentation>,
-    RandomStateGenerator,
-    beluga::Weight,
-    std::tuple<StateType, beluga::Weight>,
-    ExecutionPolicy>;
-
-/// All combinations of supported 3D NDT AMCL variants.
-using NdtAmclVariant = std::variant<
-    NdtAmcl<beluga::DifferentialDriveModel3d, std::execution::parallel_policy>,  //
-    NdtAmcl<beluga::DifferentialDriveModel3d, std::execution::sequenced_policy>>;
-
-/// Supported motion models.
-using MotionModelVariant = std::variant<beluga::DifferentialDriveModel3d>;
+    beluga::DifferentialDriveModel3d,  //
+    beluga::NdtSensorModel<NdtMap>,    //
+    std::tuple<Sophus::SE3d, beluga::Weight>>;
 
 /// 3D NDT AMCL as a ROS 2 composable lifecycle node.
 class NdtAmclNode3D : public BaseAMCLNode {
@@ -100,13 +73,13 @@ class NdtAmclNode3D : public BaseAMCLNode {
   auto get_initial_estimate() const -> std::optional<std::pair<Sophus::SE3d, Sophus::Matrix6d>>;
 
   /// Get motion model as per current parametrization.
-  auto get_motion_model() const -> MotionModelVariant;
+  auto get_motion_model() const -> beluga::DifferentialDriveModel3d;
 
   /// Get sensor model as per current parametrization.
-  beluga::NDTSensorModel<NDTMapRepresentation> get_sensor_model() const;
+  auto get_sensor_model() const -> beluga::NdtSensorModel<NdtMap>;
 
   /// Instantiate particle filter given an initial occupancy grid map and the current parametrization.
-  auto make_particle_filter() const -> std::unique_ptr<NdtAmclVariant>;
+  auto make_particle_filter() const -> std::unique_ptr<NdtAmcl>;
 
   /// Callback for periodic particle cloud updates.
   void do_periodic_timer_callback() override;
@@ -138,7 +111,7 @@ class NdtAmclNode3D : public BaseAMCLNode {
   message_filters::Connection laser_scan_connection_;
 
   /// Particle filter instance.
-  std::unique_ptr<NdtAmclVariant> particle_filter_;
+  std::unique_ptr<NdtAmcl> particle_filter_;
   /// Last known pose estimate, if any.
   std::optional<std::pair<Sophus::SE3d, Sophus::Matrix6d>> last_known_estimate_;
   /// Last known map to odom correction estimate, if any.

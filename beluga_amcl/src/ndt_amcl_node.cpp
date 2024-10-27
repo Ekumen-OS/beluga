@@ -13,64 +13,18 @@
 // limitations under the License.
 
 #include <chrono>
-#include <cstddef>
-#include <execution>
 #include <functional>
 #include <memory>
 #include <optional>
-#include <rclcpp/duration.hpp>
 #include <stdexcept>
 #include <string>
-#include <string_view>
 #include <utility>
-#include <variant>
 #include <vector>
 
-#include <range/v3/range/conversion.hpp>
-#include <range/v3/view/transform.hpp>
-
-#include <Eigen/Core>
-#include <sophus/se2.hpp>
-#include <sophus/types.hpp>
-
-#include <tf2/convert.h>
-#include <tf2/exceptions.h>
-#include <tf2/time.h>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/buffer_interface.h>
-#include <tf2_ros/create_timer_ros.h>
-#include <tf2_ros/message_filter.h>
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/transform_listener.h>
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcpp"
-#include <message_filters/subscriber.h>
-#pragma GCC diagnostic pop
-
-#include <bondcpp/bond.hpp>
-#include <rclcpp/rclcpp.hpp>
-#include <rclcpp_lifecycle/lifecycle_node.hpp>
-
-#include <geometry_msgs/msg/pose_array.hpp>
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <lifecycle_msgs/msg/state.hpp>
-#include <sensor_msgs/msg/laser_scan.hpp>
-
-#include <beluga/algorithm/amcl_core.hpp>
-#include <beluga/algorithm/estimation.hpp>
-#include <beluga/algorithm/spatial_hash.hpp>
-#include <beluga/motion/differential_drive_model.hpp>
-#include <beluga/motion/omnidirectional_drive_model.hpp>
-#include <beluga/motion/stationary_model.hpp>
-#include <beluga/random/multivariate_normal_distribution.hpp>
-#include <beluga/sensor/ndt_sensor_model.hpp>
-#include <beluga/views/particles.hpp>
-#include <beluga_ros/messages.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
-#include "beluga_amcl/ndt_amcl_node.hpp"
-#include "beluga_amcl/ros2_common.hpp"
+
+#include <beluga_amcl/ndt_amcl_node.hpp>
 
 namespace beluga_amcl {
 
@@ -178,81 +132,52 @@ auto NdtAmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus
   return std::make_pair(pose, covariance);
 }
 
-auto NdtAmclNode::get_motion_model() const -> MotionModelVariant {
+auto NdtAmclNode::get_motion_model() const -> beluga::DifferentialDriveModel2d {
   const auto name = get_parameter("robot_model_type").as_string();
-  if (name == kDifferentialModelName) {
+  if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
     auto params = beluga::DifferentialDriveModelParam{};
     params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
     params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
     params.translation_noise_from_translation = get_parameter("alpha3").as_double();
     params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
-    return beluga::DifferentialDriveModel{params};
+    return beluga::DifferentialDriveModel2d{params};
   }
-  if (name == kOmnidirectionalModelName) {
-    auto params = beluga::OmnidirectionalDriveModelParam{};
-    params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
-    params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
-    params.translation_noise_from_translation = get_parameter("alpha3").as_double();
-    params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
-    params.strafe_noise_from_translation = get_parameter("alpha5").as_double();
-    return beluga::OmnidirectionalDriveModel{params};
-  }
-  if (name == kStationaryModelName) {
-    return beluga::StationaryModel{};
-  }
-
   throw std::invalid_argument(std::string("Invalid motion model: ") + name);
 }
 
-beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode::get_sensor_model() const {
-  auto params = beluga::NDTModelParam2d{};
+auto NdtAmclNode::get_sensor_model() const -> beluga::NdtSensorModel<NdtMap> {
+  auto params = beluga::NdtModelParam2d{};
   params.minimum_likelihood = get_parameter("minimum_likelihood").as_double();
   params.d1 = get_parameter("d1").as_double();
   params.d2 = get_parameter("d2").as_double();
   const auto map_path = get_parameter("map_path").as_string();
   RCLCPP_INFO(get_logger(), "Loading map from %s.", map_path.c_str());
 
-  return beluga::NDTSensorModel<NDTMapRepresentation>{
-      params, beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string())};
+  return beluga::NdtSensorModel<NdtMap>{
+      params, beluga::io::load_from_hdf5<NdtMap>(get_parameter("map_path").as_string())};
 }
 
-auto NdtAmclNode::make_particle_filter() const -> std::unique_ptr<NdtAmclVariant> {
-  auto amcl = std::visit(
-      [this](auto motion_model, auto execution_policy) -> NdtAmclVariant {
-        auto params = beluga::AmclParams{};
-        params.update_min_d = get_parameter("update_min_d").as_double();
-        params.update_min_a = get_parameter("update_min_a").as_double();
-        params.resample_interval = static_cast<std::size_t>(get_parameter("resample_interval").as_int());
-        params.selective_resampling = get_parameter("selective_resampling").as_bool();
-        params.min_particles = static_cast<std::size_t>(get_parameter("min_particles").as_int());
-        params.max_particles = static_cast<std::size_t>(get_parameter("max_particles").as_int());
-        params.alpha_slow = get_parameter("recovery_alpha_slow").as_double();
-        params.alpha_fast = get_parameter("recovery_alpha_fast").as_double();
-        params.kld_epsilon = get_parameter("pf_err").as_double();
-        params.kld_z = get_parameter("pf_z").as_double();
+auto NdtAmclNode::make_particle_filter() const -> std::unique_ptr<beluga_amcl::NdtAmcl> {
+  auto params = beluga::AmclParams{};
+  params.update_min_d = get_parameter("update_min_d").as_double();
+  params.update_min_a = get_parameter("update_min_a").as_double();
+  params.resample_interval = static_cast<std::size_t>(get_parameter("resample_interval").as_int());
+  params.selective_resampling = get_parameter("selective_resampling").as_bool();
+  params.min_particles = static_cast<std::size_t>(get_parameter("min_particles").as_int());
+  params.max_particles = static_cast<std::size_t>(get_parameter("max_particles").as_int());
+  params.kld_epsilon = get_parameter("pf_err").as_double();
+  params.kld_z = get_parameter("pf_z").as_double();
 
-        auto hasher = beluga::spatial_hash<Sophus::SE2d>(
-            get_parameter("spatial_resolution_x").as_double(), get_parameter("spatial_resolution_y").as_double(),
-            get_parameter("spatial_resolution_theta").as_double());
+  auto hasher = beluga::spatial_hash<Sophus::SE2d>(
+      get_parameter("spatial_resolution_x").as_double(),  //
+      get_parameter("spatial_resolution_y").as_double(),  //
+      get_parameter("spatial_resolution_theta").as_double());
 
-        RandomStateGenerator random_state_maker = [](const auto& particles) {
-          static thread_local auto generator = std::mt19937{std::random_device()()};
-          const auto estimate = beluga::estimate(beluga::views::states(particles), beluga::views::weights(particles));
-          return [estimate]() {
-            return beluga::MultivariateNormalDistribution{estimate.first, estimate.second}(generator);
-          };
-        };
-
-        return beluga::Amcl(
-            std::move(motion_model),
-            get_sensor_model(),             //
-            std::move(random_state_maker),  //
-            std::move(hasher),              //
-            params,                         //
-            execution_policy);
-      },
-      get_motion_model(), get_execution_policy());
-  return std::make_unique<NdtAmclVariant>(std::move(amcl));
+  return std::make_unique<beluga_amcl::NdtAmcl>(
+      get_motion_model(),
+      get_sensor_model(),  //
+      std::move(hasher),   //
+      params);
 }
 
 void NdtAmclNode::do_periodic_timer_callback() {
@@ -263,14 +188,11 @@ void NdtAmclNode::do_periodic_timer_callback() {
   if (particle_cloud_pub_->get_subscription_count() == 0) {
     return;
   }
-  std::visit(
-      [this](const auto& particle_filter) {
-        auto message = beluga_ros::msg::PoseArray{};
-        beluga_ros::assign_particle_cloud(particle_filter.particles(), message);
-        beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
-        particle_cloud_pub_->publish(message);
-      },
-      *particle_filter_);
+
+  auto message = beluga_ros::msg::PoseArray{};
+  beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
+  beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
+  particle_cloud_pub_->publish(message);
 }
 
 // TODO(alon): Wouldn't it be better in the callback of each message to simply receive
@@ -314,22 +236,21 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
 
-  // TODO(nahuel, Ramiro): Remove this once we update the measurement type.
+  // TODO(nahuel): Remove this once we update the measurement type.
   auto scan = beluga_ros::LaserScan{
-      laser_scan, laser_pose_in_base, static_cast<std::size_t>(get_parameter("max_beams").as_int()),
-      get_parameter("laser_min_range").as_double(), get_parameter("laser_max_range").as_double()};
+      laser_scan,                                                     //
+      laser_pose_in_base,                                             //
+      static_cast<std::size_t>(get_parameter("max_beams").as_int()),  //
+      get_parameter("laser_min_range").as_double(),                   //
+      get_parameter("laser_max_range").as_double()};
+
   auto measurement = scan.points_in_cartesian_coordinates() |  //
                      ranges::views::transform([&scan](const auto& p) {
                        return Eigen::Vector2d((scan.origin() * Sophus::Vector3d{p.x(), p.y(), 0}).head<2>());
                      }) |
                      ranges::to<std::vector>;
-  const auto new_estimate = std::visit(
-      [base_pose_in_odom, measurement = std::move(measurement)](auto& particle_filter) {
-        return particle_filter.update(
-            base_pose_in_odom,  //
-            std::move(measurement));
-      },
-      *particle_filter_);
+
+  const auto new_estimate = particle_filter_->update(base_pose_in_odom, std::move(measurement));
 
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
@@ -339,8 +260,7 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
     last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
     last_known_estimate_ = new_estimate;
 
-    const auto num_particles =
-        std::visit([](const auto& particle_filter) { return particle_filter.particles().size(); }, *particle_filter_);
+    const auto num_particles = particle_filter_->particles().size();
 
     RCLCPP_INFO(
         get_logger(), "Particle filter update iteration stats: %ld particles %ld points - %.3fms", num_particles,
@@ -400,9 +320,7 @@ bool NdtAmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::
   }
 
   try {
-    std::visit(
-        [estimate](auto& particle_filter) { particle_filter.initialize(estimate.first, estimate.second); },
-        *particle_filter_);
+    particle_filter_->initialize(estimate.first, estimate.second);
   } catch (const std::runtime_error& error) {
     RCLCPP_ERROR(get_logger(), "Could not initialize particles: %s", error.what());
     return false;
@@ -410,16 +328,17 @@ bool NdtAmclNode::initialize_from_estimate(const std::pair<Sophus::SE2d, Eigen::
 
   enable_tf_broadcast_ = true;
 
-  const auto num_particles =
-      std::visit([](const auto& particle_filter) { return particle_filter.particles().size(); }, *particle_filter_);
-
   const auto& pose = estimate.first;
   RCLCPP_INFO(
       get_logger(), "Particle filter initialized with %ld particles about initial pose x=%g, y=%g, yaw=%g",
-      num_particles, pose.translation().x(), pose.translation().y(), pose.so2().log());
+      particle_filter_->particles().size(),  //
+      pose.translation().x(),                //
+      pose.translation().y(),                //
+      pose.so2().log());
 
   return true;
 }
+
 }  // namespace beluga_amcl
 
 #include <rclcpp_components/register_node_macro.hpp>

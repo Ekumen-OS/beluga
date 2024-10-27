@@ -149,6 +149,13 @@ class TesterNode : public rclcpp::Node {
     auto scan = sensor_msgs::msg::LaserScan{};
     scan.header.stamp = timestamp;
     scan.header.frame_id = "laser";
+    scan.angle_min = -1.57F;
+    scan.angle_max = 1.57F;
+    scan.angle_increment = 1.57F;
+    scan.time_increment = 0.0F;
+
+    scan.ranges.resize(1);
+    scan.intensities.resize(1);
 
     auto transform_base = geometry_msgs::msg::TransformStamped{};
     transform_base.header.stamp = timestamp;
@@ -175,8 +182,12 @@ class TesterNode : public rclcpp::Node {
     sensor_msgs::PointCloud2Modifier modifier(scan);
 
     modifier.setPointCloud2Fields(
-        3, "x", 1, sensor_msgs::msg::PointField::FLOAT32, "y", 1, sensor_msgs::msg::PointField::FLOAT32, "z", 1,
-        sensor_msgs::msg::PointField::FLOAT32);
+        3,                                              //
+        "x", 1, sensor_msgs::msg::PointField::FLOAT32,  //
+        "y", 1, sensor_msgs::msg::PointField::FLOAT32,  //
+        "z", 1, sensor_msgs::msg::PointField::FLOAT32);
+
+    modifier.resize(1);
 
     auto transform_base = geometry_msgs::msg::TransformStamped{};
     transform_base.header.stamp = timestamp;

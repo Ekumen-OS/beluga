@@ -82,7 +82,7 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_sc
     auto random_state = ranges::compose(beluga::make_from_state<particle_type>, std::ref(map_distribution_));
 
     if (random_state_probability > 0.0) {
-      random_probability_estimator_.reset();
+      random_probability_estimator_.reset();  // LCOV_EXCL_LINE
     }
 
     particles_ |= beluga::views::sample |
