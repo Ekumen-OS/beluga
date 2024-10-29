@@ -174,7 +174,7 @@ auto NdtAmclNode3D::get_initial_estimate() const -> std::optional<std::pair<Soph
 
 auto NdtAmclNode3D::get_motion_model() const -> beluga::DifferentialDriveModel3d {
   const auto name = get_parameter("robot_model_type").as_string();
-  if (name == kDifferentialModelName || name == kNav2DifferentialModelName) {
+  if (name == kDifferentialModelName) {
     auto params = beluga::DifferentialDriveModelParam{};
     params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
     params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
