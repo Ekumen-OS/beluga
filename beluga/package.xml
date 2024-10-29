@@ -19,7 +19,7 @@
   <depend>range-v3</depend>
   <depend>sophus</depend>
   <depend>tbb</depend>
-  <depend>OpenVDB</depend>
+  <depend>libopenvdb-dev</depend>
 
   <test_depend>clang-format</test_depend>
   <test_depend>clang-tidy</test_depend>
