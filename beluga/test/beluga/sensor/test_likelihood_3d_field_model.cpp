@@ -69,10 +69,10 @@ TEST(TestLikelihoodFieldModel3, Point) {
   // Parameters
   constexpr double kVoxelSize = 0.07;
   constexpr double kMaxObstacleDistance = 2.0;
-  constexpr double kMaxLaserDistance = 20.0;
+  constexpr double kMaxLaserDistance = 100.0;
   constexpr double kZHit = 0.5;
-  constexpr double kZRandom = 0.5;
-  constexpr double kSigmaHit = 0.2;
+  constexpr double kZRandom = 0.001;
+  constexpr double kSigmaHit = 0.22;
 
   // Create Grid
   const std::vector<openvdb::math::Vec3s> world_points{openvdb::math::Vec3s(1.0F, 1.0F, 1.0F)};
@@ -87,19 +87,82 @@ TEST(TestLikelihoodFieldModel3, Point) {
   auto pointcloud_measurement_exact =
       beluga::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{{1.0F, 1.0F, 1.0F}}};
   auto state_weighting_function_exact = sensor_model(std::move(pointcloud_measurement_exact));
-  ASSERT_NEAR(1.0, state_weighting_function_exact(Sophus::SE3d{}), 0.03);
+  ASSERT_GT(state_weighting_function_exact(Sophus::SE3d{}), 1.90);
 
   // Close point (Inside the narrow band)
   auto pointcloud_measurement_close =
       beluga::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{{1.035F, 1.0F, 1.0F}}};
   auto state_weighting_function_close = sensor_model(std::move(pointcloud_measurement_close));
-  ASSERT_NEAR(1.0, state_weighting_function_close(Sophus::SE3d{}), 0.03);
+  ASSERT_GT(state_weighting_function_close(Sophus::SE3d{}), 1.8);
 
   // Far point (Outside the narrow band)
   auto pointcloud_measurement_far =
       beluga::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{{1.1F, 1.1F, 1.1F}}};
   auto state_weighting_function_far = sensor_model(std::move(pointcloud_measurement_far));
-  ASSERT_NEAR(1.0, state_weighting_function_far(Sophus::SE3d{}), 0.03);
+  ASSERT_LT(state_weighting_function_far(Sophus::SE3d{}), 1.65);
+}
+
+TEST(TestLikelihoodFieldModel3, Cube) {
+  openvdb::initialize();
+  // Parameters
+  constexpr double kVoxelSize = 0.07;
+  constexpr double kMaxObstacleDistance = 2.0;
+  constexpr double kMaxLaserDistance = 100.0;
+  constexpr double kZHit = 0.5;
+  constexpr double kZRandom = 0.001;
+  constexpr double kSigmaHit = 0.22;
+
+  // Create Grid
+  const std::vector<openvdb::math::Vec3s> world_points{
+      openvdb::math::Vec3s(1.0F, 1.0F, 1.0F),   openvdb::math::Vec3s(1.0F, 1.0F, -1.0F),
+      openvdb::math::Vec3s(1.0F, -1.0F, 1.0F),  openvdb::math::Vec3s(1.0F, -1.0F, -1.0F),
+      openvdb::math::Vec3s(-1.0F, -1.0F, 1.0F), openvdb::math::Vec3s(-1.0F, -1.0F, -1.0F),
+      openvdb::math::Vec3s(-1.0F, 1.0F, 1.0F),  openvdb::math::Vec3s(-1.0F, 1.0F, -1.0F)};
+  auto map = make_map<openvdb::FloatGrid, openvdb::math::Vec3s>(kVoxelSize, world_points);
+
+  const auto params =
+      beluga::LikelihoodFieldModel3Param{kMaxObstacleDistance, kMaxLaserDistance, kZHit, kZRandom, kSigmaHit};
+  auto sensor_model =
+      beluga::LikelihoodFieldModel3<openvdb::FloatGrid, beluga::testing::SimpleSparsePointCloud3f>{params, *map};
+
+  // Exact point
+  auto pointcloud_measurement_exact = beluga::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{
+      {1.0F, 1.0F, 1.0F},
+      {1.0F, 1.0F, -1.0F},
+      {1.0F, -1.0F, 1.0F},
+      {1.0F, -1.0F, -1.0F},
+      {-1.0F, -1.0F, 1.0F},
+      {-1.0F, -1.0F, -1.0F},
+      {-1.0F, 1.0F, 1.0F},
+      {-1.0F, 1.0F, -1.0F}}};
+  auto state_weighting_function_exact = sensor_model(std::move(pointcloud_measurement_exact));
+  ASSERT_GT(state_weighting_function_exact(Sophus::SE3d{}), 8.2);
+
+  // Close point (Inside the narrow band)
+  auto pointcloud_measurement_close = beluga::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{
+      {1.035F, 1.0F, 1.0F},
+      {1.035F, 1.0F, -1.0F},
+      {1.035F, -1.0F, 1.0F},
+      {1.035F, -1.0F, -1.0F},
+      {-1.0F, -1.0F, 1.0F},
+      {-1.0F, -1.0F, -1.0F},
+      {-1.0F, 1.0F, 1.0F},
+      {-1.0F, 1.0F, -1.0F}}};
+  auto state_weighting_function_close = sensor_model(std::move(pointcloud_measurement_close));
+  ASSERT_GT(state_weighting_function_close(Sophus::SE3d{}), 7.4);
+
+  // Far point (Outside the narrow band)
+  auto pointcloud_measurement_far = beluga::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{
+      {1.1F, 1.1F, 1.1F},
+      {1.1F, 1.1F, -1.1F},
+      {1.1F, -1.1F, 1.1F},
+      {1.1F, -1.1F, -1.1F},
+      {-1.1F, -1.1F, 1.1F},
+      {-1.1F, -1.1F, -1.1F},
+      {-1.1F, 1.1F, 1.1F},
+      {-1.1F, 1.1F, -1.1F}}};
+  auto state_weighting_function_far = sensor_model(std::move(pointcloud_measurement_far));
+  ASSERT_LT(state_weighting_function_far(Sophus::SE3d{}), 6.85);
 }
 
 }  // namespace
