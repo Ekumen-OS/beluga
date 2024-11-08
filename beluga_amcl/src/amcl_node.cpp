@@ -63,6 +63,7 @@
 #include <beluga/sensor/beam_model.hpp>
 #include <beluga/sensor/likelihood_field_model.hpp>
 #include <beluga_ros/amcl.hpp>
+#include <beluga_ros/likelihood_field.hpp>
 #include <beluga_ros/messages.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
@@ -122,7 +123,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "If false, Likelihood Field sensor model won't model unknown space.";
+    descriptor.description = "Whether to model unknown space or assume it free.";
     declare_parameter("model_unknown_space", false, descriptor);
   }
 
@@ -417,6 +418,13 @@ void AmclNode::do_periodic_timer_callback() {
     beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
     particle_markers_pub_->publish(message);
+  }
+
+  if (likelihood_field_pub_->get_subscription_count() > 0) {
+    auto message = beluga_ros::msg::OccupancyGrid{};
+    beluga_ros::assign_likelihood_field(particle_filter_->get_likelihood_field(), message);
+    beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
+    likelihood_field_pub_->publish(message);
   }
 }
 

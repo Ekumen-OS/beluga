@@ -408,6 +408,8 @@ BaseAMCLNode::CallbackReturn BaseAMCLNode::on_configure(const rclcpp_lifecycle::
   particle_markers_pub_ =
       create_publisher<visualization_msgs::msg::MarkerArray>("particle_markers", rclcpp::SystemDefaultsQoS());
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("pose", rclcpp::SystemDefaultsQoS());
+  likelihood_field_pub_ =
+      create_publisher<nav_msgs::msg::OccupancyGrid>("likelihood_field", rclcpp::SystemDefaultsQoS());
   do_configure(state);
   return CallbackReturn::SUCCESS;
 };
@@ -417,6 +419,7 @@ BaseAMCLNode::CallbackReturn BaseAMCLNode::on_deactivate(const rclcpp_lifecycle:
   particle_cloud_pub_->on_deactivate();
   particle_markers_pub_->on_deactivate();
   pose_pub_->on_deactivate();
+  likelihood_field_pub_->on_deactivate();
   initial_pose_sub_.reset();
   tf_listener_.reset();
   tf_broadcaster_.reset();
@@ -451,6 +454,7 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
   particle_cloud_pub_->on_activate();
   particle_markers_pub_->on_activate();
   pose_pub_->on_activate();
+  likelihood_field_pub_->on_activate();
   {
     initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
         get_parameter("initial_pose_topic").as_string(), rclcpp::SystemDefaultsQoS(),

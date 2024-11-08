@@ -62,7 +62,7 @@ amcl:
     # Weight used to combine the probability of random noise in perception.
     z_rand: 0.5
     # Whether to model unknown space or assume it free.
-    model_unknown_space : false
+    model_unknown_space: true
     # Weight used to combine the probability of getting short readings.
     z_short: 0.05
     # Weight used to combine the probability of getting max range readings.
