@@ -123,10 +123,11 @@ class LikelihoodFieldModel3 {
   [[nodiscard]] auto operator()(measurement_type&& measurement) const {
     const size_t pointcloud_size = measurement.points().size();
     // Transform each point from the sensor frame to the origin frame
-    auto transformed_points =
-        ranges::views::all(measurement.points()) | ranges::views::transform([&](const auto& point) {
-          return measurement.origin() * point.template cast<double>();
-        });
+    auto transformed_points = ranges::views::all(measurement.points()) |
+                              ranges::views::transform([&](const auto& point) {
+                                return measurement.origin() * point.template cast<double>();
+                              }) |
+                              ranges::to<std::vector>();
 
     return [this, pointcloud_size, points = std::move(transformed_points)](const state_type& state) -> weight_type {
       std::vector<float> nb_distances;
