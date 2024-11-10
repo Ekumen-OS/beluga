@@ -63,6 +63,8 @@ laser_max_beams: 100
 laser_z_hit: 0.5
 # Weight used to combine the probability of random noise in perception.
 laser_z_rand: 0.5
+# Whether to model unknown space or assume it free.
+model_unknown_space: false
 # Weight used to combine the probability of getting short readings.
 laser_z_short: 0.05
 # Weight used to combine the probability of getting max range readings.

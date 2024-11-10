@@ -76,6 +76,11 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_sc
       },
       execution_policy_, motion_model_, sensor_model_);
 
+  if (std::holds_alternative<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
+    likelihood_field_ =
+        std::get<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field();
+  }
+
   const double random_state_probability = random_probability_estimator_(particles_);
 
   if (resample_policy_(particles_)) {
