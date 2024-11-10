@@ -27,9 +27,12 @@
 
 namespace beluga_ros {
 
+/// Convert from likelihood data to ROS2 message.
 inline void assign_likelihood_field(
     const beluga::ValueGrid2<float>& likelihood_field,
-    nav_msgs::msg::OccupancyGrid& message) {
+    nav_msgs::msg::OccupancyGrid& message,
+    double free_threshold = 0.2,
+    double occupied_threshold = 0.25) {
   // Set metadata
   message.info.width = static_cast<unsigned int>(likelihood_field.width());
   message.info.height = static_cast<unsigned int>(likelihood_field.height());
@@ -40,8 +43,13 @@ inline void assign_likelihood_field(
   const auto& grid_data = likelihood_field.data();
 
   for (std::size_t i = 0; i < likelihood_field.size(); ++i) {
-    // Convert T to int8_t if necessary
-    message.data[i] = static_cast<int8_t>(grid_data[i]);
+    if (grid_data[i] <= free_threshold) {
+      message.data[i] = 0;  // Free
+    } else if (grid_data[i] >= occupied_threshold) {
+      message.data[i] = 100;  // Occupied
+    } else {
+      message.data[i] = -1;  // Unknown
+    }
   }
 }
 
