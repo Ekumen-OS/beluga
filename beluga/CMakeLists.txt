@@ -18,8 +18,6 @@ project(beluga VERSION 1.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-list(APPEND CMAKE_MODULE_PATH "/usr/local/lib/cmake/OpenVDB")
-
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "Setting build type to 'Release' as none was specified.")
   set(CMAKE_BUILD_TYPE
@@ -49,7 +47,13 @@ find_package(
 find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
-find_package(OpenVDB REQUIRED)
+
+list(APPEND CMAKE_MODULE_PATH "/usr/lib/x86_64-linux-gnu/cmake/OpenVDB/")
+list(APPEND CMAKE_MODULE_PATH "/usr/lib/aarch64-linux-gnu/cmake/OpenVDB")
+find_package(OpenVDB QUIET)
+if(OpenVDB_FOUND)
+  add_definitions(-USE_OPENVDB)
+endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
@@ -64,7 +68,7 @@ target_link_libraries(
             Sophus::Sophus
             TBB::tbb
             range-v3::range-v3
-            OpenVDB::openvdb)
+            $<IF:$<BOOL:${OpenVDB_FOUND}>,OpenVDB::openvdb,>)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG
                                                      SOPHUS_USE_BASIC_LOGGING)

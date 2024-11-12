@@ -16,6 +16,7 @@ file(COPY test_data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(
   test_beluga
+  $<IF:$<BOOL:${USE_OPENVDB}>,sensor/test_likelihood_3d_field_model.cpp,>
   actions/test_assign.cpp
   actions/test_normalize.cpp
   actions/test_overlay.cpp
@@ -52,7 +53,6 @@ add_executable(
   sensor/test_beam_model.cpp
   sensor/test_bearing_sensor_model.cpp
   sensor/test_landmark_sensor_model.cpp
-  sensor/test_likelihood_3d_field_model.cpp
   sensor/test_likelihood_field_model.cpp
   sensor/test_ndt_model.cpp
   test_3d_embedding.cpp
