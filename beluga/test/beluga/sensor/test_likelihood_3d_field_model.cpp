@@ -38,7 +38,7 @@ auto make_map(const double voxel_size, const std::vector<T>& world_points) {
   constexpr int kClosingSteps = 0;
 
   // Create the grid
-  typename GridT::Ptr grid = openvdb::FloatGrid::create();
+  const typename GridT::Ptr grid = openvdb::FloatGrid::create();
   grid->setTransform(openvdb::math::Transform::createLinearTransform(voxel_size));
 
   // Get an accessor for coordinate-based access to voxels

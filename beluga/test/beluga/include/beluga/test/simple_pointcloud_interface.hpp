@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_TEST_STATIC_SIMPLE_POINTCLOUD_INTERFACE_HPP
-#define BELUGA_TEST_STATIC_SIMPLE_POINTCLOUD_INTERFACE_HPP
+#ifndef BELUGA_TEST_SIMPLE_POINTCLOUD_INTERFACE_HPP
+#define BELUGA_TEST_SIMPLE_POINTCLOUD_INTERFACE_HPP
 
 #include <range/v3/view/iota.hpp>
 #include <sophus/se3.hpp>

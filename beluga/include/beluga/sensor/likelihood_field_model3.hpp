@@ -135,7 +135,7 @@ class LikelihoodFieldModel3 {
       vdb_points.reserve(pointcloud_size);
 
       // Transform each point to every particle state
-      std::transform(points.begin(), points.end(), std::back_inserter(vdb_points), [this, state](const auto& point) {
+      std::transform(points.begin(), points.end(), std::back_inserter(vdb_points), [state](const auto& point) {
         // OpenVDB grid already in world coordinates
         const Eigen::Vector3d point_in_state_frame = state * point;
         return openvdb::Vec3R{point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()};
