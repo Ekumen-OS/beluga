@@ -30,7 +30,7 @@ class SimpleSparsePointCloud3 {
   [[nodiscard]] const auto& origin() const { return origin_; }
 
   /// Get the 3D points collection.
-  [[nodiscard]] auto& points() const { return points_; }
+  [[nodiscard]] const auto& points() const { return points_; }
 
  private:
   std::vector<Eigen::Vector3<T>> points_;
