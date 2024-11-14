@@ -49,7 +49,6 @@ RUN apt-get update \
     python3-colcon-coveragepy-result \
     python3-colcon-lcov-result \
     python3-pip \
-    libopenvdb-dev \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
