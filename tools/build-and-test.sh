@@ -22,11 +22,16 @@ SCRIPT_PATH=$(dirname "$(readlink -f "$0")")
 
 set -o errexit
 
+OPEN_VDB="Off"
+
 if [ "${ROS_DISTRO}" != "noetic" ]; then
     if [ "${ROS_DISTRO}" != "jazzy" ] && [ "${ROS_DISTRO}" != "rolling" ]; then
         ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_benchmark beluga_example beluga_system_tests beluga_tools"
     else
         ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools"
+        if [ "${ROS_DISTRO}" != "humble" ]; then
+            OPEN_VDB="On"
+        fi
     fi
 else
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_example"
@@ -43,6 +48,7 @@ colcon build \
         build-testing-on \
         ccache \
         release \
+    --cmake-args -DUSE_OPENVDB=${OPEN_VDB} \
     --cmake-force-configure
 echo ::endgroup::
 
@@ -57,6 +63,7 @@ colcon build \
         coverage-gcc \
         coverage-pytest \
         debug \
+    --cmake-args -DUSE_OPENVDB=${OPEN_VDB} \
     --cmake-force-configure
 echo ::endgroup::
 
