@@ -18,6 +18,14 @@ project(beluga VERSION 1.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+option(
+  USE_OPENVDB
+  "Compiles with OpenVDB, required for the 3D likelihood field sensor model"
+  Off)
+set(OPENVDB_CMAKE_MODULE_PATH
+    ${OPENVDB_CMAKE_MODULE_PATH}
+    CACHE PATH "Path to OpenVDB CMake module")
+
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "Setting build type to 'Release' as none was specified.")
   set(CMAKE_BUILD_TYPE
@@ -48,11 +56,31 @@ find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
 
-list(APPEND CMAKE_MODULE_PATH "/usr/lib/x86_64-linux-gnu/cmake/OpenVDB/")
-list(APPEND CMAKE_MODULE_PATH "/usr/lib/aarch64-linux-gnu/cmake/OpenVDB")
-find_package(OpenVDB QUIET)
-if(OpenVDB_FOUND)
-  add_definitions(-USE_OPENVDB)
+# If USE_OPENVDB is enabled, proceed with finding OpenVDB
+if(USE_OPENVDB)
+  if(NOT OPENVDB_CMAKE_MODULE_PATH)
+    find_file(
+      OPENVDB_MODULE_PATH FindOpenVDB.cmake
+      PATHS /usr/lib/x86_64-linux-gnu/cmake/OpenVDB/
+            /usr/lib/aarch64-linux-gnu/cmake/OpenVDB/
+      NO_DEFAULT_PATH)
+  else()
+    find_file(OPENVDB_MODULE_PATH FindOpenVDB.cmake
+              PATHS ${OPENVDB_CMAKE_MODULE_PATH})
+  endif()
+
+  if(OPENVDB_MODULE_PATH)
+    get_filename_component(OPENVDB_CMAKE_MODULE_PATH ${OPENVDB_MODULE_PATH}
+                           DIRECTORY)
+    message(STATUS "Found OpenVDB CMake module at ${OPENVDB_CMAKE_MODULE_PATH}")
+    list(APPEND CMAKE_MODULE_PATH ${OPENVDB_CMAKE_MODULE_PATH})
+    find_package(Boost REQUIRED)
+    find_package(OpenVDB REQUIRED)
+  else()
+    message(FATAL_ERROR "FindOpenVDB.cmake not found in the speficied paths.")
+  endif()
+else()
+  message(STATUS "USE_OPENVDB is Off, skipping OpenVDB setup.")
 endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
@@ -68,10 +96,11 @@ target_link_libraries(
             Sophus::Sophus
             TBB::tbb
             range-v3::range-v3
-            $<IF:$<BOOL:${OpenVDB_FOUND}>,OpenVDB::openvdb,>)
+            $<IF:$<BOOL:${USE_OPENVDB}>,OpenVDB::openvdb,>)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
-target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG
-                                                     SOPHUS_USE_BASIC_LOGGING)
+target_compile_definitions(
+  ${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG SOPHUS_USE_BASIC_LOGGING
+                            $<$<BOOL:${USE_OPENVDB}>:BELUGA_OPENVDB_SUPPORT>)
 
 add_executable(clang_tidy_findable)
 target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
