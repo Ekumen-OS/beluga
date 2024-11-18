@@ -155,9 +155,9 @@ class LikelihoodFieldModel3 {
  private:
   param_type params_;
   typename openvdb::tools::ClosestSurfacePoint<map_type>::Ptr looker_;
-  const double two_squared_sigma_;
-  const double amplitude_;
-  const double offset_;
+  double two_squared_sigma_;
+  double amplitude_;
+  double offset_;
 };
 
 }  // namespace beluga
