@@ -59,28 +59,21 @@ find_package(TBB REQUIRED)
 # If USE_OPENVDB is enabled, proceed with finding OpenVDB
 if(USE_OPENVDB)
   if(NOT OPENVDB_CMAKE_MODULE_PATH)
-    find_file(
-      OPENVDB_MODULE_PATH FindOpenVDB.cmake
-      PATHS /usr/lib/x86_64-linux-gnu/cmake/OpenVDB/
-            /usr/lib/aarch64-linux-gnu/cmake/OpenVDB/
-      NO_DEFAULT_PATH)
-  else()
     find_file(OPENVDB_MODULE_PATH FindOpenVDB.cmake
-              PATHS ${OPENVDB_CMAKE_MODULE_PATH})
+              PATHS /usr/lib/x86_64-linux-gnu/cmake/OpenVDB/)
+    if(OPENVDB_MODULE_PATH)
+      get_filename_component(OPENVDB_CMAKE_MODULE_PATH ${OPENVDB_MODULE_PATH}
+                             DIRECTORY)
+    endif()
   endif()
-
-  if(OPENVDB_MODULE_PATH)
-    get_filename_component(OPENVDB_CMAKE_MODULE_PATH ${OPENVDB_MODULE_PATH}
-                           DIRECTORY)
-    message(STATUS "Found OpenVDB CMake module at ${OPENVDB_CMAKE_MODULE_PATH}")
+  if(OPENVDB_CMAKE_MODULE_PATH)
     list(APPEND CMAKE_MODULE_PATH ${OPENVDB_CMAKE_MODULE_PATH})
-    find_package(Boost REQUIRED)
-    find_package(OpenVDB REQUIRED)
-  else()
-    message(FATAL_ERROR "FindOpenVDB.cmake not found in the speficied paths.")
   endif()
-else()
-  message(STATUS "USE_OPENVDB is Off, skipping OpenVDB setup.")
+  find_package(Boost REQUIRED)
+  find_package(OpenVDB REQUIRED)
+  if(OPENVDB_CMAKE_MODULE_PATH)
+    list(POP_BACK CMAKE_MODULE_PATH)
+  endif()
 endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
@@ -96,7 +89,7 @@ target_link_libraries(
             Sophus::Sophus
             TBB::tbb
             range-v3::range-v3
-            $<IF:$<BOOL:${USE_OPENVDB}>,OpenVDB::openvdb,>)
+            $<$<BOOL:${USE_OPENVDB}>:OpenVDB::openvdb>)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_compile_definitions(
   ${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG SOPHUS_USE_BASIC_LOGGING
