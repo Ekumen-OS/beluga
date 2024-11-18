@@ -22,7 +22,7 @@ SCRIPT_PATH=$(dirname "$(readlink -f "$0")")
 
 set -o errexit
 
-OPEN_VDB="Off"
+CMAKE_EXTRA_ARGS=""
 
 if [ "${ROS_DISTRO}" != "noetic" ]; then
     if [ "${ROS_DISTRO}" != "jazzy" ] && [ "${ROS_DISTRO}" != "rolling" ]; then
@@ -30,7 +30,7 @@ if [ "${ROS_DISTRO}" != "noetic" ]; then
     else
         ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools"
         if [ "${ROS_DISTRO}" != "humble" ]; then
-            OPEN_VDB="On"
+            CMAKE_EXTRA_ARGS="${CMAKE_EXTRA_ARGS} -DUSE_OPENVDB=On"
         fi
     fi
 else
@@ -40,31 +40,36 @@ fi
 source /opt/ros/${ROS_DISTRO}/setup.sh
 
 echo ::group::Release Build
-colcon build \
-    --event-handlers console_cohesion+ \
-    --packages-up-to ${ROS_PACKAGES} \
-    --symlink-install \
-    --mixin \
-        build-testing-on \
-        ccache \
-        release \
-    --cmake-args -DUSE_OPENVDB=${OPEN_VDB} \
-    --cmake-force-configure
+COLCON_EXTRA_ARGS="--event-handlers console_cohesion+ \
+                   --packages-up-to ${ROS_PACKAGES} \
+                   --symlink-install \
+                   --mixin \
+                       build-testing-on \
+                       ccache \
+                       release \
+                   --cmake-force-configure"
+if [ "${CMAKE_EXTRA_ARGS}" != "" ]; then
+    COLCON_EXTRA_ARGS="${COLCON_EXTRA_ARGS} --cmake-args ${CMAKE_EXTRA_ARGS}"
+fi
+colcon build ${COLCON_EXTRA_ARGS}
 echo ::endgroup::
 
+
 echo ::group::Debug Build
-colcon build \
-    --packages-up-to ${ROS_PACKAGES} \
-    --event-handlers console_cohesion+ \
-    --symlink-install \
-    --mixin \
-        build-testing-on \
-        ccache \
-        coverage-gcc \
-        coverage-pytest \
-        debug \
-    --cmake-args -DUSE_OPENVDB=${OPEN_VDB} \
-    --cmake-force-configure
+COLCON_EXTRA_ARGS="--packages-up-to ${ROS_PACKAGES} \
+                   --event-handlers console_cohesion+ \
+                   --symlink-install \
+                   --mixin \
+                       build-testing-on \
+                       ccache \
+                       coverage-gcc \
+                       coverage-pytest \
+                       debug \
+                   --cmake-force-configure"
+if [ "${CMAKE_EXTRA_ARGS}" != "" ]; then
+    COLCON_EXTRA_ARGS="${COLCON_EXTRA_ARGS} --cmake-args ${CMAKE_EXTRA_ARGS}"
+fi
+colcon build ${COLCON_EXTRA_ARGS}
 echo ::endgroup::
 
 LCOV_CONFIG_PATH=${SCRIPT_PATH}/../.lcovrc
