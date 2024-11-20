@@ -21,7 +21,6 @@
 #include <vector>
 
 #include <openvdb/openvdb.h>
-#include <openvdb/tools/VolumeToSpheres.h>
 
 #include <Eigen/Core>
 
@@ -104,7 +103,10 @@ class LikelihoodFieldModel3 {
    */
   explicit LikelihoodFieldModel3(const param_type& params, const map_type& grid)
       : params_{params},
-        looker_{openvdb::tools::ClosestSurfacePoint<map_type>::create(grid)},
+        grid_{openvdb::gridPtrCast<map_type>(grid.deepCopyGrid())},
+        accessor_{grid_->getConstAccessor()},
+        transform_{grid_->transform()},
+        background_{grid_->background()},
         two_squared_sigma_{2 * params.sigma_hit * params.sigma_hit},
         amplitude_{params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()))},
         offset_{params.z_random / params.max_laser_distance} {
@@ -130,23 +132,21 @@ class LikelihoodFieldModel3 {
                               ranges::to<std::vector>();
 
     return [this, pointcloud_size, points = std::move(transformed_points)](const state_type& state) -> weight_type {
-      std::vector<float> nb_distances;
-      std::vector<openvdb::Vec3R> vdb_points;
-      vdb_points.reserve(pointcloud_size);
+      std::vector<float> distances;
+      distances.reserve(pointcloud_size);
 
       // Transform each point to every particle state
-      std::transform(points.begin(), points.end(), std::back_inserter(vdb_points), [state](const auto& point) {
+      std::transform(points.begin(), points.end(), std::back_inserter(distances), [this, state](const auto& point) {
         // OpenVDB grid already in world coordinates
         const Eigen::Vector3d point_in_state_frame = state * point;
-        return openvdb::Vec3R{point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()};
+        const openvdb::math::Coord ijk = transform_.worldToIndexCellCentered(
+            openvdb::math::Vec3d(point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()));
+        return accessor_.isValueOn(ijk) ? accessor_.getValue(ijk) : background_;
       });
-
-      // Extract the distance to the closest surface for each point
-      looker_->search(vdb_points, nb_distances);
 
       // Calculates the probality based on the distance
       return std::transform_reduce(
-          nb_distances.cbegin(), nb_distances.cend(), 1.0, std::plus{}, [this](const auto& distance) {
+          distances.cbegin(), distances.cend(), 1.0, std::plus{}, [this](const auto& distance) {
             return amplitude_ * std::exp(-(distance * distance) / two_squared_sigma_) + offset_;
           });
     };
@@ -154,7 +154,10 @@ class LikelihoodFieldModel3 {
 
  private:
   param_type params_;
-  typename openvdb::tools::ClosestSurfacePoint<map_type>::Ptr looker_;
+  const typename map_type::Ptr grid_;
+  const typename map_type::ConstAccessor accessor_;
+  const openvdb::math::Transform transform_;
+  const typename map_type::ValueType background_;
   double two_squared_sigma_;
   double amplitude_;
   double offset_;
