@@ -16,6 +16,8 @@
 
   <depend>eigen</depend>
   <depend>libhdf5-dev</depend>
+  <depend>libopenvdb-dev</depend>
+  <depend>libopenvdb</depend>
   <depend>range-v3</depend>
   <depend>sophus</depend>
   <depend>tbb</depend>

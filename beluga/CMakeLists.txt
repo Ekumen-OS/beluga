@@ -59,12 +59,23 @@ find_package(TBB REQUIRED)
 # If USE_OPENVDB is enabled, proceed with finding OpenVDB
 if(USE_OPENVDB)
   if(NOT OPENVDB_CMAKE_MODULE_PATH)
-    find_file(OPENVDB_MODULE_PATH FindOpenVDB.cmake
-              PATHS /usr/lib/x86_64-linux-gnu/cmake/OpenVDB/)
-    if(OPENVDB_MODULE_PATH)
-      get_filename_component(OPENVDB_CMAKE_MODULE_PATH ${OPENVDB_MODULE_PATH}
+    file(
+      GLOB_RECURSE
+      OPENVDB_MODULES
+      /usr/lib/*/FindOpenVDB.cmake
+      /usr/local/lib/*/FindOpenVDB.cmake)
+    list(LENGTH OPENVDB_MODULES NUM_OPENVDB_MODULES)
+    if(NUM_OPENVDB_MODULES EQUAL 1)
+      list(
+        GET
+        OPENVDB_MODULES
+        0
+        OPENVDB_MODULE)
+      get_filename_component(OPENVDB_CMAKE_MODULE_PATH ${OPENVDB_MODULE}
                              DIRECTORY)
     endif()
+    unset(NUM_OPENVDB_MODULES)
+    unset(OPENVDB_MODULES)
   endif()
   if(OPENVDB_CMAKE_MODULE_PATH)
     list(APPEND CMAKE_MODULE_PATH ${OPENVDB_CMAKE_MODULE_PATH})
