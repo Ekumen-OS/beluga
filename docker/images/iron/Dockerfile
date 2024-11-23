@@ -44,8 +44,6 @@ RUN apt-get update \
     gdb \
     git \
     lcov \
-    libboost-all-dev \
-    libopenvdb-dev \
     linux-tools-common \
     linux-tools-generic \
     python3-colcon-coveragepy-result \

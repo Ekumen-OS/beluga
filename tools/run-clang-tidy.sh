@@ -25,7 +25,7 @@ COLCON_EXTRA_ARGS=""
 
 if [ "${ROS_DISTRO}" != "noetic" ]; then
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
-    if [ "${ROS_DISTRO}" != "humble" ]; then
+    if [ "${ROS_DISTRO}" != "humble" && "${ROS_DISTRO}" != "iron" ]; then
         CMAKE_EXTRA_ARGS="${CMAKE_EXTRA_ARGS} -DUSE_OPENVDB=On"
     fi
 else
