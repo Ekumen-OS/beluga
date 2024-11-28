@@ -91,6 +91,32 @@ struct almost_equal_to<Sophus::SE2<Scalar>> {
   const Scalar angular_resolution;  ///< Resolution for rotational coordinates, in radians.
 };
 
+/// std::equal_to equivalent specialized for SE(3) types, with user resolutions.
+template <typename Scalar>
+struct almost_equal_to<Sophus::SE3<Scalar>> {
+  /// Constructs near equality functor.
+  /**
+   * \param _linear_resolution Resolution for translational coordinates, in meters.
+   * \param _angular_resolution Resolution for rotational coordinates, in radians.
+   */
+  explicit almost_equal_to(Scalar _linear_resolution, Scalar _angular_resolution)
+      : linear_resolution(_linear_resolution), angular_resolution(_angular_resolution) {}
+
+  /// Compares `a` and `b` for near equality.
+  bool operator()(const Sophus::SE3<Scalar>& a, const Sophus::SE3<Scalar>& b) const {
+    using std::abs, std::atan, std::tan;
+    const Eigen::Vector3<Scalar> angles = a.so3().log() - b.so3().log();
+    return (abs(a.translation().x() - b.translation().x()) < linear_resolution) &&
+           (abs(a.translation().y() - b.translation().y()) < linear_resolution) &&
+           (abs(a.translation().z() - b.translation().z()) < linear_resolution) &&
+           (abs(atan(tan(angles.x()))) < angular_resolution) && (abs(atan(tan(angles.y()))) < angular_resolution) &&
+           (abs(atan(tan(angles.z()))) < angular_resolution);
+  }
+
+  const Scalar linear_resolution;   ///< Resolution for translational coordinates, in meters.
+  const Scalar angular_resolution;  ///< Resolution for rotational coordinates, in radians.
+};
+
 }  // namespace detail
 
 /// Assign a pose distribution to a particle cloud message.
@@ -149,7 +175,8 @@ template <
     class State = typename beluga::state_t<Particle>,
     class Weight = typename beluga::weight_t<Particle>,
     class Scalar = typename State::Scalar,
-    typename = std::enable_if_t<std::is_same_v<State, typename Sophus::SE2<Scalar>>>>
+    typename = std::enable_if_t<
+        std::is_same_v<State, typename Sophus::SE2<Scalar>> || std::is_same_v<State, typename Sophus::SE3<Scalar>>>>
 beluga_ros::msg::MarkerArray& assign_particle_cloud(
     Particles&& particles,
     Scalar linear_resolution,
