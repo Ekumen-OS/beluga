@@ -34,7 +34,7 @@ namespace {
 template <typename GridT, typename T>
 auto make_map(const double voxel_size, const std::vector<T>& world_points) {
   // Parameters
-  constexpr int kHalfWidth = 1;
+  constexpr int kHalfWidth = 3;
   constexpr int kClosingSteps = 0;
 
   // Create the grid
