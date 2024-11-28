@@ -54,7 +54,7 @@
  *
  * \section SensorModelLinks See also
  * - beluga::LikelihoodFieldModel
- * - beluga::Likelihood3DFieldModel
+ * - beluga::LikelihoodFieldModel3
  * - beluga::BeamSensorModel
  * - beluga::LandmarkSensorModel
  * - beluga::BearingSensorModel

@@ -92,10 +92,10 @@ class LikelihoodFieldModel3 {
   /// Parameter type that the constructor uses to configure the likelihood field model.
   using param_type = LikelihoodFieldModel3Param;
 
-  /// Constructs a Likelihood3DFieldModel instance.
+  /// Constructs a LikelihoodFieldModel3 instance.
   /**
    * \param params Parameters to configure this instance.
-   *  See beluga::Likelihood3DFieldModelParam for details.
+   *  See beluga::LikelihoodFieldModel3Param for details.
    * \param grid Narrow band Level set grid representing the static map that the sensor model
    *  uses to compute a likelihood field for lidar hits and compute importance weights
    *  for particle states.
@@ -123,17 +123,14 @@ class LikelihoodFieldModel3 {
    *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
   [[nodiscard]] auto operator()(measurement_type&& measurement) const {
-    const size_t pointcloud_size = measurement.points().size();
     // Transform each point from the sensor frame to the origin frame
-    auto transformed_points = ranges::views::all(measurement.points()) |
-                              ranges::views::transform([&](const auto& point) {
+    auto transformed_points = measurement.points() | ranges::views::transform([&](const auto& point) {
                                 return measurement.origin() * point.template cast<double>();
                               }) |
                               ranges::to<std::vector>();
 
-    return [this, pointcloud_size, points = std::move(transformed_points)](const state_type& state) -> weight_type {
+    return [this, points = std::move(transformed_points)](const state_type& state) -> weight_type {
       std::vector<float> distances;
-      distances.reserve(pointcloud_size);
 
       // Transform each point to every particle state
       std::transform(points.begin(), points.end(), std::back_inserter(distances), [this, state](const auto& point) {
