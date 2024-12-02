@@ -145,6 +145,9 @@ class NdtAmclNode3D : public BaseAMCLNode {
   std::optional<Sophus::SE3d> last_known_odom_transform_in_map_;
   /// Whether to broadcast transforms or not.
   bool enable_tf_broadcast_{false};
+
+  /// Map representation publisher.
+  rclcpp_lifecycle::LifecyclePublisher<visualization_msgs::msg::MarkerArray>::SharedPtr map_visualization_pub_;
 };
 
 }  // namespace beluga_amcl

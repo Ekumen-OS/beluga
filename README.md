@@ -17,8 +17,6 @@
 
 ## 🌐 Overview
 
-This is a fork from the Ekumen's project Beluga.
-
 Beluga is an extensible C++17 library with a ground-up implementation of the Monte Carlo Localization (MCL) family of estimation algorithms featuring:
 
 - A modular design based on orthogonal components.
