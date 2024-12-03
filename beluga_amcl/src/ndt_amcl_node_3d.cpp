@@ -156,9 +156,12 @@ void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Making particle filter");
 
   // Map visualization publisher
+  rclcpp::QoS qos_profile{rclcpp::KeepLast(1)};
+  qos_profile.reliable();
+  qos_profile.durability(rclcpp::DurabilityPolicy::TransientLocal);
+
   map_visualization_pub_ =
-    create_publisher<visualization_msgs::msg::MarkerArray>("obstacle_markers", rclcpp::SystemDefaultsQoS());
-  RCLCPP_INFO(get_logger(), "Map visualization publisher created");
+    create_publisher<visualization_msgs::msg::MarkerArray>("obstacle_markers", qos_profile);
 
   particle_filter_ = make_particle_filter();
   {
@@ -258,13 +261,15 @@ beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode3D::get_sensor_model() c
   //    params, beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string())};
 
   // Store the map (sparse_value_grid?)
-  auto map =
+  const auto map =
     beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string());
 
   // Get the markers
   beluga_ros::msg::MarkerArray obstacle_markers = beluga_ros::assign_obstacle_map(map);
   // Publish the message
+  RCLCPP_INFO(get_logger(), "Publishing obstacle markers");
   map_visualization_pub_->publish(obstacle_markers);
+  RCLCPP_INFO(get_logger(), "Markers published");
 
   return beluga::NDTSensorModel<NDTMapRepresentation>{
     params, map};

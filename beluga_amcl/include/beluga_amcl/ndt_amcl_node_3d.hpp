@@ -147,7 +147,8 @@ class NdtAmclNode3D : public BaseAMCLNode {
   bool enable_tf_broadcast_{false};
 
   /// Map representation publisher.
-  rclcpp_lifecycle::LifecyclePublisher<visualization_msgs::msg::MarkerArray>::SharedPtr map_visualization_pub_;
+  //rclcpp_lifecycle::LifecyclePublisher<visualization_msgs::msg::MarkerArray>::SharedPtr map_visualization_pub_;
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr map_visualization_pub_;
 };
 
 }  // namespace beluga_amcl

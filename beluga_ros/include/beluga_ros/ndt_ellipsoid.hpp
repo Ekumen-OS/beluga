@@ -17,6 +17,7 @@
 
 #include <beluga_ros/messages.hpp>
 
+
 /**
  * \file
  * \brief Utilities for NDT I/O over ROS interfaces.
@@ -26,7 +27,8 @@ namespace beluga_ros {
 
 /// 
 template <typename MapType, int NDim>
-beluga_ros::msg::MarkerArray& assign_obstacle_map(beluga::SparseValueGrid<MapType, NDim> grid){
+//beluga_ros::msg::MarkerArray& assign_obstacle_map(beluga::SparseValueGrid<MapType, NDim> grid){
+beluga_ros::msg::MarkerArray assign_obstacle_map(const beluga::SparseValueGrid<MapType, NDim>& grid){
 
   // Get data from the grid
   auto& map = grid.data();
@@ -36,32 +38,32 @@ beluga_ros::msg::MarkerArray& assign_obstacle_map(beluga::SparseValueGrid<MapTyp
   int idCount = 0;
   for (const auto& [key, cell] : map)
   {
-      beluga_ros::msg::Marker marker;
-      marker.header.frame_id = "map";
-      marker.id = idCount++;  // TODO: Compile and check if this is the way to set id
-      marker.ns = "obstacles";
-      marker.type = beluga_ros::msg::Marker::SPHERE;
-      marker.action = beluga_ros::msg::Marker::ADD;
+    beluga_ros::msg::Marker marker;
+    marker.header.frame_id = "map";
+    marker.id = idCount++;  // TODO: Compile and check if this is the way to set id
+    marker.ns = "obstacles";
+    marker.type = beluga_ros::msg::Marker::SPHERE;
+    marker.action = beluga_ros::msg::Marker::ADD;
 
-      // Set the position
-      // TODO: check the mean's data type and how to access to its members
-      marker.pose.position.x = cell.mean[0];
-      marker.pose.position.y = cell.mean[1];
-      marker.pose.position.z = cell.mean[2];
+    // Set the position
+    // TODO: check the mean's data type and how to access to its members
+    marker.pose.position.x = cell.mean[0];
+    marker.pose.position.y = cell.mean[1];
+    marker.pose.position.z = cell.mean[2];
 
-      // Set the scale based on the covariance
-      // TODO: check what values of the covariance should be used and if they need be changed before
-      marker.scale.x = 1;
-      marker.scale.y = 1;
-      marker.scale.z = 1;
+    // Set the scale based on the covariance
+    // TODO: check what values of the covariance should be used and if they need be changed before
+    marker.scale.x = 0.5f;
+    marker.scale.y = 0.5f;
+    marker.scale.z = 0.5f;
 
-      marker.color.r = 1.0f;
-      marker.color.g = 0.0f;
-      marker.color.b = 0.0f;
-      marker.color.a = 1.0f;
+    marker.color.r = 0.0f;
+    marker.color.g = 0.0f;
+    marker.color.b = 1.0f;
+    marker.color.a = 1.0f;
 
-      // Add the marker
-      message.markers.push_back(marker);
+    // Add the marker
+    message.markers.push_back(marker);
   }
 
   return message;
