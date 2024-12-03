@@ -187,7 +187,6 @@ void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
       last_known_odom_transform_in_map_.reset();
       initialize_from_estimate(initial_estimate.value());
     }
-
   }
 }
 
@@ -257,19 +256,13 @@ beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode3D::get_sensor_model() c
   const auto map_path = get_parameter("map_path").as_string();
   RCLCPP_INFO(get_logger(), "Loading map from %s.", map_path.c_str());
 
-  //return beluga::NDTSensorModel<NDTMapRepresentation>{
-  //    params, beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string())};
-
-  // Store the map (sparse_value_grid?)
+  // Load the map from hdf5 file
   const auto map =
     beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string());
 
-  // Get the markers
+  // Publish markers for map visualization
   beluga_ros::msg::MarkerArray obstacle_markers = beluga_ros::assign_obstacle_map(map);
-  // Publish the message
-  RCLCPP_INFO(get_logger(), "Publishing obstacle markers");
   map_visualization_pub_->publish(obstacle_markers);
-  RCLCPP_INFO(get_logger(), "Markers published");
 
   return beluga::NDTSensorModel<NDTMapRepresentation>{
     params, map};
