@@ -17,7 +17,6 @@
 
 #include <beluga_ros/messages.hpp>
 
-
 /**
  * \file
  * \brief Utilities for NDT I/O over ROS interfaces.
@@ -25,23 +24,23 @@
 
 namespace beluga_ros {
 
-/// 
+///
 template <typename MapType, int NDim>
-beluga_ros::msg::MarkerArray assign_obstacle_map(const beluga::SparseValueGrid<MapType, NDim>& grid){
-
+beluga_ros::msg::MarkerArray assign_obstacle_map(const beluga::SparseValueGrid<MapType, NDim>& grid) {
   // Get data from the grid
   auto& map = grid.data();
 
+  // Clean up the message
   beluga_ros::msg::MarkerArray message{};
   {
     beluga_ros::msg::Marker marker;
     marker.ns = "obstacles";
-    marker.action = beluga_ros::msg::Marker::DELETE;
+    marker.action = beluga_ros::msg::Marker::DELETEALL;
+    message.markers.push_back(marker);
   }
 
   int idCount = 0;
-  for (const auto& [key, cell] : map)
-  {
+  for (const auto& [key, cell] : map) {
     beluga_ros::msg::Marker marker;
     marker.header.frame_id = "map";
     marker.id = idCount++;
@@ -54,14 +53,45 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(const beluga::SparseValueGrid<M
     marker.pose.position.y = cell.mean[1];
     marker.pose.position.z = cell.mean[2];
 
-    // Set the scale based on the covariance
-    marker.scale.x = 0.5f;
-    marker.scale.y = 0.5f;
-    marker.scale.z = 0.5f;
+    // Compute the rotation based on the covariance matrix
+    const auto eigenSolver = Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>{cell.covariance};
+    assert(eigenSolver.info() == Eigen::Success);
+    const auto eigenvectors = eigenSolver.eigenvectors().real();
+    const auto eigenvalues = eigenSolver.eigenvalues();
+
+    // TODO: Discuss a better way to do this (threshold and permutation)
+    Eigen::Matrix3d rotationMatrix;
+    rotationMatrix << eigenvectors.col(0), eigenvectors.col(1), eigenvectors.col(2);
+    const auto scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
+
+    // Permutation
+    if (std::abs(rotationMatrix.determinant() - 1.0) > 1e-6) {
+      rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
+      scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
+
+      if (std::abs(rotationMatrix.determinant() - 1.0) > 1e-6) {
+        rotationMatrix << eigenvectors.col(0), eigenvectors.col(2), eigenvectors.col(1);
+        scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.z(), eigenvalues.y()};
+      }
+    }
+
+    Eigen::Quaterniond rotation;
+    if (std::abs(rotationMatrix.determinant() - 1.0) < 1e-6) {
+      rotation = Eigen::Quaterniond{rotationMatrix};
+    }
+
+    marker.pose.orientation.x = rotation.x();
+    marker.pose.orientation.y = rotation.y();
+    marker.pose.orientation.z = rotation.z();
+    marker.pose.orientation.w = rotation.w();
+
+    marker.scale.x = scalevector.x();
+    marker.scale.y = scalevector.y();
+    marker.scale.z = scalevector.z();
 
     marker.color.r = 0.0f;
-    marker.color.g = 0.0f;
-    marker.color.b = 1.0f;
+    marker.color.g = 1.0f;
+    marker.color.b = 0.0f;
     marker.color.a = 1.0f;
 
     // Add the marker
