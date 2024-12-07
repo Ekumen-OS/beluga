@@ -31,7 +31,7 @@ if [ "${ROS_DISTRO}" != "noetic" ]; then
     else
         ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools"
         if [ "${ROS_DISTRO}" != "humble" ] && [ "${ROS_DISTRO}" != "iron" ]; then
-            CMAKE_EXTRA_ARGS="${CMAKE_EXTRA_ARGS} -DUSE_OPENVDB=On"
+            ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools beluga_vdb"
         fi
     fi
 else
