@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+  <name>beluga_vdb</name>
+  <version>1.0.0</version>
+
+  <description>A generic MCL library for ROS2.</description>
+
+  <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
+  <maintainer email="ivanpauno@ekumenlabs.com">Ivan Paunovic</maintainer>
+  <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
+
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>cmake</buildtool_depend>
+
+  <depend>beluga</depend>
+  <depend>eigen</depend>
+  <depend>libboost-iostreams-dev</depend>
+  <depend>libboost-thread-dev</depend>
+  <depend>libopenvdb-dev</depend>
+  <depend>range-v3</depend>
+  <depend>sophus</depend>
+  <depend>tbb</depend>
+
+  <test_depend>clang-format</test_depend>
+  <test_depend>clang-tidy</test_depend>
+  <test_depend>gtest</test_depend>
+  <test_depend>libgmock-dev</test_depend>
+
+  <doc_depend>doxygen</doc_depend>
+  <doc_depend>graphviz</doc_depend>
+  <doc_depend>texlive-latex-base</doc_depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
