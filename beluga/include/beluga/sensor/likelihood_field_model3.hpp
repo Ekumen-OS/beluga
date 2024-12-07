@@ -24,6 +24,9 @@
 
 #include <Eigen/Core>
 
+#include <range/v3/algorithm/fold_left.hpp>
+#include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
@@ -130,22 +133,16 @@ class LikelihoodFieldModel3 {
                               ranges::to<std::vector>();
 
     return [this, points = std::move(transformed_points)](const state_type& state) -> weight_type {
-      std::vector<float> distances;
-
-      // Transform each point to every particle state
-      std::transform(points.begin(), points.end(), std::back_inserter(distances), [this, state](const auto& point) {
-        // OpenVDB grid already in world coordinates
-        const Eigen::Vector3d point_in_state_frame = state * point;
-        const openvdb::math::Coord ijk = transform_.worldToIndexCellCentered(
-            openvdb::math::Vec3d(point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()));
-        return accessor_.isValueOn(ijk) ? accessor_.getValue(ijk) : background_;
-      });
-
-      // Calculates the probality based on the distance
-      return std::transform_reduce(
-          distances.cbegin(), distances.cend(), 1.0, std::plus{}, [this](const auto& distance) {
-            return amplitude_ * std::exp(-(distance * distance) / two_squared_sigma_) + offset_;
-          });
+      return ranges::fold_left(
+          points |  //
+              ranges::views::transform([this, &state](const auto& point) {
+                const Eigen::Vector3d point_in_state_frame = state * point;
+                const openvdb::math::Coord ijk = transform_.worldToIndexCellCentered(
+                    openvdb::math::Vec3d(point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()));
+                const auto prob = accessor_.isValueOn(ijk) ? accessor_.getValue(ijk) : background_;
+                return amplitude_ * std::exp(-(prob * prob) / two_squared_sigma_) + offset_;
+              }),
+          1.0, std::plus{});
     };
   }
 
