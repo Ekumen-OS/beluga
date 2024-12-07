@@ -22,6 +22,7 @@ set(OPENVDB_CMAKE_MODULE_PATH
     ${OPENVDB_CMAKE_MODULE_PATH}
     CACHE PATH "Path to OpenVDB CMake module")
 
+add_library(${PROJECT_NAME} INTERFACE)
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "Setting build type to 'Release' as none was specified.")
   set(CMAKE_BUILD_TYPE
@@ -38,7 +39,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     -Wpedantic)
 endif()
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
-  target_compile_options(-fno-inline)
+  target_compile_options(${PROJECT_NAME} INTERFACE -fno-inline)
 endif()
 
 find_package(Eigen3 REQUIRED NO_MODULE)
@@ -77,7 +78,6 @@ if(OPENVDB_CMAKE_MODULE_PATH)
   list(POP_BACK CMAKE_MODULE_PATH)
 endif()
 
-add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
   ${PROJECT_NAME}
   INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
