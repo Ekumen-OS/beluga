@@ -4,7 +4,7 @@
   <name>beluga_vdb</name>
   <version>1.0.0</version>
 
-  <description>A generic MCL library for ROS2.</description>
+  <description>A beluga extension to facilitate the use of OpenVDB.</description>
 
   <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
   <maintainer email="ivanpauno@ekumenlabs.com">Ivan Paunovic</maintainer>
