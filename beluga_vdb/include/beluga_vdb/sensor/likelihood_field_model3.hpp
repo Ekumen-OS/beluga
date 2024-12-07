@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL3_HPP
-#define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL3_HPP
+#ifndef BELUGA_VDB_SENSOR_LIKELIHOOD_FIELD_MODEL3_HPP
+#define BELUGA_VDB_SENSOR_LIKELIHOOD_FIELD_MODEL3_HPP
 
 #include <algorithm>
 #include <cmath>
@@ -38,7 +38,7 @@
  * \brief Implementation of a likelihood field sensor model for 3D Lidars.
  */
 
-namespace beluga {
+namespace beluga_vdb {
 
 /// Parameters used to construct a LikelihoodFieldModel3 instance.
 /**
@@ -157,6 +157,6 @@ class LikelihoodFieldModel3 {
   double offset_;
 };
 
-}  // namespace beluga
+}  // namespace beluga_vdb
 
 #endif

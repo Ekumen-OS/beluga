@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_TEST_SIMPLE_POINTCLOUD_INTERFACE_HPP
-#define BELUGA_TEST_SIMPLE_POINTCLOUD_INTERFACE_HPP
+#ifndef BELUGA_VDB_TEST_SIMPLE_POINTCLOUD_INTERFACE_HPP
+#define BELUGA_VDB_TEST_SIMPLE_POINTCLOUD_INTERFACE_HPP
 
 #include <range/v3/view/iota.hpp>
 #include <sophus/se3.hpp>
 
-namespace beluga::testing {
+namespace beluga_vdb::testing {
 
 template <typename T>
 class SimpleSparsePointCloud3 {
@@ -40,6 +40,6 @@ class SimpleSparsePointCloud3 {
 using SimpleSparsePointCloud3d = SimpleSparsePointCloud3<double>;
 using SimpleSparsePointCloud3f = SimpleSparsePointCloud3<float>;
 
-}  // namespace beluga::testing
+}  // namespace beluga_vdb::testing
 
 #endif
