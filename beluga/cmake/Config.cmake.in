@@ -7,11 +7,6 @@ find_dependency(HDF5 COMPONENTS CXX REQUIRED)
 find_dependency(Sophus REQUIRED)
 find_dependency(TBB REQUIRED)
 
-if("@USE_OPENVDB@")
-    list(APPEND CMAKE_MODULE_PATH "@OPENVDB_CMAKE_MODULE_PATH@")
-    find_dependency(OpenVDB REQUIRED)
-endif()
-
 include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
 
 set(@PROJECT_NAME@_LIBRARIES @PROJECT_NAME@::@PROJECT_NAME@)

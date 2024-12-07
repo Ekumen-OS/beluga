@@ -15,10 +15,7 @@
   <buildtool_depend>cmake</buildtool_depend>
 
   <depend>eigen</depend>
-  <depend>libboost-iostreams-dev</depend>
-  <depend>libboost-thread-dev</depend>
   <depend>libhdf5-dev</depend>
-  <depend>libopenvdb-dev</depend>
   <depend>range-v3</depend>
   <depend>sophus</depend>
   <depend>tbb</depend>

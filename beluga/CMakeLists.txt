@@ -18,14 +18,6 @@ project(beluga VERSION 1.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(
-  USE_OPENVDB
-  "Compiles with OpenVDB, required for the 3D likelihood field sensor model"
-  Off)
-set(OPENVDB_CMAKE_MODULE_PATH
-    ${OPENVDB_CMAKE_MODULE_PATH}
-    CACHE PATH "Path to OpenVDB CMake module")
-
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "Setting build type to 'Release' as none was specified.")
   set(CMAKE_BUILD_TYPE
@@ -56,36 +48,6 @@ find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
 
-# If USE_OPENVDB is enabled, proceed with finding OpenVDB
-if(USE_OPENVDB)
-  if(NOT OPENVDB_CMAKE_MODULE_PATH)
-    file(
-      GLOB_RECURSE
-      OPENVDB_MODULES
-      /usr/lib/*/FindOpenVDB.cmake
-      /usr/local/lib/*/FindOpenVDB.cmake)
-    list(LENGTH OPENVDB_MODULES NUM_OPENVDB_MODULES)
-    if(NUM_OPENVDB_MODULES EQUAL 1)
-      list(
-        GET
-        OPENVDB_MODULES
-        0
-        OPENVDB_MODULE)
-      get_filename_component(OPENVDB_CMAKE_MODULE_PATH ${OPENVDB_MODULE}
-                             DIRECTORY)
-    endif()
-    unset(NUM_OPENVDB_MODULES)
-    unset(OPENVDB_MODULES)
-  endif()
-  if(OPENVDB_CMAKE_MODULE_PATH)
-    list(APPEND CMAKE_MODULE_PATH ${OPENVDB_CMAKE_MODULE_PATH})
-  endif()
-  find_package(OpenVDB REQUIRED)
-  if(OPENVDB_CMAKE_MODULE_PATH)
-    list(POP_BACK CMAKE_MODULE_PATH)
-  endif()
-endif()
-
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
   ${PROJECT_NAME}
@@ -98,12 +60,10 @@ target_link_libraries(
             ${HDF5_CXX_LIBRARIES}
             Sophus::Sophus
             TBB::tbb
-            range-v3::range-v3
-            $<$<BOOL:${USE_OPENVDB}>:OpenVDB::openvdb>)
+            range-v3::range-v3)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
-target_compile_definitions(
-  ${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG SOPHUS_USE_BASIC_LOGGING
-                            $<$<BOOL:${USE_OPENVDB}>:BELUGA_OPENVDB_SUPPORT>)
+target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG
+                                                     SOPHUS_USE_BASIC_LOGGING)
 
 add_executable(clang_tidy_findable)
 target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
