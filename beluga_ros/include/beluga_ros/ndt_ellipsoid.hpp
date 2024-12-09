@@ -24,7 +24,15 @@
 
 namespace beluga_ros {
 
-///
+/// Assign an ellipsoid to each cell of a SparseValueGrid. A cube is used instead if the distribution of the
+/// cell is not suitable for the rotation matrix creation.
+ /** 
+  * \param grid A SparseValueGrid that contains cells representing obstacles.
+  * \return A message with the ellipsoids or cubes.
+  * \tparam MapType Container that maps from Eigen::Vector<int, NDim> to the type of the cell. See [SparseValueGrid]
+  * (https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html).
+  * \tparam NDim Dimension of the grid.
+  */ 
 template <typename MapType, int NDim>
 beluga_ros::msg::MarkerArray assign_obstacle_map(const beluga::SparseValueGrid<MapType, NDim>& grid) {
   // Get data from the grid
