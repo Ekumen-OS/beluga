@@ -59,24 +59,19 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(const beluga::SparseValueGrid<M
     const auto eigenvectors = eigenSolver.eigenvectors().real();
     const auto eigenvalues = eigenSolver.eigenvalues();
 
-    // TODO: Discuss a better way to do this (threshold and permutation)
     Eigen::Matrix3d rotationMatrix;
+    Eigen::Vector3d scalevector;
     rotationMatrix << eigenvectors.col(0), eigenvectors.col(1), eigenvectors.col(2);
-    const auto scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
+    scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
 
     // Permutation
-    if (std::abs(rotationMatrix.determinant() - 1.0) > 1e-6) {
+    if (std::abs(rotationMatrix.determinant() - 1.0) > Eigen::NumTraits<double>::dummy_precision()) {
       rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
       scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
-
-      if (std::abs(rotationMatrix.determinant() - 1.0) > 1e-6) {
-        rotationMatrix << eigenvectors.col(0), eigenvectors.col(2), eigenvectors.col(1);
-        scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.z(), eigenvalues.y()};
-      }
     }
 
     Eigen::Quaterniond rotation;
-    if (std::abs(rotationMatrix.determinant() - 1.0) < 1e-6) {
+    if (std::abs(rotationMatrix.determinant() - 1.0) < Eigen::NumTraits<double>::dummy_precision()) {
       rotation = Eigen::Quaterniond{rotationMatrix};
     }
 
