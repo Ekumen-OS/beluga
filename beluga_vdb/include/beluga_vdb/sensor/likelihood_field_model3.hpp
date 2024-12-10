@@ -139,8 +139,8 @@ class LikelihoodFieldModel3 {
                 const Eigen::Vector3d point_in_state_frame = state * point;
                 const openvdb::math::Coord ijk = transform_.worldToIndexCellCentered(
                     openvdb::math::Vec3d(point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()));
-                const auto prob = accessor_.isValueOn(ijk) ? accessor_.getValue(ijk) : background_;
-                return amplitude_ * std::exp(-(prob * prob) / two_squared_sigma_) + offset_;
+                const auto distance = accessor_.isValueOn(ijk) ? accessor_.getValue(ijk) : background_;
+                return amplitude_ * std::exp(-(distance * distance) / two_squared_sigma_) + offset_;
               }),
           1.0, std::plus{});
     };
