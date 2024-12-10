@@ -24,6 +24,57 @@
 
 namespace beluga_ros {
 
+static void use_mean_covariance(const auto& mean, const auto& eigenSolver, auto& marker){
+  marker.type = beluga_ros::msg::Marker::SPHERE;
+  marker.action = beluga_ros::msg::Marker::ADD;
+  
+  // Compute the rotation based on the covariance matrix
+  const auto eigenvectors = eigenSolver.eigenvectors().real();
+  const auto eigenvalues = eigenSolver.eigenvalues();
+
+  Eigen::Matrix3d rotationMatrix;
+  Eigen::Vector3d scalevector;
+  rotationMatrix << eigenvectors.col(0), eigenvectors.col(1), eigenvectors.col(2);
+  scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
+
+  // Permutation
+  if (std::abs(rotationMatrix.determinant() - 1.0) > Eigen::NumTraits<double>::dummy_precision()) {
+    rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
+    scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
+  }
+
+  Eigen::Quaterniond rotation{1.0f, 0.0f, 0.0f, 0.0f};
+  if (std::abs(rotationMatrix.determinant() - 1.0) < Eigen::NumTraits<double>::dummy_precision()) {
+    rotation = Eigen::Quaterniond{rotationMatrix};
+  }
+
+  marker.pose.position.x = mean[0];
+  marker.pose.position.y = mean[1];
+  marker.pose.position.z = mean[2];
+
+  marker.pose.orientation.x = rotation.x();
+  marker.pose.orientation.y = rotation.y();
+  marker.pose.orientation.z = rotation.z();
+  marker.pose.orientation.w = rotation.w();
+
+  marker.scale.x = scalevector.x();
+  marker.scale.y = scalevector.y();
+  marker.scale.z = scalevector.z();
+}
+
+static void use_cell_size(const auto& position, const auto& size, auto& marker){
+  marker.type = beluga_ros::msg::Marker::CUBE;
+  marker.action = beluga_ros::msg::Marker::ADD;
+
+  marker.pose.position.x = position[0];
+  marker.pose.position.y = position[1];
+  marker.pose.position.z = position[2];
+
+  marker.scale.x = size;
+  marker.scale.y = size;
+  marker.scale.z = size;
+}
+
 /// Assign an ellipsoid to each cell of a SparseValueGrid. A cube is used instead if the distribution of the
 /// cell is not suitable for the rotation matrix creation.
  /** 
@@ -47,50 +98,22 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(const beluga::SparseValueGrid<M
     message.markers.push_back(marker);
   }
 
+  // Add the markers
   int idCount = 0;
   for (const auto& [key, cell] : map) {
     beluga_ros::msg::Marker marker;
     marker.header.frame_id = "map";
     marker.id = idCount++;
     marker.ns = "obstacles";
-    marker.type = beluga_ros::msg::Marker::SPHERE;
-    marker.action = beluga_ros::msg::Marker::ADD;
 
-    // Set the position
-    marker.pose.position.x = cell.mean[0];
-    marker.pose.position.y = cell.mean[1];
-    marker.pose.position.z = cell.mean[2];
-
-    // Compute the rotation based on the covariance matrix
     const auto eigenSolver = Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>{cell.covariance};
-    assert(eigenSolver.info() == Eigen::Success);
-    const auto eigenvectors = eigenSolver.eigenvectors().real();
-    const auto eigenvalues = eigenSolver.eigenvalues();
-
-    Eigen::Matrix3d rotationMatrix;
-    Eigen::Vector3d scalevector;
-    rotationMatrix << eigenvectors.col(0), eigenvectors.col(1), eigenvectors.col(2);
-    scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
-
-    // Permutation
-    if (std::abs(rotationMatrix.determinant() - 1.0) > Eigen::NumTraits<double>::dummy_precision()) {
-      rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
-      scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
+    if(eigenSolver.info() == Eigen::Success){
+      // Create an ellipsoid with values of the cell
+      use_mean_covariance(cell.mean, eigenSolver, marker);
+    }else{
+      // Create a cube based on the resolution of the grid
+      use_cell_size(key, grid.resolution(), marker);
     }
-
-    Eigen::Quaterniond rotation;
-    if (std::abs(rotationMatrix.determinant() - 1.0) < Eigen::NumTraits<double>::dummy_precision()) {
-      rotation = Eigen::Quaterniond{rotationMatrix};
-    }
-
-    marker.pose.orientation.x = rotation.x();
-    marker.pose.orientation.y = rotation.y();
-    marker.pose.orientation.z = rotation.z();
-    marker.pose.orientation.w = rotation.w();
-
-    marker.scale.x = scalevector.x();
-    marker.scale.y = scalevector.y();
-    marker.scale.z = scalevector.z();
 
     marker.color.r = 0.0f;
     marker.color.g = 1.0f;
