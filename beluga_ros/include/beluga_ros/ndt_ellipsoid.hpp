@@ -24,7 +24,7 @@
 
 namespace beluga_ros {
 
-static void use_mean_covariance(const auto& mean, const auto& eigenSolver, auto& marker){
+inline void use_mean_covariance(const auto& mean, const auto& eigenSolver, auto& marker){
   marker.type = beluga_ros::msg::Marker::SPHERE;
   marker.action = beluga_ros::msg::Marker::ADD;
   
@@ -57,12 +57,13 @@ static void use_mean_covariance(const auto& mean, const auto& eigenSolver, auto&
   marker.pose.orientation.z = rotation.z();
   marker.pose.orientation.w = rotation.w();
 
-  marker.scale.x = scalevector.x();
-  marker.scale.y = scalevector.y();
-  marker.scale.z = scalevector.z();
+  float scaleConstant = 5.0f;
+  marker.scale.x = scalevector.x() * scaleConstant;
+  marker.scale.y = scalevector.y() * scaleConstant;
+  marker.scale.z = scalevector.z() * scaleConstant;
 }
 
-static void use_cell_size(const auto& position, const auto& size, auto& marker){
+inline void use_cell_size(const auto& position, const auto& size, auto& marker){
   marker.type = beluga_ros::msg::Marker::CUBE;
   marker.action = beluga_ros::msg::Marker::ADD;
 
@@ -99,11 +100,11 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(const beluga::SparseValueGrid<M
   }
 
   // Add the markers
-  int idCount = 0;
-  for (const auto& [key, cell] : map) {
+  for (auto [index, entry] : ranges::views::enumerate(map)) {
+    const auto [cellCenter, cell] = entry;
     beluga_ros::msg::Marker marker;
     marker.header.frame_id = "map";
-    marker.id = idCount++;
+    marker.id = index;
     marker.ns = "obstacles";
 
     const auto eigenSolver = Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>{cell.covariance};
@@ -112,13 +113,14 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(const beluga::SparseValueGrid<M
       use_mean_covariance(cell.mean, eigenSolver, marker);
     }else{
       // Create a cube based on the resolution of the grid
-      use_cell_size(key, grid.resolution(), marker);
+      use_cell_size(cellCenter, grid.resolution(), marker);
     }
 
-    marker.color.r = 0.0f;
-    marker.color.g = 1.0f;
-    marker.color.b = 0.0f;
-    marker.color.a = 1.0f;
+    float color[] = {0.0f, 1.0f, 0.0f, 1.0f};
+    marker.color.r = color[0];
+    marker.color.g = color[1];
+    marker.color.b = color[2];
+    marker.color.a = color[3];
 
     // Add the marker
     message.markers.push_back(marker);
