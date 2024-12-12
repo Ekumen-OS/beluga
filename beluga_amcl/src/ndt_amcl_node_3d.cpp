@@ -259,7 +259,8 @@ beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode3D::get_sensor_model() c
   const auto map = beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string());
 
   // Publish markers for map visualization
-  beluga_ros::msg::MarkerArray obstacle_markers = beluga_ros::assign_obstacle_map(map);
+  beluga_ros::msg::MarkerArray obstacle_markers{};
+  beluga_ros::assign_obstacle_map(map, obstacle_markers);
   map_visualization_pub_->publish(obstacle_markers);
 
   return beluga::NDTSensorModel<NDTMapRepresentation>{params, map};
