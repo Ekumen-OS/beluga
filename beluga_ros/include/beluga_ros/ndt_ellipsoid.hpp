@@ -24,9 +24,11 @@
 
 namespace beluga_ros {
 
-inline void use_mean_covariance(const auto& mean, const auto& eigenSolver, auto& marker){
-  marker.type = beluga_ros::msg::Marker::SPHERE;
-  marker.action = beluga_ros::msg::Marker::ADD;
+inline bool use_mean_covariance(auto& eigenSolver, const auto& cell, auto& marker){
+  eigenSolver.compute(cell.covariance);
+  if(eigenSolver.info() != Eigen::Success){
+    return false;
+  }
   
   // Compute the rotation based on the covariance matrix
   const auto eigenvectors = eigenSolver.eigenvectors().real();
@@ -43,24 +45,30 @@ inline void use_mean_covariance(const auto& mean, const auto& eigenSolver, auto&
     scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
   }
 
-  Eigen::Quaterniond rotation{1.0f, 0.0f, 0.0f, 0.0f};
-  if (std::abs(rotationMatrix.determinant() - 1.0) < Eigen::NumTraits<double>::dummy_precision()) {
-    rotation = Eigen::Quaterniond{rotationMatrix};
+  if (std::abs(rotationMatrix.determinant() - 1.0) > Eigen::NumTraits<double>::dummy_precision()) {
+    return false;
   }
+  const auto rotation = Eigen::Quaterniond{rotationMatrix};
 
-  marker.pose.position.x = mean[0];
-  marker.pose.position.y = mean[1];
-  marker.pose.position.z = mean[2];
+  // Fill in the message
+  marker.type = beluga_ros::msg::Marker::SPHERE;
+  marker.action = beluga_ros::msg::Marker::ADD;
+
+  marker.pose.position.x = cell.mean[0];
+  marker.pose.position.y = cell.mean[1];
+  marker.pose.position.z = cell.mean[2];
 
   marker.pose.orientation.x = rotation.x();
   marker.pose.orientation.y = rotation.y();
   marker.pose.orientation.z = rotation.z();
   marker.pose.orientation.w = rotation.w();
 
-  float scaleConstant = 5.0f;
-  marker.scale.x = scalevector.x() * scaleConstant;
-  marker.scale.y = scalevector.y() * scaleConstant;
-  marker.scale.z = scalevector.z() * scaleConstant;
+  float scaleConstant = 2.0f;
+  marker.scale.x = std::sqrt(scalevector.x()) * scaleConstant;
+  marker.scale.y = std::sqrt(scalevector.y()) * scaleConstant;
+  marker.scale.z = std::sqrt(scalevector.z()) * scaleConstant;
+
+  return true;
 }
 
 inline void use_cell_size(const auto& position, const auto& size, auto& marker){
@@ -103,17 +111,14 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(
   // Add the markers
   Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>> eigenSolver;
   for (auto [index, entry] : ranges::views::enumerate(map)) {
-    const auto [cellCenter, cell] = entry;
+    const auto& [cellCenter, cell] = entry;
     beluga_ros::msg::Marker marker;
     marker.header.frame_id = "map";
     marker.id = index;
     marker.ns = "obstacles";
 
-    eigenSolver.compute(cell.covariance);
-    if(eigenSolver.info() == Eigen::Success){
-      // Create an ellipsoid with values of the cell
-      use_mean_covariance(cell.mean, eigenSolver, marker);
-    }else{
+    // Try to create an ellipsoid with values of the cell
+    if(!use_mean_covariance(eigenSolver, cell, marker)){
       // Create a cube based on the resolution of the grid
       use_cell_size(cellCenter, grid.resolution(), marker);
     }
