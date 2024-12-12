@@ -24,6 +24,11 @@
 
 namespace beluga_ros {
 
+template <typename RealScalar>
+inline bool isApprox(RealScalar x, RealScalar y, RealScalar prec = Eigen::NumTraits<RealScalar>::dummy_precision()){
+  return std::abs(x-y) < prec;
+}
+
 inline bool use_mean_covariance(auto& eigenSolver, const auto& cell, auto& marker){
   eigenSolver.compute(cell.covariance);
   if(eigenSolver.info() != Eigen::Success){
@@ -40,12 +45,12 @@ inline bool use_mean_covariance(auto& eigenSolver, const auto& cell, auto& marke
   scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
 
   // Permutation
-  if (std::abs(rotationMatrix.determinant() - 1.0) > Eigen::NumTraits<double>::dummy_precision()) {
+  if(!isApprox(rotationMatrix.determinant(), 1.0)) {
     rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
     scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
   }
 
-  if (std::abs(rotationMatrix.determinant() - 1.0) > Eigen::NumTraits<double>::dummy_precision()) {
+  if(!isApprox(rotationMatrix.determinant(), 1.0)) {
     return false;
   }
   const auto rotation = Eigen::Quaterniond{rotationMatrix};
