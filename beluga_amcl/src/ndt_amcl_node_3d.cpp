@@ -260,7 +260,11 @@ beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode3D::get_sensor_model() c
 
   // Publish markers for map visualization
   beluga_ros::msg::MarkerArray obstacle_markers{};
-  beluga_ros::assign_obstacle_map(map, obstacle_markers);
+  bool flag;
+  beluga_ros::assign_obstacle_map(map, obstacle_markers, flag);
+  if (flag) {
+    RCLCPP_WARN(get_logger(), "Covariances from map representation cells seem to be non-diagonalizable");
+  }
   map_visualization_pub_->publish(obstacle_markers);
 
   return beluga::NDTSensorModel<NDTMapRepresentation>{params, map};

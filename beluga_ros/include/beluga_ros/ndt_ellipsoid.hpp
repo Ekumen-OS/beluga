@@ -24,17 +24,21 @@
 
 namespace beluga_ros {
 
+namespace {
+
 template <typename RealScalar>
-inline bool isApprox(RealScalar x, RealScalar y, RealScalar prec = Eigen::NumTraits<RealScalar>::dummy_precision()){
-  return std::abs(x-y) < prec;
+inline bool isApprox(RealScalar x, RealScalar y, RealScalar prec = Eigen::NumTraits<RealScalar>::dummy_precision()) {
+  return std::abs(x - y) < prec;
 }
 
-inline bool use_mean_covariance(auto& eigenSolver, const auto& cell, auto& marker){
+}  // namespace
+
+inline bool use_mean_covariance(auto& eigenSolver, const auto& cell, auto& marker) {
   eigenSolver.compute(cell.covariance);
-  if(eigenSolver.info() != Eigen::Success){
+  if (eigenSolver.info() != Eigen::Success) {
     return false;
   }
-  
+
   // Compute the rotation based on the covariance matrix
   const auto eigenvectors = eigenSolver.eigenvectors().real();
   const auto eigenvalues = eigenSolver.eigenvalues();
@@ -45,12 +49,12 @@ inline bool use_mean_covariance(auto& eigenSolver, const auto& cell, auto& marke
   scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
 
   // Permutation
-  if(!isApprox(rotationMatrix.determinant(), 1.0)) {
+  if (!isApprox(rotationMatrix.determinant(), 1.0)) {
     rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
     scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
   }
 
-  if(!isApprox(rotationMatrix.determinant(), 1.0)) {
+  if (!isApprox(rotationMatrix.determinant(), 1.0)) {
     return false;
   }
   const auto rotation = Eigen::Quaterniond{rotationMatrix};
@@ -68,15 +72,20 @@ inline bool use_mean_covariance(auto& eigenSolver, const auto& cell, auto& marke
   marker.pose.orientation.z = rotation.z();
   marker.pose.orientation.w = rotation.w();
 
-  float scaleConstant = 2.0f;
-  marker.scale.x = std::sqrt(scalevector.x()) * scaleConstant;
-  marker.scale.y = std::sqrt(scalevector.y()) * scaleConstant;
-  marker.scale.z = std::sqrt(scalevector.z()) * scaleConstant;
+  constexpr float kScaleFactor = 4.0f;
+  marker.scale.x = std::sqrt(scalevector.x()) * kScaleFactor;
+  marker.scale.y = std::sqrt(scalevector.y()) * kScaleFactor;
+  marker.scale.z = std::sqrt(scalevector.z()) * kScaleFactor;
+
+  marker.color.r = 0.0f;
+  marker.color.g = 1.0f;
+  marker.color.b = 0.0f;
+  marker.color.a = 1.0f;
 
   return true;
 }
 
-inline void use_cell_size(const auto& position, const auto& size, auto& marker){
+inline void use_cell_size(const auto& position, const auto& size, auto& marker) {
   marker.type = beluga_ros::msg::Marker::CUBE;
   marker.action = beluga_ros::msg::Marker::ADD;
 
@@ -87,14 +96,20 @@ inline void use_cell_size(const auto& position, const auto& size, auto& marker){
   marker.scale.x = size;
   marker.scale.y = size;
   marker.scale.z = size;
+
+  marker.color.r = 1.0f;
+  marker.color.g = 0.0f;
+  marker.color.b = 0.0f;
+  marker.color.a = 1.0f;
 }
 
 /// Assign an ellipsoid to each cell of a SparseValueGrid. A cube is used instead if the distribution of the
 /// cell is not suitable for the rotation matrix creation.
-/** 
+/**
  * \param grid A SparseValueGrid that contains cells representing obstacles.
  * \return A message with the ellipsoids or cubes.
  * \param[out] message Markers message to be assigned.
+ * \param[out] cubesGenerated Is set to true if there were problems with covariance matrices from cells.
  * \tparam MapType Container that maps from Eigen::Vector<int, NDim> to the type of the cell. See [SparseValueGrid]
  * (https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html).
  * \tparam NDim Dimension of the grid.
@@ -102,8 +117,9 @@ inline void use_cell_size(const auto& position, const auto& size, auto& marker){
 template <typename MapType, int NDim>
 beluga_ros::msg::MarkerArray assign_obstacle_map(
     const beluga::SparseValueGrid<MapType, NDim>& grid,
-    beluga_ros::msg::MarkerArray& message) {
-  
+    beluga_ros::msg::MarkerArray& message,
+    bool& cubesGenerated) {
+  cubesGenerated = false;
   // Get data from the grid
   auto& map = grid.data();
 
@@ -123,16 +139,11 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(
     marker.ns = "obstacles";
 
     // Try to create an ellipsoid with values of the cell
-    if(!use_mean_covariance(eigenSolver, cell, marker)){
+    if (!use_mean_covariance(eigenSolver, cell, marker)) {
       // Create a cube based on the resolution of the grid
+      cubesGenerated = true;
       use_cell_size(cellCenter, grid.resolution(), marker);
     }
-
-    float color[] = {0.0f, 1.0f, 0.0f, 1.0f};
-    marker.color.r = color[0];
-    marker.color.g = color[1];
-    marker.color.b = color[2];
-    marker.color.a = color[3];
 
     // Add the marker
     message.markers.push_back(marker);
