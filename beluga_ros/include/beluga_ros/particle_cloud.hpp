@@ -84,7 +84,7 @@ struct almost_equal_to<Sophus::SE2<Scalar>> {
     using std::abs;
     return (abs(a.translation().x() - b.translation().x()) < linear_resolution) &&
            (abs(a.translation().y() - b.translation().y()) < linear_resolution) &&
-           (abs((a * b.inverse()).log().x()) < angular_resolution);
+           (abs((a * b.inverse()).log().z()) < angular_resolution);
   }
 
   const Scalar linear_resolution;   ///< Resolution for translational coordinates, in meters.
@@ -105,12 +105,12 @@ struct almost_equal_to<Sophus::SE3<Scalar>> {
   /// Compares `a` and `b` for near equality.
   bool operator()(const Sophus::SE3<Scalar>& a, const Sophus::SE3<Scalar>& b) const {
     using std::abs;
-    const Eigen::Vector3<Scalar> angles = (a * b.inverse()).log();
+    const Eigen::Vector<Scalar, 6> angles = (a * b.inverse()).log();
     return (abs(a.translation().x() - b.translation().x()) < linear_resolution) &&
            (abs(a.translation().y() - b.translation().y()) < linear_resolution) &&
            (abs(a.translation().z() - b.translation().z()) < linear_resolution) &&
-           (abs(angles.x()) < angular_resolution) && (abs(angles.y()) < angular_resolution) &&
-           (abs(angles.z()) < angular_resolution);
+           (abs(angles[3]) < angular_resolution) && (abs(angles[4]) < angular_resolution) &&
+           (abs(angles[5]) < angular_resolution);
   }
 
   const Scalar linear_resolution;   ///< Resolution for translational coordinates, in meters.
