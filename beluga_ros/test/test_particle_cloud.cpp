@@ -60,6 +60,7 @@ TEST(TestParticleCloud, Assign) {
 }
 
 TEST(TestParticleCloud3, Assign) {
+  constexpr double kTolerance = 0.001;
   const auto particles = std::vector{
       std::make_tuple(
           Sophus::SE3d{
@@ -81,9 +82,9 @@ TEST(TestParticleCloud3, Assign) {
     EXPECT_DOUBLE_EQ(pose.position.y, 0.0);
     EXPECT_DOUBLE_EQ(std::abs(pose.position.z), 1.0);
     EXPECT_DOUBLE_EQ(pose.orientation.x, 0.0);
-    EXPECT_NEAR(std::abs(pose.orientation.y), 0.3728217, 0.001);
-    EXPECT_NEAR(pose.orientation.z, 0.3728217, 0.001);
-    EXPECT_NEAR(pose.orientation.w, 0.8497105, 0.001);
+    EXPECT_NEAR(std::abs(pose.orientation.y), 0.3728217, kTolerance);
+    EXPECT_NEAR(pose.orientation.z, 0.3728217, kTolerance);
+    EXPECT_NEAR(pose.orientation.w, 0.8497105, kTolerance);
   }
   const auto num_particles_in_upper_half_xy_plane =
       ranges::count_if(message.poses, [](const auto& pose) { return pose.position.z > 0.0; });
