@@ -78,6 +78,8 @@
 #include "beluga_amcl/ndt_amcl_node_3d.hpp"
 #include "beluga_amcl/ros2_common.hpp"
 
+#include "beluga_ros/ndt_ellipsoid.hpp"
+
 namespace beluga_amcl {
 
 NdtAmclNode3D::NdtAmclNode3D(const rclcpp::NodeOptions& options) : BaseAMCLNode{"ndt_amcl", "", options} {
@@ -152,6 +154,14 @@ NdtAmclNode3D::NdtAmclNode3D(const rclcpp::NodeOptions& options) : BaseAMCLNode{
 
 void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Making particle filter");
+
+  // Map visualization publisher
+  rclcpp::QoS qos_profile{rclcpp::KeepLast(1)};
+  qos_profile.reliable();
+  qos_profile.durability(rclcpp::DurabilityPolicy::TransientLocal);
+
+  map_visualization_pub_ = create_publisher<visualization_msgs::msg::MarkerArray>("obstacle_markers", qos_profile);
+
   particle_filter_ = make_particle_filter();
   {
     using LaserScanSubscriber =
@@ -245,8 +255,19 @@ beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode3D::get_sensor_model() c
   const auto map_path = get_parameter("map_path").as_string();
   RCLCPP_INFO(get_logger(), "Loading map from %s.", map_path.c_str());
 
-  return beluga::NDTSensorModel<NDTMapRepresentation>{
-      params, beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string())};
+  // Load the map from hdf5 file
+  const auto map = beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string());
+
+  // Publish markers for map visualization
+  beluga_ros::msg::MarkerArray obstacle_markers{};
+  bool flag;
+  beluga_ros::assign_obstacle_map(map, obstacle_markers, flag);
+  if (flag) {
+    RCLCPP_WARN(get_logger(), "Covariances from map representation cells seem to be non-diagonalizable");
+  }
+  map_visualization_pub_->publish(obstacle_markers);
+
+  return beluga::NDTSensorModel<NDTMapRepresentation>{params, map};
 }
 auto NdtAmclNode3D::make_particle_filter() const -> std::unique_ptr<NdtAmclVariant> {
   auto amcl = std::visit(
