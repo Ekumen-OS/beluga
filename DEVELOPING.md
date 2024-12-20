@@ -38,7 +38,7 @@ To bring up a development environment:
    (cd beluga && ROSDISTRO=humble docker/run.sh)
    ```
 
-   Supported distributions include `noetic`, `humble`, `iron`, `jazzy`, and `rolling`.
+   Supported distributions include `noetic`, `humble`, `jazzy`, and `rolling`.
 
 ## Workflow
 
