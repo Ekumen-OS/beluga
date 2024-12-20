@@ -143,10 +143,6 @@ Beluga is supported on a number of ROS 1 and ROS 2 distributions, primarily on L
 :text-align: center
 ![ROS 2 Humble Hawksbill logo](./_images/humble_hawksbill_logo.png)
 :::
-:::{grid-item-card} ROS 2 Iron Irwini
-:text-align: center
-![ROS 2 Iron Irwini logo](./_images/iron_irwini_logo.jpg)
-:::
 :::{grid-item-card} ROS 2 Jazzy Jalisco
 :text-align: center
 ![ROS 2 Jazzy Jalisco logo](./_images/jazzy_jalisco_logo.png)
