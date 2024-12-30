@@ -16,6 +16,7 @@ on:
 
 jobs:
   build-image:
+    if: github.repository == 'Ekumen-OS/beluga'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -23,7 +24,6 @@ jobs:
         ros_distro:
           - noetic
           - humble
-          - iron
           - jazzy
           - rolling
     steps:
