@@ -1,0 +1,42 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Eigen3 REQUIRED NO_MODULE)
+find_dependency(range-v3 REQUIRED)
+find_dependency(Sophus REQUIRED)
+find_dependency(beluga REQUIRED)
+
+set(OPENVDB_CMAKE_MODULE_PATH
+    ${OPENVDB_CMAKE_MODULE_PATH}
+    CACHE PATH "Path to OpenVDB CMake module")
+
+if(NOT OPENVDB_CMAKE_MODULE_PATH)
+  file(
+    GLOB_RECURSE
+    OPENVDB_MODULES
+    /usr/lib/*/FindOpenVDB.cmake
+    /usr/local/lib/*/FindOpenVDB.cmake)
+  list(LENGTH OPENVDB_MODULES NUM_OPENVDB_MODULES)
+  if(NUM_OPENVDB_MODULES EQUAL 1)
+    list(GET OPENVDB_MODULES 0 OPENVDB_MODULE)
+    get_filename_component(OPENVDB_CMAKE_MODULE_PATH ${OPENVDB_MODULE} DIRECTORY)
+  endif()
+  unset(NUM_OPENVDB_MODULES)
+  unset(OPENVDB_MODULES)
+endif()
+
+if(OPENVDB_CMAKE_MODULE_PATH)
+  list(APPEND CMAKE_MODULE_PATH ${OPENVDB_CMAKE_MODULE_PATH})
+endif()
+
+find_dependency(OpenVDB REQUIRED)
+
+if(OPENVDB_CMAKE_MODULE_PATH)
+  list(POP_BACK CMAKE_MODULE_PATH)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+
+set(@PROJECT_NAME@_LIBRARIES @PROJECT_NAME@::@PROJECT_NAME@)
+
+check_required_components($@PROJECT_NAME@)
