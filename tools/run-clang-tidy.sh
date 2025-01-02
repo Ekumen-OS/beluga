@@ -26,7 +26,7 @@ COLCON_EXTRA_ARGS=""
 if [ "${ROS_DISTRO}" != "noetic" ]; then
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
     if [ "${ROS_DISTRO}" != "humble" ] && [ "${ROS_DISTRO}" != "iron" ]; then
-        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools beluga_vdb"
+        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
     fi
 else
     ROS_PACKAGES="beluga beluga_ros beluga_amcl"

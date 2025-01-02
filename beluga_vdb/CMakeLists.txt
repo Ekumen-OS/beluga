@@ -22,7 +22,6 @@ set(OPENVDB_CMAKE_MODULE_PATH
     ${OPENVDB_CMAKE_MODULE_PATH}
     CACHE PATH "Path to OpenVDB CMake module")
 
-add_library(${PROJECT_NAME} INTERFACE)
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "Setting build type to 'Release' as none was specified.")
   set(CMAKE_BUILD_TYPE
@@ -30,23 +29,11 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "Build type" FORCE)
 endif()
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(
-    -Wall
-    -Wconversion
-    -Wextra
-    -Werror
-    -Wpedantic)
-endif()
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
-  target_compile_options(${PROJECT_NAME} INTERFACE -fno-inline)
-endif()
+find_package(beluga REQUIRED)
 
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
-find_package(TBB REQUIRED)
-find_package(beluga REQUIRED)
 
 if(NOT OPENVDB_CMAKE_MODULE_PATH)
   file(
@@ -78,12 +65,42 @@ if(OPENVDB_CMAKE_MODULE_PATH)
   list(POP_BACK CMAKE_MODULE_PATH)
 endif()
 
+add_library(${PROJECT_NAME} INTERFACE)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  target_compile_options(
+    ${PROJECT_NAME}
+    INTERFACE -Wall
+              -Wconversion
+              -Wextra
+              -Werror
+              -Wpedantic)
+endif()
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+  target_compile_options(${PROJECT_NAME} INTERFACE -fno-inline)
+endif()
+
 target_include_directories(
   ${PROJECT_NAME}
   INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_link_libraries(${PROJECT_NAME} INTERFACE beluga::beluga OpenVDB::openvdb)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
+target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG
+                                                     SOPHUS_USE_BASIC_LOGGING)
+
+add_executable(clang_tidy_findable)
+target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)
+target_link_libraries(clang_tidy_findable PRIVATE ${PROJECT_NAME})
+
+option(BUILD_TESTING "Build the testing tree." ON)
+if(BUILD_TESTING)
+  message(STATUS "Build testing enabled.")
+  enable_testing()
+  add_subdirectory(test)
+endif()
+
+install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 
 install(
   TARGETS ${PROJECT_NAME}
@@ -92,11 +109,23 @@ install(
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 
-install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
+set(INSTALL_CMAKEDIR ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/cmake)
 
-option(BUILD_TESTING "Build the testing tree." ON)
-if(BUILD_TESTING)
-  message(STATUS "Build testing enabled.")
-  enable_testing()
-  add_subdirectory(test)
-endif()
+install(
+  EXPORT ${PROJECT_NAME}Targets
+  FILE ${PROJECT_NAME}Targets.cmake
+  NAMESPACE ${PROJECT_NAME}::
+  DESTINATION ${INSTALL_CMAKEDIR})
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION ${INSTALL_CMAKEDIR})
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  COMPATIBILITY SameMajorVersion)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+              "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+        DESTINATION ${INSTALL_CMAKEDIR})
