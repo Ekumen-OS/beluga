@@ -155,12 +155,7 @@ NdtAmclNode3D::NdtAmclNode3D(const rclcpp::NodeOptions& options) : BaseAMCLNode{
 void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Making particle filter");
 
-  // Map visualization publisher
-  rclcpp::QoS qos_profile{rclcpp::KeepLast(1)};
-  qos_profile.reliable();
-  qos_profile.durability(rclcpp::DurabilityPolicy::TransientLocal);
-
-  map_visualization_pub_ = create_publisher<visualization_msgs::msg::MarkerArray>("obstacle_markers", qos_profile);
+  map_visualization_pub_->on_activate();
 
   particle_filter_ = make_particle_filter();
   {
@@ -189,12 +184,24 @@ void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
   }
 }
 
+void NdtAmclNode3D::do_configure(const rclcpp_lifecycle::State&) {
+  RCLCPP_INFO(get_logger(), "Configuring");
+
+  // Map visualization publisher
+  rclcpp::QoS qos_profile{rclcpp::KeepLast(1)};
+  qos_profile.reliable();
+  qos_profile.durability(rclcpp::DurabilityPolicy::TransientLocal);
+
+  map_visualization_pub_ = create_publisher<visualization_msgs::msg::MarkerArray>("obstacle_markers", qos_profile);
+}
+
 void NdtAmclNode3D::do_deactivate(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Cleaning up");
   particle_cloud_pub_.reset();
   laser_scan_connection_.disconnect();
   laser_scan_filter_.reset();
   laser_scan_sub_.reset();
+  map_visualization_pub_.reset();
 }
 
 void NdtAmclNode3D::do_cleanup(const rclcpp_lifecycle::State&) {
@@ -203,6 +210,7 @@ void NdtAmclNode3D::do_cleanup(const rclcpp_lifecycle::State&) {
   pose_pub_.reset();
   particle_filter_.reset();
   enable_tf_broadcast_ = false;
+  map_visualization_pub_.reset();
 }
 
 auto NdtAmclNode3D::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE3d, Sophus::Matrix6d>> {

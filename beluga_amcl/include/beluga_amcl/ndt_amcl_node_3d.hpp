@@ -90,6 +90,9 @@ class NdtAmclNode3D : public BaseAMCLNode {
   /// Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state.
   void do_activate(const rclcpp_lifecycle::State&) override;
 
+  /// Callback for lifecycle transitions from the UNCONFIGURED state to the INACTIVE state.
+  void do_configure(const rclcpp_lifecycle::State&) override;
+
   /// Callback for lifecycle transitions from the ACTIVE state to the INACTIVE state.
   void do_deactivate(const rclcpp_lifecycle::State&) override;
 
@@ -147,7 +150,7 @@ class NdtAmclNode3D : public BaseAMCLNode {
   bool enable_tf_broadcast_{false};
 
   /// Map representation publisher.
-  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr map_visualization_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<visualization_msgs::msg::MarkerArray>::SharedPtr map_visualization_pub_;
 };
 
 }  // namespace beluga_amcl
