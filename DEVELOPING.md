@@ -49,6 +49,7 @@ Within a development environment:
 1. **Build and test the project**. You will usually use `colcon`.
 
     ```bash
+    . /opt/ros/${ROS_DISTRO}/setup.bash
     cd /ws
     colcon build --symlink-install
     colcon test
@@ -59,6 +60,7 @@ Within a development environment:
 2. **Update package dependencies**. Listed in `package.xml` files.
 
     ```bash
+    . /opt/ros/${ROS_DISTRO}/setup.bash
     cd /ws
     rosdep update
     rosdep install --from-path src
