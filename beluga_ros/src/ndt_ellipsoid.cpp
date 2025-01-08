@@ -46,15 +46,16 @@ bool use_mean_covariance(
   rotationMatrix << eigenvectors.col(0), eigenvectors.col(1), eigenvectors.col(2);
   scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
 
-  // Permutation
-  if(!isApprox(rotationMatrix.determinant(), 1.0)) {
+  if(!isApprox(std::abs(rotationMatrix.determinant()), 1.0)) {
+    return false;
+  }
+  
+  // Permute columns to ensure the rotation is in fact a rotation
+  if(rotationMatrix.determinant() < 0) {
     rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
     scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
   }
 
-  if(!isApprox(rotationMatrix.determinant(), 1.0)) {
-    return false;
-  }
   const auto rotation = Eigen::Quaterniond{rotationMatrix};
 
   // Fill in the message
