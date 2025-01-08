@@ -17,6 +17,14 @@
 
 #include <beluga_ros/messages.hpp>
 
+#include <Eigen/Core>
+#include <beluga/eigen_compatibility.hpp>
+
+#include <range/v3/view/enumerate.hpp>
+
+#include <beluga/sensor/data/sparse_value_grid.hpp>
+#include <beluga/sensor/data/ndt_cell.hpp>
+
 /**
  * \file
  * \brief Utilities for NDT I/O over ROS interfaces.
@@ -24,84 +32,15 @@
 
 namespace beluga_ros {
 
-namespace {
+bool use_mean_covariance(
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigenSolver,
+    const beluga::NDTCell<3> cell,
+    beluga_ros::msg::Marker& marker);
 
-template <typename RealScalar>
-inline bool isApprox(RealScalar x, RealScalar y, RealScalar prec = Eigen::NumTraits<RealScalar>::dummy_precision()) {
-  return std::abs(x - y) < prec;
-}
-
-}  // namespace
-
-inline bool use_mean_covariance(auto& eigenSolver, const auto& cell, auto& marker) {
-  eigenSolver.compute(cell.covariance);
-  if (eigenSolver.info() != Eigen::Success) {
-    return false;
-  }
-
-  // Compute the rotation based on the covariance matrix
-  const auto eigenvectors = eigenSolver.eigenvectors().real();
-  const auto eigenvalues = eigenSolver.eigenvalues();
-
-  Eigen::Matrix3d rotationMatrix;
-  Eigen::Vector3d scalevector;
-  rotationMatrix << eigenvectors.col(0), eigenvectors.col(1), eigenvectors.col(2);
-  scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
-
-  // Permutation
-  if (!isApprox(rotationMatrix.determinant(), 1.0)) {
-    rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
-    scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
-  }
-
-  if (!isApprox(rotationMatrix.determinant(), 1.0)) {
-    return false;
-  }
-  const auto rotation = Eigen::Quaterniond{rotationMatrix};
-
-  // Fill in the message
-  marker.type = beluga_ros::msg::Marker::SPHERE;
-  marker.action = beluga_ros::msg::Marker::ADD;
-
-  marker.pose.position.x = cell.mean[0];
-  marker.pose.position.y = cell.mean[1];
-  marker.pose.position.z = cell.mean[2];
-
-  marker.pose.orientation.x = rotation.x();
-  marker.pose.orientation.y = rotation.y();
-  marker.pose.orientation.z = rotation.z();
-  marker.pose.orientation.w = rotation.w();
-
-  constexpr float kScaleFactor = 4.0f;
-  marker.scale.x = std::sqrt(scalevector.x()) * kScaleFactor;
-  marker.scale.y = std::sqrt(scalevector.y()) * kScaleFactor;
-  marker.scale.z = std::sqrt(scalevector.z()) * kScaleFactor;
-
-  marker.color.r = 0.0f;
-  marker.color.g = 1.0f;
-  marker.color.b = 0.0f;
-  marker.color.a = 1.0f;
-
-  return true;
-}
-
-inline void use_cell_size(const auto& position, const auto& size, auto& marker) {
-  marker.type = beluga_ros::msg::Marker::CUBE;
-  marker.action = beluga_ros::msg::Marker::ADD;
-
-  marker.pose.position.x = position[0];
-  marker.pose.position.y = position[1];
-  marker.pose.position.z = position[2];
-
-  marker.scale.x = size;
-  marker.scale.y = size;
-  marker.scale.z = size;
-
-  marker.color.r = 1.0f;
-  marker.color.g = 0.0f;
-  marker.color.b = 0.0f;
-  marker.color.a = 1.0f;
-}
+void use_cell_size(
+    const Eigen::Vector<int, 3>& position,
+    double size,
+    beluga_ros::msg::Marker& marker);
 
 /// Assign an ellipsoid to each cell of a SparseValueGrid. A cube is used instead if the distribution of the
 /// cell is not suitable for the rotation matrix creation.
@@ -135,7 +74,7 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(
     const auto& [cellCenter, cell] = entry;
     beluga_ros::msg::Marker marker;
     marker.header.frame_id = "map";
-    marker.id = index;
+    marker.id = index+1;
     marker.ns = "obstacles";
 
     // Try to create an ellipsoid with values of the cell
