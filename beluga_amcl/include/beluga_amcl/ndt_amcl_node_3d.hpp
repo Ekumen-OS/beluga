@@ -140,6 +140,9 @@ class NdtAmclNode3D : public BaseAMCLNode {
   /// Connection for laser scan updates filter and callback.
   message_filters::Connection laser_scan_connection_;
 
+  /// NDT map representation
+  beluga_amcl::NDTMapRepresentation map_;
+
   /// Particle filter instance.
   std::unique_ptr<NdtAmclVariant> particle_filter_;
   /// Last known pose estimate, if any.
@@ -149,7 +152,7 @@ class NdtAmclNode3D : public BaseAMCLNode {
   /// Whether to broadcast transforms or not.
   bool enable_tf_broadcast_{false};
 
-  /// Map representation publisher.
+  /// Map visualization publisher.
   rclcpp_lifecycle::LifecyclePublisher<visualization_msgs::msg::MarkerArray>::SharedPtr map_visualization_pub_;
 };
 

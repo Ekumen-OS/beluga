@@ -157,6 +157,15 @@ void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
 
   map_visualization_pub_->on_activate();
 
+  // Publish markers for map visualization
+  beluga_ros::msg::MarkerArray obstacle_markers{};
+  bool flag;
+  beluga_ros::assign_obstacle_map(map_, obstacle_markers, flag);
+  if (flag) {
+    RCLCPP_WARN(get_logger(), "Covariances from map representation cells seem to be non-diagonalizable");
+  }
+  map_visualization_pub_->publish(obstacle_markers);
+
   particle_filter_ = make_particle_filter();
   {
     using LaserScanSubscriber =
@@ -186,6 +195,11 @@ void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
 
 void NdtAmclNode3D::do_configure(const rclcpp_lifecycle::State&) {
   RCLCPP_INFO(get_logger(), "Configuring");
+  const auto map_path = get_parameter("map_path").as_string();
+  RCLCPP_INFO(get_logger(), "Loading map from %s.", map_path.c_str());
+
+  // Load the map from hdf5 file
+  map_ = beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string());
 
   // Map visualization publisher
   rclcpp::QoS qos_profile{rclcpp::KeepLast(1)};
@@ -260,22 +274,8 @@ beluga::NDTSensorModel<NDTMapRepresentation> NdtAmclNode3D::get_sensor_model() c
   params.minimum_likelihood = get_parameter("minimum_likelihood").as_double();
   params.d1 = get_parameter("d1").as_double();
   params.d2 = get_parameter("d2").as_double();
-  const auto map_path = get_parameter("map_path").as_string();
-  RCLCPP_INFO(get_logger(), "Loading map from %s.", map_path.c_str());
 
-  // Load the map from hdf5 file
-  const auto map = beluga::io::load_from_hdf5<NDTMapRepresentation>(get_parameter("map_path").as_string());
-
-  // Publish markers for map visualization
-  beluga_ros::msg::MarkerArray obstacle_markers{};
-  bool flag;
-  beluga_ros::assign_obstacle_map(map, obstacle_markers, flag);
-  if (flag) {
-    RCLCPP_WARN(get_logger(), "Covariances from map representation cells seem to be non-diagonalizable");
-  }
-  map_visualization_pub_->publish(obstacle_markers);
-
-  return beluga::NDTSensorModel<NDTMapRepresentation>{params, map};
+  return beluga::NDTSensorModel<NDTMapRepresentation>{params, map_};
 }
 auto NdtAmclNode3D::make_particle_filter() const -> std::unique_ptr<NdtAmclVariant> {
   auto amcl = std::visit(
