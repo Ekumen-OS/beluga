@@ -56,7 +56,7 @@ auto make_map(const double voxel_size, const std::vector<T>& world_points) {
   }
 
   // Check grid
-  const openvdb::tools::CheckLevelSet<GridT> checker(*grid);
+  openvdb::tools::CheckLevelSet<GridT> checker(*grid);
   // Check inactive values have a magnitude equal to the background value
   assert(checker.checkInactiveValues() == "");
 
