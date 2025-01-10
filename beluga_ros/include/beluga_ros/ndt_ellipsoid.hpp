@@ -22,8 +22,8 @@
 
 #include <range/v3/view/enumerate.hpp>
 
-#include <beluga/sensor/data/sparse_value_grid.hpp>
 #include <beluga/sensor/data/ndt_cell.hpp>
+#include <beluga/sensor/data/sparse_value_grid.hpp>
 
 /**
  * \file
@@ -37,10 +37,7 @@ bool use_mean_covariance(
     const beluga::NDTCell<3> cell,
     beluga_ros::msg::Marker& marker);
 
-void use_cell_size(
-    const Eigen::Vector<int, 3>& position,
-    double size,
-    beluga_ros::msg::Marker& marker);
+void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ros::msg::Marker& marker);
 
 /// Assign an ellipsoid to each cell of a SparseValueGrid. A cube is used instead if the distribution of the
 /// cell is not suitable for the rotation matrix creation.
@@ -74,7 +71,7 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(
     const auto& [cellCenter, cell] = entry;
     beluga_ros::msg::Marker marker;
     marker.header.frame_id = "map";
-    marker.id = index+1;
+    marker.id = index + 1;
     marker.ns = "obstacles";
 
     // Try to create an ellipsoid with values of the cell

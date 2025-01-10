@@ -24,10 +24,7 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
 add_library(beluga_ros)
-target_sources(
-  beluga_ros
-  PRIVATE src/amcl.cpp
-          src/ndt_ellipsoid.cpp)
+target_sources(beluga_ros PRIVATE src/amcl.cpp src/ndt_ellipsoid.cpp)
 target_include_directories(
   beluga_ros PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                     $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)

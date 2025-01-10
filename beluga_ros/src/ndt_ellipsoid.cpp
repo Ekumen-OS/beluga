@@ -26,17 +26,17 @@ inline bool isApprox(RealScalar x, RealScalar y, RealScalar prec = Eigen::NumTra
   return std::abs(x - y) < prec;
 }
 
-}
+}  // namespace
 
 bool use_mean_covariance(
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigenSolver,
     const beluga::NDTCell<3> cell,
-    beluga_ros::msg::Marker& marker){
+    beluga_ros::msg::Marker& marker) {
   eigenSolver.compute(cell.covariance);
-  if(eigenSolver.info() != Eigen::Success){
+  if (eigenSolver.info() != Eigen::Success) {
     return false;
   }
-  
+
   // Compute the rotation based on the covariance matrix
   const auto eigenvectors = eigenSolver.eigenvectors().real();
   const auto eigenvalues = eigenSolver.eigenvalues();
@@ -46,12 +46,12 @@ bool use_mean_covariance(
   rotationMatrix << eigenvectors.col(0), eigenvectors.col(1), eigenvectors.col(2);
   scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
 
-  if(!isApprox(std::abs(rotationMatrix.determinant()), 1.0)) {
+  if (!isApprox(std::abs(rotationMatrix.determinant()), 1.0)) {
     return false;
   }
-  
+
   // Permute columns to ensure the rotation is in fact a rotation
-  if(rotationMatrix.determinant() < 0) {
+  if (rotationMatrix.determinant() < 0) {
     rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
     scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
   }
@@ -84,10 +84,7 @@ bool use_mean_covariance(
   return true;
 }
 
-void use_cell_size(
-    const Eigen::Vector<int, 3>& position,
-    double size,
-    beluga_ros::msg::Marker& marker){
+void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ros::msg::Marker& marker) {
   marker.type = beluga_ros::msg::Marker::CUBE;
   marker.action = beluga_ros::msg::Marker::ADD;
 
@@ -104,6 +101,5 @@ void use_cell_size(
   marker.color.b = 0.0f;
   marker.color.a = 1.0f;
 }
-
 
 }  // namespace beluga_ros
