@@ -1,4 +1,4 @@
-// Copyright 2024 Ekumen, Inc.
+// Copyright 2025 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@
 namespace beluga_ros {
 
 bool use_mean_covariance(
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigenSolver,
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigen_solver,
     const beluga::NDTCell<3> cell,
     beluga_ros::msg::Marker& marker);
 
@@ -45,17 +45,16 @@ void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ro
  * \param grid A SparseValueGrid that contains cells representing obstacles.
  * \return A message with the ellipsoids or cubes.
  * \param[out] message Markers message to be assigned.
- * \param[out] cubesGenerated Is set to true if there were problems with covariance matrices from cells.
+ * \param[out] cubes_generated Is set to true if there were problems with covariance matrices from cells.
  * \tparam MapType Container that maps from Eigen::Vector<int, NDim> to the type of the cell. See [SparseValueGrid]
  * (https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html).
  * \tparam NDim Dimension of the grid.
  */
 template <typename MapType, int NDim>
-beluga_ros::msg::MarkerArray assign_obstacle_map(
+std::pair<beluga_ros::msg::MarkerArray, bool> assign_obstacle_map(
     const beluga::SparseValueGrid<MapType, NDim>& grid,
-    beluga_ros::msg::MarkerArray& message,
-    bool& cubesGenerated) {
-  cubesGenerated = false;
+    beluga_ros::msg::MarkerArray& message) {
+  bool cubes_generated = false;
   // Get data from the grid
   auto& map = grid.data();
 
@@ -66,26 +65,26 @@ beluga_ros::msg::MarkerArray assign_obstacle_map(
   message.markers.push_back(marker);
 
   // Add the markers
-  Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>> eigenSolver;
+  Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>> eigen_solver;
   for (auto [index, entry] : ranges::views::enumerate(map)) {
-    const auto& [cellCenter, cell] = entry;
+    const auto& [cell_center, cell] = entry;
     beluga_ros::msg::Marker marker;
     marker.header.frame_id = "map";
     marker.id = index + 1;
     marker.ns = "obstacles";
 
     // Try to create an ellipsoid with values of the cell
-    if (!use_mean_covariance(eigenSolver, cell, marker)) {
+    if (!use_mean_covariance(eigen_solver, cell, marker)) {
       // Create a cube based on the resolution of the grid
-      cubesGenerated = true;
-      use_cell_size(cellCenter, grid.resolution(), marker);
+      cubes_generated = true;
+      use_cell_size(cell_center, grid.resolution(), marker);
     }
 
     // Add the marker
     message.markers.push_back(marker);
   }
 
-  return message;
+  return {message, cubes_generated};
 }
 
 }  // namespace beluga_ros

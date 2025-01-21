@@ -159,10 +159,13 @@ void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
 
   // Publish markers for map visualization
   beluga_ros::msg::MarkerArray obstacle_markers{};
-  bool flag;
-  beluga_ros::assign_obstacle_map(map_, obstacle_markers, flag);
-  if (flag) {
-    RCLCPP_WARN(get_logger(), "Covariances from map representation cells seem to be non-diagonalizable");
+  bool visualization_error;
+  std::tie(obstacle_markers, visualization_error) = beluga_ros::assign_obstacle_map(map_, obstacle_markers);
+  if (visualization_error) {
+    RCLCPP_WARN(
+        get_logger(),
+        "Some cell covariances appear to be non-diagonalizable. A cube will be generated instead of an ellipsoid for "
+        "those.");
   }
   map_visualization_pub_->publish(obstacle_markers);
 

@@ -1,4 +1,4 @@
-// Copyright 2024 Ekumen, Inc.
+// Copyright 2025 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,41 +22,41 @@ namespace beluga_ros {
 namespace {
 
 template <typename RealScalar>
-inline bool isApprox(RealScalar x, RealScalar y, RealScalar prec = Eigen::NumTraits<RealScalar>::dummy_precision()) {
+inline bool is_approx(RealScalar x, RealScalar y, RealScalar prec = Eigen::NumTraits<RealScalar>::dummy_precision()) {
   return std::abs(x - y) < prec;
 }
 
 }  // namespace
 
 bool use_mean_covariance(
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigenSolver,
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigen_solver,
     const beluga::NDTCell<3> cell,
     beluga_ros::msg::Marker& marker) {
-  eigenSolver.compute(cell.covariance);
-  if (eigenSolver.info() != Eigen::Success) {
+  eigen_solver.compute(cell.covariance);
+  if (eigen_solver.info() != Eigen::Success) {
     return false;
   }
 
   // Compute the rotation based on the covariance matrix
-  const auto eigenvectors = eigenSolver.eigenvectors().real();
-  const auto eigenvalues = eigenSolver.eigenvalues();
+  const auto eigenvectors = eigen_solver.eigenvectors().real();
+  const auto eigenvalues = eigen_solver.eigenvalues();
 
-  Eigen::Matrix3d rotationMatrix;
+  Eigen::Matrix3d rotation_matrix;
   Eigen::Vector3d scalevector;
-  rotationMatrix << eigenvectors.col(0), eigenvectors.col(1), eigenvectors.col(2);
+  rotation_matrix << eigenvectors.col(0), eigenvectors.col(1), eigenvectors.col(2);
   scalevector = Eigen::Vector3d{eigenvalues.x(), eigenvalues.y(), eigenvalues.z()};
 
-  if (!isApprox(std::abs(rotationMatrix.determinant()), 1.0)) {
+  if (!is_approx(std::abs(rotation_matrix.determinant()), 1.0)) {
     return false;
   }
 
   // Permute columns to ensure the rotation is in fact a rotation
-  if (rotationMatrix.determinant() < 0) {
-    rotationMatrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
+  if (rotation_matrix.determinant() < 0) {
+    rotation_matrix << eigenvectors.col(1), eigenvectors.col(0), eigenvectors.col(2);
     scalevector = Eigen::Vector3d{eigenvalues.y(), eigenvalues.x(), eigenvalues.z()};
   }
 
-  const auto rotation = Eigen::Quaterniond{rotationMatrix};
+  const auto rotation = Eigen::Quaterniond{rotation_matrix};
 
   // Fill in the message
   marker.type = beluga_ros::msg::Marker::SPHERE;
@@ -71,10 +71,10 @@ bool use_mean_covariance(
   marker.pose.orientation.z = rotation.z();
   marker.pose.orientation.w = rotation.w();
 
-  constexpr float kScaleFactor = 4.0f;
-  marker.scale.x = std::sqrt(scalevector.x()) * kScaleFactor;
-  marker.scale.y = std::sqrt(scalevector.y()) * kScaleFactor;
-  marker.scale.z = std::sqrt(scalevector.z()) * kScaleFactor;
+  constexpr float k_scale_factor = 4.0f;
+  marker.scale.x = std::sqrt(scalevector.x()) * k_scale_factor;
+  marker.scale.y = std::sqrt(scalevector.y()) * k_scale_factor;
+  marker.scale.z = std::sqrt(scalevector.z()) * k_scale_factor;
 
   marker.color.r = 0.0f;
   marker.color.g = 1.0f;
