@@ -34,7 +34,7 @@ namespace beluga_ros {
 
 bool use_mean_covariance(
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigen_solver,
-    const beluga::NDTCell<3> cell,
+    beluga::NDTCell<3> cell,
     beluga_ros::msg::Marker& marker);
 
 void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ros::msg::Marker& marker);

@@ -71,15 +71,15 @@ bool use_mean_covariance(
   marker.pose.orientation.z = rotation.z();
   marker.pose.orientation.w = rotation.w();
 
-  constexpr float k_scale_factor = 4.0f;
+  constexpr float k_scale_factor = 4.0F;
   marker.scale.x = std::sqrt(scalevector.x()) * k_scale_factor;
   marker.scale.y = std::sqrt(scalevector.y()) * k_scale_factor;
   marker.scale.z = std::sqrt(scalevector.z()) * k_scale_factor;
 
-  marker.color.r = 0.0f;
-  marker.color.g = 1.0f;
-  marker.color.b = 0.0f;
-  marker.color.a = 1.0f;
+  marker.color.r = 0.0F;
+  marker.color.g = 1.0F;
+  marker.color.b = 0.0F;
+  marker.color.a = 1.0F;
 
   return true;
 }
@@ -96,10 +96,10 @@ void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ro
   marker.scale.y = size;
   marker.scale.z = size;
 
-  marker.color.r = 1.0f;
-  marker.color.g = 0.0f;
-  marker.color.b = 0.0f;
-  marker.color.a = 1.0f;
+  marker.color.r = 1.0F;
+  marker.color.g = 0.0F;
+  marker.color.b = 0.0F;
+  marker.color.a = 1.0F;
 }
 
 }  // namespace beluga_ros
