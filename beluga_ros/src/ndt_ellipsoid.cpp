@@ -28,6 +28,8 @@ inline bool is_approx(RealScalar x, RealScalar y, RealScalar prec = Eigen::NumTr
 
 }  // namespace
 
+namespace detail {
+
 bool use_mean_covariance(
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigen_solver,
     const beluga::NDTCell<3> cell,
@@ -101,5 +103,7 @@ void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ro
   marker.color.b = 0.0F;
   marker.color.a = 1.0F;
 }
+
+}  // namespace detail
 
 }  // namespace beluga_ros

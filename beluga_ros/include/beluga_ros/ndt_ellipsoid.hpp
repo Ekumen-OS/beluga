@@ -32,12 +32,30 @@
 
 namespace beluga_ros {
 
+namespace detail {
+
+/// Create an ellipoid based on NDT cell data (eigenvalues and eigenvectors) contained in the received marker.
+/**
+ * \param eigen_solver Precreated eigen solver of the NDT cell.
+ * \param cell NDT cell.
+ * \param marker Marker that will contain the message.
+ * \return A boolean set to false if the ellipsoid could not be created (because the covariances are
+ * non-diagonalizable).
+ */
 bool use_mean_covariance(
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigen_solver,
     beluga::NDTCell<3> cell,
     beluga_ros::msg::Marker& marker);
 
+/// Create a cube contained in the received marker.
+/**
+ * \param position Center of the cube.
+ * \param size Size of the edges.
+ * \param marker Marker that will contain the message.
+ */
 void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ros::msg::Marker& marker);
+
+}  // namespace detail
 
 /// Assign an ellipsoid to each cell of a SparseValueGrid. A cube is used instead if the distribution of the
 /// cell is not suitable for the rotation matrix creation.
@@ -74,10 +92,10 @@ std::pair<beluga_ros::msg::MarkerArray, bool> assign_obstacle_map(
     marker.ns = "obstacles";
 
     // Try to create an ellipsoid with values of the cell
-    if (!use_mean_covariance(eigen_solver, cell, marker)) {
+    if (!beluga_ros::detail::use_mean_covariance(eigen_solver, cell, marker)) {
       // Create a cube based on the resolution of the grid
       cubes_generated = true;
-      use_cell_size(cell_center, grid.resolution(), marker);
+      beluga_ros::detail::use_cell_size(cell_center, grid.resolution(), marker);
     }
 
     // Add the marker
