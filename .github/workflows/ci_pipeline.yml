@@ -142,10 +142,11 @@ jobs:
         run: make -C docs html
 
       - name: Upload documentation artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docs
           path: ./docs/_build/html/
+          overwrite: true
           include-hidden-files: true
           retention-days: 7
 
@@ -169,9 +170,10 @@ jobs:
           git rm -rf .
 
       - name: Download documentation artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: docs
+          merge-multiple: true
 
       - name: Deploy documentation
         env:
