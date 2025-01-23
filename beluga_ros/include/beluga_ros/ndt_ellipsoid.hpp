@@ -62,8 +62,9 @@ void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ro
 /**
  * \param grid A SparseValueGrid that contains cells representing obstacles.
  * \param[out] message A MarkerArray that will contain the shapes
- * \return A std::pair with the MarkerArray containing the shapes and a boolean indicating if at least one cube was generated.
- * \tparam MapType Container that maps from Eigen::Vector<int, NDim> to the type of the cell. See [SparseValueGrid]
+ * \return A std::pair with the MarkerArray containing the shapes and a boolean indicating if at least one cube was
+ * generated. \tparam MapType Container that maps from Eigen::Vector<int, NDim> to the type of the cell. See
+ * [SparseValueGrid]
  * (https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html).
  * \tparam NDim Dimension of the grid.
  */
