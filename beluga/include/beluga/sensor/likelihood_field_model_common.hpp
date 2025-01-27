@@ -19,21 +19,10 @@
 #include <cmath>
 #include <random>
 #include <vector>
-//TODO: LIMPIEZA DE HEADER
-#include <beluga/actions/overlay.hpp>
-#include <beluga/algorithm/distance_map.hpp>
-#include <beluga/sensor/data/occupancy_grid.hpp>
-#include <beluga/sensor/data/value_grid.hpp>
-#include <range/v3/action/transform.hpp>
-#include <range/v3/range/conversion.hpp>
-#include <range/v3/view/all.hpp>
-#include <range/v3/view/transform.hpp>
-#include <sophus/se2.hpp>
-#include <sophus/so2.hpp>
 
 /**
  * \file
- * \brief Implementation of a likelihood field prob sensor model for range finders.
+ * \brief Implementation of a likelihood field common sensor model for range finders.
  */
 
 namespace beluga {
@@ -64,7 +53,7 @@ struct LikelihoodFieldModelCommonParam {
   bool model_unknown_space = false;
 };
 
-/// Likelihood field prob sensor model for range finders.
+/// Likelihood field common sensor model for range finders.
 /**
  * This model relies on a pre-computed likelihood map of the environment.
  * It is less computationally intensive than the beluga::BeamSensorModel
@@ -81,18 +70,12 @@ struct LikelihoodFieldModelCommonParam {
 template <class OccupancyGrid>
 class LikelihoodFieldModelCommon {
  public:
-  /// State type of a particle.
-  using state_type = Sophus::SE2d;
-  /// Weight type of the particle.
-  using weight_type = double;
-  /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<std::pair<double, double>>;
   /// Map representation type.
   using map_type = OccupancyGrid;
   /// Parameter type that the constructor uses to configure the likelihood field model.
   using param_type = LikelihoodFieldModelCommonParam;
 
-  /// Constructs a LikelihoodFieldProbModel instance.
+  /// Constructs a LikelihoodFieldCommonModel instance.
   /**
    * \param params Parameters to configure this instance.
    *  See beluga::LikelihoodFieldModelCommon for details.
@@ -124,7 +107,7 @@ class LikelihoodFieldModelCommon {
   ValueGrid2<float> likelihood_field_;
   Sophus::SE2d world_to_likelihood_field_transform_;
 
-  static ValueGrid2<float> make_likelihood_field(const LikelihoodFieldModelCommon& params, const OccupancyGrid& grid) {
+  static ValueGrid2<float> make_likelihood_field(const param_type& params, const OccupancyGrid& grid) {
     const auto squared_distance = [&grid](std::size_t first, std::size_t second) {
       return static_cast<float>((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm());
     };

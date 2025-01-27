@@ -22,14 +22,9 @@
 
 #include <beluga/actions/overlay.hpp>
 #include <beluga/algorithm/distance_map.hpp>
-#include <beluga/sensor/data/occupancy_grid.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
 #include <range/v3/action/transform.hpp>
-#include <range/v3/range/conversion.hpp>
-#include <range/v3/view/all.hpp>
-#include <range/v3/view/transform.hpp>
 #include <sophus/se2.hpp>
-#include <sophus/so2.hpp>
 #include <beluga/sensor/likelihood_field_model_common.hpp>
 
 /**
@@ -82,7 +77,7 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelCommon<OccupancyGrid
    *  for particle states.
    */
   explicit LikelihoodFieldProbModel(const param_type& params, const map_type& grid)
-      : LikelihoodFieldModelCommon<OccupancyGrid>(params,grid)  {}
+      : LikelihoodFieldModelCommon<OccupancyGrid>(params,grid) {}
 
   /// Returns a state weighting function conditioned on 2D lidar hits.
   /**
