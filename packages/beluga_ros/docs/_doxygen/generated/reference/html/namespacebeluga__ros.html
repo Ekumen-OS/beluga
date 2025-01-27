@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
-    <meta name="docbuild:last-update" content="&#39;Mon Jan 13 14:02:24 2025 +0100, f035e0f&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Mon Jan 27 15:11:57 2025 -0300, bf8731a&#39;"/>
   </head>
   
   
@@ -462,6 +462,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a51e9af3fab5a224206addbcc122532bc"><td class="memItemLeft" align="right" valign="top">beluga_ros::msg::MarkerArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a51e9af3fab5a224206addbcc122532bc">stamp_message</a> (std::string_view frame_id, detail::Time timestamp, beluga_ros::msg::MarkerArray &amp;message)</td></tr>
 <tr class="memdesc:a51e9af3fab5a224206addbcc122532bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamp all markers in a marker array message with a frame ID and timestamp.  <a href="namespacebeluga__ros.html#a51e9af3fab5a224206addbcc122532bc">More...</a><br /></td></tr>
 <tr class="separator:a51e9af3fab5a224206addbcc122532bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f564d4e978f42ad3895af7b0b2e52b8"><td class="memTemplParams" colspan="2">template&lt;typename MapType , int NDim&gt; </td></tr>
+<tr class="memitem:a8f564d4e978f42ad3895af7b0b2e52b8"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; beluga_ros::msg::MarkerArray, bool &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a8f564d4e978f42ad3895af7b0b2e52b8">assign_obstacle_map</a> (const <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a>&lt; MapType, NDim &gt; &amp;grid, beluga_ros::msg::MarkerArray &amp;message)</td></tr>
+<tr class="separator:a8f564d4e978f42ad3895af7b0b2e52b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1031238cbda7b7b12efe3a7e8b0508c9"><td class="memTemplParams" colspan="2">template&lt;class Particles , class Particle  = ranges::range_value_t&lt;Particles&gt;, class State  = typename beluga::state_t&lt;Particle&gt;, class Scalar  = typename State::Scalar, typename  = std::enable_if_t&lt;        std::is_same_v&lt;State, typename Sophus::SE2&lt;Scalar&gt;&gt; || std::is_same_v&lt;State, typename Sophus::SE3&lt;Scalar&gt;&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a1031238cbda7b7b12efe3a7e8b0508c9"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::PoseArray &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">assign_particle_cloud</a> (Particles &amp;&amp;particles, std::size_t size, beluga_ros::msg::PoseArray &amp;message)</td></tr>
 <tr class="memdesc:a1031238cbda7b7b12efe3a7e8b0508c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a pose distribution to a particle cloud message.  <a href="namespacebeluga__ros.html#a1031238cbda7b7b12efe3a7e8b0508c9">More...</a><br /></td></tr>
@@ -482,6 +485,51 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The main Beluga ROS namespace. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a8f564d4e978f42ad3895af7b0b2e52b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f564d4e978f42ad3895af7b0b2e52b8">&#9670;&nbsp;</a></span>assign_obstacle_map()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename MapType , int NDim&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;beluga_ros::msg::MarkerArray, bool&gt; beluga_ros::assign_obstacle_map </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a>&lt; MapType, NDim &gt; &amp;&#160;</td>
+          <td class="paramname"><em>grid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">beluga_ros::msg::MarkerArray &amp;&#160;</td>
+          <td class="paramname"><em>message</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Assign an ellipsoid to each cell of a SparseValueGrid. A cube is used instead if the distribution of the cell is not suitable for the rotation matrix creation. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">grid</td><td>A SparseValueGrid that contains cells representing obstacles. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">message</td><td>A MarkerArray that will contain the shapes </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A std::pair with the MarkerArray containing the shapes and a boolean indicating if at least one cube was generated. </dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">MapType</td><td>Container that maps from Eigen::Vector&lt;int, NDim&gt; to the type of the cell. See <a href="https://ekumen-os.github.io/beluga/packages/beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">SparseValueGrid</a>. </td></tr>
+    <tr><td class="paramname">NDim</td><td>Dimension of the grid. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aa3a6b3a74143cfc2852e53ce015569b7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa3a6b3a74143cfc2852e53ce015569b7">&#9670;&nbsp;</a></span>assign_particle_cloud() <span class="overload">[1/4]</span></h2>
 
@@ -844,7 +892,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Jan 13 14:02:24 2025 +0100, f035e0f&#39;.
+  Last updated on &#39;Mon Jan 27 15:11:57 2025 -0300, bf8731a&#39;.
   <br/>
 </p>
   </div>
