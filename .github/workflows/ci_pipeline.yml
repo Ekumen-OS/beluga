@@ -144,7 +144,7 @@ jobs:
       - name: Upload documentation artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: docs-${{ github.ref_name }}
+          name: docs-${{ github.sha }}
           path: ./docs/_build/html/
           overwrite: true
           include-hidden-files: true
@@ -172,7 +172,7 @@ jobs:
       - name: Download documentation artifacts
         uses: actions/download-artifact@v4
         with:
-          name: docs-${{ github.ref_name }}
+          name: docs-${{ github.sha }}
           merge-multiple: true
 
       - name: Deploy documentation
