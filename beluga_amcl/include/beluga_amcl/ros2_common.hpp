@@ -24,6 +24,7 @@
 
 #include <bondcpp/bond.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
+#include <nav_msgs/msg/occupancy_grid.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/time.hpp>
 
@@ -118,6 +119,8 @@ class BaseAMCLNode : public rclcpp_lifecycle::LifecycleNode {
   rclcpp_lifecycle::LifecyclePublisher<visualization_msgs::msg::MarkerArray>::SharedPtr particle_markers_pub_;
   /// Estimated pose publisher.
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pose_pub_;
+  /// Likelihood field publisher
+  rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr likelihood_field_pub_;
   /// Node bond with the lifecycle manager.
   std::unique_ptr<bond::Bond> bond_;
   /// Timer for periodic particle cloud updates.

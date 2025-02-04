@@ -194,6 +194,7 @@ auto AmclNodelet::get_sensor_model(std::string_view name, const nav_msgs::Occupa
     params.z_hit = config_.laser_z_hit;
     params.z_random = config_.laser_z_rand;
     params.sigma_hit = config_.laser_sigma_hit;
+    params.model_unknown_space = config_.model_unknown_space;
     return beluga::LikelihoodFieldModel{params, beluga_ros::OccupancyGrid{map}};
   }
   if (name == kBeamSensorModelName) {
