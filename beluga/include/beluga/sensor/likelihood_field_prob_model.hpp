@@ -103,7 +103,7 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelCommon<OccupancyGrid
             const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
             const auto pz =
                 static_cast<double>(this->likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob));
-            return pz;
+            return std::max(pz, 0.05);
           });
     };
   }
