@@ -93,9 +93,14 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelCommon<OccupancyGrid
       const auto cos_theta = transform.so2().unit_complex().x();
       const auto sin_theta = transform.so2().unit_complex().y();
       const auto unknown_space_occupancy_prob = static_cast<float>(1. / this->params_.max_laser_distance);
+
+      const auto num_points = points.size();
+      const auto effective_point_zone = static_cast<double>(num_points) * 0.75;
+      const auto likelihood_threshold = std::pow(this->initial_likelihood_threshold_, effective_point_zone);
+
       return std::transform_reduce(
           points.cbegin(), points.cend(), 1.0, std::multiplies{},
-          [this, x_offset, y_offset, cos_theta, sin_theta, unknown_space_occupancy_prob](const auto& point) {
+          [this, x_offset, y_offset, cos_theta, sin_theta, unknown_space_occupancy_prob, likelihood_threshold](const auto& point) {
             // Transform the end point of the laser to the grid local coordinate system.
             // Not using Eigen/Sophus because they make the routine x10 slower.
             // See `benchmark_likelihood_field_model.cpp` for reference.
@@ -103,7 +108,7 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelCommon<OccupancyGrid
             const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
             const auto pz =
                 static_cast<double>(this->likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob));
-            return std::max(pz, 0.025);
+            return std::max(pz, likelihood_threshold);
           });
     };
   }

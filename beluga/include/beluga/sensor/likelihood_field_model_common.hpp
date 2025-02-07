@@ -86,6 +86,7 @@ class LikelihoodFieldModelCommon {
   explicit LikelihoodFieldModelCommon(const param_type& params, const map_type& grid)
       : params_{params},
         likelihood_field_{make_likelihood_field(params, grid)},
+        initial_likelihood_threshold_{make_likelihood_threshold(params)},
         world_to_likelihood_field_transform_{grid.origin().inverse()} {}
 
   /// Returns the likelihood field, constructed from the provided map.
@@ -105,8 +106,28 @@ class LikelihoodFieldModelCommon {
  protected:
   param_type params_;
   ValueGrid2<float> likelihood_field_;
+  double initial_likelihood_threshold_;  
   Sophus::SE2d world_to_likelihood_field_transform_;
 
+  static double make_likelihood_threshold(const param_type& params) {
+    const auto squared_max_distance = static_cast<float>(params.max_obstacle_distance * params.max_obstacle_distance);
+
+    /// Pre-computed variables
+    const double two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit;
+    assert(two_squared_sigma > 0.0);
+
+    const double amplitude = params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()));
+    assert(amplitude > 0.0);
+
+    const double offset = params.z_random / params.max_laser_distance;
+
+    const auto to_likelihood = [amplitude, two_squared_sigma, offset](double squared_distance) {
+      return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
+    };
+
+    return to_likelihood(squared_max_distance);
+  }
+  
   static ValueGrid2<float> make_likelihood_field(const param_type& params, const OccupancyGrid& grid) {
     const auto squared_distance = [&grid](std::size_t first, std::size_t second) {
       return static_cast<float>((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm());
@@ -146,7 +167,7 @@ class LikelihoodFieldModelCommon {
     auto likelihood_values = std::move(distance_map) |                               //
                              ranges::actions::transform(truncate_to_max_distance) |  //
                              ranges::actions::transform(to_likelihood);
-
+    
     return ValueGrid2<float>{std::move(likelihood_values), grid.width(), grid.resolution()};
   }
 };
