@@ -95,7 +95,7 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelCommon<OccupancyGrid
       const auto unknown_space_occupancy_prob = static_cast<float>(1. / this->params_.max_laser_distance);
 
       const auto num_points = points.size();
-      const auto likely_points_threshold = static_cast<double>(num_points) * 0.50;
+      const auto likely_points_threshold = static_cast<double>(num_points) * 0.25;
       const auto likelihood_threshold = std::pow(this->max_distance_likelihood_, likely_points_threshold);
 
       return std::transform_reduce(
