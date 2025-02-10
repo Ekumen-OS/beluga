@@ -15,6 +15,7 @@
 #ifndef BELUGA_ALGORITHM_DISTANCE_MAP_HPP
 #define BELUGA_ALGORITHM_DISTANCE_MAP_HPP
 
+#include <algorithm>
 #include <queue>
 #include <vector>
 
@@ -54,19 +55,22 @@ template <class Range, class DistanceFunction, class NeighborsFunction>
 auto nearest_obstacle_distance_map(
     Range&& obstacle_mask,
     DistanceFunction&& distance_function,
-    NeighborsFunction&& neighbors_function) {
+    NeighborsFunction&& neighbors_function,
+    std::invoke_result_t<DistanceFunction, std::size_t, std::size_t> max_distance_value) {
   struct IndexPair {
     std::size_t nearest_obstacle_index;
     std::size_t index;
   };
 
   using DistanceType = std::invoke_result_t<DistanceFunction, std::size_t, std::size_t>;
-  auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_mask));
+
+  auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_mask), max_distance_value);
   auto visited = std::vector<bool>(ranges::size(obstacle_mask), false);
 
   auto compare = [&distance_map](const IndexPair& first, const IndexPair& second) {
     return distance_map[first.index] > distance_map[second.index];
   };
+
   auto queue = std::priority_queue<IndexPair, std::vector<IndexPair>, decltype(compare)>{compare};
 
   for (auto [index, is_obstacle] : ranges::views::enumerate(obstacle_mask)) {
@@ -83,8 +87,11 @@ auto nearest_obstacle_distance_map(
     for (const std::size_t index : neighbors_function(parent.index)) {
       if (!visited[index]) {
         visited[index] = true;
-        distance_map[index] = distance_function(parent.nearest_obstacle_index, index);
-        queue.push(IndexPair{parent.nearest_obstacle_index, index});
+        const auto distance = distance_function(parent.nearest_obstacle_index, index);
+        if (distance < max_distance_value) {
+          distance_map[index] = distance;
+          queue.push(IndexPair{parent.nearest_obstacle_index, index});
+        }
       }
     }
   }
