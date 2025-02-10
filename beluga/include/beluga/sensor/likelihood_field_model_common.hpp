@@ -86,7 +86,7 @@ class LikelihoodFieldModelCommon {
   explicit LikelihoodFieldModelCommon(const param_type& params, const map_type& grid)
       : params_{params},
         likelihood_field_{make_likelihood_field(params, grid)},
-        initial_likelihood_threshold_{make_likelihood_threshold(params)},
+        max_distance_likelihood_{make_likelihood_threshold(params)},
         world_to_likelihood_field_transform_{grid.origin().inverse()} {}
 
   /// Returns the likelihood field, constructed from the provided map.
@@ -106,7 +106,7 @@ class LikelihoodFieldModelCommon {
  protected:
   param_type params_;
   ValueGrid2<float> likelihood_field_;
-  double initial_likelihood_threshold_;  
+  double max_distance_likelihood_;  
   Sophus::SE2d world_to_likelihood_field_transform_;
 
   static double make_likelihood_threshold(const param_type& params) {
