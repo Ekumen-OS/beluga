@@ -15,7 +15,6 @@
 #ifndef BELUGA_ALGORITHM_DISTANCE_MAP_HPP
 #define BELUGA_ALGORITHM_DISTANCE_MAP_HPP
 
-#include <algorithm>
 #include <queue>
 #include <vector>
 
