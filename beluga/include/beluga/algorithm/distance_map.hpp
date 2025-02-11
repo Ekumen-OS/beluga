@@ -69,7 +69,6 @@ auto nearest_obstacle_distance_map(
   auto compare = [&distance_map](const IndexPair& first, const IndexPair& second) {
     return distance_map[first.index] > distance_map[second.index];
   };
-
   auto queue = std::priority_queue<IndexPair, std::vector<IndexPair>, decltype(compare)>{compare};
 
   for (auto [index, is_obstacle] : ranges::views::enumerate(obstacle_mask)) {
