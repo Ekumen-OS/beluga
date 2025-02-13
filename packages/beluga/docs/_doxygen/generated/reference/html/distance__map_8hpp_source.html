@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
-    <meta name="docbuild:last-update" content="&#39;Mon Feb 3 09:47:17 2025 -0300, b6d5ee3&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Feb 13 17:59:44 2025 -0300, c91454c&#39;"/>
   </head>
   
   
@@ -451,53 +451,57 @@ $(function() {
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, <span class="keyword">class</span> DistanceFunction, <span class="keyword">class</span> NeighborsFunction&gt;</div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="namespacebeluga.html#ac408d5ea2b04b0330cefd231bc018e20">   54</a></span>&#160;<span class="keyword">auto</span> <a class="code" href="namespacebeluga.html#ac408d5ea2b04b0330cefd231bc018e20">nearest_obstacle_distance_map</a>(</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    Range&amp;&amp; obstacle_mask,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    DistanceFunction&amp;&amp; distance_function,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    NeighborsFunction&amp;&amp; neighbors_function) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">struct </span>IndexPair {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    std::size_t nearest_obstacle_index;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    std::size_t index;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  };</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">using</span> DistanceType = std::invoke_result_t&lt;DistanceFunction, std::size_t, std::size_t&gt;;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">auto</span> distance_map = std::vector&lt;DistanceType&gt;(ranges::size(obstacle_mask));</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">auto</span> visited = std::vector&lt;bool&gt;(ranges::size(obstacle_mask), <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">auto</span> compare = [&amp;distance_map](<span class="keyword">const</span> IndexPair&amp; first, <span class="keyword">const</span> IndexPair&amp; second) {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">return</span> distance_map[first.index] &gt; distance_map[second.index];</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  };</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keyword">auto</span> queue = std::priority_queue&lt;IndexPair, std::vector&lt;IndexPair&gt;, decltype(compare)&gt;{compare};</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> [index, is_obstacle] : ranges::views::enumerate(obstacle_mask)) {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">if</span> (is_obstacle) {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      visited[index] = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      distance_map[index] = 0;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      queue.push(IndexPair{index, index});  <span class="comment">// The nearest obstacle is itself</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordflow">while</span> (!queue.empty()) {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">auto</span> parent = queue.top();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    queue.pop();</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> std::size_t index : neighbors_function(parent.index)) {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      <span class="keywordflow">if</span> (!visited[index]) {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        visited[index] = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        distance_map[index] = distance_function(parent.nearest_obstacle_index, index);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        queue.push(IndexPair{parent.nearest_obstacle_index, index});</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keywordflow">return</span> distance_map;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Range, <span class="keyword">class</span> DistanceFunction, <span class="keyword">class</span> NeighborsFunction&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="namespacebeluga.html#a3514fb728a6d09abf3ee1be194fb1394">   55</a></span>&#160;<span class="keyword">auto</span> <a class="code" href="namespacebeluga.html#a3514fb728a6d09abf3ee1be194fb1394">nearest_obstacle_distance_map</a>(</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    Range&amp;&amp; obstacle_mask,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    DistanceFunction&amp;&amp; distance_function,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    NeighborsFunction&amp;&amp; neighbors_function,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    std::invoke_result_t&lt;DistanceFunction, std::size_t, std::size_t&gt; max_distance_value) {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">struct </span>IndexPair {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    std::size_t nearest_obstacle_index;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    std::size_t index;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  };</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">using</span> DistanceType = std::invoke_result_t&lt;DistanceFunction, std::size_t, std::size_t&gt;;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keyword">auto</span> distance_map = std::vector&lt;DistanceType&gt;(ranges::size(obstacle_mask), max_distance_value);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">auto</span> visited = std::vector&lt;bool&gt;(ranges::size(obstacle_mask), <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keyword">auto</span> compare = [&amp;distance_map](<span class="keyword">const</span> IndexPair&amp; first, <span class="keyword">const</span> IndexPair&amp; second) {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> distance_map[first.index] &gt; distance_map[second.index];</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  };</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keyword">auto</span> queue = std::priority_queue&lt;IndexPair, std::vector&lt;IndexPair&gt;, decltype(compare)&gt;{compare};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> [index, is_obstacle] : ranges::views::enumerate(obstacle_mask)) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">if</span> (is_obstacle) {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      visited[index] = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      distance_map[index] = 0;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      queue.push(IndexPair{index, index});  <span class="comment">// The nearest obstacle is itself</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  }</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keywordflow">while</span> (!queue.empty()) {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">auto</span> parent = queue.top();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    queue.pop();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> std::size_t index : neighbors_function(parent.index)) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      <span class="keywordflow">if</span> (!visited[index]) {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        visited[index] = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> distance = distance_function(parent.nearest_obstacle_index, index);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">if</span> (distance &lt; max_distance_value) {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;          distance_map[index] = distance;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;          queue.push(IndexPair{parent.nearest_obstacle_index, index});</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  }</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keywordflow">return</span> distance_map;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
-<div class="ttc" id="anamespacebeluga_html_ac408d5ea2b04b0330cefd231bc018e20"><div class="ttname"><a href="namespacebeluga.html#ac408d5ea2b04b0330cefd231bc018e20">beluga::nearest_obstacle_distance_map</a></div><div class="ttdeci">auto nearest_obstacle_distance_map(Range &amp;&amp;obstacle_mask, DistanceFunction &amp;&amp;distance_function, NeighborsFunction &amp;&amp;neighbors_function)</div><div class="ttdoc">Returns a map where the value of each cell is the distance to the nearest obstacle.</div><div class="ttdef"><b>Definition:</b> distance_map.hpp:54</div></div>
+<div class="ttc" id="anamespacebeluga_html_a3514fb728a6d09abf3ee1be194fb1394"><div class="ttname"><a href="namespacebeluga.html#a3514fb728a6d09abf3ee1be194fb1394">beluga::nearest_obstacle_distance_map</a></div><div class="ttdeci">auto nearest_obstacle_distance_map(Range &amp;&amp;obstacle_mask, DistanceFunction &amp;&amp;distance_function, NeighborsFunction &amp;&amp;neighbors_function, std::invoke_result_t&lt; DistanceFunction, std::size_t, std::size_t &gt; max_distance_value)</div><div class="ttdoc">Returns a map where the value of each cell is the distance to the nearest obstacle.</div><div class="ttdef"><b>Definition:</b> distance_map.hpp:55</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -554,7 +558,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Feb 3 09:47:17 2025 -0300, b6d5ee3&#39;.
+  Last updated on &#39;Thu Feb 13 17:59:44 2025 -0300, c91454c&#39;.
   <br/>
 </p>
   </div>

@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
-    <meta name="docbuild:last-update" content="&#39;Mon Feb 3 09:47:17 2025 -0300, b6d5ee3&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Feb 13 17:59:44 2025 -0300, c91454c&#39;"/>
   </head>
   
   
@@ -810,10 +810,10 @@ Sophus::SE3d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a283a211c0e9ec8ad0a71140d11b96b94"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a283a211c0e9ec8ad0a71140d11b96b94">cluster_based_estimate</a> (States &amp;&amp;states, Weights &amp;&amp;weights, <a class="el" href="structbeluga_1_1ParticleClusterizerParam.html">ParticleClusterizerParam</a> parameters={})</td></tr>
 <tr class="memdesc:a283a211c0e9ec8ad0a71140d11b96b94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a cluster-based estimate from a particle set.  <a href="namespacebeluga.html#a283a211c0e9ec8ad0a71140d11b96b94">More...</a><br /></td></tr>
 <tr class="separator:a283a211c0e9ec8ad0a71140d11b96b94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac408d5ea2b04b0330cefd231bc018e20"><td class="memTemplParams" colspan="2">template&lt;class Range , class DistanceFunction , class NeighborsFunction &gt; </td></tr>
-<tr class="memitem:ac408d5ea2b04b0330cefd231bc018e20"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#ac408d5ea2b04b0330cefd231bc018e20">nearest_obstacle_distance_map</a> (Range &amp;&amp;obstacle_mask, DistanceFunction &amp;&amp;distance_function, NeighborsFunction &amp;&amp;neighbors_function)</td></tr>
-<tr class="memdesc:ac408d5ea2b04b0330cefd231bc018e20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a map where the value of each cell is the distance to the nearest obstacle.  <a href="namespacebeluga.html#ac408d5ea2b04b0330cefd231bc018e20">More...</a><br /></td></tr>
-<tr class="separator:ac408d5ea2b04b0330cefd231bc018e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3514fb728a6d09abf3ee1be194fb1394"><td class="memTemplParams" colspan="2">template&lt;class Range , class DistanceFunction , class NeighborsFunction &gt; </td></tr>
+<tr class="memitem:a3514fb728a6d09abf3ee1be194fb1394"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a3514fb728a6d09abf3ee1be194fb1394">nearest_obstacle_distance_map</a> (Range &amp;&amp;obstacle_mask, DistanceFunction &amp;&amp;distance_function, NeighborsFunction &amp;&amp;neighbors_function, std::invoke_result_t&lt; DistanceFunction, std::size_t, std::size_t &gt; max_distance_value)</td></tr>
+<tr class="memdesc:a3514fb728a6d09abf3ee1be194fb1394"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a map where the value of each cell is the distance to the nearest obstacle.  <a href="namespacebeluga.html#a3514fb728a6d09abf3ee1be194fb1394">More...</a><br /></td></tr>
+<tr class="separator:a3514fb728a6d09abf3ee1be194fb1394"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a879996e3d483a908a7d5f706ac303b88"><td class="memTemplParams" colspan="2">template&lt;class Range , std::enable_if_t&lt;!is_particle_range_v&lt; Range &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a879996e3d483a908a7d5f706ac303b88"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a879996e3d483a908a7d5f706ac303b88">effective_sample_size</a> (Range &amp;&amp;range)</td></tr>
 <tr class="memdesc:a879996e3d483a908a7d5f706ac303b88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the ESS of a given a range of weights.  <a href="namespacebeluga.html#a879996e3d483a908a7d5f706ac303b88">More...</a><br /></td></tr>
@@ -1388,8 +1388,8 @@ Z is the upper standard normal quantile for P, where P is the probability that t
 
 </div>
 </div>
-<a id="ac408d5ea2b04b0330cefd231bc018e20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac408d5ea2b04b0330cefd231bc018e20">&#9670;&nbsp;</a></span>nearest_obstacle_distance_map()</h2>
+<a id="a3514fb728a6d09abf3ee1be194fb1394"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3514fb728a6d09abf3ee1be194fb1394">&#9670;&nbsp;</a></span>nearest_obstacle_distance_map()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1412,7 +1412,13 @@ template&lt;class Range , class DistanceFunction , class NeighborsFunction &gt; 
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">NeighborsFunction &amp;&amp;&#160;</td>
-          <td class="paramname"><em>neighbors_function</em>&#160;</td>
+          <td class="paramname"><em>neighbors_function</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::invoke_result_t&lt; DistanceFunction, std::size_t, std::size_t &gt;&#160;</td>
+          <td class="paramname"><em>max_distance_value</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1437,6 +1443,7 @@ template&lt;class Range , class DistanceFunction , class NeighborsFunction &gt; 
     <tr><td class="paramname">obstacle_mask</td><td>A mask that represents obstacles in an environment. If the value of a cell is True, the cell has an obstacle. </td></tr>
     <tr><td class="paramname">distance_function</td><td>Given the indexes of two cells in the map i and j, obstacle_map(i, j) must return the distance between the two cells. </td></tr>
     <tr><td class="paramname">neighbors_function</td><td>Given the index i of one cell in the map, neighbors_function(i) returns the cell indexes of neighbor cells in the obstacle map. </td></tr>
+    <tr><td class="paramname">max_distance_value</td><td>The maximum distance anywhere in the map. Values over this will be truncated to this value. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1768,7 +1775,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Feb 3 09:47:17 2025 -0300, b6d5ee3&#39;.
+  Last updated on &#39;Thu Feb 13 17:59:44 2025 -0300, c91454c&#39;.
   <br/>
 </p>
   </div>
