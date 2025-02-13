@@ -385,6 +385,12 @@ BaseAMCLNode::BaseAMCLNode(
     this->declare_parameter("autostart_delay", 0.0, descriptor);
   }
 
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Heartbeat timeout value for the bond connection.";
+    this->declare_parameter("bond_timeout", 4.0, descriptor);
+  }
+
   common_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
   common_subscription_options_ = rclcpp::SubscriptionOptions{};
   common_subscription_options_.callback_group = common_callback_group_;
@@ -451,12 +457,14 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
   particle_cloud_pub_->on_activate();
   particle_markers_pub_->on_activate();
   pose_pub_->on_activate();
+
   {
     initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
         get_parameter("initial_pose_topic").as_string(), rclcpp::SystemDefaultsQoS(),
         std::bind(&BaseAMCLNode::initial_pose_callback, this, std::placeholders::_1), common_subscription_options_);
     RCLCPP_INFO(get_logger(), "Subscribed to initial_pose_topic: %s", initial_pose_sub_->get_topic_name());
   }
+
   {
     using namespace std::chrono_literals;
     // TODO(alon): create a parameter for the timer rate?
@@ -464,12 +472,30 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
   }
 
   {
-    bond_ = std::make_unique<bond::Bond>("bond", get_name(), shared_from_this());
+    auto on_bond_formed_callback = [this]() {
+      RCLCPP_INFO(get_logger(), "The bond connection to the lifecycle manager is now fully formed");
+    };
+    auto on_bond_broken_callback = [this]() {
+      RCLCPP_ERROR(get_logger(), "The bond connection to the lifecycle manager has been broken");
+    };
+    bond_ = std::make_unique<bond::Bond>(
+        "bond", get_name(), shared_from_this(), on_bond_broken_callback, on_bond_formed_callback);
     bond_->setHeartbeatPeriod(0.10);
-    bond_->setHeartbeatTimeout(4.0);
+    const auto heartbeat_timeout_value = get_parameter("bond_timeout").as_double();
+    // we don't want to shorten the default connection timeout, but we want to be able to
+    // make it longer because it can fail while building the likelihood map for large maps
+    // just like the heartbeat timeout does
+    const auto connect_timeout_value =
+        std::max(heartbeat_timeout_value, static_cast<double>(bond::msg::Constants::DEFAULT_CONNECT_TIMEOUT));
+    bond_->setConnectTimeout(connect_timeout_value);
+    bond_->setHeartbeatTimeout(heartbeat_timeout_value);
     bond_->start();
-    RCLCPP_INFO(get_logger(), "Created bond (%s) to lifecycle manager", get_name());
+    RCLCPP_INFO(
+        get_logger(),
+        "The bond (%s) connection to the lifecycle manager has been started (heartbeat timeout: %.2lf seconds)",
+        get_name(), heartbeat_timeout_value);
   }
+
   {
     tf_buffer_ = std::make_unique<tf2_ros::Buffer>(get_clock());
     tf_buffer_->setCreateTimerInterface(
@@ -479,6 +505,7 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
         *tf_buffer_, this,
         false);  // avoid using dedicated tf thread
   }
+
   do_activate(state);
   return CallbackReturn::SUCCESS;
 }
