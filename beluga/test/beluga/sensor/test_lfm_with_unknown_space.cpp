@@ -280,15 +280,17 @@ TEST(LikelihoodFieldModelUnknownSpace, GridUpdates) {
   const auto origin = Sophus::SE2d{};
 
   constexpr double kResolution = 0.5;
-  // clang-format off
-  auto grid = StaticOccupancyGrid<5, 5, std::int8_t>{{
-    -1, -1, -1, 0, 0,
-    -1, 0 , 0 , 0, 0,
-    -1, 0 , 0 , 0, 0,
-    0 , 0 , 0 , 0, 0,
-    0 , 0 , 0 , 0, 0},
-    kResolution, origin};
-  // clang-format on
+
+  auto grid = StaticOccupancyGrid<5, 5, std::int8_t>{
+      {
+          -1, -1, -1, +0, +0,  //
+          -1, +0, +0, +0, +0,  //
+          -1, +0, +0, +0, +0,  //
+          +0, +0, +0, +0, +0,  //
+          +0, +0, +0, +0, +0,  //
+      },
+      kResolution,
+      origin};
 
   constexpr auto kMaxObstacleDistance = 2.0;
   constexpr auto kParamMaxLaserDistance = 20.0;
@@ -303,23 +305,27 @@ TEST(LikelihoodFieldModelUnknownSpace, GridUpdates) {
 
   {
     auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{1., 1.}});
-    EXPECT_NEAR(2.068577607986223, state_weighting_function(origin), 1e-6);
+    const auto expected_sensor_return_value = std::pow(0.025, 3.0) + 1.0;
+    EXPECT_NEAR(expected_sensor_return_value, state_weighting_function(origin), 1e-6);
   }
 
-  // clang-format off
-  grid = StaticOccupancyGrid<5, 5, std::int8_t>{{
-    -1, -1, -1, 0, 0  ,
-    -1, 0 , 0 , 0, 0  ,
-    -1, 0 , 0 , 0, 0  ,
-    0 , 0 , 0 , 0, 0  ,
-    0 , 0 , 0 , 0, 100},
-    kResolution, origin};
-  // clang-format on
+  grid = StaticOccupancyGrid<5, 5, std::int8_t>{
+      {
+          -1, -1, -1, +0, +0,    //
+          -1, +0, +0, +0, +0,    //
+          -1, +0, +0, +0, +0,    //
+          +0, +0, +0, +0, +0,    //
+          +0, +0, +0, +0, +100,  //
+      },
+      kResolution,
+      origin};
+
   sensor_model.update_map(std::move(grid));
 
   {
     auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{{1., 1.}});
-    EXPECT_NEAR(1.0, state_weighting_function(origin), 1e-3);
+    const auto expected_sensor_return_value = std::pow(0.025, 3.0) + 1.0;
+    EXPECT_NEAR(expected_sensor_return_value, state_weighting_function(origin), 1e-6);
   }
 }
 

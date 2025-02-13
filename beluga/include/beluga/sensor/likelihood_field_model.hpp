@@ -160,11 +160,6 @@ class LikelihoodFieldModel {
       return static_cast<float>((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm());
     };
 
-    const auto squared_max_distance = static_cast<float>(params.max_obstacle_distance * params.max_obstacle_distance);
-    const auto truncate_to_max_distance = [squared_max_distance](auto squared_distance) {
-      return std::min(squared_distance, squared_max_distance);
-    };
-
     /// Pre-computed variables
     const double two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit;
     assert(two_squared_sigma > 0.0);
@@ -180,19 +175,23 @@ class LikelihoodFieldModel {
 
     const auto neighborhood = [&grid](std::size_t index) { return grid.neighborhood4(index); };
 
+    const auto squared_max_distance = static_cast<float>(params.max_obstacle_distance * params.max_obstacle_distance);
+
     // determine distances to obstacles and calculate likelihood values in-place
     // to minimize memory usage when dealing with large maps
-    auto distance_map = nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood);
+    auto distance_map =
+        nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
 
     if (params.model_unknown_space) {
-      const double inverse_max_distance = 1 / params.max_laser_distance;
-      const double background_distance = -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
+      const auto inverse_max_distance = 1 / params.max_laser_distance;
+      const auto squared_background_distance =
+          -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
 
-      distance_map |= beluga::actions::overlay(grid.unknown_mask(), background_distance);
+      distance_map |= beluga::actions::overlay(
+          grid.unknown_mask(), std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
     }
 
-    auto likelihood_values = std::move(distance_map) |                               //
-                             ranges::actions::transform(truncate_to_max_distance) |  //
+    auto likelihood_values = std::move(distance_map) |  //
                              ranges::actions::transform(to_likelihood);
 
     return ValueGrid2<float>{std::move(likelihood_values), grid.width(), grid.resolution()};
