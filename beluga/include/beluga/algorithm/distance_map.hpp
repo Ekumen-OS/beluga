@@ -48,20 +48,22 @@ namespace beluga {
  * \param neighbors_function Given the index i of one cell in the map,
  *  neighbors_function(i) returns the cell indexes of neighbor cells in the
  *  obstacle map.
+ * \param max_distance_value The maximum distance anywhere in the map. Values over this will be truncated to this value.
  * \return A map where each cell value is the distance to the nearest object.
  */
 template <class Range, class DistanceFunction, class NeighborsFunction>
 auto nearest_obstacle_distance_map(
     Range&& obstacle_mask,
     DistanceFunction&& distance_function,
-    NeighborsFunction&& neighbors_function) {
+    NeighborsFunction&& neighbors_function,
+    std::invoke_result_t<DistanceFunction, std::size_t, std::size_t> max_distance_value) {
   struct IndexPair {
     std::size_t nearest_obstacle_index;
     std::size_t index;
   };
 
   using DistanceType = std::invoke_result_t<DistanceFunction, std::size_t, std::size_t>;
-  auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_mask));
+  auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_mask), max_distance_value);
   auto visited = std::vector<bool>(ranges::size(obstacle_mask), false);
 
   auto compare = [&distance_map](const IndexPair& first, const IndexPair& second) {
@@ -83,8 +85,11 @@ auto nearest_obstacle_distance_map(
     for (const std::size_t index : neighbors_function(parent.index)) {
       if (!visited[index]) {
         visited[index] = true;
-        distance_map[index] = distance_function(parent.nearest_obstacle_index, index);
-        queue.push(IndexPair{parent.nearest_obstacle_index, index});
+        const auto distance = distance_function(parent.nearest_obstacle_index, index);
+        if (distance < max_distance_value) {
+          distance_map[index] = distance;
+          queue.push(IndexPair{parent.nearest_obstacle_index, index});
+        }
       }
     }
   }
