@@ -482,7 +482,7 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
         "bond", get_name(), shared_from_this(), on_bond_broken_callback, on_bond_formed_callback);
     bond_->setHeartbeatPeriod(0.10);
     const auto heartbeat_timeout_value = get_parameter("bond_timeout").as_double();
-    // we don't want to shorten the default connection timeout, but we want to be able to
+    // We don't want to shorten the default connection timeout, but we want to be able to
     // make it longer because it can fail while building the likelihood map for large maps
     // just like the heartbeat timeout does
     const auto connect_timeout_value =
