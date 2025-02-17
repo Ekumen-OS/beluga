@@ -365,7 +365,9 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
 
   if (!particle_filter_) {
     try {
+      RCLCPP_INFO(get_logger(), "Initializing particle filter instance");
       particle_filter_ = make_particle_filter(std::move(map));
+      RCLCPP_INFO(get_logger(), "Particle filter initialization completed");
     } catch (const std::invalid_argument& error) {
       RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());
       return;
