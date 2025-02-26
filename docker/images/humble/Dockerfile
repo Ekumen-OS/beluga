@@ -84,6 +84,15 @@ RUN /bin/bash -c '\
 
 RUN cd /opt && git clone https://github.com/brendangregg/FlameGraph
 
+# Install OpenVDB from sources
+RUN cd /tmp && \
+    git clone -b v8.2.0 https://github.com/AcademySoftwareFoundation/openvdb.git && \
+    cd openvdb && \
+    mkdir build && cd build && \
+    cmake .. && \
+    make -j$(nproc) && sudo make install && \
+    rm -rf /tmp/openvdb
+
 USER $USER:$GROUP
 
 ENV USER_WS /ws
