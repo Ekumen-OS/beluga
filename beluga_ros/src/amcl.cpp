@@ -18,9 +18,10 @@
 #include <beluga/actions/normalize.hpp>
 #include <beluga/actions/propagate.hpp>
 #include <beluga/actions/reweight.hpp>
-#include <beluga/algorithm/estimation.hpp>
+#include <beluga/algorithm/cluster_based_estimation.hpp>
 #include <beluga/views/random_intersperse.hpp>
 #include <beluga/views/take_while_kld.hpp>
+#include <cmath>
 
 namespace beluga_ros {
 
@@ -97,7 +98,7 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_sc
   }
 
   force_update_ = false;
-  return beluga::estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
+  return beluga::cluster_based_estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
 }
 
 }  // namespace beluga_ros
