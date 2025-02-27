@@ -6,20 +6,19 @@
 
 ## 🌐 Overview
 
-BelugaVDB is a library extension for `beluga` that integrates [OpenVDB](https://www.openvdb.org/), enabling advanced 3D localization capabilities. Currently, this extension uses the powerful volumetric data structure of OpenVDB to efficiently process maps and 3D pointcloud data, providing the localization of the autonomous system.
-
+BelugaVDB is a library extension for `beluga` that integrates [OpenVDB](https://www.openvdb.org/), enabling advanced 3D localization capabilities. Currently, this extension uses OpenVDB to efficiently process 3D maps and pointcloud data. Maps in `vdb` format can be generated using any third party library such as [VDB Mapping](https://github.com/fzi-forschungszentrum-informatik/vdb_mapping).
 
 ## 📦 External Dependencies
 
 ### OpenVDB
 
-For Ubuntu 24.04 and newer versions OpenVDB can be installed using `apt`:
+For Ubuntu 24.04 and newer distributions, OpenVDB can be installed using `apt`:
 
 ```bash
 sudo apt install libopenvdb-dev
 ```
 
-Older version must be isnstalled from sources as follow:
+For older distributions, it must be installed from sources as follows:
 
 #### Step 1: Download OpenVDB
 
@@ -48,4 +47,5 @@ You can now install OpenVDB using:
 sudo make install
 ```
 
-🔸 For more information about OpenVDB please refer to the [official documentation](https://www.openvdb.org/documentation/doxygen/).
+> [!NOTE]
+> For more information about OpenVDB please refer to the [official documentation](https://www.openvdb.org/documentation/doxygen/).
