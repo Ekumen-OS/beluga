@@ -21,6 +21,7 @@
 #include <range/v3/action/transform.hpp>
 #include <sophus/se2.hpp>
 #include <vector>
+
 /**
  * \file
  * \brief Implementation of a likelihood field common sensor model for range finders.
@@ -104,10 +105,17 @@ class LikelihoodFieldModelCommon {
   }
 
  protected:
-  param_type params_;
-  ValueGrid2<float> likelihood_field_;
-  Sophus::SE2d world_to_likelihood_field_transform_;
+  param_type params_;                                /*!< Parameters configuring the likelihood field model. */
+  ValueGrid2<float> likelihood_field_;               /*!< Likelihood field computed from the occupancy grid map. */
+  Sophus::SE2d world_to_likelihood_field_transform_; /*!< Transformation from world coordinates to the likelihood field
+                                                        coordinate system. */
 
+  /// Creates a likelihood field from an occupancy grid.
+  /**
+   * \param params Parameters to configure the likelihood field.
+   * \param grid Occupancy grid representing the static map.
+   * \return Likelihood field computed from the occupancy grid.
+   */
   static ValueGrid2<float> make_likelihood_field(const param_type& params, const OccupancyGrid& grid) {
     const auto squared_distance = [&grid](std::size_t first, std::size_t second) {
       return static_cast<float>((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm());

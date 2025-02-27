@@ -24,8 +24,6 @@
 #include <beluga/algorithm/distance_map.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
 #include <beluga/sensor/likelihood_field_model_common.hpp>
-#include <range/v3/action/transform.hpp>
-#include <sophus/se2.hpp>
 
 /**
  * \file
