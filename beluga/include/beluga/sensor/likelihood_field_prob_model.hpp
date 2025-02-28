@@ -16,14 +16,10 @@
 #define BELUGA_SENSOR_LIKELIHOOD_FIELD_PROB_MODEL_HPP
 
 #include <algorithm>
+#include <beluga/sensor/likelihood_field_model_common.hpp>
 #include <cmath>
 #include <random>
 #include <vector>
-
-#include <beluga/actions/overlay.hpp>
-#include <beluga/algorithm/distance_map.hpp>
-#include <beluga/sensor/data/value_grid.hpp>
-#include <beluga/sensor/likelihood_field_model_common.hpp>
 
 /**
  * \file

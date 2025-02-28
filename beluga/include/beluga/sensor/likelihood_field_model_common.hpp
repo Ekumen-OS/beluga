@@ -16,6 +16,10 @@
 #define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_COMMON_HPP
 
 #include <algorithm>
+#include <beluga/actions/overlay.hpp>
+#include <beluga/algorithm/distance_map.hpp>
+#include <beluga/sensor/data/occupancy_grid.hpp>
+#include <beluga/sensor/data/value_grid.hpp>
 #include <cmath>
 #include <random>
 #include <range/v3/action/transform.hpp>
