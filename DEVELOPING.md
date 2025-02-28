@@ -68,7 +68,7 @@ Within a development environment:
 
 
 > [!IMPORTANT]
-> `beluga_vdb` requires OpenVDB to be installed in order to be used. For Ubuntu distributions previous to `Noble` OpenVDB needs to be installed from sources before building. Installation instructions can be found [here](beluga_vdb/README.md). If you don't need `beluga_vdb`, you can skip it using `colcon build --symlink-install --packages-ignore beluga_vdb`
+> `beluga_vdb` requires OpenVDB to be installed in order to be used. For Ubuntu distributions previous to `Noble` OpenVDB needs to be installed from sources before building. Installation instructions can be found [here](beluga_vdb/README.md). If you don't need `beluga_vdb`, you can skip it using `colcon build --symlink-install --packages-ignore beluga_vdb`.
 
 For more advanced tooling, check repository [tools](./tools).
 
