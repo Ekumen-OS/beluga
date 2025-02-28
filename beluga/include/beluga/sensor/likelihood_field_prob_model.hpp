@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_HPP
-#define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_HPP
+#ifndef BELUGA_SENSOR_LIKELIHOOD_FIELD_PROB_MODEL_HPP
+#define BELUGA_SENSOR_LIKELIHOOD_FIELD_PROB_MODEL_HPP
 
 #include <algorithm>
 #include <beluga/sensor/likelihood_field_model_common.hpp>
@@ -23,18 +23,18 @@
 
 /**
  * \file
- * \brief Implementation of a likelihood field sensor model for range finders.
+ * \brief Implementation of a likelihood field prob sensor model for range finders.
  */
 
 namespace beluga {
 
-/// Parameters used to construct a LikelihoodFieldModel instance.
+/// Parameters used to construct a LikelihoodFieldProbModelParam instance.
 /**
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4, particularly Table 6.3.
  */
-using LikelihoodFieldModelParam = LikelihoodFieldModelCommonParam;
+using LikelihoodFieldProbModelParam = LikelihoodFieldModelCommonParam;
 
-/// Likelihood field sensor model for range finders.
+/// Likelihood field prob sensor model for range finders.
 /**
  * This model relies on a pre-computed likelihood map of the environment.
  * It is less computationally intensive than the beluga::BeamSensorModel
@@ -49,7 +49,7 @@ using LikelihoodFieldModelParam = LikelihoodFieldModelCommonParam;
  *  It must satisfy \ref OccupancyGrid2Page.
  */
 template <class OccupancyGrid>
-class LikelihoodFieldModel : public LikelihoodFieldModelCommon<OccupancyGrid> {
+class LikelihoodFieldProbModel : public LikelihoodFieldModelCommon<OccupancyGrid> {
  public:
   /// State type of a particle.
   using state_type = Sophus::SE2d;
@@ -60,17 +60,17 @@ class LikelihoodFieldModel : public LikelihoodFieldModelCommon<OccupancyGrid> {
   /// Map representation type.
   using map_type = OccupancyGrid;
   /// Parameter type that the constructor uses to configure the likelihood field model.
-  using param_type = LikelihoodFieldModelParam;
+  using param_type = LikelihoodFieldProbModelParam;
 
-  /// Constructs a LikelihoodFieldModel instance.
+  /// Constructs a LikelihoodFieldProbModel instance.
   /**
    * \param params Parameters to configure this instance.
-   *  See beluga::LikelihoodFieldModelParam for details.
+   *  See beluga::LikelihoodFieldProbModelParam for details.
    * \param grid Occupancy grid representing the static map that the sensor model
    *  uses to compute a likelihood field for lidar hits and compute importance weights
    *  for particle states.
    */
-  explicit LikelihoodFieldModel(const param_type& params, const map_type& grid)
+  explicit LikelihoodFieldProbModel(const param_type& params, const map_type& grid)
       : LikelihoodFieldModelCommon<OccupancyGrid>(params, grid) {}
 
   /// Returns a state weighting function conditioned on 2D lidar hits.
@@ -87,8 +87,9 @@ class LikelihoodFieldModel : public LikelihoodFieldModelCommon<OccupancyGrid> {
       const auto cos_theta = transform.so2().unit_complex().x();
       const auto sin_theta = transform.so2().unit_complex().y();
       const auto unknown_space_occupancy_prob = static_cast<float>(1. / this->params_.max_laser_distance);
-      return std::transform_reduce(
-          points.cbegin(), points.cend(), 1.0, std::plus{},
+
+      return std::exp(std::transform_reduce(
+          points.cbegin(), points.cend(), 0.0, std::plus{},
           [this, x_offset, y_offset, cos_theta, sin_theta, unknown_space_occupancy_prob](const auto& point) {
             // Transform the end point of the laser to the grid local coordinate system.
             // Not using Eigen/Sophus because they make the routine x10 slower.
@@ -97,10 +98,8 @@ class LikelihoodFieldModel : public LikelihoodFieldModelCommon<OccupancyGrid> {
             const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
             const auto pz =
                 static_cast<double>(this->likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob));
-            // TODO(glpuga): Investigate why AMCL and QuickMCL both use this formula for the weight.
-            // See https://github.com/Ekumen-OS/beluga/issues/153
-            return pz * pz * pz;
-          });
+            return std::log(pz);
+          }));
     };
   }
 };
