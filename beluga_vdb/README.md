@@ -54,7 +54,7 @@ int main()
 }
 ```
 
-Also, `vdb` level-set maps can be generated from `pcd` maps (created from SLAM libraries such as [FAST_LIO](https://github.com/hku-mars/FAST_LIO)).
+Also, `vdb` level-set maps can be generated from `pcd` maps (created from SLAM libraries such as [FAST-LIO](https://github.com/hku-mars/FAST_LIO)).
 
 A simple code to generate a `vdb` level-set map from a `pcd` file is shown below:
 
