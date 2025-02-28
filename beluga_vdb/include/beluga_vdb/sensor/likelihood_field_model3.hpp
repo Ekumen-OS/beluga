@@ -24,8 +24,6 @@
 
 #include <Eigen/Core>
 
-#include <range/v3/algorithm/fold_left.hpp>
-#include <range/v3/algorithm/for_each.hpp>
 #include <range/v3/numeric/accumulate.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
@@ -133,7 +131,7 @@ class LikelihoodFieldModel3 {
                               ranges::to<std::vector>();
 
     return [this, points = std::move(transformed_points)](const state_type& state) -> weight_type {
-      return ranges::fold_left(
+      return ranges::accumulate(
           points |  //
               ranges::views::transform([this, &state](const auto& point) {
                 const Eigen::Vector3d point_in_state_frame = state * point;

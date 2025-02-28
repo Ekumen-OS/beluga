@@ -32,6 +32,24 @@ RUN git clone -b develop https://github.com/NERSC/timemory.git \
     . \
   && cmake --build ./build --target timem
 
+FROM ros:humble-ros-base-jammy AS openvdb-builder
+
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \
+    git \
+    libboost-all-dev \
+    libtbb-dev \
+    libblosc-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt
+
+RUN git clone -b v8.2.0 https://github.com/AcademySoftwareFoundation/openvdb.git \
+  && cd openvdb \
+  && mkdir build && cd build \
+  && cmake .. \
+  && make -j$(nproc)
+
 FROM ros:humble-ros-base-jammy AS builder
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -105,6 +123,11 @@ RUN sudo apt-get update \
   && sudo rm -rf /var/lib/apt/lists/*
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/
+
+COPY --from=openvdb-builder --chown=$USER:$GROUP /opt/openvdb/ /opt/openvdb
+RUN cd /opt/openvdb/build \
+    && sudo make install \
+    && sudo rm -rf /opt/openvdb
 
 ENV WITHIN_DEV 1
 
