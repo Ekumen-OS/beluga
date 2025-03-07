@@ -1,9 +1,5 @@
 # Beluga VDB
 
-<div align="center">
-<img alt="Shows the Beluga logo." src="images/57fe338a-3e7e-46b3-ad2f-17011d6d306a.png" height="200">
-</div>
-
 ## 🌐 Overview
 
 BelugaVDB is a library extension for `beluga` that integrates [OpenVDB](https://www.openvdb.org/), enabling advanced 3D localization capabilities. Currently, this extension uses OpenVDB to efficiently process 3D maps and pointcloud data.
