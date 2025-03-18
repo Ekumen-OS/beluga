@@ -100,4 +100,4 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
-        if: ${{ matrix.upload_artifacts && github.event_name == "schedule" }}
+        if: ${{ matrix.upload_artifacts && github.event_name == 'schedule' }}
