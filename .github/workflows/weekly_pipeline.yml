@@ -97,6 +97,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./lcov/total_coverage.info,./coveragepy/.coverage
+          codecov_yml_path: ./src/beluga/.codecov.yml
+          disable_search: true
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
