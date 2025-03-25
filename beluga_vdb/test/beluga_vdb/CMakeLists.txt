@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_executable(test_beluga_vdb sensor/test_likelihood_3d_field_model.cpp)
+add_executable(test_beluga_vdb sensor/test_vdb_likelihood_field_model.cpp)
 
 target_link_libraries(test_beluga_vdb PRIVATE ${PROJECT_NAME} beluga_vdb
                                               GTest::gmock_main)

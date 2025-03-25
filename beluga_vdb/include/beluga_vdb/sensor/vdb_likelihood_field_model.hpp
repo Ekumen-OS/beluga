@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_VDB_SENSOR_LIKELIHOOD_FIELD_MODEL3_HPP
-#define BELUGA_VDB_SENSOR_LIKELIHOOD_FIELD_MODEL3_HPP
+#ifndef BELUGA_VDB_SENSOR_VDB_LIKELIHOOD_FIELD_MODEL_HPP
+#define BELUGA_VDB_SENSOR_VDB_LIKELIHOOD_FIELD_MODEL_HPP
 
 #include <algorithm>
 #include <cmath>
@@ -28,21 +28,23 @@
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/transform.hpp>
+#include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
+#include <sophus/so2.hpp>
 #include <sophus/so3.hpp>
 
 /**
  * \file
- * \brief Implementation of a likelihood field sensor model for 3D Lidars.
+ * \brief Implementation of a likelihood field sensor model based on OpenVDB for 3D Lidars.
  */
 
 namespace beluga_vdb {
 
-/// Parameters used to construct a LikelihoodFieldModel3 instance.
+/// Parameters used to construct a VDBLikelihoodFieldModel instance.
 /**
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4, particularly Table 6.3.
  */
-struct LikelihoodFieldModel3Param {
+struct VDBLikelihoodFieldModelParam {
   /// Maximum distance to obstacle.
   /**
    * When creating a distance map, if the distance to an obstacle is higher than the value specified here,
@@ -75,11 +77,15 @@ struct LikelihoodFieldModel3Param {
  *
  * \tparam OpenVDB grid type.
  */
-template <typename GridT, typename PointCloud>
-class LikelihoodFieldModel3 {
+template <typename GridT, typename PointCloud, class StateType = Sophus::SE3d>
+class VDBLikelihoodFieldModel {
+  static_assert(
+      std::is_same_v<StateType, Sophus::SE2d> or std::is_same_v<StateType, Sophus::SE3d>,
+      "VDB likelihood field sensor model only supports SE2 and SE3 state types.");
+
  public:
   /// State type of a particle.
-  using state_type = Sophus::SE3d;
+  using state_type = StateType;
 
   /// Weight type of the particle.
   using weight_type = double;
@@ -91,18 +97,18 @@ class LikelihoodFieldModel3 {
   using map_type = GridT;
 
   /// Parameter type that the constructor uses to configure the likelihood field model.
-  using param_type = LikelihoodFieldModel3Param;
+  using param_type = VDBLikelihoodFieldModelParam;
 
-  /// Constructs a LikelihoodFieldModel3 instance.
+  /// Constructs a VDBLikelihoodFieldModel instance.
   /**
    * \param params Parameters to configure this instance.
-   *  See beluga::LikelihoodFieldModel3Param for details.
+   *  See beluga::VDBLikelihoodFieldModelParam for details.
    * \param grid Narrow band Level set grid representing the static map that the sensor model
    *  uses to compute a likelihood field for lidar hits and compute importance weights
    *  for particle states.
    *  Currently only supports OpenVDB Level sets.
    */
-  explicit LikelihoodFieldModel3(const param_type& params, const map_type& grid)
+  explicit VDBLikelihoodFieldModel(const param_type& params, const map_type& grid)
       : params_{params},
         grid_{openvdb::gridPtrCast<map_type>(grid.deepCopyGrid())},
         accessor_{grid_->getConstAccessor()},
@@ -154,6 +160,14 @@ class LikelihoodFieldModel3 {
   double amplitude_;
   double offset_;
 };
+
+/// Alias for a 2D likelihood field model, for convinience.
+template <typename GridT, typename PointCloud>
+using VDBLikelihoodFieldModel2 = VDBLikelihoodFieldModel<GridT, PointCloud, Sophus::SE2d>;
+
+/// Alias for a 3D likelihood field model, for convinience.
+template <typename GridT, typename PointCloud>
+using VDBLikelihoodFieldModel3 = VDBLikelihoodFieldModel<GridT, PointCloud, Sophus::SE3d>;
 
 }  // namespace beluga_vdb
 
