@@ -16,7 +16,7 @@
 #define BELUGA_SENSOR_LIKELIHOOD_FIELD_PROB_MODEL_HPP
 
 #include <algorithm>
-#include <beluga/sensor/likelihood_field_model_common.hpp>
+#include <beluga/sensor/likelihood_field_model_base.hpp>
 #include <cmath>
 #include <random>
 #include <vector>
@@ -32,7 +32,7 @@ namespace beluga {
 /**
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4, particularly Table 6.3.
  */
-using LikelihoodFieldProbModelParam = LikelihoodFieldModelCommonParam;
+using LikelihoodFieldProbModelParam = LikelihoodFieldModelBaseParam;
 
 /// Likelihood field prob sensor model for range finders.
 /**
@@ -49,7 +49,7 @@ using LikelihoodFieldProbModelParam = LikelihoodFieldModelCommonParam;
  *  It must satisfy \ref OccupancyGrid2Page.
  */
 template <class OccupancyGrid>
-class LikelihoodFieldProbModel : public LikelihoodFieldModelCommon<OccupancyGrid> {
+class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> {
  public:
   /// State type of a particle.
   using state_type = Sophus::SE2d;
@@ -71,7 +71,7 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelCommon<OccupancyGrid
    *  for particle states.
    */
   explicit LikelihoodFieldProbModel(const param_type& params, const map_type& grid)
-      : LikelihoodFieldModelCommon<OccupancyGrid>(params, grid) {}
+      : LikelihoodFieldModelBase<OccupancyGrid>(params, grid) {}
 
   /// Returns a state weighting function conditioned on 2D lidar hits.
   /**

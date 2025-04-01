@@ -33,11 +33,11 @@
 
 namespace beluga {
 
-/// Parameters used to construct a LikelihoodFieldModelCommon instance.
+/// Parameters used to construct a LikelihoodFieldModelBase instance.
 /**
  * See Probabilistic Robotics \cite thrun2005probabilistic Chapter 6.4, particularly Table 6.3.
  */
-struct LikelihoodFieldModelCommonParam {
+struct LikelihoodFieldModelBaseParam {
   /// Maximum distance to obstacle.
   /**
    * When creating a distance map, if the distance to an obstacle is higher than the value specified here,
@@ -74,22 +74,22 @@ struct LikelihoodFieldModelCommonParam {
  *  It must satisfy \ref OccupancyGrid2Page.
  */
 template <class OccupancyGrid>
-class LikelihoodFieldModelCommon {
+class LikelihoodFieldModelBase {
  public:
   /// Map representation type.
   using map_type = OccupancyGrid;
   /// Parameter type that the constructor uses to configure the likelihood field model.
-  using param_type = LikelihoodFieldModelCommonParam;
+  using param_type = LikelihoodFieldModelBaseParam;
 
   /// Constructs a LikelihoodFieldCommonModel instance.
   /**
    * \param params Parameters to configure this instance.
-   *  See beluga::LikelihoodFieldModelCommon for details.
+   *  See beluga::LikelihoodFieldModelBase for details.
    * \param grid Occupancy grid representing the static map that the sensor model
    *  uses to compute a likelihood field for lidar hits and compute importance weights
    *  for particle states.
    */
-  explicit LikelihoodFieldModelCommon(const param_type& params, const map_type& grid)
+  explicit LikelihoodFieldModelBase(const param_type& params, const map_type& grid)
       : params_{params},
         likelihood_field_{make_likelihood_field(params, grid)},
         world_to_likelihood_field_transform_{grid.origin().inverse()} {}

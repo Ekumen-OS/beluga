@@ -54,7 +54,7 @@ add_executable(
   sensor/test_landmark_sensor_model.cpp
   sensor/test_lfm_with_unknown_space.cpp
   sensor/test_likelihood_field_model.cpp
-  sensor/test_likelihood_field_model_common.cpp
+  sensor/test_likelihood_field_model_base.cpp
   sensor/test_likelihood_field_prob_model.cpp
   sensor/test_ndt_model.cpp
   test_3d_embedding.cpp

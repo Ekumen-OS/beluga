@@ -29,9 +29,9 @@ namespace {
 
 using beluga::testing::StaticOccupancyGrid;
 
-using UUT = beluga::LikelihoodFieldModelCommon<StaticOccupancyGrid<5, 5>>;
+using UUT = beluga::LikelihoodFieldModelBase<StaticOccupancyGrid<5, 5>>;
 
-TEST(LikelihoodFieldModelCommon, LikelihoodField) {
+TEST(LikelihoodFieldModelBase, LikelihoodField) {
   constexpr double kResolution = 0.5;
   // clang-format off
   const auto grid = StaticOccupancyGrid<5, 5>{{
@@ -51,7 +51,7 @@ TEST(LikelihoodFieldModelCommon, LikelihoodField) {
   };
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldModelCommonParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldModelBaseParam{2.0, 20.0, 0.5, 0.5, 0.2};
   auto sensor_model = UUT{params, grid};
 
   ASSERT_THAT(
