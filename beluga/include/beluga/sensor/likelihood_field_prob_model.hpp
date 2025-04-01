@@ -61,7 +61,9 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
 
   /// Returns a state weighting function conditioned on 2D lidar hits.
   /**
-   * @copydoc LikelihoodFieldModel::operator()
+   * \param points 2D lidar hit points in the reference frame of particle states.
+   * \return a state weighting function satisfying \ref StateWeightingFunctionPage
+   *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
   [[nodiscard]] auto operator()(measurement_type&& points) const {
     return [this, points = std::move(points)](const state_type& state) -> weight_type {
