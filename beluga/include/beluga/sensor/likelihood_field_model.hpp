@@ -36,17 +36,7 @@ using LikelihoodFieldModelParam = LikelihoodFieldModelBaseParam;
 
 /// Likelihood field sensor model for range finders.
 /**
- * This model relies on a pre-computed likelihood map of the environment.
- * It is less computationally intensive than the beluga::BeamSensorModel
- * because no ray-tracing is required, and it can also provide better
- * performance in environments with non-smooth occupation maps. See
- * Probabilistic Robotics \cite thrun2005probabilistic, Chapter 6.4,
- * for further reference.
- *
- * \note This class satisfies \ref SensorModelPage.
- *
- * \tparam OccupancyGrid Type representing an occupancy grid.
- *  It must satisfy \ref OccupancyGrid2Page.
+ * @copydoc LikelihoodFieldModelBase
  */
 template <class OccupancyGrid>
 class LikelihoodFieldModel : public LikelihoodFieldModelBase<OccupancyGrid> {
@@ -64,11 +54,7 @@ class LikelihoodFieldModel : public LikelihoodFieldModelBase<OccupancyGrid> {
 
   /// Constructs a LikelihoodFieldModel instance.
   /**
-   * \param params Parameters to configure this instance.
-   *  See beluga::LikelihoodFieldModelParam for details.
-   * \param grid Occupancy grid representing the static map that the sensor model
-   *  uses to compute a likelihood field for lidar hits and compute importance weights
-   *  for particle states.
+   * @copydoc LikelihoodFieldModelBase::LikelihoodFieldModelBase
    */
   explicit LikelihoodFieldModel(const param_type& params, const map_type& grid)
       : LikelihoodFieldModelBase<OccupancyGrid>(params, grid) {}

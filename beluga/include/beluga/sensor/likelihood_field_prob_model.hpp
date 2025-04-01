@@ -36,17 +36,7 @@ using LikelihoodFieldProbModelParam = LikelihoodFieldModelBaseParam;
 
 /// Likelihood field prob sensor model for range finders.
 /**
- * This model relies on a pre-computed likelihood map of the environment.
- * It is less computationally intensive than the beluga::BeamSensorModel
- * because no ray-tracing is required, and it can also provide better
- * performance in environments with non-smooth occupation maps. See
- * Probabilistic Robotics \cite thrun2005probabilistic, Chapter 6.4,
- * for further reference.
- *
- * \note This class satisfies \ref SensorModelPage.
- *
- * \tparam OccupancyGrid Type representing an occupancy grid.
- *  It must satisfy \ref OccupancyGrid2Page.
+ * @copydoc LikelihoodFieldModelBase
  */
 template <class OccupancyGrid>
 class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> {
@@ -64,20 +54,14 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
 
   /// Constructs a LikelihoodFieldProbModel instance.
   /**
-   * \param params Parameters to configure this instance.
-   *  See beluga::LikelihoodFieldProbModelParam for details.
-   * \param grid Occupancy grid representing the static map that the sensor model
-   *  uses to compute a likelihood field for lidar hits and compute importance weights
-   *  for particle states.
+   * @copydoc LikelihoodFieldModelBase::LikelihoodFieldModelBase
    */
   explicit LikelihoodFieldProbModel(const param_type& params, const map_type& grid)
       : LikelihoodFieldModelBase<OccupancyGrid>(params, grid) {}
 
   /// Returns a state weighting function conditioned on 2D lidar hits.
   /**
-   * \param points 2D lidar hit points in the reference frame of particle states.
-   * \return a state weighting function satisfying \ref StateWeightingFunctionPage
-   *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
+   * @copydoc LikelihoodFieldModel::operator()
    */
   [[nodiscard]] auto operator()(measurement_type&& points) const {
     return [this, points = std::move(points)](const state_type& state) -> weight_type {

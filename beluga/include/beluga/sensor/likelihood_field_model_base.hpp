@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_COMMON_HPP
-#define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_COMMON_HPP
+#ifndef BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_BASE_HPP
+#define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_BASE_HPP
 
 #include <algorithm>
 #include <beluga/actions/overlay.hpp>
