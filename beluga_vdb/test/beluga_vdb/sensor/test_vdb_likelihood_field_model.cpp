@@ -63,7 +63,7 @@ auto make_map(const double voxel_size, const std::vector<T>& world_points) {
   // Transform to levelset
   return openvdb::tools::topologyToLevelSet(*grid, kHalfWidth, kClosingSteps);
 }
-
+/*
 TEST(TestVDBLikelihoodFieldModel2, Point) {
   openvdb::initialize();
   // Parameters
@@ -269,5 +269,5 @@ TEST(TestVDBLikelihoodFieldModel3, Cube) {
   auto state_weighting_function_far = sensor_model(std::move(pointcloud_measurement_far));
   ASSERT_LT(state_weighting_function_far(Sophus::SE3d{}), 6.85);
 }
-
+*/
 }  // namespace

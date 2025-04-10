@@ -21,6 +21,7 @@
 #include <vector>
 
 #include <openvdb/openvdb.h>
+#include <beluga/3d_embedding.hpp>
 
 #include <Eigen/Core>
 
@@ -80,7 +81,8 @@ struct VDBLikelihoodFieldModelParam {
 template <typename GridT, typename PointCloud, class StateType = Sophus::SE3d>
 class VDBLikelihoodFieldModel {
   static_assert(
-      std::is_same_v<StateType, Sophus::SE2d> or std::is_same_v<StateType, Sophus::SE3d>,
+      std::is_same_v<StateType, Sophus::SE2<typename StateType::Scalar>> or
+          std::is_same_v<StateType, Sophus::SE3<typename StateType::Scalar>>,
       "VDB likelihood field sensor model only supports SE2 and SE3 state types.");
 
  public:
@@ -129,24 +131,39 @@ class VDBLikelihoodFieldModel {
    * \return a state weighting function satisfying \ref StateWeightingFunctionPage
    *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
+  template <typename T = state_type>
   [[nodiscard]] auto operator()(measurement_type&& measurement) const {
     // Transform each point from the sensor frame to the origin frame
     auto transformed_points = measurement.points() | ranges::views::transform([&](const auto& point) {
                                 return measurement.origin() * point.template cast<double>();
                               }) |
                               ranges::to<std::vector>();
-
     return [this, points = std::move(transformed_points)](const state_type& state) -> weight_type {
-      return ranges::accumulate(
-          points |  //
-              ranges::views::transform([this, &state](const auto& point) {
-                const Eigen::Vector3d point_in_state_frame = state * point;
-                const openvdb::math::Coord ijk = transform_.worldToIndexCellCentered(
-                    openvdb::math::Vec3d(point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()));
-                const auto distance = accessor_.isValueOn(ijk) ? accessor_.getValue(ijk) : background_;
-                return amplitude_ * std::exp(-(distance * distance) / two_squared_sigma_) + offset_;
-              }),
-          1.0, std::plus{});
+      if constexpr (std::is_same_v<T, Sophus::SE3d>) {
+        // Logic for Sophus::SE3d
+        return ranges::accumulate(
+            points | ranges::views::transform([this, &state](const auto& point) {
+              const Eigen::Vector3d point_in_state_frame = state * point;
+              const openvdb::math::Coord ijk = transform_.worldToIndexCellCentered(
+                  openvdb::math::Vec3d(point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()));
+              const auto distance = accessor_.isValueOn(ijk) ? accessor_.getValue(ijk) : background_;
+              return amplitude_ * std::exp(-(distance * distance) / two_squared_sigma_) + offset_;
+            }),
+            1.0, std::plus{});
+      } else if constexpr (std::is_same_v<T, Sophus::SE2d>) {
+        // Logic for Sophus::SE2d
+        return ranges::accumulate(
+            points | ranges::views::transform([this, &state](const auto& point) {
+              const Eigen::Vector3d point_in_state_frame = beluga::To3d(state) * point;
+              const openvdb::math::Coord ijk = transform_.worldToIndexCellCentered(
+                  openvdb::math::Vec3d(point_in_state_frame.x(), point_in_state_frame.y(), point_in_state_frame.z()));
+              const auto distance = accessor_.isValueOn(ijk) ? accessor_.getValue(ijk) : background_;
+              return amplitude_ * std::exp(-(distance * distance) / two_squared_sigma_) + offset_;
+            }),
+            1.0, std::plus{});
+      } else {
+        static_assert("Unsupported state_type");
+      }
     };
   }
 
