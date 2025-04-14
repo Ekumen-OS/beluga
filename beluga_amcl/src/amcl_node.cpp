@@ -62,6 +62,7 @@
 #include <beluga/motion/stationary_model.hpp>
 #include <beluga/sensor/beam_model.hpp>
 #include <beluga/sensor/likelihood_field_model.hpp>
+#include <beluga/sensor/likelihood_field_prob_model.hpp>
 #include <beluga_ros/amcl.hpp>
 #include <beluga_ros/messages.hpp>
 #include <beluga_ros/particle_cloud.hpp>
@@ -74,6 +75,7 @@ namespace beluga_amcl {
 namespace {
 
 constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
+constexpr std::string_view kLikelihoodFieldProbModelName = "likelihood_field_prob";
 constexpr std::string_view kBeamSensorModelName = "beam";
 
 }  // namespace
@@ -305,6 +307,15 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
     params.z_random = get_parameter("z_rand").as_double();
     params.sigma_hit = get_parameter("sigma_hit").as_double();
     return beluga::LikelihoodFieldModel{params, beluga_ros::OccupancyGrid{map}};
+  }
+  if (name == kLikelihoodFieldProbModelName) {
+    auto params = beluga::LikelihoodFieldProbModelParam{};
+    params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
+    params.max_laser_distance = get_parameter("laser_max_range").as_double();
+    params.z_hit = get_parameter("z_hit").as_double();
+    params.z_random = get_parameter("z_rand").as_double();
+    params.sigma_hit = get_parameter("sigma_hit").as_double();
+    return beluga::LikelihoodFieldProbModel{params, beluga_ros::OccupancyGrid{map}};
   }
   if (name == kBeamSensorModelName) {
     auto params = beluga::BeamModelParam{};
