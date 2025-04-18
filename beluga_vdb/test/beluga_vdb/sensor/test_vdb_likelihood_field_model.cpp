@@ -26,7 +26,7 @@
 #include <range/v3/view/transform.hpp>
 #include <sophus/common.hpp>
 
-#include "beluga_vdb/sensor/likelihood_field_model3.hpp"
+#include "beluga_vdb/sensor/vdb_likelihood_field_model.hpp"
 #include "beluga_vdb/test/simple_pointcloud_interface.hpp"
 
 namespace {
@@ -64,7 +64,7 @@ auto make_map(const double voxel_size, const std::vector<T>& world_points) {
   return openvdb::tools::topologyToLevelSet(*grid, kHalfWidth, kClosingSteps);
 }
 
-TEST(TestLikelihoodFieldModel3, Point) {
+TEST(TestVDBLikelihoodFieldModel2, Point) {
   openvdb::initialize();
   // Parameters
   constexpr double kVoxelSize = 0.07;
@@ -79,9 +79,112 @@ TEST(TestLikelihoodFieldModel3, Point) {
   auto map = make_map<openvdb::FloatGrid, openvdb::math::Vec3s>(kVoxelSize, world_points);
 
   const auto params =
-      beluga_vdb::LikelihoodFieldModel3Param{kMaxObstacleDistance, kMaxLaserDistance, kZHit, kZRandom, kSigmaHit};
+      beluga_vdb::VDBLikelihoodFieldModelParam{kMaxObstacleDistance, kMaxLaserDistance, kZHit, kZRandom, kSigmaHit};
   auto sensor_model =
-      beluga_vdb::LikelihoodFieldModel3<openvdb::FloatGrid, beluga_vdb::testing::SimpleSparsePointCloud3f>{
+      beluga_vdb::VDBLikelihoodFieldModel2<openvdb::FloatGrid, beluga_vdb::testing::SimpleSparsePointCloud3f>{
+          params, *map};
+
+  // Exact point
+  auto pointcloud_measurement_exact =
+      beluga_vdb::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{{1.0F, 1.0F, 1.0F}}};
+  auto state_weighting_function_exact = sensor_model(std::move(pointcloud_measurement_exact));
+  ASSERT_GT(state_weighting_function_exact(Sophus::SE2d{}), 1.90);
+
+  // Close point (Inside the narrow band)
+  auto pointcloud_measurement_close =
+      beluga_vdb::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{{1.035F, 1.0F, 1.0F}}};
+  auto state_weighting_function_close = sensor_model(std::move(pointcloud_measurement_close));
+  ASSERT_GT(state_weighting_function_close(Sophus::SE2d{}), 1.8);
+
+  // Far point (Outside the narrow band)
+  auto pointcloud_measurement_far =
+      beluga_vdb::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{{1.1F, 1.1F, 1.1F}}};
+  auto state_weighting_function_far = sensor_model(std::move(pointcloud_measurement_far));
+  ASSERT_LT(state_weighting_function_far(Sophus::SE2d{}), 1.65);
+}
+
+TEST(TestVDBLikelihoodFieldModel2, Cube) {
+  openvdb::initialize();
+  // Parameters
+  constexpr double kVoxelSize = 0.07;
+  constexpr double kMaxObstacleDistance = 2.0;
+  constexpr double kMaxLaserDistance = 100.0;
+  constexpr double kZHit = 0.5;
+  constexpr double kZRandom = 0.001;
+  constexpr double kSigmaHit = 0.22;
+
+  // Create Grid
+  const std::vector<openvdb::math::Vec3s> world_points{
+      openvdb::math::Vec3s(1.0F, 1.0F, 1.0F),   openvdb::math::Vec3s(1.0F, 1.0F, -1.0F),
+      openvdb::math::Vec3s(1.0F, -1.0F, 1.0F),  openvdb::math::Vec3s(1.0F, -1.0F, -1.0F),
+      openvdb::math::Vec3s(-1.0F, -1.0F, 1.0F), openvdb::math::Vec3s(-1.0F, -1.0F, -1.0F),
+      openvdb::math::Vec3s(-1.0F, 1.0F, 1.0F),  openvdb::math::Vec3s(-1.0F, 1.0F, -1.0F)};
+  auto map = make_map<openvdb::FloatGrid, openvdb::math::Vec3s>(kVoxelSize, world_points);
+
+  const auto params =
+      beluga_vdb::VDBLikelihoodFieldModelParam{kMaxObstacleDistance, kMaxLaserDistance, kZHit, kZRandom, kSigmaHit};
+  auto sensor_model =
+      beluga_vdb::VDBLikelihoodFieldModel2<openvdb::FloatGrid, beluga_vdb::testing::SimpleSparsePointCloud3f>{
+          params, *map};
+
+  // Exact point
+  auto pointcloud_measurement_exact = beluga_vdb::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{
+      {1.0F, 1.0F, 1.0F},
+      {1.0F, 1.0F, -1.0F},
+      {1.0F, -1.0F, 1.0F},
+      {1.0F, -1.0F, -1.0F},
+      {-1.0F, -1.0F, 1.0F},
+      {-1.0F, -1.0F, -1.0F},
+      {-1.0F, 1.0F, 1.0F},
+      {-1.0F, 1.0F, -1.0F}}};
+  auto state_weighting_function_exact = sensor_model(std::move(pointcloud_measurement_exact));
+  ASSERT_GT(state_weighting_function_exact(Sophus::SE2d{}), 8.2);
+
+  // Close point (Inside the narrow band)
+  auto pointcloud_measurement_close = beluga_vdb::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{
+      {1.035F, 1.0F, 1.0F},
+      {1.035F, 1.0F, -1.0F},
+      {1.035F, -1.0F, 1.0F},
+      {1.035F, -1.0F, -1.0F},
+      {-1.0F, -1.0F, 1.0F},
+      {-1.0F, -1.0F, -1.0F},
+      {-1.0F, 1.0F, 1.0F},
+      {-1.0F, 1.0F, -1.0F}}};
+  auto state_weighting_function_close = sensor_model(std::move(pointcloud_measurement_close));
+  ASSERT_GT(state_weighting_function_close(Sophus::SE2d{}), 7.4);
+
+  // Far point (Outside the narrow band)
+  auto pointcloud_measurement_far = beluga_vdb::testing::SimpleSparsePointCloud3f{std::vector<Eigen::Vector3<float>>{
+      {1.1F, 1.1F, 1.1F},
+      {1.1F, 1.1F, -1.1F},
+      {1.1F, -1.1F, 1.1F},
+      {1.1F, -1.1F, -1.1F},
+      {-1.1F, -1.1F, 1.1F},
+      {-1.1F, -1.1F, -1.1F},
+      {-1.1F, 1.1F, 1.1F},
+      {-1.1F, 1.1F, -1.1F}}};
+  auto state_weighting_function_far = sensor_model(std::move(pointcloud_measurement_far));
+  ASSERT_LT(state_weighting_function_far(Sophus::SE2d{}), 6.85);
+}
+
+TEST(TestVDBLikelihoodFieldModel3, Point) {
+  openvdb::initialize();
+  // Parameters
+  constexpr double kVoxelSize = 0.07;
+  constexpr double kMaxObstacleDistance = 2.0;
+  constexpr double kMaxLaserDistance = 100.0;
+  constexpr double kZHit = 0.5;
+  constexpr double kZRandom = 0.001;
+  constexpr double kSigmaHit = 0.22;
+
+  // Create Grid
+  const std::vector<openvdb::math::Vec3s> world_points{openvdb::math::Vec3s(1.0F, 1.0F, 1.0F)};
+  auto map = make_map<openvdb::FloatGrid, openvdb::math::Vec3s>(kVoxelSize, world_points);
+
+  const auto params =
+      beluga_vdb::VDBLikelihoodFieldModelParam{kMaxObstacleDistance, kMaxLaserDistance, kZHit, kZRandom, kSigmaHit};
+  auto sensor_model =
+      beluga_vdb::VDBLikelihoodFieldModel3<openvdb::FloatGrid, beluga_vdb::testing::SimpleSparsePointCloud3f>{
           params, *map};
 
   // Exact point
@@ -103,7 +206,7 @@ TEST(TestLikelihoodFieldModel3, Point) {
   ASSERT_LT(state_weighting_function_far(Sophus::SE3d{}), 1.65);
 }
 
-TEST(TestLikelihoodFieldModel3, Cube) {
+TEST(TestVDBLikelihoodFieldModel3, Cube) {
   openvdb::initialize();
   // Parameters
   constexpr double kVoxelSize = 0.07;
@@ -122,9 +225,9 @@ TEST(TestLikelihoodFieldModel3, Cube) {
   auto map = make_map<openvdb::FloatGrid, openvdb::math::Vec3s>(kVoxelSize, world_points);
 
   const auto params =
-      beluga_vdb::LikelihoodFieldModel3Param{kMaxObstacleDistance, kMaxLaserDistance, kZHit, kZRandom, kSigmaHit};
+      beluga_vdb::VDBLikelihoodFieldModelParam{kMaxObstacleDistance, kMaxLaserDistance, kZHit, kZRandom, kSigmaHit};
   auto sensor_model =
-      beluga_vdb::LikelihoodFieldModel3<openvdb::FloatGrid, beluga_vdb::testing::SimpleSparsePointCloud3f>{
+      beluga_vdb::VDBLikelihoodFieldModel3<openvdb::FloatGrid, beluga_vdb::testing::SimpleSparsePointCloud3f>{
           params, *map};
 
   // Exact point

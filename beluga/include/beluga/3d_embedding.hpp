@@ -31,6 +31,11 @@ inline Sophus::SE3d To3d(const Sophus::SE2d& tf) {
       Sophus::SO3d::rotZ(tf.so2().log()), Eigen::Vector3d{tf.translation().x(), tf.translation().y(), 0.0}};
 }
 
+/// Workaround for algorithms that need to handle 2D and 3D poses.
+inline Sophus::SE3d To3d(const Sophus::SE3d& pose) {
+  return pose;
+}
+
 }  // namespace beluga
 
 #endif
