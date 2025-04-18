@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Mar 19 08:43:07 2025 -0300, 875283c&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Sat Apr 19 05:27:45 2025 +0800, a0cf83f&#39;"/>
   </head>
   
   
@@ -469,9 +469,13 @@ $(function() {
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;      Sophus::SO3d::rotZ(tf.so2().log()), Eigen::Vector3d{tf.translation().x(), tf.translation().y(), 0.0}};</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="namespacebeluga.html#aa241326af304fa6f220dae8e59abfaf8">   35</a></span>&#160;<span class="keyword">inline</span> Sophus::SE3d <a class="code" href="namespacebeluga.html#a4dcdce1508dcbf370be7429ab791d89e">To3d</a>(<span class="keyword">const</span> Sophus::SE3d&amp; pose) {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keywordflow">return</span> pose;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
 <div class="ttc" id="anamespacebeluga_html_a4dcdce1508dcbf370be7429ab791d89e"><div class="ttname"><a href="namespacebeluga.html#a4dcdce1508dcbf370be7429ab791d89e">beluga::To3d</a></div><div class="ttdeci">Sophus::SE3d To3d(const Sophus::SE2d &amp;tf)</div><div class="ttdoc">Embed a SE2 transform into 3D space with zero Z translation and only rotation about the Z axis.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:29</div></div>
 <div class="ttc" id="anamespacebeluga_html_a8701feef2edde9d5688efec1a66045ab"><div class="ttname"><a href="namespacebeluga.html#a8701feef2edde9d5688efec1a66045ab">beluga::To2d</a></div><div class="ttdeci">Sophus::SE2d To2d(const Sophus::SE3d &amp;tf)</div><div class="ttdoc">Transforms a SE3 transform into a SE2 transform, by flattening the Z axis.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:24</div></div>
@@ -531,7 +535,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Mar 19 08:43:07 2025 -0300, 875283c&#39;.
+  Last updated on &#39;Sat Apr 19 05:27:45 2025 +0800, a0cf83f&#39;.
   <br/>
 </p>
   </div>
