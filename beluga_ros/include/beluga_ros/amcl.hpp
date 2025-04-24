@@ -109,7 +109,8 @@ class Amcl {
 
   /// Sensor model variant type for runtime selection support.
   using sensor_model_variant = std::variant<
-      beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>,  //
+      beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>,      //
+      beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>,  //
       beluga::BeamSensorModel<beluga_ros::OccupancyGrid>>;
 
   /// Execution policy variant type for runtime selection support.
