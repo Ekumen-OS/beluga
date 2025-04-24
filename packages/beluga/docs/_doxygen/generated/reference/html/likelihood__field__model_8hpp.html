@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Sat Apr 19 05:27:45 2025 +0800, a0cf83f&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Apr 24 12:11:17 2025 -0300, 876fc11&#39;"/>
   </head>
   
   
@@ -436,7 +436,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">likelihood_field_model.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -445,19 +446,10 @@ $(function() {
 <p>Implementation of a likelihood field sensor model for range finders.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;<a class="el" href="likelihood__field__model__base_8hpp_source.html">beluga/sensor/likelihood_field_model_base.hpp</a>&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;random&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;<a class="el" href="overlay_8hpp_source.html">beluga/actions/overlay.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="distance__map_8hpp_source.html">beluga/algorithm/distance_map.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="occupancy__grid_8hpp_source.html">beluga/sensor/data/occupancy_grid.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="value__grid_8hpp_source.html">beluga/sensor/data/value_grid.hpp</a>&gt;</code><br />
-<code>#include &lt;range/v3/action/transform.hpp&gt;</code><br />
-<code>#include &lt;range/v3/range/conversion.hpp&gt;</code><br />
-<code>#include &lt;range/v3/view/all.hpp&gt;</code><br />
-<code>#include &lt;range/v3/view/transform.hpp&gt;</code><br />
-<code>#include &lt;sophus/se2.hpp&gt;</code><br />
-<code>#include &lt;sophus/so2.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for likelihood_field_model.hpp:</div>
 <div class="dyncontent">
@@ -475,9 +467,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeluga_1_1LikelihoodFieldModelParam.html">beluga::LikelihoodFieldModelParam</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct a <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html" title="Likelihood field sensor model for range finders.">LikelihoodFieldModel</a> instance.  <a href="structbeluga_1_1LikelihoodFieldModelParam.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModel.html">beluga::LikelihoodFieldModel&lt; OccupancyGrid &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Likelihood field sensor model for range finders.  <a href="classbeluga_1_1LikelihoodFieldModel.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -487,6 +476,12 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacebeluga"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html">beluga</a></td></tr>
 <tr class="memdesc:namespacebeluga"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main Beluga namespace. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a35093dbc9ee16be3abbceaa7b1568fc4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga.html#a35093dbc9ee16be3abbceaa7b1568fc4">beluga::LikelihoodFieldModelParam</a> = LikelihoodFieldModelBaseParam</td></tr>
+<tr class="memdesc:a35093dbc9ee16be3abbceaa7b1568fc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters used to construct a <a class="el" href="classbeluga_1_1LikelihoodFieldModel.html" title="Likelihood field sensor model for range finders.">LikelihoodFieldModel</a> instance.  <a href="namespacebeluga.html#a35093dbc9ee16be3abbceaa7b1568fc4">More...</a><br /></td></tr>
+<tr class="separator:a35093dbc9ee16be3abbceaa7b1568fc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of a likelihood field sensor model for range finders. </p>
@@ -546,7 +541,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Sat Apr 19 05:27:45 2025 +0800, a0cf83f&#39;.
+  Last updated on &#39;Thu Apr 24 12:11:17 2025 -0300, 876fc11&#39;.
   <br/>
 </p>
   </div>

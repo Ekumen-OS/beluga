@@ -1,0 +1,4 @@
+<map id="beluga::LikelihoodFieldModel&lt; OccupancyGrid &gt;" name="beluga::LikelihoodFieldModel&lt; OccupancyGrid &gt;">
+<area shape="rect" id="node1" title="Likelihood field sensor model for range finders." alt="" coords="5,95,216,136"/>
+<area shape="rect" id="node2" href="$classbeluga_1_1LikelihoodFieldModelBase.html" title="Likelihood field common sensor model for range finders." alt="" coords="5,5,216,47"/>
+</map>

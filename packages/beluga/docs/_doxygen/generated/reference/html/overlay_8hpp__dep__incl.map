@@ -1,7 +1,9 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/actions/overlay.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/actions/overlay.hpp">
-<area shape="rect" id="node1" title="Implementation of the overlay range adaptor object." alt="" coords="23,5,223,61"/>
-<area shape="rect" id="node2" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="27,109,220,180"/>
-<area shape="rect" id="node3" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="27,228,220,284"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="27,332,220,388"/>
-<area shape="rect" id="node5" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="5,436,241,492"/>
+<area shape="rect" id="node1" title="Implementation of the overlay range adaptor object." alt="" coords="110,5,310,61"/>
+<area shape="rect" id="node2" href="$likelihood__field__model__base_8hpp.html" title="Implementation of a likelihood field common sensor model for range finders." alt="" coords="113,109,307,180"/>
+<area shape="rect" id="node3" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="5,228,199,299"/>
+<area shape="rect" id="node7" href="$likelihood__field__prob__model_8hpp.html" title="Implementation of a likelihood field prob sensor model for range finders." alt="" coords="223,228,416,299"/>
+<area shape="rect" id="node4" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="113,347,307,403"/>
+<area shape="rect" id="node5" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="113,451,307,507"/>
+<area shape="rect" id="node6" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="92,555,328,611"/>
 </map>

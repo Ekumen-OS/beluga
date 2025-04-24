@@ -1,0 +1,9 @@
+<map id="beluga::LikelihoodFieldModelBase&lt; OccupancyGrid &gt;" name="beluga::LikelihoodFieldModelBase&lt; OccupancyGrid &gt;">
+<area shape="rect" id="node1" title="Likelihood field common sensor model for range finders." alt="" coords="51,457,261,499"/>
+<area shape="rect" id="node2" href="$structbeluga_1_1LikelihoodFieldModelBaseParam.html" title="Parameters used to construct a LikelihoodFieldModelBase instance." alt="" coords="5,353,216,395"/>
+<area shape="rect" id="node3" href="$classbeluga_1_1ValueGrid2.html" title=" " alt="" coords="241,353,386,395"/>
+<area shape="rect" id="node4" href="$classbeluga_1_1BaseLinearGrid2.html" title="Linear 2D grid base type." alt="" coords="223,263,404,304"/>
+<area shape="rect" id="node5" href="$classbeluga_1_1BaseDenseGrid2.html" title="Dense 2D grid base type." alt="" coords="222,172,405,213"/>
+<area shape="rect" id="node6" href="$classbeluga_1_1BaseRegularGrid.html" title="Regularly spaced N dimensional grid base type." alt="" coords="203,96,423,123"/>
+<area shape="rect" id="node7" title=" " alt="" coords="245,5,381,47"/>
+</map>

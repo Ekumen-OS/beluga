@@ -1,52 +1,52 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor.hpp">
-<area shape="rect" id="node1" title="Includes all Beluga sensor models and their interfaces." alt="" coords="1079,5,1272,61"/>
-<area shape="rect" id="node2" href="$beam__model_8hpp.html" title="Implementation of a beam sensor model for range finders." alt="" coords="1098,109,1253,151"/>
-<area shape="rect" id="node19" href="$bearing__sensor__model_8hpp.html" title="Implementation of a discrete landmark bearing sensor model." alt="" coords="825,199,992,240"/>
-<area shape="rect" id="node24" href="$landmark__sensor__model_8hpp.html" title="Implementation of a discrete landmark sensor model." alt="" coords="622,199,801,240"/>
-<area shape="rect" id="node25" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="1640,109,1820,151"/>
-<area shape="rect" id="node40" href="$ndt__sensor__model_8hpp_source.html" title=" " alt="" coords="4405,109,4593,151"/>
-<area shape="rect" id="node3" title=" " alt="" coords="1714,295,1799,322"/>
-<area shape="rect" id="node4" title=" " alt="" coords="413,295,476,322"/>
-<area shape="rect" id="node5" title=" " alt="" coords="317,295,389,322"/>
-<area shape="rect" id="node6" title=" " alt="" coords="2256,385,2319,411"/>
-<area shape="rect" id="node7" href="$raycasting_8hpp.html" title="Implementation of raycasting algorithms." alt="" coords="1205,206,1439,233"/>
-<area shape="rect" id="node12" title=" " alt="" coords="431,385,594,411"/>
-<area shape="rect" id="node15" title=" " alt="" coords="1567,295,1690,322"/>
-<area shape="rect" id="node16" title=" " alt="" coords="2026,295,2149,322"/>
-<area shape="rect" id="node17" title=" " alt="" coords="69,295,292,322"/>
-<area shape="rect" id="node18" title=" " alt="" coords="850,295,1061,322"/>
-<area shape="rect" id="node8" title=" " alt="" coords="2411,385,2486,411"/>
-<area shape="rect" id="node9" title=" " alt="" coords="1379,385,1439,411"/>
-<area shape="rect" id="node10" href="$bresenham_8hpp.html" title="Implementation of Bresenham&#45;like raytracing algorithms." alt="" coords="1186,288,1391,329"/>
-<area shape="rect" id="node13" title=" " alt="" coords="1141,377,1287,419"/>
-<area shape="rect" id="node11" title=" " alt="" coords="2029,385,2095,411"/>
-<area shape="rect" id="node14" title=" " alt="" coords="3493,385,3585,411"/>
-<area shape="rect" id="node20" title=" " alt="" coords="4178,295,4301,322"/>
-<area shape="rect" id="node21" href="$landmark__detection__types_8hpp.html" title="Auxiliar types for landmark models." alt="" coords="603,288,775,329"/>
-<area shape="rect" id="node22" title=" " alt="" coords="619,385,759,411"/>
-<area shape="rect" id="node23" title=" " alt="" coords="783,385,957,411"/>
-<area shape="rect" id="node26" href="$overlay_8hpp.html" title="Implementation of the overlay range adaptor object." alt="" coords="3623,206,3819,233"/>
-<area shape="rect" id="node30" href="$distance__map_8hpp.html" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="3006,199,3198,240"/>
-<area shape="rect" id="node35" href="$occupancy__grid_8hpp.html" title="Concepts and abstract implementations of occupancy grids." alt="" coords="2458,199,2613,240"/>
-<area shape="rect" id="node38" href="$value__grid_8hpp.html" title="Implementation of generic value grid." alt="" coords="1767,199,1914,240"/>
-<area shape="rect" id="node39" title=" " alt="" coords="1989,206,2207,233"/>
-<area shape="rect" id="node27" title=" " alt="" coords="4069,295,4154,322"/>
-<area shape="rect" id="node28" title=" " alt="" coords="3623,295,3818,322"/>
-<area shape="rect" id="node29" title=" " alt="" coords="3842,295,4045,322"/>
-<area shape="rect" id="node31" title=" " alt="" coords="3536,295,3599,322"/>
-<area shape="rect" id="node32" title=" " alt="" coords="3072,295,3268,322"/>
-<area shape="rect" id="node33" title=" " alt="" coords="3293,295,3511,322"/>
-<area shape="rect" id="node34" title=" " alt="" coords="2779,295,2996,322"/>
-<area shape="rect" id="node36" title=" " alt="" coords="2597,295,2652,322"/>
-<area shape="rect" id="node37" href="$linear__grid_8hpp.html" title="Concepts and abstract implementations of linear (ie. contiguous storage) grids." alt="" coords="2375,288,2522,329"/>
-<area shape="rect" id="node41" title=" " alt="" coords="4785,206,4854,233"/>
-<area shape="rect" id="node42" title=" " alt="" coords="4878,206,4969,233"/>
-<area shape="rect" id="node43" title=" " alt="" coords="4993,206,5080,233"/>
-<area shape="rect" id="node44" title=" " alt="" coords="4557,295,4649,322"/>
-<area shape="rect" id="node45" title=" " alt="" coords="5104,206,5228,233"/>
-<area shape="rect" id="node46" title=" " alt="" coords="5253,206,5330,233"/>
-<area shape="rect" id="node47" title=" " alt="" coords="4375,295,4533,322"/>
-<area shape="rect" id="node48" href="$ndt__cell_8hpp_source.html" title=" " alt="" coords="4265,199,4411,240"/>
-<area shape="rect" id="node49" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="4673,295,4899,322"/>
-<area shape="rect" id="node50" href="$sparse__value__grid_8hpp.html" title="Implementation of generic sparse value regular grid." alt="" coords="4588,199,4760,240"/>
+<area shape="rect" id="node1" title="Includes all Beluga sensor models and their interfaces." alt="" coords="2237,5,2430,61"/>
+<area shape="rect" id="node2" href="$beam__model_8hpp.html" title="Implementation of a beam sensor model for range finders." alt="" coords="2396,109,2551,151"/>
+<area shape="rect" id="node19" href="$bearing__sensor__model_8hpp.html" title="Implementation of a discrete landmark bearing sensor model." alt="" coords="2422,199,2589,240"/>
+<area shape="rect" id="node24" href="$landmark__sensor__model_8hpp.html" title="Implementation of a discrete landmark sensor model." alt="" coords="2219,199,2397,240"/>
+<area shape="rect" id="node25" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="751,109,931,151"/>
+<area shape="rect" id="node35" href="$likelihood__field__prob__model_8hpp.html" title="Implementation of a likelihood field prob sensor model for range finders." alt="" coords="1258,109,1438,151"/>
+<area shape="rect" id="node36" href="$ndt__sensor__model_8hpp_source.html" title=" " alt="" coords="4025,109,4213,151"/>
+<area shape="rect" id="node3" title=" " alt="" coords="560,385,645,411"/>
+<area shape="rect" id="node4" title=" " alt="" coords="1582,385,1645,411"/>
+<area shape="rect" id="node5" title=" " alt="" coords="1301,295,1373,322"/>
+<area shape="rect" id="node6" title=" " alt="" coords="1430,385,1493,411"/>
+<area shape="rect" id="node7" href="$raycasting_8hpp.html" title="Implementation of raycasting algorithms." alt="" coords="3234,206,3467,233"/>
+<area shape="rect" id="node12" title=" " alt="" coords="3269,385,3432,411"/>
+<area shape="rect" id="node15" title=" " alt="" coords="2949,295,3072,322"/>
+<area shape="rect" id="node16" title=" " alt="" coords="3579,295,3701,322"/>
+<area shape="rect" id="node17" title=" " alt="" coords="1701,295,1923,322"/>
+<area shape="rect" id="node18" title=" " alt="" coords="2655,385,2865,411"/>
+<area shape="rect" id="node8" title=" " alt="" coords="4445,295,4520,322"/>
+<area shape="rect" id="node9" title=" " alt="" coords="3035,385,3095,411"/>
+<area shape="rect" id="node10" href="$bresenham_8hpp.html" title="Implementation of Bresenham&#45;like raytracing algorithms." alt="" coords="3248,288,3453,329"/>
+<area shape="rect" id="node13" title=" " alt="" coords="3463,377,3609,419"/>
+<area shape="rect" id="node11" title=" " alt="" coords="2561,385,2628,411"/>
+<area shape="rect" id="node14" title=" " alt="" coords="4434,385,4526,411"/>
+<area shape="rect" id="node20" title=" " alt="" coords="3776,295,3899,322"/>
+<area shape="rect" id="node21" href="$landmark__detection__types_8hpp.html" title="Auxiliar types for landmark models." alt="" coords="2321,288,2493,329"/>
+<area shape="rect" id="node22" title=" " alt="" coords="2366,385,2506,411"/>
+<area shape="rect" id="node23" title=" " alt="" coords="2167,385,2342,411"/>
+<area shape="rect" id="node26" href="$likelihood__field__model__base_8hpp.html" title="Implementation of a likelihood field common sensor model for range finders." alt="" coords="1015,199,1195,240"/>
+<area shape="rect" id="node27" href="$overlay_8hpp.html" title="Implementation of the overlay range adaptor object." alt="" coords="217,295,413,322"/>
+<area shape="rect" id="node31" href="$distance__map_8hpp.html" title="Implementation of algorithm to calculate distance from obstacles." alt="" coords="984,288,1176,329"/>
+<area shape="rect" id="node32" href="$occupancy__grid_8hpp.html" title="Concepts and abstract implementations of occupancy grids." alt="" coords="2517,288,2672,329"/>
+<area shape="rect" id="node33" href="$value__grid_8hpp.html" title="Implementation of generic value grid." alt="" coords="2099,288,2245,329"/>
+<area shape="rect" id="node34" title=" " alt="" coords="691,295,909,322"/>
+<area shape="rect" id="node28" title=" " alt="" coords="232,385,317,411"/>
+<area shape="rect" id="node29" title=" " alt="" coords="341,385,536,411"/>
+<area shape="rect" id="node30" title=" " alt="" coords="5,385,208,411"/>
+<area shape="rect" id="node37" title=" " alt="" coords="5085,206,5155,233"/>
+<area shape="rect" id="node38" title=" " alt="" coords="3705,206,3796,233"/>
+<area shape="rect" id="node39" title=" " alt="" coords="3821,206,3907,233"/>
+<area shape="rect" id="node40" title=" " alt="" coords="4545,295,4637,322"/>
+<area shape="rect" id="node41" title=" " alt="" coords="3931,206,4055,233"/>
+<area shape="rect" id="node42" title=" " alt="" coords="4080,206,4157,233"/>
+<area shape="rect" id="node43" title=" " alt="" coords="4264,295,4421,322"/>
+<area shape="rect" id="node44" href="$ndt__cell_8hpp_source.html" title=" " alt="" coords="4232,199,4379,240"/>
+<area shape="rect" id="node47" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="4809,385,5034,411"/>
+<area shape="rect" id="node49" href="$sparse__value__grid_8hpp.html" title="Implementation of generic sparse value regular grid." alt="" coords="4527,199,4699,240"/>
+<area shape="rect" id="node45" title=" " alt="" coords="3923,295,3999,322"/>
+<area shape="rect" id="node46" title=" " alt="" coords="4024,295,4189,322"/>
+<area shape="rect" id="node48" title=" " alt="" coords="4870,467,4973,493"/>
+<area shape="rect" id="node50" href="$regular__grid_8hpp.html" title="Concepts and abstract implementations of regular grids." alt="" coords="4661,288,4808,329"/>
 </map>
