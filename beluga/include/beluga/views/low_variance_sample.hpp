@@ -33,7 +33,15 @@ namespace beluga::views {
 
 namespace detail {
 
-/// Implementation of the sample view.
+/// Implementation of the low variance sample view.
+/// This algorithm computes a single random number r in the range [0, 1/M) and then selects samples from
+/// according to this number but still with a probability proportional to the sample weight. This is
+/// done by drawing a random number r in the interval [0;M^-1]. Where M is the number of samples in the range.
+/// It selects the particles by repeadly adding the fixed amount M-1 to r and by choosing the particle that
+/// corresponds to to the resulting number.
+/// [Based on] Sebastian Thrun, Wolfram Burgard, and Dieter Fox. 2005. Probabilistic Robotics (Intelligent Robotics
+/// and Autonomous Agents). The MIT Press. https://gaoyichao.com/Xiaotu/resource/refs/PR.MIT.en.pdf
+
 /**
  * \tparam Range A [random access](https://en.cppreference.com/w/cpp/ranges/random_access_range) and
  *  [sized](https://en.cppreference.com/w/cpp/ranges/sized_range) range.
@@ -160,13 +168,6 @@ struct low_variance_sample_base_fn {
       return low_variance_sample_from_range(std::forward<Range>(range), uniform_weights, engine);
     }
   }
-
-  // /// Sample from random distributions.
-  // template <class Distribution, class URNG>
-  // constexpr auto low_variance_sample_from_distribution(Distribution distribution, URNG& engine) const {
-  //   return ranges::views::generate(
-  //       [distribution = std::move(distribution), &engine]() mutable { return distribution(engine); });
-  // }
 };
 
 /// Implementation detail for a sample range adaptor object.
@@ -185,9 +186,6 @@ struct low_variance_sample_fn : public low_variance_sample_base_fn {
     if constexpr (ranges::range<T> && ranges::range<U>) {
       auto& engine = ranges::detail::get_random_engine();
       return low_variance_sample_from_range(std::forward<T>(t), std::forward<U>(u), engine);
-      // } else if constexpr (is_random_distribution_v<T>) {
-      //   static_assert(std::is_lvalue_reference_v<U&&>);  // Assume U is a URNG
-      //   return low_variance_sample_from_distribution(std::forward<T>(t), u);
     } else {
       static_assert(ranges::range<T>);
       static_assert(std::is_lvalue_reference_v<U&&>);  // Assume U is a URNG
@@ -201,9 +199,6 @@ struct low_variance_sample_fn : public low_variance_sample_base_fn {
     if constexpr (ranges::range<T>) {
       auto& engine = ranges::detail::get_random_engine();
       return low_variance_sample_from_range(std::forward<T>(t), engine);
-      // } else if constexpr (is_random_distribution_v<T>) {
-      //   auto& engine = ranges::detail::get_random_engine();
-      //   return low_variance_sample_from_distribution(std::forward<T>(t), engine);
     } else {
       static_assert(std::is_lvalue_reference_v<T&&>);  // Assume T is a URNG
       return ranges::make_view_closure(ranges::bind_back(low_variance_sample_fn{}, std::ref(t)));
@@ -219,27 +214,8 @@ struct low_variance_sample_fn : public low_variance_sample_base_fn {
 };
 
 }  // namespace detail
+/// \brief A view adaptor that samples elements from a range with replacement using low variance sampling.
 
-/// [Range adaptor object](https://en.cppreference.com/w/cpp/named_req/RangeAdaptorObject) that
-/// will randomly sample with replacement from an input range.
-/**
- * Unlike `std::views::sample`, this does not require a size parameter and the samples will be taken
- * from the population **with replacement**, making the sample values independent.
- * To use this, the input range must model the
- * [random_access_range](https://en.cppreference.com/w/cpp/ranges/random_access_range)
- * and [sized_range](https://en.cppreference.com/w/cpp/ranges/sized_range) concepts.
- *
- * This view implements multinomial resampling for a given range of particles.
- * The core idea is to draw random indices / iterators to the input particle range
- * from a [multinomial distribution](https://en.wikipedia.org/wiki/Multinomial_distribution)
- * parameterized after particle weights (and assumed uniform for non-weighted particle ranges).
- *
- * This view can also be used to convert any random distribution (a callable that takes a URNG as an
- * input argument) into an infinite view that generates values from that distribution.
- *
- * This view is not cheap to copy, so care must be taken when moving it around.
- * Range-v3 does not support move-only views at the time of this implementation.
- */
 inline constexpr ranges::views::view_closure<detail::low_variance_sample_fn> low_variance_sample;
 
 }  // namespace beluga::views
