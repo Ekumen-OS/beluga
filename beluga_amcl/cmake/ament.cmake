@@ -21,22 +21,41 @@ find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_srvs REQUIRED)
 
+# Determine if we are using Kilted or newer, where ament_target_dependencies is deprecated.
+set(USE_MODERN_CMAKE FALSE)
+if(DEFINED ENV{ROS_DISTRO} AND "$ENV{ROS_DISTRO}" STREQUAL "kilted")
+  set(USE_MODERN_CMAKE TRUE)
+endif()
+
 add_library(beluga_amcl_ros2_common SHARED)
 target_sources(beluga_amcl_ros2_common PRIVATE src/ros2_common.cpp)
 
 target_include_directories(
   beluga_amcl_ros2_common
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+         ${std_srvs_INCLUDE_DIRS})
 
-ament_target_dependencies(
-  beluga_amcl_ros2_common
-  PUBLIC beluga_ros
-         bondcpp
-         rclcpp
-         rclcpp_components
-         rclcpp_lifecycle
-         std_srvs)
+if(USE_MODERN_CMAKE)
+  target_link_libraries(beluga_amcl_ros2_common PUBLIC
+    beluga_ros::beluga_ros
+    bondcpp::bondcpp
+    rclcpp::rclcpp
+    rclcpp_components::component
+    rclcpp_lifecycle::rclcpp_lifecycle
+    ${std_srvs_TARGETS}
+  )
+else()
+  ament_target_dependencies(
+    beluga_amcl_ros2_common
+    PUBLIC beluga_ros
+           bondcpp
+           rclcpp
+           rclcpp_components
+           rclcpp_lifecycle
+           std_srvs
+  )
+endif()
 
 add_library(amcl_node_component SHARED)
 target_sources(amcl_node_component PRIVATE src/amcl_node.cpp)
@@ -50,36 +69,40 @@ install(
 target_include_directories(
   amcl_node_component
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+         ${std_srvs_INCLUDE_DIRS})
 
 target_link_libraries(amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
 target_compile_features(amcl_node_component PUBLIC cxx_std_17)
 
-ament_target_dependencies(
-  amcl_node_component
-  PUBLIC beluga
-         beluga_ros
-         bondcpp
-         rclcpp
-         rclcpp_components
-         rclcpp_lifecycle
-         std_srvs)
+if(USE_MODERN_CMAKE)
+  target_link_libraries(amcl_node_component PUBLIC
+    beluga::beluga
+    beluga_ros::beluga_ros
+    bondcpp::bondcpp
+    rclcpp::rclcpp
+    rclcpp_components::component
+    rclcpp_lifecycle::rclcpp_lifecycle
+    ${std_srvs_TARGETS}
+  )
+else()
+  ament_target_dependencies(
+    amcl_node_component
+    PUBLIC beluga
+           beluga_ros
+           bondcpp
+           rclcpp
+           rclcpp_components
+           rclcpp_lifecycle
+           std_srvs
+  )
+endif()
 
 rclcpp_components_register_node(
   amcl_node_component
   PLUGIN "beluga_amcl::AmclNode"
   EXECUTABLE amcl_node)
-
-ament_export_dependencies(
-  beluga
-  beluga_ros
-  bondcpp
-  rclcpp
-  rclcpp_components
-  rclcpp_lifecycle
-  std_srvs)
-ament_export_include_directories("include/${PROJECT_NAME}")
 
 install(
   TARGETS amcl_node_component
@@ -98,36 +121,40 @@ target_sources(ndt_amcl_node_component PRIVATE src/ndt_amcl_node.cpp)
 target_include_directories(
   ndt_amcl_node_component
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+         ${std_srvs_INCLUDE_DIRS})
 
 target_compile_features(ndt_amcl_node_component PUBLIC cxx_std_17)
 
 target_link_libraries(ndt_amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
-ament_target_dependencies(
-  ndt_amcl_node_component
-  PUBLIC beluga
-         beluga_ros
-         bondcpp
-         rclcpp
-         rclcpp_components
-         rclcpp_lifecycle
-         std_srvs)
+if(USE_MODERN_CMAKE)
+  target_link_libraries(ndt_amcl_node_component PUBLIC
+    beluga::beluga
+    beluga_ros::beluga_ros
+    bondcpp::bondcpp
+    rclcpp::rclcpp
+    rclcpp_components::component
+    rclcpp_lifecycle::rclcpp_lifecycle
+    ${std_srvs_TARGETS}
+  )
+else()
+  ament_target_dependencies(
+    ndt_amcl_node_component
+    PUBLIC beluga
+           beluga_ros
+           bondcpp
+           rclcpp
+           rclcpp_components
+           rclcpp_lifecycle
+           std_srvs
+  )
+endif()
 
 rclcpp_components_register_node(
   ndt_amcl_node_component
   PLUGIN "beluga_amcl::NdtAmclNode"
   EXECUTABLE ndt_amcl_node)
-
-ament_export_dependencies(
-  beluga
-  beluga_ros
-  bondcpp
-  rclcpp
-  rclcpp_components
-  rclcpp_lifecycle
-  std_srvs)
-ament_export_include_directories("include/${PROJECT_NAME}")
 
 install(
   TARGETS ndt_amcl_node_component
@@ -145,21 +172,35 @@ target_sources(ndt_amcl_node_3d_component PRIVATE src/ndt_amcl_node_3d.cpp)
 target_include_directories(
   ndt_amcl_node_3d_component
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+         ${std_srvs_INCLUDE_DIRS})
 
 target_compile_features(ndt_amcl_node_3d_component PUBLIC cxx_std_17)
 
 target_link_libraries(ndt_amcl_node_3d_component PUBLIC beluga_amcl_ros2_common)
 
-ament_target_dependencies(
-  ndt_amcl_node_3d_component
-  PUBLIC beluga
-         beluga_ros
-         bondcpp
-         rclcpp
-         rclcpp_components
-         rclcpp_lifecycle
-         std_srvs)
+if(USE_MODERN_CMAKE)
+  target_link_libraries(ndt_amcl_node_3d_component PUBLIC
+    beluga::beluga
+    beluga_ros::beluga_ros
+    bondcpp::bondcpp
+    rclcpp::rclcpp
+    rclcpp_components::component
+    rclcpp_lifecycle::rclcpp_lifecycle
+    ${std_srvs_TARGETS}
+  )
+else()
+  ament_target_dependencies(
+    ndt_amcl_node_3d_component
+    PUBLIC beluga
+           beluga_ros
+           bondcpp
+           rclcpp
+           rclcpp_components
+           rclcpp_lifecycle
+           std_srvs
+  )
+endif()
 
 rclcpp_components_register_node(
   ndt_amcl_node_3d_component
@@ -184,6 +225,7 @@ ament_export_dependencies(
   rclcpp_components
   rclcpp_lifecycle
   std_srvs)
+
 ament_export_include_directories("include/${PROJECT_NAME}")
 
 if(BUILD_TESTING)
