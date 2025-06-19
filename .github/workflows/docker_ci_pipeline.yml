@@ -25,6 +25,7 @@ jobs:
           - noetic
           - humble
           - jazzy
+          - kilted
           - rolling
     steps:
       - name: Checkout repository
