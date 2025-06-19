@@ -21,12 +21,6 @@ find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_srvs REQUIRED)
 
-# Determine if we are using Kilted or newer, where ament_target_dependencies is deprecated.
-set(USE_MODERN_CMAKE FALSE)
-if(DEFINED ENV{ROS_DISTRO} AND "$ENV{ROS_DISTRO}" STREQUAL "kilted")
-  set(USE_MODERN_CMAKE TRUE)
-endif()
-
 add_library(beluga_amcl_ros2_common SHARED)
 target_sources(beluga_amcl_ros2_common PRIVATE src/ros2_common.cpp)
 
@@ -36,26 +30,14 @@ target_include_directories(
          $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
          ${std_srvs_INCLUDE_DIRS})
 
-if(USE_MODERN_CMAKE)
-  target_link_libraries(beluga_amcl_ros2_common PUBLIC
-    beluga_ros::beluga_ros
-    bondcpp::bondcpp
-    rclcpp::rclcpp
-    rclcpp_components::component
-    rclcpp_lifecycle::rclcpp_lifecycle
-    ${std_srvs_TARGETS}
-  )
-else()
-  ament_target_dependencies(
-    beluga_amcl_ros2_common
-    PUBLIC beluga_ros
-           bondcpp
-           rclcpp
-           rclcpp_components
-           rclcpp_lifecycle
-           std_srvs
-  )
-endif()
+target_link_libraries(beluga_amcl_ros2_common PUBLIC
+  beluga_ros::beluga_ros
+  bondcpp::bondcpp
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_lifecycle::rclcpp_lifecycle
+  ${std_srvs_TARGETS}
+)
 
 add_library(amcl_node_component SHARED)
 target_sources(amcl_node_component PRIVATE src/amcl_node.cpp)
@@ -76,28 +58,15 @@ target_link_libraries(amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
 target_compile_features(amcl_node_component PUBLIC cxx_std_17)
 
-if(USE_MODERN_CMAKE)
-  target_link_libraries(amcl_node_component PUBLIC
-    beluga::beluga
-    beluga_ros::beluga_ros
-    bondcpp::bondcpp
-    rclcpp::rclcpp
-    rclcpp_components::component
-    rclcpp_lifecycle::rclcpp_lifecycle
-    ${std_srvs_TARGETS}
-  )
-else()
-  ament_target_dependencies(
-    amcl_node_component
-    PUBLIC beluga
-           beluga_ros
-           bondcpp
-           rclcpp
-           rclcpp_components
-           rclcpp_lifecycle
-           std_srvs
-  )
-endif()
+target_link_libraries(amcl_node_component PUBLIC
+  beluga::beluga
+  beluga_ros::beluga_ros
+  bondcpp::bondcpp
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_lifecycle::rclcpp_lifecycle
+  ${std_srvs_TARGETS}
+)
 
 rclcpp_components_register_node(
   amcl_node_component
@@ -128,28 +97,15 @@ target_compile_features(ndt_amcl_node_component PUBLIC cxx_std_17)
 
 target_link_libraries(ndt_amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
-if(USE_MODERN_CMAKE)
-  target_link_libraries(ndt_amcl_node_component PUBLIC
-    beluga::beluga
-    beluga_ros::beluga_ros
-    bondcpp::bondcpp
-    rclcpp::rclcpp
-    rclcpp_components::component
-    rclcpp_lifecycle::rclcpp_lifecycle
-    ${std_srvs_TARGETS}
-  )
-else()
-  ament_target_dependencies(
-    ndt_amcl_node_component
-    PUBLIC beluga
-           beluga_ros
-           bondcpp
-           rclcpp
-           rclcpp_components
-           rclcpp_lifecycle
-           std_srvs
-  )
-endif()
+target_link_libraries(ndt_amcl_node_component PUBLIC
+  beluga::beluga
+  beluga_ros::beluga_ros
+  bondcpp::bondcpp
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_lifecycle::rclcpp_lifecycle
+  ${std_srvs_TARGETS}
+)
 
 rclcpp_components_register_node(
   ndt_amcl_node_component
@@ -179,28 +135,15 @@ target_compile_features(ndt_amcl_node_3d_component PUBLIC cxx_std_17)
 
 target_link_libraries(ndt_amcl_node_3d_component PUBLIC beluga_amcl_ros2_common)
 
-if(USE_MODERN_CMAKE)
-  target_link_libraries(ndt_amcl_node_3d_component PUBLIC
-    beluga::beluga
-    beluga_ros::beluga_ros
-    bondcpp::bondcpp
-    rclcpp::rclcpp
-    rclcpp_components::component
-    rclcpp_lifecycle::rclcpp_lifecycle
-    ${std_srvs_TARGETS}
-  )
-else()
-  ament_target_dependencies(
-    ndt_amcl_node_3d_component
-    PUBLIC beluga
-           beluga_ros
-           bondcpp
-           rclcpp
-           rclcpp_components
-           rclcpp_lifecycle
-           std_srvs
-  )
-endif()
+target_link_libraries(ndt_amcl_node_3d_component PUBLIC
+  beluga::beluga
+  beluga_ros::beluga_ros
+  bondcpp::bondcpp
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_lifecycle::rclcpp_lifecycle
+  ${std_srvs_TARGETS}
+)
 
 rclcpp_components_register_node(
   ndt_amcl_node_3d_component
