@@ -41,6 +41,7 @@ They are lazily evaluated range adaptor objects compatible with the Range-v3 lib
 | [beluga::views::states](@ref views/particles.hpp) | Produces a view of the states of a range of particles |
 | [beluga::views::take_evenly](@ref views/take_evenly.hpp) | Returns a range consisting of `count` elements evenly spaced over the source range |
 | [beluga::views::take_while_kld](@ref views/take_while_kld.hpp) | Take elements from a range while the KLD condition is statisfied |
+| [beluga::views::low_variance_sample](@ref views/low_variance_sample.hpp) | Implements low variance resampling for a given range of particles |
 | [beluga::views::weights](@ref views/particles.hpp) | Produces a view of the weights of a range of particles |
 | [beluga::views::zip](@ref views/zip.hpp) | Given N ranges, return a new range where the Mth element is a tuple of the Mth elements of all N ranges |
 
