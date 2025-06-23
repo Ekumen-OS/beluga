@@ -206,6 +206,7 @@ INSTANTIATE_TEST_SUITE_P(
     Models,
     TestInitializationWithModel,
     testing::Values(
+        std::make_tuple("differential_drive", "likelihood_field_prob"),
         std::make_tuple("differential_drive", "likelihood_field"),
         std::make_tuple("omnidirectional_drive", "beam"),
         std::make_tuple("stationary", "likelihood_field")));
