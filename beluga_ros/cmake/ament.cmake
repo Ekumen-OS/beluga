@@ -29,17 +29,17 @@ target_include_directories(
   beluga_ros PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                     $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_link_libraries(beluga_ros PUBLIC beluga::beluga)
-target_link_libraries(beluga_ros PUBLIC
-      ${geometry_msgs_TARGETS}
-      ${nav_msgs_TARGETS}
-      ${sensor_msgs_TARGETS}
-      ${std_msgs_TARGETS}
-      ${visualization_msgs_TARGETS}
-      sensor_msgs::sensor_msgs_library
-      tf2::tf2
-      tf2_eigen::tf2_eigen
-      tf2_geometry_msgs::tf2_geometry_msgs
-    )
+target_link_libraries(
+  beluga_ros
+  PUBLIC ${geometry_msgs_TARGETS}
+         ${nav_msgs_TARGETS}
+         ${sensor_msgs_TARGETS}
+         ${std_msgs_TARGETS}
+         ${visualization_msgs_TARGETS}
+         sensor_msgs::sensor_msgs_library
+         tf2::tf2
+         tf2_eigen::tf2_eigen
+         tf2_geometry_msgs::tf2_geometry_msgs)
 target_compile_definitions(beluga_ros PUBLIC BELUGA_ROS_VERSION=2)
 target_compile_features(beluga_ros PUBLIC cxx_std_17)
 

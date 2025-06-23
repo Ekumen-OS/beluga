@@ -27,17 +27,16 @@ target_sources(beluga_amcl_ros2_common PRIVATE src/ros2_common.cpp)
 target_include_directories(
   beluga_amcl_ros2_common
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-         ${std_srvs_INCLUDE_DIRS})
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}> ${std_srvs_INCLUDE_DIRS})
 
-target_link_libraries(beluga_amcl_ros2_common PUBLIC
-  beluga_ros::beluga_ros
-  bondcpp::bondcpp
-  rclcpp::rclcpp
-  rclcpp_components::component
-  rclcpp_lifecycle::rclcpp_lifecycle
-  ${std_srvs_TARGETS}
-)
+target_link_libraries(
+  beluga_amcl_ros2_common
+  PUBLIC beluga_ros::beluga_ros
+         bondcpp::bondcpp
+         rclcpp::rclcpp
+         rclcpp_components::component
+         rclcpp_lifecycle::rclcpp_lifecycle
+         ${std_srvs_TARGETS})
 
 add_library(amcl_node_component SHARED)
 target_sources(amcl_node_component PRIVATE src/amcl_node.cpp)
@@ -51,22 +50,21 @@ install(
 target_include_directories(
   amcl_node_component
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-         ${std_srvs_INCLUDE_DIRS})
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}> ${std_srvs_INCLUDE_DIRS})
 
 target_link_libraries(amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
 target_compile_features(amcl_node_component PUBLIC cxx_std_17)
 
-target_link_libraries(amcl_node_component PUBLIC
-  beluga::beluga
-  beluga_ros::beluga_ros
-  bondcpp::bondcpp
-  rclcpp::rclcpp
-  rclcpp_components::component
-  rclcpp_lifecycle::rclcpp_lifecycle
-  ${std_srvs_TARGETS}
-)
+target_link_libraries(
+  amcl_node_component
+  PUBLIC beluga::beluga
+         beluga_ros::beluga_ros
+         bondcpp::bondcpp
+         rclcpp::rclcpp
+         rclcpp_components::component
+         rclcpp_lifecycle::rclcpp_lifecycle
+         ${std_srvs_TARGETS})
 
 rclcpp_components_register_node(
   amcl_node_component
@@ -90,22 +88,21 @@ target_sources(ndt_amcl_node_component PRIVATE src/ndt_amcl_node.cpp)
 target_include_directories(
   ndt_amcl_node_component
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-         ${std_srvs_INCLUDE_DIRS})
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}> ${std_srvs_INCLUDE_DIRS})
 
 target_compile_features(ndt_amcl_node_component PUBLIC cxx_std_17)
 
 target_link_libraries(ndt_amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
-target_link_libraries(ndt_amcl_node_component PUBLIC
-  beluga::beluga
-  beluga_ros::beluga_ros
-  bondcpp::bondcpp
-  rclcpp::rclcpp
-  rclcpp_components::component
-  rclcpp_lifecycle::rclcpp_lifecycle
-  ${std_srvs_TARGETS}
-)
+target_link_libraries(
+  ndt_amcl_node_component
+  PUBLIC beluga::beluga
+         beluga_ros::beluga_ros
+         bondcpp::bondcpp
+         rclcpp::rclcpp
+         rclcpp_components::component
+         rclcpp_lifecycle::rclcpp_lifecycle
+         ${std_srvs_TARGETS})
 
 rclcpp_components_register_node(
   ndt_amcl_node_component
@@ -128,22 +125,21 @@ target_sources(ndt_amcl_node_3d_component PRIVATE src/ndt_amcl_node_3d.cpp)
 target_include_directories(
   ndt_amcl_node_3d_component
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-         ${std_srvs_INCLUDE_DIRS})
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}> ${std_srvs_INCLUDE_DIRS})
 
 target_compile_features(ndt_amcl_node_3d_component PUBLIC cxx_std_17)
 
 target_link_libraries(ndt_amcl_node_3d_component PUBLIC beluga_amcl_ros2_common)
 
-target_link_libraries(ndt_amcl_node_3d_component PUBLIC
-  beluga::beluga
-  beluga_ros::beluga_ros
-  bondcpp::bondcpp
-  rclcpp::rclcpp
-  rclcpp_components::component
-  rclcpp_lifecycle::rclcpp_lifecycle
-  ${std_srvs_TARGETS}
-)
+target_link_libraries(
+  ndt_amcl_node_3d_component
+  PUBLIC beluga::beluga
+         beluga_ros::beluga_ros
+         bondcpp::bondcpp
+         rclcpp::rclcpp
+         rclcpp_components::component
+         rclcpp_lifecycle::rclcpp_lifecycle
+         ${std_srvs_TARGETS})
 
 rclcpp_components_register_node(
   ndt_amcl_node_3d_component
