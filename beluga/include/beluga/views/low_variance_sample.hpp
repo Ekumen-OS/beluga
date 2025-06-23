@@ -36,14 +36,15 @@ namespace beluga::views {
 namespace detail {
 
 /// Implementation of the low variance sample view.
-/// This algorithm computes a single random number r in the range [0, 1/M) and then selects samples from
-/// according to this number but still with a probability proportional to the sample weight. This is
-/// done by drawing a random number r in the interval [0;M^-1]. Where M is the number of samples in the range.
-/// It selects the particles by repeadly adding the fixed amount M^(-1) to r and by choosing the particle that
-/// corresponds to to the resulting number.
-/// Where M is the number of samples in the range.
-/// [Based on] Sebastian Thrun, Wolfram Burgard, and Dieter Fox. 2005. Probabilistic Robotics (Intelligent Robotics
-/// and Autonomous Agents). The MIT Press.
+/// This algorithm is designed to sample elements from a range with replacement, ensuring that the probability of
+/// selecting each element is proportional to its weight. It works by computing a single random number r is generated in
+/// the range [0, 1/M), where M is the total number of elements in the range. Then, starting from this random number r,
+/// the algorithm repeatedly adds a fixed step size of 1/M to r. This step size ensures that the sampling process
+/// progresses evenly across the range. After that, for each resulting value, the algorithm selects the element whose
+/// cumulative weight corresponds to the current value of r. This ensures that elements with higher weights are more
+/// likely to be selected. Finally, the process continues until the desired number of samples is obtained.
+/// [Based on] Sebastian Thrun, Wolfram Burgard, and Dieter Fox. 2005. Probabilistic Robotics (Intelligent Robotics and
+/// Autonomous Agents). The MIT Press.
 
 /**
  * \tparam Range A [random access](https://en.cppreference.com/w/cpp/ranges/random_access_range) and
@@ -104,15 +105,16 @@ struct low_variance_sample_view
 
     /// Position the current iterator.
     constexpr void next() {
-      ++m_;
       // A number U in [0, 1] that points to exactly one particle in the range.
       // Where the particle i satisfies with i=argmin_j \sum_1^j w^m >= U.
       const double U = r_ + (static_cast<double>(m_) - 1.0) / static_cast<double>(M_);
       while (i_ < M_ - 1 && U > c_) {
         ++i_;
-        c_ += static_cast<double>(*std::next(weights_begin_, i_));  // weights_begin_[i_]
+        ++weights_begin_;
+        c_ += *weights_begin_;
       }
-      it_ = std::next(range_begin_, i_);  // range_begin_ + i_
+      ++m_;
+      it_ = std::next(range_begin_, i_);
     }
 
    private:
@@ -124,7 +126,7 @@ struct low_variance_sample_view
     double r_;
     uint64_t m_;
     uint64_t i_;
-    double c_;
+    ranges::range_value_t<Weights> c_;
   };
 
   /// Return the cursor for the begin iterator.
