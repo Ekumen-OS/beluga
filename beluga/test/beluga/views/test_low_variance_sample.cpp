@@ -168,7 +168,7 @@ TEST(LowVarianceSampleView, LargeRangePerformance) {
   std::vector<int> large_input(1000);
   std::iota(large_input.begin(), large_input.end(), 1);
 
-  std::vector<double> uniform_weights(1000, 1.0 / 1000.0);
+  std::vector<double> uniform_weights(large_input.size(), 1.0 / static_cast<double>(large_input.size()));
 
   auto engine = std::mt19937{42};
   auto output = beluga::views::low_variance_sample(large_input, uniform_weights, engine) |
@@ -182,6 +182,97 @@ TEST(LowVarianceSampleView, LargeRangePerformance) {
     ASSERT_GE(sample, 1);
     ASSERT_LE(sample, 1000);
   }
+}
+
+// Multinomial sampling for comparison - simple implementation
+std::vector<int> multinomial_sample(
+    const std::vector<int>& input,
+    const std::vector<double>& weights,
+    int num_samples,
+    std::mt19937& engine) {
+  std::discrete_distribution<> dist(weights.begin(), weights.end());
+  std::vector<int> result;
+  result.reserve(num_samples);
+
+  for (int i = 0; i < num_samples; ++i) {
+    result.push_back(input[dist(engine)]);
+  }
+
+  return result;
+}
+
+TEST(LowVarianceSampleView, LowerVarianceThanMultinomialSampling) {
+  const auto num_samples = 1000;
+  const auto num_trials = 200;
+
+  auto input = std::vector<int>{1, 2, 3, 4};
+  auto weights = std::vector<double>{0.1, 0.25, 0.35, 0.3};
+
+  std::vector<double> lv_variances, multinomial_variances;
+
+  for (int trial = 0; trial < num_trials; ++trial) {
+    // Low variance sampling
+    auto engine_lv = std::mt19937{static_cast<unsigned>(trial + 5000)};
+    auto lv_output = beluga::views::low_variance_sample(input, weights, engine_lv) |
+                     ranges::views::take_exactly(num_samples) | ranges::to<std::vector>;
+
+    // Multinomial sampling
+    auto engine_mult = std::mt19937{static_cast<unsigned>(trial + 5000)};  // Same seed
+    auto mult_output = multinomial_sample(input, weights, num_samples, engine_mult);
+
+    auto lv_count_1 = ranges::count(lv_output, 1);
+    auto mult_count_1 = ranges::count(mult_output, 1);
+
+    double lv_ratio = static_cast<double>(lv_count_1) / num_samples;
+    double mult_ratio = static_cast<double>(mult_count_1) / num_samples;
+
+    // Store squared deviation from expected (0.1)
+    lv_variances.push_back(std::pow(lv_ratio - 0.1, 2));
+    multinomial_variances.push_back(std::pow(mult_ratio - 0.1, 2));
+  }
+
+  // Calculate mean squared errors (approximation of variance)
+  double lv_mse = std::accumulate(lv_variances.begin(), lv_variances.end(), 0.0) / num_trials;
+  double mult_mse = std::accumulate(multinomial_variances.begin(), multinomial_variances.end(), 0.0) / num_trials;
+
+  // Low variance sampling should have lower variance (MSE)
+  ASSERT_LT(lv_mse, mult_mse);
+
+  ASSERT_LT(lv_mse, mult_mse * 0.8);
+
+  std::vector<double> lv_total_var, mult_total_var;
+
+  for (int trial = 0; trial < std::min(50, num_trials); ++trial) {  // Subset for performance
+    auto engine_lv = std::mt19937{static_cast<unsigned>(trial + 6000)};
+    auto lv_output = beluga::views::low_variance_sample(input, weights, engine_lv) |
+                     ranges::views::take_exactly(num_samples) | ranges::to<std::vector>;
+
+    auto engine_mult = std::mt19937{static_cast<unsigned>(trial + 6000)};
+    auto mult_output = multinomial_sample(input, weights, num_samples, engine_mult);
+
+    // Calculate total variance across all elements
+    double lv_var_sum = 0.0, mult_var_sum = 0.0;
+    for (size_t i = 0; i < input.size(); ++i) {
+      auto lv_count = ranges::count(lv_output, input[i]);
+      auto mult_count = ranges::count(mult_output, input[i]);
+
+      double lv_ratio = static_cast<double>(lv_count) / num_samples;
+      double mult_ratio = static_cast<double>(mult_count) / num_samples;
+
+      lv_var_sum += std::pow(lv_ratio - weights[i], 2);
+      mult_var_sum += std::pow(mult_ratio - weights[i], 2);
+    }
+
+    lv_total_var.push_back(lv_var_sum);
+    mult_total_var.push_back(mult_var_sum);
+  }
+
+  double lv_avg_total_var =
+      std::accumulate(lv_total_var.begin(), lv_total_var.end(), 0.0) / static_cast<double>(lv_total_var.size());
+  double mult_avg_total_var =
+      std::accumulate(mult_total_var.begin(), mult_total_var.end(), 0.0) / static_cast<double>(mult_total_var.size());
+
+  ASSERT_LT(lv_avg_total_var, mult_avg_total_var);
 }
 
 }  // namespace
