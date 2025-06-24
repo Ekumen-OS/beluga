@@ -54,7 +54,7 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcpp"
-#include <message_filters/subscriber.h>
+#include <message_filters/subscriber.hpp>
 #pragma GCC diagnostic pop
 
 /**
