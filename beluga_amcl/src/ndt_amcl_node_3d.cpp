@@ -77,7 +77,7 @@
 #include <beluga_ros/tf2_sophus.hpp>
 #include "beluga_amcl/ndt_amcl_node_3d.hpp"
 #include "beluga_amcl/ros2_common.hpp"
-
+#include "beluga_amcl/message_filters_adapter.hpp"
 #include "beluga_ros/ndt_ellipsoid.hpp"
 
 namespace beluga_amcl {
@@ -171,12 +171,20 @@ void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
 
   particle_filter_ = make_particle_filter();
   {
-    using LaserScanSubscriber =
-        message_filters::Subscriber<sensor_msgs::msg::PointCloud2, rclcpp_lifecycle::LifecycleNode>;
-    laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
-        shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data,
-        common_subscription_options_);
+    // NOTE: Compatibility issues in message_filters between versions lower than and higher than 7.2.1
+    //       Also refer to messagge_filters_adapter.hpp
+    using LaserScanSubscriber = beluga_amcl::compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::PointCloud2>;
 
+    if constexpr (MESSAGE_FILTERS_VERSION_CHECK(7, 2, 1)) {
+      laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
+          shared_from_this(), get_parameter("scan_topic").as_string(), rclcpp::SensorDataQoS(),
+          common_subscription_options_);
+    } else {
+      laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
+          shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data,
+          common_subscription_options_);
+    }
+    
     // Message filter that caches laser scan readings until it is possible to transform
     // from laser frame to odom frame and update the particle filter.
     laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::PointCloud2>>(

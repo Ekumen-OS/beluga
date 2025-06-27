@@ -39,6 +39,7 @@
 
 #include <beluga_ros/laser_scan.hpp>
 #include "beluga_amcl/ros2_common.hpp"
+#include "beluga_amcl/message_filters_adapter.hpp"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcpp"
@@ -132,8 +133,8 @@ class NdtAmclNode3D : public BaseAMCLNode {
   bool initialize_from_estimate(const std::pair<Sophus::SE3d, Sophus::Matrix6d>& estimate);
 
   /// Laser scan updates subscription.
-  std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::PointCloud2, rclcpp_lifecycle::LifecycleNode>>
-      laser_scan_sub_;
+  using LaserScanSubscriber = compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::PointCloud2>;
+  std::unique_ptr<LaserScanSubscriber> laser_scan_sub_;
 
   /// Transform synchronization filter for laser scan updates.
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::PointCloud2>> laser_scan_filter_;

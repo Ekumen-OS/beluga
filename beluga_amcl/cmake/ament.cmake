@@ -20,6 +20,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(message_filters REQUIRED)
 
 add_library(beluga_amcl_ros2_common SHARED)
 target_sources(beluga_amcl_ros2_common PRIVATE src/ros2_common.cpp)
@@ -166,6 +167,12 @@ ament_export_dependencies(
   std_srvs)
 
 ament_export_include_directories("include/${PROJECT_NAME}")
+
+add_compile_definitions(
+  MESSAGE_FILTERS_VERSION_MAJOR=${message_filters_VERSION_MAJOR}
+  MESSAGE_FILTERS_VERSION_MINOR=${message_filters_VERSION_MINOR}
+  MESSAGE_FILTERS_VERSION_PATCH=${message_filters_VERSION_PATCH}
+)
 
 if(BUILD_TESTING)
   enable_testing()

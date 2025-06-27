@@ -41,6 +41,7 @@
 #include <beluga/beluga.hpp>
 #include <beluga_ros/amcl.hpp>
 #include "beluga_amcl/ros2_common.hpp"
+#include "beluga_amcl/message_filters_adapter.hpp"
 
 /**
  * \file
@@ -128,9 +129,10 @@ class AmclNode : public BaseAMCLNode {
 
   /// Occupancy grid map updates subscription.
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
+  
   /// Laser scan updates subscription.
-  std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode>>
-      laser_scan_sub_;
+  using LaserScanSubscriber = compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::LaserScan>;
+  std::unique_ptr<LaserScanSubscriber> laser_scan_sub_;
 
   /// Global relocalization service server.
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr global_localization_server_;
