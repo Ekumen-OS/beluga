@@ -171,8 +171,7 @@ ament_export_include_directories("include/${PROJECT_NAME}")
 add_compile_definitions(
   MESSAGE_FILTERS_VERSION_MAJOR=${message_filters_VERSION_MAJOR}
   MESSAGE_FILTERS_VERSION_MINOR=${message_filters_VERSION_MINOR}
-  MESSAGE_FILTERS_VERSION_PATCH=${message_filters_VERSION_PATCH}
-)
+  MESSAGE_FILTERS_VERSION_PATCH=${message_filters_VERSION_PATCH})
 
 if(BUILD_TESTING)
   enable_testing()

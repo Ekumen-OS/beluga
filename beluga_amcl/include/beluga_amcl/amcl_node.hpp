@@ -40,8 +40,8 @@
 
 #include <beluga/beluga.hpp>
 #include <beluga_ros/amcl.hpp>
-#include "beluga_amcl/ros2_common.hpp"
 #include "beluga_amcl/message_filters_adapter.hpp"
+#include "beluga_amcl/ros2_common.hpp"
 
 /**
  * \file
@@ -129,7 +129,7 @@ class AmclNode : public BaseAMCLNode {
 
   /// Occupancy grid map updates subscription.
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
-  
+
   /// Laser scan updates subscription.
   using LaserScanSubscriber = compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::LaserScan>;
   std::unique_ptr<LaserScanSubscriber> laser_scan_sub_;

@@ -38,8 +38,8 @@
 #include <std_srvs/srv/empty.hpp>
 
 #include <beluga_ros/laser_scan.hpp>
-#include "beluga_amcl/ros2_common.hpp"
 #include "beluga_amcl/message_filters_adapter.hpp"
+#include "beluga_amcl/ros2_common.hpp"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcpp"

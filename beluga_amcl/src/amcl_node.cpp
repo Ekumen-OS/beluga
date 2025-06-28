@@ -68,8 +68,8 @@
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
 #include "beluga_amcl/amcl_node.hpp"
-#include "beluga_amcl/ros2_common.hpp"
 #include "beluga_amcl/message_filters_adapter.hpp"
+#include "beluga_amcl/ros2_common.hpp"
 
 namespace beluga_amcl {
 
@@ -194,7 +194,8 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
   {
     // NOTE: Compatibility issues in message_filters between versions lower than and higher than 7.2.1
     //       Also refer to messagge_filters_adapter.hpp
-    using LaserScanSubscriber = beluga_amcl::compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::LaserScan>;
+    using LaserScanSubscriber =
+        beluga_amcl::compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::LaserScan>;
 
     if constexpr (MESSAGE_FILTERS_VERSION_CHECK(7, 2, 1)) {
       laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(

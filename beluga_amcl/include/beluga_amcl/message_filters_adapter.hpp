@@ -15,27 +15,28 @@
 #ifndef BELUGA_AMCL_MESSAGE_FILTERS_ADAPTER_HPP
 #define BELUGA_AMCL_MESSAGE_FILTERS_ADAPTER_HPP
 
+#include <message_filters/subscriber.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include <message_filters/subscriber.hpp>
 
 // Macro definition for message_filters version check (true if equal or higher than)
-#define MESSAGE_FILTERS_VERSION_CHECK(major, minor, patch) \
-    ((MESSAGE_FILTERS_VERSION_MAJOR > (major)) || \
-        (MESSAGE_FILTERS_VERSION_MAJOR == (major) && MESSAGE_FILTERS_VERSION_MINOR > (minor)) || \
-        (MESSAGE_FILTERS_VERSION_MAJOR == (major) && MESSAGE_FILTERS_VERSION_MINOR == (minor) && MESSAGE_FILTERS_VERSION_PATCH >= (patch)))
+#define MESSAGE_FILTERS_VERSION_CHECK(major, minor, patch)                                  \
+  ((MESSAGE_FILTERS_VERSION_MAJOR > (major)) ||                                             \
+   (MESSAGE_FILTERS_VERSION_MAJOR == (major) && MESSAGE_FILTERS_VERSION_MINOR > (minor)) || \
+   (MESSAGE_FILTERS_VERSION_MAJOR == (major) && MESSAGE_FILTERS_VERSION_MINOR == (minor) && \
+    MESSAGE_FILTERS_VERSION_PATCH >= (patch)))
 
 namespace beluga_amcl::compatibility::message_filters {
 
-    // mesagge_filters templetized adapter
-    #if MESSAGE_FILTERS_VERSION_CHECK(7, 2, 1)
-    template <typename MsgT>
-    using AdaptedSubscriber = ::message_filters::Subscriber<MsgT>;
-    #else
-    template <typename MsgT>
-    using AdaptedSubscriber = ::message_filters::Subscriber<MsgT, rclcpp_lifecycle::LifecycleNode>;
-    #endif
+// mesagge_filters templetized adapter
+#if MESSAGE_FILTERS_VERSION_CHECK(7, 2, 1)
+template <typename MsgT>
+using AdaptedSubscriber = ::message_filters::Subscriber<MsgT>;
+#else
+template <typename MsgT>
+using AdaptedSubscriber = ::message_filters::Subscriber<MsgT, rclcpp_lifecycle::LifecycleNode>;
+#endif
 
 }  // namespace beluga_amcl::compatibility::message_filters
 
