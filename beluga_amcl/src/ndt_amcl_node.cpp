@@ -117,7 +117,7 @@ void NdtAmclNode::do_activate(const rclcpp_lifecycle::State&) {
     //       Also refer to messagge_filters_adapter.hpp
     using LaserScanSubscriber =
         beluga_amcl::compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::LaserScan>;
-    
+
     if constexpr (MESSAGE_FILTERS_VERSION_CHECK(7, 2, 1)) {
       laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
           shared_from_this(), get_parameter("scan_topic").as_string(), rclcpp::SensorDataQoS(),
