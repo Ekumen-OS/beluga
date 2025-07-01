@@ -44,38 +44,44 @@ auto make_neighbors_function(std::size_t size) {
 
 TEST(DistanceMap, None) {
   auto map = std::vector<bool>{};
-  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6));
+  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6), 1);
   ASSERT_EQ(distance_map.size(), 0);
 }
 
-TEST(DistanceMap, Empty) {
+TEST(DistanceMap, EmptyNonZeroDistanceMin) {
   auto map = std::array<bool, 6>{false, false, false, false, false, false};
-  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6));
-  ASSERT_THAT(distance_map, testing::ElementsAre(0, 0, 0, 0, 0, 0));
+  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6), 10);
+  ASSERT_THAT(distance_map, testing::ElementsAre(10, 10, 10, 10, 10, 10));
 }
 
 TEST(DistanceMap, Full) {
   auto map = std::array<bool, 6>{true, true, true, true, true, true};
-  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6));
+  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6), 10);
   ASSERT_THAT(distance_map, testing::ElementsAre(0, 0, 0, 0, 0, 0));
 }
 
 TEST(DistanceMap, Case1) {
   auto map = std::array<bool, 6>{false, true, false, false, false, true};
-  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6));
+  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6), 10);
   ASSERT_THAT(distance_map, testing::ElementsAre(1, 0, 1, 2, 1, 0));
 }
 
 TEST(DistanceMap, Case2) {
   auto map = std::array<bool, 6>{true, true, false, false, false, false};
-  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6));
+  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6), 10);
   ASSERT_THAT(distance_map, testing::ElementsAre(0, 0, 1, 2, 3, 4));
 }
 
 TEST(DistanceMap, Case3) {
   auto map = std::array<bool, 6>{false, false, false, false, false, true};
-  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6));
+  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6), 10);
   ASSERT_THAT(distance_map, testing::ElementsAre(5, 4, 3, 2, 1, 0));
+}
+
+TEST(DistanceMap, MapWithTruncatedDistances) {
+  auto map = std::array<bool, 6>{false, false, false, false, false, true};
+  auto distance_map = beluga::nearest_obstacle_distance_map(map, array_distance, make_neighbors_function(6), 3);
+  ASSERT_THAT(distance_map, testing::ElementsAre(3, 3, 3, 2, 1, 0));
 }
 
 }  // namespace

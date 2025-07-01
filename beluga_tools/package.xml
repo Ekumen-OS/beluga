@@ -11,12 +11,12 @@
   <license>Apache License 2.0</license>
 
 
-  <!-- The released debian for h5py package when on humble or iron seems to have a bug where it's incompatible with numpy's 2.0.0 version.
+  <!-- The released debian for h5py package when on humble seems to have a bug where it's incompatible with numpy's 2.0.0 version.
   We will install newest package version using pip in the development images to circumvent this..
   See:
   https://github.com/h5py/h5py/issues/2353
   -->
-  <exec_depend condition="$ROS_VERSION == 2 and $ROS_DISTRO != 'humble' and $ROS_DISTRO != 'iron'">python3-h5py</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2 and $ROS_DISTRO != 'humble'">python3-h5py</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">python3-matplotlib</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">python3-numpy</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">python3-scipy</exec_depend>

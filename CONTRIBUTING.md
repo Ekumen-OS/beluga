@@ -19,6 +19,8 @@ All types of contributions are encouraged and valued. See the [Table of Contents
   - [Reporting Bugs](#reporting-bugs)
   - [Requesting Features](#requesting-features)
   - [Your First Code Contribution](#your-first-code-contribution)
+    - [A Primer On Project Workflow](#a-primer-on-project-workflow)
+    - [How Do I Submit a Good Code Contribution?](#how-do-i-submit-a-good-code-contribution)
 - [Styleguides](#styleguides)
 
 ## I Have a Question
@@ -121,7 +123,7 @@ This projects adopts a [feature branch workflow](https://about.gitlab.com/topics
    ```bash
    git checkout -b <your_username>/fix-issue-12345 main
    ```
-1. **Work on your contribution**. See [instructions](GETTING_STARTED.md) on how to get started with Beluga development.
+1. **Work on your contribution**. See [instructions](DEVELOPING.md) on how to get started with Beluga development.
 1. **Test your changes**. For bug fixes, make sure regression tests are included.
 1. **Document your changes as needed**. For new features, make sure added functionality is clearly documented.
 1. **Push the branch to your fork on GitHub**.

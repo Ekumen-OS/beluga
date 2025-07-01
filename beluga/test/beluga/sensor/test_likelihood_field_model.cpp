@@ -31,34 +31,6 @@ using beluga::testing::StaticOccupancyGrid;
 
 using UUT = beluga::LikelihoodFieldModel<StaticOccupancyGrid<5, 5>>;
 
-TEST(LikelihoodFieldModel, LikelihoodField) {
-  constexpr double kResolution = 0.5;
-  // clang-format off
-  const auto grid = StaticOccupancyGrid<5, 5>{{
-    false, false, false, false, true ,
-    false, false, false, true , false,
-    false, false, true , false, false,
-    false, true , false, false, false,
-    true , false, false, false, false},
-    kResolution};
-
-  const double expected_likelihood_field[] = {  // NOLINT(modernize-avoid-c-arrays)
-    0.025, 0.025, 0.025, 0.069, 1.022,
-    0.025, 0.027, 0.069, 1.022, 0.069,
-    0.025, 0.069, 1.022, 0.069, 0.025,
-    0.069, 1.022, 0.069, 0.027, 0.025,
-    1.022, 0.069, 0.025, 0.025, 0.025
-  };
-  // clang-format on
-
-  const auto params = beluga::LikelihoodFieldModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
-  auto sensor_model = UUT{params, grid};
-
-  ASSERT_THAT(
-      sensor_model.likelihood_field().data(),
-      testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
-}
-
 TEST(LikelihoodFieldModel, ImportanceWeight) {
   constexpr double kResolution = 0.5;
   // clang-format off

@@ -20,14 +20,24 @@
 
 set -o errexit -o xtrace
 
+CMAKE_EXTRA_ARGS=""
+COLCON_EXTRA_ARGS=""
+
 if [ "${ROS_DISTRO}" != "noetic" ]; then
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
+    if [ "${ROS_DISTRO}" != "humble" ] && [ "${ROS_DISTRO}" != "iron" ]; then
+        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
+    fi
 else
     ROS_PACKAGES="beluga beluga_ros beluga_amcl"
 fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
-colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache
+
+if [ "${CMAKE_EXTRA_ARGS}" != "" ]; then
+    COLCON_EXTRA_ARGS="${COLCON_EXTRA_ARGS} --cmake-args ${CMAKE_EXTRA_ARGS}"
+fi
+colcon build --packages-up-to ${ROS_PACKAGES} --event-handlers=console_cohesion+ --symlink-install --mixin ccache ${COLCON_EXTRA_ARGS}
 echo ${ROS_PACKAGES} |
     xargs -n1 echo |
     # NOTE: `-Wno-gnu-zero-variadic-macro-arguments` is needed due to

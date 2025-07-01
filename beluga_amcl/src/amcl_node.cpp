@@ -62,6 +62,7 @@
 #include <beluga/motion/stationary_model.hpp>
 #include <beluga/sensor/beam_model.hpp>
 #include <beluga/sensor/likelihood_field_model.hpp>
+#include <beluga/sensor/likelihood_field_prob_model.hpp>
 #include <beluga_ros/amcl.hpp>
 #include <beluga_ros/likelihood_field.hpp>
 #include <beluga_ros/messages.hpp>
@@ -75,6 +76,7 @@ namespace beluga_amcl {
 namespace {
 
 constexpr std::string_view kLikelihoodFieldModelName = "likelihood_field";
+constexpr std::string_view kLikelihoodFieldProbModelName = "likelihood_field_prob";
 constexpr std::string_view kBeamSensorModelName = "beam";
 
 }  // namespace
@@ -314,6 +316,15 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
     params.model_unknown_space = get_parameter("model_unknown_space").as_bool();
     return beluga::LikelihoodFieldModel{params, beluga_ros::OccupancyGrid{map}};
   }
+  if (name == kLikelihoodFieldProbModelName) {
+    auto params = beluga::LikelihoodFieldProbModelParam{};
+    params.max_obstacle_distance = get_parameter("laser_likelihood_max_dist").as_double();
+    params.max_laser_distance = get_parameter("laser_max_range").as_double();
+    params.z_hit = get_parameter("z_hit").as_double();
+    params.z_random = get_parameter("z_rand").as_double();
+    params.sigma_hit = get_parameter("sigma_hit").as_double();
+    return beluga::LikelihoodFieldProbModel{params, beluga_ros::OccupancyGrid{map}};
+  }
   if (name == kBeamSensorModelName) {
     auto params = beluga::BeamModelParam{};
     params.z_hit = get_parameter("z_hit").as_double();
@@ -373,7 +384,9 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
 
   if (!particle_filter_) {
     try {
+      RCLCPP_INFO(get_logger(), "Initializing particle filter instance");
       particle_filter_ = make_particle_filter(std::move(map));
+      RCLCPP_INFO(get_logger(), "Particle filter initialization completed");
     } catch (const std::invalid_argument& error) {
       RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());
       return;
