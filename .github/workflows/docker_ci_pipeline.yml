@@ -22,7 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         ros_distro:
-          - noetic
           - humble
           - jazzy
           - rolling
