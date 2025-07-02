@@ -38,7 +38,7 @@
 #include <std_srvs/srv/empty.hpp>
 
 #include <beluga_ros/laser_scan.hpp>
-#include "beluga_amcl/message_filters_adapter.hpp"
+#include "beluga_amcl/message_filters.hpp"
 #include "beluga_amcl/ros2_common.hpp"
 
 #pragma GCC diagnostic push
@@ -133,13 +133,12 @@ class NdtAmclNode3D : public BaseAMCLNode {
   bool initialize_from_estimate(const std::pair<Sophus::SE3d, Sophus::Matrix6d>& estimate);
 
   /// Laser scan updates subscription.
-  using LaserScanSubscriber = compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::PointCloud2>;
-  std::unique_ptr<LaserScanSubscriber> laser_scan_sub_;
+  std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::PointCloud2>> laser_scan_sub_;
 
   /// Transform synchronization filter for laser scan updates.
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::PointCloud2>> laser_scan_filter_;
   /// Connection for laser scan updates filter and callback.
-  message_filters::Connection laser_scan_connection_;
+  ::message_filters::Connection laser_scan_connection_;
 
   /// NDT map representation
   beluga_amcl::NDTMapRepresentation map_;

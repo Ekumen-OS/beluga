@@ -39,11 +39,19 @@ target_link_libraries(
          rclcpp_lifecycle::rclcpp_lifecycle
          ${std_srvs_TARGETS})
 
+target_compile_definitions(
+  beluga_amcl_ros2_common
+  PUBLIC
+    BELUGA_AMCL_MESSAGE_FILTERS_VERSION_MAJOR=${message_filters_VERSION_MAJOR}
+    BELUGA_AMCL_MESSAGE_FILTERS_VERSION_MINOR=${message_filters_VERSION_MINOR}
+    BELUGA_AMCL_MESSAGE_FILTERS_VERSION_PATCH=${message_filters_VERSION_PATCH})
+
 add_library(amcl_node_component SHARED)
 target_sources(amcl_node_component PRIVATE src/amcl_node.cpp)
 
 install(
   TARGETS beluga_amcl_ros2_common
+  EXPORT ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
@@ -74,13 +82,12 @@ rclcpp_components_register_node(
 
 install(
   TARGETS amcl_node_component
+  EXPORT ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 
 install(TARGETS amcl_node DESTINATION lib/${PROJECT_NAME})
-
-install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 
 add_library(ndt_amcl_node_component SHARED)
 
@@ -112,13 +119,12 @@ rclcpp_components_register_node(
 
 install(
   TARGETS ndt_amcl_node_component
+  EXPORT ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 
 install(TARGETS ndt_amcl_node DESTINATION lib/${PROJECT_NAME})
-
-install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 
 add_library(ndt_amcl_node_3d_component SHARED)
 target_sources(ndt_amcl_node_3d_component PRIVATE src/ndt_amcl_node_3d.cpp)
@@ -149,6 +155,7 @@ rclcpp_components_register_node(
 
 install(
   TARGETS ndt_amcl_node_3d_component
+  EXPORT ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
@@ -167,12 +174,7 @@ ament_export_dependencies(
   std_srvs)
 
 ament_export_include_directories("include/${PROJECT_NAME}")
-
-add_compile_definitions(
-  MESSAGE_FILTERS_VERSION_MAJOR=${message_filters_VERSION_MAJOR}
-  MESSAGE_FILTERS_VERSION_MINOR=${message_filters_VERSION_MINOR}
-  MESSAGE_FILTERS_VERSION_PATCH=${message_filters_VERSION_PATCH})
-
+ament_export_targets(${PROJECT_NAME})
 if(BUILD_TESTING)
   enable_testing()
   add_subdirectory(test)

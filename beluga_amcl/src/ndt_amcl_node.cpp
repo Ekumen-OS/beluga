@@ -69,7 +69,7 @@
 #include <beluga_ros/messages.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
-#include "beluga_amcl/message_filters_adapter.hpp"
+#include "beluga_amcl/message_filters.hpp"
 #include "beluga_amcl/ndt_amcl_node.hpp"
 #include "beluga_amcl/ros2_common.hpp"
 
@@ -113,20 +113,17 @@ void NdtAmclNode::do_activate(const rclcpp_lifecycle::State&) {
   particle_filter_ = make_particle_filter();
 
   {
-    // NOTE: Compatibility issues in message_filters between versions lower than and higher than 7.2.1
-    //       Also refer to messagge_filters_adapter.hpp
-    using LaserScanSubscriber =
-        beluga_amcl::compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::LaserScan>;
-
-    if constexpr (MESSAGE_FILTERS_VERSION_CHECK(7, 2, 1)) {
-      laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
-          shared_from_this(), get_parameter("scan_topic").as_string(), rclcpp::SensorDataQoS(),
-          common_subscription_options_);
-    } else {
-      laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
-          shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data,
-          common_subscription_options_);
-    }
+    // Cope with variations in between message_filters versions.
+    // See beluga_amcl/message_filters.hpp for further reference.
+    const auto laser_scan_qos = [] {
+      if constexpr (BELUGA_AMCL_MESSAGE_FILTERS_VERSION_GTE(7, 2, 1)) {
+        return rclcpp::SensorDataQoS();
+      } else {
+        return rmw_qos_profile_sensor_data;
+      }
+    }();
+    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
+        shared_from_this(), get_parameter("scan_topic").as_string(), laser_scan_qos, common_subscription_options_);
 
     // Message filter that caches laser scan readings until it is possible to transform
     // from laser frame to odom frame and update the particle filter.

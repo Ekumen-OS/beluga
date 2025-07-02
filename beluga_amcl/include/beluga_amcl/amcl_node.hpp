@@ -40,7 +40,7 @@
 
 #include <beluga/beluga.hpp>
 #include <beluga_ros/amcl.hpp>
-#include "beluga_amcl/message_filters_adapter.hpp"
+#include "beluga_amcl/message_filters.hpp"
 #include "beluga_amcl/ros2_common.hpp"
 
 /**
@@ -131,8 +131,7 @@ class AmclNode : public BaseAMCLNode {
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
 
   /// Laser scan updates subscription.
-  using LaserScanSubscriber = compatibility::message_filters::AdaptedSubscriber<sensor_msgs::msg::LaserScan>;
-  std::unique_ptr<LaserScanSubscriber> laser_scan_sub_;
+  std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan>> laser_scan_sub_;
 
   /// Global relocalization service server.
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr global_localization_server_;
@@ -142,7 +141,7 @@ class AmclNode : public BaseAMCLNode {
   /// Transform synchronization filter for laser scan updates.
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>> laser_scan_filter_;
   /// Connection for laser scan updates filter and callback.
-  message_filters::Connection laser_scan_connection_;
+  ::message_filters::Connection laser_scan_connection_;
 
   /// Particle filter instance.
   std::unique_ptr<beluga_ros::Amcl> particle_filter_;
