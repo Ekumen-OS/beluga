@@ -25,7 +25,7 @@
 
 #include <gtest/gtest.h>
 
-#include <tf2/convert.h>
+#include <tf2/convert.hpp>
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
