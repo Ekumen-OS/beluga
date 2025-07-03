@@ -14,7 +14,7 @@ Beluga AMCL
 
    Related Pages <pages>
    Classes <annotated_classes>
-   Files <files>
+   Files <files_files>
 
 .. container:: doxygen-content
 

@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Apr 24 12:11:17 2025 -0300, 876fc11&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Jul 3 11:01:32 2025 -0300, 080ffa5&#39;"/>
   </head>
   
   
@@ -590,18 +590,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:aa8cb9892037fc7c07c6e18b29fc8515e"><td class="memItemLeft" align="right" valign="top"><a id="aa8cb9892037fc7c07c6e18b29fc8515e"></a>
-std::unique_ptr&lt; message_filters::Subscriber&lt; sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode.html#aa8cb9892037fc7c07c6e18b29fc8515e">laser_scan_sub_</a></td></tr>
-<tr class="memdesc:aa8cb9892037fc7c07c6e18b29fc8515e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Laser scan updates subscription. <br /></td></tr>
-<tr class="separator:aa8cb9892037fc7c07c6e18b29fc8515e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3d3b6e5ac890fc32b2ed4851bd3b641"><td class="memItemLeft" align="right" valign="top"><a id="ac3d3b6e5ac890fc32b2ed4851bd3b641"></a>
+std::unique_ptr&lt; <a class="el" href="message__filters_8hpp.html#a675d23ea709bfdf18ec6af33d80d96fa">message_filters::Subscriber</a>&lt; sensor_msgs::msg::LaserScan &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode.html#ac3d3b6e5ac890fc32b2ed4851bd3b641">laser_scan_sub_</a></td></tr>
+<tr class="memdesc:ac3d3b6e5ac890fc32b2ed4851bd3b641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Laser scan updates subscription. <br /></td></tr>
+<tr class="separator:ac3d3b6e5ac890fc32b2ed4851bd3b641"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af92d809fd2fa8d923ec1cac8b4749d13"><td class="memItemLeft" align="right" valign="top"><a id="af92d809fd2fa8d923ec1cac8b4749d13"></a>
 std::unique_ptr&lt; tf2_ros::MessageFilter&lt; sensor_msgs::msg::LaserScan &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode.html#af92d809fd2fa8d923ec1cac8b4749d13">laser_scan_filter_</a></td></tr>
 <tr class="memdesc:af92d809fd2fa8d923ec1cac8b4749d13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform synchronization filter for laser scan updates. <br /></td></tr>
 <tr class="separator:af92d809fd2fa8d923ec1cac8b4749d13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2612f7d9164bbbb7cde242c0319a08c5"><td class="memItemLeft" align="right" valign="top"><a id="a2612f7d9164bbbb7cde242c0319a08c5"></a>
-message_filters::Connection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode.html#a2612f7d9164bbbb7cde242c0319a08c5">laser_scan_connection_</a></td></tr>
-<tr class="memdesc:a2612f7d9164bbbb7cde242c0319a08c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connection for laser scan updates filter and callback. <br /></td></tr>
-<tr class="separator:a2612f7d9164bbbb7cde242c0319a08c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95d46d0b0ad3f689d83c702bbb250f67"><td class="memItemLeft" align="right" valign="top"><a id="a95d46d0b0ad3f689d83c702bbb250f67"></a>
+::message_filters::Connection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode.html#a95d46d0b0ad3f689d83c702bbb250f67">laser_scan_connection_</a></td></tr>
+<tr class="memdesc:a95d46d0b0ad3f689d83c702bbb250f67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connection for laser scan updates filter and callback. <br /></td></tr>
+<tr class="separator:a95d46d0b0ad3f689d83c702bbb250f67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d8f638420ca827b39c8f48b8a1b43e8"><td class="memItemLeft" align="right" valign="top"><a id="a3d8f638420ca827b39c8f48b8a1b43e8"></a>
 std::unique_ptr&lt; <a class="el" href="ndt__amcl__node_8hpp.html#aa6ba96a699dd60beedea43a64b5f3c2f">NdtAmclVariant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1NdtAmclNode.html#a3d8f638420ca827b39c8f48b8a1b43e8">particle_filter_</a> = nullptr</td></tr>
 <tr class="memdesc:a3d8f638420ca827b39c8f48b8a1b43e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Particle filter instance. <br /></td></tr>
@@ -766,7 +766,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Apr 24 12:11:17 2025 -0300, 876fc11&#39;.
+  Last updated on &#39;Thu Jul 3 11:01:32 2025 -0300, 080ffa5&#39;.
   <br/>
 </p>
   </div>

@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Apr 24 12:11:17 2025 -0300, 876fc11&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Jul 3 11:01:32 2025 -0300, 080ffa5&#39;"/>
   </head>
   
   
@@ -461,7 +461,7 @@ $(function() {
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;diagnostic_updater/diagnostic_updater.h&gt;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;dynamic_reconfigure/server.h&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;message_filters/subscriber.h&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;message_filters/subscriber.hpp&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/buffer.h&gt;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/message_filter.h&gt;</span></div>
@@ -563,7 +563,7 @@ $(function() {
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
 <div class="line"><a name="l00186"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1AmclNodelet.html#a2d5a20488f43d2cb00db0b08a0c30494">  186</a></span>&#160;  diagnostic_updater::Updater <a class="code" href="classbeluga__amcl_1_1AmclNodelet.html#a2d5a20488f43d2cb00db0b08a0c30494">diagnosic_updater_</a>;</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
-<div class="line"><a name="l00189"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1AmclNodelet.html#ad35e8f8110b5ac4fb0344dfcda9d43dd">  189</a></span>&#160;  message_filters::Subscriber&lt;sensor_msgs::LaserScan&gt; <a class="code" href="classbeluga__amcl_1_1AmclNodelet.html#ad35e8f8110b5ac4fb0344dfcda9d43dd">laser_scan_sub_</a>;</div>
+<div class="line"><a name="l00189"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1AmclNodelet.html#ad35e8f8110b5ac4fb0344dfcda9d43dd">  189</a></span>&#160;  <a class="code" href="message__filters_8hpp.html#a675d23ea709bfdf18ec6af33d80d96fa">message_filters::Subscriber&lt;sensor_msgs::LaserScan&gt;</a> <a class="code" href="classbeluga__amcl_1_1AmclNodelet.html#ad35e8f8110b5ac4fb0344dfcda9d43dd">laser_scan_sub_</a>;</div>
 <div class="line"><a name="l00191"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1AmclNodelet.html#a198d347c9bf9d0c6efbbd062565c2031">  191</a></span>&#160;  std::unique_ptr&lt;tf2_ros::MessageFilter&lt;sensor_msgs::LaserScan&gt;&gt; <a class="code" href="classbeluga__amcl_1_1AmclNodelet.html#a198d347c9bf9d0c6efbbd062565c2031">laser_scan_filter_</a>;</div>
 <div class="line"><a name="l00193"></a><span class="lineno"><a class="line" href="classbeluga__amcl_1_1AmclNodelet.html#aa1ec17df7db8ea7c3324cdac7b24c3ae">  193</a></span>&#160;  message_filters::Connection <a class="code" href="classbeluga__amcl_1_1AmclNodelet.html#aa1ec17df7db8ea7c3324cdac7b24c3ae">laser_scan_connection_</a>;</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
@@ -628,6 +628,7 @@ $(function() {
 <div class="ttc" id="aclassbeluga__amcl_1_1AmclNodelet_html_aee268022e6475ac6c58294214cebadd1"><div class="ttname"><a href="classbeluga__amcl_1_1AmclNodelet.html#aee268022e6475ac6c58294214cebadd1">beluga_amcl::AmclNodelet::get_execution_policy</a></div><div class="ttdeci">static auto get_execution_policy(std::string_view) -&gt; beluga_ros::Amcl::execution_policy_variant</div><div class="ttdoc">Get execution policy given its name.</div></div>
 <div class="ttc" id="aclassbeluga__amcl_1_1AmclNodelet_html_af5fdd86f62f96d566ec0e134fa1aeb15"><div class="ttname"><a href="classbeluga__amcl_1_1AmclNodelet.html#af5fdd86f62f96d566ec0e134fa1aeb15">beluga_amcl::AmclNodelet::config_</a></div><div class="ttdeci">beluga_amcl::AmclConfig config_</div><div class="ttdoc">Current beluga_amcl configuration.</div><div class="ttdef"><b>Definition:</b> amcl_nodelet.hpp:170</div></div>
 <div class="ttc" id="aclassbeluga__amcl_1_1AmclNodelet_html_af8cf8e47d8e0394b5d82f46d0b675e85"><div class="ttname"><a href="classbeluga__amcl_1_1AmclNodelet.html#af8cf8e47d8e0394b5d82f46d0b675e85">beluga_amcl::AmclNodelet::particle_cloud_timer_</a></div><div class="ttdeci">ros::Timer particle_cloud_timer_</div><div class="ttdoc">Timer for periodic particle cloud updates.</div><div class="ttdef"><b>Definition:</b> amcl_nodelet.hpp:144</div></div>
+<div class="ttc" id="amessage__filters_8hpp_html_a675d23ea709bfdf18ec6af33d80d96fa"><div class="ttname"><a href="message__filters_8hpp.html#a675d23ea709bfdf18ec6af33d80d96fa">beluga_amcl::message_filters::Subscriber</a></div><div class="ttdeci">::message_filters::Subscriber&lt; MsgT, rclcpp_lifecycle::LifecycleNode &gt; Subscriber</div><div class="ttdoc">message_filters::Subscriber specialization</div><div class="ttdef"><b>Definition:</b> message_filters.hpp:51</div></div>
 <div class="ttc" id="anamespaceSophus_html"><div class="ttname"><a href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespaceSophus.html">Sophus</a></div></div>
 <div class="ttc" id="anamespacebeluga__ros_html"><div class="ttname"><a href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespacebeluga__ros.html">beluga_ros</a></div></div>
 <div class="ttc" id="astructstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a></div></div>
@@ -687,7 +688,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Apr 24 12:11:17 2025 -0300, 876fc11&#39;.
+  Last updated on &#39;Thu Jul 3 11:01:32 2025 -0300, 080ffa5&#39;.
   <br/>
 </p>
   </div>

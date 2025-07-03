@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 858;
+var viewWidth = 869;
 var viewHeight = 117;
 var sectionId = 'dynsection-0';
 </script>
@@ -159,47 +159,47 @@ var sectionId = 'dynsection-0';
 <g id="node8" class="node">
 <title>Node8</title>
 <g id="a_node8"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="491,-6 491,-25 554,-25 554,-6 491,-6"/>
-<text text-anchor="middle" x="522.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">tf2/utils.h</text>
+<polygon fill="none" stroke="#bfbfbf" points="491,-6 491,-25 566,-25 566,-6 491,-6"/>
+<text text-anchor="middle" x="528.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">tf2/utils.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node8 -->
 <g id="edge7" class="edge">
 <title>Node1&#45;&gt;Node8</title>
-<path fill="none" stroke="midnightblue" d="M374.6,-67.48C406.24,-56.8 446.06,-43.28 481.5,-31 483.87,-30.18 486.32,-29.33 488.78,-28.46"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="489.96,-31.76 498.24,-25.14 487.64,-25.15 489.96,-31.76"/>
+<path fill="none" stroke="midnightblue" d="M375.27,-67.46C413.09,-54.88 460.98,-38.95 493.07,-28.28"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="494.52,-31.49 502.9,-25.01 492.31,-24.85 494.52,-31.49"/>
 </g>
 <!-- Node9 -->
 <g id="node9" class="node">
 <title>Node9</title>
 <g id="a_node9"><a target="_parent" xlink:href="../../../../../../beluga/docs/_doxygen/generated/reference/html/occupancy__grid_8hpp.html.html" xlink:title=" ">
-<polygon fill="none" stroke="black" points="572.5,-0.5 572.5,-30.5 688.5,-30.5 688.5,-0.5 572.5,-0.5"/>
-<text text-anchor="start" x="580.5" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/data</text>
-<text text-anchor="middle" x="630.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">/occupancy_grid.hpp</text>
+<polygon fill="none" stroke="black" points="583.5,-0.5 583.5,-30.5 699.5,-30.5 699.5,-0.5 583.5,-0.5"/>
+<text text-anchor="start" x="591.5" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/data</text>
+<text text-anchor="middle" x="641.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">/occupancy_grid.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node9 -->
 <g id="edge8" class="edge">
 <title>Node1&#45;&gt;Node9</title>
-<path fill="none" stroke="midnightblue" d="M403.13,-67.55C453.36,-56.27 515.7,-42.27 562.4,-31.79"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="563.42,-35.15 572.41,-29.54 561.89,-28.32 563.42,-35.15"/>
+<path fill="none" stroke="midnightblue" d="M403.14,-68.34C450.91,-58.04 511.55,-44.93 573.28,-31.48"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="574.17,-34.87 583.2,-29.32 572.68,-28.03 574.17,-34.87"/>
 </g>
 <!-- Node10 -->
 <g id="node10" class="node">
 <title>Node10</title>
 <g id="a_node10"><a xlink:href="messages_8hpp_source.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="707,-6 707,-25 850,-25 850,-6 707,-6"/>
-<text text-anchor="middle" x="778.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">beluga_ros/messages.hpp</text>
+<polygon fill="none" stroke="black" points="718,-6 718,-25 861,-25 861,-6 718,-6"/>
+<text text-anchor="middle" x="789.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">beluga_ros/messages.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node10 -->
 <g id="edge9" class="edge">
 <title>Node1&#45;&gt;Node10</title>
-<path fill="none" stroke="midnightblue" d="M403.25,-75.04C480.55,-64.19 596.71,-47.42 697.5,-31 705.52,-29.69 713.97,-28.25 722.27,-26.8"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="723.04,-30.22 732.28,-25.03 721.82,-23.32 723.04,-30.22"/>
+<path fill="none" stroke="midnightblue" d="M403.05,-75.53C482.57,-64.78 603.64,-47.87 708.5,-31 716.52,-29.71 724.98,-28.28 733.28,-26.83"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="734.05,-30.25 743.29,-25.06 732.83,-23.35 734.05,-30.25"/>
 </g>
 </g>
 </svg>

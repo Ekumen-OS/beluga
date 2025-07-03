@@ -1,0 +1,6 @@
+<map id="/home/runner/work/beluga/beluga/beluga_amcl/include/beluga_amcl/message_filters.hpp" name="/home/runner/work/beluga/beluga/beluga_amcl/include/beluga_amcl/message_filters.hpp">
+<area shape="rect" id="node1" title="Compatibility layer for message_filters." alt="" coords="240,5,484,61"/>
+<area shape="rect" id="node2" href="$amcl__node_8hpp.html" title="ROS 2 integration of the 2D AMCL algorithm." alt="" coords="5,109,217,165"/>
+<area shape="rect" id="node3" href="$ndt__amcl__node_8hpp.html" title="ROS 2 integration of the 2D NDT&#45;AMCL algorithm." alt="" coords="242,109,482,165"/>
+<area shape="rect" id="node4" href="$ndt__amcl__node__3d_8hpp.html" title="ROS 2 integration of the 3D NDT&#45;AMCL algorithm." alt="" coords="507,109,769,165"/>
+</map>

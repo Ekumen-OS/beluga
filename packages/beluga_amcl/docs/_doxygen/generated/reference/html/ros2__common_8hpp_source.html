@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Apr 24 12:11:17 2025 -0300, 876fc11&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Jul 3 11:01:32 2025 -0300, 080ffa5&#39;"/>
   </head>
   
   
@@ -467,11 +467,11 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;rclcpp/rclcpp.hpp&gt;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;rclcpp/time.hpp&gt;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;tf2/convert.h&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;tf2/utils.h&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/create_timer_ros.h&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/transform_broadcaster.h&gt;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/transform_listener.h&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/create_timer_ros.h&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/transform_broadcaster.h&gt;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;tf2_ros/transform_listener.h&gt;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;tf2/convert.hpp&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;tf2/utils.hpp&gt;</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/tf2__sophus_8hpp.html">beluga_ros/tf2_sophus.hpp</a>&gt;</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
@@ -572,7 +572,7 @@ $(function() {
 <div class="ttc" id="aclassbeluga__amcl_1_1BaseAMCLNode_html_ad36206a8f483715987d967136cdc8aa2"><div class="ttname"><a href="classbeluga__amcl_1_1BaseAMCLNode.html#ad36206a8f483715987d967136cdc8aa2">beluga_amcl::BaseAMCLNode::do_autostart_callback</a></div><div class="ttdeci">virtual void do_autostart_callback()</div><div class="ttdoc">User provided extra steps for the autostart process.</div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:92</div></div>
 <div class="ttc" id="aclassbeluga__amcl_1_1BaseAMCLNode_html_ae9f2cea1a98d12277eb07454b4031af9"><div class="ttname"><a href="classbeluga__amcl_1_1BaseAMCLNode.html#ae9f2cea1a98d12277eb07454b4031af9">beluga_amcl::BaseAMCLNode::periodic_timer_callback</a></div><div class="ttdeci">void periodic_timer_callback()</div><div class="ttdoc">Callback for the periodic particle updates.</div></div>
 <div class="ttc" id="aclassbeluga__amcl_1_1BaseAMCLNode_html_afa50e522b77e0d6a9c2487d9391b7b36"><div class="ttname"><a href="classbeluga__amcl_1_1BaseAMCLNode.html#afa50e522b77e0d6a9c2487d9391b7b36">beluga_amcl::BaseAMCLNode::BaseAMCLNode</a></div><div class="ttdeci">BaseAMCLNode(const std::string &amp;node_name=&quot;amcl&quot;, const std::string &amp;node_namespace=&quot;&quot;, const rclcpp::NodeOptions &amp;node_options=rclcpp::NodeOptions{})</div><div class="ttdoc">Constructor, following LifecycleNode signature.</div></div>
-<div class="ttc" id="andt__amcl__node_8hpp_html_a20a6813586f56b33cebd9dbe32713d5e"><div class="ttname"><a href="ndt__amcl__node_8hpp.html#a20a6813586f56b33cebd9dbe32713d5e">beluga_amcl::ExecutionPolicyVariant</a></div><div class="ttdeci">std::variant&lt; std::execution::sequenced_policy, std::execution::parallel_policy &gt; ExecutionPolicyVariant</div><div class="ttdoc">Supported execution policies.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node.hpp:100</div></div>
+<div class="ttc" id="andt__amcl__node_8hpp_html_a20a6813586f56b33cebd9dbe32713d5e"><div class="ttname"><a href="ndt__amcl__node_8hpp.html#a20a6813586f56b33cebd9dbe32713d5e">beluga_amcl::ExecutionPolicyVariant</a></div><div class="ttdeci">std::variant&lt; std::execution::sequenced_policy, std::execution::parallel_policy &gt; ExecutionPolicyVariant</div><div class="ttdoc">Supported execution policies.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node.hpp:101</div></div>
 <div class="ttc" id="atf2__sophus_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/tf2__sophus_8hpp.html">tf2_sophus.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
@@ -630,7 +630,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Apr 24 12:11:17 2025 -0300, 876fc11&#39;.
+  Last updated on &#39;Thu Jul 3 11:01:32 2025 -0300, 080ffa5&#39;.
   <br/>
 </p>
   </div>
