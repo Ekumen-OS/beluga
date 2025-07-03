@@ -23,7 +23,7 @@
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
 
-#include <tf2/utils.h>
+#include <tf2/utils.hpp>
 
 #if BELUGA_ROS_VERSION == 2
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>

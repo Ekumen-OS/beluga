@@ -15,12 +15,12 @@
 #ifndef BELUGA_ROS_TF2_SOPHUS_HPP
 #define BELUGA_ROS_TF2_SOPHUS_HPP
 
-#include <tf2/convert.h>
-#include <tf2/utils.h>
 #include <beluga/algorithm/unscented_transform.hpp>
 #include <beluga/eigen_compatibility.hpp>
 #include <cmath>
 #include <sophus/common.hpp>
+#include <tf2/convert.hpp>
+#include <tf2/utils.hpp>
 
 #if BELUGA_ROS_VERSION == 2
 #include <tf2_eigen/tf2_eigen.hpp>

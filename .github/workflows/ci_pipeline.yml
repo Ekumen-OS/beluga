@@ -35,9 +35,9 @@ jobs:
       fail-fast: false
       matrix:
         ros_distro:
-          - noetic
           - humble
           - jazzy
+          - kilted
         include:
           - ros_distro: humble
             upload_artifacts: true

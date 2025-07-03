@@ -22,9 +22,9 @@ jobs:
       fail-fast: false
       matrix:
         ros_distro:
-          - noetic
           - humble
           - jazzy
+          - kilted
           - rolling
         include:
           - ros_distro: humble

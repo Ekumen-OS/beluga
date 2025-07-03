@@ -39,19 +39,19 @@
 #include <sophus/types.hpp>
 
 #include <Eigen/src/Core/Matrix.h>
-#include <tf2/convert.h>
-#include <tf2/exceptions.h>
-#include <tf2/time.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/buffer_interface.h>
 #include <tf2_ros/create_timer_ros.h>
 #include <tf2_ros/message_filter.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
+#include <tf2/convert.hpp>
+#include <tf2/exceptions.hpp>
+#include <tf2/time.hpp>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcpp"
-#include <message_filters/subscriber.h>
+#include <message_filters/subscriber.hpp>
 #pragma GCC diagnostic pop
 
 #include <bondcpp/bond.hpp>
@@ -75,9 +75,9 @@
 #include <beluga_ros/messages.hpp>
 #include <beluga_ros/particle_cloud.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
+#include "beluga_amcl/message_filters.hpp"
 #include "beluga_amcl/ndt_amcl_node_3d.hpp"
 #include "beluga_amcl/ros2_common.hpp"
-
 #include "beluga_ros/ndt_ellipsoid.hpp"
 
 namespace beluga_amcl {
@@ -171,11 +171,17 @@ void NdtAmclNode3D::do_activate(const rclcpp_lifecycle::State&) {
 
   particle_filter_ = make_particle_filter();
   {
-    using LaserScanSubscriber =
-        message_filters::Subscriber<sensor_msgs::msg::PointCloud2, rclcpp_lifecycle::LifecycleNode>;
-    laser_scan_sub_ = std::make_unique<LaserScanSubscriber>(
-        shared_from_this(), get_parameter("scan_topic").as_string(), rmw_qos_profile_sensor_data,
-        common_subscription_options_);
+    // Cope with variations in between message_filters versions.
+    // See beluga_amcl/message_filters.hpp for further reference.
+    const auto laser_scan_qos = [] {
+      if constexpr (BELUGA_AMCL_MESSAGE_FILTERS_VERSION_GTE(7, 2, 1)) {
+        return rclcpp::SensorDataQoS();
+      } else {
+        return rmw_qos_profile_sensor_data;
+      }
+    }();
+    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::PointCloud2>>(
+        shared_from_this(), get_parameter("scan_topic").as_string(), laser_scan_qos, common_subscription_options_);
 
     // Message filter that caches laser scan readings until it is possible to transform
     // from laser frame to odom frame and update the particle filter.
