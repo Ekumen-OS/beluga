@@ -19,10 +19,7 @@
 
 #include <beluga/sensor/data/value_grid.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
-
-#include <tf2/LinearMath/Quaternion.h>
-#include <geometry_msgs/msg/quaternion.hpp>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp> 
+#include <beluga_ros/tf2_sophus.hpp>
 
 /**
  * \file
@@ -42,14 +39,7 @@ inline void assign_likelihood_field(
   message.info.width = static_cast<unsigned int>(likelihood_field.width());
   message.info.height = static_cast<unsigned int>(likelihood_field.height());
   message.info.resolution = static_cast<float>(likelihood_field.resolution());
-
-  message.info.origin.position.x = origin.translation().x();
-  message.info.origin.position.y = origin.translation().y();
-  message.info.origin.position.z = 0.0;
-
-  tf2::Quaternion q;
-  q.setRPY(0, 0, origin.so2().log());
-  message.info.origin.orientation = tf2::toMsg(q);
+  tf2::toMsg(origin, message.info.origin); // origin -> Pose: [x,y,z],[w,x,y,z]
 
   // Populate the data field with the grid data
   message.data.resize(likelihood_field.size());
