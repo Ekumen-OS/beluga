@@ -20,6 +20,10 @@
 #include <beluga/sensor/data/value_grid.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 
+#include <tf2/LinearMath/Quaternion.h>
+#include <geometry_msgs/msg/quaternion.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp> 
+
 /**
  * \file
  * \brief Utilities for likelihood data over ROS interfaces.
@@ -30,6 +34,7 @@ namespace beluga_ros {
 /// Convert from likelihood data to ROS2 message.
 inline void assign_likelihood_field(
     const beluga::ValueGrid2<float>& likelihood_field,
+    const Sophus::SE2d& origin,
     nav_msgs::msg::OccupancyGrid& message,
     double free_threshold = 0.2,
     double occupied_threshold = 0.25) {
@@ -37,6 +42,14 @@ inline void assign_likelihood_field(
   message.info.width = static_cast<unsigned int>(likelihood_field.width());
   message.info.height = static_cast<unsigned int>(likelihood_field.height());
   message.info.resolution = static_cast<float>(likelihood_field.resolution());
+
+  message.info.origin.position.x = origin.translation().x();
+  message.info.origin.position.y = origin.translation().y();
+  message.info.origin.position.z = 0.0;
+
+  tf2::Quaternion q;
+  q.setRPY(0, 0, origin.so2().log());
+  message.info.origin.orientation = tf2::toMsg(q);
 
   // Populate the data field with the grid data
   message.data.resize(likelihood_field.size());

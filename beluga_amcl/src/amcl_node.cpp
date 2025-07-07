@@ -435,7 +435,7 @@ void AmclNode::do_periodic_timer_callback() {
 
   if (likelihood_field_pub_->get_subscription_count() > 0) {
     auto message = beluga_ros::msg::OccupancyGrid{};
-    beluga_ros::assign_likelihood_field(particle_filter_->get_likelihood_field(), message);
+    beluga_ros::assign_likelihood_field(particle_filter_->get_likelihood_field(), particle_filter_->get_likelihood_field_origin(), message);
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
     likelihood_field_pub_->publish(message);
   }

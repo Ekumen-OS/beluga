@@ -138,6 +138,11 @@ class Amcl {
   /// Returns a reference to the current likelihood field.
   [[nodiscard]] const auto& get_likelihood_field() const { return likelihood_field_; }
 
+  /// Returns a reference to the current likelihood field.
+  [[nodiscard]] auto get_likelihood_field_origin() const {
+    return std::get<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field_origin();
+  }  
+
   /// Initialize particles using a custom distribution.
   template <class Distribution>
   void initialize(Distribution distribution) {
