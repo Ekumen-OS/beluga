@@ -42,17 +42,26 @@ inline void assign_likelihood_field(
   tf2::toMsg(origin, message.info.origin); // origin -> Pose: [x,y,z],[w,x,y,z]
 
   // Populate the data field with the grid data
-  message.data.resize(likelihood_field.size());
   const auto& grid_data = likelihood_field.data();
+  message.data.resize(likelihood_field.size());
 
-  for (std::size_t i = 0; i < likelihood_field.size(); ++i) {
-    if (grid_data[i] <= free_threshold) {
-      message.data[i] = 0;  // Free
-    } else if (grid_data[i] >= occupied_threshold) {
-      message.data[i] = 100;  // Occupied
-    } else {
-      message.data[i] = -1;  // Unknown
-    }
+  // Find min and max values for normalization
+  const auto [min_it, max_it] = std::minmax_element(grid_data.begin(), grid_data.end());
+  const float min_val = *min_it;
+  const float max_val = *max_it;
+  const float range = max_val - min_val;
+
+  // Handle degenerate case (Flat grid). That case fill the grid with zeros
+  if (range <= std::numeric_limits<float>::epsilon()) {
+    // All values are the same; treat as unknown or flat
+    std::fill(message.data.begin(), message.data.end(), 0);
+    return;
+  }
+
+  // Normalizing each cell to [0, 100]
+  for (std::size_t i = 0; i < grid_data.size(); ++i) {
+    const float normalized = (grid_data[i] - min_val) / range;
+    message.data[i] = static_cast<int8_t>(normalized * 100.0f);  // Scale to [0, 100]
   }
 }
 
