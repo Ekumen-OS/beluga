@@ -139,9 +139,21 @@ class Amcl {
   [[nodiscard]] const auto& get_likelihood_field() const { return likelihood_field_; }
 
   /// Returns a reference to the current likelihood field.
+  //------------------------------------------------------
   [[nodiscard]] auto get_likelihood_field_origin() const {
     return std::get<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field_origin();
-  }  
+  }
+  
+  bool supports_likelihood_field() const {
+    return std::visit([](const auto& model) -> bool {
+      using T = std::decay_t<decltype(model)>;
+      return std::is_same_v<T, beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>> ||
+             std::is_same_v<T, beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>;
+    }, sensor_model_);
+  }
+
+  /// Returns a const reference to the sensor model variant.
+  [[nodiscard]] const auto& get_sensor_model() const { return sensor_model_; }
 
   /// Initialize particles using a custom distribution.
   template <class Distribution>
