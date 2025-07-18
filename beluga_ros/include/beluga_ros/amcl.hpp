@@ -146,7 +146,7 @@ class Amcl {
     throw std::invalid_argument(std::string("Invalid sensor argument: Likelihood_field"));
   }
 
-  /// Returns a reference to the current likelihood field origin
+  /// Returns the current likelihood field origin transform.
   [[nodiscard]] auto get_likelihood_field_origin() const {
     if (std::holds_alternative<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
       return std::get<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field_origin();
@@ -157,6 +157,8 @@ class Amcl {
     }
     throw std::invalid_argument(std::string("Invalid sensor argument: Likelihood_field_origin"));
   }
+
+  /// Indicates if the sensor model supports likelihood fields.
   [[nodiscard]] bool supports_likelihood_field() const {
     return std::holds_alternative<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_) ||
            std::holds_alternative<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_);
