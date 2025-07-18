@@ -18,8 +18,8 @@
 #include <cstdint>
 
 #include <beluga/sensor/data/value_grid.hpp>
-#include <nav_msgs/msg/occupancy_grid.hpp>
 #include <beluga_ros/tf2_sophus.hpp>
+#include <nav_msgs/msg/occupancy_grid.hpp>
 
 /**
  * \file
@@ -39,7 +39,7 @@ inline void assign_likelihood_field(
   message.info.width = static_cast<unsigned int>(likelihood_field.width());
   message.info.height = static_cast<unsigned int>(likelihood_field.height());
   message.info.resolution = static_cast<float>(likelihood_field.resolution());
-  tf2::toMsg(origin, message.info.origin); // origin -> Pose: [x,y,z],[w,x,y,z]
+  tf2::toMsg(origin, message.info.origin);  // origin -> Pose: [x,y,z],[w,x,y,z]
 
   // Populate the data field with the grid data
   const auto& grid_data = likelihood_field.data();
