@@ -191,12 +191,18 @@ AmclNode::~AmclNode() {
 }
 
 void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
+  // Adding activation control on likelihood fields
+  if (likelihood_field_pub_) {
+    likelihood_field_pub_->on_activate();
+  }
+
   {
     map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
         get_parameter("map_topic").as_string(), rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
         std::bind(&AmclNode::map_callback, this, std::placeholders::_1), common_subscription_options_);
     RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
   }
+
   {
     using LaserScanSubscriber =
         message_filters::Subscriber<sensor_msgs::msg::LaserScan, rclcpp_lifecycle::LifecycleNode>;
@@ -246,10 +252,15 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   laser_scan_filter_.reset();
   laser_scan_sub_.reset();
   global_localization_server_.reset();
+  // Adding deactivation control on likelihood fields
+  if (likelihood_field_pub_) {
+    likelihood_field_pub_->on_deactivate();
+  }
 }
 
 void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   particle_filter_.reset();
+  likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
   enable_tf_broadcast_ = false;
 }
 
@@ -391,6 +402,17 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
       RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());
       return;
     }
+
+    // Conditionally creating likelihood_field publisher (if sensor model supports it)
+    if (particle_filter_->supports_likelihood_field()) {
+      // subscribe to likelihood_field (and couple to particle_filter)
+      likelihood_field_pub_ =
+          create_publisher<nav_msgs::msg::OccupancyGrid>("likelihood_field", rclcpp::SystemDefaultsQoS());
+
+      // activate publisher for the very first time
+      likelihood_field_pub_->on_activate();
+    }
+
   } else {
     particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
   }
@@ -433,9 +455,10 @@ void AmclNode::do_periodic_timer_callback() {
     particle_markers_pub_->publish(message);
   }
 
-  if (likelihood_field_pub_->get_subscription_count() > 0) {
+  if (likelihood_field_pub_ && likelihood_field_pub_->get_subscription_count() > 0) {
     auto message = beluga_ros::msg::OccupancyGrid{};
-    beluga_ros::assign_likelihood_field(particle_filter_->get_likelihood_field(), particle_filter_->get_likelihood_field_origin(), message);
+    beluga_ros::assign_likelihood_field(
+        particle_filter_->get_likelihood_field(), particle_filter_->get_likelihood_field_origin(), message);
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
     likelihood_field_pub_->publish(message);
   }

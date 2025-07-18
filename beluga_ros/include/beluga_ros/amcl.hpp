@@ -132,28 +132,35 @@ class Amcl {
       const AmclParams& params,
       execution_policy_variant execution_policy);
 
-  /// Returns a reference to the current set of particles.
+  /// Returns a reference to the current set of particles
   [[nodiscard]] const auto& particles() const { return particles_; }
 
   /// Returns a reference to the current likelihood field.
-  [[nodiscard]] const auto& get_likelihood_field() const { return likelihood_field_; }
+  [[nodiscard]] const auto& get_likelihood_field() const {
+    if (std::holds_alternative<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
+      return std::get<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field();
+    }
+    if (std::holds_alternative<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
+      return std::get<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field();
+    }
+    throw std::invalid_argument(std::string("Invalid sensor argument: Likelihood_field"));
+  }
 
-  /// Returns a reference to the current likelihood field.
-  //------------------------------------------------------
+  /// Returns a reference to the current likelihood field origin
   [[nodiscard]] auto get_likelihood_field_origin() const {
-    return std::get<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field_origin();
+    if (std::holds_alternative<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
+      return std::get<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field_origin();
+    }
+    if (std::holds_alternative<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
+      return std::get<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_)
+          .likelihood_field_origin();
+    }
+    throw std::invalid_argument(std::string("Invalid sensor argument: Likelihood_field_origin"));
   }
-  
-  bool supports_likelihood_field() const {
-    return std::visit([](const auto& model) -> bool {
-      using T = std::decay_t<decltype(model)>;
-      return std::is_same_v<T, beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>> ||
-             std::is_same_v<T, beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>;
-    }, sensor_model_);
+  [[nodiscard]] bool supports_likelihood_field() const {
+    return std::holds_alternative<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_) ||
+           std::holds_alternative<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_);
   }
-
-  /// Returns a const reference to the sensor model variant.
-  [[nodiscard]] const auto& get_sensor_model() const { return sensor_model_; }
 
   /// Initialize particles using a custom distribution.
   template <class Distribution>
@@ -200,7 +207,6 @@ class Amcl {
 
  private:
   beluga::TupleVector<particle_type> particles_;
-  beluga::ValueGrid2<float> likelihood_field_ = createCleanValueGrid2<float>(0, 2, 2);  // Dummy initialization
 
   AmclParams params_;
   beluga::MultivariateUniformDistribution<Sophus::SE2d, beluga_ros::OccupancyGrid> map_distribution_;
@@ -216,17 +222,6 @@ class Amcl {
   beluga::RollingWindow<Sophus::SE2d, 2> control_action_window_;
 
   bool force_update_{true};
-
-  // Created to initialize likelihood_field_
-  template <typename T>
-  beluga::ValueGrid2<T>
-  createCleanValueGrid2(T default_value, std::size_t width, std::size_t height, double resolution = 1.0) {
-    // Create a data vector with default_value for each cell
-    std::vector<T> data(width * height, default_value);
-
-    // Construct and return the ValueGrid2 object
-    return beluga::ValueGrid2<T>(std::move(data), width, resolution);
-  }
 };
 
 }  // namespace beluga_ros
