@@ -191,7 +191,9 @@ AmclNode::~AmclNode() {
 }
 
 void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
-  // Adding activation control on likelihood fields
+  // Creation of the likelihood field publisher is attached to the creation of the particle filter
+  // (and knowledge of sensor model used). Hence publication of the likelihood field and activation control
+  // is defined at this stage.
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_activate();
   }
@@ -458,7 +460,7 @@ void AmclNode::do_periodic_timer_callback() {
   if (likelihood_field_pub_ && likelihood_field_pub_->get_subscription_count() > 0) {
     auto message = beluga_ros::msg::OccupancyGrid{};
     beluga_ros::assign_likelihood_field(
-        particle_filter_->get_likelihood_field(), particle_filter_->get_likelihood_field_origin(), message);
+        particle_filter_->likelihood_field(), particle_filter_->likelihood_field_origin(), message);
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
     likelihood_field_pub_->publish(message);
   }

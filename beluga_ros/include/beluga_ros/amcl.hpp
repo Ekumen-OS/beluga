@@ -32,6 +32,7 @@
 #include <beluga/random.hpp>
 #include <beluga/sensor.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
+#include <beluga/sensor/sensor_primitives.hpp>
 #include <beluga/views/sample.hpp>
 
 #include <beluga_ros/laser_scan.hpp>
@@ -132,36 +133,57 @@ class Amcl {
       const AmclParams& params,
       execution_policy_variant execution_policy);
 
-  /// Returns a reference to the current set of particles
+  /// Returns a reference to the current set of particles.
   [[nodiscard]] const auto& particles() const { return particles_; }
 
   /// Returns a reference to the current likelihood field.
-  [[nodiscard]] const auto& get_likelihood_field() const {
-    if (std::holds_alternative<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
-      return std::get<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field();
+  [[nodiscard]] const auto& likelihood_field() const {
+    std::optional<std::reference_wrapper<const beluga::ValueGrid2<float>>> result;
+
+    std::visit(
+        [&result](const auto& sensor_model) {
+          using T = std::decay_t<decltype(sensor_model)>;
+          if constexpr (beluga::has_likelihood_field_v<T>) {
+            result = std::cref(sensor_model.likelihood_field());
+          }
+        },
+        sensor_model_);
+
+    if (!result) {
+      throw std::runtime_error("The current sensor model does not support likelihood field");
     }
-    if (std::holds_alternative<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
-      return std::get<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field();
-    }
-    throw std::invalid_argument(std::string("Invalid sensor argument: Likelihood_field"));
+
+    return result->get();
   }
 
   /// Returns the current likelihood field origin transform.
-  [[nodiscard]] auto get_likelihood_field_origin() const {
-    if (std::holds_alternative<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
-      return std::get<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_).likelihood_field_origin();
+  [[nodiscard]] auto likelihood_field_origin() const {
+    std::optional<Sophus::SE2<double>> result;
+
+    std::visit(
+        [&result](const auto& sensor_model) {
+          using T = std::decay_t<decltype(sensor_model)>;
+          if constexpr (beluga::has_likelihood_field_v<T>) {
+            result = sensor_model.likelihood_field_origin();
+          }
+        },
+        sensor_model_);
+
+    if (!result) {
+      throw std::runtime_error("The current sensor model does not support likelihood field");
     }
-    if (std::holds_alternative<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_)) {
-      return std::get<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_)
-          .likelihood_field_origin();
-    }
-    throw std::invalid_argument(std::string("Invalid sensor argument: Likelihood_field_origin"));
+
+    return *result;  // return by value
   }
 
   /// Indicates if the sensor model supports likelihood fields.
   [[nodiscard]] bool supports_likelihood_field() const {
-    return std::holds_alternative<beluga::LikelihoodFieldModel<beluga_ros::OccupancyGrid>>(sensor_model_) ||
-           std::holds_alternative<beluga::LikelihoodFieldProbModel<beluga_ros::OccupancyGrid>>(sensor_model_);
+    return std::visit(
+        [](const auto& sensor_model) {
+          using T = std::decay_t<decltype(sensor_model)>;
+          return beluga::has_likelihood_field_v<T>;
+        },
+        sensor_model_);
   }
 
   /// Initialize particles using a custom distribution.

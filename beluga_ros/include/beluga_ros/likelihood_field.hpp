@@ -29,12 +29,11 @@
 namespace beluga_ros {
 
 /// Convert from likelihood data to ROS2 message.
+template <typename T>
 inline void assign_likelihood_field(
-    const beluga::ValueGrid2<float>& likelihood_field,
+    const beluga::ValueGrid2<T>& likelihood_field,
     const Sophus::SE2d& origin,
-    nav_msgs::msg::OccupancyGrid& message,
-    double free_threshold = 0.2,
-    double occupied_threshold = 0.25) {
+    nav_msgs::msg::OccupancyGrid& message) {
   // Set metadata
   message.info.width = static_cast<unsigned int>(likelihood_field.width());
   message.info.height = static_cast<unsigned int>(likelihood_field.height());
@@ -61,7 +60,7 @@ inline void assign_likelihood_field(
   // Normalizing each cell to [0, 100]
   for (std::size_t i = 0; i < grid_data.size(); ++i) {
     const float normalized = (grid_data[i] - min_val) / range;
-    message.data[i] = static_cast<int8_t>(normalized * 100.0f);  // Scale to [0, 100]
+    message.data[i] = static_cast<int8_t>(normalized * 255.0f);  // Scale to [0, 255]
   }
 }
 
