@@ -18,6 +18,7 @@
 #include <cstdint>
 
 #include <beluga/sensor/data/value_grid.hpp>
+#include <beluga_ros/tf2_sophus.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 
 /**
@@ -28,28 +29,39 @@
 namespace beluga_ros {
 
 /// Convert from likelihood data to ROS2 message.
+template <typename T>
 inline void assign_likelihood_field(
-    const beluga::ValueGrid2<float>& likelihood_field,
-    nav_msgs::msg::OccupancyGrid& message,
-    double free_threshold = 0.2,
-    double occupied_threshold = 0.25) {
+    const beluga::ValueGrid2<T>& likelihood_field,
+    const Sophus::SE2d& origin,
+    nav_msgs::msg::OccupancyGrid& message) {
   // Set metadata
   message.info.width = static_cast<unsigned int>(likelihood_field.width());
   message.info.height = static_cast<unsigned int>(likelihood_field.height());
   message.info.resolution = static_cast<float>(likelihood_field.resolution());
+  tf2::toMsg(origin, message.info.origin);  // origin -> Pose: [x,y,z],[w,x,y,z]
 
   // Populate the data field with the grid data
-  message.data.resize(likelihood_field.size());
   const auto& grid_data = likelihood_field.data();
+  message.data.resize(likelihood_field.size());
 
-  for (std::size_t i = 0; i < likelihood_field.size(); ++i) {
-    if (grid_data[i] <= free_threshold) {
-      message.data[i] = 0;  // Free
-    } else if (grid_data[i] >= occupied_threshold) {
-      message.data[i] = 100;  // Occupied
-    } else {
-      message.data[i] = -1;  // Unknown
-    }
+  // Find min and max values for normalization
+  const auto [min_it, max_it] = std::minmax_element(grid_data.begin(), grid_data.end());
+  const float min_val = *min_it;
+  const float max_val = *max_it;
+  const float range = max_val - min_val;
+
+  // Handle degenerate case (flat grid) by filling the occupancy grid with zeros
+  if (range <= std::numeric_limits<float>::epsilon()) {
+    // All values are the same; treat as unknown or flat
+    std::fill(message.data.begin(), message.data.end(), 0);
+    return;
+  }
+
+  // Normalizing each cell to [0, 100] - To be consistent with nav2:
+  // navigation2/nav2_costmap_2d/src/costmap_2d_publisher.cpp
+  for (std::size_t i = 0; i < grid_data.size(); ++i) {
+    const float normalized = (grid_data[i] - min_val) / range;
+    message.data[i] = static_cast<int8_t>(normalized * 100.0f);  // Scale to [0, 100]
   }
 }
 

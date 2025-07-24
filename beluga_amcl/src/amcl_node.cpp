@@ -187,17 +187,23 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
 AmclNode::~AmclNode() {
   RCLCPP_INFO(get_logger(), "Destroying");
-  // In case this lifecycle node wasn't properly shut down, do it here
+  // In case this lifecycle node wasn't properly shut down, do it here.
   on_shutdown(get_current_state());
 }
 
 void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
+  // Ensure likelihood field publisher is (re)activated early enough.
+  if (likelihood_field_pub_) {
+    likelihood_field_pub_->on_activate();
+  }
+
   {
     map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
         get_parameter("map_topic").as_string(), rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
         std::bind(&AmclNode::map_callback, this, std::placeholders::_1), common_subscription_options_);
     RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
   }
+
   {
     // Cope with variations in between message_filters versions.
     // See beluga_amcl/message_filters.hpp for further reference.
@@ -253,10 +259,14 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   laser_scan_filter_.reset();
   laser_scan_sub_.reset();
   global_localization_server_.reset();
+  if (likelihood_field_pub_) {
+    likelihood_field_pub_->on_deactivate();
+  }
 }
 
 void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   particle_filter_.reset();
+  likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
   enable_tf_broadcast_ = false;
 }
 
@@ -398,6 +408,13 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
       RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());
       return;
     }
+    if (particle_filter_->has_likelihood_field()) {
+      likelihood_field_pub_ =
+          create_publisher<nav_msgs::msg::OccupancyGrid>("likelihood_field", rclcpp::SystemDefaultsQoS());
+      // Activate publisher immediately, we are likely past the activation phase.
+      likelihood_field_pub_->on_activate();
+    }
+
   } else {
     particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
   }
@@ -440,9 +457,10 @@ void AmclNode::do_periodic_timer_callback() {
     particle_markers_pub_->publish(message);
   }
 
-  if (likelihood_field_pub_->get_subscription_count() > 0) {
+  if (likelihood_field_pub_ && likelihood_field_pub_->get_subscription_count() > 0) {
     auto message = beluga_ros::msg::OccupancyGrid{};
-    beluga_ros::assign_likelihood_field(particle_filter_->get_likelihood_field(), message);
+    beluga_ros::assign_likelihood_field(
+        particle_filter_->likelihood_field(), particle_filter_->likelihood_field_origin(), message);
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
     likelihood_field_pub_->publish(message);
   }
