@@ -186,14 +186,12 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
 AmclNode::~AmclNode() {
   RCLCPP_INFO(get_logger(), "Destroying");
-  // In case this lifecycle node wasn't properly shut down, do it here
+  // In case this lifecycle node wasn't properly shut down, do it here.
   on_shutdown(get_current_state());
 }
 
 void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
-  // Creation of the likelihood field publisher is attached to the creation of the particle filter
-  // (and knowledge of sensor model used). Hence publication of the likelihood field and activation control
-  // is defined at this stage.
+  // Ensure likelihood field publisher is (re)activated early enough.
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_activate();
   }
@@ -254,7 +252,6 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   laser_scan_filter_.reset();
   laser_scan_sub_.reset();
   global_localization_server_.reset();
-  // Adding deactivation control on likelihood fields
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_deactivate();
   }
@@ -404,14 +401,10 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
       RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());
       return;
     }
-
-    // Conditionally creating likelihood_field publisher (if sensor model supports it)
-    if (particle_filter_->supports_likelihood_field()) {
-      // subscribe to likelihood_field (and couple to particle_filter)
+    if (particle_filter_->has_likelihood_field()) {
       likelihood_field_pub_ =
           create_publisher<nav_msgs::msg::OccupancyGrid>("likelihood_field", rclcpp::SystemDefaultsQoS());
-
-      // activate publisher for the very first time
+      // Activate publisher immediately, we are likely past the activation phase.
       likelihood_field_pub_->on_activate();
     }
 

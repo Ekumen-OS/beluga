@@ -50,17 +50,18 @@ inline void assign_likelihood_field(
   const float max_val = *max_it;
   const float range = max_val - min_val;
 
-  // Handle degenerate case (Flat grid). That case fill the grid with zeros
+  // Handle degenerate case (flat grid) by filling the occupancy grid with zeros
   if (range <= std::numeric_limits<float>::epsilon()) {
     // All values are the same; treat as unknown or flat
     std::fill(message.data.begin(), message.data.end(), 0);
     return;
   }
 
-  // Normalizing each cell to [0, 100]
+  // Normalizing each cell to [0, 100] - To be consistent with nav2:
+  // navigation2/nav2_costmap_2d/src/costmap_2d_publisher.cpp
   for (std::size_t i = 0; i < grid_data.size(); ++i) {
     const float normalized = (grid_data[i] - min_val) / range;
-    message.data[i] = static_cast<int8_t>(normalized * 255.0f);  // Scale to [0, 255]
+    message.data[i] = static_cast<int8_t>(normalized * 100.0f);  // Scale to [0, 100]
   }
 }
 

@@ -12,15 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BELUGA_SENSOR_SENSOR_PRIMITIVES_HPP
-#define BELUGA_SENSOR_SENSOR_PRIMITIVES_HPP
-
-// #include <tuple>
-// #include <type_traits>
-
-// #include <beluga/type_traits/strongly_typed_numeric.hpp>
-// #include <beluga/type_traits/tuple_traits.hpp>
-// #include <beluga/utility/forward_like.hpp>
+#ifndef BELUGA_SENSOR_PRIMITIVES_HPP
+#define BELUGA_SENSOR_PRIMITIVES_HPP
 
 // /**
 //  * \file
@@ -40,4 +33,4 @@ inline constexpr bool has_likelihood_field_v = has_likelihood_field<T>::value;
 
 }  // namespace beluga
 
-#endif  // BELUGA_SENSOR_SENSOR_PRIMITIVES_HPP
+#endif  // BELUGA_SENSOR_PRIMITIVES_HPP

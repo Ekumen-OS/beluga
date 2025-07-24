@@ -32,7 +32,7 @@
 #include <beluga/random.hpp>
 #include <beluga/sensor.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
-#include <beluga/sensor/sensor_primitives.hpp>
+#include <beluga/sensor/primitives.hpp>
 #include <beluga/views/sample.hpp>
 
 #include <beluga_ros/laser_scan.hpp>
@@ -176,8 +176,8 @@ class Amcl {
     return *result;  // return by value
   }
 
-  /// Indicates if the sensor model supports likelihood fields.
-  [[nodiscard]] bool supports_likelihood_field() const {
+  /// Check if the sensor model bears a likelihood field.
+  [[nodiscard]] bool has_likelihood_field() const {
     return std::visit(
         [](const auto& sensor_model) {
           using T = std::decay_t<decltype(sensor_model)>;
