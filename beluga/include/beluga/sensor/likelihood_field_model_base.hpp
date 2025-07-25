@@ -98,7 +98,7 @@ class LikelihoodFieldModelBase {
   [[nodiscard]] const auto& likelihood_field() const { return likelihood_field_; }
 
   /// Returns the origin of the likelihood field in world coordinates.
-  [[nodiscard]] const auto likelihood_field_origin() const { return world_to_likelihood_field_transform_.inverse(); }
+  [[nodiscard]] auto likelihood_field_origin() const { return world_to_likelihood_field_transform_.inverse(); }
 
   /// Update the sensor model with a new occupancy grid map.
   /**
