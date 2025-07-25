@@ -22,12 +22,18 @@
 
 namespace beluga {
 
+// Primary template which defaults to `false_type`.
+// A specialization will override this if the method is detected.
 template <class T, class = void>
 struct has_likelihood_field : std::false_type {};
 
+// Specialization. Uses SFINAE to detect whether the expression
+// `std::declval<T>().likelihood_field()` is valid.
+// If so, evaluates to `true_type`.
 template <class T>
 struct has_likelihood_field<T, std::void_t<decltype(std::declval<T>().likelihood_field())>> : std::true_type {};
 
+/// Trait variable that indicates whether a type `T` has a `likelihood_field()` method.
 template <class T>
 inline constexpr bool has_likelihood_field_v = has_likelihood_field<T>::value;
 
