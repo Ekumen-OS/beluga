@@ -16,6 +16,13 @@
 #include <lifecycle_msgs/msg/state.hpp>
 #include <rclcpp/publisher.hpp>
 
+#include <beluga/sensor/likelihood_field_model.hpp>
+#include <beluga/sensor/likelihood_field_prob_model.hpp>
+#include <beluga_ros/messages.hpp>
+#include <beluga_ros/occupancy_grid.hpp>
+
+#include <beluga_ros/amcl.hpp>
+
 namespace beluga_amcl {
 
 BaseAMCLNode::BaseAMCLNode(
@@ -414,6 +421,7 @@ BaseAMCLNode::CallbackReturn BaseAMCLNode::on_configure(const rclcpp_lifecycle::
   particle_markers_pub_ =
       create_publisher<visualization_msgs::msg::MarkerArray>("particle_markers", rclcpp::SystemDefaultsQoS());
   pose_pub_ = create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("pose", rclcpp::SystemDefaultsQoS());
+
   do_configure(state);
   return CallbackReturn::SUCCESS;
 };
@@ -457,7 +465,6 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
   particle_cloud_pub_->on_activate();
   particle_markers_pub_->on_activate();
   pose_pub_->on_activate();
-
   {
     initial_pose_sub_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
         get_parameter("initial_pose_topic").as_string(), rclcpp::SystemDefaultsQoS(),

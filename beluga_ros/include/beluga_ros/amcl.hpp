@@ -31,6 +31,8 @@
 #include <beluga/policies.hpp>
 #include <beluga/random.hpp>
 #include <beluga/sensor.hpp>
+#include <beluga/sensor/data/value_grid.hpp>
+#include <beluga/sensor/primitives.hpp>
 #include <beluga/views/sample.hpp>
 
 #include <beluga_ros/laser_scan.hpp>
@@ -133,6 +135,56 @@ class Amcl {
 
   /// Returns a reference to the current set of particles.
   [[nodiscard]] const auto& particles() const { return particles_; }
+
+  /// Returns a reference to the current likelihood field.
+  [[nodiscard]] const auto& likelihood_field() const {
+    std::optional<std::reference_wrapper<const beluga::ValueGrid2<float>>> result;
+
+    std::visit(
+        [&result](const auto& sensor_model) {
+          using T = std::decay_t<decltype(sensor_model)>;
+          if constexpr (beluga::has_likelihood_field_v<T>) {
+            result = std::cref(sensor_model.likelihood_field());
+          }
+        },
+        sensor_model_);
+
+    if (!result) {
+      throw std::runtime_error("The current sensor model does not support likelihood field");
+    }
+
+    return result->get();
+  }
+
+  /// Returns the current likelihood field origin transform.
+  [[nodiscard]] auto likelihood_field_origin() const {
+    std::optional<Sophus::SE2<double>> result;
+
+    std::visit(
+        [&result](const auto& sensor_model) {
+          using T = std::decay_t<decltype(sensor_model)>;
+          if constexpr (beluga::has_likelihood_field_v<T>) {
+            result = sensor_model.likelihood_field_origin();
+          }
+        },
+        sensor_model_);
+
+    if (!result) {
+      throw std::runtime_error("The current sensor model does not support likelihood field");
+    }
+
+    return *result;  // return by value
+  }
+
+  /// Check if the sensor model bears a likelihood field.
+  [[nodiscard]] bool has_likelihood_field() const {
+    return std::visit(
+        [](const auto& sensor_model) {
+          using T = std::decay_t<decltype(sensor_model)>;
+          return beluga::has_likelihood_field_v<T>;
+        },
+        sensor_model_);
+  }
 
   /// Initialize particles using a custom distribution.
   template <class Distribution>
