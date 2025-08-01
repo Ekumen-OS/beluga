@@ -91,6 +91,9 @@ class AmclNode : public BaseAMCLNode {
   /// Callback for laser scan updates.
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
 
+  /// Callback for point cloud updates.
+  void point_cloud_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr);
+
   /// Callback for pose (re)initialization.
   void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;
 
@@ -133,6 +136,9 @@ class AmclNode : public BaseAMCLNode {
   /// Laser scan updates subscription.
   std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan>> laser_scan_sub_;
 
+  /// Point cloud updates subscription.
+  std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::PointCloud2>> point_cloud_sub_;
+
   /// Global relocalization service server.
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr global_localization_server_;
   /// No motion update service server.
@@ -142,6 +148,12 @@ class AmclNode : public BaseAMCLNode {
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>> laser_scan_filter_;
   /// Connection for laser scan updates filter and callback.
   ::message_filters::Connection laser_scan_connection_;
+
+  /// Transform synchronization filter for laser scan updates.
+  std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::PointCloud2>> point_cloud_filter_;
+
+  /// Connection for point cloud updates filter and callback.
+  ::message_filters::Connection point_cloud_connection_;
 
   /// Particle filter instance.
   std::unique_ptr<beluga_ros::Amcl> particle_filter_;

@@ -52,14 +52,6 @@ void Amcl::update_map(beluga_ros::OccupancyGrid map) {
 
 auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan)
     -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
-  if (particles_.empty()) {
-    return std::nullopt;
-  }
-
-  if (!update_policy_(base_pose_in_odom) && !force_update_) {
-    return std::nullopt;
-  }
-
   // TODO(nahuel): Remove this once we update the measurement type.
   auto measurement = laser_scan.points_in_cartesian_coordinates() |  //
                      ranges::views::transform([&laser_scan](const auto& p) {
@@ -67,6 +59,29 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_sc
                        return std::make_pair(result.x(), result.y());
                      }) |
                      ranges::to<std::vector>;
+  return update(base_pose_in_odom, std::move(measurement));
+}
+
+auto Amcl::update(Sophus::SE2d base_pose_in_odom, const SparsePointCloud3<double>& point_cloud)
+    -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
+  std::vector<std::pair<double, double>> measurement;
+  measurement.reserve(point_cloud.size());
+
+  for (const Eigen::Vector3d& point : point_cloud.points()) {
+    measurement.emplace_back(point.x(), point.y());
+  }
+  return update(base_pose_in_odom, std::move(measurement));
+}
+
+auto Amcl::update(Sophus::SE2d base_pose_in_odom, std::vector<std::pair<double, double>>&& measurement)
+    -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
+  if (particles_.empty()) {
+    return std::nullopt;
+  }
+
+  if (!update_policy_(base_pose_in_odom) && !force_update_) {
+    return std::nullopt;
+  }
 
   std::visit(
       [&, this](auto& policy, auto& motion_model, auto& sensor_model) {

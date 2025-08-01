@@ -35,6 +35,7 @@
 #include <beluga/sensor/primitives.hpp>
 #include <beluga/views/sample.hpp>
 
+#include <beluga_ros/sparse_point_cloud.hpp>
 #include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
 
@@ -225,6 +226,38 @@ class Amcl {
    */
   auto update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan)
       -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
+
+  /// Update particles based on motion and sensor information.
+  /**
+   * This method performs a particle filter update step using motion and sensor data. It evaluates whether
+   * an update is necessary based on the configured update policy and the force_update flag. If an update
+   * is required, the motion model and sensor model updates are applied to the particles, and the particle
+   * weights are adjusted accordingly. Also, according to the configured resampling policy, the particles
+   * are resampled to maintain diversity and prevent degeneracy.
+   *
+   * \param base_pose_in_odom Base pose in the odometry frame.
+   * \param point_cloud Point cloud measurement in the sensor frame.
+   * \return An optional pair containing the estimated pose and covariance after the update,
+   *         or std::nullopt if no update was performed.
+   */
+  auto update(Sophus::SE2d base_pose_in_odom, const SparsePointCloud3<double>& point_cloud)
+      -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
+
+  /// Update particles based on motion and sensor information.
+  /**
+   * This method performs a particle filter update step using motion and sensor data. It evaluates whether
+   * an update is necessary based on the configured update policy and the force_update flag. If an update
+   * is required, the motion model and sensor model updates are applied to the particles, and the particle
+   * weights are adjusted accordingly. Also, according to the configured resampling policy, the particles
+   * are resampled to maintain diversity and prevent degeneracy.
+   *
+   * \param base_pose_in_odom Base pose in the odometry frame.
+   * \param measurement A vector of 2D points representing the sensor measurement in the base frame.
+   * \return An optional pair containing the estimated pose and covariance after the update,
+   *         or std::nullopt if no update was performed.
+   */
+   auto update(Sophus::SE2d base_pose_in_odom, std::vector<std::pair<double, double>>&& measurement)
+   -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
 
   /// Force a manual update of the particles on the next iteration of the filter.
   void force_update() { force_update_ = true; }

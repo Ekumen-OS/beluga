@@ -55,6 +55,7 @@
 #include <lifecycle_msgs/msg/state.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+#include <sensor_msgs/msg/point_field.hpp>
 #include <std_srvs/srv/empty.hpp>
 
 #include <beluga/motion/differential_drive_model.hpp>
@@ -217,8 +218,19 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
         shared_from_this(), get_parameter("scan_topic").as_string(), laser_scan_qos, common_subscription_options_);
 
-    // Message filter that caches laser scan readings until it is possible to transform
-    // from laser frame to odom frame and update the particle filter.
+  const auto sensor_qos = [] {
+    if constexpr (BELUGA_AMCL_MESSAGE_FILTERS_VERSION_GTE(7, 2, 1)) {
+      return rclcpp::SensorDataQoS();
+    } else {
+      return rmw_qos_profile_sensor_data;
+    }
+  }();
+
+  const auto scan_topic = get_parameter("scan_topic").as_string();
+  if (!scan_topic.empty()) {
+    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
+        shared_from_this(), scan_topic, sensor_qos, common_subscription_options_);
+
     laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
         *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10, get_node_logging_interface(),
         get_node_clock_interface(), tf2::durationFromSec(get_parameter("transform_tolerance").as_double()));
@@ -226,6 +238,21 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     laser_scan_connection_ =
         laser_scan_filter_->registerCallback(std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
     RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
+  }
+
+  const auto point_cloud_topic = get_parameter("point_cloud_topic").as_string();
+  if (!point_cloud_topic.empty()) {
+    point_cloud_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::PointCloud2>>(
+        shared_from_this(), point_cloud_topic, sensor_qos, common_subscription_options_);
+
+    point_cloud_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::PointCloud2>>(
+        *point_cloud_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10,
+        get_node_logging_interface(), get_node_clock_interface(),
+        tf2::durationFromSec(get_parameter("transform_tolerance").as_double()));
+
+    point_cloud_connection_ = point_cloud_filter_->registerCallback(
+        std::bind(&AmclNode::point_cloud_callback, this, std::placeholders::_1));
+    RCLCPP_INFO(get_logger(), "Subscribed to point_cloud_topic: %s", point_cloud_sub_->getTopic().c_str());
   }
 
   const auto common_service_qos = [] {
@@ -265,9 +292,23 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
 }
 
 void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
+  // Release all resources.
+  map_sub_.reset();
+  if (laser_scan_sub_) {
+    laser_scan_filter_.reset();
+    laser_scan_sub_.reset();
+  }
+  if (point_cloud_sub_) {
+    point_cloud_filter_.reset();
+    point_cloud_sub_.reset();
+  }
+  global_localization_server_.reset();
+  nomotion_update_server_.reset();
   particle_filter_.reset();
   likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
   enable_tf_broadcast_ = false;
+  last_known_estimate_.reset();
+  last_known_odom_transform_in_map_.reset();
 }
 
 auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
@@ -551,6 +592,96 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   if (new_estimate.has_value()) {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
     message.header.stamp = laser_scan->header.stamp;
+    message.header.frame_id = get_parameter("global_frame_id").as_string();
+    const auto& [base_pose_in_map, base_pose_covariance] = new_estimate.value();
+    tf2::toMsg(base_pose_in_map, message.pose.pose);
+    tf2::covarianceEigenToRowMajor(base_pose_covariance, message.pose.covariance);
+    pose_pub_->publish(message);
+  }
+}
+
+void AmclNode::point_cloud_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr point_cloud) {
+  if (!particle_filter_) {
+    RCLCPP_WARN_THROTTLE(
+        get_logger(), *get_clock(), 2000, "Ignoring point cloud data because the particle filter has not been initialized");
+    return;
+  }
+
+  auto base_pose_in_odom = Sophus::SE2d{};
+  try {
+    // Use the lookupTransform overload with no timeout since we're not using a dedicated
+    // tf thread. The message filter we are using avoids the need for it.
+    tf2::convert(
+        tf_buffer_
+            ->lookupTransform(
+                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
+                tf2_ros::fromMsg(point_cloud->header.stamp))
+            .transform,
+        base_pose_in_odom);
+  } catch (const tf2::TransformException& error) {
+    RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
+    return;
+  }
+
+  auto sensor_pose_in_base = Sophus::SE3d{};
+  try {
+    tf2::convert(
+        tf_buffer_
+            ->lookupTransform(
+                get_parameter("base_frame_id").as_string(), point_cloud->header.frame_id,
+                tf2_ros::fromMsg(point_cloud->header.stamp))
+            .transform,
+        sensor_pose_in_base);
+  } catch (const tf2::TransformException& error) {
+    RCLCPP_ERROR(get_logger(), "Could not transform from base to sensor: %s", error.what());
+    return;
+  }
+
+  const auto update_start_time = std::chrono::high_resolution_clock::now();
+  const auto new_estimate = particle_filter_->update(
+      base_pose_in_odom,  //
+      beluga_ros::SparsePointCloud3<double>{
+          point_cloud,
+          sensor_pose_in_base,
+      });
+  const auto update_stop_time = std::chrono::high_resolution_clock::now();
+  const auto update_duration = update_stop_time - update_start_time;
+
+  if (new_estimate.has_value()) {
+    const auto& [base_pose_in_map, _] = new_estimate.value();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
+    last_known_estimate_ = new_estimate;
+
+    RCLCPP_INFO(
+        get_logger(), "Particle filter update iteration stats: %ld particles %u points - %.3fms",
+        particle_filter_->particles().size(), (point_cloud->width * point_cloud->height),
+        std::chrono::duration<double, std::milli>(update_duration).count());
+  }
+
+  if (!last_known_estimate_.has_value()) {
+    RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Estimate not available for publishing");
+    return;
+  }
+
+  // Transforms are always published to keep them current.
+  if (enable_tf_broadcast_ && get_parameter("tf_broadcast").as_bool()) {
+    if (last_known_odom_transform_in_map_.has_value()) {
+      auto message = geometry_msgs::msg::TransformStamped{};
+      // Sending a transform that is valid into the future so that odom can be used.
+      const auto expiration_stamp = tf2_ros::fromMsg(point_cloud->header.stamp) +
+                                    tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
+      message.header.stamp = tf2_ros::toMsg(expiration_stamp);
+      message.header.frame_id = get_parameter("global_frame_id").as_string();
+      message.child_frame_id = get_parameter("odom_frame_id").as_string();
+      message.transform = tf2::toMsg(*last_known_odom_transform_in_map_);
+      tf_broadcaster_->sendTransform(message);
+    }
+  }
+
+  // New pose messages are only published on updates to the filter.
+  if (new_estimate.has_value()) {
+    auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
+    message.header.stamp = point_cloud->header.stamp;
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     const auto& [base_pose_in_map, base_pose_covariance] = new_estimate.value();
     tf2::toMsg(base_pose_in_map, message.pose.pose);
