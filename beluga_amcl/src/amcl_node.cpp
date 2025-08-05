@@ -205,19 +205,6 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
   }
 
-  {
-    // Cope with variations in between message_filters versions.
-    // See beluga_amcl/message_filters.hpp for further reference.
-    const auto laser_scan_qos = [] {
-      if constexpr (BELUGA_AMCL_MESSAGE_FILTERS_VERSION_GTE(7, 2, 1)) {
-        return rclcpp::SensorDataQoS();
-      } else {
-        return rmw_qos_profile_sensor_data;
-      }
-    }();
-    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
-        shared_from_this(), get_parameter("scan_topic").as_string(), laser_scan_qos, common_subscription_options_);
-
   const auto sensor_qos = [] {
     if constexpr (BELUGA_AMCL_MESSAGE_FILTERS_VERSION_GTE(7, 2, 1)) {
       return rclcpp::SensorDataQoS();
@@ -227,7 +214,12 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
   }();
 
   const auto scan_topic = get_parameter("scan_topic").as_string();
-  if (!scan_topic.empty()) {
+  const auto point_cloud_topic = get_parameter("point_cloud_topic").as_string();
+
+  if ((!scan_topic.empty() && !point_cloud_topic.empty())) {
+    // Parametrization of both, scan_topic and point_cloud_topic not allowed.
+    throw std::invalid_argument("scan_topic and point_cloud_topic cannot be specified at the same time");
+  } else if (!scan_topic.empty()) {
     laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
         shared_from_this(), scan_topic, sensor_qos, common_subscription_options_);
 
@@ -238,10 +230,7 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     laser_scan_connection_ =
         laser_scan_filter_->registerCallback(std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
     RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
-  }
-
-  const auto point_cloud_topic = get_parameter("point_cloud_topic").as_string();
-  if (!point_cloud_topic.empty()) {
+  } else if (!point_cloud_topic.empty()) {
     point_cloud_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::PointCloud2>>(
         shared_from_this(), point_cloud_topic, sensor_qos, common_subscription_options_);
 
@@ -253,6 +242,18 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     point_cloud_connection_ = point_cloud_filter_->registerCallback(
         std::bind(&AmclNode::point_cloud_callback, this, std::placeholders::_1));
     RCLCPP_INFO(get_logger(), "Subscribed to point_cloud_topic: %s", point_cloud_sub_->getTopic().c_str());
+  } else {
+    // Forced to subscribe to /scan topic since not specified.
+    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
+      shared_from_this(), "/scan", sensor_qos, common_subscription_options_);
+
+    laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
+        *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10, get_node_logging_interface(),
+        get_node_clock_interface(), tf2::durationFromSec(get_parameter("transform_tolerance").as_double()));
+
+    laser_scan_connection_ =
+        laser_scan_filter_->registerCallback(std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
+    RCLCPP_INFO(get_logger(), "Subscribed by default (since not specified) to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
   }
 
   const auto common_service_qos = [] {
@@ -282,10 +283,19 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
 
 void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   map_sub_.reset();
-  laser_scan_connection_.disconnect();
-  laser_scan_filter_.reset();
-  laser_scan_sub_.reset();
   global_localization_server_.reset();
+  nomotion_update_server_.reset();
+  // Disconnect the callbacks for sensor data to stop processing them.
+  if (laser_scan_sub_) {
+    laser_scan_connection_.disconnect();
+    laser_scan_filter_.reset();
+    laser_scan_sub_.reset();
+  }
+  if (point_cloud_sub_) {
+    point_cloud_connection_.disconnect();
+    point_cloud_filter_.reset();
+    point_cloud_sub_.reset();
+  }
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_deactivate();
   }
@@ -302,10 +312,12 @@ void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
     point_cloud_filter_.reset();
     point_cloud_sub_.reset();
   }
+  if (likelihood_field_pub_) {
+    likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
+  }
   global_localization_server_.reset();
   nomotion_update_server_.reset();
   particle_filter_.reset();
-  likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
   enable_tf_broadcast_ = false;
   last_known_estimate_.reset();
   last_known_odom_transform_in_map_.reset();

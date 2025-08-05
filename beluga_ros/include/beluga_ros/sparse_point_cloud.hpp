@@ -77,7 +77,7 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
     }
   }
 
-  /// Get the point clod size
+  /// Get the point cloud size.
   [[nodiscard]] std::size_t size() const {
     return static_cast<std::size_t>(cloud_->width) * cloud_->height;
   }
