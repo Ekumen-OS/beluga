@@ -71,7 +71,7 @@ BaseAMCLNode::BaseAMCLNode(
     descriptor.description = "Topic to subscribe to in order to receive point cloud scans. If empty, it is ignored.";
     declare_parameter("point_cloud_topic", rclcpp::ParameterValue(""), descriptor);
   }
-  
+
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Minimum allowed number of particles.";

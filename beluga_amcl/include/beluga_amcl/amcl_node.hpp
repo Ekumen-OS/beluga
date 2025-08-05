@@ -88,11 +88,9 @@ class AmclNode : public BaseAMCLNode {
   /// Callback for periodic particle cloud updates.
   void do_periodic_timer_callback() override;
 
-  /// Callback for laser scan updates.
-  void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
-
-  /// Callback for point cloud updates.
-  void point_cloud_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr);
+  /// Callback for sensor updates.
+  template <typename MsgT>
+  void sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg);
 
   /// Callback for pose (re)initialization.
   void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;

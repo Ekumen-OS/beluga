@@ -35,9 +35,9 @@
 #include <beluga/sensor/primitives.hpp>
 #include <beluga/views/sample.hpp>
 
-#include <beluga_ros/sparse_point_cloud.hpp>
 #include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
+#include <beluga_ros/sparse_point_cloud.hpp>
 
 /**
  * \file
@@ -256,8 +256,8 @@ class Amcl {
    * \return An optional pair containing the estimated pose and covariance after the update,
    *         or std::nullopt if no update was performed.
    */
-   auto update(Sophus::SE2d base_pose_in_odom, std::vector<std::pair<double, double>>&& measurement)
-   -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
+  auto update(Sophus::SE2d base_pose_in_odom, std::vector<std::pair<double, double>>&& measurement)
+      -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
 
   /// Force a manual update of the particles on the next iteration of the filter.
   void force_update() { force_update_ = true; }
