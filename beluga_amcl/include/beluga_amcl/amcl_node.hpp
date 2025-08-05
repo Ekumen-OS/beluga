@@ -91,6 +91,12 @@ class AmclNode : public BaseAMCLNode {
   /// Callback for laser scan updates.
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
 
+  /// Callback for increased propagation timer.
+  void propagation_timer_callback();
+
+  /// Helper function to get base pose in odom frame at specific time.
+  auto get_base_pose_in_odom(const tf2::TimePoint& time) const -> std::optional<Sophus::SE2d>;
+
   /// Callback for pose (re)initialization.
   void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;
 
@@ -142,6 +148,9 @@ class AmclNode : public BaseAMCLNode {
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>> laser_scan_filter_;
   /// Connection for laser scan updates filter and callback.
   ::message_filters::Connection laser_scan_connection_;
+
+  /// Timer for increased propagation rate.
+  rclcpp::TimerBase::SharedPtr propagation_timer_;
 
   /// Particle filter instance.
   std::unique_ptr<beluga_ros::Amcl> particle_filter_;

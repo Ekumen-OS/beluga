@@ -183,6 +183,16 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
         "and ignore subsequent ones.";
     declare_parameter("first_map_only", false, descriptor);
   }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Frequency in Hz for increased propagation rate. Set to 0 to disable.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0.0;
+    descriptor.floating_point_range[0].to_value = 100.0;
+    descriptor.floating_point_range[0].step = 0.0;
+    declare_parameter("increase_propagation", rclcpp::ParameterValue(0.0), descriptor);
+  }
 }
 
 AmclNode::~AmclNode() {
@@ -251,6 +261,17 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
           std::placeholders::_3),
       common_service_qos, common_callback_group_);
   RCLCPP_INFO(get_logger(), "Created request_nomotion_update service");
+
+  // Setup increased propagation timer if enabled
+  {
+    const double propagation_freq = get_parameter("increase_propagation").as_double();
+    if (propagation_freq > 0.0) {
+      auto period = std::chrono::duration<double>(1.0 / propagation_freq);
+      propagation_timer_ =
+          create_wall_timer(period, std::bind(&AmclNode::propagation_timer_callback, this), common_callback_group_);
+      RCLCPP_INFO(get_logger(), "Created propagation timer at %.1f Hz", propagation_freq);
+    }
+  }
 }
 
 void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
@@ -259,6 +280,7 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   laser_scan_filter_.reset();
   laser_scan_sub_.reset();
   global_localization_server_.reset();
+  propagation_timer_.reset();
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_deactivate();
   }
@@ -466,6 +488,41 @@ void AmclNode::do_periodic_timer_callback() {
   }
 }
 
+auto AmclNode::get_base_pose_in_odom(const tf2::TimePoint& time) const -> std::optional<Sophus::SE2d> {
+  auto base_pose_in_odom = Sophus::SE2d{};
+  try {
+    tf2::convert(
+        tf_buffer_
+            ->lookupTransform(
+                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(), time)
+            .transform,
+        base_pose_in_odom);
+    return base_pose_in_odom;
+  } catch (const tf2::TransformException& error) {
+    RCLCPP_WARN(get_logger(), "Could not get base pose in odom: %s", error.what());
+    return std::nullopt;
+  }
+}
+
+void AmclNode::propagation_timer_callback() {
+  if (!particle_filter_) {
+    RCLCPP_WARN_THROTTLE(
+        get_logger(), *get_clock(), 2000, "Ignoring propagation because the particle filter has not been initialized");
+    return;
+  }
+
+  // Get current base pose in odom frame (latest available)
+  auto base_pose_in_odom = get_base_pose_in_odom(tf2::TimePointZero);
+  if (!base_pose_in_odom.has_value()) {
+    return;
+  }
+
+  // Force a propagation-only update (without sensor data)
+  particle_filter_->update_propagation(base_pose_in_odom.value());
+
+  RCLCPP_INFO(get_logger(), "Forced propagation update executed");
+}
+
 void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
   if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
@@ -473,19 +530,9 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
-  auto base_pose_in_odom = Sophus::SE2d{};
-  try {
-    // Use the lookupTransform overload with no timeout since we're not using a dedicated
-    // tf thread. The message filter we are using avoids the need for it.
-    tf2::convert(
-        tf_buffer_
-            ->lookupTransform(
-                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
-                tf2_ros::fromMsg(laser_scan->header.stamp))
-            .transform,
-        base_pose_in_odom);
-  } catch (const tf2::TransformException& error) {
-    RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
+  // Get base pose in odom frame at laser scan timestamp
+  auto base_pose_in_odom = get_base_pose_in_odom(tf2_ros::fromMsg(laser_scan->header.stamp));
+  if (!base_pose_in_odom.has_value()) {
     return;
   }
 
@@ -505,7 +552,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto new_estimate = particle_filter_->update(
-      base_pose_in_odom,  //
+      base_pose_in_odom.value(),  //
       beluga_ros::LaserScan{
           laser_scan,
           laser_pose_in_base,
@@ -518,7 +565,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   if (new_estimate.has_value()) {
     const auto& [base_pose_in_map, _] = new_estimate.value();
-    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.value().inverse();
     last_known_estimate_ = new_estimate;
 
     RCLCPP_INFO(

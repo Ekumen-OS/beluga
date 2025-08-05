@@ -45,6 +45,9 @@ class AmclNodeUnderTest : public beluga_amcl::AmclNode {
 
   /// Return the last known estimate. Throws if there is no estimate.
   const auto& estimate() { return last_known_estimate_.value(); }
+
+  /// Check if propagation timer is created
+  bool has_propagation_timer() const { return propagation_timer_ != nullptr; }
 };
 
 /// Base node fixture class with common utilities.
@@ -696,6 +699,47 @@ TEST_F(TestNode, TransformValue) {
   EXPECT_NEAR(transform.translation().x(), -2.00, 0.01);
   EXPECT_NEAR(transform.translation().y(), -2.00, 0.01);
   EXPECT_NEAR(transform.so2().log(), 0.0, 0.01);
+}
+
+TEST_F(TestNode, PropagationTimerNotCreatedWhenDisabled) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"increase_propagation", 0.0});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+
+  // Timer should not be created when frequency is 0
+  EXPECT_FALSE(amcl_node_->has_propagation_timer());
+}
+
+TEST_F(TestNode, PropagationTimerCreatedWhenEnabled) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"increase_propagation", 10.0});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+
+  // Timer should be created when frequency > 0
+  EXPECT_TRUE(amcl_node_->has_propagation_timer());
+}
+
+TEST_F(TestNode, PropagationTimerIntegrationTest) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"increase_propagation", 5.0});
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+
+  // Configure TF so get_base_pose_in_odom works by publishing a laser scan with transform
+  tester_node_->publish_laser_scan_with_odom_to_base(Sophus::SE2d{});
+
+  // Wait for several timer executions
+  spin_for(500ms, amcl_node_, tester_node_);
+
+  // Verify particle filter still exists and has particles
+  EXPECT_TRUE(amcl_node_->particle_filter() != nullptr);
+  EXPECT_GT(amcl_node_->particle_filter()->particles().size(), 0UL);
 }
 
 class TestParameterValue : public ::testing::TestWithParam<rclcpp::Parameter> {};

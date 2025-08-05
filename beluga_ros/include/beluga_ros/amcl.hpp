@@ -210,6 +210,16 @@ class Amcl {
   /// Update the map used for localization.
   void update_map(beluga_ros::OccupancyGrid map);
 
+  /// Update particles based on motion only (propagation only).
+  /**
+   * This method only performs the propagation step of the particle filter update,
+   * applying the motion model without any sensor correction. Useful for forced
+   * propagation at regular intervals without waiting for sensor data.
+   *
+   * \param base_pose_in_odom Base pose in the odometry frame.
+   */
+  void update_propagation(Sophus::SE2d base_pose_in_odom);
+
   /// Update particles based on motion and sensor information.
   /**
    * This method performs a particle filter update step using motion and sensor data. It evaluates whether
