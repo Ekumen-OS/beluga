@@ -149,4 +149,10 @@ TEST(TestAmcl, UpdateWithParticlesForced) {
   ASSERT_TRUE(estimate.has_value());
 }
 
+TEST(TestAmcl, UpdatePropagationWithNoParticles) {
+  auto amcl = make_amcl();
+  amcl.update_propagation(Sophus::SE2d{});
+  ASSERT_EQ(amcl.particles().size(), 0);
+}
+
 }  // namespace

@@ -48,6 +48,9 @@ class AmclNodeUnderTest : public beluga_amcl::AmclNode {
 
   /// Check if propagation timer is created
   bool has_propagation_timer() const { return propagation_timer_ != nullptr; }
+
+  /// Expose propagation timer callback for testing
+  void propagation_timer_callback() { AmclNode::propagation_timer_callback(); }
 };
 
 /// Base node fixture class with common utilities.
@@ -740,6 +743,40 @@ TEST_F(TestNode, PropagationTimerIntegrationTest) {
   // Verify particle filter still exists and has particles
   EXPECT_TRUE(amcl_node_->particle_filter() != nullptr);
   EXPECT_GT(amcl_node_->particle_filter()->particles().size(), 0UL);
+}
+
+TEST_F(TestNode, PropagationTimerWithoutParticles) {
+  // Call propagation timer callback when particle filter is not initialized
+  // This should trigger early return due to !particle_filter_ check
+  amcl_node_->propagation_timer_callback();
+
+  // Verify that particle filter remains uninitialized
+  // The callback should have returned early without creating the filter
+  EXPECT_FALSE(amcl_node_->particle_filter() != nullptr);
+}
+
+TEST_F(TestNode, PropagationTimerWithoutBaseToOdom) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+
+  // Particle filter is initialized but no odom->base transform is available
+  EXPECT_TRUE(amcl_node_->is_initialized());
+  EXPECT_TRUE(amcl_node_->particle_filter() != nullptr);
+
+  // Capture the current particles before calling the propagation callback
+  const auto particles_before = amcl_node_->particle_filter()->particles();
+  EXPECT_GT(particles_before.size(), 0UL);
+
+  // Call propagation callback without any transform data
+  // This should return early because get_base_pose_in_odom() will fail
+  amcl_node_->propagation_timer_callback();
+
+  // Verify particles remain unchanged since no propagation occurred
+  const auto particles_after = amcl_node_->particle_filter()->particles();
+  EXPECT_EQ(particles_before.size(), particles_after.size());
 }
 
 class TestParameterValue : public ::testing::TestWithParam<rclcpp::Parameter> {};
