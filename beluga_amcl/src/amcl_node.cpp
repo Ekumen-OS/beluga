@@ -283,7 +283,9 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
 }
 
 void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
+  // Reset subscriptions.
   map_sub_.reset();
+  // Reset services.
   global_localization_server_.reset();
   nomotion_update_server_.reset();
   // Disconnect the callbacks for sensor data to stop processing them.
@@ -304,7 +306,11 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
 
 void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   // Release all resources.
+  particle_filter_.reset();
+  enable_tf_broadcast_ = false;
   map_sub_.reset();
+  global_localization_server_.reset();
+  nomotion_update_server_.reset();
   if (laser_scan_sub_) {
     laser_scan_filter_.reset();
     laser_scan_sub_.reset();
@@ -316,12 +322,6 @@ void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   if (likelihood_field_pub_) {
     likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
   }
-  global_localization_server_.reset();
-  nomotion_update_server_.reset();
-  particle_filter_.reset();
-  enable_tf_broadcast_ = false;
-  last_known_estimate_.reset();
-  last_known_odom_transform_in_map_.reset();
 }
 
 auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
