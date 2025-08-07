@@ -123,7 +123,7 @@ void NdtAmclNode::do_activate(const rclcpp_lifecycle::State&) {
       }
     }();
     auto scan_topic = get_parameter("scan_topic").as_string();
-    if (scan_topic.empty()){
+    if (scan_topic.empty()) {
       scan_topic = "scan";
     }
     laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
