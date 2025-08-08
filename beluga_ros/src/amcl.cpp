@@ -69,9 +69,13 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, const SparsePointCloud3<double
   std::vector<std::pair<double, double>> measurement;
   measurement.reserve(point_cloud.size());
 
-  for (const Eigen::Vector3d& point : point_cloud.points()) {
-    measurement.emplace_back(point.x(), point.y());
-  }
+  // Transform points from the sensor frame to the base frame (and project to Z=0).
+  measurement = point_cloud.points() | ranges::views::transform([&point_cloud](const auto& p) {
+                  const auto result = point_cloud.origin() * p;
+                  return std::pair{result.x(), result.y()};
+                }) |
+                ranges::to<std::vector>();
+
   return update(base_pose_in_odom, std::move(measurement));
 }
 
