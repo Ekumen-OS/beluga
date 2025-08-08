@@ -589,6 +589,35 @@ TEST_F(TestNode, CanUpdatePoseEstimate) {
   }
 }
 
+TEST_F(TestNode, CanUpdatePoseEstimateWithPointCloud) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"scan_topic", ""});
+  amcl_node_->set_parameter(rclcpp::Parameter{"point_cloud_topic", "point_cloud"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
+  tester_node_->publish_default_initial_pose();
+  spin_for(10ms, amcl_node_, tester_node_);  // ensure orderly processing
+  tester_node_->publish_point_cloud();
+  ASSERT_TRUE(wait_for_pose_estimate());
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
+}
+
+TEST_F(TestNode, ThrowsIfBothSensorTopicsAreSet) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"scan_topic", "scan"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"point_cloud_topic", "point_cloud"});
+  amcl_node_->configure();
+  try {
+    amcl_node_->activate();
+  } catch (const std::invalid_argument& e) {
+    EXPECT_STREQ("scan_topic and point_cloud_topic cannot be specified at the same time", e.what());
+  } catch (...) {
+    FAIL() << "Expected std::invalid_argument";
+  }
+}
+
 TEST_F(TestNode, CanForcePoseEstimate) {
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
   amcl_node_->configure();

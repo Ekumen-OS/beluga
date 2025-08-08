@@ -219,7 +219,9 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
   if ((!scan_topic.empty() && !point_cloud_topic.empty())) {
     // Parametrization of both, scan_topic and point_cloud_topic not allowed.
     throw std::invalid_argument("scan_topic and point_cloud_topic cannot be specified at the same time");
-  } else if (!scan_topic.empty()) {
+  }
+
+  if (!scan_topic.empty()) {
     laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
         shared_from_this(), scan_topic, sensor_qos, common_subscription_options_);
 

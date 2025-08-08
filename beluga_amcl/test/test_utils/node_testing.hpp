@@ -244,6 +244,46 @@ class TesterNode : public rclcpp::Node {
     tf_broadcaster_->sendTransform(transform_laser);
   }
 
+  void publish_point_cloud() {
+    const auto timestamp = now();
+
+    auto cloud = sensor_msgs::msg::PointCloud2{};
+    cloud.header.stamp = timestamp;
+    cloud.header.frame_id = "laser";
+    cloud.height = 1;
+    cloud.width = 1;
+    cloud.is_dense = true;
+    cloud.is_bigendian = false;
+
+    sensor_msgs::PointCloud2Modifier modifier(cloud);
+    modifier.setPointCloud2Fields(
+        3, "x", 1, sensor_msgs::msg::PointField::FLOAT64, "y", 1, sensor_msgs::msg::PointField::FLOAT64, "z", 1,
+        sensor_msgs::msg::PointField::FLOAT64);
+    modifier.resize(1);
+
+    sensor_msgs::PointCloud2Iterator<double> iter_x(cloud, "x");
+    sensor_msgs::PointCloud2Iterator<double> iter_y(cloud, "y");
+    sensor_msgs::PointCloud2Iterator<double> iter_z(cloud, "z");
+
+    *iter_x = 1.0;
+    *iter_y = 0.0;
+    *iter_z = 0.0;
+
+    auto transform_base = geometry_msgs::msg::TransformStamped{};
+    transform_base.header.stamp = timestamp;
+    transform_base.header.frame_id = "odom";
+    transform_base.child_frame_id = "base_footprint";
+
+    auto transform_laser = geometry_msgs::msg::TransformStamped{};
+    transform_laser.header.stamp = timestamp;
+    transform_laser.header.frame_id = "base_footprint";
+    transform_laser.child_frame_id = "laser";
+
+    point_cloud_publisher_->publish(cloud);
+    tf_broadcaster_->sendTransform(transform_base);
+    tf_broadcaster_->sendTransform(transform_laser);
+  }
+
   void publish_laser_scan_with_odom_to_base(const Sophus::SE2d& transform) {
     const auto timestamp = now();
 

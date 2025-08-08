@@ -50,6 +50,7 @@ void Amcl::update_map(beluga_ros::OccupancyGrid map) {
   std::visit([&](auto& sensor_model) { sensor_model.update_map(std::move(map)); }, sensor_model_);
 }
 
+// Overloaded update method for LaserScan.
 auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan)
     -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
   // TODO(nahuel): Remove this once we update the measurement type.
@@ -62,6 +63,7 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_sc
   return update(base_pose_in_odom, std::move(measurement));
 }
 
+// Overloaded update method for SparsePointCloud3.
 auto Amcl::update(Sophus::SE2d base_pose_in_odom, const SparsePointCloud3<double>& point_cloud)
     -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
   std::vector<std::pair<double, double>> measurement;
@@ -73,6 +75,7 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, const SparsePointCloud3<double
   return update(base_pose_in_odom, std::move(measurement));
 }
 
+// Overloaded update method for vector of double pairs.
 auto Amcl::update(Sophus::SE2d base_pose_in_odom, std::vector<std::pair<double, double>>&& measurement)
     -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
   if (particles_.empty()) {

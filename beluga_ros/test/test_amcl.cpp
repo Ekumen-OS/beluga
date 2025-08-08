@@ -32,6 +32,7 @@
 #include "beluga_ros/amcl.hpp"
 #include "beluga_ros/laser_scan.hpp"
 #include "beluga_ros/messages.hpp"
+#include "beluga_ros/sparse_point_cloud.hpp"
 
 namespace {
 
@@ -67,6 +68,35 @@ auto make_dummy_laser_scan() {
   message->range_min = 10.F;
   message->range_max = 100.F;
   return beluga_ros::LaserScan(message);
+}
+
+auto make_dummy_point_cloud() {
+#if BELUGA_ROS_VERSION == 2
+  auto message = std::make_shared<beluga_ros::msg::PointCloud2>();
+#elif BELUGA_ROS_VERSION == 1
+  auto message = boost::make_shared<beluga_ros::msg::PointCloud2>();
+#else
+#error BELUGA_ROS_VERSION is not defined or invalid
+#endif
+  message->width = 1;
+  message->height = 1;
+  message->is_dense = true;
+  message->is_bigendian = false;
+
+  beluga_ros::msg::PointCloud2Modifier modifier(*message);
+  modifier.setPointCloud2Fields(
+      3, "x", 1, beluga_ros::msg::PointField::FLOAT64, "y", 1, beluga_ros::msg::PointField::FLOAT64, "z", 1,
+      beluga_ros::msg::PointField::FLOAT64);
+  modifier.resize(1);
+
+  beluga_ros::msg::PointCloud2Iterator<double> iter_x(*message, "x");
+  beluga_ros::msg::PointCloud2Iterator<double> iter_y(*message, "y");
+  beluga_ros::msg::PointCloud2Iterator<double> iter_z(*message, "z");
+  *iter_x = 1.0;
+  *iter_y = 0.0;
+  *iter_z = 0.0;
+
+  return beluga_ros::SparsePointCloud3<double>{message};
 }
 
 auto make_amcl() {
@@ -112,6 +142,15 @@ TEST(TestAmcl, UpdateWithParticles) {
   amcl.initialize_from_map();
   ASSERT_EQ(amcl.particles().size(), 50UL);
   auto estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
+  ASSERT_TRUE(estimate.has_value());
+}
+
+TEST(TestAmcl, UpdateWithParticlesAndPointCloud) {
+  auto amcl = make_amcl();
+  ASSERT_EQ(amcl.particles().size(), 0);
+  amcl.initialize_from_map();
+  ASSERT_EQ(amcl.particles().size(), 50UL);
+  auto estimate = amcl.update(Sophus::SE2d{}, make_dummy_point_cloud());
   ASSERT_TRUE(estimate.has_value());
 }
 
