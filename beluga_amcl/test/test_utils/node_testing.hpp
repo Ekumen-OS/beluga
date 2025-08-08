@@ -261,9 +261,9 @@ class TesterNode : public rclcpp::Node {
         sensor_msgs::msg::PointField::FLOAT64);
     modifier.resize(1);
 
-    sensor_msgs::PointCloud2Iterator<double> iter_x(cloud, "x");
-    sensor_msgs::PointCloud2Iterator<double> iter_y(cloud, "y");
-    sensor_msgs::PointCloud2Iterator<double> iter_z(cloud, "z");
+    sensor_msgs::PointCloud2Iterator<double> iter_x(cloud, "x"); // NOLINT(misc-const-correctness)
+    sensor_msgs::PointCloud2Iterator<double> iter_y(cloud, "y"); // NOLINT(misc-const-correctness)
+    sensor_msgs::PointCloud2Iterator<double> iter_z(cloud, "z"); // NOLINT(misc-const-correctness)
 
     *iter_x = 1.0;
     *iter_y = 0.0;

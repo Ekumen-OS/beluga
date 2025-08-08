@@ -567,9 +567,9 @@ void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) 
   // Conditional wrapper construction.
   auto wrapper = [&] {
     if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::LaserScan>) {
-      std::size_t max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
-      double min_range = get_parameter("laser_min_range").as_double();
-      double max_range = get_parameter("laser_max_range").as_double();
+      const std::size_t max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
+      const double min_range = get_parameter("laser_min_range").as_double();
+      const double max_range = get_parameter("laser_max_range").as_double();
       return beluga_ros::LaserScan{sensor_msg, sensor_pose_in_base, max_beams, min_range, max_range};
     } else if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>) {
       return beluga_ros::SparsePointCloud3<double>{sensor_msg, sensor_pose_in_base};
