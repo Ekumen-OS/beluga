@@ -89,9 +89,9 @@ auto make_dummy_point_cloud() {
       beluga_ros::msg::PointField::FLOAT64);
   modifier.resize(1);
 
-  beluga_ros::msg::PointCloud2Iterator<double> iter_x(*message, "x");
-  beluga_ros::msg::PointCloud2Iterator<double> iter_y(*message, "y");
-  beluga_ros::msg::PointCloud2Iterator<double> iter_z(*message, "z");
+  beluga_ros::msg::PointCloud2Iterator<double> iter_x(*message, "x");  // NOLINT(misc-const-correctness)
+  beluga_ros::msg::PointCloud2Iterator<double> iter_y(*message, "y");  // NOLINT(misc-const-correctness)
+  beluga_ros::msg::PointCloud2Iterator<double> iter_z(*message, "z");  // NOLINT(misc-const-correctness)
   *iter_x = 1.0;
   *iter_y = 0.0;
   *iter_z = 0.0;
