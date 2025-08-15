@@ -506,10 +506,7 @@ void AmclNode::do_periodic_timer_callback() {
   }
 }
 
-template <
-    typename MsgT,
-    typename = std::enable_if_t<
-        std::is_same_v<MsgT, sensor_msgs::msg::LaserScan> || std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>>>
+template <typename MsgT, typename>
 void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) {
   if (!particle_filter_) {
     RCLCPP_WARN(get_logger(), "Particle filter not initialized, skipping sensor update");
