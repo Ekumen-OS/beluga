@@ -609,7 +609,7 @@ TEST_F(TestNode, ThrowsIfBothSensorTopicsAreSet) {
   amcl_node_->set_parameter(rclcpp::Parameter{"scan_topic", "scan"});
   amcl_node_->set_parameter(rclcpp::Parameter{"point_cloud_topic", "point_cloud"});
   amcl_node_->configure();
-  
+
   // std::invalid argument exception launched on AmclNode::do_activate is not visible at this stage
   // (catched by callback method. See rclcpp_lifecycle).
   //

@@ -70,7 +70,7 @@ class LaserScan : public beluga::BaseLaserScan<LaserScan> {
              return static_cast<Scalar>(scan_->angle_min + static_cast<float>(i) * scan_->angle_increment);
            });
   }
-  
+
   /// Get laser scan range measurements as a range.
   [[nodiscard]] auto ranges() const {
     return scan_->ranges | beluga::views::take_evenly(max_beams_) |

@@ -17,8 +17,8 @@
 
 #include <memory>
 #include <optional>
-#include <utility>
 #include <type_traits>
+#include <utility>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcpp"
@@ -93,8 +93,7 @@ class AmclNode : public BaseAMCLNode {
   template <
       typename MsgT,
       typename = std::enable_if_t<
-          std::is_same_v<MsgT, sensor_msgs::msg::LaserScan> ||
-          std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>>>
+          std::is_same_v<MsgT, sensor_msgs::msg::LaserScan> || std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>>>
   void sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg);
 
   /// Callback for pose (re)initialization.

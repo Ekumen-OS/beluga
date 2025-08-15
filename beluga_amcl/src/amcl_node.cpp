@@ -237,7 +237,7 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     const auto effective_scan_topic = scan_topic.empty() ? "scan" : scan_topic;
 
     laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
-      shared_from_this(), effective_scan_topic, sensor_qos, common_subscription_options_);
+        shared_from_this(), effective_scan_topic, sensor_qos, common_subscription_options_);
 
     laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
         *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10, get_node_logging_interface(),
@@ -245,7 +245,7 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
 
     laser_scan_connection_ = laser_scan_filter_->registerCallback(
         std::bind(&AmclNode::sensor_callback<sensor_msgs::msg::LaserScan>, this, std::placeholders::_1));
-    
+
     if (scan_topic.empty()) {
       RCLCPP_INFO(
           get_logger(), "Subscribed by default (since not specified) to scan_topic: %s",
@@ -305,17 +305,6 @@ void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   // Release all resources.
   particle_filter_.reset();
   enable_tf_broadcast_ = false;
-  map_sub_.reset();
-  global_localization_server_.reset();
-  nomotion_update_server_.reset();
-  if (laser_scan_sub_) {
-    laser_scan_filter_.reset();
-    laser_scan_sub_.reset();
-  }
-  if (point_cloud_sub_) {
-    point_cloud_filter_.reset();
-    point_cloud_sub_.reset();
-  }
   if (likelihood_field_pub_) {
     likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
   }
@@ -520,10 +509,7 @@ void AmclNode::do_periodic_timer_callback() {
 template <
     typename MsgT,
     typename = std::enable_if_t<
-        std::is_same_v<MsgT, sensor_msgs::msg::LaserScan> ||
-        std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>
-    >
->
+        std::is_same_v<MsgT, sensor_msgs::msg::LaserScan> || std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>>>
 void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) {
   if (!particle_filter_) {
     RCLCPP_WARN(get_logger(), "Particle filter not initialized, skipping sensor update");
