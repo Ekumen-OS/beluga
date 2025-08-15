@@ -221,18 +221,7 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     throw std::invalid_argument("scan_topic and point_cloud_topic cannot be specified at the same time");
   }
 
-  if (!scan_topic.empty()) {
-    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
-        shared_from_this(), scan_topic, sensor_qos, common_subscription_options_);
-
-    laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
-        *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10, get_node_logging_interface(),
-        get_node_clock_interface(), tf2::durationFromSec(get_parameter("transform_tolerance").as_double()));
-
-    laser_scan_connection_ = laser_scan_filter_->registerCallback(
-        std::bind(&AmclNode::sensor_callback<sensor_msgs::msg::LaserScan>, this, std::placeholders::_1));
-    RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
-  } else if (!point_cloud_topic.empty()) {
+  if (!point_cloud_topic.empty()) {
     point_cloud_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::PointCloud2>>(
         shared_from_this(), point_cloud_topic, sensor_qos, common_subscription_options_);
 
@@ -244,9 +233,11 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
         std::bind(&AmclNode::sensor_callback<sensor_msgs::msg::PointCloud2>, this, std::placeholders::_1));
     RCLCPP_INFO(get_logger(), "Subscribed to point_cloud_topic: %s", point_cloud_sub_->getTopic().c_str());
   } else {
-    // Forced to subscribe to /scan topic since not specified.
+    // Default to LaserScan if point_cloud_topic is not provided.
+    const auto effective_scan_topic = scan_topic.empty() ? "scan" : scan_topic;
+
     laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
-        shared_from_this(), "/scan", sensor_qos, common_subscription_options_);
+      shared_from_this(), effective_scan_topic, sensor_qos, common_subscription_options_);
 
     laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
         *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10, get_node_logging_interface(),
@@ -254,11 +245,15 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
 
     laser_scan_connection_ = laser_scan_filter_->registerCallback(
         std::bind(&AmclNode::sensor_callback<sensor_msgs::msg::LaserScan>, this, std::placeholders::_1));
-    RCLCPP_INFO(
-        get_logger(), "Subscribed by default (since not specified) to scan_topic: %s",
-        laser_scan_sub_->getTopic().c_str());
+    
+    if (scan_topic.empty()) {
+      RCLCPP_INFO(
+          get_logger(), "Subscribed by default (since not specified) to scan_topic: %s",
+          laser_scan_sub_->getTopic().c_str());
+    } else {
+      RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
+    }
   }
-
   const auto common_service_qos = [] {
     if constexpr (RCLCPP_VERSION_GTE(17, 0, 0)) {
       return rclcpp::ServicesQoS();
@@ -522,11 +517,13 @@ void AmclNode::do_periodic_timer_callback() {
   }
 }
 
-// Helper function.
-template <typename>
-constexpr bool always_false = false;
-
-template <typename MsgT>
+template <
+    typename MsgT,
+    typename = std::enable_if_t<
+        std::is_same_v<MsgT, sensor_msgs::msg::LaserScan> ||
+        std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>
+    >
+>
 void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) {
   if (!particle_filter_) {
     RCLCPP_WARN(get_logger(), "Particle filter not initialized, skipping sensor update");
@@ -565,20 +562,18 @@ void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
 
   // Conditional wrapper construction.
-  auto wrapper = [&] {
+  auto measurement = [&] {
     if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::LaserScan>) {
       const std::size_t max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
       const double min_range = get_parameter("laser_min_range").as_double();
       const double max_range = get_parameter("laser_max_range").as_double();
       return beluga_ros::LaserScan{sensor_msg, sensor_pose_in_base, max_beams, min_range, max_range};
     } else if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>) {
-      return beluga_ros::SparsePointCloud3<double>{sensor_msg, sensor_pose_in_base};
-    } else {
-      static_assert(always_false<MsgT>, "Unsupported sensor message type");
+      return beluga_ros::SparsePointCloud3<float>{sensor_msg, sensor_pose_in_base};
     }
   }();
 
-  const auto new_estimate = particle_filter_->update(base_pose_in_odom, wrapper);
+  const auto new_estimate = particle_filter_->update(base_pose_in_odom, measurement);
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 
@@ -587,16 +582,9 @@ void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) 
     last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
     last_known_estimate_ = new_estimate;
 
-    size_t num_points = 0;
-    if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::LaserScan>) {
-      num_points = sensor_msg->ranges.size();
-    } else if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>) {
-      num_points = sensor_msg->width * sensor_msg->height;
-    }
-
     RCLCPP_INFO(
         get_logger(), "Particle filter update: %zu particles, %zu points - %.3fms",
-        particle_filter_->particles().size(), num_points,
+        particle_filter_->particles().size(), measurement.size(),
         std::chrono::duration<double, std::milli>(update_duration).count());
   }
 

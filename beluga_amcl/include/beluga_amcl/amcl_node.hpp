@@ -18,6 +18,7 @@
 #include <memory>
 #include <optional>
 #include <utility>
+#include <type_traits>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcpp"
@@ -89,7 +90,11 @@ class AmclNode : public BaseAMCLNode {
   void do_periodic_timer_callback() override;
 
   /// Callback for sensor updates.
-  template <typename MsgT>
+  template <
+      typename MsgT,
+      typename = std::enable_if_t<
+          std::is_same_v<MsgT, sensor_msgs::msg::LaserScan> ||
+          std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>>>
   void sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg);
 
   /// Callback for pose (re)initialization.

@@ -70,12 +70,15 @@ class LaserScan : public beluga::BaseLaserScan<LaserScan> {
              return static_cast<Scalar>(scan_->angle_min + static_cast<float>(i) * scan_->angle_increment);
            });
   }
-
+  
   /// Get laser scan range measurements as a range.
   [[nodiscard]] auto ranges() const {
     return scan_->ranges | beluga::views::take_evenly(max_beams_) |
            ranges::views::transform([](auto value) { return static_cast<Scalar>(value); });
   }
+
+  /// Get the number of beams in the scan.
+  [[nodiscard]] std::size_t size() const { return ranges::size(ranges()); }
 
   /// Get the minimum range measurement.
   [[nodiscard]] auto min_range() const { return min_range_; }

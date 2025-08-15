@@ -85,8 +85,8 @@ auto make_dummy_point_cloud() {
 
   beluga_ros::msg::PointCloud2Modifier modifier(*message);
   modifier.setPointCloud2Fields(
-      3, "x", 1, beluga_ros::msg::PointField::FLOAT64, "y", 1, beluga_ros::msg::PointField::FLOAT64, "z", 1,
-      beluga_ros::msg::PointField::FLOAT64);
+      3, "x", 1, beluga_ros::msg::PointField::FLOAT32, "y", 1, beluga_ros::msg::PointField::FLOAT32, "z", 1,
+      beluga_ros::msg::PointField::FLOAT32);
   modifier.resize(1);
 
   beluga_ros::msg::PointCloud2Iterator<double> iter_x(*message, "x");  // NOLINT(misc-const-correctness)
@@ -96,7 +96,7 @@ auto make_dummy_point_cloud() {
   *iter_y = 0.0;
   *iter_z = 0.0;
 
-  return beluga_ros::SparsePointCloud3<double>{message};
+  return beluga_ros::SparsePointCloud3<float>{message};
 }
 
 auto make_amcl() {

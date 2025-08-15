@@ -122,12 +122,10 @@ void NdtAmclNode::do_activate(const rclcpp_lifecycle::State&) {
         return rmw_qos_profile_sensor_data;
       }
     }();
-    auto scan_topic = get_parameter("scan_topic").as_string();
-    if (scan_topic.empty()) {
-      scan_topic = "scan";
-    }
+    
+    const auto scan_topic = get_parameter("scan_topic").as_string();
     laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
-        shared_from_this(), scan_topic, laser_scan_qos, common_subscription_options_);
+        shared_from_this(), !scan_topic.empty() ? scan_topic : "scan", laser_scan_qos, common_subscription_options_);
 
     // Message filter that caches laser scan readings until it is possible to transform
     // from laser frame to odom frame and update the particle filter.

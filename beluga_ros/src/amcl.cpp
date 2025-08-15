@@ -64,14 +64,14 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_sc
 }
 
 // Overloaded update method for SparsePointCloud3.
-auto Amcl::update(Sophus::SE2d base_pose_in_odom, const SparsePointCloud3<double>& point_cloud)
+auto Amcl::update(Sophus::SE2d base_pose_in_odom, const SparsePointCloud3<float>& point_cloud)
     -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
-  std::vector<std::pair<double, double>> measurement;
+  std::vector<std::pair<double, double>> measurement; //NOTE: Should be float?
   measurement.reserve(point_cloud.size());
 
   // Transform points from the sensor frame to the base frame (and project to Z=0).
   measurement = point_cloud.points() | ranges::views::transform([&point_cloud](const auto& p) {
-                  const auto result = point_cloud.origin() * p;
+                  const auto result = point_cloud.origin() * p.template cast<double>();
                   return std::pair{result.x(), result.y()};
                 }) |
                 ranges::to<std::vector>();
@@ -80,7 +80,7 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, const SparsePointCloud3<double
 }
 
 // Overloaded update method for vector of double pairs.
-auto Amcl::update(Sophus::SE2d base_pose_in_odom, std::vector<std::pair<double, double>>&& measurement)
+auto Amcl::update(Sophus::SE2d base_pose_in_odom, std::vector<std::pair<double, double>>&& measurement) //NOTE: Should be float?
     -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
   if (particles_.empty()) {
     return std::nullopt;

@@ -609,13 +609,18 @@ TEST_F(TestNode, ThrowsIfBothSensorTopicsAreSet) {
   amcl_node_->set_parameter(rclcpp::Parameter{"scan_topic", "scan"});
   amcl_node_->set_parameter(rclcpp::Parameter{"point_cloud_topic", "point_cloud"});
   amcl_node_->configure();
-  try {
-    amcl_node_->activate();
-  } catch (const std::invalid_argument& e) {
-    EXPECT_STREQ("scan_topic and point_cloud_topic cannot be specified at the same time", e.what());
-  } catch (...) {
-    FAIL() << "Expected std::invalid_argument";
-  }
+  
+  // std::invalid argument exception launched on AmclNode::do_activate is not visible at this stage
+  // (catched by callback method. See rclcpp_lifecycle).
+  //
+  // Testing failure is evidenced evaluating node state is not ACTIVE after activating.
+
+  // Activate node, expecting no exceptions thrown
+  EXPECT_NO_THROW(amcl_node_->activate());
+
+  // Check lifecycle state after activation — expect INACTIVE state (Activation didn't succeded)
+  auto state = amcl_node_->get_current_state();
+  EXPECT_EQ(state.id(), lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED);
 }
 
 TEST_F(TestNode, CanForcePoseEstimate) {
