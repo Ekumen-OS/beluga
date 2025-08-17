@@ -51,6 +51,9 @@ class AmclNodeUnderTest : public beluga_amcl::AmclNode {
 
   /// Expose propagation timer callback for testing
   void propagation_timer_callback() { AmclNode::propagation_timer_callback(); }
+
+  /// Expose odometry_motion_buffer_ for testing
+  const auto& odometry_motion_buffer() const { return odometry_motion_buffer_; }
 };
 
 /// Base node fixture class with common utilities.
@@ -705,7 +708,7 @@ TEST_F(TestNode, TransformValue) {
 }
 
 TEST_F(TestNode, PropagationTimerNotCreatedWhenDisabled) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"increase_propagation", 0.0});
+  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", 0.0});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
@@ -716,7 +719,7 @@ TEST_F(TestNode, PropagationTimerNotCreatedWhenDisabled) {
 }
 
 TEST_F(TestNode, PropagationTimerCreatedWhenEnabled) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"increase_propagation", 10.0});
+  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", 10.0});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
@@ -727,18 +730,30 @@ TEST_F(TestNode, PropagationTimerCreatedWhenEnabled) {
 }
 
 TEST_F(TestNode, PropagationTimerIntegrationTest) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"increase_propagation", 5.0});
+  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", 5.0});
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 
+  tester_node_->publish_odom_to_base_tf(Sophus::SE2d{});
+
+  // Wait for several timer executions to fill the odometry buffer
+  spin_for(500ms, amcl_node_, tester_node_);
+
+  // Check that odometry_motion_buffer_ has values before laser scan
+  EXPECT_FALSE(amcl_node_->odometry_motion_buffer().empty());
+  const auto buffer_size_before = amcl_node_->odometry_motion_buffer().size();
+
   // Configure TF so get_base_pose_in_odom works by publishing a laser scan with transform
   tester_node_->publish_laser_scan_with_odom_to_base(Sophus::SE2d{});
 
-  // Wait for several timer executions
-  spin_for(500ms, amcl_node_, tester_node_);
+  // Wait for the callback to process the buffer
+  spin_for(100ms, amcl_node_, tester_node_);
+
+  // Check that odometry_motion_buffer_ was consumed up to the lidar timestamp
+  EXPECT_LT(amcl_node_->odometry_motion_buffer().size(), buffer_size_before);
 
   // Verify particle filter still exists and has particles
   EXPECT_TRUE(amcl_node_->particle_filter() != nullptr);
@@ -746,13 +761,14 @@ TEST_F(TestNode, PropagationTimerIntegrationTest) {
 }
 
 TEST_F(TestNode, PropagationTimerWithoutParticles) {
+  // Verify that particle filter remains uninitialized
+  EXPECT_FALSE(amcl_node_->particle_filter() != nullptr);
+
   // Call propagation timer callback when particle filter is not initialized
-  // This should trigger early return due to !particle_filter_ check
   amcl_node_->propagation_timer_callback();
 
-  // Verify that particle filter remains uninitialized
-  // The callback should have returned early without creating the filter
-  EXPECT_FALSE(amcl_node_->particle_filter() != nullptr);
+  // The callback should have returned early without filling the queue
+  EXPECT_TRUE(amcl_node_->odometry_motion_buffer().empty());
 }
 
 TEST_F(TestNode, PropagationTimerWithoutBaseToOdom) {
@@ -766,17 +782,12 @@ TEST_F(TestNode, PropagationTimerWithoutBaseToOdom) {
   EXPECT_TRUE(amcl_node_->is_initialized());
   EXPECT_TRUE(amcl_node_->particle_filter() != nullptr);
 
-  // Capture the current particles before calling the propagation callback
-  const auto particles_before = amcl_node_->particle_filter()->particles();
-  EXPECT_GT(particles_before.size(), 0UL);
-
   // Call propagation callback without any transform data
   // This should return early because get_base_pose_in_odom() will fail
   amcl_node_->propagation_timer_callback();
 
-  // Verify particles remain unchanged since no propagation occurred
-  const auto particles_after = amcl_node_->particle_filter()->particles();
-  EXPECT_EQ(particles_before.size(), particles_after.size());
+  // The callback should have returned early without filling the queue
+  EXPECT_TRUE(amcl_node_->odometry_motion_buffer().empty());
 }
 
 class TestParameterValue : public ::testing::TestWithParam<rclcpp::Parameter> {};

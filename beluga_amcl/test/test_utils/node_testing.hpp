@@ -244,6 +244,15 @@ class TesterNode : public rclcpp::Node {
     tf_broadcaster_->sendTransform(transform_laser);
   }
 
+  void publish_odom_to_base_tf(const Sophus::SE2d& transform) {
+    auto msg = geometry_msgs::msg::TransformStamped{};
+    msg.header.stamp = now();
+    msg.header.frame_id = "odom";
+    msg.child_frame_id = "base_footprint";
+    msg.transform = tf2::toMsg(transform);
+    tf_broadcaster_->sendTransform(msg);
+  }
+
   void publish_laser_scan_with_odom_to_base(const Sophus::SE2d& transform) {
     const auto timestamp = now();
 

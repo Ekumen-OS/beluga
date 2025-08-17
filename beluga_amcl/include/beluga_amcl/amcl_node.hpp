@@ -43,6 +43,8 @@
 #include "beluga_amcl/message_filters.hpp"
 #include "beluga_amcl/ros2_common.hpp"
 
+#include <deque>
+
 /**
  * \file
  * \brief ROS 2 integration of the 2D AMCL algorithm.
@@ -160,6 +162,10 @@ class AmclNode : public BaseAMCLNode {
   std::optional<Sophus::SE2d> last_known_odom_transform_in_map_;
   /// Whether to broadcast transforms or not.
   bool enable_tf_broadcast_{false};
+
+  using OdometryMotion = std::pair<tf2::TimePoint, Sophus::SE2d>;
+  /// Buffer for queued odometry motions (timestamp, pose)
+  std::deque<OdometryMotion> odometry_motion_buffer_;
 };
 
 }  // namespace beluga_amcl

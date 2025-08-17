@@ -218,7 +218,7 @@ class Amcl {
    *
    * \param base_pose_in_odom Base pose in the odometry frame.
    */
-  void update_propagation(Sophus::SE2d base_pose_in_odom);
+  void update(Sophus::SE2d base_pose_in_odom);
 
   /// Update particles based on motion and sensor information.
   /**

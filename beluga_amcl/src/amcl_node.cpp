@@ -191,7 +191,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
     descriptor.floating_point_range[0].from_value = 0.0;
     descriptor.floating_point_range[0].to_value = 100.0;
     descriptor.floating_point_range[0].step = 0.0;
-    declare_parameter("increase_propagation", rclcpp::ParameterValue(0.0), descriptor);
+    declare_parameter("propagation_rate", rclcpp::ParameterValue(0.0), descriptor);
   }
 }
 
@@ -264,12 +264,14 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
 
   // Setup increased propagation timer if enabled
   {
-    const double propagation_freq = get_parameter("increase_propagation").as_double();
+    const double propagation_freq = get_parameter("propagation_rate").as_double();
     if (propagation_freq > 0.0) {
       auto period = std::chrono::duration<double>(1.0 / propagation_freq);
       propagation_timer_ =
           create_wall_timer(period, std::bind(&AmclNode::propagation_timer_callback, this), common_callback_group_);
       RCLCPP_INFO(get_logger(), "Created propagation timer at %.1f Hz", propagation_freq);
+      // Initialize odometry motion buffer
+      odometry_motion_buffer_.clear();
     }
   }
 }
@@ -290,6 +292,7 @@ void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   particle_filter_.reset();
   likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
   enable_tf_broadcast_ = false;
+  odometry_motion_buffer_.clear();
 }
 
 auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
@@ -499,7 +502,7 @@ auto AmclNode::get_base_pose_in_odom(const tf2::TimePoint& time) const -> std::o
         base_pose_in_odom);
     return base_pose_in_odom;
   } catch (const tf2::TransformException& error) {
-    RCLCPP_WARN(get_logger(), "Could not get base pose in odom: %s", error.what());
+    RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
     return std::nullopt;
   }
 }
@@ -511,16 +514,15 @@ void AmclNode::propagation_timer_callback() {
     return;
   }
 
-  // Get current base pose in odom frame (latest available)
-  auto base_pose_in_odom = get_base_pose_in_odom(tf2::TimePointZero);
+  const auto base_pose_in_odom = get_base_pose_in_odom(tf2::TimePointZero);
   if (!base_pose_in_odom.has_value()) {
     return;
   }
 
-  // Force a propagation-only update (without sensor data)
-  particle_filter_->update_propagation(base_pose_in_odom.value());
-
-  RCLCPP_INFO(get_logger(), "Forced propagation update executed");
+  const auto now = this->now();
+  const auto time = tf2_ros::fromMsg(now);
+  // Queue odometry motion (timestamp, pose) for later processing in laser_callback
+  odometry_motion_buffer_.emplace_back(time, base_pose_in_odom.value());
 }
 
 void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
@@ -530,8 +532,21 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
+  // If propagation_rate is enabled, process odometry buffer up to lidar timestamp
+  if (get_parameter("propagation_rate").as_double() > 0.0) {
+    const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
+    while (!odometry_motion_buffer_.empty()) {
+      const auto& [odom_time, odom_pose] = odometry_motion_buffer_.front();
+      if (odom_time >= laser_scan_stamp) {
+        break;
+      }
+      particle_filter_->update(odom_pose);
+      odometry_motion_buffer_.pop_front();
+    }
+  }
+
   // Get base pose in odom frame at laser scan timestamp
-  auto base_pose_in_odom = get_base_pose_in_odom(tf2_ros::fromMsg(laser_scan->header.stamp));
+  const auto base_pose_in_odom = get_base_pose_in_odom(tf2_ros::fromMsg(laser_scan->header.stamp));
   if (!base_pose_in_odom.has_value()) {
     return;
   }
