@@ -162,7 +162,7 @@ class AmclNode : public BaseAMCLNode {
   std::optional<Sophus::SE2d> last_known_odom_transform_in_map_;
   /// Whether to broadcast transforms or not.
   bool enable_tf_broadcast_{false};
-
+  /// Type Buffer for queued odometry motions (timestamp, pose)
   using OdometryMotion = std::pair<tf2::TimePoint, Sophus::SE2d>;
   /// Buffer for queued odometry motions (timestamp, pose)
   std::deque<OdometryMotion> odometry_motion_buffer_;
