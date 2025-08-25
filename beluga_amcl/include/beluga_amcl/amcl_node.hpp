@@ -40,10 +40,10 @@
 
 #include <beluga/beluga.hpp>
 #include <beluga_ros/amcl.hpp>
+#include <deque>
+#include <nav_msgs/msg/odometry.hpp>
 #include "beluga_amcl/message_filters.hpp"
 #include "beluga_amcl/ros2_common.hpp"
-
-#include <deque>
 
 /**
  * \file
@@ -93,8 +93,8 @@ class AmclNode : public BaseAMCLNode {
   /// Callback for laser scan updates.
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
 
-  /// Callback for increased propagation timer.
-  void propagation_timer_callback();
+  /// Callback for odometry updates.
+  void odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr);
 
   /// Helper function to get base pose in odom frame at specific time.
   auto get_base_pose_in_odom(const tf2::TimePoint& time) const -> std::optional<Sophus::SE2d>;
@@ -151,8 +151,8 @@ class AmclNode : public BaseAMCLNode {
   /// Connection for laser scan updates filter and callback.
   ::message_filters::Connection laser_scan_connection_;
 
-  /// Timer for increased propagation rate.
-  rclcpp::TimerBase::SharedPtr propagation_timer_;
+  /// Odometry updates subscription.
+  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
 
   /// Particle filter instance.
   std::unique_ptr<beluga_ros::Amcl> particle_filter_;
@@ -162,10 +162,8 @@ class AmclNode : public BaseAMCLNode {
   std::optional<Sophus::SE2d> last_known_odom_transform_in_map_;
   /// Whether to broadcast transforms or not.
   bool enable_tf_broadcast_{false};
-  /// Type Buffer for queued odometry motions (timestamp, pose)
-  using OdometryMotion = std::pair<tf2::TimePoint, Sophus::SE2d>;
   /// Buffer for queued odometry motions (timestamp, pose)
-  std::deque<OdometryMotion> odometry_motion_buffer_;
+  std::deque<beluga_ros::OdometryMotion> odometry_motion_buffer_;
 };
 
 }  // namespace beluga_amcl

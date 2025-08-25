@@ -46,11 +46,11 @@ class AmclNodeUnderTest : public beluga_amcl::AmclNode {
   /// Return the last known estimate. Throws if there is no estimate.
   const auto& estimate() { return last_known_estimate_.value(); }
 
-  /// Check if propagation timer is created
-  bool has_propagation_timer() const { return propagation_timer_ != nullptr; }
+  /// Check if odom_sub_ is created
+  bool has_odom_sub() const { return odom_sub_ != nullptr; }
 
-  /// Expose propagation timer callback for testing
-  void propagation_timer_callback() { AmclNode::propagation_timer_callback(); }
+  /// Expose odometry callback for testing
+  void odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom) { AmclNode::odometry_callback(odom); }
 
   /// Expose odometry_motion_buffer_ for testing
   const auto& odometry_motion_buffer() const { return odometry_motion_buffer_; }
@@ -707,44 +707,44 @@ TEST_F(TestNode, TransformValue) {
   EXPECT_NEAR(transform.so2().log(), 0.0, 0.01);
 }
 
-TEST_F(TestNode, PropagationTimerNotCreatedWhenDisabled) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", 0.0});
+TEST_F(TestNode, OdomSubNotCreatedWhenPropagationDisabled) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", false});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 
-  // Timer should not be created when frequency is 0
-  EXPECT_FALSE(amcl_node_->has_propagation_timer());
+  // odom_sub_ should not be created when propagation is disabled
+  EXPECT_EQ(amcl_node_->has_odom_sub(), false);
 }
 
-TEST_F(TestNode, PropagationTimerCreatedWhenEnabled) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", 10.0});
+TEST_F(TestNode, OdomSubCreatedWhenPropagationEnabled) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", true});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 
-  // Timer should be created when frequency > 0
-  EXPECT_TRUE(amcl_node_->has_propagation_timer());
+  // odom_sub_ should be created when propagation is enabled
+  EXPECT_EQ(amcl_node_->has_odom_sub(), true);
 }
 
-TEST_F(TestNode, PropagationTimerIntegrationTest) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", 5.0});
+TEST_F(TestNode, PropagationRate) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", true});
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
 
-  tester_node_->publish_odom_to_base_tf(Sophus::SE2d{});
-
-  // Wait for several timer executions to fill the odometry buffer
-  spin_for(500ms, amcl_node_, tester_node_);
+  // Publish several odometry messages to fill the buffer
+  for (int i = 0; i < 5; ++i) {
+    tester_node_->publish_odometry(i * 0.1, 0.0);
+    spin_for(20ms, amcl_node_, tester_node_);
+  }
 
   // Check that odometry_motion_buffer_ has values before laser scan
-  EXPECT_FALSE(amcl_node_->odometry_motion_buffer().empty());
-  const auto buffer_size_before = amcl_node_->odometry_motion_buffer().size();
+  EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 5);
 
   // Configure TF so get_base_pose_in_odom works by publishing a laser scan with transform
   tester_node_->publish_laser_scan_with_odom_to_base(Sophus::SE2d{});
@@ -753,38 +753,20 @@ TEST_F(TestNode, PropagationTimerIntegrationTest) {
   spin_for(100ms, amcl_node_, tester_node_);
 
   // Check that odometry_motion_buffer_ was consumed up to the lidar timestamp
-  EXPECT_LT(amcl_node_->odometry_motion_buffer().size(), buffer_size_before);
+  EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 0);
 
   // Verify particle filter still exists and has particles
   EXPECT_TRUE(amcl_node_->particle_filter() != nullptr);
   EXPECT_GT(amcl_node_->particle_filter()->particles().size(), 0UL);
 }
 
-TEST_F(TestNode, PropagationTimerWithoutParticles) {
+TEST_F(TestNode, OdomSubWithoutParticles) {
   // Verify that particle filter remains uninitialized
   EXPECT_FALSE(amcl_node_->particle_filter() != nullptr);
 
-  // Call propagation timer callback when particle filter is not initialized
-  amcl_node_->propagation_timer_callback();
-
-  // The callback should have returned early without filling the queue
-  EXPECT_TRUE(amcl_node_->odometry_motion_buffer().empty());
-}
-
-TEST_F(TestNode, PropagationTimerWithoutBaseToOdom) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
-  amcl_node_->configure();
-  amcl_node_->activate();
-  tester_node_->publish_map();
-  ASSERT_TRUE(wait_for_initialization());
-
-  // Particle filter is initialized but no odom->base transform is available
-  EXPECT_TRUE(amcl_node_->is_initialized());
-  EXPECT_TRUE(amcl_node_->particle_filter() != nullptr);
-
-  // Call propagation callback without any transform data
-  // This should return early because get_base_pose_in_odom() will fail
-  amcl_node_->propagation_timer_callback();
+  // Call odometry callback when particle filter is not initialized
+  const nav_msgs::msg::Odometry::SharedPtr odom = std::make_shared<nav_msgs::msg::Odometry>();
+  amcl_node_->odometry_callback(odom);
 
   // The callback should have returned early without filling the queue
   EXPECT_TRUE(amcl_node_->odometry_motion_buffer().empty());

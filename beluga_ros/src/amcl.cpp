@@ -50,6 +50,16 @@ void Amcl::update_map(beluga_ros::OccupancyGrid map) {
   std::visit([&](auto& sensor_model) { sensor_model.update_map(std::move(map)); }, sensor_model_);
 }
 
+void Amcl::process_buffered_odometry_until(std::deque<OdometryMotion>& buffer, const tf2::TimePoint& until) {
+  while (!buffer.empty()) {
+    const auto& [odom_time, odom_pose] = buffer.front();
+    if (odom_time >= until)
+      break;
+    update(odom_pose);
+    buffer.pop_front();
+  }
+}
+
 void Amcl::update(Sophus::SE2d base_pose_in_odom) {
   if (!particles_.empty()) {
     std::visit(
