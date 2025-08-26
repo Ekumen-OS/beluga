@@ -15,6 +15,8 @@
 find_package(ament_cmake_ros REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
+include_directories(include)
+
 ament_add_ros_isolated_gmock(test_amcl test_amcl.cpp)
 target_compile_options(test_amcl PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_amcl beluga_ros)
@@ -42,3 +44,7 @@ target_link_libraries(test_particle_cloud beluga_ros)
 ament_add_ros_isolated_gmock(test_point_cloud test_point_cloud.cpp)
 target_compile_options(test_point_cloud PRIVATE -Wno-deprecated-copy)
 target_link_libraries(test_point_cloud beluga_ros)
+
+ament_add_gmock(test_sparse_point_cloud test_sparse_point_cloud.cpp)
+target_compile_options(test_sparse_point_cloud PRIVATE -Wno-deprecated-copy)
+target_link_libraries(test_sparse_point_cloud beluga_ros)

@@ -135,11 +135,9 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
   Sophus::SE3d origin_;
 };
 
-template <bool Strict = false>
-using PointCloud3d = PointCloud3<double, Strict>;
-
-template <bool Strict = false>
-using PointCloud3f = PointCloud3<float, Strict>;
+// Non-strict aliases.
+using PointCloud3d = PointCloud3<double, false>;
+using PointCloud3f = PointCloud3<float, false>;
 
 }  // namespace beluga_ros
 

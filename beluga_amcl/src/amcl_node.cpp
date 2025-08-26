@@ -501,8 +501,8 @@ void AmclNode::do_periodic_timer_callback() {
   }
 }
 
-template <typename MsgT, typename>
-void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) {
+template <typename MessageT>
+void AmclNode::sensor_callback(const typename MessageT::ConstSharedPtr& sensor_msg) {
   if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 2000, "Ignoring laser data because the particle filter has not been initialized");
@@ -538,21 +538,23 @@ void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) 
     return;
   }
 
-  const auto update_start_time = std::chrono::high_resolution_clock::now();
-
   auto measurement = [&] {
-    if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::LaserScan>) {
+    static_assert(
+      std::is_same_v<MessageT, sensor_msgs::msg::LaserScan> ||
+      std::is_same_v<MessageT, sensor_msgs::msg::PointCloud2>,
+      "Invalid sensor message type");
+    if constexpr (std::is_same_v<MessageT, sensor_msgs::msg::LaserScan>) {
       const std::size_t max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
       const double min_range = get_parameter("laser_min_range").as_double();
       const double max_range = get_parameter("laser_max_range").as_double();
       return beluga_ros::LaserScan{sensor_msg, sensor_pose_in_base, max_beams, min_range, max_range};
-    } else if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>) {
-      constexpr bool kStrict = true;
-      return beluga_ros::SparsePointCloud3<float, !kStrict>{sensor_msg, sensor_pose_in_base};
+    } else {
+      return beluga_ros::SparsePointCloud3f{sensor_msg, sensor_pose_in_base};
     }
   }();
 
-  const auto new_estimate = particle_filter_->update(base_pose_in_odom, std::move(measurement));
+  const auto update_start_time = std::chrono::high_resolution_clock::now();
+  const auto new_estimate = particle_filter_->update(base_pose_in_odom, measurement);
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 

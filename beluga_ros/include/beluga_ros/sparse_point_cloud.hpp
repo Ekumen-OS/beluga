@@ -131,11 +131,9 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
   Sophus::SE3d origin_;
 };
 
-template <bool Strict = false>
-using SparsePointCloud3d = SparsePointCloud3<double, Strict>;
-
-template <bool Strict = false>
-using SparsePointCloud3f = SparsePointCloud3<float, Strict>;
+// Non-strict aliases.
+using SparsePointCloud3d = SparsePointCloud3<double, false>;
+using SparsePointCloud3f = SparsePointCloud3<float, false>;
 
 }  // namespace beluga_ros
 

@@ -90,11 +90,8 @@ class AmclNode : public BaseAMCLNode {
   void do_periodic_timer_callback() override;
 
   /// Callback for sensor updates.
-  template <
-      typename MsgT,
-      typename = std::enable_if_t<
-          std::is_same_v<MsgT, sensor_msgs::msg::LaserScan> || std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>>>
-  void sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg);
+  template <typename MessageT>
+  void sensor_callback(const typename MessageT::ConstSharedPtr& sensor_msg);
 
   /// Callback for pose (re)initialization.
   void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;
