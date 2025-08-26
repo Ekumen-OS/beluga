@@ -182,7 +182,7 @@ Also available as a standalone `amcl_node` executable.
 : Mixture weight for the probability of getting short measurements used in the `beam` model.
 : Defaults to `0.05`.
 
-`lambda_short _(`float`)_
+`lambda_short` _(`float`)_
 : Short readings' exponential distribution parameter used in the `beam` model.
 : Defaults to `0.1`.
 
