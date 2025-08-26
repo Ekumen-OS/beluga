@@ -16,12 +16,12 @@
 #define BELUGA_ROS_TEST_POINT_CLOUD_UTILS_HPP
 
 #include <memory>
-#include <vector>
 #include <optional>
+#include <vector>
 
 #if BELUGA_ROS_VERSION == 1
-#include <boost/smart_ptr.hpp>
 #include <sensor_msgs/point_cloud2_iterator.h>
+#include <boost/smart_ptr.hpp>
 #endif
 
 #include <Eigen/Dense>
@@ -51,7 +51,8 @@ auto make_point_data(const size_t size) {
 
 template <typename T>
 auto make_xy_pointcloud(
-    const unsigned int width, std::optional<unsigned int> height = std::nullopt, 
+    const unsigned int width,
+    std::optional<unsigned int> height = std::nullopt,
     std::optional<std::vector<Eigen::Vector3<T>>> point_data = std::nullopt) {
   if (!height.has_value()) {
     height = width > 0 ? 1 : 0;
@@ -96,7 +97,8 @@ auto make_xy_pointcloud(
 
 template <typename T>
 auto make_xyz_pointcloud(
-    const unsigned int width, std::optional<unsigned int> height = std::nullopt, 
+    const unsigned int width,
+    std::optional<unsigned int> height = std::nullopt,
     std::optional<std::vector<Eigen::Vector3<T>>> point_data = std::nullopt) {
   if (!height.has_value()) {
     height = width > 0 ? 1 : 0;

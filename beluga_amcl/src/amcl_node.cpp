@@ -540,9 +540,9 @@ void AmclNode::sensor_callback(const typename MessageT::ConstSharedPtr& sensor_m
 
   auto measurement = [&] {
     static_assert(
-      std::is_same_v<MessageT, sensor_msgs::msg::LaserScan> ||
-      std::is_same_v<MessageT, sensor_msgs::msg::PointCloud2>,
-      "Invalid sensor message type");
+        std::is_same_v<MessageT, sensor_msgs::msg::LaserScan> ||
+            std::is_same_v<MessageT, sensor_msgs::msg::PointCloud2>,
+        "Invalid sensor message type");
     if constexpr (std::is_same_v<MessageT, sensor_msgs::msg::LaserScan>) {
       const std::size_t max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
       const double min_range = get_parameter("laser_min_range").as_double();

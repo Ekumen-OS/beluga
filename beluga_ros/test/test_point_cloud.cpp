@@ -27,17 +27,17 @@
 
 namespace {
 
-using beluga_ros::testing::make_uninitialized_pointcloud;
+using beluga_ros::testing::make_ixyz_pointcloud;
+using beluga_ros::testing::make_ouster_pointcloud;
 using beluga_ros::testing::make_point_data;
+using beluga_ros::testing::make_robosense_pointcloud;
+using beluga_ros::testing::make_uninitialized_pointcloud;
+using beluga_ros::testing::make_velodyne_pointcloud;
 using beluga_ros::testing::make_xy_pointcloud;
+using beluga_ros::testing::make_xyz_int32_pointcloud;
 using beluga_ros::testing::make_xyz_pointcloud;
 using beluga_ros::testing::make_xyzi_pointcloud;
-using beluga_ros::testing::make_ixyz_pointcloud;
-using beluga_ros::testing::make_xyz_int32_pointcloud;
 using beluga_ros::testing::make_zxyi_pointcloud;
-using beluga_ros::testing::make_velodyne_pointcloud;
-using beluga_ros::testing::make_robosense_pointcloud;
-using beluga_ros::testing::make_ouster_pointcloud;
 
 constexpr unsigned int kUnorderedWidth = 5;
 constexpr unsigned int kUnorderedHeight = 1;
