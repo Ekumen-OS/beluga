@@ -104,13 +104,11 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
           return ranges::any_view<Eigen::Vector3<Scalar>>(
               points_view<float>(*cloud_) |
               ranges::views::transform([](auto point) { return point.template cast<Scalar>(); }));
-        } else if (datatype == sensor_msgs::typeAsPointFieldType<double>::value) {
-          return ranges::any_view<Eigen::Vector3<Scalar>>(
-              points_view<double>(*cloud_) |
-              ranges::views::transform([](auto point) { return point.template cast<Scalar>(); }));
-        } else {
-          throw std::runtime_error("unexpected point cloud datatype");
         }
+        assert(datatype == sensor_msgs::typeAsPointFieldType<double>::value);
+        return ranges::any_view<Eigen::Vector3<Scalar>>(
+            points_view<double>(*cloud_) |
+            ranges::views::transform([](auto point) { return point.template cast<Scalar>(); }));
       }
       return ranges::any_view<Eigen::Vector3<Scalar>>(points_view<Scalar>(*cloud_));
     } else {

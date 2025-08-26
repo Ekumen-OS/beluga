@@ -201,7 +201,7 @@ auto make_xyzi_pointcloud(
   return message;
 }
 
-auto make_ixyz_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
+inline auto make_ixyz_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   auto message = make_uninitialized_pointcloud();
   message->width = static_cast<unsigned int>(point_data.size());
   message->height = 1;
@@ -233,7 +233,7 @@ auto make_ixyz_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   return message;
 }
 
-auto make_zxyi_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
+inline auto make_zxyi_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   auto message = make_uninitialized_pointcloud();
   message->width = static_cast<unsigned int>(point_data.size());
   message->height = 1;
@@ -265,7 +265,7 @@ auto make_zxyi_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   return message;
 }
 
-auto make_velodyne_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
+inline auto make_velodyne_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   auto message = make_uninitialized_pointcloud();
   message->width = static_cast<unsigned int>(point_data.size());
   message->height = 1;
@@ -307,7 +307,7 @@ auto make_velodyne_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   return message;
 }
 
-auto make_robosense_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
+inline auto make_robosense_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   auto message = make_uninitialized_pointcloud();
   message->width = static_cast<unsigned int>(point_data.size());
   message->height = 1;
@@ -349,7 +349,7 @@ auto make_robosense_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   return message;
 }
 
-auto make_ouster_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
+inline auto make_ouster_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   auto message = make_uninitialized_pointcloud();
   message->width = static_cast<unsigned int>(point_data.size());
   message->height = 1;
@@ -407,7 +407,7 @@ auto make_ouster_pointcloud(const std::vector<Eigen::Vector3f>& point_data) {
   return message;
 }
 
-auto make_xyz_int32_pointcloud(const unsigned int size) {
+inline auto make_xyz_int32_pointcloud(const unsigned int size) {
   auto message = make_uninitialized_pointcloud();
   message->width = size;
   message->height = 1;

@@ -110,11 +110,9 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
       if (datatype != sensor_msgs::typeAsPointFieldType<Scalar>::value) {
         if (datatype == sensor_msgs::typeAsPointFieldType<float>::value) {
           return Eigen::Matrix3X<Scalar>(points_matrix<float>(*cloud_).template cast<Scalar>());
-        } else if (datatype == sensor_msgs::typeAsPointFieldType<double>::value) {
-          return Eigen::Matrix3X<Scalar>(points_matrix<double>(*cloud_).template cast<Scalar>());
-        } else {
-          throw std::runtime_error("unexpected point cloud datatype");
         }
+        assert(datatype == sensor_msgs::typeAsPointFieldType<double>::value);
+        return Eigen::Matrix3X<Scalar>(points_matrix<double>(*cloud_).template cast<Scalar>());
       }
       return Eigen::Matrix3X<Scalar>(points_matrix<Scalar>(*cloud_));
     } else {
