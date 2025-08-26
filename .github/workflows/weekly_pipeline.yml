@@ -52,7 +52,7 @@ jobs:
              h5py==3.11.0
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: ${{ github.workspace }}/src/beluga
 
