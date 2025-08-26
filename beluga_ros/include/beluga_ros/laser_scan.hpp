@@ -78,7 +78,7 @@ class LaserScan : public beluga::BaseLaserScan<LaserScan> {
   }
 
   /// Get the number of beams in the scan.
-  [[nodiscard]] std::size_t size() const { return ranges::size(ranges()); }
+  [[nodiscard]] std::size_t size() const { return scan_->ranges.size(); }
 
   /// Get the minimum range measurement.
   [[nodiscard]] auto min_range() const { return min_range_; }

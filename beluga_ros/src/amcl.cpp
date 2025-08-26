@@ -64,7 +64,7 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_sc
 }
 
 // Overloaded update method for SparsePointCloud3.
-auto Amcl::update(Sophus::SE2d base_pose_in_odom, const SparsePointCloud3<float>& point_cloud)
+auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::SparsePointCloud3f point_cloud)
     -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
   std::vector<std::pair<double, double>> measurement;  // NOTE: Should be float?
   measurement.reserve(point_cloud.size());

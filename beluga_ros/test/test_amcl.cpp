@@ -96,7 +96,7 @@ auto make_dummy_point_cloud() {
   *iter_y = 0.0;
   *iter_z = 0.0;
 
-  return beluga_ros::SparsePointCloud3<float>{message};
+  return beluga_ros::SparsePointCloud3f{message};
 }
 
 auto make_amcl() {

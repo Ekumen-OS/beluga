@@ -43,61 +43,103 @@
 
 namespace beluga_ros {
 
-/// Thin wrapper type for 3D `sensor_msgs/PointCloud2` messages.
-template <typename T>
+/// Thin wrapper type for 3D `sensor_msgs/PointCloud2` messages with dense layouts.
+/**
+ * The layout of the point cloud message must include exactly three (3) fields: x, y, and z,
+ * all of the same floating point datatype, representing cartesian coordinates for each point.
+ *
+ * \tparam T Scalar type for point coordinates. Must be floating point.
+ * \tparam Strict If true, xyz fields' datatypes must match the expected scalar type
+ * or the wrapper will throw on construction. If false, the wrapper will cast as necessary.
+ */
+template <typename T, bool Strict = true>
 class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
  public:
-  /// PointCloud type
+  /// Expected PointCloud2 fields type
   using Scalar = T;
 
-  /// Check type is float or double
+  // Assert fields' type is floating point
   static_assert(
       std::is_same_v<Scalar, float> || std::is_same_v<Scalar, double>,
-      "Pointcloud3 only supports float or double datatype");
+      "Pointcloud3 only supports floating point types");
 
   /// Constructor.
   ///
   /// \param cloud Point cloud message.
   /// \param origin Point cloud frame origin in the filter frame.
+  /// \throws std::invalid_argument if `cloud` does not meet expectations.
   explicit PointCloud3(beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d origin = Sophus::SE3d())
       : cloud_(std::move(cloud)), origin_(std::move(origin)) {
     assert(cloud_ != nullptr);
-    constexpr uint8_t fieldType = sensor_msgs::typeAsPointFieldType<T>::value;
-    // Check if point cloud is 3D
-    if (cloud_->fields.size() < 3) {
-      throw std::invalid_argument("PointCloud is not 3D");
+    if (cloud_->fields.size() != 3) {
+      throw std::invalid_argument("point cloud must have exactly 3 fields");
     }
-    // Check point cloud is XYZ... type
-    if (cloud_->fields.at(0).name != "x" || cloud_->fields.at(1).name != "y" || cloud_->fields.at(2).name != "z") {
-      throw std::invalid_argument("PointCloud not XYZ...");
+    const auto& field_0 = cloud_->fields.at(0);
+    const auto& field_1 = cloud_->fields.at(1);
+    const auto& field_2 = cloud_->fields.at(2);
+    if (field_0.name != "x" || field_1.name != "y" || field_2.name != "z") {
+      throw std::invalid_argument("point cloud layout is not xyz");
     }
-    // Check XYZ datatype is the same
-    if (cloud_->fields.at(0).datatype != fieldType || cloud_->fields.at(1).datatype != fieldType ||
-        cloud_->fields.at(2).datatype != fieldType) {
-      throw std::invalid_argument("XYZ datatype are not same");
+    if (field_0.datatype != field_1.datatype || field_1.datatype != field_2.datatype) {
+      throw std::invalid_argument("point cloud xyz datatypes are not all the same");
     }
-    // Check stride is divisible
-    if (cloud_->point_step % sizeof(Scalar) != 0) {
-      throw std::invalid_argument("Data is not memory-aligned");
+    if constexpr (Strict) {
+      if (field_0.datatype != sensor_msgs::typeAsPointFieldType<Scalar>::value) {
+        throw std::invalid_argument("xyz datatype does not match the expected type");
+      }
+    } else {
+      if (field_0.datatype != sensor_msgs::typeAsPointFieldType<float>::value &&
+          field_0.datatype != sensor_msgs::typeAsPointFieldType<double>::value) {
+        throw std::invalid_argument("xyz datatype is not floating point");
+      }
     }
-    stride_ = static_cast<int>(cloud_->point_step / sizeof(Scalar));
+    constexpr auto float_datatype = sensor_msgs::typeAsPointFieldType<float>::value;
+    const auto size_of_datatype = field_0.datatype == float_datatype ? sizeof(float) : sizeof(double);
+    if (cloud_->point_step % size_of_datatype != 0) {
+      throw std::invalid_argument("point cloud is not dense");
+    }
   }
 
   /// Get the point cloud frame origin in the filter frame.
   [[nodiscard]] const auto& origin() const { return origin_; }
 
-  /// Get the unorganized 3D point collection as an Eigen Map<Eigen::Matrix3X>.
+  /// Get cartesian points in the point cloud as a matrix.
   [[nodiscard]] auto points() const {
-    const beluga_ros::msg::PointCloud2ConstIterator<Scalar> iter_points(*cloud_, "x");
-    return Eigen::Map<const Eigen::Matrix3X<Scalar>, 0, Eigen::OuterStride<>>(
-        &iter_points[0], 3, cloud_->width * cloud_->height, stride_);
+    if constexpr (!Strict) {
+      const auto datatype = cloud_->fields.at(0).datatype;
+      if (datatype != sensor_msgs::typeAsPointFieldType<Scalar>::value) {
+        if (datatype == sensor_msgs::typeAsPointFieldType<float>::value) {
+          return Eigen::Matrix3X<Scalar>(points_matrix<float>(*cloud_).template cast<Scalar>());
+        } else if (datatype == sensor_msgs::typeAsPointFieldType<double>::value) {
+          return Eigen::Matrix3X<Scalar>(points_matrix<double>(*cloud_).template cast<Scalar>());
+        } else {
+          throw std::runtime_error("unexpected point cloud datatype");
+        }
+      }
+      return Eigen::Matrix3X<Scalar>(points_matrix<Scalar>(*cloud_));
+    } else {
+      return points_matrix<Scalar>(*cloud_);
+    }
   }
 
  private:
+  template <typename U>
+  static auto points_matrix(const beluga_ros::msg::PointCloud2& cloud) {
+    const auto stride = static_cast<int>(cloud.point_step / sizeof(U));
+    const beluga_ros::msg::PointCloud2ConstIterator<U> iter_points(cloud, "x");
+    return Eigen::Map<const Eigen::Matrix3X<U>, 0, Eigen::OuterStride<>>(
+        &iter_points[0], 3, cloud.width * cloud.height, stride);
+  }
+
   beluga_ros::msg::PointCloud2ConstSharedPtr cloud_;
-  int stride_;
   Sophus::SE3d origin_;
 };
+
+template <bool Strict = false>
+using PointCloud3d = PointCloud3<double, Strict>;
+
+template <bool Strict = false>
+using PointCloud3f = PointCloud3<float, Strict>;
 
 }  // namespace beluga_ros
 

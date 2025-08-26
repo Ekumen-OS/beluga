@@ -233,9 +233,10 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
         std::bind(&AmclNode::sensor_callback<sensor_msgs::msg::PointCloud2>, this, std::placeholders::_1));
     RCLCPP_INFO(get_logger(), "Subscribed to point_cloud_topic: %s", point_cloud_sub_->getTopic().c_str());
   } else {
-    // Default to LaserScan if point_cloud_topic is not provided.
     const auto effective_scan_topic = scan_topic.empty() ? "scan" : scan_topic;
-
+    if (scan_topic.empty()) {
+      RCLCPP_INFO(get_logger(), "No scan_topic specified, defaulting to: %s", effective_scan_topic.c_str());
+    }
     laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
         shared_from_this(), effective_scan_topic, sensor_qos, common_subscription_options_);
 
@@ -245,15 +246,9 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
 
     laser_scan_connection_ = laser_scan_filter_->registerCallback(
         std::bind(&AmclNode::sensor_callback<sensor_msgs::msg::LaserScan>, this, std::placeholders::_1));
-
-    if (scan_topic.empty()) {
-      RCLCPP_INFO(
-          get_logger(), "Subscribed by default (since not specified) to scan_topic: %s",
-          laser_scan_sub_->getTopic().c_str());
-    } else {
-      RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
-    }
+    RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
   }
+
   const auto common_service_qos = [] {
     if constexpr (RCLCPP_VERSION_GTE(17, 0, 0)) {
       return rclcpp::ServicesQoS();
@@ -509,7 +504,8 @@ void AmclNode::do_periodic_timer_callback() {
 template <typename MsgT, typename>
 void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) {
   if (!particle_filter_) {
-    RCLCPP_WARN(get_logger(), "Particle filter not initialized, skipping sensor update");
+    RCLCPP_WARN_THROTTLE(
+        get_logger(), *get_clock(), 2000, "Ignoring laser data because the particle filter has not been initialized");
     return;
   }
   auto base_pose_in_odom = Sophus::SE2d{};
@@ -544,7 +540,6 @@ void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) 
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
 
-  // Conditional wrapper construction.
   auto measurement = [&] {
     if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::LaserScan>) {
       const std::size_t max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
@@ -552,11 +547,12 @@ void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) 
       const double max_range = get_parameter("laser_max_range").as_double();
       return beluga_ros::LaserScan{sensor_msg, sensor_pose_in_base, max_beams, min_range, max_range};
     } else if constexpr (std::is_same_v<MsgT, sensor_msgs::msg::PointCloud2>) {
-      return beluga_ros::SparsePointCloud3<float>{sensor_msg, sensor_pose_in_base};
+      constexpr bool kStrict = true;
+      return beluga_ros::SparsePointCloud3<float, !kStrict>{sensor_msg, sensor_pose_in_base};
     }
   }();
 
-  const auto new_estimate = particle_filter_->update(base_pose_in_odom, measurement);
+  const auto new_estimate = particle_filter_->update(base_pose_in_odom, std::move(measurement));
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 
@@ -566,12 +562,12 @@ void AmclNode::sensor_callback(const typename MsgT::ConstSharedPtr& sensor_msg) 
     last_known_estimate_ = new_estimate;
 
     RCLCPP_INFO(
-        get_logger(), "Particle filter update: %zu particles, %zu points - %.3fms",
+        get_logger(), "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
         particle_filter_->particles().size(), measurement.size(),
         std::chrono::duration<double, std::milli>(update_duration).count());
   }
 
-  if (!last_known_estimate_) {
+  if (!last_known_estimate_.has_value()) {
     RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Estimate not available for publishing");
     return;
   }

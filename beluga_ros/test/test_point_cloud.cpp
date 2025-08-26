@@ -47,8 +47,9 @@ auto make_pointcloud(
     const unsigned int height,
     const std::vector<Eigen::Vector3<T>>& point_data = {},
     const bool empty = false) {
-  if (point_data.size() < static_cast<unsigned>(width * height) && !empty)
+  if (point_data.size() < static_cast<unsigned>(width * height) && !empty) {
     throw std::invalid_argument("Not enough points");
+  }
 
   auto message = make_message();
 
