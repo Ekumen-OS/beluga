@@ -23,6 +23,7 @@ The current set of features includes:
   - Multinomial resampling from a particle range
   - [Adaptive KLD resampling][fox2001]
   - [Selective resampling][grisetti2007], on-motion resampling, and interval resampling policies
+  - Low Variance sampling
   - Support for sequential and parallel execution policies
   - Weighted mean and covariance statistics for pose estimation
 - Sensor models:
