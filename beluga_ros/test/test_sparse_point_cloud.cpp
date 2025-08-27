@@ -22,6 +22,7 @@
 #include <Eigen/Dense>
 
 #include "beluga/eigen_compatibility.hpp"
+#include "beluga_ros/messages.hpp"
 #include "beluga_ros/sparse_point_cloud.hpp"
 #include "beluga_ros/test/point_cloud_utils.hpp"
 
@@ -34,6 +35,7 @@ using beluga_ros::testing::make_robosense_pointcloud;
 using beluga_ros::testing::make_uninitialized_pointcloud;
 using beluga_ros::testing::make_velodyne_pointcloud;
 using beluga_ros::testing::make_xy_pointcloud;
+using beluga_ros::testing::make_xyz_different_types_pointcloud;
 using beluga_ros::testing::make_xyz_int32_pointcloud;
 using beluga_ros::testing::make_xyz_pointcloud;
 using beluga_ros::testing::make_xyzi_pointcloud;
@@ -47,7 +49,20 @@ TEST(TestSparsePointCloud, FloatXYZPoints) {
   const auto message = make_xyz_pointcloud<float>(kUnorderedWidth, kUnorderedHeight, point_data);
 
   const auto cloud_sparse = beluga_ros::SparsePointCloud3f(message);
-  const auto points = cloud_sparse.points() | ranges::to<std::vector>;
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
+  ASSERT_EQ(points.size(), point_data.size());
+  for (size_t i = 0; i < points.size(); ++i) {
+    ASSERT_EQ(point_data.at(i), points.at(i));
+  }
+}
+
+TEST(TestSparsePointCloud, StrictFloatXYZPoints) {
+  constexpr bool kStrict = true;
+  const auto point_data = make_point_data<float>(kUnorderedWidth * kUnorderedHeight);
+  const auto message = make_xyz_pointcloud<float>(kUnorderedWidth, kUnorderedHeight, point_data);
+
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3<float, kStrict>(message);
+  const auto points = cloud_sparse.points() | ranges::to<std::vector<Eigen::Vector3f>>;
   ASSERT_EQ(points.size(), point_data.size());
   for (size_t i = 0; i < points.size(); ++i) {
     ASSERT_EQ(point_data.at(i), points.at(i));
@@ -59,7 +74,7 @@ TEST(TestSparsePointCloud, FloatXYZIPoints) {
   const auto message = make_xyzi_pointcloud<float>(kUnorderedWidth, kUnorderedHeight, point_data);
 
   const auto cloud_sparse = beluga_ros::SparsePointCloud3f(message);
-  const auto points = cloud_sparse.points() | ranges::to<std::vector>;
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
   ASSERT_EQ(points.size(), point_data.size());
   for (size_t i = 0; i < points.size(); ++i) {
     ASSERT_EQ(point_data.at(i), points.at(i));
@@ -71,7 +86,7 @@ TEST(TestSparsePointCloud, DoubleXYZIPoints) {
   const auto message = make_xyzi_pointcloud<double>(kUnorderedWidth, kUnorderedHeight, point_data);
 
   const auto cloud_sparse = beluga_ros::SparsePointCloud3d(message);
-  const auto points = cloud_sparse.points() | ranges::to<std::vector>;
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
   ASSERT_EQ(points.size(), point_data.size());
   for (size_t i = 0; i < points.size(); ++i) {
     ASSERT_EQ(point_data.at(i), points.at(i));
@@ -82,7 +97,7 @@ TEST(TestSparsePointCloud, EmptyXYZPoints) {
   const auto message = make_xyz_pointcloud<float>(0);
 
   const auto cloud_sparse = beluga_ros::SparsePointCloud3f(message);
-  const auto points = cloud_sparse.points() | ranges::to<std::vector>;
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
   ASSERT_EQ(points.size(), 0);
 }
 
@@ -90,7 +105,7 @@ TEST(TestSparsePointCloud, EmptyXYZIPoints) {
   const auto message = make_xyzi_pointcloud<float>(0);
 
   const auto cloud_sparse = beluga_ros::SparsePointCloud3f(message);
-  const auto points = cloud_sparse.points() | ranges::to<std::vector>;
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
   ASSERT_EQ(points.size(), 0);
 }
 
@@ -109,6 +124,11 @@ TEST(TestSparsePointCloud, BadFieldsFail) {
   ASSERT_THROW((beluga_ros::SparsePointCloud3f(message)), std::invalid_argument);
 }
 
+TEST(TestSparsePointCloud, DifferentXYZTypesFail) {
+  const auto message = make_xyz_different_types_pointcloud(1);
+  ASSERT_THROW((beluga_ros::SparsePointCloud3f(message)), std::invalid_argument);
+}
+
 TEST(TestSparsePointCloud, StrictFloatFromDoubleFails) {
   constexpr bool kStrict = true;
   const auto message = make_xyzi_pointcloud<double>(kUnorderedWidth * kUnorderedHeight);
@@ -124,8 +144,8 @@ TEST(TestSparsePointCloud, StrictDoubleFromFloatFails) {
 TEST(TestSparsePointCloud, NonStrictFloatFromDouble) {
   const auto point_data = make_point_data<double>(kUnorderedWidth * kUnorderedHeight);
   const auto message = make_xyzi_pointcloud<double>(kUnorderedWidth, kUnorderedHeight, point_data);
-  const auto cloud = beluga_ros::SparsePointCloud3f(message);
-  const auto points = cloud.points() | ranges::to<std::vector>;
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3f(message);
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
   ASSERT_EQ(points.size(), point_data.size());
   for (size_t i = 0; i < points.size(); ++i) {
     ASSERT_FLOAT_EQ(static_cast<float>(point_data.at(i).x()), points.at(i).x());
@@ -137,8 +157,8 @@ TEST(TestSparsePointCloud, NonStrictFloatFromDouble) {
 TEST(TestSparsePointCloud, NonStrictDoubleFromFloat) {
   const auto point_data = make_point_data<float>(kUnorderedWidth * kUnorderedHeight);
   const auto message = make_xyzi_pointcloud<float>(kUnorderedWidth, kUnorderedHeight, point_data);
-  const auto cloud = beluga_ros::SparsePointCloud3d(message);
-  const auto points = cloud.points() | ranges::to<std::vector>;
+  const auto cloud_sparse = beluga_ros::SparsePointCloud3d(message);
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
   ASSERT_EQ(points.size(), point_data.size());
   for (size_t i = 0; i < points.size(); ++i) {
     ASSERT_DOUBLE_EQ(static_cast<double>(point_data.at(i).x()), points.at(i).x());
@@ -173,7 +193,7 @@ TEST(TestSparsePointCloud, VelodyneLayout) {
   const auto point_data = make_point_data<float>(kUnorderedWidth);
   const auto message = make_velodyne_pointcloud(point_data);
   const auto cloud_sparse = beluga_ros::SparsePointCloud3f(message);
-  const auto points = cloud_sparse.points() | ranges::to<std::vector>;
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
   ASSERT_EQ(points.size(), point_data.size());
   for (size_t i = 0; i < points.size(); ++i) {
     ASSERT_EQ(point_data.at(i), points.at(i));
@@ -184,7 +204,7 @@ TEST(TestSparsePointCloud, RobosenseLayout) {
   const auto point_data = make_point_data<float>(kUnorderedWidth);
   const auto message = make_robosense_pointcloud(point_data);
   const auto cloud_sparse = beluga_ros::SparsePointCloud3f(message);
-  const auto points = cloud_sparse.points() | ranges::to<std::vector>;
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
   ASSERT_EQ(points.size(), point_data.size());
   for (size_t i = 0; i < points.size(); ++i) {
     ASSERT_EQ(point_data.at(i), points.at(i));
@@ -195,7 +215,7 @@ TEST(TestSparsePointCloud, OusterLayout) {
   const auto point_data = make_point_data<float>(kUnorderedWidth);
   const auto message = make_ouster_pointcloud(point_data);
   const auto cloud_sparse = beluga_ros::SparsePointCloud3f(message);
-  const auto points = cloud_sparse.points() | ranges::to<std::vector>;
+  auto points = cloud_sparse.points() | ranges::to<std::vector>;
   ASSERT_EQ(points.size(), point_data.size());
   for (size_t i = 0; i < points.size(); ++i) {
     ASSERT_EQ(point_data.at(i), points.at(i));

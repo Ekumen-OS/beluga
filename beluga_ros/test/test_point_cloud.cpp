@@ -31,6 +31,7 @@ using beluga_ros::testing::make_ixyz_pointcloud;
 using beluga_ros::testing::make_point_data;
 using beluga_ros::testing::make_uninitialized_pointcloud;
 using beluga_ros::testing::make_xy_pointcloud;
+using beluga_ros::testing::make_xyz_different_types_pointcloud;
 using beluga_ros::testing::make_xyz_int32_pointcloud;
 using beluga_ros::testing::make_xyz_pointcloud;
 using beluga_ros::testing::make_xyzi_pointcloud;
@@ -44,6 +45,20 @@ TEST(TestPointCloud, FloatXYZPoints) {
   const auto message = make_xyz_pointcloud<float>(kUnorderedWidth, kUnorderedHeight, point_data);
   const auto cloud = beluga_ros::PointCloud3f(message);
   const auto matrix = cloud.points();
+  for (unsigned i = 0; i < matrix.cols(); ++i) {
+    ASSERT_EQ(point_data.at(i).x(), matrix(0, i));
+    ASSERT_EQ(point_data.at(i).y(), matrix(1, i));
+    ASSERT_EQ(point_data.at(i).z(), matrix(2, i));
+  }
+}
+
+TEST(TestPointCloud, StrictFloatXYZPoints) {
+  constexpr bool kStrict = true;
+  const auto point_data = make_point_data<float>(kUnorderedWidth * kUnorderedHeight);
+  const auto message = make_xyz_pointcloud<float>(kUnorderedWidth, kUnorderedHeight, point_data);
+  const auto cloud = beluga_ros::PointCloud3<float, kStrict>(message);
+  const auto matrix = cloud.points();
+  ASSERT_EQ(static_cast<std::size_t>(matrix.cols()), point_data.size());
   for (unsigned i = 0; i < matrix.cols(); ++i) {
     ASSERT_EQ(point_data.at(i).x(), matrix(0, i));
     ASSERT_EQ(point_data.at(i).y(), matrix(1, i));
@@ -122,6 +137,17 @@ TEST(TestPointCloud, NonStrictDoubleFromFloat) {
 
 TEST(TestPointCloud, NonFloatPointsFail) {
   const auto message = make_xyz_int32_pointcloud(1);
+  ASSERT_THROW((beluga_ros::PointCloud3f(message)), std::invalid_argument);
+}
+
+TEST(TestPointCloud, DifferentXYZTypesFail) {
+  const auto message = make_xyz_different_types_pointcloud(1);
+  ASSERT_THROW((beluga_ros::PointCloud3f(message)), std::invalid_argument);
+}
+
+TEST(TestPointCloud, NonDenseCloudFails) {
+  auto message = make_xyz_pointcloud<float>(1);
+  message->point_step += 1;  // make it not a multiple of sizeof(float)
   ASSERT_THROW((beluga_ros::PointCloud3f(message)), std::invalid_argument);
 }
 

@@ -416,6 +416,21 @@ inline auto make_xyz_int32_pointcloud(const unsigned int size) {
   return message;
 }
 
+inline auto make_xyz_different_types_pointcloud(const unsigned int size) {
+  auto message = make_uninitialized_pointcloud();
+  message->width = size;
+  message->height = 1;
+  message->is_dense = true;
+  message->is_bigendian = false;
+
+  beluga_ros::msg::PointCloud2Modifier modifier(*message);
+  modifier.setPointCloud2Fields(
+      3, "x", 1, beluga_ros::msg::PointField::FLOAT32, "y", 1, beluga_ros::msg::PointField::FLOAT64, "z", 1,
+      beluga_ros::msg::PointField::FLOAT32);
+  modifier.resize(size);
+  return message;
+}
+
 }  // namespace beluga_ros::testing
 
 #endif  // BELUGA_ROS_TEST_POINT_CLOUD_UTILS_HPP

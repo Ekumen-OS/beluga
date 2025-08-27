@@ -98,19 +98,20 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
   /// Get the range of cartesian points in the point cloud.
   [[nodiscard]] auto points() const {
     if constexpr (!Strict) {
+      constexpr auto kCategory = ranges::category::sized | ranges::category::forward;
       const auto datatype = cloud_->fields.at(0).datatype;
       if (datatype != sensor_msgs::typeAsPointFieldType<Scalar>::value) {
         if (datatype == sensor_msgs::typeAsPointFieldType<float>::value) {
-          return ranges::any_view<Eigen::Vector3<Scalar>>(
+          return ranges::any_view<Eigen::Vector3<Scalar>, kCategory>(
               points_view<float>(*cloud_) |
               ranges::views::transform([](auto point) { return point.template cast<Scalar>(); }));
         }
         assert(datatype == sensor_msgs::typeAsPointFieldType<double>::value);
-        return ranges::any_view<Eigen::Vector3<Scalar>>(
+        return ranges::any_view<Eigen::Vector3<Scalar>, kCategory>(
             points_view<double>(*cloud_) |
             ranges::views::transform([](auto point) { return point.template cast<Scalar>(); }));
       }
-      return ranges::any_view<Eigen::Vector3<Scalar>>(points_view<Scalar>(*cloud_));
+      return ranges::any_view<Eigen::Vector3<Scalar>, kCategory>(points_view<Scalar>(*cloud_));
     } else {
       return points_view<Scalar>(*cloud_);
     }
