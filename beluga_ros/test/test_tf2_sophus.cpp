@@ -33,8 +33,8 @@ class TransformConvertTest : public testing::Test {
 TYPED_TEST_SUITE(TransformConvertTest, SophusTestCases, );
 
 TYPED_TEST(TransformConvertTest, ThereAndBackAgain) {
-  auto message1 = beluga_ros::msg::Transform{};
-  auto message2 = beluga_ros::msg::Transform{};
+  auto message1 = geometry_msgs::msg::Transform{};
+  auto message2 = geometry_msgs::msg::Transform{};
   message1.translation.x = 1;
   message1.translation.y = 2;
   message1.translation.z = 0;
@@ -57,8 +57,8 @@ class PoseConvertTest : public testing::Test {
 TYPED_TEST_SUITE(PoseConvertTest, SophusTestCases, );
 
 TYPED_TEST(PoseConvertTest, ThereAndBackAgain) {
-  auto message1 = beluga_ros::msg::Pose{};
-  auto message2 = beluga_ros::msg::Pose{};
+  auto message1 = geometry_msgs::msg::Pose{};
+  auto message2 = geometry_msgs::msg::Pose{};
   message1.position.x = 1;
   message1.position.y = 2;
   message1.position.z = 0;
@@ -86,7 +86,7 @@ TYPED_TEST(PoseWithCovarianceConvertTest, Basic) {
   using Covariance = Eigen::Matrix<typename TestFixture::TypeParam::Scalar, 6, 6>;
   auto instance = typename TestFixture::TypeParam{};
   const Covariance covariance = (Eigen::Vector<typename TestFixture::TypeParam::Scalar, 6>::Ones() * 1e-3).asDiagonal();
-  const beluga_ros::msg::PoseWithCovariance message = tf2::toMsg(instance, covariance);
+  const geometry_msgs::msg::PoseWithCovariance message = tf2::toMsg(instance, covariance);
   ASSERT_DOUBLE_EQ(message.pose.position.x, 0.0);
   ASSERT_DOUBLE_EQ(message.pose.position.y, 0.0);
   ASSERT_DOUBLE_EQ(message.pose.position.z, 0.0);

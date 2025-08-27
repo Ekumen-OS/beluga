@@ -20,8 +20,8 @@ Thin, Beluga-compatible wrappers for typical ROS data structures (usually messag
 
 | | |
 |-|-|
-| beluga_ros::LaserScan | A beluga::BaseLaserScan subclass that wraps [sensor_msgs/LaserScan](https://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/LaserScan.html) messages. |
-| beluga_ros::OccupancyGrid | A beluga::BaseOccupancyGrid2 subclass that wraps [nav_msgs/OccupancyGrid](https://docs.ros.org/en/noetic/api/nav_msgs/html/msg/OccupancyGrid.html) messages. |
+| beluga_ros::LaserScan | A beluga::BaseLaserScan subclass that wraps [sensor_msgs/LaserScan](https://docs.ros2.org/latest/api/sensor_msgs/msg/LaserScan.html) messages. |
+| beluga_ros::OccupancyGrid | A beluga::BaseOccupancyGrid2 subclass that wraps [nav_msgs/OccupancyGrid](https://docs.ros2.org/latest/api/nav_msgs/msg/OccupancyGrid.html) messages. |
 
 #### Utilities
 

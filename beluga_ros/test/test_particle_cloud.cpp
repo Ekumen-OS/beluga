@@ -40,7 +40,7 @@ TEST(TestParticleCloud, Assign) {
           Sophus::SE2d{Sophus::SO2d{Constants::pi() / 2.0}, Eigen::Vector2d{0.0, -1.0}}, beluga::Weight(0.5)),
   };
   constexpr std::size_t kSampleSize = 1000U;
-  auto message = beluga_ros::msg::PoseArray{};
+  auto message = geometry_msgs::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, kSampleSize, message);
   EXPECT_EQ(message.poses.size(), kSampleSize);
   for (const auto& pose : message.poses) {
@@ -74,7 +74,7 @@ TEST(TestParticleCloud3, Assign) {
           beluga::Weight(0.5)),
   };
   constexpr std::size_t kSampleSize = 1000U;
-  auto message = beluga_ros::msg::PoseArray{};
+  auto message = geometry_msgs::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, kSampleSize, message);
   EXPECT_EQ(message.poses.size(), kSampleSize);
   for (const auto& pose : message.poses) {
@@ -97,7 +97,7 @@ TEST(TestParticleCloud, AssignNone) {
   const auto particles = std::vector{
       std::make_tuple(Sophus::SE2d{}, beluga::Weight(1.0)),
   };
-  auto message = beluga_ros::msg::PoseArray{};
+  auto message = geometry_msgs::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, 0U, message);
   EXPECT_EQ(message.poses.size(), 0U);
 }
@@ -106,7 +106,7 @@ TEST(TestParticleCloud3, AssignNone) {
   const auto particles = std::vector{
       std::make_tuple(Sophus::SE3d{}, beluga::Weight(1.0)),
   };
-  auto message = beluga_ros::msg::PoseArray{};
+  auto message = geometry_msgs::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, 0U, message);
   EXPECT_EQ(message.poses.size(), 0U);
 }
@@ -115,7 +115,7 @@ TEST(TestParticleCloud, AssignMatchingDistribution) {
   const auto particles = std::vector{
       std::make_tuple(Sophus::SE2d{}, beluga::Weight(1.0)),
   };
-  auto message = beluga_ros::msg::PoseArray{};
+  auto message = geometry_msgs::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, message);
   EXPECT_EQ(message.poses.size(), particles.size());
 }
@@ -124,21 +124,21 @@ TEST(TestParticleCloud3, AssignMatchingDistribution) {
   const auto particles = std::vector{
       std::make_tuple(Sophus::SE3d{}, beluga::Weight(1.0)),
   };
-  auto message = beluga_ros::msg::PoseArray{};
+  auto message = geometry_msgs::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, message);
   EXPECT_EQ(message.poses.size(), particles.size());
 }
 
 TEST(TestParticleCloud, AssignMatchingEmpty) {
   const auto particles = std::vector<std::tuple<Sophus::SE2d, beluga::Weight>>{};
-  auto message = beluga_ros::msg::PoseArray{};
+  auto message = geometry_msgs::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, message);
   EXPECT_EQ(message.poses.size(), 0U);
 }
 
 TEST(TestParticleCloud3, AssignMatchingEmpty) {
   const auto particles = std::vector<std::tuple<Sophus::SE3d, beluga::Weight>>{};
-  auto message = beluga_ros::msg::PoseArray{};
+  auto message = geometry_msgs::msg::PoseArray{};
   beluga_ros::assign_particle_cloud(particles, message);
   EXPECT_EQ(message.poses.size(), 0U);
 }
@@ -150,7 +150,7 @@ TEST(TestParticleCloud, AssignMarkers) {
       std::make_tuple(Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{1.0, 0.0}}, beluga::Weight(0.25)),
       std::make_tuple(Sophus::SE2d{Sophus::SO2d{Constants::pi()}, Eigen::Vector2d{0.0, -1.0}}, beluga::Weight(0.4)),
   };
-  auto message = beluga_ros::msg::MarkerArray{};
+  auto message = visualization_msgs::msg::MarkerArray{};
   beluga_ros::assign_particle_cloud(particles, message);
   ASSERT_EQ(message.markers.size(), 2U);
   EXPECT_EQ(message.markers[0].points.size(), 2 * 2);  // 2 arrows, 2 vertices each
@@ -165,7 +165,7 @@ TEST(TestParticleCloud3, AssignMarkers) {
           Sophus::SE3d{Sophus::SO3d{Eigen::Quaternion<double>{1.0, 0.0, 0.0, 0.0}}, Eigen::Vector3d{0.0, 0.0, -1.0}},
           beluga::Weight(0.4)),
   };
-  auto message = beluga_ros::msg::MarkerArray{};
+  auto message = visualization_msgs::msg::MarkerArray{};
   beluga_ros::assign_particle_cloud(particles, message);
   ASSERT_EQ(message.markers.size(), 2U);
   EXPECT_EQ(message.markers[0].points.size(), 2 * 2);  // 2 arrows, 2 vertices each
@@ -174,14 +174,14 @@ TEST(TestParticleCloud3, AssignMarkers) {
 
 TEST(TestParticleCloud, AssignNoMarkers) {
   const auto particles = std::vector<std::tuple<Sophus::SE2d, beluga::Weight>>{};
-  auto message = beluga_ros::msg::MarkerArray{};
+  auto message = visualization_msgs::msg::MarkerArray{};
   beluga_ros::assign_particle_cloud(particles, message);
   EXPECT_EQ(message.markers.size(), 0U);
 }
 
 TEST(TestParticleCloud3, AssignNoMarkers) {
   const auto particles = std::vector<std::tuple<Sophus::SE3d, beluga::Weight>>{};
-  auto message = beluga_ros::msg::MarkerArray{};
+  auto message = visualization_msgs::msg::MarkerArray{};
   beluga_ros::assign_particle_cloud(particles, message);
   EXPECT_EQ(message.markers.size(), 0U);
 }

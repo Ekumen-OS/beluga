@@ -275,7 +275,7 @@ void NdtAmclNode::do_periodic_timer_callback() {
   }
   std::visit(
       [this](const auto& particle_filter) {
-        auto message = beluga_ros::msg::PoseArray{};
+        auto message = geometry_msgs::msg::PoseArray{};
         beluga_ros::assign_particle_cloud(particle_filter.particles(), message);
         beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
         particle_cloud_pub_->publish(message);

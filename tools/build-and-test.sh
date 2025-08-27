@@ -25,19 +25,14 @@ set -o errexit
 CMAKE_EXTRA_ARGS=""
 COLCON_EXTRA_ARGS=""
 
-if [ "${ROS_DISTRO}" != "noetic" ]; then
-    if [ "${ROS_DISTRO}" != "jazzy" ] && [ "${ROS_DISTRO}" != "rolling" ]; then
-        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_benchmark beluga_example beluga_system_tests beluga_tools"
-    else
-        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools"
-        if [ "${ROS_DISTRO}" != "humble" ] && [ "${ROS_DISTRO}" != "iron" ]; then
-            ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools beluga_vdb"
-        fi
-    fi
+if [ "${ROS_DISTRO}" != "jazzy" ] && [ "${ROS_DISTRO}" != "rolling" ]; then
+    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_benchmark beluga_example beluga_system_tests beluga_tools"
 else
-    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_example"
+    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools"
+    if [ "${ROS_DISTRO}" != "humble" ] && [ "${ROS_DISTRO}" != "iron" ]; then
+        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_tools beluga_vdb"
+    fi
 fi
-
 
 if [ "${CMAKE_EXTRA_ARGS}" != "" ]; then
     COLCON_EXTRA_ARGS="${COLCON_EXTRA_ARGS} --cmake-args ${CMAKE_EXTRA_ARGS}"

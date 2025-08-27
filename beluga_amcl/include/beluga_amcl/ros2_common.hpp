@@ -23,8 +23,11 @@
 #include <string_view>
 
 #include <bondcpp/bond.hpp>
+#include <geometry_msgs/msg/pose_array.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
+
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/time.hpp>
 

@@ -25,7 +25,10 @@
 
 #include <Eigen/Dense>
 
-#include "beluga/eigen_compatibility.hpp"
+#include <beluga/eigen_compatibility.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/point_cloud2_iterator.hpp>
+#include <sensor_msgs/point_field_conversion.hpp>
 
 /**
  * \file
@@ -68,7 +71,7 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
   /// \param cloud Point cloud message.
   /// \param origin Point cloud frame origin in the filter frame.
   /// \throws std::invalid_argument if `cloud` does not meet expectations.
-  explicit PointCloud3(beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d origin = Sophus::SE3d())
+  explicit PointCloud3(sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud, Sophus::SE3d origin = Sophus::SE3d())
       : cloud_(std::move(cloud)), origin_(std::move(origin)) {
     assert(cloud_ != nullptr);
     if (cloud_->fields.size() != 3) {
@@ -122,14 +125,14 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
 
  private:
   template <typename U>
-  static auto points_matrix(const beluga_ros::msg::PointCloud2& cloud) {
+  static auto points_matrix(const sensor_msgs::msg::PointCloud2& cloud) {
     const auto stride = static_cast<int>(cloud.point_step / sizeof(U));
-    const beluga_ros::msg::PointCloud2ConstIterator<U> iter_points(cloud, "x");
+    const sensor_msgs::PointCloud2ConstIterator<U> iter_points(cloud, "x");
     return Eigen::Map<const Eigen::Matrix3X<U>, 0, Eigen::OuterStride<>>(
         &iter_points[0], 3, cloud.width * cloud.height, stride);
   }
 
-  beluga_ros::msg::PointCloud2ConstSharedPtr cloud_;
+  sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud_;
   Sophus::SE3d origin_;
 };
 

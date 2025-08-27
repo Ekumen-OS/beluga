@@ -495,14 +495,14 @@ void AmclNode::do_periodic_timer_callback() {
   }
 
   if (particle_cloud_pub_->get_subscription_count() > 0) {
-    auto message = beluga_ros::msg::PoseArray{};
+    auto message = geometry_msgs::msg::PoseArray{};
     beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
     particle_cloud_pub_->publish(message);
   }
 
   if (particle_markers_pub_->get_subscription_count() > 0) {
-    auto message = beluga_ros::msg::MarkerArray{};
+    auto message = visualization_msgs::msg::MarkerArray{};
     beluga_ros::assign_particle_cloud(particle_filter_->particles(), message);
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
     particle_markers_pub_->publish(message);

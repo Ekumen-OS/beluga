@@ -15,8 +15,6 @@
 #ifndef BELUGA_ROS_NDT_ELLIPSOID_HPP
 #define BELUGA_ROS_NDT_ELLIPSOID_HPP
 
-#include <beluga_ros/messages.hpp>
-
 #include <Eigen/Core>
 #include <beluga/eigen_compatibility.hpp>
 
@@ -24,6 +22,9 @@
 
 #include <beluga/sensor/data/ndt_cell.hpp>
 #include <beluga/sensor/data/sparse_value_grid.hpp>
+
+#include <visualization_msgs/msg/marker.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 /**
  * \file
@@ -45,7 +46,7 @@ namespace detail {
 bool use_mean_covariance(
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigen_solver,
     beluga::NDTCell<3> cell,
-    beluga_ros::msg::Marker& marker);
+    visualization_msgs::msg::Marker& marker);
 
 /// Create a cube contained in the received marker.
 /**
@@ -53,7 +54,7 @@ bool use_mean_covariance(
  * \param size Size of the edges.
  * \param marker Marker that will contain the message.
  */
-void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ros::msg::Marker& marker);
+void use_cell_size(const Eigen::Vector<int, 3>& position, double size, visualization_msgs::msg::Marker& marker);
 
 }  // namespace detail
 
@@ -69,24 +70,24 @@ void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ro
  * \tparam NDim Dimension of the grid.
  */
 template <typename MapType, int NDim>
-std::pair<beluga_ros::msg::MarkerArray, bool> assign_obstacle_map(
+std::pair<visualization_msgs::msg::MarkerArray, bool> assign_obstacle_map(
     const beluga::SparseValueGrid<MapType, NDim>& grid,
-    beluga_ros::msg::MarkerArray& message) {
+    visualization_msgs::msg::MarkerArray& message) {
   bool cubes_generated = false;
   // Get data from the grid
   auto& map = grid.data();
 
   // Clean up the message
-  beluga_ros::msg::Marker marker;
+  visualization_msgs::msg::Marker marker;
   marker.ns = "obstacles";
-  marker.action = beluga_ros::msg::Marker::DELETEALL;
+  marker.action = visualization_msgs::msg::Marker::DELETEALL;
   message.markers.push_back(marker);
 
   // Add the markers
   Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>> eigen_solver;
   for (auto [index, entry] : ranges::views::enumerate(map)) {
     const auto& [cell_center, cell] = entry;
-    beluga_ros::msg::Marker marker;
+    visualization_msgs::msg::Marker marker;
     marker.header.frame_id = "map";
     marker.id = index + 1;
     marker.ns = "obstacles";

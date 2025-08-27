@@ -135,10 +135,6 @@ Beluga AMCL running on an [Andino](https://github.com/Ekumen-OS/andino) robot (R
 Beluga is supported on a number of ROS 1 and ROS 2 distributions, primarily on Linux platforms:
 
 ::::{grid}
-:::{grid-item-card} ROS 1 Noetic Ninjemys
-:text-align: center
-![ROS 1 Noetic Ninjemys logo](./_images/noetic_ninjemys_logo.png)
-:::
 :::{grid-item-card} ROS 2 Humble Hawksbill
 :text-align: center
 ![ROS 2 Humble Hawksbill logo](./_images/humble_hawksbill_logo.png)
@@ -146,6 +142,10 @@ Beluga is supported on a number of ROS 1 and ROS 2 distributions, primarily on L
 :::{grid-item-card} ROS 2 Jazzy Jalisco
 :text-align: center
 ![ROS 2 Jazzy Jalisco logo](./_images/jazzy_jalisco_logo.png)
+:::
+:::{grid-item-card} ROS 2 Kilted Kaiju
+:text-align: center
+![ROS 2 Kilted Kaiju logo](./_images/kilted_kaiju_logo.png)
 :::
 ::::
 

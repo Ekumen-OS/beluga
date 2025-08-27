@@ -19,21 +19,13 @@
 
 #include <range/v3/range/conversion.hpp>
 
-#if BELUGA_ROS_VERSION == 1
-#include <boost/smart_ptr.hpp>
-#endif
-
 #include "beluga_ros/laser_scan.hpp"
 #include "beluga_ros/messages.hpp"
 
 namespace {
 
 auto make_message() {
-#if BELUGA_ROS_VERSION == 2
-  return std::make_shared<beluga_ros::msg::LaserScan>();
-#elif BELUGA_ROS_VERSION == 1
-  return boost::make_shared<beluga_ros::msg::LaserScan>();
-#endif
+  return std::make_shared<sensor_msgs::msg::LaserScan>();
 }
 
 TEST(TestLaserScan, MinMaxRangeFromMessage) {

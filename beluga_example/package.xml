@@ -12,26 +12,20 @@
 
   <license>Apache License 2.0</license>
 
-  <buildtool_depend condition="$ROS_VERSION == 1">catkin</buildtool_depend>
-  <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>beluga_amcl</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 1">amcl</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 1">map_server</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 1">roslaunch</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 1">rviz</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">launch_ros</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">nav2_amcl</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">nav2_lifecycle_manager</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">nav2_map_server</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">rviz2</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>nav2_amcl</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>rviz2</exec_depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
 
-  <test_depend condition="$ROS_VERSION == 2">launch</test_depend>
-  <test_depend condition="$ROS_VERSION == 2">launch_testing</test_depend>
+  <test_depend>launch</test_depend>
+  <test_depend>launch_testing</test_depend>
 
   <export>
-    <build_type condition="$ROS_VERSION == 1">catkin</build_type>
-    <build_type condition="$ROS_VERSION == 2">ament_cmake</build_type>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
