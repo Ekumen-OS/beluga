@@ -31,7 +31,7 @@
 
 namespace beluga_ros::testing {
 
-auto make_uninitialized_pointcloud() {
+inline auto make_uninitialized_pointcloud() {
 #if BELUGA_ROS_VERSION == 2
   return std::make_shared<beluga_ros::msg::PointCloud2>();
 #elif BELUGA_ROS_VERSION == 1
@@ -54,19 +54,17 @@ auto make_xy_pointcloud(
     const unsigned int width,
     std::optional<unsigned int> height = std::nullopt,
     std::optional<std::vector<Eigen::Vector3<T>>> point_data = std::nullopt) {
-  if (!height.has_value()) {
-    height = width > 0 ? 1 : 0;
-  }
-  if (!point_data.has_value() && width * height.value() > 0) {
-    point_data = make_point_data<T>(width * height.value());
-  } else if (point_data.has_value() && point_data->size() != width * height.value()) {
+  const unsigned int effective_height = height.value_or(width > 0 ? 1 : 0);
+  if (!point_data.has_value() && width * effective_height > 0) {
+    point_data = make_point_data<T>(width * effective_height);
+  } else if (point_data.has_value() && point_data->size() != width * effective_height) {
     throw std::invalid_argument("point_data size does not match width * height");
   }
 
   auto message = make_uninitialized_pointcloud();
 
   message->width = width;
-  message->height = height.value();
+  message->height = effective_height;
   message->fields.clear();
   message->fields.reserve(2);
 
@@ -100,19 +98,17 @@ auto make_xyz_pointcloud(
     const unsigned int width,
     std::optional<unsigned int> height = std::nullopt,
     std::optional<std::vector<Eigen::Vector3<T>>> point_data = std::nullopt) {
-  if (!height.has_value()) {
-    height = width > 0 ? 1 : 0;
-  }
-  if (!point_data.has_value() && width * height.value() > 0) {
-    point_data = make_point_data<T>(width * height.value());
-  } else if (point_data.has_value() && point_data->size() != width * height.value()) {
+  const unsigned int effective_height = height.value_or(width > 0 ? 1 : 0);
+  if (!point_data.has_value() && width * effective_height > 0) {
+    point_data = make_point_data<T>(width * effective_height);
+  } else if (point_data.has_value() && point_data->size() != width * effective_height) {
     throw std::invalid_argument("point_data size does not match width * height");
   }
 
   auto message = make_uninitialized_pointcloud();
 
   message->width = width;
-  message->height = height.value();
+  message->height = effective_height;
   message->fields.clear();
   message->fields.reserve(3);
 
@@ -151,20 +147,18 @@ auto make_xyzi_pointcloud(
     std::optional<unsigned int> height = std::nullopt,
     std::optional<std::vector<Eigen::Vector3<T>>> point_data = std::nullopt,
     std::optional<std::vector<T>> intensity_data = std::nullopt) {
-  if (!height.has_value()) {
-    height = width > 0 ? 1 : 0;
+  const unsigned int effective_height = height.value_or(width > 0 ? 1 : 0);
+  if (!point_data.has_value() && width * effective_height > 0) {
+    point_data = make_point_data<T>(width * effective_height);
   }
-  if (!point_data.has_value() && width * height.value() > 0) {
-    point_data = make_point_data<T>(width * height.value());
-  }
-  if (!intensity_data.has_value() && width * height.value() > 0) {
-    intensity_data.emplace(width * height.value(), static_cast<T>(1.1));
+  if (!intensity_data.has_value() && width * effective_height > 0) {
+    intensity_data.emplace(width * effective_height, static_cast<T>(1.1));
   }
 
   auto message = make_uninitialized_pointcloud();
 
   message->width = width;
-  message->height = height.value();
+  message->height = effective_height;
   message->fields.clear();
   message->fields.reserve(4);
 
@@ -190,11 +184,13 @@ auto make_xyzi_pointcloud(
       *iter_x = point_data->at(i).x();
       *iter_y = point_data->at(i).y();
       *iter_z = point_data->at(i).z();
-      *iter_intensity = intensity_data->at(i);
       ++iter_x;
       ++iter_y;
       ++iter_z;
-      ++iter_intensity;
+      if (intensity_data.has_value()) {
+        *iter_intensity = intensity_data->at(i);
+        ++iter_intensity;
+      }
     }
   }
 

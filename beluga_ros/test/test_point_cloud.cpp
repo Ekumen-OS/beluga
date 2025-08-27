@@ -28,11 +28,8 @@
 namespace {
 
 using beluga_ros::testing::make_ixyz_pointcloud;
-using beluga_ros::testing::make_ouster_pointcloud;
 using beluga_ros::testing::make_point_data;
-using beluga_ros::testing::make_robosense_pointcloud;
 using beluga_ros::testing::make_uninitialized_pointcloud;
-using beluga_ros::testing::make_velodyne_pointcloud;
 using beluga_ros::testing::make_xy_pointcloud;
 using beluga_ros::testing::make_xyz_int32_pointcloud;
 using beluga_ros::testing::make_xyz_pointcloud;
@@ -47,7 +44,7 @@ TEST(TestPointCloud, FloatXYZPoints) {
   const auto message = make_xyz_pointcloud<float>(kUnorderedWidth, kUnorderedHeight, point_data);
   const auto cloud = beluga_ros::PointCloud3f(message);
   const auto matrix = cloud.points();
-  for (Eigen::Index i = 0; i < matrix.cols(); ++i) {
+  for (unsigned i = 0; i < matrix.cols(); ++i) {
     ASSERT_EQ(point_data.at(i).x(), matrix(0, i));
     ASSERT_EQ(point_data.at(i).y(), matrix(1, i));
     ASSERT_EQ(point_data.at(i).z(), matrix(2, i));
@@ -104,7 +101,7 @@ TEST(TestPointCloud, NonStrictFloatFromDouble) {
   const auto message = make_xyz_pointcloud<double>(kUnorderedWidth, kUnorderedHeight, point_data);
   const auto cloud = beluga_ros::PointCloud3f(message);
   const auto matrix = cloud.points();
-  for (Eigen::Index i = 0; i < matrix.cols(); ++i) {
+  for (unsigned i = 0; i < matrix.cols(); ++i) {
     ASSERT_FLOAT_EQ(static_cast<float>(point_data.at(i).x()), matrix(0, i));
     ASSERT_FLOAT_EQ(static_cast<float>(point_data.at(i).y()), matrix(1, i));
     ASSERT_FLOAT_EQ(static_cast<float>(point_data.at(i).z()), matrix(2, i));
@@ -116,7 +113,7 @@ TEST(TestPointCloud, NonStrictDoubleFromFloat) {
   const auto message = make_xyz_pointcloud<float>(kUnorderedWidth, kUnorderedHeight, point_data);
   const auto cloud = beluga_ros::PointCloud3d(message);
   const auto matrix = cloud.points();
-  for (Eigen::Index i = 0; i < matrix.cols(); ++i) {
+  for (unsigned i = 0; i < matrix.cols(); ++i) {
     ASSERT_DOUBLE_EQ(static_cast<double>(point_data.at(i).x()), matrix(0, i));
     ASSERT_DOUBLE_EQ(static_cast<double>(point_data.at(i).y()), matrix(1, i));
     ASSERT_DOUBLE_EQ(static_cast<double>(point_data.at(i).z()), matrix(2, i));
