@@ -527,6 +527,8 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   // Get base pose in odom frame at laser scan timestamp
   auto base_pose_in_odom = Sophus::SE2d{};
   try {
+    // Use the lookupTransform overload with no timeout since we're not using a dedicated
+    // tf thread. The message filter we are using avoids the need for it.
     tf2::convert(
         tf_buffer_
             ->lookupTransform(

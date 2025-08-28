@@ -148,4 +148,5 @@ TEST(TestAmcl, UpdateWithParticlesForced) {
   estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
   ASSERT_TRUE(estimate.has_value());
 }
+
 }  // namespace

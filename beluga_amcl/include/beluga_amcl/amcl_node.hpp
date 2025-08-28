@@ -102,9 +102,6 @@ class AmclNode : public BaseAMCLNode {
   /// Processes and removes from the buffer all odometry actions up to a given time point.
   void process_buffered_odometry_until(std::deque<OdometryMotion>& buffer, const tf2::TimePoint& until);
 
-  /// Helper function to get base pose in odom frame at specific time.
-  auto get_base_pose_in_odom(const tf2::TimePoint& time) const -> std::optional<Sophus::SE2d>;
-
   /// Callback for pose (re)initialization.
   void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;
 
