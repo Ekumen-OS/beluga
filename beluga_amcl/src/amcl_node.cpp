@@ -186,8 +186,8 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Set true to enable increased propagation, and set false to disable it.";
-    declare_parameter("propagation_rate", rclcpp::ParameterValue(false), descriptor);
+    descriptor.description = "Set true to enable odometry-driven filter propagation.";
+    declare_parameter("use_odometry_propagation", rclcpp::ParameterValue(false), descriptor);
   }
 }
 
@@ -260,7 +260,7 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
 
   {
     // Subscribe to odometry topic to buffer odometry motions
-    if (get_parameter("propagation_rate").as_bool()) {
+    if (get_parameter("use_odometry_propagation").as_bool()) {
       odom_sub_ = create_subscription<nav_msgs::msg::Odometry>(
           get_parameter("odom_topic").as_string(), rclcpp::SensorDataQoS(),
           std::bind(&AmclNode::odometry_callback, this, std::placeholders::_1), common_subscription_options_);
@@ -500,6 +500,17 @@ void AmclNode::odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom) {
   odometry_motion_buffer_.emplace_back(time, base_pose_in_odom);
 }
 
+void AmclNode::process_buffered_odometry_until(std::deque<OdometryMotion>& buffer, const tf2::TimePoint& until) {
+  while (!buffer.empty()) {
+    const auto& [odom_time, odom_pose] = buffer.front();
+    if (odom_time > until) {
+      break;
+    }
+    particle_filter_->update(odom_pose);
+    buffer.pop_front();
+  }
+}
+
 void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
   if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
@@ -507,10 +518,10 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
-  // If propagation_rate is enabled, process odometry buffer up to lidar timestamp
-  if (get_parameter("propagation_rate").as_bool()) {
+  // If use_odometry_propagation is enabled, process odometry buffer up to lidar timestamp
+  if (get_parameter("use_odometry_propagation").as_bool()) {
     const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
-    particle_filter_->process_buffered_odometry_until(odometry_motion_buffer_, laser_scan_stamp);
+    process_buffered_odometry_until(odometry_motion_buffer_, laser_scan_stamp);
   }
 
   // Get base pose in odom frame at laser scan timestamp

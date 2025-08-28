@@ -246,8 +246,10 @@ class TesterNode : public rclcpp::Node {
     tf_broadcaster_->sendTransform(transform_laser);
   }
 
-  void publish_laser_scan_with_odom_to_base(const Sophus::SE2d& transform) {
-    const auto timestamp = now();
+  void publish_laser_scan_with_odom_to_base(
+      const Sophus::SE2d& transform,
+      std::optional<rclcpp::Time> stamp = std::nullopt) {
+    const auto timestamp = stamp.value_or(now());
 
     auto scan = sensor_msgs::msg::LaserScan{};
     scan.header.stamp = timestamp;
@@ -269,9 +271,10 @@ class TesterNode : public rclcpp::Node {
     tf_broadcaster_->sendTransform(transform_laser);
   }
 
-  void publish_odometry(double x, double y, double orientation_w = 1.0) {
+  void
+  publish_odometry(double x, double y, double orientation_w = 1.0, std::optional<rclcpp::Time> stamp = std::nullopt) {
     auto odom_msg = nav_msgs::msg::Odometry{};
-    odom_msg.header.stamp = now();
+    odom_msg.header.stamp = stamp.value_or(now());
     odom_msg.header.frame_id = "odom";
     odom_msg.child_frame_id = "base_footprint";
     odom_msg.pose.pose.position.x = x;

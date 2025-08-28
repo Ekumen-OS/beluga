@@ -62,6 +62,9 @@ class AmclNode : public BaseAMCLNode {
   ~AmclNode() override;
 
  protected:
+  /// Type Buffer for queued odometry motions (timestamp, pose)
+  using OdometryMotion = std::pair<tf2::TimePoint, Sophus::SE2d>;
+
   /// Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state.
   void do_activate(const rclcpp_lifecycle::State&) override;
 
@@ -95,6 +98,9 @@ class AmclNode : public BaseAMCLNode {
 
   /// Callback for odometry updates.
   void odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr);
+
+  /// Processes and removes from the buffer all odometry actions up to a given time point.
+  void process_buffered_odometry_until(std::deque<OdometryMotion>& buffer, const tf2::TimePoint& until);
 
   /// Helper function to get base pose in odom frame at specific time.
   auto get_base_pose_in_odom(const tf2::TimePoint& time) const -> std::optional<Sophus::SE2d>;
@@ -163,7 +169,7 @@ class AmclNode : public BaseAMCLNode {
   /// Whether to broadcast transforms or not.
   bool enable_tf_broadcast_{false};
   /// Buffer for queued odometry motions (timestamp, pose)
-  std::deque<beluga_ros::OdometryMotion> odometry_motion_buffer_;
+  std::deque<OdometryMotion> odometry_motion_buffer_;
 };
 
 }  // namespace beluga_amcl

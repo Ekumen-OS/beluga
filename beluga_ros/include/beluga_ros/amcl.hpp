@@ -96,9 +96,6 @@ struct AmclParams {
   double spatial_resolution_theta = 10 * Sophus::Constants<double>::pi() / 180;
 };
 
-/// Type Buffer for queued odometry motions (timestamp, pose)
-using OdometryMotion = std::pair<tf2::TimePoint, Sophus::SE2d>;
-
 /// Implementation of the 2D Adaptive Monte Carlo Localization (AMCL) algorithm.
 /// Generic two-dimensional implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm in 2D.
 class Amcl {
@@ -212,18 +209,6 @@ class Amcl {
 
   /// Update the map used for localization.
   void update_map(beluga_ros::OccupancyGrid map);
-
-  /**
-   * \brief Processes and removes from the buffer all odometry actions up to a given time point.
-   *
-   * This method iterates over the odometry action buffer (pairs of timestamp and pose),
-   * applying the motion model propagation to the particles for each action whose timestamp
-   * is less than or equal to `until`. Processed actions are removed from the buffer.
-   *
-   * \param buffer Reference to the buffer of odometry actions (timestamp, pose) to process.
-   * \param until Time point limit: all actions with timestamp <= until are processed.
-   */
-  void process_buffered_odometry_until(std::deque<OdometryMotion>& buffer, const tf2::TimePoint& until);
 
   /// Update particles based on motion only (propagation only).
   /**

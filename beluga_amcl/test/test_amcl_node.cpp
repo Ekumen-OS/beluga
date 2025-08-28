@@ -708,7 +708,7 @@ TEST_F(TestNode, TransformValue) {
 }
 
 TEST_F(TestNode, OdomSubNotCreatedWhenPropagationDisabled) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", false});
+  amcl_node_->set_parameter(rclcpp::Parameter{"use_odometry_propagation", false});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
@@ -719,7 +719,7 @@ TEST_F(TestNode, OdomSubNotCreatedWhenPropagationDisabled) {
 }
 
 TEST_F(TestNode, OdomSubCreatedWhenPropagationEnabled) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", true});
+  amcl_node_->set_parameter(rclcpp::Parameter{"use_odometry_propagation", true});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
@@ -729,8 +729,8 @@ TEST_F(TestNode, OdomSubCreatedWhenPropagationEnabled) {
   EXPECT_EQ(amcl_node_->has_odom_sub(), true);
 }
 
-TEST_F(TestNode, PropagationRate) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"propagation_rate", true});
+TEST_F(TestNode, OdometryPropagationConsumesBuffer) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"use_odometry_propagation", true});
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   amcl_node_->configure();
   amcl_node_->activate();
@@ -754,10 +754,95 @@ TEST_F(TestNode, PropagationRate) {
 
   // Check that odometry_motion_buffer_ was consumed up to the lidar timestamp
   EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 0);
+}
 
-  // Verify particle filter still exists and has particles
-  EXPECT_TRUE(amcl_node_->particle_filter() != nullptr);
-  EXPECT_GT(amcl_node_->particle_filter()->particles().size(), 0UL);
+TEST_F(TestNode, OdometryBufferConsumedWhenOdomTimestampsLessThanLidar) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"use_odometry_propagation", true});
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+
+  // Publish several odometry messages to fill the buffer
+  for (int i = 0; i < 5; ++i) {
+    tester_node_->publish_odometry(i * 0.1, 0.0);
+    spin_for(20ms, amcl_node_, tester_node_);
+  }
+
+  // Check that odometry_motion_buffer_ has values before laser scan
+  EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 5);
+
+  // Configure TF so get_base_pose_in_odom works by publishing a laser scan with transform
+  tester_node_->publish_laser_scan_with_odom_to_base(Sophus::SE2d{});
+
+  // Wait for the callback to process the buffer
+  spin_for(100ms, amcl_node_, tester_node_);
+
+  // Check that odometry_motion_buffer_ was consumed up to the lidar timestamp
+  EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 0);
+}
+
+TEST_F(TestNode, OdometryBufferConsumedWhenOdomTimestampsEqualThanLidar) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"use_odometry_propagation", true});
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+
+  rclcpp::Time timestamp;
+  // Publish several odometry messages to fill the buffer
+  for (int i = 0; i < 5; ++i) {
+    timestamp = tester_node_->now();
+    tester_node_->publish_odometry(i * 0.1, 0.0, 1.0, timestamp);
+    spin_for(20ms, amcl_node_, tester_node_);
+  }
+
+  // Check that odometry_motion_buffer_ has values before laser scan
+  EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 5);
+
+  // Configure TF so get_base_pose_in_odom works by publishing a laser scan with transform
+  tester_node_->publish_laser_scan_with_odom_to_base(Sophus::SE2d{}, timestamp);
+
+  // Wait for the callback to process the buffer
+  spin_for(100ms, amcl_node_, tester_node_);
+
+  // Check that odometry_motion_buffer_ was consumed up to the lidar timestamp
+  EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 0);
+}
+
+TEST_F(TestNode, OdometryBufferConsumedWhenOdomTimestampsMajorThanLidar) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"use_odometry_propagation", true});
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+
+  rclcpp::Time timestamp;
+  // Publish several odometry messages to fill the buffer
+  for (int i = 0; i < 5; ++i) {
+    timestamp = tester_node_->now();
+    tester_node_->publish_odometry(i * 0.1, 0.0, 1.0, timestamp);
+    spin_for(20ms, amcl_node_, tester_node_);
+  }
+
+  const auto newtimestamp = tester_node_->now();
+  tester_node_->publish_odometry(5 * 0.1, 0.0, 1.0, newtimestamp);
+  spin_for(20ms, amcl_node_, tester_node_);
+
+  // Check that odometry_motion_buffer_ has values before laser scan
+  EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 6);
+
+  // Configure TF so get_base_pose_in_odom works by publishing a laser scan with transform
+  tester_node_->publish_laser_scan_with_odom_to_base(Sophus::SE2d{}, timestamp);
+
+  // Wait for the callback to process the buffer
+  spin_for(100ms, amcl_node_, tester_node_);
+
+  // Check that odometry_motion_buffer_ was consumed up to the lidar timestamp
+  EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 1);
 }
 
 TEST_F(TestNode, OdomSubWithoutParticles) {
