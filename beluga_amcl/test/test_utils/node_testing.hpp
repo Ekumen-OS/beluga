@@ -28,16 +28,16 @@
 #include <tf2/convert.hpp>
 #include <tf2/utils.hpp>
 
+#include <beluga_ros/tf2_sophus.hpp>
 #include <geometry_msgs/msg/pose_array.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <std_srvs/srv/empty.hpp>
-
-#include <beluga_ros/tf2_sophus.hpp>
 
 namespace beluga_amcl::testing {
 
@@ -53,6 +53,8 @@ class TesterNode : public rclcpp::Node {
         create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("initialpose", rclcpp::SystemDefaultsQoS());
 
     laser_scan_publisher_ = create_publisher<sensor_msgs::msg::LaserScan>("scan", rclcpp::SystemDefaultsQoS());
+
+    odometry_publisher_ = create_publisher<nav_msgs::msg::Odometry>("odom", rclcpp::SensorDataQoS());
 
     point_cloud_publisher_ =
         create_publisher<sensor_msgs::msg::PointCloud2>("point_cloud", rclcpp::SystemDefaultsQoS());
@@ -244,8 +246,10 @@ class TesterNode : public rclcpp::Node {
     tf_broadcaster_->sendTransform(transform_laser);
   }
 
-  void publish_laser_scan_with_odom_to_base(const Sophus::SE2d& transform) {
-    const auto timestamp = now();
+  void publish_laser_scan_with_odom_to_base(
+      const Sophus::SE2d& transform,
+      std::optional<rclcpp::Time> stamp = std::nullopt) {
+    const auto timestamp = stamp.value_or(now());
 
     auto scan = sensor_msgs::msg::LaserScan{};
     scan.header.stamp = timestamp;
@@ -265,6 +269,18 @@ class TesterNode : public rclcpp::Node {
     laser_scan_publisher_->publish(scan);
     tf_broadcaster_->sendTransform(transform_base);
     tf_broadcaster_->sendTransform(transform_laser);
+  }
+
+  void
+  publish_odometry(double x, double y, double orientation_w = 1.0, std::optional<rclcpp::Time> stamp = std::nullopt) {
+    auto odom_msg = nav_msgs::msg::Odometry{};
+    odom_msg.header.stamp = stamp.value_or(now());
+    odom_msg.header.frame_id = "odom";
+    odom_msg.child_frame_id = "base_footprint";
+    odom_msg.pose.pose.position.x = x;
+    odom_msg.pose.pose.position.y = y;
+    odom_msg.pose.pose.orientation.w = orientation_w;
+    odometry_publisher_->publish(odom_msg);
   }
 
   void publish_3d_laser_scan_with_odom_to_base(const Sophus::SE3d& transform) {
@@ -344,6 +360,7 @@ class TesterNode : public rclcpp::Node {
   PublisherPtr<nav_msgs::msg::OccupancyGrid> map_publisher_;
   PublisherPtr<geometry_msgs::msg::PoseWithCovarianceStamped> initial_pose_publisher_;
   PublisherPtr<sensor_msgs::msg::LaserScan> laser_scan_publisher_;
+  PublisherPtr<nav_msgs::msg::Odometry> odometry_publisher_;
   PublisherPtr<sensor_msgs::msg::PointCloud2> point_cloud_publisher_;
 
   template <class Message>

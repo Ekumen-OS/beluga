@@ -68,6 +68,12 @@ BaseAMCLNode::BaseAMCLNode(
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Topic to subscribe to in order to receive odometry messages for motion propagation.";
+    this->declare_parameter("odom_topic", rclcpp::ParameterValue("odom"), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Minimum allowed number of particles.";
     descriptor.integer_range.resize(1);
     descriptor.integer_range[0].from_value = 0;

@@ -40,6 +40,8 @@
 
 #include <beluga/beluga.hpp>
 #include <beluga_ros/amcl.hpp>
+#include <deque>
+#include <nav_msgs/msg/odometry.hpp>
 #include "beluga_amcl/message_filters.hpp"
 #include "beluga_amcl/ros2_common.hpp"
 
@@ -60,6 +62,9 @@ class AmclNode : public BaseAMCLNode {
   ~AmclNode() override;
 
  protected:
+  /// Type Buffer for queued odometry motions (timestamp, pose)
+  using OdometryMotion = std::pair<tf2::TimePoint, Sophus::SE2d>;
+
   /// Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state.
   void do_activate(const rclcpp_lifecycle::State&) override;
 
@@ -90,6 +95,12 @@ class AmclNode : public BaseAMCLNode {
 
   /// Callback for laser scan updates.
   void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
+
+  /// Callback for odometry updates.
+  void odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr);
+
+  /// Processes and removes from the buffer all odometry actions up to a given time point.
+  void process_buffered_odometry_until(std::deque<OdometryMotion>& buffer, const tf2::TimePoint& until);
 
   /// Callback for pose (re)initialization.
   void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;
@@ -143,6 +154,9 @@ class AmclNode : public BaseAMCLNode {
   /// Connection for laser scan updates filter and callback.
   ::message_filters::Connection laser_scan_connection_;
 
+  /// Odometry updates subscription.
+  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
+
   /// Particle filter instance.
   std::unique_ptr<beluga_ros::Amcl> particle_filter_;
   /// Last known pose estimate, if any.
@@ -151,6 +165,8 @@ class AmclNode : public BaseAMCLNode {
   std::optional<Sophus::SE2d> last_known_odom_transform_in_map_;
   /// Whether to broadcast transforms or not.
   bool enable_tf_broadcast_{false};
+  /// Buffer for queued odometry motions (timestamp, pose)
+  std::deque<OdometryMotion> odometry_motion_buffer_;
 };
 
 }  // namespace beluga_amcl
