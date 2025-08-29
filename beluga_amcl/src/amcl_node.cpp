@@ -55,6 +55,7 @@
 #include <lifecycle_msgs/msg/state.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+#include <sensor_msgs/msg/point_field.hpp>
 #include <std_srvs/srv/empty.hpp>
 
 #include <beluga/motion/differential_drive_model.hpp>
@@ -204,27 +205,47 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     RCLCPP_INFO(get_logger(), "Subscribed to map_topic: %s", map_sub_->get_topic_name());
   }
 
-  {
-    // Cope with variations in between message_filters versions.
-    // See beluga_amcl/message_filters.hpp for further reference.
-    const auto laser_scan_qos = [] {
-      if constexpr (BELUGA_AMCL_MESSAGE_FILTERS_VERSION_GTE(7, 2, 1)) {
-        return rclcpp::SensorDataQoS();
-      } else {
-        return rmw_qos_profile_sensor_data;
-      }
-    }();
-    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
-        shared_from_this(), get_parameter("scan_topic").as_string(), laser_scan_qos, common_subscription_options_);
+  const auto sensor_qos = [] {
+    if constexpr (BELUGA_AMCL_MESSAGE_FILTERS_VERSION_GTE(7, 2, 1)) {
+      return rclcpp::SensorDataQoS();
+    } else {
+      return rmw_qos_profile_sensor_data;
+    }
+  }();
 
-    // Message filter that caches laser scan readings until it is possible to transform
-    // from laser frame to odom frame and update the particle filter.
+  const auto scan_topic = get_parameter("scan_topic").as_string();
+  const auto point_cloud_topic = get_parameter("point_cloud_topic").as_string();
+
+  if ((!scan_topic.empty() && !point_cloud_topic.empty())) {
+    // Parametrization of both, scan_topic and point_cloud_topic not allowed.
+    throw std::invalid_argument("scan_topic and point_cloud_topic cannot be specified at the same time");
+  }
+
+  if (!point_cloud_topic.empty()) {
+    point_cloud_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::PointCloud2>>(
+        shared_from_this(), point_cloud_topic, sensor_qos, common_subscription_options_);
+
+    point_cloud_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::PointCloud2>>(
+        *point_cloud_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10, get_node_logging_interface(),
+        get_node_clock_interface(), tf2::durationFromSec(get_parameter("transform_tolerance").as_double()));
+
+    point_cloud_connection_ = point_cloud_filter_->registerCallback(
+        std::bind(&AmclNode::sensor_callback<sensor_msgs::msg::PointCloud2>, this, std::placeholders::_1));
+    RCLCPP_INFO(get_logger(), "Subscribed to point_cloud_topic: %s", point_cloud_sub_->getTopic().c_str());
+  } else {
+    const auto effective_scan_topic = scan_topic.empty() ? "scan" : scan_topic;
+    if (scan_topic.empty()) {
+      RCLCPP_INFO(get_logger(), "No scan_topic specified, defaulting to: %s", effective_scan_topic.c_str());
+    }
+    laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
+        shared_from_this(), effective_scan_topic, sensor_qos, common_subscription_options_);
+
     laser_scan_filter_ = std::make_unique<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>>(
         *laser_scan_sub_, *tf_buffer_, get_parameter("odom_frame_id").as_string(), 10, get_node_logging_interface(),
         get_node_clock_interface(), tf2::durationFromSec(get_parameter("transform_tolerance").as_double()));
 
-    laser_scan_connection_ =
-        laser_scan_filter_->registerCallback(std::bind(&AmclNode::laser_callback, this, std::placeholders::_1));
+    laser_scan_connection_ = laser_scan_filter_->registerCallback(
+        std::bind(&AmclNode::sensor_callback<sensor_msgs::msg::LaserScan>, this, std::placeholders::_1));
     RCLCPP_INFO(get_logger(), "Subscribed to scan_topic: %s", laser_scan_sub_->getTopic().c_str());
   }
 
@@ -254,20 +275,34 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
 }
 
 void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
+  // Reset subscriptions.
   map_sub_.reset();
-  laser_scan_connection_.disconnect();
-  laser_scan_filter_.reset();
-  laser_scan_sub_.reset();
+  // Reset services.
   global_localization_server_.reset();
+  nomotion_update_server_.reset();
+  // Disconnect the callbacks for sensor data to stop processing them.
+  if (laser_scan_sub_) {
+    laser_scan_connection_.disconnect();
+    laser_scan_filter_.reset();
+    laser_scan_sub_.reset();
+  }
+  if (point_cloud_sub_) {
+    point_cloud_connection_.disconnect();
+    point_cloud_filter_.reset();
+    point_cloud_sub_.reset();
+  }
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_deactivate();
   }
 }
 
 void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
+  // Release all resources.
   particle_filter_.reset();
-  likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
   enable_tf_broadcast_ = false;
+  if (likelihood_field_pub_) {
+    likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
+  }
 }
 
 auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
@@ -466,13 +501,13 @@ void AmclNode::do_periodic_timer_callback() {
   }
 }
 
-void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
+template <typename MessageT>
+void AmclNode::sensor_callback(const typename MessageT::ConstSharedPtr& sensor_msg) {
   if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 2000, "Ignoring laser data because the particle filter has not been initialized");
     return;
   }
-
   auto base_pose_in_odom = Sophus::SE2d{};
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
@@ -481,7 +516,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
         tf_buffer_
             ->lookupTransform(
                 get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
-                tf2_ros::fromMsg(laser_scan->header.stamp))
+                tf2_ros::fromMsg(sensor_msg->header.stamp))
             .transform,
         base_pose_in_odom);
   } catch (const tf2::TransformException& error) {
@@ -489,30 +524,37 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
-  auto laser_pose_in_base = Sophus::SE3d{};
+  auto sensor_pose_in_base = Sophus::SE3d{};
   try {
     tf2::convert(
         tf_buffer_
             ->lookupTransform(
-                get_parameter("base_frame_id").as_string(), laser_scan->header.frame_id,
-                tf2_ros::fromMsg(laser_scan->header.stamp))
+                get_parameter("base_frame_id").as_string(), sensor_msg->header.frame_id,
+                tf2_ros::fromMsg(sensor_msg->header.stamp))
             .transform,
-        laser_pose_in_base);
+        sensor_pose_in_base);
   } catch (const tf2::TransformException& error) {
-    RCLCPP_ERROR(get_logger(), "Could not transform from base to laser: %s", error.what());
+    RCLCPP_ERROR(get_logger(), "Could not transform from base to sensor: %s", error.what());
     return;
   }
 
+  auto measurement = [&] {
+    static_assert(
+        std::is_same_v<MessageT, sensor_msgs::msg::LaserScan> ||
+            std::is_same_v<MessageT, sensor_msgs::msg::PointCloud2>,
+        "Invalid sensor message type");
+    if constexpr (std::is_same_v<MessageT, sensor_msgs::msg::LaserScan>) {
+      const std::size_t max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
+      const double min_range = get_parameter("laser_min_range").as_double();
+      const double max_range = get_parameter("laser_max_range").as_double();
+      return beluga_ros::LaserScan{sensor_msg, sensor_pose_in_base, max_beams, min_range, max_range};
+    } else {
+      return beluga_ros::SparsePointCloud3f{sensor_msg, sensor_pose_in_base};
+    }
+  }();
+
   const auto update_start_time = std::chrono::high_resolution_clock::now();
-  const auto new_estimate = particle_filter_->update(
-      base_pose_in_odom,  //
-      beluga_ros::LaserScan{
-          laser_scan,
-          laser_pose_in_base,
-          static_cast<std::size_t>(get_parameter("max_beams").as_int()),
-          get_parameter("laser_min_range").as_double(),
-          get_parameter("laser_max_range").as_double(),
-      });
+  const auto new_estimate = particle_filter_->update(base_pose_in_odom, measurement);
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 
@@ -523,7 +565,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
     RCLCPP_INFO(
         get_logger(), "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
-        particle_filter_->particles().size(), laser_scan->ranges.size(),
+        particle_filter_->particles().size(), measurement.size(),
         std::chrono::duration<double, std::milli>(update_duration).count());
   }
 
@@ -537,7 +579,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     if (last_known_odom_transform_in_map_.has_value()) {
       auto message = geometry_msgs::msg::TransformStamped{};
       // Sending a transform that is valid into the future so that odom can be used.
-      const auto expiration_stamp = tf2_ros::fromMsg(laser_scan->header.stamp) +
+      const auto expiration_stamp = tf2_ros::fromMsg(sensor_msg->header.stamp) +
                                     tf2::durationFromSec(get_parameter("transform_tolerance").as_double());
       message.header.stamp = tf2_ros::toMsg(expiration_stamp);
       message.header.frame_id = get_parameter("global_frame_id").as_string();
@@ -550,7 +592,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   // New pose messages are only published on updates to the filter.
   if (new_estimate.has_value()) {
     auto message = geometry_msgs::msg::PoseWithCovarianceStamped{};
-    message.header.stamp = laser_scan->header.stamp;
+    message.header.stamp = sensor_msg->header.stamp;
     message.header.frame_id = get_parameter("global_frame_id").as_string();
     const auto& [base_pose_in_map, base_pose_covariance] = new_estimate.value();
     tf2::toMsg(base_pose_in_map, message.pose.pose);
