@@ -37,9 +37,9 @@ namespace detail {
 
 /// Implementation of the low variance sample view.
 /// This algorithm is designed to sample elements from a range with replacement, ensuring that the probability of
-/// selecting each element is proportional to its weight. It works by computing a single random number r is generated in
-/// the range [0, 1/M), where M is the total number of elements in the range. Then, starting from this random number r,
-/// the algorithm repeatedly adds a fixed step size of 1/M to r. This step size ensures that the sampling process
+/// selecting each element is proportional to its weight. It works with a single random number r in
+/// the [0, 1/M) interval, where M is the total number of elements in the range. Then, starting from this random number
+/// r, the algorithm repeatedly adds a fixed step size of 1/M to r. This step size ensures that the sampling process
 /// progresses evenly across the range. After that, for each resulting value, the algorithm selects the element whose
 /// cumulative weight corresponds to the current value of r. This ensures that elements with higher weights are more
 /// likely to be selected. Finally, the process continues until the desired number of samples is obtained.
@@ -96,7 +96,6 @@ struct low_variance_sample_view
           r_{std::uniform_real_distribution<double>(0.0, 1.0 / static_cast<double>(M_))(
               *view_->engine_)},  // random number in [0, 1/M)
           m_{0},                  // Current sample index
-          i_{0},                  // Current index in the range.
           c_{*weights_begin_}     // Cumulative weight of the first particle
     {}
 
@@ -107,14 +106,13 @@ struct low_variance_sample_view
     constexpr void next() {
       // A number U in [0, 1] that points to exactly one particle in the range.
       // Where the particle i satisfies with i=argmin_j \sum_1^j w^m >= U.
-      const double U = r_ + (static_cast<double>(m_) - 1.0) / static_cast<double>(M_);
-      while (i_ < M_ - 1 && U > c_) {
-        ++i_;
+      const double U = r_ + static_cast<double>(m_) / static_cast<double>(M_);
+      while (it_ != ranges::end(view_->range_) && U > c_) {
+        ++it_;
         ++weights_begin_;
         c_ += *weights_begin_;
       }
       ++m_;
-      it_ = std::next(range_begin_, i_);
     }
 
    private:
@@ -125,7 +123,6 @@ struct low_variance_sample_view
     uint64_t M_;
     double r_;
     uint64_t m_;
-    uint64_t i_;
     ranges::range_value_t<Weights> c_;
   };
 
@@ -178,43 +175,43 @@ struct low_variance_sample_base_fn {
 /// Implementation detail for a sample range adaptor object.
 struct low_variance_sample_fn : public low_variance_sample_base_fn {
   /// Overload that takes three arguments.
-  template <class T, class U, class V>
-  constexpr auto operator()(T&& t, U&& u, V& v) const {
-    static_assert(ranges::range<T>);
-    static_assert(ranges::range<U>);
-    return low_variance_sample_from_range(std::forward<T>(t), std::forward<U>(u), v);  // Assume V is a URNG
+  template <class Range, class Weights, class RandomEngine>
+  constexpr auto operator()(Range&& range, Weights&& weights, RandomEngine& random_engine) const {
+    static_assert(ranges::range<Range>);
+    static_assert(ranges::range<Weights>);
+    return low_variance_sample_from_range(std::forward<Range>(range), std::forward<Weights>(weights), random_engine);
   }
 
   /// Overload that takes two arguments.
-  template <class T, class U>
-  constexpr auto operator()(T&& t, U&& u) const {
-    if constexpr (ranges::range<T> && ranges::range<U>) {
-      auto& engine = ranges::detail::get_random_engine();
-      return low_variance_sample_from_range(std::forward<T>(t), std::forward<U>(u), engine);
+  template <class Range, class Weights>
+  constexpr auto operator()(Range&& range, Weights&& weights) const {
+    if constexpr (ranges::range<Range> && ranges::range<Weights>) {
+      auto& random_engine = ranges::detail::get_random_engine();
+      return low_variance_sample_from_range(std::forward<Range>(range), std::forward<Weights>(weights), random_engine);
     } else {
-      static_assert(ranges::range<T>);
-      static_assert(std::is_lvalue_reference_v<U&&>);
-      return low_variance_sample_from_range(std::forward<T>(t), u);
+      static_assert(ranges::range<Range>);
+      static_assert(std::is_lvalue_reference_v<Weights&&>);
+      return low_variance_sample_from_range(std::forward<Range>(range), weights);
     }
   }
 
   /// Overload that takes one argument.
-  template <class T>
-  constexpr auto operator()(T&& t) const {
-    if constexpr (ranges::range<T>) {
-      auto& engine = ranges::detail::get_random_engine();
-      return low_variance_sample_from_range(std::forward<T>(t), engine);
+  template <class Range>
+  constexpr auto operator()(Range&& range) const {
+    if constexpr (ranges::range<Range>) {
+      auto& random_engine = ranges::detail::get_random_engine();
+      return low_variance_sample_from_range(std::forward<Range>(range), random_engine);
     } else {
-      static_assert(std::is_lvalue_reference_v<T&&>);
-      return ranges::make_view_closure(ranges::bind_back(low_variance_sample_fn{}, std::ref(t)));
+      static_assert(std::is_lvalue_reference_v<Range&&>);
+      return ranges::make_view_closure(ranges::bind_back(low_variance_sample_fn{}, std::ref(range)));
     }
   }
 
   /// Overload that unwraps the engine reference from a view closure.
-  template <class Range, class URNG>
-  constexpr auto operator()(Range&& range, std::reference_wrapper<URNG> engine) const {
+  template <class Range, class RandomEngine>
+  constexpr auto operator()(Range&& range, std::reference_wrapper<RandomEngine> random_engine) const {
     static_assert(ranges::range<Range>);
-    return low_variance_sample_from_range(std::forward<Range>(range), engine.get());
+    return low_variance_sample_from_range(std::forward<Range>(range), random_engine.get());
   }
 };
 

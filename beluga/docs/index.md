@@ -23,7 +23,7 @@ The current set of features includes:
   - Multinomial resampling from a particle range
   - [Adaptive KLD resampling][fox2001]
   - [Selective resampling][grisetti2007], on-motion resampling, and interval resampling policies
-  - Low Variance sampling
+  - [Low Variance sampling][thrun2005]
   - Support for sequential and parallel execution policies
   - Weighted mean and covariance statistics for pose estimation
 - Sensor models:
@@ -45,3 +45,4 @@ Beluga is built on top of the following open source libraries:
 [aos_soa]: https://en.wikipedia.org/wiki/AoS_and_SoA
 [fox2001]: https://dl.acm.org/doi/10.5555/2980539.2980632
 [grisetti2007]: https://doi.org/10.1109/TRO.2006.889486
+[thrun2005]: https://books.google.com.ar/books?id=jtSMEAAAQBAJ

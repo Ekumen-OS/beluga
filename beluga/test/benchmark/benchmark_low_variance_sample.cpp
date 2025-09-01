@@ -57,9 +57,17 @@ Container create_weighted_container(std::size_t size) {
   std::mt19937 gen(42);  // Fixed seed for reproducibility
   std::uniform_real_distribution<double> dist(0.1, 2.0);
 
+  double total_weight = 0.0;
   for (auto&& [state, weight] : container) {
     weight = dist(gen);
+    total_weight += weight;
   }
+
+  // Normalize weights
+  for (auto&& [state, weight] : container) {
+    weight /= total_weight;
+  }
+
   return container;
 }
 
@@ -69,9 +77,17 @@ Container create_exponential_container(std::size_t size) {
   std::mt19937 gen(42);  // Fixed seed for reproducibility
   std::exponential_distribution<double> dist(1.0);
 
+  double total_weight = 0.0;
   for (auto&& [state, weight] : container) {
     weight = dist(gen) + 0.01;  // Add small offset to avoid zero weights
+    total_weight += weight;
   }
+
+  // Normalize weights
+  for (auto&& [state, weight] : container) {
+    weight /= total_weight;
+  }
+
   return container;
 }
 
@@ -173,7 +189,7 @@ void BM_LowVarianceSample_MemoryPattern(benchmark::State& state) {
   const auto particle_count = state.range(0);
   state.SetComplexityN(particle_count);
   const auto container_size = static_cast<std::size_t>(particle_count);
-  const auto sample_size = std::max(static_cast<std::size_t>(1), container_size / 10);  // Sample 10% of particles
+  const auto sample_size = std::max(1UL, container_size / 10UL);  // Sample 10% of particles
 
   auto container = create_weighted_container(container_size);
   auto new_container = Container{sample_size};
