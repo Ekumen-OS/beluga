@@ -63,7 +63,13 @@ BaseAMCLNode::BaseAMCLNode(
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Topic to subscribe to in order to receive the laser scan for localization.";
-    this->declare_parameter("scan_topic", rclcpp::ParameterValue("scan"), descriptor);
+    this->declare_parameter("scan_topic", rclcpp::ParameterValue(""), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Topic to subscribe to in order to receive point cloud scans. If empty, it is ignored.";
+    declare_parameter("point_cloud_topic", rclcpp::ParameterValue(""), descriptor);
   }
 
   {

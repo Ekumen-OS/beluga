@@ -37,6 +37,7 @@
 
 #include <beluga_ros/laser_scan.hpp>
 #include <beluga_ros/occupancy_grid.hpp>
+#include <beluga_ros/sparse_point_cloud.hpp>
 
 /**
  * \file
@@ -210,6 +211,38 @@ class Amcl {
   /// Update the map used for localization.
   void update_map(beluga_ros::OccupancyGrid map);
 
+  /// Update particles using laser scan data.
+  /**
+   * This method transforms laser scan data from polar to cartesian coordinates in the robot base frame. Then forwards
+   * to the generic update() method which performs the particle filter update step based on motion and sensor
+   * information. See the detailed description of the general update() method below.
+   *
+   * \see update(Sophus::SE2d, std::vector<std::pair<double, double>>&&)
+   *
+   * \param base_pose_in_odom Base pose in the odometry frame.
+   * \param laser_scan Laser scan data.
+   * \return An optional pair containing the estimated pose and covariance after the update,
+   *         or std::nullopt if no update was performed.
+   */
+  auto update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan)
+      -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
+
+  /// Update particles using point cloud data.
+  /**
+   * This method transforms and projects point cloud data onto the z = 0 plane of the robot base frame. Then forwards
+   * the data to the generic update() method that performs the particle filter update step using motion and sensor
+   * information.
+   *
+   * \see update(Sophus::SE2d, std::vector<std::pair<double, double>>&&)
+   *
+   * \param base_pose_in_odom Base pose in the odometry frame.
+   * \param point_cloud Point cloud measurement in the sensor frame; points are projected onto the z=0 plane.
+   * \return An optional pair containing the estimated pose and covariance after the update,
+   *         or std::nullopt if no update was performed.
+   */
+  auto update(Sophus::SE2d base_pose_in_odom, beluga_ros::SparsePointCloud3f point_cloud)
+      -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
+
   /// Update particles based on motion and sensor information.
   /**
    * This method performs a particle filter update step using motion and sensor data. It evaluates whether
@@ -219,11 +252,11 @@ class Amcl {
    * are resampled to maintain diversity and prevent degeneracy.
    *
    * \param base_pose_in_odom Base pose in the odometry frame.
-   * \param laser_scan Laser scan data.
+   * \param measurement A vector of 2D points representing the sensor measurement in the base frame.
    * \return An optional pair containing the estimated pose and covariance after the update,
    *         or std::nullopt if no update was performed.
    */
-  auto update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan)
+  auto update(Sophus::SE2d base_pose_in_odom, std::vector<std::pair<double, double>>&& measurement)
       -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
 
   /// Force a manual update of the particles on the next iteration of the filter.

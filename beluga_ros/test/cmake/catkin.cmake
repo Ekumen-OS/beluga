@@ -14,6 +14,8 @@
 
 find_package(rostest REQUIRED)
 
+include_directories(include)
+
 catkin_add_gmock(test_amcl test_amcl.cpp)
 target_link_libraries(
   test_amcl
@@ -59,6 +61,13 @@ target_link_libraries(
 catkin_add_gmock(test_point_cloud test_point_cloud.cpp)
 target_link_libraries(
   test_point_cloud
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  gmock_main)
+
+catkin_add_gmock(test_sparse_point_cloud test_sparse_point_cloud.cpp)
+target_link_libraries(
+  test_sparse_point_cloud
   ${PROJECT_NAME}
   ${catkin_LIBRARIES}
   gmock_main)
