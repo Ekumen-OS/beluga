@@ -546,17 +546,18 @@ std::optional<beluga_ros::SparsePointCloud3f> AmclNode::wrap_sensor_data(
 
   auto pointcloud = beluga_ros::SparsePointCloud3f{sensor_msg, sensor_pose_in_base.value()};
 
-  static std::once_flag flag;
-  std::call_once(flag, [&] {
-    const float z = ranges::begin(pointcloud.points())->z();
-    const auto on_constant_z_plane = [=](const auto& point) {
-      return std::fabs(point.z() - z) < std::numeric_limits<float>::epsilon();
-    };
-    if (!ranges::all_of(pointcloud.points(), on_constant_z_plane)) {
-      RCLCPP_ERROR(get_logger(), "Point cloud is NOT on a z = constant plane, filter will misbehave");
-    }
-  });
-
+  if (pointcloud.size() > 0) {
+    static std::once_flag flag;
+    std::call_once(flag, [&] {
+      const Eigen::Vector3f head = *pointcloud.points().begin();
+      const auto on_constant_z_plane = [=](const auto& point) {
+        return std::fabs(point.z() - head.z()) < std::numeric_limits<float>::epsilon();
+      };
+      if (!ranges::all_of(pointcloud.points(), on_constant_z_plane)) {
+        RCLCPP_WARN(get_logger(), "Point cloud is NOT on a z = constant plane, filter will misbehave");
+      }
+    });
+  }
   return pointcloud;
 }
 
