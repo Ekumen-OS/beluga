@@ -38,7 +38,7 @@ The subscribed topic names can be changed with the parameters `map_topic`, `scan
 |------------------|-------------------------------------------|-----------------------------------------------------------------------------|
 | `map`            | `nav_msgs/OccupancyGrid`                  | Input topic for map updates.                                                |
 | `scan`           | `sensor_msgs/LaserScan`                   | Input topic for laser scan updates.                                         |
-| `odom`           | `nav_msgs/Odometry`                       | Input topic for odometry updates (when use_odometry_propagation is enabled).       |
+| `odom`           | `nav_msgs/Odometry`                       | Input topic for odometry updates (when use_odometry_propagation is enabled).|
 | `initial_pose`   | `geometry_msgs/PoseWithCovarianceStamped` | Input topic for pose mean and covariance to initialize the particle filter. |
 
 ### Published Topics

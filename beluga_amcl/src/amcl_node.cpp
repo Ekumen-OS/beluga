@@ -186,7 +186,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Set true to enable odometry-driven filter propagation.";
+    descriptor.description = "Enable odometry-driven filter propagation.";
     declare_parameter("use_odometry_propagation", rclcpp::ParameterValue(false), descriptor);
   }
 }
@@ -265,7 +265,7 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
           get_parameter("odom_topic").as_string(), rclcpp::SensorDataQoS(),
           std::bind(&AmclNode::odometry_callback, this, std::placeholders::_1), common_subscription_options_);
 
-      RCLCPP_INFO(get_logger(), "Subscribed to odom_topic: %s", odom_sub_->get_topic_name());
+      RCLCPP_INFO(get_logger(), "Subscribed to odometry topic: %s", odom_sub_->get_topic_name());
       odometry_motion_buffer_.clear();
     }
   }
@@ -500,14 +500,14 @@ void AmclNode::odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom) {
   odometry_motion_buffer_.emplace_back(time, base_pose_in_odom);
 }
 
-void AmclNode::process_buffered_odometry_until(std::deque<OdometryMotion>& buffer, const tf2::TimePoint& until) {
-  while (!buffer.empty()) {
-    const auto& [odom_time, odom_pose] = buffer.front();
+void AmclNode::process_buffered_odometry_until(const tf2::TimePoint& until) {
+  while (!odometry_motion_buffer_.empty()) {
+    const auto& [odom_time, odom_pose] = odometry_motion_buffer_.front();
     if (odom_time > until) {
       break;
     }
     particle_filter_->update(odom_pose);
-    buffer.pop_front();
+    odometry_motion_buffer_.pop_front();
   }
 }
 
@@ -519,10 +519,8 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   }
 
   // If use_odometry_propagation is enabled, process odometry buffer up to lidar timestamp
-  if (get_parameter("use_odometry_propagation").as_bool()) {
-    const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
-    process_buffered_odometry_until(odometry_motion_buffer_, laser_scan_stamp);
-  }
+  const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
+  process_buffered_odometry_until(laser_scan_stamp);
 
   // Get base pose in odom frame at laser scan timestamp
   auto base_pose_in_odom = Sophus::SE2d{};

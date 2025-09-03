@@ -708,7 +708,6 @@ TEST_F(TestNode, TransformValue) {
 }
 
 TEST_F(TestNode, OdomSubNotCreatedWhenPropagationDisabled) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"use_odometry_propagation", false});
   amcl_node_->configure();
   amcl_node_->activate();
   tester_node_->publish_map();
@@ -812,7 +811,7 @@ TEST_F(TestNode, OdometryBufferConsumedWhenOdomTimestampsEqualThanLidar) {
   EXPECT_EQ(amcl_node_->odometry_motion_buffer().size(), 0);
 }
 
-TEST_F(TestNode, OdometryBufferConsumedWhenOdomTimestampsMajorThanLidar) {
+TEST_F(TestNode, OdometryBufferConsumedWhenOdomTimestampsGreaterThanLidar) {
   amcl_node_->set_parameter(rclcpp::Parameter{"use_odometry_propagation", true});
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   amcl_node_->configure();
