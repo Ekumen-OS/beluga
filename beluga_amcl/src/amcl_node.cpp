@@ -50,6 +50,8 @@
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 
+#include <range/v3/algorithm/all_of.hpp>
+
 #include <geometry_msgs/msg/pose_array.hpp>
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <lifecycle_msgs/msg/state.hpp>
@@ -217,7 +219,7 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
   const auto point_cloud_topic = get_parameter("point_cloud_topic").as_string();
 
   if ((!scan_topic.empty() && !point_cloud_topic.empty())) {
-    // Parametrization of both, scan_topic and point_cloud_topic not allowed.
+    RCLCPP_ERROR(get_logger(), "scan_topic and point_cloud_topic cannot be specified at the same time");
     throw std::invalid_argument("scan_topic and point_cloud_topic cannot be specified at the same time");
   }
 
@@ -300,9 +302,7 @@ void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   // Release all resources.
   particle_filter_.reset();
   enable_tf_broadcast_ = false;
-  if (likelihood_field_pub_) {
-    likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
-  }
+  likelihood_field_pub_.reset();
 }
 
 auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
@@ -444,14 +444,22 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
       return;
     }
     if (particle_filter_->has_likelihood_field()) {
-      likelihood_field_pub_ =
-          create_publisher<nav_msgs::msg::OccupancyGrid>("likelihood_field", rclcpp::SystemDefaultsQoS());
+      likelihood_field_pub_ = create_publisher<nav_msgs::msg::OccupancyGrid>(
+          "likelihood_field", rclcpp::SystemDefaultsQoS().transient_local());
       // Activate publisher immediately, we are likely past the activation phase.
       likelihood_field_pub_->on_activate();
     }
 
   } else {
     particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
+  }
+
+  if (likelihood_field_pub_) {
+    auto message = beluga_ros::msg::OccupancyGrid{};
+    beluga_ros::assign_likelihood_field(
+        particle_filter_->likelihood_field(), particle_filter_->likelihood_field_origin(), message);
+    beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
+    likelihood_field_pub_->publish(message);
   }
 
   if (should_reset_initial_pose) {
@@ -491,81 +499,99 @@ void AmclNode::do_periodic_timer_callback() {
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
     particle_markers_pub_->publish(message);
   }
+}
 
-  if (likelihood_field_pub_ && likelihood_field_pub_->get_subscription_count() > 0) {
-    auto message = beluga_ros::msg::OccupancyGrid{};
-    beluga_ros::assign_likelihood_field(
-        particle_filter_->likelihood_field(), particle_filter_->likelihood_field_origin(), message);
-    beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);
-    likelihood_field_pub_->publish(message);
+template <typename TransformT>
+std::optional<TransformT> AmclNode::lookup_transform(
+    const std::string& target_frame_id,
+    const std::string& source_frame_id,
+    const tf2::TimePoint& stamp) {
+  try {
+    auto output = TransformT{};
+    tf2::convert(tf_buffer_->lookupTransform(target_frame_id, source_frame_id, stamp).transform, output);
+    return output;
+  } catch (const tf2::TransformException& error) {
+    RCLCPP_ERROR(
+        get_logger(), "Could not transform from %s to %s: %s", target_frame_id.c_str(), source_frame_id.c_str(),
+        error.what());
+    return std::nullopt;
   }
 }
 
+std::optional<beluga_ros::LaserScan> AmclNode::wrap_sensor_data(
+    const sensor_msgs::msg::LaserScan::ConstSharedPtr& sensor_msg) {
+  auto sensor_pose_in_base = lookup_transform<Sophus::SE3d>(
+      get_parameter("base_frame_id").as_string(), sensor_msg->header.frame_id,
+      tf2_ros::fromMsg(sensor_msg->header.stamp));
+  if (!sensor_pose_in_base.has_value()) {
+    RCLCPP_ERROR(get_logger(), "Could not transform from base to sensor");
+    return std::nullopt;
+  }
+
+  const auto max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
+  const double min_range = get_parameter("laser_min_range").as_double();
+  const double max_range = get_parameter("laser_max_range").as_double();
+  return beluga_ros::LaserScan{sensor_msg, sensor_pose_in_base.value(), max_beams, min_range, max_range};
+}
+
+std::optional<beluga_ros::SparsePointCloud3f> AmclNode::wrap_sensor_data(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr& sensor_msg) {
+  auto sensor_pose_in_base = lookup_transform<Sophus::SE3d>(
+      get_parameter("base_frame_id").as_string(), sensor_msg->header.frame_id,
+      tf2_ros::fromMsg(sensor_msg->header.stamp));
+  if (!sensor_pose_in_base.has_value()) {
+    RCLCPP_ERROR(get_logger(), "Could not transform from base to sensor");
+    return std::nullopt;
+  }
+
+  auto pointcloud = beluga_ros::SparsePointCloud3f{sensor_msg, sensor_pose_in_base.value()};
+
+  static std::once_flag flag;
+  std::call_once(flag, [&] {
+    const auto on_xy_plane = [](const auto& point) { return std::fpclassify(point.z()) == FP_ZERO; };
+    if (!ranges::all_of(pointcloud.points(), on_xy_plane)) {
+      RCLCPP_ERROR(get_logger(), "Point cloud is NOT on the z = 0 plane, filter will misbehave");
+    }
+  });
+
+  return pointcloud;
+}
+
 template <typename MessageT>
-void AmclNode::sensor_callback(const typename MessageT::ConstSharedPtr& sensor_msg) {
+void AmclNode::sensor_callback(const std::shared_ptr<const MessageT>& sensor_msg) {
   if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
-        get_logger(), *get_clock(), 2000, "Ignoring laser data because the particle filter has not been initialized");
-    return;
-  }
-  auto base_pose_in_odom = Sophus::SE2d{};
-  try {
-    // Use the lookupTransform overload with no timeout since we're not using a dedicated
-    // tf thread. The message filter we are using avoids the need for it.
-    tf2::convert(
-        tf_buffer_
-            ->lookupTransform(
-                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
-                tf2_ros::fromMsg(sensor_msg->header.stamp))
-            .transform,
-        base_pose_in_odom);
-  } catch (const tf2::TransformException& error) {
-    RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
+        get_logger(), *get_clock(), 2000, "Ignoring sensor data because the particle filter has not been initialized");
     return;
   }
 
-  auto sensor_pose_in_base = Sophus::SE3d{};
-  try {
-    tf2::convert(
-        tf_buffer_
-            ->lookupTransform(
-                get_parameter("base_frame_id").as_string(), sensor_msg->header.frame_id,
-                tf2_ros::fromMsg(sensor_msg->header.stamp))
-            .transform,
-        sensor_pose_in_base);
-  } catch (const tf2::TransformException& error) {
-    RCLCPP_ERROR(get_logger(), "Could not transform from base to sensor: %s", error.what());
+  auto base_pose_in_odom = lookup_transform<Sophus::SE2d>(
+      get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
+      tf2_ros::fromMsg(sensor_msg->header.stamp));
+  if (!base_pose_in_odom.has_value()) {
+    RCLCPP_ERROR(get_logger(), "Failed to lookup motion data");
     return;
   }
 
-  auto measurement = [&] {
-    static_assert(
-        std::is_same_v<MessageT, sensor_msgs::msg::LaserScan> ||
-            std::is_same_v<MessageT, sensor_msgs::msg::PointCloud2>,
-        "Invalid sensor message type");
-    if constexpr (std::is_same_v<MessageT, sensor_msgs::msg::LaserScan>) {
-      const std::size_t max_beams = static_cast<std::size_t>(get_parameter("max_beams").as_int());
-      const double min_range = get_parameter("laser_min_range").as_double();
-      const double max_range = get_parameter("laser_max_range").as_double();
-      return beluga_ros::LaserScan{sensor_msg, sensor_pose_in_base, max_beams, min_range, max_range};
-    } else {
-      return beluga_ros::SparsePointCloud3f{sensor_msg, sensor_pose_in_base};
-    }
-  }();
+  auto measurement = wrap_sensor_data(sensor_msg);
+  if (!measurement.has_value()) {
+    RCLCPP_ERROR(get_logger(), "Failed to process sensor data");
+    return;
+  }
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
-  const auto new_estimate = particle_filter_->update(base_pose_in_odom, measurement);
+  const auto new_estimate = particle_filter_->update(base_pose_in_odom.value(), measurement.value());
   const auto update_stop_time = std::chrono::high_resolution_clock::now();
   const auto update_duration = update_stop_time - update_start_time;
 
   if (new_estimate.has_value()) {
     const auto& [base_pose_in_map, _] = new_estimate.value();
-    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom->inverse();
     last_known_estimate_ = new_estimate;
 
     RCLCPP_INFO(
         get_logger(), "Particle filter update iteration stats: %ld particles %ld points - %.3fms",
-        particle_filter_->particles().size(), measurement.size(),
+        particle_filter_->particles().size(), measurement->size(),
         std::chrono::duration<double, std::milli>(update_duration).count());
   }
 

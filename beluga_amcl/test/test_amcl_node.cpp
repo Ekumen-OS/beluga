@@ -590,7 +590,6 @@ TEST_F(TestNode, CanUpdatePoseEstimate) {
 }
 
 TEST_F(TestNode, CanUpdatePoseEstimateWithPointCloud) {
-  amcl_node_->set_parameter(rclcpp::Parameter{"scan_topic", ""});
   amcl_node_->set_parameter(rclcpp::Parameter{"point_cloud_topic", "point_cloud"});
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
   amcl_node_->configure();

@@ -89,9 +89,21 @@ class AmclNode : public BaseAMCLNode {
   /// Callback for periodic particle cloud updates.
   void do_periodic_timer_callback() override;
 
+  /// Try to look up a tf transform immediately.
+  template <typename TransformT>
+  std::optional<TransformT>
+  lookup_transform(const std::string& target_frame_id, const std::string& source_frame_id, const tf2::TimePoint& stamp);
+
+  /// Try to wrap a laser scan message.
+  std::optional<beluga_ros::LaserScan> wrap_sensor_data(const sensor_msgs::msg::LaserScan::ConstSharedPtr& sensor_msg);
+
+  /// Try to wrap a pointcloud message.
+  std::optional<beluga_ros::SparsePointCloud3f> wrap_sensor_data(
+      const sensor_msgs::msg::PointCloud2::ConstSharedPtr& sensor_msg);
+
   /// Callback for sensor updates.
   template <typename MessageT>
-  void sensor_callback(const typename MessageT::ConstSharedPtr& sensor_msg);
+  void sensor_callback(const std::shared_ptr<const MessageT>& sensor_msg);
 
   /// Callback for pose (re)initialization.
   void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;

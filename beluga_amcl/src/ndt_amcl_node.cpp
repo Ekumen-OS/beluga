@@ -123,7 +123,8 @@ void NdtAmclNode::do_activate(const rclcpp_lifecycle::State&) {
       }
     }();
 
-    const auto scan_topic = get_parameter("scan_topic").as_string();
+    const auto scan_topic = get_parameter("scan_topic").as_string();  // may default to the empty string
+    // TODO(hidmic): rework parameter defaults after rehashing what constitutes common node code
     laser_scan_sub_ = std::make_unique<message_filters::Subscriber<sensor_msgs::msg::LaserScan>>(
         shared_from_this(), !scan_topic.empty() ? scan_topic : "scan", laser_scan_qos, common_subscription_options_);
 
