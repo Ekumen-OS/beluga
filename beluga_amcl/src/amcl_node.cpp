@@ -183,6 +183,12 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
         "and ignore subsequent ones.";
     declare_parameter("first_map_only", false, descriptor);
   }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Enable odometry-driven filter propagation.";
+    declare_parameter("use_odometry_propagation", rclcpp::ParameterValue(false), descriptor);
+  }
 }
 
 AmclNode::~AmclNode() {
@@ -251,6 +257,18 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
           std::placeholders::_3),
       common_service_qos, common_callback_group_);
   RCLCPP_INFO(get_logger(), "Created request_nomotion_update service");
+
+  {
+    // Subscribe to odometry topic to buffer odometry motions
+    if (get_parameter("use_odometry_propagation").as_bool()) {
+      odom_sub_ = create_subscription<nav_msgs::msg::Odometry>(
+          get_parameter("odom_topic").as_string(), rclcpp::SensorDataQoS(),
+          std::bind(&AmclNode::odometry_callback, this, std::placeholders::_1), common_subscription_options_);
+
+      RCLCPP_INFO(get_logger(), "Subscribed to odometry topic: %s", odom_sub_->get_topic_name());
+      odometry_motion_buffer_.clear();
+    }
+  }
 }
 
 void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
@@ -259,6 +277,7 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   laser_scan_filter_.reset();
   laser_scan_sub_.reset();
   global_localization_server_.reset();
+  odom_sub_.reset();
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_deactivate();
   }
@@ -268,6 +287,7 @@ void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   particle_filter_.reset();
   likelihood_field_pub_.reset();  // attaching likelihood_field_pub_ lifespan to particle_filter_ lifespan
   enable_tf_broadcast_ = false;
+  odometry_motion_buffer_.clear();
 }
 
 auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
@@ -466,6 +486,31 @@ void AmclNode::do_periodic_timer_callback() {
   }
 }
 
+void AmclNode::odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom) {
+  if (!particle_filter_) {
+    RCLCPP_WARN_THROTTLE(
+        get_logger(), *get_clock(), 2000,
+        "Ignoring odometry data because the particle filter has not been initialized");
+    return;
+  }
+  // Use the odometry message timestamp and pose
+  const auto time = tf2_ros::fromMsg(odom->header.stamp);
+  auto base_pose_in_odom = Sophus::SE2d{};
+  tf2::convert(odom->pose.pose, base_pose_in_odom);
+  odometry_motion_buffer_.emplace_back(time, base_pose_in_odom);
+}
+
+void AmclNode::process_buffered_odometry_until(const tf2::TimePoint& until) {
+  while (!odometry_motion_buffer_.empty()) {
+    const auto& [odom_time, odom_pose] = odometry_motion_buffer_.front();
+    if (odom_time > until) {
+      break;
+    }
+    particle_filter_->update(odom_pose);
+    odometry_motion_buffer_.pop_front();
+  }
+}
+
 void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan) {
   if (!particle_filter_) {
     RCLCPP_WARN_THROTTLE(
@@ -473,6 +518,11 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
+  // If use_odometry_propagation is enabled, process odometry buffer up to lidar timestamp
+  const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
+  process_buffered_odometry_until(laser_scan_stamp);
+
+  // Get base pose in odom frame at laser scan timestamp
   auto base_pose_in_odom = Sophus::SE2d{};
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated

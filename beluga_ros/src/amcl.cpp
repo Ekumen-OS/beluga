@@ -50,6 +50,16 @@ void Amcl::update_map(beluga_ros::OccupancyGrid map) {
   std::visit([&](auto& sensor_model) { sensor_model.update_map(std::move(map)); }, sensor_model_);
 }
 
+void Amcl::update(Sophus::SE2d base_pose_in_odom) {
+  if (!particles_.empty()) {
+    std::visit(
+        [&, this](auto& policy, auto& motion_model) {
+          particles_ |= beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_in_odom));
+        },
+        execution_policy_, motion_model_);
+  }
+}
+
 auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan)
     -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
   if (particles_.empty()) {
