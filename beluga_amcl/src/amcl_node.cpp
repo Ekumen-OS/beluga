@@ -548,9 +548,12 @@ std::optional<beluga_ros::SparsePointCloud3f> AmclNode::wrap_sensor_data(
 
   static std::once_flag flag;
   std::call_once(flag, [&] {
-    const auto on_xy_plane = [](const auto& point) { return std::fpclassify(point.z()) == FP_ZERO; };
-    if (!ranges::all_of(pointcloud.points(), on_xy_plane)) {
-      RCLCPP_ERROR(get_logger(), "Point cloud is NOT on the z = 0 plane, filter will misbehave");
+    const float z = ranges::begin(pointcloud.points())->z();
+    const auto on_constant_z_plane = [=](const auto& point) {
+      return std::fabs(point.z() - z) < std::numeric_limits<float>::epsilon();
+    };
+    if (!ranges::all_of(pointcloud.points(), on_constant_z_plane)) {
+      RCLCPP_ERROR(get_logger(), "Point cloud is NOT on a z = constant plane, filter will misbehave");
     }
   });
 
