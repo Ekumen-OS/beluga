@@ -204,6 +204,10 @@ Also available as a standalone `amcl_node` executable.
 : Delay, in seconds, to wait before initiating an autostart sequence. Also the retry period when the sequence fails.
 : Defaults to `0.0`.
 
+`debug` _(`boolean`)_
+: If true, debugging aids will be enabled (i.e. logged, published). Note this will increase resource usage and degrade performance somewhat.
+: Defaults to `false`.
+
 ### Published topics
 
 `particle_cloud`
@@ -217,6 +221,7 @@ Also available as a standalone `amcl_node` executable.
 
 `likelihood_field`
 : Likelihood field published as `nav_msgs/msg/OccupancyGrid` messages, using a system default QoS policy with transient local durability. It will be published with every map update but only if a likelihood field based sensor model was configured as `laser_model_type`.
+: Only published if `debug` is `true`.
 
 ### Subscribed topics
 

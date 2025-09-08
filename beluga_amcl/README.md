@@ -40,9 +40,9 @@ The subscribed topic names can be changed with the parameters `map_topic`, `scan
 | `scan`           | `sensor_msgs/LaserScan`                   | Input topic for laser scan updates.                                         |
 | `initial_pose`   | `geometry_msgs/PoseWithCovarianceStamped` | Input topic for pose mean and covariance to initialize the particle filter. |
 
-Alternatively, and instead of the `scan_topic`, one may set the `point_cloud_topic`. Point clouds are expected to be contained in a z = constant
-plane in the base frame of reference. It is assumed this plane is the same that embeds the SE(2) manifold the filter operates in. That is, the same
-plane where the map lives and pose estimates are defined. If this is not the case, Beluga AMCL will misbehave.
+Alternatively, and instead of the `scan_topic`, one may set the `point_cloud_topic`. Point clouds are assumed to be contained in a z = constant
+plane in the base frame of reference. It is further assumed this plane is the same plane where the map and pose estimates are defined. If this
+is not the case, Beluga AMCL will misbehave. It is on the user to filter point clouds and make sure these assumption hold.
 
 ### Published Topics
 

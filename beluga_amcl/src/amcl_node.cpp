@@ -186,6 +186,14 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
         "and ignore subsequent ones.";
     declare_parameter("first_map_only", false, descriptor);
   }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Set this to true to enable debugging aids. This will "
+        "increase resource usage and potentially degrade performance.";
+    declare_parameter("debug", false, descriptor);
+  }
 }
 
 AmclNode::~AmclNode() {
@@ -443,7 +451,7 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
       RCLCPP_ERROR(get_logger(), "Could not initialize particle filter: %s", error.what());
       return;
     }
-    if (particle_filter_->has_likelihood_field()) {
+    if (get_parameter("debug").as_bool() && particle_filter_->has_likelihood_field()) {
       likelihood_field_pub_ = create_publisher<nav_msgs::msg::OccupancyGrid>(
           "likelihood_field", rclcpp::SystemDefaultsQoS().transient_local());
       // Activate publisher immediately, we are likely past the activation phase.
