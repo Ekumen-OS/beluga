@@ -32,7 +32,7 @@ See [Beluga AMCL documentation](https://ekumen-os.github.io/beluga/packages/belu
 
 ### Subscribed Topics
 
-The subscribed topic names can be changed with the parameters `map_topic`, `scan_topic` and `initial_pose_topic`.
+The subscribed topic names can be changed with the parameters `map_topic`, `scan_topic`, and `initial_pose_topic`.
 
 | Topic            | Type                                      | Description                                                                 |
 |------------------|-------------------------------------------|-----------------------------------------------------------------------------|
@@ -40,12 +40,18 @@ The subscribed topic names can be changed with the parameters `map_topic`, `scan
 | `scan`           | `sensor_msgs/LaserScan`                   | Input topic for laser scan updates.                                         |
 | `initial_pose`   | `geometry_msgs/PoseWithCovarianceStamped` | Input topic for pose mean and covariance to initialize the particle filter. |
 
+Alternatively, and instead of the `scan_topic`, one may set the `point_cloud_topic`. Point clouds are assumed to be contained in a z = constant
+plane in the base frame of reference. It is further assumed this plane is the same plane where the map and pose estimates are defined. If this
+is not the case, Beluga AMCL will misbehave. It is on the user to filter point clouds and make sure these assumption hold.
+
 ### Published Topics
 
-| Topic            | Type                                      | Description                                                              |
-|------------------|-------------------------------------------|--------------------------------------------------------------------------|
-| `particle_cloud` | `geometry_msgs/PoseArray`                 | Output topic for particle cloud published at a fixed frequency.          |
-| `pose`           | `geometry_msgs/PoseWithCovarianceStamped` | Output topic for estimated pose mean and covariance in map frame.        |
+| Topic              | Type                                      | Description                                                              |
+|--------------------|-------------------------------------------|--------------------------------------------------------------------------|
+| `particle_cloud`   | `geometry_msgs/PoseArray`                 | Output topic for particle cloud poses published at a fixed frequency.    |
+| `particle_markers` | `visualization_msgs/MarkerArray`          | Output topic for particle cloud markers published at a fixed frequency.  |
+| `likelihood_field` | `nav_msgs/OccupancyGrid`                  | Output topic for likelihood field, published on update when applicable.  |
+| `pose`             | `geometry_msgs/PoseWithCovarianceStamped` | Output topic for estimated pose mean and covariance in map frame.        |
 
 ### Published Transforms
 

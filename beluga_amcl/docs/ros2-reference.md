@@ -28,7 +28,11 @@ Also available as a standalone `amcl_node` executable.
 
 `scan_topic` _(`string`)_
 : The name of the topic where laser scans will be published. A transform must exist between the coordinate frame used in the scan messages and the base frame of the robot.
-: Defaults to `scan`.
+: Defaults to `scan` unless `point_cloud_topic` is set.
+
+`point_cloud_topic` _(`string`)_
+: The name of the topic where laser scans will be published as a point cloud. A transform must exist between the coordinate frame used in the scan messages and the base frame of the robot.
+: Ignored if not set.
 
 `map_topic` _(`string`)_
 : The name of the topic to subscribe to for map updates. Typically published by the [map server](https://github.com/ros-planning/navigation2/tree/main/nav2_map_server).
@@ -200,6 +204,10 @@ Also available as a standalone `amcl_node` executable.
 : Delay, in seconds, to wait before initiating an autostart sequence. Also the retry period when the sequence fails.
 : Defaults to `0.0`.
 
+`debug` _(`boolean`)_
+: If true, debugging aids will be enabled (i.e. logged, published). Note this will increase resource usage and degrade performance somewhat.
+: Defaults to `false`.
+
 ### Published topics
 
 `particle_cloud`
@@ -210,6 +218,10 @@ Also available as a standalone `amcl_node` executable.
 
 `pose`
 : Mean and covariance of the estimated pose distribution published as `geometry_msgs/msg/PoseWithCovarianceStamped` messages (assumed Gaussian), using a system default QoS policy.
+
+`likelihood_field`
+: Likelihood field published as `nav_msgs/msg/OccupancyGrid` messages, using a system default QoS policy with transient local durability. It will be published with every map update but only if a likelihood field based sensor model was configured as `laser_model_type`.
+: Only published if `debug` is `true`.
 
 ### Subscribed topics
 
@@ -224,6 +236,10 @@ Also available as a standalone `amcl_node` executable.
 
 `<scan_topic>`
 : Lidar scan updates subscribed as `sensor_msgs/msg/LaserScan` messages, using a sensor data QoS policy. Actual topic name is dictated by the `scan_topic` parameter.
+: Lidar scans subscribed for sensor models to work with.
+
+`<point_cloud_topic>`
+: Lidar scan updates subscribed as `sensor_msgs/msg/PointCloud2` messages, using a sensor data QoS policy. Mutually exclusive with `<scan_topic>`. Only applicable when the `point_cloud_topic` parameter is set.
 : Lidar scans subscribed for sensor models to work with.
 
 ### Subscribed transforms
@@ -259,6 +275,7 @@ Also available as a standalone `amcl_node` executable.
 | `odom_frame_id` |  | ✅ | ✅ |  |
 | `global_frame_id` |  | ✅ | ✅ |  |
 | `scan_topic` |  | ✅ | ✅ |  |
+| `point_cloud_topic` |  |  | ✅ |  |
 | `map_topic` |  | ✅ | ✅ |  |
 | `initial_pose_topic` | A parameter that allows changing the topic name doesn't exist in Nav2 AMCL, but the `initialpose` topic can be [remapped externally](https://design.ros2.org/articles/static_remapping.html). |  | ✅ |  |
 | `set_initial_pose` |  | ✅ | ✅ |  |

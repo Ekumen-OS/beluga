@@ -87,6 +87,12 @@ class BaseNodeFixture : public T {
         [this] { return tester_node_->latest_particle_markers().has_value(); }, 1000ms, amcl_node_, tester_node_);
   }
 
+  bool wait_for_likelihood_field() {
+    tester_node_->create_likelihood_field_subscriber();
+    return spin_until(
+        [this] { return tester_node_->latest_likelihood_field().has_value(); }, 1000ms, amcl_node_, tester_node_);
+  }
+
   bool request_global_localization() {
     if (!tester_node_->wait_for_global_localization_service(500ms)) {
       return false;
@@ -589,6 +595,39 @@ TEST_F(TestNode, CanUpdatePoseEstimate) {
   }
 }
 
+TEST_F(TestNode, CanUpdatePoseEstimateWithPointCloud) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"point_cloud_topic", "point_cloud"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
+  tester_node_->publish_default_initial_pose();
+  spin_for(10ms, amcl_node_, tester_node_);  // ensure orderly processing
+  tester_node_->publish_point_cloud();
+  ASSERT_TRUE(wait_for_pose_estimate());
+  ASSERT_TRUE(wait_for_transform("map", "odom"));
+}
+
+TEST_F(TestNode, ThrowsIfBothSensorTopicsAreSet) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"scan_topic", "scan"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"point_cloud_topic", "point_cloud"});
+  amcl_node_->configure();
+
+  // std::invalid argument exception launched on AmclNode::do_activate is not visible at this stage
+  // (catched by callback method. See rclcpp_lifecycle).
+  //
+  // Testing failure is evidenced evaluating node state is not ACTIVE after activating.
+
+  // Activate node, expecting no exceptions thrown
+  EXPECT_NO_THROW(amcl_node_->activate());
+
+  // Check lifecycle state after activation — expect INACTIVE state (Activation didn't succeded)
+  auto state = amcl_node_->get_current_state();
+  EXPECT_EQ(state.id(), lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED);
+}
+
 TEST_F(TestNode, CanForcePoseEstimate) {
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", false});
   amcl_node_->configure();
@@ -647,6 +686,16 @@ TEST_F(TestNode, IsPublishingParticleMarkers) {
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_TRUE(wait_for_particle_markers());
+}
+
+TEST_F(TestNode, IsPublishingLikelihoodField) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_model_type", "likelihood_field"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"debug", true});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  ASSERT_TRUE(wait_for_likelihood_field());
 }
 
 TEST_F(TestNode, LaserScanWithNoOdomToBase) {

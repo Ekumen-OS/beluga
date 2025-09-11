@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <optional>
+#include <type_traits>
 #include <utility>
 
 #pragma GCC diagnostic push
@@ -88,8 +89,21 @@ class AmclNode : public BaseAMCLNode {
   /// Callback for periodic particle cloud updates.
   void do_periodic_timer_callback() override;
 
-  /// Callback for laser scan updates.
-  void laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr);
+  /// Try to look up a tf transform immediately.
+  template <typename TransformT>
+  std::optional<TransformT>
+  lookup_transform(const std::string& target_frame_id, const std::string& source_frame_id, const tf2::TimePoint& stamp);
+
+  /// Try to wrap a laser scan message.
+  std::optional<beluga_ros::LaserScan> wrap_sensor_data(const sensor_msgs::msg::LaserScan::ConstSharedPtr& sensor_msg);
+
+  /// Try to wrap a pointcloud message.
+  std::optional<beluga_ros::SparsePointCloud3f> wrap_sensor_data(
+      const sensor_msgs::msg::PointCloud2::ConstSharedPtr& sensor_msg);
+
+  /// Callback for sensor updates.
+  template <typename MessageT>
+  void sensor_callback(const std::shared_ptr<const MessageT>& sensor_msg);
 
   /// Callback for pose (re)initialization.
   void do_initial_pose_callback(geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override;
@@ -133,6 +147,12 @@ class AmclNode : public BaseAMCLNode {
   /// Laser scan updates subscription.
   std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::LaserScan>> laser_scan_sub_;
 
+  /// Point cloud updates subscription.
+  std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::PointCloud2>> point_cloud_sub_;
+
+  /// Likelihood field publisher
+  rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr likelihood_field_pub_;
+
   /// Global relocalization service server.
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr global_localization_server_;
   /// No motion update service server.
@@ -142,6 +162,12 @@ class AmclNode : public BaseAMCLNode {
   std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>> laser_scan_filter_;
   /// Connection for laser scan updates filter and callback.
   ::message_filters::Connection laser_scan_connection_;
+
+  /// Transform synchronization filter for laser scan updates.
+  std::unique_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::PointCloud2>> point_cloud_filter_;
+
+  /// Connection for point cloud updates filter and callback.
+  ::message_filters::Connection point_cloud_connection_;
 
   /// Particle filter instance.
   std::unique_ptr<beluga_ros::Amcl> particle_filter_;

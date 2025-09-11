@@ -105,6 +105,19 @@ class TesterNode : public rclcpp::Node {
 
   const auto& latest_particle_markers() const { return latest_particle_markers_; }
 
+  void create_likelihood_field_subscriber() {
+    auto qos = rclcpp::SystemDefaultsQoS();
+    qos.reliable().transient_local();
+    likelihood_field_subscriber_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
+        "likelihood_field", qos, std::bind(&TesterNode::likelihood_field_callback, this, std::placeholders::_1));
+  }
+
+  void likelihood_field_callback(nav_msgs::msg::OccupancyGrid::SharedPtr message) {
+    latest_likelihood_field_ = *message;
+  }
+
+  const auto& latest_likelihood_field() const { return latest_likelihood_field_; }
+
   static auto make_dummy_map() {
     auto map = nav_msgs::msg::OccupancyGrid{};
     map.header.frame_id = "map";
@@ -244,6 +257,46 @@ class TesterNode : public rclcpp::Node {
     tf_broadcaster_->sendTransform(transform_laser);
   }
 
+  void publish_point_cloud() {
+    const auto timestamp = now();
+
+    auto cloud = sensor_msgs::msg::PointCloud2{};
+    cloud.header.stamp = timestamp;
+    cloud.header.frame_id = "laser";
+    cloud.height = 1;
+    cloud.width = 1;
+    cloud.is_dense = true;
+    cloud.is_bigendian = false;
+
+    sensor_msgs::PointCloud2Modifier modifier(cloud);
+    modifier.setPointCloud2Fields(
+        3, "x", 1, sensor_msgs::msg::PointField::FLOAT32, "y", 1, sensor_msgs::msg::PointField::FLOAT32, "z", 1,
+        sensor_msgs::msg::PointField::FLOAT32);
+    modifier.resize(1);
+
+    sensor_msgs::PointCloud2Iterator<double> iter_x(cloud, "x");  // NOLINT(misc-const-correctness)
+    sensor_msgs::PointCloud2Iterator<double> iter_y(cloud, "y");  // NOLINT(misc-const-correctness)
+    sensor_msgs::PointCloud2Iterator<double> iter_z(cloud, "z");  // NOLINT(misc-const-correctness)
+
+    *iter_x = 1.0;
+    *iter_y = 0.0;
+    *iter_z = 0.0;
+
+    auto transform_base = geometry_msgs::msg::TransformStamped{};
+    transform_base.header.stamp = timestamp;
+    transform_base.header.frame_id = "odom";
+    transform_base.child_frame_id = "base_footprint";
+
+    auto transform_laser = geometry_msgs::msg::TransformStamped{};
+    transform_laser.header.stamp = timestamp;
+    transform_laser.header.frame_id = "base_footprint";
+    transform_laser.child_frame_id = "laser";
+
+    point_cloud_publisher_->publish(cloud);
+    tf_broadcaster_->sendTransform(transform_base);
+    tf_broadcaster_->sendTransform(transform_laser);
+  }
+
   void publish_laser_scan_with_odom_to_base(const Sophus::SE2d& transform) {
     const auto timestamp = now();
 
@@ -352,10 +405,12 @@ class TesterNode : public rclcpp::Node {
   SubscriberPtr<geometry_msgs::msg::PoseWithCovarianceStamped> pose_subscriber_;
   SubscriberPtr<geometry_msgs::msg::PoseArray> particle_cloud_subscriber_;
   SubscriberPtr<visualization_msgs::msg::MarkerArray> particle_markers_subscriber_;
+  SubscriberPtr<nav_msgs::msg::OccupancyGrid> likelihood_field_subscriber_;
 
   std::optional<geometry_msgs::msg::PoseWithCovarianceStamped> latest_pose_;
   std::optional<geometry_msgs::msg::PoseArray> latest_particle_cloud_;
   std::optional<visualization_msgs::msg::MarkerArray> latest_particle_markers_;
+  std::optional<nav_msgs::msg::OccupancyGrid> latest_likelihood_field_;
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
