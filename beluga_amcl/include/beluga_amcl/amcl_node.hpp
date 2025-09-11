@@ -150,6 +150,9 @@ class AmclNode : public BaseAMCLNode {
   /// Point cloud updates subscription.
   std::unique_ptr<message_filters::Subscriber<sensor_msgs::msg::PointCloud2>> point_cloud_sub_;
 
+  /// Likelihood field publisher
+  rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr likelihood_field_pub_;
+
   /// Global relocalization service server.
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr global_localization_server_;
   /// No motion update service server.

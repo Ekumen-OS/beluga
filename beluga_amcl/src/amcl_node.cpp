@@ -452,18 +452,18 @@ void AmclNode::map_callback(nav_msgs::msg::OccupancyGrid::SharedPtr map) {
       return;
     }
     if (get_parameter("debug").as_bool() && particle_filter_->has_likelihood_field()) {
-      likelihood_field_pub_ = create_publisher<nav_msgs::msg::OccupancyGrid>(
-          "likelihood_field", rclcpp::SystemDefaultsQoS().transient_local());
+      auto qos = rclcpp::SystemDefaultsQoS();
+      qos.reliable().transient_local();
+      likelihood_field_pub_ = create_publisher<nav_msgs::msg::OccupancyGrid>("likelihood_field", qos);
       // Activate publisher immediately, we are likely past the activation phase.
       likelihood_field_pub_->on_activate();
     }
-
   } else {
     particle_filter_->update_map(beluga_ros::OccupancyGrid{std::move(map)});
   }
 
   if (likelihood_field_pub_) {
-    auto message = beluga_ros::msg::OccupancyGrid{};
+    auto message = nav_msgs::msg::OccupancyGrid{};
     beluga_ros::assign_likelihood_field(
         particle_filter_->likelihood_field(), particle_filter_->likelihood_field_origin(), message);
     beluga_ros::stamp_message(get_parameter("global_frame_id").as_string(), now(), message);

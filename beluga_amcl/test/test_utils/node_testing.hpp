@@ -105,6 +105,19 @@ class TesterNode : public rclcpp::Node {
 
   const auto& latest_particle_markers() const { return latest_particle_markers_; }
 
+  void create_likelihood_field_subscriber() {
+    auto qos = rclcpp::SystemDefaultsQoS();
+    qos.reliable().transient_local();
+    likelihood_field_subscriber_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
+        "likelihood_field", qos, std::bind(&TesterNode::likelihood_field_callback, this, std::placeholders::_1));
+  }
+
+  void likelihood_field_callback(nav_msgs::msg::OccupancyGrid::SharedPtr message) {
+    latest_likelihood_field_ = *message;
+  }
+
+  const auto& latest_likelihood_field() const { return latest_likelihood_field_; }
+
   static auto make_dummy_map() {
     auto map = nav_msgs::msg::OccupancyGrid{};
     map.header.frame_id = "map";
@@ -392,10 +405,12 @@ class TesterNode : public rclcpp::Node {
   SubscriberPtr<geometry_msgs::msg::PoseWithCovarianceStamped> pose_subscriber_;
   SubscriberPtr<geometry_msgs::msg::PoseArray> particle_cloud_subscriber_;
   SubscriberPtr<visualization_msgs::msg::MarkerArray> particle_markers_subscriber_;
+  SubscriberPtr<nav_msgs::msg::OccupancyGrid> likelihood_field_subscriber_;
 
   std::optional<geometry_msgs::msg::PoseWithCovarianceStamped> latest_pose_;
   std::optional<geometry_msgs::msg::PoseArray> latest_particle_cloud_;
   std::optional<visualization_msgs::msg::MarkerArray> latest_particle_markers_;
+  std::optional<nav_msgs::msg::OccupancyGrid> latest_likelihood_field_;
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;

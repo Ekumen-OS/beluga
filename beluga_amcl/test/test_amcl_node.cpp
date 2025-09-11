@@ -87,6 +87,12 @@ class BaseNodeFixture : public T {
         [this] { return tester_node_->latest_particle_markers().has_value(); }, 1000ms, amcl_node_, tester_node_);
   }
 
+  bool wait_for_likelihood_field() {
+    tester_node_->create_likelihood_field_subscriber();
+    return spin_until(
+        [this] { return tester_node_->latest_likelihood_field().has_value(); }, 1000ms, amcl_node_, tester_node_);
+  }
+
   bool request_global_localization() {
     if (!tester_node_->wait_for_global_localization_service(500ms)) {
       return false;
@@ -680,6 +686,16 @@ TEST_F(TestNode, IsPublishingParticleMarkers) {
   tester_node_->publish_map();
   ASSERT_TRUE(wait_for_initialization());
   ASSERT_TRUE(wait_for_particle_markers());
+}
+
+TEST_F(TestNode, IsPublishingLikelihoodField) {
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_model_type", "likelihood_field"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"debug", true});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  ASSERT_TRUE(wait_for_likelihood_field());
 }
 
 TEST_F(TestNode, LaserScanWithNoOdomToBase) {
