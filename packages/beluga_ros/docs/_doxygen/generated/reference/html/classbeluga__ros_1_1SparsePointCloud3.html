@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Beluga ROS: beluga_ros::SparsePointCloud3&amp;lt; T &amp;gt; Class Template Reference &#8212; Beluga  documentation</title>
+    <title>Beluga ROS: beluga_ros::SparsePointCloud3&amp;lt; T, Strict &amp;gt; Class Template Reference &#8212; Beluga  documentation</title>
   
   
   
@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 26 20:25:08 2025 -0300, 78f21b7&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Sep 11 17:29:24 2025 -0300, 6b0e9d3&#39;"/>
   </head>
   
   
@@ -365,7 +365,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>SparsePointCloud3&lt; T &gt; Class Template Reference</h1>
+    <h1>SparsePointCloud3&lt; T, Strict &gt; Class Template Reference</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -379,8 +379,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="sparsepointcloud3-lt-t-gt-class-template-reference">
-<h1>SparsePointCloud3&amp;lt; T &amp;gt; Class Template Reference<a class="headerlink" href="#sparsepointcloud3-lt-t-gt-class-template-reference" title="Link to this heading">#</a></h1>
+  <section id="sparsepointcloud3-lt-t-strict-gt-class-template-reference">
+<h1>SparsePointCloud3&amp;lt; T, Strict &amp;gt; Class Template Reference<a class="headerlink" href="#sparsepointcloud3-lt-t-strict-gt-class-template-reference" title="Link to this heading">#</a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -389,7 +389,7 @@ document.write(`
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Beluga ROS: beluga_ros::SparsePointCloud3&lt; T &gt; Class Template Reference</title>
+<title>Beluga ROS: beluga_ros::SparsePointCloud3&lt; T, Strict &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -439,64 +439,78 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classbeluga__ros_1_1SparsePointCloud3-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">beluga_ros::SparsePointCloud3&lt; T &gt; Class Template Reference</div>  </div>
+<div class="title">beluga_ros::SparsePointCloud3&lt; T, Strict &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
+<p>Thin wrapper for 3D <code>sensor_msgs/PointCloud2</code> messages with potentially sparse layouts.  
+ <a href="classbeluga__ros_1_1SparsePointCloud3.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="sparse__point__cloud_8hpp_source.html">sparse_point_cloud.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for beluga_ros::SparsePointCloud3&lt; T &gt;:</div>
+Inheritance diagram for beluga_ros::SparsePointCloud3&lt; T, Strict &gt;:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classbeluga__ros_1_1SparsePointCloud3__inherit__graph.svg" width="272" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classbeluga__ros_1_1SparsePointCloud3__inherit__graph.svg" width="234" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
-Collaboration diagram for beluga_ros::SparsePointCloud3&lt; T &gt;:</div>
+Collaboration diagram for beluga_ros::SparsePointCloud3&lt; T, Strict &gt;:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classbeluga__ros_1_1SparsePointCloud3__coll__graph.svg" width="272" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classbeluga__ros_1_1SparsePointCloud3__coll__graph.svg" width="234" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a1b5e1649cd5f541a5a6e3147e7997281"><td class="memItemLeft" align="right" valign="top"><a id="a1b5e1649cd5f541a5a6e3147e7997281"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#a1b5e1649cd5f541a5a6e3147e7997281">Scalar</a> = T</td></tr>
-<tr class="memdesc:a1b5e1649cd5f541a5a6e3147e7997281"><td class="mdescLeft">&#160;</td><td class="mdescRight">PointCloud type. <br /></td></tr>
-<tr class="separator:a1b5e1649cd5f541a5a6e3147e7997281"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0df589a1304be63346a23a352626bfca"><td class="memItemLeft" align="right" valign="top"><a id="a0df589a1304be63346a23a352626bfca"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#a0df589a1304be63346a23a352626bfca">Scalar</a> = T</td></tr>
+<tr class="memdesc:a0df589a1304be63346a23a352626bfca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expected PointCloud2 fields type. <br /></td></tr>
+<tr class="separator:a0df589a1304be63346a23a352626bfca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad088941a4c32f5b8f9208c0c1bf89e5b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#ad088941a4c32f5b8f9208c0c1bf89e5b">SparsePointCloud3</a> (beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d <a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#a92ffeb6892ed52678d3654c686ac162b">origin</a>=Sophus::SE3d())</td></tr>
-<tr class="memdesc:ad088941a4c32f5b8f9208c0c1bf89e5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check type is float or double.  <a href="classbeluga__ros_1_1SparsePointCloud3.html#ad088941a4c32f5b8f9208c0c1bf89e5b">More...</a><br /></td></tr>
-<tr class="separator:ad088941a4c32f5b8f9208c0c1bf89e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92ffeb6892ed52678d3654c686ac162b"><td class="memItemLeft" align="right" valign="top"><a id="a92ffeb6892ed52678d3654c686ac162b"></a>
-const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#a92ffeb6892ed52678d3654c686ac162b">origin</a> () const</td></tr>
-<tr class="memdesc:a92ffeb6892ed52678d3654c686ac162b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the point cloud frame origin in the filter frame. <br /></td></tr>
-<tr class="separator:a92ffeb6892ed52678d3654c686ac162b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88a1454c4139a04a42c1afa99ac2b671"><td class="memItemLeft" align="right" valign="top"><a id="a88a1454c4139a04a42c1afa99ac2b671"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#a88a1454c4139a04a42c1afa99ac2b671">points</a> () const</td></tr>
-<tr class="memdesc:a88a1454c4139a04a42c1afa99ac2b671"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the unorganized 3D point collection as an Eigen Map&lt;Eigen::Vector3&gt;. <br /></td></tr>
-<tr class="separator:a88a1454c4139a04a42c1afa99ac2b671"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af477bce6c0984772972124746c1d0a2f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#af477bce6c0984772972124746c1d0a2f">SparsePointCloud3</a> (beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d <a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">origin</a>=Sophus::SE3d())</td></tr>
+<tr class="separator:af477bce6c0984772972124746c1d0a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4fed97e4071888b3ef502f24eae955f"><td class="memItemLeft" align="right" valign="top"><a id="ac4fed97e4071888b3ef502f24eae955f"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#ac4fed97e4071888b3ef502f24eae955f">size</a> () const</td></tr>
+<tr class="memdesc:ac4fed97e4071888b3ef502f24eae955f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the point cloud size. <br /></td></tr>
+<tr class="separator:ac4fed97e4071888b3ef502f24eae955f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a854baaa635b637f82e49d898202f29f4"><td class="memItemLeft" align="right" valign="top"><a id="a854baaa635b637f82e49d898202f29f4"></a>
+const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">origin</a> () const</td></tr>
+<tr class="memdesc:a854baaa635b637f82e49d898202f29f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the point cloud frame origin in the filter frame. <br /></td></tr>
+<tr class="separator:a854baaa635b637f82e49d898202f29f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68b10fdf198aa03eac08953592f53736"><td class="memItemLeft" align="right" valign="top"><a id="a68b10fdf198aa03eac08953592f53736"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html#a68b10fdf198aa03eac08953592f53736">points</a> () const</td></tr>
+<tr class="memdesc:a68b10fdf198aa03eac08953592f53736"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the range of cartesian points in the point cloud. <br /></td></tr>
+<tr class="separator:a68b10fdf198aa03eac08953592f53736"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename T&gt;<br />
-class beluga_ros::SparsePointCloud3&lt; T &gt;</h3>
+<div class="textblock"><h3>template&lt;typename T, bool Strict = true&gt;<br />
+class beluga_ros::SparsePointCloud3&lt; T, Strict &gt;</h3>
 
-<p>Thin wrapper type for 3D <code>sensor_msgs/PointCloud2</code> messages. Assumes an XYZ... type message. XYZ datafields must be the same type (float or double). Other datafields can be different types. </p>
+<p>Thin wrapper for 3D <code>sensor_msgs/PointCloud2</code> messages with potentially sparse layouts. </p>
+<p>The layout of the point cloud message is only required to include at least three (3) fields: x, y, and z, all of the same floating point datatype, representing cartesian coordinates for each point. These fields must be at the beginning of each point.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Scalar type for point coordinates. Must be floating point. </td></tr>
+    <tr><td class="paramname">Strict</td><td>If true, xyz fields' datatypes must match the expected scalar type or the wrapper will throw on construction. If false, the wrapper will cast as necessary. </td></tr>
+  </table>
+  </dd>
+</dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad088941a4c32f5b8f9208c0c1bf89e5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad088941a4c32f5b8f9208c0c1bf89e5b">&#9670;&nbsp;</a></span>SparsePointCloud3()</h2>
+<a id="af477bce6c0984772972124746c1d0a2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af477bce6c0984772972124746c1d0a2f">&#9670;&nbsp;</a></span>SparsePointCloud3()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T &gt; </div>
+template&lt;typename T , bool Strict = true&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html">beluga_ros::SparsePointCloud3</a>&lt; T &gt;::<a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3</a> </td>
+          <td class="memname"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html">beluga_ros::SparsePointCloud3</a>&lt; T, Strict &gt;::<a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3</a> </td>
           <td>(</td>
           <td class="paramtype">beluga_ros::msg::PointCloud2ConstSharedPtr&#160;</td>
           <td class="paramname"><em>cloud</em>, </td>
@@ -519,13 +533,17 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Check type is float or double. </p>
 <p>Constructor.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cloud</td><td>Point cloud message. </td></tr>
     <tr><td class="paramname">origin</td><td>Point cloud frame origin in the filter frame. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>if <code>cloud</code> does not meet expectations. </td></tr>
   </table>
   </dd>
 </dl>
@@ -591,7 +609,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 26 20:25:08 2025 -0300, 78f21b7&#39;.
+  Last updated on &#39;Thu Sep 11 17:29:24 2025 -0300, 6b0e9d3&#39;.
   <br/>
 </p>
   </div>

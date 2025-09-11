@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node1" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BasePointCloud.html" title=" " alt="" coords="5,5,181,47"/>
-<area shape="rect" id="node2" href="$classbeluga__ros_1_1PointCloud3.html" title="Thin wrapper type for 3D sensor_msgs/PointCloud2 messages." alt="" coords="229,13,447,39"/>
+<area shape="rect" id="node2" href="$classbeluga__ros_1_1PointCloud3.html" title="Thin wrapper type for 3D sensor_msgs/PointCloud2 messages with dense layouts." alt="" coords="229,5,408,47"/>
 </map>

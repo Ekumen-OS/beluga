@@ -14,6 +14,7 @@ Namespace Members
 
       All <namespacemembers>
       Functions <namespacemembers_func>
+      Typedefs <namespacemembers_type>
 
    .. raw:: html
 

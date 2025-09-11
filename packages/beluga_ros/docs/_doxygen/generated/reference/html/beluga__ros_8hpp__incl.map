@@ -1,52 +1,52 @@
 <map id="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/beluga_ros.hpp" name="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/beluga_ros.hpp">
-<area shape="rect" id="node1" title="Includes all the Beluga ROS API." alt="" coords="3910,5,4110,61"/>
-<area shape="rect" id="node2" href="$amcl_8hpp.html" title="Generic two&#45;dimensional implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm in 2..." alt="" coords="1499,117,1657,143"/>
-<area shape="rect" id="node19" href="$laser__scan_8hpp.html" title="Implementation of sensor_msgs/LaserScan wrapper type." alt="" coords="4315,213,4510,240"/>
-<area shape="rect" id="node25" href="$occupancy__grid_8hpp.html" title="Implementation of nav_msgs/OccupancyGrid wrapper type." alt="" coords="84,206,251,247"/>
-<area shape="rect" id="node32" href="$particle__cloud_8hpp.html" title="Utilities for particle cloud I/O over ROS interfaces." alt="" coords="3438,109,3585,151"/>
-<area shape="rect" id="node39" href="$tf2__eigen_8hpp.html" title="Message conversion API overloads for Eigen types." alt="" coords="4105,213,4291,240"/>
-<area shape="rect" id="node41" href="$tf2__sophus_8hpp.html" title="Message conversion API overloads for Sophus types." alt="" coords="3833,213,4029,240"/>
-<area shape="rect" id="node46" href="$point__cloud_8hpp.html" title="Implementation of sensor_msgs/PointCloud2 wrapper type for messages with memory&#45;aligned strides." alt="" coords="4711,213,4911,240"/>
-<area shape="rect" id="node49" href="$sparse__point__cloud_8hpp.html" title="Implementation of sensor_msgs/PointCloud2 wrapper type for messages without alignment constraints on ..." alt="" coords="4993,206,5173,247"/>
-<area shape="rect" id="node3" title=" " alt="" coords="681,213,755,240"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,310,65,337"/>
-<area shape="rect" id="node5" title=" " alt="" coords="780,213,848,240"/>
-<area shape="rect" id="node6" title=" " alt="" coords="872,213,1095,240"/>
-<area shape="rect" id="node7" title=" " alt="" coords="2234,206,2381,247"/>
-<area shape="rect" id="node8" title=" " alt="" coords="2523,310,2646,337"/>
-<area shape="rect" id="node9" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$spatial__hash_8hpp.html.html" title=" " alt="" coords="2405,206,2586,247"/>
-<area shape="rect" id="node10" title=" " alt="" coords="1119,199,1290,255"/>
-<area shape="rect" id="node11" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$containers_8hpp.html.html" title=" " alt="" coords="1315,213,1481,240"/>
-<area shape="rect" id="node12" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$motion_8hpp.html.html" title=" " alt="" coords="1506,213,1650,240"/>
-<area shape="rect" id="node13" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$policies_8hpp.html.html" title=" " alt="" coords="1675,213,1823,240"/>
-<area shape="rect" id="node14" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$random_8hpp.html.html" title=" " alt="" coords="1847,213,1995,240"/>
-<area shape="rect" id="node15" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$sensor_8hpp.html.html" title=" " alt="" coords="2019,213,2159,240"/>
-<area shape="rect" id="node16" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$value__grid_8hpp.html.html" title=" " alt="" coords="275,206,422,247"/>
-<area shape="rect" id="node17" title=" " alt="" coords="446,213,657,240"/>
-<area shape="rect" id="node18" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$sample_8hpp.html.html" title=" " alt="" coords="2611,213,2799,240"/>
-<area shape="rect" id="node20" title=" " alt="" coords="5054,310,5225,337"/>
-<area shape="rect" id="node21" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$laser__scan_8hpp.html.html" title=" " alt="" coords="4315,303,4462,344"/>
-<area shape="rect" id="node22" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$take__evenly_8hpp.html.html" title=" " alt="" coords="5249,310,5467,337"/>
-<area shape="rect" id="node23" href="$messages_8hpp_source.html" title=" " alt="" coords="4100,310,4291,337"/>
-<area shape="rect" id="node24" title=" " alt="" coords="4486,310,4609,337"/>
-<area shape="rect" id="node26" title=" " alt="" coords="3059,310,3121,337"/>
-<area shape="rect" id="node27" title=" " alt="" coords="1657,310,1734,337"/>
-<area shape="rect" id="node28" title=" " alt="" coords="269,310,332,337"/>
-<area shape="rect" id="node29" title=" " alt="" coords="357,310,479,337"/>
-<area shape="rect" id="node30" title=" " alt="" coords="3145,310,3245,337"/>
-<area shape="rect" id="node31" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$occupancy__grid_8hpp.html.html" title=" " alt="" coords="90,303,245,344"/>
-<area shape="rect" id="node33" title=" " alt="" coords="2874,213,2925,240"/>
-<area shape="rect" id="node34" title=" " alt="" coords="2949,213,3041,240"/>
-<area shape="rect" id="node35" title=" " alt="" coords="3066,213,3285,240"/>
-<area shape="rect" id="node36" title=" " alt="" coords="3269,310,3405,337"/>
-<area shape="rect" id="node37" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$primitives_8hpp.html.html" title=" " alt="" coords="3309,213,3473,240"/>
-<area shape="rect" id="node38" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$zip_8hpp.html.html" title=" " alt="" coords="3651,213,3809,240"/>
-<area shape="rect" id="node40" title=" " alt="" coords="3984,310,4076,337"/>
-<area shape="rect" id="node42" title=" " alt="" coords="3756,303,3960,344"/>
-<area shape="rect" id="node43" title=" " alt="" coords="4804,310,5029,337"/>
-<area shape="rect" id="node44" title=" " alt="" coords="3429,310,3586,337"/>
-<area shape="rect" id="node45" title=" " alt="" coords="3611,310,3732,337"/>
-<area shape="rect" id="node47" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$point__cloud_8hpp.html.html" title=" " alt="" coords="4633,303,4779,344"/>
-<area shape="rect" id="node48" title=" " alt="" coords="5491,310,5593,337"/>
-<area shape="rect" id="node50" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$sparse__point__cloud_8hpp.html.html" title=" " alt="" coords="5618,303,5797,344"/>
+<area shape="rect" id="node1" title="Includes all the Beluga ROS API." alt="" coords="2576,5,2776,61"/>
+<area shape="rect" id="node2" href="$amcl_8hpp.html" title="Generic two&#45;dimensional implementation of the Adaptive Monte Carlo Localization (AMCL) algorithm in 2..." alt="" coords="2851,117,3008,143"/>
+<area shape="rect" id="node19" href="$laser__scan_8hpp.html" title="Implementation of sensor_msgs/LaserScan wrapper type." alt="" coords="4339,213,4533,240"/>
+<area shape="rect" id="node25" href="$occupancy__grid_8hpp.html" title="Implementation of nav_msgs/OccupancyGrid wrapper type." alt="" coords="2087,206,2254,247"/>
+<area shape="rect" id="node32" href="$sparse__point__cloud_8hpp.html" title="Implementation of sensor_msgs/PointCloud2 wrapper type for messages without alignment constraints on ..." alt="" coords="4782,206,4962,247"/>
+<area shape="rect" id="node37" href="$particle__cloud_8hpp.html" title="Utilities for particle cloud I/O over ROS interfaces." alt="" coords="1168,109,1315,151"/>
+<area shape="rect" id="node44" href="$tf2__eigen_8hpp.html" title="Message conversion API overloads for Eigen types." alt="" coords="5,213,192,240"/>
+<area shape="rect" id="node46" href="$tf2__sophus_8hpp.html" title="Message conversion API overloads for Sophus types." alt="" coords="318,213,514,240"/>
+<area shape="rect" id="node49" href="$point__cloud_8hpp.html" title="Implementation of sensor_msgs/PointCloud2 wrapper type for messages with memory&#45;aligned strides." alt="" coords="4557,213,4757,240"/>
+<area shape="rect" id="node3" title=" " alt="" coords="3513,213,3588,240"/>
+<area shape="rect" id="node4" title=" " alt="" coords="2285,310,2345,337"/>
+<area shape="rect" id="node5" title=" " alt="" coords="3613,213,3681,240"/>
+<area shape="rect" id="node6" title=" " alt="" coords="3705,213,3927,240"/>
+<area shape="rect" id="node7" title=" " alt="" coords="1916,206,2063,247"/>
+<area shape="rect" id="node8" title=" " alt="" coords="1323,310,1445,337"/>
+<area shape="rect" id="node9" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$spatial__hash_8hpp.html.html" title=" " alt="" coords="1497,206,1679,247"/>
+<area shape="rect" id="node10" title=" " alt="" coords="3952,199,4123,255"/>
+<area shape="rect" id="node11" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$containers_8hpp.html.html" title=" " alt="" coords="4147,213,4314,240"/>
+<area shape="rect" id="node12" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$motion_8hpp.html.html" title=" " alt="" coords="2431,213,2575,240"/>
+<area shape="rect" id="node13" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$policies_8hpp.html.html" title=" " alt="" coords="2599,213,2747,240"/>
+<area shape="rect" id="node14" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$random_8hpp.html.html" title=" " alt="" coords="2771,213,2919,240"/>
+<area shape="rect" id="node15" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$sensor_8hpp.html.html" title=" " alt="" coords="2943,213,3083,240"/>
+<area shape="rect" id="node16" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$value__grid_8hpp.html.html" title=" " alt="" coords="3108,206,3255,247"/>
+<area shape="rect" id="node17" title=" " alt="" coords="3279,213,3489,240"/>
+<area shape="rect" id="node18" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$sample_8hpp.html.html" title=" " alt="" coords="1703,213,1891,240"/>
+<area shape="rect" id="node20" title=" " alt="" coords="4571,310,4741,337"/>
+<area shape="rect" id="node21" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$laser__scan_8hpp.html.html" title=" " alt="" coords="3908,303,4055,344"/>
+<area shape="rect" id="node22" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$take__evenly_8hpp.html.html" title=" " alt="" coords="4329,310,4546,337"/>
+<area shape="rect" id="node23" href="$messages_8hpp_source.html" title=" " alt="" coords="2369,310,2559,337"/>
+<area shape="rect" id="node24" title=" " alt="" coords="3761,310,3884,337"/>
+<area shape="rect" id="node26" title=" " alt="" coords="735,310,798,337"/>
+<area shape="rect" id="node27" title=" " alt="" coords="1621,310,1699,337"/>
+<area shape="rect" id="node28" title=" " alt="" coords="2050,310,2113,337"/>
+<area shape="rect" id="node29" title=" " alt="" coords="2137,310,2260,337"/>
+<area shape="rect" id="node30" title=" " alt="" coords="1023,310,1123,337"/>
+<area shape="rect" id="node31" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$occupancy__grid_8hpp.html.html" title=" " alt="" coords="1871,303,2025,344"/>
+<area shape="rect" id="node33" title=" " alt="" coords="4937,310,5039,337"/>
+<area shape="rect" id="node34" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$sparse__point__cloud_8hpp.html.html" title=" " alt="" coords="5064,303,5243,344"/>
+<area shape="rect" id="node35" title=" " alt="" coords="5267,310,5474,337"/>
+<area shape="rect" id="node36" title=" " alt="" coords="4079,310,4305,337"/>
+<area shape="rect" id="node38" title=" " alt="" coords="539,213,589,240"/>
+<area shape="rect" id="node39" title=" " alt="" coords="614,213,706,240"/>
+<area shape="rect" id="node40" title=" " alt="" coords="731,213,949,240"/>
+<area shape="rect" id="node41" title=" " alt="" coords="165,310,301,337"/>
+<area shape="rect" id="node42" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$primitives_8hpp.html.html" title=" " alt="" coords="974,213,1138,240"/>
+<area shape="rect" id="node43" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$zip_8hpp.html.html" title=" " alt="" coords="1162,213,1321,240"/>
+<area shape="rect" id="node45" title=" " alt="" coords="49,310,141,337"/>
+<area shape="rect" id="node47" title=" " alt="" coords="507,303,711,344"/>
+<area shape="rect" id="node48" title=" " alt="" coords="325,310,483,337"/>
+<area shape="rect" id="node50" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$point__cloud_8hpp.html.html" title=" " alt="" coords="4765,303,4912,344"/>
 </map>

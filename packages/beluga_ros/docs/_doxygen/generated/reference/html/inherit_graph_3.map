@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node1" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseSparsePointCloud.html" title=" " alt="" coords="5,5,225,47"/>
-<area shape="rect" id="node2" href="$classbeluga__ros_1_1SparsePointCloud3.html" title=" " alt="" coords="273,13,535,39"/>
+<area shape="rect" id="node2" href="$classbeluga__ros_1_1SparsePointCloud3.html" title="Thin wrapper for 3D sensor_msgs/PointCloud2 messages with potentially sparse layouts." alt="" coords="273,5,496,47"/>
 </map>

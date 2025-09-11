@@ -1,11 +1,11 @@
-.. meta::373f93339a37a501efe25f1b3b19bc983232a38499f332eb45f6c1f9c4a9139283296e53aa922d5c972dc7888c43a9765d8f1b61b7a92d457e9c4e3bd21ce9f4
+.. meta::bde29a89f4b89289bca6d9b4748d34aebc134783482bfa0d666c07fc41ad32982944c0773690783794af4e39ae9fcfd0fc0fd55e84d642d5e004d46dbafa1c3c
 
 :orphan:
 
-.. title:: Beluga ROS: beluga_ros::SparsePointCloud3&lt; T &gt; Class Template Reference
+.. title:: Beluga ROS: beluga_ros::SparsePointCloud3&lt; T, Strict &gt; Class Template Reference
 
-SparsePointCloud3&lt; T &gt; Class Template Reference
-=====================================================
+SparsePointCloud3&lt; T, Strict &gt; Class Template Reference
+=============================================================
 
 .. container:: doxygen-content
 

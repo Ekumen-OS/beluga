@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 26 20:25:08 2025 -0300, 78f21b7&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Sep 11 17:29:24 2025 -0300, 6b0e9d3&#39;"/>
   </head>
   
   
@@ -436,7 +436,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">sparse_point_cloud.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -444,12 +445,13 @@ $(function() {
 
 <p>Implementation of <code>sensor_msgs/PointCloud2</code> wrapper type for messages without alignment constraints on the stride.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;range/v3/view/iota.hpp&gt;</code><br />
+<div class="textblock"><code>#include &lt;Eigen/Dense&gt;</code><br />
 <code>#include &lt;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sparse__point__cloud_8hpp.html">beluga/sensor/data/sparse_point_cloud.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/take__evenly_8hpp.html">beluga/views/take_evenly.hpp</a>&gt;</code><br />
 <code>#include &lt;beluga_ros/messages.hpp&gt;</code><br />
+<code>#include &lt;range/v3/view/any_view.hpp&gt;</code><br />
+<code>#include &lt;range/v3/view/iota.hpp&gt;</code><br />
 <code>#include &lt;sophus/se3.hpp&gt;</code><br />
-<code>#include &lt;Eigen/Dense&gt;</code><br />
 <code>#include &quot;beluga/eigen_compatibility.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for sparse_point_cloud.hpp:</div>
@@ -460,7 +462,7 @@ Include dependency graph for sparse_point_cloud.hpp:</div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="sparse__point__cloud_8hpp__dep__incl.svg" width="266" height="171"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="sparse__point__cloud_8hpp__dep__incl.svg" width="304" height="275"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div>
@@ -468,7 +470,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html">beluga_ros::SparsePointCloud3&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html">beluga_ros::SparsePointCloud3&lt; T, Strict &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thin wrapper for 3D <code>sensor_msgs/PointCloud2</code> messages with potentially sparse layouts.  <a href="classbeluga__ros_1_1SparsePointCloud3.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -476,6 +479,17 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacebeluga__ros"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html">beluga_ros</a></td></tr>
 <tr class="memdesc:namespacebeluga__ros"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main Beluga ROS namespace. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a11afdefe42b9868067180dadb0da8a8b"><td class="memItemLeft" align="right" valign="top"><a id="a11afdefe42b9868067180dadb0da8a8b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a11afdefe42b9868067180dadb0da8a8b">beluga_ros::SparsePointCloud3d</a> = SparsePointCloud3&lt; double, false &gt;</td></tr>
+<tr class="memdesc:a11afdefe42b9868067180dadb0da8a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-strict alias for <a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html" title="Thin wrapper for 3D sensor_msgs/PointCloud2 messages with potentially sparse layouts.">SparsePointCloud3</a> of <code>double</code> type. <br /></td></tr>
+<tr class="separator:a11afdefe42b9868067180dadb0da8a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a730b74280619ab41ecea2d96959a7c29"><td class="memItemLeft" align="right" valign="top"><a id="a730b74280619ab41ecea2d96959a7c29"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a730b74280619ab41ecea2d96959a7c29">beluga_ros::SparsePointCloud3f</a> = SparsePointCloud3&lt; float, false &gt;</td></tr>
+<tr class="memdesc:a730b74280619ab41ecea2d96959a7c29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-strict alias for <a class="el" href="classbeluga__ros_1_1SparsePointCloud3.html" title="Thin wrapper for 3D sensor_msgs/PointCloud2 messages with potentially sparse layouts.">SparsePointCloud3</a> of <code>float</code> type. <br /></td></tr>
+<tr class="separator:a730b74280619ab41ecea2d96959a7c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of <code>sensor_msgs/PointCloud2</code> wrapper type for messages without alignment constraints on the stride. </p>
@@ -536,7 +550,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 26 20:25:08 2025 -0300, 78f21b7&#39;.
+  Last updated on &#39;Thu Sep 11 17:29:24 2025 -0300, 6b0e9d3&#39;.
   <br/>
 </p>
   </div>

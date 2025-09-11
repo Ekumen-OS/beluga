@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 26 20:25:08 2025 -0300, 78f21b7&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Sep 11 17:29:24 2025 -0300, 6b0e9d3&#39;"/>
   </head>
   
   
@@ -515,10 +515,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a9f964e31e1d592f2909156d3deaa417e">do_periodic_timer_callback</a> () override</td></tr>
 <tr class="memdesc:a9f964e31e1d592f2909156d3deaa417e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for periodic particle cloud updates. <br /></td></tr>
 <tr class="separator:a9f964e31e1d592f2909156d3deaa417e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a000ad7e3f576131d90d7ed66b94d652e"><td class="memItemLeft" align="right" valign="top"><a id="a000ad7e3f576131d90d7ed66b94d652e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a000ad7e3f576131d90d7ed66b94d652e">laser_callback</a> (sensor_msgs::msg::LaserScan::ConstSharedPtr)</td></tr>
-<tr class="memdesc:a000ad7e3f576131d90d7ed66b94d652e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for laser scan updates. <br /></td></tr>
-<tr class="separator:a000ad7e3f576131d90d7ed66b94d652e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26d3fac644c53440a0d32d2b8d4999cc"><td class="memTemplParams" colspan="2"><a id="a26d3fac644c53440a0d32d2b8d4999cc"></a>
+template&lt;typename TransformT &gt; </td></tr>
+<tr class="memitem:a26d3fac644c53440a0d32d2b8d4999cc"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; TransformT &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a26d3fac644c53440a0d32d2b8d4999cc">lookup_transform</a> (const std::string &amp;target_frame_id, const std::string &amp;source_frame_id, const tf2::TimePoint &amp;stamp)</td></tr>
+<tr class="memdesc:a26d3fac644c53440a0d32d2b8d4999cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to look up a tf transform immediately. <br /></td></tr>
+<tr class="separator:a26d3fac644c53440a0d32d2b8d4999cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a121e6b334ed93d1e1d8771c131e6aac0"><td class="memItemLeft" align="right" valign="top"><a id="a121e6b334ed93d1e1d8771c131e6aac0"></a>
+std::optional&lt; <a class="elRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/classbeluga__ros_1_1LaserScan.html">beluga_ros::LaserScan</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a121e6b334ed93d1e1d8771c131e6aac0">wrap_sensor_data</a> (const sensor_msgs::msg::LaserScan::ConstSharedPtr &amp;sensor_msg)</td></tr>
+<tr class="memdesc:a121e6b334ed93d1e1d8771c131e6aac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to wrap a laser scan message. <br /></td></tr>
+<tr class="separator:a121e6b334ed93d1e1d8771c131e6aac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a900c82d522d305d015a99183746c6a4b"><td class="memItemLeft" align="right" valign="top"><a id="a900c82d522d305d015a99183746c6a4b"></a>
+std::optional&lt; <a class="elRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/namespacebeluga__ros.html#a730b74280619ab41ecea2d96959a7c29">beluga_ros::SparsePointCloud3f</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a900c82d522d305d015a99183746c6a4b">wrap_sensor_data</a> (const sensor_msgs::msg::PointCloud2::ConstSharedPtr &amp;sensor_msg)</td></tr>
+<tr class="memdesc:a900c82d522d305d015a99183746c6a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to wrap a pointcloud message. <br /></td></tr>
+<tr class="separator:a900c82d522d305d015a99183746c6a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31cfc2f18721cb7412e54df73aaccd9c"><td class="memTemplParams" colspan="2"><a id="a31cfc2f18721cb7412e54df73aaccd9c"></a>
+template&lt;typename MessageT &gt; </td></tr>
+<tr class="memitem:a31cfc2f18721cb7412e54df73aaccd9c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a31cfc2f18721cb7412e54df73aaccd9c">sensor_callback</a> (const std::shared_ptr&lt; const MessageT &gt; &amp;sensor_msg)</td></tr>
+<tr class="memdesc:a31cfc2f18721cb7412e54df73aaccd9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for sensor updates. <br /></td></tr>
+<tr class="separator:a31cfc2f18721cb7412e54df73aaccd9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab83cab94efa0f515cdbb5cf2699eb9a"><td class="memItemLeft" align="right" valign="top"><a id="aab83cab94efa0f515cdbb5cf2699eb9a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#aab83cab94efa0f515cdbb5cf2699eb9a">do_initial_pose_callback</a> (geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) override</td></tr>
 <tr class="memdesc:aab83cab94efa0f515cdbb5cf2699eb9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for pose (re)initialization. <br /></td></tr>
@@ -613,6 +627,14 @@ rclcpp::Subscription&lt; nav_msgs::msg::OccupancyGrid &gt;::SharedPtr&#160;</td>
 std::unique_ptr&lt; <a class="el" href="message__filters_8hpp.html#a675d23ea709bfdf18ec6af33d80d96fa">message_filters::Subscriber</a>&lt; sensor_msgs::msg::LaserScan &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a8a0226e36aca08001c9ca83060e9b4a3">laser_scan_sub_</a></td></tr>
 <tr class="memdesc:a8a0226e36aca08001c9ca83060e9b4a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Laser scan updates subscription. <br /></td></tr>
 <tr class="separator:a8a0226e36aca08001c9ca83060e9b4a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e264ff307ce7824627bb79998b2df49"><td class="memItemLeft" align="right" valign="top"><a id="a3e264ff307ce7824627bb79998b2df49"></a>
+std::unique_ptr&lt; <a class="el" href="message__filters_8hpp.html#a675d23ea709bfdf18ec6af33d80d96fa">message_filters::Subscriber</a>&lt; sensor_msgs::msg::PointCloud2 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a3e264ff307ce7824627bb79998b2df49">point_cloud_sub_</a></td></tr>
+<tr class="memdesc:a3e264ff307ce7824627bb79998b2df49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Point cloud updates subscription. <br /></td></tr>
+<tr class="separator:a3e264ff307ce7824627bb79998b2df49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c363bd95ece74a6d834e59cbad6691e"><td class="memItemLeft" align="right" valign="top"><a id="a8c363bd95ece74a6d834e59cbad6691e"></a>
+rclcpp_lifecycle::LifecyclePublisher&lt; nav_msgs::msg::OccupancyGrid &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a8c363bd95ece74a6d834e59cbad6691e">likelihood_field_pub_</a></td></tr>
+<tr class="memdesc:a8c363bd95ece74a6d834e59cbad6691e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Likelihood field publisher. <br /></td></tr>
+<tr class="separator:a8c363bd95ece74a6d834e59cbad6691e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f93438aafd52c5d29229953eb6e0852"><td class="memItemLeft" align="right" valign="top"><a id="a7f93438aafd52c5d29229953eb6e0852"></a>
 rclcpp::Service&lt; std_srvs::srv::Empty &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a7f93438aafd52c5d29229953eb6e0852">global_localization_server_</a></td></tr>
 <tr class="memdesc:a7f93438aafd52c5d29229953eb6e0852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global relocalization service server. <br /></td></tr>
@@ -629,6 +651,14 @@ std::unique_ptr&lt; tf2_ros::MessageFilter&lt; sensor_msgs::msg::LaserScan &gt; 
 ::message_filters::Connection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a9c56d7da106405771cc15ba7c818b4df">laser_scan_connection_</a></td></tr>
 <tr class="memdesc:a9c56d7da106405771cc15ba7c818b4df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connection for laser scan updates filter and callback. <br /></td></tr>
 <tr class="separator:a9c56d7da106405771cc15ba7c818b4df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d0ce70f3e3c4d69c59de4d15f21947d"><td class="memItemLeft" align="right" valign="top"><a id="a1d0ce70f3e3c4d69c59de4d15f21947d"></a>
+std::unique_ptr&lt; tf2_ros::MessageFilter&lt; sensor_msgs::msg::PointCloud2 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a1d0ce70f3e3c4d69c59de4d15f21947d">point_cloud_filter_</a></td></tr>
+<tr class="memdesc:a1d0ce70f3e3c4d69c59de4d15f21947d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform synchronization filter for laser scan updates. <br /></td></tr>
+<tr class="separator:a1d0ce70f3e3c4d69c59de4d15f21947d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae878aa8219f43fb04f3e6117f71a7889"><td class="memItemLeft" align="right" valign="top"><a id="ae878aa8219f43fb04f3e6117f71a7889"></a>
+::message_filters::Connection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#ae878aa8219f43fb04f3e6117f71a7889">point_cloud_connection_</a></td></tr>
+<tr class="memdesc:ae878aa8219f43fb04f3e6117f71a7889"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connection for point cloud updates filter and callback. <br /></td></tr>
+<tr class="separator:ae878aa8219f43fb04f3e6117f71a7889"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c9153d4a6b0349d229b05a4a18a9258"><td class="memItemLeft" align="right" valign="top"><a id="a5c9153d4a6b0349d229b05a4a18a9258"></a>
 std::unique_ptr&lt; <a class="elRef" href="../../../../../../beluga_ros/docs/_doxygen/generated/reference/html/classbeluga__ros_1_1Amcl.html">beluga_ros::Amcl</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1AmclNode.html#a5c9153d4a6b0349d229b05a4a18a9258">particle_filter_</a></td></tr>
 <tr class="memdesc:a5c9153d4a6b0349d229b05a4a18a9258"><td class="mdescLeft">&#160;</td><td class="mdescRight">Particle filter instance. <br /></td></tr>
@@ -658,10 +688,6 @@ rclcpp_lifecycle::LifecyclePublisher&lt; visualization_msgs::msg::MarkerArray &g
 rclcpp_lifecycle::LifecyclePublisher&lt; geometry_msgs::msg::PoseWithCovarianceStamped &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#ac95ec7145c7d97c802f2c7786c40fbf8">pose_pub_</a></td></tr>
 <tr class="memdesc:ac95ec7145c7d97c802f2c7786c40fbf8 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimated pose publisher. <br /></td></tr>
 <tr class="separator:ac95ec7145c7d97c802f2c7786c40fbf8 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb2657c044eb19dfe39049adfd072344 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="adb2657c044eb19dfe39049adfd072344"></a>
-rclcpp_lifecycle::LifecyclePublisher&lt; nav_msgs::msg::OccupancyGrid &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#adb2657c044eb19dfe39049adfd072344">likelihood_field_pub_</a></td></tr>
-<tr class="memdesc:adb2657c044eb19dfe39049adfd072344 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Likelihood field publisher. <br /></td></tr>
-<tr class="separator:adb2657c044eb19dfe39049adfd072344 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a132faa2c69def19aa24a6bc3685506f3 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="memItemLeft" align="right" valign="top"><a id="a132faa2c69def19aa24a6bc3685506f3"></a>
 std::unique_ptr&lt; bond::Bond &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga__amcl_1_1BaseAMCLNode.html#a132faa2c69def19aa24a6bc3685506f3">bond_</a></td></tr>
 <tr class="memdesc:a132faa2c69def19aa24a6bc3685506f3 inherit pro_attribs_classbeluga__amcl_1_1BaseAMCLNode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node bond with the lifecycle manager. <br /></td></tr>
@@ -826,7 +852,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 26 20:25:08 2025 -0300, 78f21b7&#39;.
+  Last updated on &#39;Thu Sep 11 17:29:24 2025 -0300, 6b0e9d3&#39;.
   <br/>
 </p>
   </div>

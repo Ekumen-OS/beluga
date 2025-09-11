@@ -58,7 +58,7 @@
     <link rel="prev" title="ROS Reference" href="ros-reference.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Aug 26 20:25:08 2025 -0300, 78f21b7&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Sep 11 17:29:24 2025 -0300, 6b0e9d3&#39;"/>
   </head>
   
   
@@ -445,7 +445,11 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">scan_topic</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>The name of the topic where laser scans will be published. A transform must exist between the coordinate frame used in the scan messages and the base frame of the robot.</p>
 </dd>
-<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">scan</span></code>.</p>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">scan</span></code> unless <code class="docutils literal notranslate"><span class="pre">point_cloud_topic</span></code> is set.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">point_cloud_topic</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>The name of the topic where laser scans will be published as a point cloud. A transform must exist between the coordinate frame used in the scan messages and the base frame of the robot.</p>
+</dd>
+<dd><p>Ignored if not set.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">map_topic</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>The name of the topic to subscribe to for map updates. Typically published by the <a class="reference external" href="https://github.com/ros-planning/navigation2/tree/main/nav2_map_server">map server</a>.</p>
 </dd>
@@ -632,6 +636,10 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 </dd>
 <dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
 </dd>
+<dt><code class="docutils literal notranslate"><span class="pre">debug</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>If true, debugging aids will be enabled (i.e. logged, published). Note this will increase resource usage and degrade performance somewhat.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd>
 </dl>
 </section>
 </section>
@@ -644,6 +652,10 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 <dt><code class="docutils literal notranslate"><span class="pre">particle_markers</span></code></dt><dd><p>Estimated pose distribution visualization published as <code class="docutils literal notranslate"><span class="pre">visualization_msgs/msg/MarkerArray</span></code> messages, using a system default QoS policy. Each particle is depicted using an arrow. Each arrow is colored and scaled according to the weight of the corresponding state in the distribution. Large, bright red arrows represent the most likely states, whereas small, dim purple arrows represent the least likely states. The rest lie in between. It will only be published if subscribers are found.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">pose</span></code></dt><dd><p>Mean and covariance of the estimated pose distribution published as <code class="docutils literal notranslate"><span class="pre">geometry_msgs/msg/PoseWithCovarianceStamped</span></code> messages (assumed Gaussian), using a system default QoS policy.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code></dt><dd><p>Likelihood field published as <code class="docutils literal notranslate"><span class="pre">nav_msgs/msg/OccupancyGrid</span></code> messages, using a system default QoS policy with transient local durability. It will be published with every map update but only if a likelihood field based sensor model was configured as <code class="docutils literal notranslate"><span class="pre">laser_model_type</span></code>.</p>
+</dd>
+<dd><p>Only published if <code class="docutils literal notranslate"><span class="pre">debug</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
 </dd>
 </dl>
 </section>
@@ -659,6 +671,10 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 <dt><code class="docutils literal notranslate"><span class="pre">&lt;initial_pose_topic&gt;</span></code></dt><dd><p>Gaussian pose distribution subscribed as <code class="docutils literal notranslate"><span class="pre">geometry_msgs/msg/PoseWithCovarianceStamped</span></code> messages, using a system default QoS policy, for filter (re)initialization. Actual topic name is dictated by the <code class="docutils literal notranslate"><span class="pre">initial_pose_topic</span></code> parameter.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">&lt;scan_topic&gt;</span></code></dt><dd><p>Lidar scan updates subscribed as <code class="docutils literal notranslate"><span class="pre">sensor_msgs/msg/LaserScan</span></code> messages, using a sensor data QoS policy. Actual topic name is dictated by the <code class="docutils literal notranslate"><span class="pre">scan_topic</span></code> parameter.</p>
+</dd>
+<dd><p>Lidar scans subscribed for sensor models to work with.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;point_cloud_topic&gt;</span></code></dt><dd><p>Lidar scan updates subscribed as <code class="docutils literal notranslate"><span class="pre">sensor_msgs/msg/PointCloud2</span></code> messages, using a sensor data QoS policy. Mutually exclusive with <code class="docutils literal notranslate"><span class="pre">&lt;scan_topic&gt;</span></code>. Only applicable when the <code class="docutils literal notranslate"><span class="pre">point_cloud_topic</span></code> parameter is set.</p>
 </dd>
 <dd><p>Lidar scans subscribed for sensor models to work with.</p>
 </dd>
@@ -732,253 +748,259 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">map_topic</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">point_cloud_topic</span></code></p></td>
+<td><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p>✅</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">map_topic</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initial_pose_topic</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initial_pose_topic</span></code></p></td>
 <td><p>A parameter that allows changing the topic name doesn’t exist in Nav2 AMCL, but the <code class="docutils literal notranslate"><span class="pre">initialpose</span></code> topic can be <a class="reference external" href="https://design.ros2.org/articles/static_remapping.html">remapped externally</a>.</p></td>
 <td class="text-center"><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">set_initial_pose</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">set_initial_pose</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initial_pose.[x,</span> <span class="pre">y,</span> <span class="pre">yaw]</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initial_pose.[x,</span> <span class="pre">y,</span> <span class="pre">yaw]</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initial_pose.covariance_[x,</span> <span class="pre">y,</span> <span class="pre">yaw,</span> <span class="pre">xy,</span> <span class="pre">xyaw,</span> <span class="pre">yyaw]</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initial_pose.covariance_[x,</span> <span class="pre">y,</span> <span class="pre">yaw,</span> <span class="pre">xy,</span> <span class="pre">xyaw,</span> <span class="pre">yyaw]</span></code></p></td>
 <td><p>Nav2 AMCL considers these to be zero.</p></td>
 <td class="text-center"><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">always_reset_initial_pose</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">always_reset_initial_pose</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">first_map_only</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">first_map_only</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tf_broadcast</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tf_broadcast</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">transform_tolerance</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">transform_tolerance</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_particles</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_particles</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">min_particles</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">min_particles</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pf_z</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pf_z</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pf_err</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pf_err</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">spatial_resolution_[x,</span> <span class="pre">y,</span> <span class="pre">theta]</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">spatial_resolution_[x,</span> <span class="pre">y,</span> <span class="pre">theta]</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">recovery_alpha_fast</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">recovery_alpha_fast</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">recovery_alpha_slow</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">recovery_alpha_slow</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">resample_interval</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">resample_interval</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">selective_resampling</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">selective_resampling</span></code></p></td>
 <td><p>This feature is currently supported by Nav AMCL in ROS 1 but it hasn’t been ported to ROS 2 at the time of this writing.</p></td>
 <td class="text-center"><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_min_a</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_min_a</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_min_d</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_min_d</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">execution_policy</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">execution_policy</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">robot_model_type</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">robot_model_type</span></code></p></td>
 <td><p>Beluga AMCL supports Nav2 AMCL plugin names (<code class="docutils literal notranslate"><span class="pre">nav2_amcl::DifferentialMotionModel</span></code>, <code class="docutils literal notranslate"><span class="pre">nav2_amcl::OmniMotionModel</span></code>) as a value in the <code class="docutils literal notranslate"><span class="pre">robot_model_type</span></code> parameter, but will load the equivalent Beluga model.</p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alpha1</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alpha1</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alpha2</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alpha2</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alpha3</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alpha3</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alpha4</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alpha4</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alpha5</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alpha5</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">laser_model_type</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">laser_model_type</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">laser_max_range</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">laser_max_range</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">laser_min_range</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">laser_min_range</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_beams</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_beams</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sigma_hit</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sigma_hit</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">z_hit</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">z_hit</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">z_rand</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">z_rand</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">z_max</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">z_max</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">z_short</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">z_short</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lambda_short</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lambda_short</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">laser_likelihood_max_dist</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">laser_likelihood_max_dist</span></code></p></td>
 <td><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">do_beamskip</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">do_beamskip</span></code></p></td>
 <td><p>Whether to ignore the beams for which the majority of the particles do not match the map in the likelihood field model. Beluga AMCL does not support beam skipping.</p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">beam_skip_distance</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beam_skip_distance</span></code></p></td>
 <td><p>Maximum distance to an obstacle to consider that a beam coincides with the map. Beluga AMCL does not support beam skipping.</p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beam_skip_threshold</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">beam_skip_threshold</span></code></p></td>
 <td><p>Minimum percentage of particles for which a particular beam must match the map to not be skipped. Beluga AMCL does not support beam skipping.</p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">beam_skip_error_threshold</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beam_skip_error_threshold</span></code></p></td>
 <td><p>Maximum percentage of skipped beams. Too many skipped beams trigger a full update to recover in case of bad convergence. Beluga AMCL does not support beam skipping.</p></td>
 <td class="text-center"><p>✅</p></td>
 <td class="text-center"><p></p></td>
@@ -1089,7 +1111,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Aug 26 20:25:08 2025 -0300, 78f21b7&#39;.
+  Last updated on &#39;Thu Sep 11 17:29:24 2025 -0300, 6b0e9d3&#39;.
   <br/>
 </p>
   </div>
