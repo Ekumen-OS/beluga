@@ -133,3 +133,5 @@ ENV WITHIN_DEV 1
 
 ENV SHELL /bin/bash
 ENTRYPOINT ["fixuid", "-q", "/ros_entrypoint.sh", "/bin/bash"]
+
+#     sudo curl -L https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 -o /usr/local/bin/bazel

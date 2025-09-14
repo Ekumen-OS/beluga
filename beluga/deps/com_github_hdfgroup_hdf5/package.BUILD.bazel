@@ -1,0 +1,893 @@
+# Copyright 2025 Ekumen, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
+
+expand_template(
+    name = "h5_pubconf",
+    out = "src/H5pubconf.h",
+    template = "config/cmake/H5pubconf.h.in",
+    substitutions = {
+        "#cmakedefine H5_USE_16_API_DEFAULT @H5_USE_16_API_DEFAULT@": "",
+        "#cmakedefine H5_USE_18_API_DEFAULT @H5_USE_18_API_DEFAULT@": "",
+        "#cmakedefine H5_USE_110_API_DEFAULT @H5_USE_110_API_DEFAULT@": "",
+        "#cmakedefine H5_USE_112_API_DEFAULT @H5_USE_112_API_DEFAULT@": "",
+        "#cmakedefine H5_HAVE_PARALLEL @H5_HAVE_PARALLEL@": "",
+        "#cmakedefine H5_HAVE_WINDOWS @H5_HAVE_WINDOWS@": "",
+        "#cmakedefine H5_HAVE_MINGW @H5_HAVE_MINGW@": "",
+        "#cmakedefine H5_HAVE_WIN32_API @H5_HAVE_WIN32_API@": "",
+        "#cmakedefine H5_HAVE_WIN_THREADS @H5_HAVE_WIN_THREADS@": "",
+        "#cmakedefine H5_HAVE__FLOAT16 @H5_HAVE__FLOAT16@": "",
+        "#cmakedefine": "#define",
+        "# cmakedefine": "#define",
+        "@H5_HAVE_WINDOWS@": "",
+        "@H5_FC_FUNC@": "H5_FC_FUNC(name,NAME)",
+        "@H5_FC_FUNC_@": "H5_FC_FUNC_(name,NAME)",
+        "@H5_USE_114_API_DEFAULT@": "1",
+        "@H5_SIZEOF_SIZE_T@": "8",  # https://cmake.org/cmake/help/latest/module/CheckTypeSize.html
+        "@H5_SIZEOF_SSIZE_T@": "8", # https://cmake.org/cmake/help/latest/module/CheckTypeSize.html
+        "@H5_HAVE_BUILTIN_EXPECT@": "1",
+    },
+)
+
+filegroup(
+    name = "h5_srcs",
+    srcs = [
+        "src/H5.c",
+        # "src/H5build_settings.c",
+        "src/H5checksum.c",
+        "src/H5dbg.c",
+        "src/H5mpi.c",
+        "src/H5system.c",
+        "src/H5timer.c",
+        "src/H5trace.c",
+    ],
+)
+
+filegroup(
+    name = "h5_hdrs",
+    srcs = [
+        "src/hdf5.h",
+        "src/H5api_adpt.h",
+        "src/H5encode.h",
+        "src/H5public.h",
+        "src/H5version.h",
+        # "src/H5overflow.h",
+    ],
+)
+
+filegroup(
+    name = "h5a_srcs",
+    srcs = [
+        "src/H5A.c",
+        "src/H5Abtree2.c",
+        "src/H5Adense.c",
+        "src/H5Adeprec.c",
+        "src/H5Aint.c",
+        "src/H5Atest.c",
+    ],
+)
+
+filegroup(
+    name = "h5a_hdrs",
+    srcs = [
+        "src/H5Apublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5ac_srcs",
+    srcs = [
+        "src/H5AC.c",
+        "src/H5ACdbg.c",
+        "src/H5ACmpio.c",
+        "src/H5ACproxy_entry.c",
+    ],
+)
+
+filegroup(
+    name = "h5ac_hdrs",
+    srcs = [
+        "src/H5ACpublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5b_srcs",
+    srcs = [
+        "src/H5B.c",
+        "src/H5Bcache.c",
+        "src/H5Bdbg.c",
+    ],
+)
+
+filegroup(
+    name = "h5b_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5b2_srcs",
+    srcs = [
+        "src/H5B2.c",
+        "src/H5B2cache.c",
+        "src/H5B2dbg.c",
+        "src/H5B2hdr.c",
+        "src/H5B2int.c",
+        "src/H5B2internal.c",
+        "src/H5B2leaf.c",
+        "src/H5B2stat.c",
+        "src/H5B2test.c",
+    ],
+)
+
+filegroup(
+    name = "h5b2_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5c_srcs",
+    srcs = [
+        "src/H5C.c",
+        "src/H5Cdbg.c",
+        "src/H5Centry.c",
+        "src/H5Cepoch.c",
+        "src/H5Cimage.c",
+        "src/H5Cint.c",
+        "src/H5Clog.c",
+        "src/H5Clog_json.c",
+        "src/H5Clog_trace.c",
+        "src/H5Cmpio.c",
+        "src/H5Cprefetched.c",
+        "src/H5Cquery.c",
+        "src/H5Ctag.c",
+        "src/H5Ctest.c",
+    ],
+)
+
+filegroup(
+    name = "h5c_hdrs",
+    srcs = [
+        "src/H5Cpublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5cx_srcs",
+    srcs = [
+        "src/H5CX.c",
+    ],
+)
+
+filegroup(
+    name = "h5cx_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5d_srcs",
+    srcs = [
+        "src/H5D.c",
+        "src/H5Dbtree.c",
+        "src/H5Dbtree2.c",
+        "src/H5Dchunk.c",
+        "src/H5Dcompact.c",
+        "src/H5Dcontig.c",
+        "src/H5Ddbg.c",
+        "src/H5Ddeprec.c",
+        "src/H5Dearray.c",
+        "src/H5Defl.c",
+        "src/H5Dfarray.c",
+        "src/H5Dfill.c",
+        "src/H5Dint.c",
+        "src/H5Dio.c",
+        "src/H5Dlayout.c",
+        "src/H5Dmpio.c",
+        "src/H5Dnone.c",
+        "src/H5Doh.c",
+        "src/H5Dscatgath.c",
+        "src/H5Dselect.c",
+        "src/H5Dsingle.c",
+        "src/H5Dtest.c",
+        "src/H5Dvirtual.c",
+    ],
+)
+
+filegroup(
+    name = "h5d_hdrs",
+    srcs = [
+        "src/H5Dpublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5e_srcs",
+    srcs = [
+        "src/H5E.c",
+        "src/H5Edeprec.c",
+        "src/H5Eint.c",
+    ],
+)
+
+filegroup(
+    name = "h5e_hdrs",
+    srcs = [
+        "src/H5Epubgen.h",
+        "src/H5Epublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5ea_srcs",
+    srcs = [
+        "src/H5EA.c",
+        "src/H5EAcache.c",
+        "src/H5EAdbg.c",
+        "src/H5EAdblkpage.c",
+        "src/H5EAdblock.c",
+        "src/H5EAhdr.c",
+        "src/H5EAiblock.c",
+        "src/H5EAint.c",
+        "src/H5EAsblock.c",
+        "src/H5EAstat.c",
+        "src/H5EAtest.c",
+    ],
+)
+
+filegroup(
+    name = "h5ea_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5es_srcs",
+    srcs = [
+        "src/H5ES.c",
+        "src/H5ESevent.c",
+        "src/H5ESint.c",
+        "src/H5ESlist.c",
+    ],
+)
+
+filegroup(
+    name = "h5es_hdrs",
+    srcs = [
+        "src/H5ESdevelop.h",
+        "src/H5ESpublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5f_srcs",
+    srcs = [
+        "src/H5F.c",
+        "src/H5Faccum.c",
+        "src/H5Fcwfs.c",
+        "src/H5Fdbg.c",
+        "src/H5Fdeprec.c",
+        "src/H5Fefc.c",
+        "src/H5Ffake.c",
+        "src/H5Fint.c",
+        "src/H5Fio.c",
+        "src/H5Fmount.c",
+        "src/H5Fmpi.c",
+        "src/H5Fquery.c",
+        "src/H5Fsfile.c",
+        "src/H5Fspace.c",
+        "src/H5Fsuper.c",
+        "src/H5Fsuper_cache.c",
+        "src/H5Ftest.c",
+    ],
+)
+
+filegroup(
+    name = "h5f_hdrs",
+    srcs = [
+        "src/H5Fpublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5fa_srcs",
+    srcs = [
+        "src/H5FA.c",
+        "src/H5FAcache.c",
+        "src/H5FAdbg.c",
+        "src/H5FAdblkpage.c",
+        "src/H5FAdblock.c",
+        "src/H5FAhdr.c",
+        "src/H5FAint.c",
+        "src/H5FAstat.c",
+        "src/H5FAtest.c",
+    ],
+)
+
+filegroup(
+    name = "h5fa_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5fd_srcs",
+    srcs = [
+        "src/H5FD.c",
+        "src/H5FDcore.c",
+        "src/H5FDdirect.c",
+        "src/H5FDfamily.c",
+        "src/H5FDhdfs.c",
+        "src/H5FDint.c",
+        "src/H5FDlog.c",
+        "src/H5FDmirror.c",
+        "src/H5FDmpi.c",
+        "src/H5FDmpio.c",
+        "src/H5FDmulti.c",
+        "src/H5FDonion.c",
+        "src/H5FDonion_header.c",
+        "src/H5FDonion_history.c",
+        "src/H5FDonion_index.c",
+        "src/H5FDperform.c",
+        "src/H5FDros3.c",
+        "src/H5FDs3comms.c",
+        "src/H5FDsec2.c",
+        "src/H5FDspace.c",
+        "src/H5FDsplitter.c",
+        "src/H5FDstdio.c",
+        "src/H5FDtest.c",
+        "src/H5FDwindows.c",
+    ],
+)
+
+filegroup(
+    name = "h5fd_hdrs",
+    srcs = [
+        "src/H5FDcore.h",
+        "src/H5FDdevelop.h",
+        "src/H5FDdirect.h",
+        "src/H5FDfamily.h",
+        "src/H5FDhdfs.h",
+        "src/H5FDlog.h",
+        "src/H5FDmirror.h",
+        "src/H5FDmpi.h",
+        "src/H5FDmpio.h",
+        "src/H5FDmulti.h",
+        "src/H5FDonion.h",
+        "src/H5FDpublic.h",
+        "src/H5FDros3.h",
+        "src/H5FDs3comms.h",
+        "src/H5FDsec2.h",
+        "src/H5FDsplitter.h",
+        "src/H5FDstdio.h",
+        "src/H5FDwindows.h",
+    ],
+)
+
+filegroup(
+    name = "h5fl_srcs",
+    srcs = [
+        "src/H5FL.c",
+    ],
+)
+
+filegroup(
+    name = "h5fl_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5fo_srcs",
+    srcs = [
+        "src/H5FO.c",
+    ],
+)
+
+filegroup(
+    name = "h5fo_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5fs_srcs",
+    srcs = [
+        "src/H5FS.c",
+        "src/H5FScache.c",
+        "src/H5FSdbg.c",
+        "src/H5FSint.c",
+        "src/H5FSsection.c",
+        "src/H5FSstat.c",
+        "src/H5FStest.c",
+    ],
+)
+
+filegroup(
+    name = "h5fs_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5g_srcs",
+    srcs = [
+        "src/H5G.c",
+        "src/H5Gbtree2.c",
+        "src/H5Gcache.c",
+        "src/H5Gcompact.c",
+        "src/H5Gdense.c",
+        "src/H5Gdeprec.c",
+        "src/H5Gent.c",
+        "src/H5Gint.c",
+        "src/H5Glink.c",
+        "src/H5Gloc.c",
+        "src/H5Gname.c",
+        "src/H5Gnode.c",
+        "src/H5Gobj.c",
+        "src/H5Goh.c",
+        "src/H5Groot.c",
+        "src/H5Gstab.c",
+        "src/H5Gtest.c",
+        "src/H5Gtraverse.c",
+    ],
+)
+
+filegroup(
+    name = "h5g_hdrs",
+    srcs = [
+        "src/H5Gpublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5hf_srcs",
+    srcs = [
+        "src/H5HF.c",
+        "src/H5HFbtree2.c",
+        "src/H5HFcache.c",
+        "src/H5HFdbg.c",
+        "src/H5HFdblock.c",
+        "src/H5HFdtable.c",
+        "src/H5HFhdr.c",
+        "src/H5HFhuge.c",
+        "src/H5HFiblock.c",
+        "src/H5HFiter.c",
+        "src/H5HFman.c",
+        "src/H5HFsection.c",
+        "src/H5HFspace.c",
+        "src/H5HFstat.c",
+        "src/H5HFtest.c",
+        "src/H5HFtiny.c",
+    ],
+)
+
+filegroup(
+    name = "h5hf_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5hg_srcs",
+    srcs = [
+        "src/H5HG.c",
+        "src/H5HGcache.c",
+        "src/H5HGdbg.c",
+        "src/H5HGquery.c",
+    ],
+)
+
+filegroup(
+    name = "h5hg_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5hl_srcs",
+    srcs = [
+        "src/H5HL.c",
+        "src/H5HLcache.c",
+        "src/H5HLdbg.c",
+        "src/H5HLdblk.c",
+        "src/H5HLint.c",
+        "src/H5HLprfx.c",
+    ],
+)
+
+filegroup(
+    name = "h5hl_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5i_srcs",
+    srcs = [
+        "src/H5I.c",
+        "src/H5Idbg.c",
+        "src/H5Iint.c",
+        "src/H5Itest.c",
+    ],
+)
+
+filegroup(
+    name = "h5i_hdrs",
+    srcs = [
+        "src/H5Idevelop.h",
+        "src/H5Ipublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5l_srcs",
+    srcs = [
+        "src/H5L.c",
+        "src/H5Ldeprec.c",
+        "src/H5Lexternal.c",
+        "src/H5Lint.c",
+    ],
+)
+
+filegroup(
+    name = "h5l_hdrs",
+    srcs = [
+        "src/H5Ldevelop.h",
+        "src/H5Lpublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5m_srcs",
+    srcs = [
+        "src/H5M.c",
+    ],
+)
+
+filegroup(
+    name = "h5m_hdrs",
+    srcs = [
+        "src/H5Mpublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5mf_srcs",
+    srcs = [
+        "src/H5MF.c",
+        "src/H5MFaggr.c",
+        "src/H5MFdbg.c",
+        "src/H5MFsection.c",
+    ],
+)
+
+filegroup(
+    name = "h5mf_hdrs",
+    srcs = [],
+)
+
+filegroup(
+    name = "h5mm_srcs",
+    srcs = [
+        "src/H5MM.c",
+    ],
+)
+
+filegroup(
+    name = "h5mm_hdrs",
+    srcs = [
+        "src/H5MMpublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5o_srcs",
+    srcs = [
+        "src/H5O.c",
+        "src/H5Oainfo.c",
+        "src/H5Oalloc.c",
+        "src/H5Oattr.c",
+        "src/H5Oattribute.c",
+        "src/H5Obogus.c",
+        "src/H5Obtreek.c",
+        "src/H5Ocache.c",
+        "src/H5Ocache_image.c",
+        "src/H5Ochunk.c",
+        "src/H5Ocont.c",
+        "src/H5Ocopy.c",
+        "src/H5Ocopy_ref.c",
+        "src/H5Odbg.c",
+        "src/H5Odeprec.c",
+        "src/H5Odrvinfo.c",
+        "src/H5Odtype.c",
+        "src/H5Oefl.c",
+        "src/H5Ofill.c",
+        "src/H5Oflush.c",
+        "src/H5Ofsinfo.c",
+        "src/H5Oginfo.c",
+        "src/H5Oint.c",
+        "src/H5Olayout.c",
+        "src/H5Olinfo.c",
+        "src/H5Olink.c",
+        "src/H5Omessage.c",
+        "src/H5Omtime.c",
+        "src/H5Oname.c",
+        "src/H5Onull.c",
+        "src/H5Opline.c",
+        "src/H5Orefcount.c",
+        "src/H5Osdspace.c",
+        "src/H5Oshared.c",
+        "src/H5Oshmesg.c",
+        "src/H5Ostab.c",
+        "src/H5Otest.c",
+        "src/H5Ounknown.c",
+    ],
+)
+
+filegroup(
+    name = "h5o_hdrs",
+    srcs = [
+        "src/H5Opublic.h",
+    ],
+)
+
+filegroup(
+    name = "h5_private_hdrs",
+    srcs = [
+        "src/H5private.h",
+        "src/H5Apkg.h",
+        "src/H5Aprivate.h",
+        "src/H5ACpkg.h",
+        "src/H5ACprivate.h",
+        "src/H5Bpkg.h",
+        "src/H5Bprivate.h",
+        "src/H5B2pkg.h",
+        "src/H5B2private.h",
+        "src/H5Clog.h",
+        "src/H5Cpkg.h",
+        "src/H5Cprivate.h",
+        "src/H5CXprivate.h",
+        "src/H5Dpkg.h",
+        "src/H5Dprivate.h",
+        "src/H5Edefin.h",
+        "src/H5Einit.h",
+        "src/H5Emajdef.h",
+        "src/H5Emindef.h",
+        "src/H5Epkg.h",
+        "src/H5Eprivate.h",
+        "src/H5Eterm.h",
+        "src/H5EApkg.h",
+        "src/H5EAprivate.h",
+        "src/H5ESpkg.h",
+        "src/H5ESprivate.h",
+        "src/H5Fpkg.h",
+        "src/H5Fprivate.h",
+        "src/H5FApkg.h",
+        "src/H5FAprivate.h",
+        "src/H5FDmirror_priv.h",
+        "src/H5FDonion_header.h",
+        "src/H5FDonion_history.h",
+        "src/H5FDonion_index.h",
+        "src/H5FDonion_priv.h",
+        "src/H5FDpkg.h",
+        "src/H5FDprivate.h",
+        "src/H5FLprivate.h",
+        "src/H5FOprivate.h",
+        "src/H5FSpkg.h",
+        "src/H5FSprivate.h",
+        "src/H5Gpkg.h",
+        "src/H5Gprivate.h",
+        "src/H5HFpkg.h",
+        "src/H5HFprivate.h",
+        "src/H5HGpkg.h",
+        "src/H5HGprivate.h",
+        "src/H5HLpkg.h",
+        "src/H5HLprivate.h",
+        "src/H5Ipkg.h",
+        "src/H5Iprivate.h",
+        "src/H5Lpkg.h",
+        "src/H5Lprivate.h",
+        "src/H5Mpkg.h",
+        "src/H5Mprivate.h",
+        "src/H5MFpkg.h",
+        "src/H5MFprivate.h",
+        "src/H5MMprivate.h",
+        "src/H5Opkg.h",
+        "src/H5Oprivate.h",
+        "src/H5Oshared.h",
+        "src/H5Ppkg.h",
+        "src/H5Pprivate.h",
+        "src/H5PBprivate.h",
+        "src/H5PBpkg.h",
+        "src/H5PLpkg.h",
+        "src/H5PLprivate.h",
+        "src/H5Rpkg.h",
+        "src/H5Rprivate.h",
+        "src/H5RSprivate.h",
+        "src/H5Spkg.h",
+        "src/H5Sprivate.h",
+        "src/H5SLprivate.h",
+        "src/H5SMpkg.h",
+        "src/H5SMprivate.h",
+        "src/H5Tconv.h",
+        "src/H5Tconv_array.h",
+        "src/H5Tconv_bitfield.h",
+        "src/H5Tconv_compound.h",
+        "src/H5Tconv_enum.h",
+        "src/H5Tconv_float.h",
+        "src/H5Tconv_integer.h",
+        "src/H5Tconv_macros.h",
+        "src/H5Tconv_reference.h",
+        "src/H5Tconv_string.h",
+        "src/H5Tconv_vlen.h",
+        "src/H5Tpkg.h",
+        "src/H5Tprivate.h",
+        "src/H5TSprivate.h",
+        "src/H5UCprivate.h",
+        "src/H5VLnative_private.h",
+        "src/H5VLpkg.h",
+        "src/H5VLprivate.h",
+        "src/H5VMprivate.h",
+        "src/H5WBprivate.h",
+        "src/H5Zpkg.h",
+        "src/H5Zprivate.h",
+        "src/H5win32defs.h",
+        "src/uthash.h",
+    ],
+)
+
+filegroup(
+    name = "h5ts_srcs",
+    srcs = ["src/H5TS.c"],
+)
+
+filegroup(
+    name = "h5ts_hdrs",
+    srcs = ["src/H5TSdevelop.h"],
+)
+
+filegroup(
+    name = "h5_module_hdrs",
+    srcs = [
+        "src/H5module.h",
+        "src/H5Amodule.h",
+        "src/H5ACmodule.h",
+        "src/H5Bmodule.h",
+        "src/H5B2module.h",
+        "src/H5Cmodule.h",
+        "src/H5CXmodule.h",
+        "src/H5Dmodule.h",
+        "src/H5Emodule.h",
+        "src/H5EAmodule.h",
+        "src/H5ESmodule.h",
+        "src/H5Fmodule.h",
+        "src/H5FAmodule.h",
+        "src/H5FDmodule.h",
+        "src/H5FLmodule.h",
+        "src/H5FSmodule.h",
+        "src/H5Gmodule.h",
+        "src/H5HFmodule.h",
+        "src/H5HGmodule.h",
+        "src/H5HLmodule.h",
+        "src/H5Imodule.h",
+        "src/H5Lmodule.h",
+        "src/H5Mmodule.h",
+        "src/H5MFmodule.h",
+        "src/H5Omodule.h",
+        "src/H5Pmodule.h",
+        "src/H5PBmodule.h",
+        "src/H5PLmodule.h",
+        "src/H5Rmodule.h",
+        "src/H5RSmodule.h",
+        "src/H5Smodule.h",
+        "src/H5SLmodule.h",
+        "src/H5SMmodule.h",
+        "src/H5Tmodule.h",
+        # "src/H5TSmodule.h",
+        "src/H5VLmodule.h",
+        "src/H5Zmodule.h",
+    ],
+)
+
+cc_library(
+    name = "h5",
+    srcs = [
+        ":h5_srcs",
+        ":h5a_srcs",
+        ":h5ac_srcs",
+        ":h5_private_hdrs",
+        ":h5_module_hdrs",
+        ":h5ts_srcs",
+        ":h5mm_srcs",
+    ],
+    hdrs = [
+        ":h5_hdrs",
+        ":h5a_hdrs",
+        ":h5ac_hdrs",
+        ":h5_pubconf",
+        ":h5ts_hdrs",
+        ":h5mm_hdrs",
+    ],
+    includes = ["src"],
+)
+
+cc_library(
+    name = "hdf5",
+    srcs = [
+        "c++/src/H5AbstractDs.cpp",
+        "c++/src/H5ArrayType.cpp",
+        "c++/src/H5AtomType.cpp",
+        "c++/src/H5Attribute.cpp",
+        "c++/src/H5CommonFG.cpp",
+        "c++/src/H5CompType.cpp",
+        "c++/src/H5DataSet.cpp",
+        "c++/src/H5DataSpace.cpp",
+        "c++/src/H5DataType.cpp",
+        "c++/src/H5DaccProp.cpp",
+        "c++/src/H5DcreatProp.cpp",
+        "c++/src/H5DxferProp.cpp",
+        "c++/src/H5EnumType.cpp",
+        "c++/src/H5Exception.cpp",
+        "c++/src/H5FaccProp.cpp",
+        "c++/src/H5FcreatProp.cpp",
+        "c++/src/H5File.cpp",
+        "c++/src/H5FloatType.cpp",
+        "c++/src/H5Group.cpp",
+        "c++/src/H5IdComponent.cpp",
+        "c++/src/H5IntType.cpp",
+        "c++/src/H5LaccProp.cpp",
+        "c++/src/H5LcreatProp.cpp",
+        "c++/src/H5Library.cpp",
+        "c++/src/H5Location.cpp",
+        "c++/src/H5Object.cpp",
+        "c++/src/H5OcreatProp.cpp",
+        "c++/src/H5PredType.cpp",
+        "c++/src/H5PropList.cpp",
+        "c++/src/H5StrType.cpp",
+        "c++/src/H5VarLenType.cpp",
+    ],
+    hdrs = [
+        "c++/src/H5AbstractDs.h",
+        "c++/src/H5Alltypes.h",
+        "c++/src/H5ArrayType.h",
+        "c++/src/H5AtomType.h",
+        "c++/src/H5Attribute.h",
+        "c++/src/H5Classes.h",
+        "c++/src/H5CommonFG.h",
+        "c++/src/H5CompType.h",
+        "c++/src/H5Cpp.h",
+        "c++/src/H5CppDoc.h",
+        "c++/src/H5DataSet.h",
+        "c++/src/H5DataSpace.h",
+        "c++/src/H5DataType.h",
+        "c++/src/H5DaccProp.h",
+        "c++/src/H5DcreatProp.h",
+        "c++/src/H5DxferProp.h",
+        "c++/src/H5EnumType.h",
+        "c++/src/H5Exception.h",
+        "c++/src/H5FaccProp.h",
+        "c++/src/H5FcreatProp.h",
+        "c++/src/H5File.h",
+        "c++/src/H5FloatType.h",
+        "c++/src/H5Group.h",
+        "c++/src/H5IdComponent.h",
+        "c++/src/H5Include.h",
+        "c++/src/H5IntType.h",
+        "c++/src/H5LaccProp.h",
+        "c++/src/H5LcreatProp.h",
+        "c++/src/H5Library.h",
+        "c++/src/H5Location.h",
+        "c++/src/H5Object.h",
+        "c++/src/H5OcreatProp.h",
+        "c++/src/H5PredType.h",
+        "c++/src/H5PropList.h",
+        "c++/src/H5StrType.h",
+        "c++/src/H5VarLenType.h",
+    ],
+    includes = ["c++/src"],
+)
