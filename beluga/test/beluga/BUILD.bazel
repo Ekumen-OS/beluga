@@ -85,8 +85,8 @@ TEST_FILES = [
 [
     cc_test(
         name = file.replace("/", "_").replace(".cpp", ""),
-        srcs = [file],
         size = "small",
+        srcs = [file],
         deps = [
             ":utils",
             "//:beluga",

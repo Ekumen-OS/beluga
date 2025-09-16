@@ -25,8 +25,8 @@ cc_binary(
         "benchmark_tuple_vector.cpp",
     ],
     deps = [
-        "//test/beluga:utils",
         "//:beluga",
+        "//test/beluga:utils",
         "@google_benchmark//:benchmark",
     ],
 )
