@@ -21,6 +21,11 @@ build --copt=-Werror
 build --copt=-Wextra
 build --copt=-Wpedantic
 
+common --test_output=errors
+common --test_summary=terse
+common --incompatible_strict_action_env
+common --reuse_sandbox_directories
+
 common:ci --announce_rc
 common:ci --nobuild_runfile_links
 common:ci --show_progress_rate_limit=60
