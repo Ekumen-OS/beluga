@@ -28,6 +28,23 @@ jobs:
       - name: Lint
         run: pre-commit run --all-files --verbose --show-diff-on-failure
 
+  build-with-bazel:
+    runs-on: ubuntu-22.04
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Mount bazel cache
+        uses: actions/cache@v4
+        with:
+          path: "~/.cache/bazel"
+          key: bazel
+
+      - name: Test with bazel
+        run: bazel test //...
+        working-directory: ${{ github.workspace }}/beluga
+
   build-test:
     runs-on: ubuntu-22.04
     needs: lint
