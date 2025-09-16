@@ -20,3 +20,8 @@ build --copt=-Wconversion
 build --copt=-Werror
 build --copt=-Wextra
 build --copt=-Wpedantic
+
+common:ci --announce_rc
+common:ci --nobuild_runfile_links
+common:ci --show_progress_rate_limit=60
+common:ci --show_timestamps
