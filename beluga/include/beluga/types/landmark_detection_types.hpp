@@ -16,8 +16,8 @@
 #define BELUGA_TYPES_LANDMARK_DETECTION_TYPES_HPP
 
 // external
-#include <eigen3/Eigen/Core>
-#include <eigen3/Eigen/Geometry>
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 
 // standard library
 #include <cstdint>
