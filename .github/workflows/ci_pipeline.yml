@@ -1,4 +1,4 @@
-name: CI pipeline
+name: CI pipeline (Colcon)
 
 on:
   push:
@@ -27,23 +27,6 @@ jobs:
 
       - name: Lint
         run: pre-commit run --all-files --verbose --show-diff-on-failure
-
-  build-with-bazel:
-    runs-on: ubuntu-22.04
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - uses: bazel-contrib/setup-bazel@0.15.0
-        with:
-          bazelisk-cache: true
-          disk-cache: ${{ github.workflow }}
-          repository-cache: true
-
-      - name: Test with bazel
-        run: bazel test --config=ci //...
-        working-directory: ${{ github.workspace }}/beluga
 
   build-test:
     runs-on: ubuntu-22.04

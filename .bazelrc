@@ -14,12 +14,20 @@
 
 build --compilation_mode opt
 
-build --copt=-std=c++17
-build --copt=-Wall
-build --copt=-Wconversion
-build --copt=-Werror
-build --copt=-Wextra
-build --copt=-Wpedantic
+build:linux --cxxopt=-std=c++17
+build:linux --cxxopt=-Wall
+build:linux --cxxopt=-Wconversion
+build:linux --cxxopt=-Werror
+build:linux --cxxopt=-Wextra
+build:linux --cxxopt=-Wpedantic
+
+build:windows --cxxopt=/std:c++17
+
+# Bazel picks up host-OS-specific config lines from bazelrc files. For example, if the host OS is
+# Linux and you run bazel build, Bazel picks up lines starting with build:linux. Supported OS
+# identifiers are `linux`, `macos`, `windows`, `freebsd`, and `openbsd`. Enabling this flag is
+# equivalent to using `--config=linux` on Linux, `--config=windows` on Windows, etc.
+common --enable_platform_specific_config
 
 # Output test errors to stderr so users don't have to `cat` or open test failure log files when test fail.
 # This makes the log noisier in exchange for reducing the time-to-feedback on test failures for users.

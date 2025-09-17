@@ -20,6 +20,7 @@ cc_build_error_test(
     name = "test_ndt_model_build_error",
     src = "test_ndt_model.cpp",
     compile_stderr = matcher.has_substr("This file requires HDF5."),
+    target_compatible_with = ["@platforms//os:linux"],
     deps = [
         "//beluga",
         "@googletest//:gtest_main",
