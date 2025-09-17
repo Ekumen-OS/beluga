@@ -15,21 +15,33 @@
 cmake_minimum_required(VERSION 3.16)
 project(beluga_example)
 
-set(ROS_VERSION $ENV{ROS_VERSION})
-if(NOT ROS_VERSION)
-  if(CATKIN_DEVEL_PREFIX OR CATKIN_BUILD_BINARY_PACKAGE)
-    set(ROS_VERSION 1)
-  else()
-    find_package(ament_cmake QUIET)
-    if(ament_cmake_FOUND)
-      set(ROS_VERSION 2)
-    endif()
-  endif()
-endif()
-if(ROS_VERSION EQUAL 1)
-  include(cmake/catkin.cmake)
-elseif(ROS_VERSION EQUAL 2)
-  include(cmake/ament.cmake)
-else()
-  message(FATAL_ERROR "Unknown ROS distribution version: ${ROS_VERSION}")
-endif()
+find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(beluga_amcl REQUIRED)
+
+ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR
+                             ${PROJECT_SOURCE_DIR}/${PROJECT_NAME})
+
+install(
+  DIRECTORY bags
+  DESTINATION share/${PROJECT_NAME}
+  PATTERN "*.bag" EXCLUDE)
+
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+  PATTERN "*.launch" EXCLUDE)
+
+install(
+  DIRECTORY rviz
+  DESTINATION share/${PROJECT_NAME}
+  PATTERN "*.ros2.rviz")
+
+install(
+  DIRECTORY params
+  DESTINATION share/${PROJECT_NAME}
+  PATTERN "*.ros2.yaml")
+
+install(DIRECTORY maps models worlds DESTINATION share/${PROJECT_NAME})
+
+ament_package()

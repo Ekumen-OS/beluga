@@ -12,17 +12,16 @@
 
   <license>Apache License 2.0</license>
 
-  <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>beluga_amcl</exec_depend>
   <exec_depend>beluga_example</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">python3-matplotlib</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">python3-numpy</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">python3-pandas</exec_depend>
-  <exec_depend condition="$ROS_VERSION == 2">python3-tk</exec_depend>
+  <exec_depend>python3-matplotlib</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-pandas</exec_depend>
+  <exec_depend>python3-tk</exec_depend>
 
   <export>
-    <build_type condition="$ROS_VERSION == 1">cmake</build_type>
-    <build_type condition="$ROS_VERSION == 2">ament_cmake</build_type>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

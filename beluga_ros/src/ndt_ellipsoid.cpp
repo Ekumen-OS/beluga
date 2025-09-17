@@ -33,7 +33,7 @@ namespace detail {
 bool use_mean_covariance(
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 3, 3>>& eigen_solver,
     const beluga::NDTCell<3> cell,
-    beluga_ros::msg::Marker& marker) {
+    visualization_msgs::msg::Marker& marker) {
   eigen_solver.compute(cell.covariance);
   if (eigen_solver.info() != Eigen::Success) {
     return false;
@@ -61,8 +61,8 @@ bool use_mean_covariance(
   const auto rotation = Eigen::Quaterniond{rotation_matrix};
 
   // Fill in the message
-  marker.type = beluga_ros::msg::Marker::SPHERE;
-  marker.action = beluga_ros::msg::Marker::ADD;
+  marker.type = visualization_msgs::msg::Marker::SPHERE;
+  marker.action = visualization_msgs::msg::Marker::ADD;
 
   marker.pose.position.x = cell.mean[0];
   marker.pose.position.y = cell.mean[1];
@@ -86,9 +86,9 @@ bool use_mean_covariance(
   return true;
 }
 
-void use_cell_size(const Eigen::Vector<int, 3>& position, double size, beluga_ros::msg::Marker& marker) {
-  marker.type = beluga_ros::msg::Marker::CUBE;
-  marker.action = beluga_ros::msg::Marker::ADD;
+void use_cell_size(const Eigen::Vector<int, 3>& position, double size, visualization_msgs::msg::Marker& marker) {
+  marker.type = visualization_msgs::msg::Marker::CUBE;
+  marker.action = visualization_msgs::msg::Marker::ADD;
 
   marker.pose.position.x = position[0];
   marker.pose.position.y = position[1];

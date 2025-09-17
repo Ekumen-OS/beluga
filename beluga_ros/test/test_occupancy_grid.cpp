@@ -19,10 +19,6 @@
 #include <memory>
 #include <vector>
 
-#if BELUGA_ROS_VERSION == 1
-#include <boost/smart_ptr.hpp>
-#endif
-
 #include "beluga_ros/messages.hpp"
 #include "beluga_ros/occupancy_grid.hpp"
 
@@ -32,13 +28,7 @@ TEST(TestOccupancyGrid, Instantiation) {
   constexpr std::size_t kWidth = 100;
   constexpr std::size_t kHeight = 200;
 
-#if BELUGA_ROS_VERSION == 2
-  auto message = std::make_shared<beluga_ros::msg::OccupancyGrid>();
-#elif BELUGA_ROS_VERSION == 1
-  auto message = boost::make_shared<beluga_ros::msg::OccupancyGrid>();
-#else
-#error BELUGA_ROS_VERSION is not defined or invalid
-#endif
+  auto message = std::make_shared<nav_msgs::msg::OccupancyGrid>();
   message->info.resolution = 0.1F;
   message->info.width = kWidth;
   message->info.height = kHeight;

@@ -16,13 +16,16 @@
 #define BELUGA_ROS_SPARSE_POINT_CLOUD_HPP
 
 #include <Eigen/Dense>
+#include <beluga/eigen_compatibility.hpp>
 #include <beluga/sensor/data/sparse_point_cloud.hpp>
 #include <beluga/views/take_evenly.hpp>
-#include <beluga_ros/messages.hpp>
 #include <range/v3/view/any_view.hpp>
 #include <range/v3/view/iota.hpp>
 #include <sophus/se3.hpp>
-#include "beluga/eigen_compatibility.hpp"
+
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/point_cloud2_iterator.hpp>
+#include <sensor_msgs/point_field_conversion.hpp>
 
 /**
  * \file
@@ -62,7 +65,7 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
   /// \param cloud Point cloud message.
   /// \param origin Point cloud frame origin in the filter frame.
   /// \throws std::invalid_argument if `cloud` does not meet expectations.
-  explicit SparsePointCloud3(beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d origin = Sophus::SE3d())
+  explicit SparsePointCloud3(sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud, Sophus::SE3d origin = Sophus::SE3d())
       : cloud_(std::move(cloud)), origin_(std::move(origin)) {
     assert(cloud_ != nullptr);
     if (cloud_->fields.size() < 3) {
@@ -119,14 +122,14 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
 
  private:
   template <typename U>
-  static auto points_view(const beluga_ros::msg::PointCloud2& cloud) {
-    beluga_ros::msg::PointCloud2ConstIterator<U> iter_points(cloud, "x");
+  static auto points_view(const sensor_msgs::msg::PointCloud2& cloud) {
+    sensor_msgs::PointCloud2ConstIterator<U> iter_points(cloud, "x");
     return ranges::views::iota(0, static_cast<int>(cloud.width * cloud.height)) |
            ranges::views::transform(
                [iter_points](int i) mutable { return Eigen::Map<const Eigen::Vector3<U>>(&(iter_points + i)[0]); });
   }
 
-  beluga_ros::msg::PointCloud2ConstSharedPtr cloud_;
+  sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud_;
   Sophus::SE3d origin_;
 };
 

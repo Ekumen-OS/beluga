@@ -15,116 +15,11 @@
 #ifndef BELUGA_ROS_MESSAGES_HPP
 #define BELUGA_ROS_MESSAGES_HPP
 
-#if BELUGA_ROS_VERSION == 2
-#include <geometry_msgs/msg/point.hpp>
-#include <geometry_msgs/msg/pose.hpp>
-#include <geometry_msgs/msg/pose_array.hpp>
-#include <geometry_msgs/msg/pose_with_covariance.hpp>
-#include <geometry_msgs/msg/transform.hpp>
-#include <nav_msgs/msg/occupancy_grid.hpp>
-#include <sensor_msgs/msg/laser_scan.hpp>
-#include <sensor_msgs/msg/point_cloud2.hpp>
-#include <sensor_msgs/msg/point_field.hpp>
-#include <sensor_msgs/point_cloud2_iterator.hpp>
-#include <sensor_msgs/point_field_conversion.hpp>
-#include <std_msgs/msg/color_rgba.hpp>
-#include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
 #include <rclcpp/time.hpp>
-#elif BELUGA_ROS_VERSION == 1
-#include <geometry_msgs/Point.h>
-#include <geometry_msgs/Pose.h>
-#include <geometry_msgs/PoseArray.h>
-#include <geometry_msgs/PoseWithCovariance.h>
-#include <geometry_msgs/Transform.h>
-#include <nav_msgs/OccupancyGrid.h>
-#include <sensor_msgs/LaserScan.h>
-#include <sensor_msgs/PointCloud2.h>
-#include <sensor_msgs/PointField.h>
-#include <sensor_msgs/point_cloud2_iterator.h>
-#include <sensor_msgs/point_field_conversion.h>
-#include <std_msgs/ColorRGBA.h>
-#include <visualization_msgs/Marker.h>
-#include <visualization_msgs/MarkerArray.h>
-
-#include <ros/time.h>
-#else
-#error BELUGA_ROS_VERSION is not defined or invalid
-#endif
 
 namespace beluga_ros {
-
-/// Compatibility layer for ROS 1 and ROS 2 messages.
-namespace msg {
-
-#if BELUGA_ROS_VERSION == 2
-
-using ColorRGBA = std_msgs::msg::ColorRGBA;
-using LaserScan = sensor_msgs::msg::LaserScan;
-using LaserScanConstSharedPtr = LaserScan::ConstSharedPtr;
-using PointCloud2 = sensor_msgs::msg::PointCloud2;
-using PointCloud2ConstSharedPtr = PointCloud2::ConstSharedPtr;
-template <typename Scalar>
-using PointCloud2ConstIterator = sensor_msgs::PointCloud2ConstIterator<Scalar>;
-template <typename Scalar>
-using PointCloud2Iterator = sensor_msgs::PointCloud2Iterator<Scalar>;
-using PointCloud2Modifier = sensor_msgs::PointCloud2Modifier;
-using PointField = sensor_msgs::msg::PointField;
-using Marker = visualization_msgs::msg::Marker;
-using MarkerArray = visualization_msgs::msg::MarkerArray;
-using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
-using OccupancyGridConstSharedPtr = OccupancyGrid::ConstSharedPtr;
-using Point = geometry_msgs::msg::Point;
-using Pose = geometry_msgs::msg::Pose;
-using PoseArray = geometry_msgs::msg::PoseArray;
-using PoseWithCovariance = geometry_msgs::msg::PoseWithCovariance;
-using Transform = geometry_msgs::msg::Transform;
-
-#elif BELUGA_ROS_VERSION == 1
-
-using ColorRGBA = std_msgs::ColorRGBA;
-using LaserScan = sensor_msgs::LaserScan;
-using LaserScanConstSharedPtr = LaserScan::ConstPtr;
-using PointCloud2 = sensor_msgs::PointCloud2;
-using PointCloud2ConstSharedPtr = PointCloud2::ConstPtr;
-template <typename Scalar>
-using PointCloud2ConstIterator = sensor_msgs::PointCloud2ConstIterator<Scalar>;
-template <typename Scalar>
-using PointCloud2Iterator = sensor_msgs::PointCloud2Iterator<Scalar>;
-using PointCloud2Modifier = sensor_msgs::PointCloud2Modifier;
-using PointField = sensor_msgs::PointField;
-using Marker = visualization_msgs::Marker;
-using MarkerArray = visualization_msgs::MarkerArray;
-using OccupancyGrid = nav_msgs::OccupancyGrid;
-using OccupancyGridConstSharedPtr = OccupancyGrid::ConstPtr;
-using Point = geometry_msgs::Point;
-using Pose = geometry_msgs::Pose;
-using PoseArray = geometry_msgs::PoseArray;
-using PoseWithCovariance = geometry_msgs::PoseWithCovariance;
-using Transform = geometry_msgs::Transform;
-
-#else
-#error BELUGA_ROS_VERSION is not defined or invalid
-#endif
-
-}  // namespace msg
-
-namespace detail {
-
-#if BELUGA_ROS_VERSION == 2
-
-using Time = rclcpp::Time;
-
-#elif BELUGA_ROS_VERSION == 1
-
-using Time = ros::Time;
-
-#else
-#error BELUGA_ROS_VERSION is not defined or invalid
-#endif
-
-}  // namespace detail
 
 /// Stamp a message with a frame ID and timestamp.
 /**
@@ -134,7 +29,7 @@ using Time = ros::Time;
  * \tparam Message A message type with a header.
  */
 template <class Message>
-Message& stamp_message(std::string_view frame_id, detail::Time timestamp, Message& message) {
+Message& stamp_message(std::string_view frame_id, rclcpp::Time timestamp, Message& message) {
   message.header.frame_id = frame_id;
   message.header.stamp = timestamp;
   return message;
@@ -146,8 +41,8 @@ Message& stamp_message(std::string_view frame_id, detail::Time timestamp, Messag
  * \param timestamp Time to stamp markers at.
  * \param[out] message Message to be stamped.
  */
-inline beluga_ros::msg::MarkerArray&
-stamp_message(std::string_view frame_id, detail::Time timestamp, beluga_ros::msg::MarkerArray& message) {
+inline visualization_msgs::msg::MarkerArray&
+stamp_message(std::string_view frame_id, rclcpp::Time timestamp, visualization_msgs::msg::MarkerArray& message) {
   for (auto& marker : message.markers) {
     stamp_message(frame_id, timestamp, marker);
   }

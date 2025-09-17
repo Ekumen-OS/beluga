@@ -15,17 +15,10 @@
 #ifndef BELUGA_ROS_TF2_EIGEN_HPP
 #define BELUGA_ROS_TF2_EIGEN_HPP
 
-#if BELUGA_ROS_VERSION == 2
 #include <tf2_eigen/tf2_eigen.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
-#elif BELUGA_ROS_VERSION == 1
-#include <tf2_eigen/tf2_eigen.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#else
-#error BELUGA_ROS_VERSION is not defined or invalid
-#endif
 
-#include <beluga_ros/messages.hpp>
+#include <geometry_msgs/msg/point.hpp>
 
 #include <Eigen/Core>
 
@@ -43,8 +36,8 @@ namespace tf2 {
  * \return The converted Point message.
  */
 template <class Scalar>
-inline beluga_ros::msg::Point toMsg(const Eigen::Matrix<Scalar, 2, 1>& in) {
-  beluga_ros::msg::Point out;
+inline geometry_msgs::msg::Point toMsg(const Eigen::Matrix<Scalar, 2, 1>& in) {
+  geometry_msgs::msg::Point out;
   out.x = static_cast<double>(in.x());
   out.y = static_cast<double>(in.y());
   return out;

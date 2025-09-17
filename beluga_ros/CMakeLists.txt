@@ -37,21 +37,63 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   add_compile_options(-fno-inline)
 endif()
 
-set(ROS_VERSION $ENV{ROS_VERSION})
-if(NOT ROS_VERSION)
-  if(CATKIN_DEVEL_PREFIX OR CATKIN_BUILD_BINARY_PACKAGE)
-    set(ROS_VERSION 1)
-  else()
-    find_package(ament_cmake QUIET)
-    if(ament_cmake_FOUND)
-      set(ROS_VERSION 2)
-    endif()
-  endif()
+find_package(ament_cmake REQUIRED)
+find_package(beluga REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_eigen REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+
+add_library(beluga_ros)
+target_sources(beluga_ros PRIVATE src/amcl.cpp src/ndt_ellipsoid.cpp)
+target_include_directories(
+  beluga_ros PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                    $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+target_link_libraries(beluga_ros PUBLIC beluga::beluga)
+target_link_libraries(
+  beluga_ros
+  PUBLIC ${geometry_msgs_TARGETS}
+         ${nav_msgs_TARGETS}
+         ${sensor_msgs_TARGETS}
+         ${std_msgs_TARGETS}
+         ${visualization_msgs_TARGETS}
+         sensor_msgs::sensor_msgs_library
+         tf2::tf2
+         tf2_eigen::tf2_eigen
+         tf2_geometry_msgs::tf2_geometry_msgs)
+target_compile_features(beluga_ros PUBLIC cxx_std_17)
+
+set_target_properties(beluga_ros PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+ament_export_dependencies(
+  beluga
+  geometry_msgs
+  nav_msgs
+  sensor_msgs
+  std_msgs
+  tf2
+  tf2_eigen
+  tf2_geometry_msgs
+  visualization_msgs)
+ament_export_include_directories("include/${PROJECT_NAME}")
+ament_export_targets(beluga_ros HAS_LIBRARY_TARGET)
+
+install(
+  TARGETS beluga_ros
+  EXPORT beluga_ros
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
+
+install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
+
+if(BUILD_TESTING)
+  enable_testing()
+  add_subdirectory(test)
 endif()
-if(ROS_VERSION EQUAL 2)
-  include(cmake/ament.cmake)
-elseif(ROS_VERSION EQUAL 1)
-  include(cmake/catkin.cmake)
-else()
-  message(FATAL_ERROR "Unknown ROS distribution version: ${ROS_VERSION}")
-endif()
+
+ament_package()

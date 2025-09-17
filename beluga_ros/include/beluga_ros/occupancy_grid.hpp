@@ -25,16 +25,11 @@
 
 #include <tf2/utils.hpp>
 
-#if BELUGA_ROS_VERSION == 2
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
-#elif BELUGA_ROS_VERSION == 1
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#else
-#error BELUGA_ROS_VERSION is not defined or invalid
-#endif
 
 #include <beluga/sensor/data/occupancy_grid.hpp>
-#include <beluga_ros/messages.hpp>
+
+#include <nav_msgs/msg/occupancy_grid.hpp>
 
 /**
  * \file
@@ -71,7 +66,7 @@ class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
   /// Constructor.
   ///
   /// \param grid Occupancy grid message.
-  explicit OccupancyGrid(beluga_ros::msg::OccupancyGridConstSharedPtr grid)
+  explicit OccupancyGrid(nav_msgs::msg::OccupancyGrid::ConstSharedPtr grid)
       : grid_(std::move(grid)), origin_(make_origin_transform(grid_->info.origin)) {}
 
   /// Get the occupancy grid origin in the occupancy grid frame.
@@ -96,10 +91,10 @@ class OccupancyGrid : public beluga::BaseOccupancyGrid2<OccupancyGrid> {
   [[nodiscard]] static auto value_traits() { return ValueTraits{}; }
 
  private:
-  beluga_ros::msg::OccupancyGridConstSharedPtr grid_;
+  nav_msgs::msg::OccupancyGrid::ConstSharedPtr grid_;
   Sophus::SE2d origin_;
 
-  static Sophus::SE2d make_origin_transform(const beluga_ros::msg::Pose& origin) {
+  static Sophus::SE2d make_origin_transform(const geometry_msgs::msg::Pose& origin) {
     const auto rotation = Sophus::SO2d{tf2::getYaw(origin.orientation)};
     const auto translation = Eigen::Vector2d{origin.position.x, origin.position.y};
     return Sophus::SE2d{rotation, translation};
