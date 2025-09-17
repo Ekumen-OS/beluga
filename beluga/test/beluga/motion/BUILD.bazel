@@ -22,8 +22,8 @@ load("@rules_cc//cc:defs.bzl", "cc_test")
             file,
         ],
         deps = [
-            "//:beluga",
-            "//test/beluga:utils",
+            "//beluga",
+            "//beluga/test:utils",
             "@googletest//:gtest_main",
         ],
     )

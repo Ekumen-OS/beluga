@@ -22,8 +22,8 @@ load("@rules_multirun//:defs.bzl", "multirun")
             file,
         ],
         deps = [
-            "//:beluga",
-            "//test/beluga:utils",
+            "//beluga",
+            "//beluga/test:utils",
             "@google_benchmark//:benchmark_main",
         ],
     )

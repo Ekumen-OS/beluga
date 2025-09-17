@@ -12,24 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@rules_cc//cc:defs.bzl", "cc_test")
-
-[
-    cc_test(
-        name = file.replace(".cpp", ""),
-        size = "small",
-        srcs = [
-            file,
-        ],
-        deps = [
-            "//beluga",
-            "//beluga/test:utils",
-            "@googletest//:gtest_main",
-        ],
-    )
-    for file in [
-        "test_particle_traits.cpp",
-        "test_strongly_typed_numeric.cpp",
-        "test_tuple_traits.cpp",
-    ]
-]
+alias(
+    name = "utils",
+    actual = "//beluga/test/beluga:utils",
+    visibility = ["//beluga/test:__subpackages__"],
+)

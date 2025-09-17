@@ -18,9 +18,9 @@ cc_library(
     name = "utils",
     srcs = glob(["include/**/*.hpp"]),
     includes = ["include"],
-    visibility = ["//visibility:public"],
+    visibility = ["//beluga/test:__pkg__"],
     deps = [
-        "//:beluga",
+        "//beluga",
     ],
 )
 
@@ -30,8 +30,8 @@ cc_library(
         size = "small",
         srcs = [file],
         deps = [
-            ":utils",
-            "//:beluga",
+            "//beluga",
+            "//beluga/test:utils",
             "@googletest//:gtest_main",
         ],
     )
