@@ -12,7 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("@rules_build_error//lang/cc:defs.bzl", "cc_build_error_test")
+load("@rules_build_error//matcher:defs.bzl", "matcher")
 load("@rules_cc//cc:defs.bzl", "cc_test")
+
+cc_build_error_test(
+    name = "test_ndt_model_build_error",
+    src = "test_ndt_model.cpp",
+    compile_stderr = matcher.has_substr("This file requires HDF5."),
+    deps = [
+        "//beluga",
+        "@googletest//:gtest_main",
+    ],
+)
 
 [
     cc_test(
@@ -35,6 +47,5 @@ load("@rules_cc//cc:defs.bzl", "cc_test")
         "test_likelihood_field_model.cpp",
         "test_likelihood_field_model_base.cpp",
         "test_likelihood_field_prob_model.cpp",
-        # "test_ndt_model.cpp",  # requires HDF5 support
     ]
 ]
