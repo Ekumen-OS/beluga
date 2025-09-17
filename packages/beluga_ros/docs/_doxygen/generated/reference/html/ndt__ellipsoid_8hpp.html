@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;"/>
   </head>
   
   
@@ -444,12 +444,13 @@ $(function() {
 
 <p>Utilities for NDT I/O over ROS interfaces.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;beluga_ros/messages.hpp&gt;</code><br />
-<code>#include &lt;Eigen/Core&gt;</code><br />
+<div class="textblock"><code>#include &lt;Eigen/Core&gt;</code><br />
 <code>#include &lt;beluga/eigen_compatibility.hpp&gt;</code><br />
 <code>#include &lt;range/v3/view/enumerate.hpp&gt;</code><br />
 <code>#include &lt;beluga/sensor/data/ndt_cell.hpp&gt;</code><br />
 <code>#include &lt;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sparse__value__grid_8hpp.html">beluga/sensor/data/sparse_value_grid.hpp</a>&gt;</code><br />
+<code>#include &lt;visualization_msgs/msg/marker.hpp&gt;</code><br />
+<code>#include &lt;visualization_msgs/msg/marker_array.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ndt_ellipsoid.hpp:</div>
 <div class="dyncontent">
@@ -467,21 +468,21 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3f3f31fee5bfaf9fc65f4c4cbb067147"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__ellipsoid_8hpp.html#a3f3f31fee5bfaf9fc65f4c4cbb067147">beluga_ros::detail::use_mean_covariance</a> (Eigen::SelfAdjointEigenSolver&lt; Eigen::Matrix&lt; double, 3, 3 &gt;&gt; &amp;eigen_solver, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1NDTCell.html">beluga::NDTCell</a>&lt; 3 &gt; cell, beluga_ros::msg::Marker &amp;marker)</td></tr>
-<tr class="memdesc:a3f3f31fee5bfaf9fc65f4c4cbb067147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an ellipoid based on NDT cell data (eigenvalues and eigenvectors) contained in the received marker.  <a href="ndt__ellipsoid_8hpp.html#a3f3f31fee5bfaf9fc65f4c4cbb067147">More...</a><br /></td></tr>
-<tr class="separator:a3f3f31fee5bfaf9fc65f4c4cbb067147"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93c6acc2bf1deddc0af3bf3fa733990e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__ellipsoid_8hpp.html#a93c6acc2bf1deddc0af3bf3fa733990e">beluga_ros::detail::use_cell_size</a> (const <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a51cbced5170bfe37a85ef0a454b4ade0">Eigen::Vector</a>&lt; int, 3 &gt; &amp;position, double size, beluga_ros::msg::Marker &amp;marker)</td></tr>
-<tr class="memdesc:a93c6acc2bf1deddc0af3bf3fa733990e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a cube contained in the received marker.  <a href="ndt__ellipsoid_8hpp.html#a93c6acc2bf1deddc0af3bf3fa733990e">More...</a><br /></td></tr>
-<tr class="separator:a93c6acc2bf1deddc0af3bf3fa733990e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f564d4e978f42ad3895af7b0b2e52b8"><td class="memTemplParams" colspan="2">template&lt;typename MapType , int NDim&gt; </td></tr>
-<tr class="memitem:a8f564d4e978f42ad3895af7b0b2e52b8"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; beluga_ros::msg::MarkerArray, bool &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#a8f564d4e978f42ad3895af7b0b2e52b8">beluga_ros::assign_obstacle_map</a> (const <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a>&lt; MapType, NDim &gt; &amp;grid, beluga_ros::msg::MarkerArray &amp;message)</td></tr>
-<tr class="separator:a8f564d4e978f42ad3895af7b0b2e52b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e40a1dfc0ba2fb99494a4534423bbd2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__ellipsoid_8hpp.html#a6e40a1dfc0ba2fb99494a4534423bbd2">beluga_ros::detail::use_mean_covariance</a> (Eigen::SelfAdjointEigenSolver&lt; Eigen::Matrix&lt; double, 3, 3 &gt;&gt; &amp;eigen_solver, <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1NDTCell.html">beluga::NDTCell</a>&lt; 3 &gt; cell, visualization_msgs::msg::Marker &amp;marker)</td></tr>
+<tr class="memdesc:a6e40a1dfc0ba2fb99494a4534423bbd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an ellipoid based on NDT cell data (eigenvalues and eigenvectors) contained in the received marker.  <a href="ndt__ellipsoid_8hpp.html#a6e40a1dfc0ba2fb99494a4534423bbd2">More...</a><br /></td></tr>
+<tr class="separator:a6e40a1dfc0ba2fb99494a4534423bbd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a390ef3bc6bb87867bfcadadc012b8fc0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndt__ellipsoid_8hpp.html#a390ef3bc6bb87867bfcadadc012b8fc0">beluga_ros::detail::use_cell_size</a> (const <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a51cbced5170bfe37a85ef0a454b4ade0">Eigen::Vector</a>&lt; int, 3 &gt; &amp;position, double size, visualization_msgs::msg::Marker &amp;marker)</td></tr>
+<tr class="memdesc:a390ef3bc6bb87867bfcadadc012b8fc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a cube contained in the received marker.  <a href="ndt__ellipsoid_8hpp.html#a390ef3bc6bb87867bfcadadc012b8fc0">More...</a><br /></td></tr>
+<tr class="separator:a390ef3bc6bb87867bfcadadc012b8fc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6b924da047dbd7e58dd6f7f02cf165b"><td class="memTemplParams" colspan="2">template&lt;typename MapType , int NDim&gt; </td></tr>
+<tr class="memitem:af6b924da047dbd7e58dd6f7f02cf165b"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; visualization_msgs::msg::MarkerArray, bool &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebeluga__ros.html#af6b924da047dbd7e58dd6f7f02cf165b">beluga_ros::assign_obstacle_map</a> (const <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a>&lt; MapType, NDim &gt; &amp;grid, visualization_msgs::msg::MarkerArray &amp;message)</td></tr>
+<tr class="separator:af6b924da047dbd7e58dd6f7f02cf165b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for NDT I/O over ROS interfaces. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a93c6acc2bf1deddc0af3bf3fa733990e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93c6acc2bf1deddc0af3bf3fa733990e">&#9670;&nbsp;</a></span>use_cell_size()</h2>
+<a id="a390ef3bc6bb87867bfcadadc012b8fc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a390ef3bc6bb87867bfcadadc012b8fc0">&#9670;&nbsp;</a></span>use_cell_size()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -501,7 +502,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">beluga_ros::msg::Marker &amp;&#160;</td>
+          <td class="paramtype">visualization_msgs::msg::Marker &amp;&#160;</td>
           <td class="paramname"><em>marker</em>&#160;</td>
         </tr>
         <tr>
@@ -524,8 +525,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a3f3f31fee5bfaf9fc65f4c4cbb067147"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f3f31fee5bfaf9fc65f4c4cbb067147">&#9670;&nbsp;</a></span>use_mean_covariance()</h2>
+<a id="a6e40a1dfc0ba2fb99494a4534423bbd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e40a1dfc0ba2fb99494a4534423bbd2">&#9670;&nbsp;</a></span>use_mean_covariance()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -545,7 +546,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">beluga_ros::msg::Marker &amp;&#160;</td>
+          <td class="paramtype">visualization_msgs::msg::Marker &amp;&#160;</td>
           <td class="paramname"><em>marker</em>&#160;</td>
         </tr>
         <tr>
@@ -625,7 +626,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;.
+  Last updated on &#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;.
   <br/>
 </p>
   </div>

@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;"/>
   </head>
   
   
@@ -450,10 +450,14 @@ $(function() {
 <code>#include &lt;sophus/common.hpp&gt;</code><br />
 <code>#include &lt;tf2/convert.hpp&gt;</code><br />
 <code>#include &lt;tf2/utils.hpp&gt;</code><br />
+<code>#include &lt;tf2_eigen/tf2_eigen.hpp&gt;</code><br />
+<code>#include &lt;tf2_geometry_msgs/tf2_geometry_msgs.hpp&gt;</code><br />
 <code>#include &lt;sophus/se2.hpp&gt;</code><br />
 <code>#include &lt;sophus/se3.hpp&gt;</code><br />
 <code>#include &lt;sophus/types.hpp&gt;</code><br />
-<code>#include &lt;beluga_ros/messages.hpp&gt;</code><br />
+<code>#include &lt;geometry_msgs/msg/pose.hpp&gt;</code><br />
+<code>#include &lt;geometry_msgs/msg/pose_with_covariance.hpp&gt;</code><br />
+<code>#include &lt;geometry_msgs/msg/transform.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for tf2_sophus.hpp:</div>
 <div class="dyncontent">
@@ -483,38 +487,38 @@ Functions</h2></td></tr>
 <tr class="memitem:a736eb1245ec6c55aa8e0213abdc6c9f9"><td class="memTemplParams" colspan="2">template&lt;typename Scalar &gt; </td></tr>
 <tr class="memitem:a736eb1245ec6c55aa8e0213abdc6c9f9"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a51cbced5170bfe37a85ef0a454b4ade0">Eigen::Vector</a>&lt; Scalar, 6 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="tf2__sophus_8hpp.html#a736eb1245ec6c55aa8e0213abdc6c9f9">detail::tangential_space_to_xyz_rpy</a> (const <a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a51cbced5170bfe37a85ef0a454b4ade0">Eigen::Vector</a>&lt; Scalar, 6 &gt; &amp;tangent)</td></tr>
 <tr class="separator:a736eb1245ec6c55aa8e0213abdc6c9f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Pose &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">tf2::toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</td></tr>
-<tr class="memdesc:a0a74cb89468798ba6738c62f3fdca4cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Pose message.  <a href="namespacetf2.html#a0a74cb89468798ba6738c62f3fdca4cb">More...</a><br /></td></tr>
-<tr class="separator:a0a74cb89468798ba6738c62f3fdca4cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4511f028283bafd60e8fe142ca2bee2e"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a4511f028283bafd60e8fe142ca2bee2e"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Pose &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a4511f028283bafd60e8fe142ca2bee2e">tf2::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in, beluga_ros::msg::Pose &amp;out)</td></tr>
-<tr class="memdesc:a4511f028283bafd60e8fe142ca2bee2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Pose message.  <a href="namespacetf2.html#a4511f028283bafd60e8fe142ca2bee2e">More...</a><br /></td></tr>
-<tr class="separator:a4511f028283bafd60e8fe142ca2bee2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4165e54c2868393e7d80cc82809ce366"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a4165e54c2868393e7d80cc82809ce366"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a4165e54c2868393e7d80cc82809ce366">tf2::toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;in)</td></tr>
-<tr class="memdesc:a4165e54c2868393e7d80cc82809ce366"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Transform message.  <a href="namespacetf2.html#a4165e54c2868393e7d80cc82809ce366">More...</a><br /></td></tr>
-<tr class="separator:a4165e54c2868393e7d80cc82809ce366"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a48396a86427eec876d6d2959411ffa"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a0a48396a86427eec876d6d2959411ffa"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a0a48396a86427eec876d6d2959411ffa">tf2::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in)</td></tr>
-<tr class="memdesc:a0a48396a86427eec876d6d2959411ffa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Transform message.  <a href="namespacetf2.html#a0a48396a86427eec876d6d2959411ffa">More...</a><br /></td></tr>
-<tr class="separator:a0a48396a86427eec876d6d2959411ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5b19c7fe5425ac099422ea142b7b459"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:ab5b19c7fe5425ac099422ea142b7b459"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#ab5b19c7fe5425ac099422ea142b7b459">tf2::fromMsg</a> (const beluga_ros::msg::Transform &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</td></tr>
-<tr class="memdesc:ab5b19c7fe5425ac099422ea142b7b459"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type.  <a href="namespacetf2.html#ab5b19c7fe5425ac099422ea142b7b459">More...</a><br /></td></tr>
-<tr class="separator:ab5b19c7fe5425ac099422ea142b7b459"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a9fc7b4c5334421b9c6d5fdaa9448ff12">tf2::fromMsg</a> (const beluga_ros::msg::Transform &amp;msg, Sophus::SE3&lt; Scalar &gt; &amp;out)</td></tr>
-<tr class="memdesc:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type.  <a href="namespacetf2.html#a9fc7b4c5334421b9c6d5fdaa9448ff12">More...</a><br /></td></tr>
-<tr class="separator:a9fc7b4c5334421b9c6d5fdaa9448ff12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a2b9d8356dac0b2bc7266ecf5d338dc9c">tf2::fromMsg</a> (const beluga_ros::msg::Pose &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</td></tr>
-<tr class="memdesc:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type.  <a href="namespacetf2.html#a2b9d8356dac0b2bc7266ecf5d338dc9c">More...</a><br /></td></tr>
-<tr class="separator:a2b9d8356dac0b2bc7266ecf5d338dc9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a057c5840ca308e4f2f38beaa02ba293e"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a057c5840ca308e4f2f38beaa02ba293e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a057c5840ca308e4f2f38beaa02ba293e">tf2::fromMsg</a> (const beluga_ros::msg::Pose &amp;msg, Sophus::SE3&lt; Scalar &gt; &amp;out)</td></tr>
-<tr class="memdesc:a057c5840ca308e4f2f38beaa02ba293e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type.  <a href="namespacetf2.html#a057c5840ca308e4f2f38beaa02ba293e">More...</a><br /></td></tr>
-<tr class="separator:a057c5840ca308e4f2f38beaa02ba293e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45d80f6debb0188c9f42da2f8399c7f0"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a45d80f6debb0188c9f42da2f8399c7f0"><td class="memTemplItemLeft" align="right" valign="top">geometry_msgs::msg::Pose &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a45d80f6debb0188c9f42da2f8399c7f0">tf2::toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;in, geometry_msgs::msg::Pose &amp;out)</td></tr>
+<tr class="memdesc:a45d80f6debb0188c9f42da2f8399c7f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Pose message.  <a href="namespacetf2.html#a45d80f6debb0188c9f42da2f8399c7f0">More...</a><br /></td></tr>
+<tr class="separator:a45d80f6debb0188c9f42da2f8399c7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f9aa101ac3fc805a240cb407057f3e0"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a9f9aa101ac3fc805a240cb407057f3e0"><td class="memTemplItemLeft" align="right" valign="top">geometry_msgs::msg::Pose &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a9f9aa101ac3fc805a240cb407057f3e0">tf2::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in, geometry_msgs::msg::Pose &amp;out)</td></tr>
+<tr class="memdesc:a9f9aa101ac3fc805a240cb407057f3e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Pose message.  <a href="namespacetf2.html#a9f9aa101ac3fc805a240cb407057f3e0">More...</a><br /></td></tr>
+<tr class="separator:a9f9aa101ac3fc805a240cb407057f3e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35734d4507197c2fe38ef02aa60f5dfc"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a35734d4507197c2fe38ef02aa60f5dfc"><td class="memTemplItemLeft" align="right" valign="top">geometry_msgs::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a35734d4507197c2fe38ef02aa60f5dfc">tf2::toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;in)</td></tr>
+<tr class="memdesc:a35734d4507197c2fe38ef02aa60f5dfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type to a Transform message.  <a href="namespacetf2.html#a35734d4507197c2fe38ef02aa60f5dfc">More...</a><br /></td></tr>
+<tr class="separator:a35734d4507197c2fe38ef02aa60f5dfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cc01d2207fb836a71dbff528a2ea77d"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a9cc01d2207fb836a71dbff528a2ea77d"><td class="memTemplItemLeft" align="right" valign="top">geometry_msgs::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a9cc01d2207fb836a71dbff528a2ea77d">tf2::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in)</td></tr>
+<tr class="memdesc:a9cc01d2207fb836a71dbff528a2ea77d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type to a Transform message.  <a href="namespacetf2.html#a9cc01d2207fb836a71dbff528a2ea77d">More...</a><br /></td></tr>
+<tr class="separator:a9cc01d2207fb836a71dbff528a2ea77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab6fa1751dc73ec1d9481969689f2722"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:aab6fa1751dc73ec1d9481969689f2722"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#aab6fa1751dc73ec1d9481969689f2722">tf2::fromMsg</a> (const geometry_msgs::msg::Transform &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:aab6fa1751dc73ec1d9481969689f2722"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type.  <a href="namespacetf2.html#aab6fa1751dc73ec1d9481969689f2722">More...</a><br /></td></tr>
+<tr class="separator:aab6fa1751dc73ec1d9481969689f2722"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ba27ddaa155c205191b03192cfde99e"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:a3ba27ddaa155c205191b03192cfde99e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#a3ba27ddaa155c205191b03192cfde99e">tf2::fromMsg</a> (const geometry_msgs::msg::Transform &amp;msg, Sophus::SE3&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:a3ba27ddaa155c205191b03192cfde99e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Transform message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type.  <a href="namespacetf2.html#a3ba27ddaa155c205191b03192cfde99e">More...</a><br /></td></tr>
+<tr class="separator:a3ba27ddaa155c205191b03192cfde99e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac16c5a50b6ed874b3bcce8ce14a9fa65"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:ac16c5a50b6ed874b3bcce8ce14a9fa65"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#ac16c5a50b6ed874b3bcce8ce14a9fa65">tf2::fromMsg</a> (const geometry_msgs::msg::Pose &amp;msg, Sophus::SE2&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:ac16c5a50b6ed874b3bcce8ce14a9fa65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE2 type.  <a href="namespacetf2.html#ac16c5a50b6ed874b3bcce8ce14a9fa65">More...</a><br /></td></tr>
+<tr class="separator:ac16c5a50b6ed874b3bcce8ce14a9fa65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadc8fa098dacbb73d0ace756b82d998b"><td class="memTemplParams" colspan="2">template&lt;class Scalar &gt; </td></tr>
+<tr class="memitem:aadc8fa098dacbb73d0ace756b82d998b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#aadc8fa098dacbb73d0ace756b82d998b">tf2::fromMsg</a> (const geometry_msgs::msg::Pose &amp;msg, Sophus::SE3&lt; Scalar &gt; &amp;out)</td></tr>
+<tr class="memdesc:aadc8fa098dacbb73d0ace756b82d998b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a Pose message type to a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> SE3 type.  <a href="namespacetf2.html#aadc8fa098dacbb73d0ace756b82d998b">More...</a><br /></td></tr>
+<tr class="separator:aadc8fa098dacbb73d0ace756b82d998b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afce89eb3573108e41ac4c57448e2fab5"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename, std::size_t &gt; class Array, typename Scalar &gt; </td></tr>
 <tr class="memitem:afce89eb3573108e41ac4c57448e2fab5"><td class="memTemplItemLeft" align="right" valign="top">Array&lt; Scalar, 36 &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#afce89eb3573108e41ac4c57448e2fab5">tf2::covarianceEigenToRowMajor</a> (const Sophus::Matrix3&lt; Scalar &gt; &amp;in, Array&lt; Scalar, 36 &gt; &amp;out)</td></tr>
 <tr class="memdesc:afce89eb3573108e41ac4c57448e2fab5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a> (ie. Eigen) 3x3 covariance matrix to a 6x6 row-major array.  <a href="namespacetf2.html#afce89eb3573108e41ac4c57448e2fab5">More...</a><br /></td></tr>
@@ -523,39 +527,39 @@ Functions</h2></td></tr>
 <tr class="memitem:adb1233c4d542bb7a5e8a1497b37813d0"><td class="memTemplItemLeft" align="right" valign="top">Sophus::Matrix3&lt; Scalar &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#adb1233c4d542bb7a5e8a1497b37813d0">tf2::covarianceRowMajorToEigen</a> (const Array&lt; Scalar, 36 &gt; &amp;in, Sophus::Matrix3&lt; Scalar &gt; &amp;out)</td></tr>
 <tr class="memdesc:adb1233c4d542bb7a5e8a1497b37813d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 6x6 row-major array to an Eigen 3x3 covariance matrix.  <a href="namespacetf2.html#adb1233c4d542bb7a5e8a1497b37813d0">More...</a><br /></td></tr>
 <tr class="separator:adb1233c4d542bb7a5e8a1497b37813d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab44dfc15804d055115e8d000d6c3dc24"><td class="memTemplParams" colspan="2">template&lt;typename Scalar &gt; </td></tr>
-<tr class="memitem:ab44dfc15804d055115e8d000d6c3dc24"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::PoseWithCovariance&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#ab44dfc15804d055115e8d000d6c3dc24">tf2::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in, const Eigen::Matrix&lt; Scalar, 6, 6 &gt; &amp;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a1e097971cc6bc315081bc0a2b7b587f1">covariance</a>)</td></tr>
-<tr class="separator:ab44dfc15804d055115e8d000d6c3dc24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a8cd23b674364e3312d842e8ecc9c15"><td class="memTemplParams" colspan="2"><a id="a3a8cd23b674364e3312d842e8ecc9c15"></a>
+<tr class="memitem:ac650636b447e38821fefe168bfd52352"><td class="memTemplParams" colspan="2">template&lt;typename Scalar &gt; </td></tr>
+<tr class="memitem:ac650636b447e38821fefe168bfd52352"><td class="memTemplItemLeft" align="right" valign="top">geometry_msgs::msg::PoseWithCovariance&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetf2.html#ac650636b447e38821fefe168bfd52352">tf2::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in, const Eigen::Matrix&lt; Scalar, 6, 6 &gt; &amp;<a class="elRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a1e097971cc6bc315081bc0a2b7b587f1">covariance</a>)</td></tr>
+<tr class="separator:ac650636b447e38821fefe168bfd52352"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb967a4fe7db95a4c254aabf518578b4"><td class="memTemplParams" colspan="2"><a id="aeb967a4fe7db95a4c254aabf518578b4"></a>
 template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a3a8cd23b674364e3312d842e8ecc9c15"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a3a8cd23b674364e3312d842e8ecc9c15">Sophus::toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;pose)</td></tr>
-<tr class="memdesc:a3a8cd23b674364e3312d842e8ecc9c15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an SE2 <code>pose</code> to a <code>geometry_msgs/Transform</code> message. <br /></td></tr>
-<tr class="separator:a3a8cd23b674364e3312d842e8ecc9c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a736860469ddeff215b25af5d506a0071"><td class="memTemplParams" colspan="2"><a id="a736860469ddeff215b25af5d506a0071"></a>
+<tr class="memitem:aeb967a4fe7db95a4c254aabf518578b4"><td class="memTemplItemLeft" align="right" valign="top">geometry_msgs::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#aeb967a4fe7db95a4c254aabf518578b4">Sophus::toMsg</a> (const Sophus::SE2&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:aeb967a4fe7db95a4c254aabf518578b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an SE2 <code>pose</code> to a <code>geometry_msgs/Transform</code> message. <br /></td></tr>
+<tr class="separator:aeb967a4fe7db95a4c254aabf518578b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a810ecd14609964e06c6373ca9dc1fabe"><td class="memTemplParams" colspan="2"><a id="a810ecd14609964e06c6373ca9dc1fabe"></a>
 template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a736860469ddeff215b25af5d506a0071"><td class="memTemplItemLeft" align="right" valign="top">beluga_ros::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a736860469ddeff215b25af5d506a0071">Sophus::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in)</td></tr>
-<tr class="memdesc:a736860469ddeff215b25af5d506a0071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an SE3 <code>pose</code> to a <code>geometry_msgs/Transform</code> message. <br /></td></tr>
-<tr class="separator:a736860469ddeff215b25af5d506a0071"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c54d773fcaa635dc4c00ff079521c69"><td class="memTemplParams" colspan="2"><a id="a7c54d773fcaa635dc4c00ff079521c69"></a>
+<tr class="memitem:a810ecd14609964e06c6373ca9dc1fabe"><td class="memTemplItemLeft" align="right" valign="top">geometry_msgs::msg::Transform&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a810ecd14609964e06c6373ca9dc1fabe">Sophus::toMsg</a> (const Sophus::SE3&lt; Scalar &gt; &amp;in)</td></tr>
+<tr class="memdesc:a810ecd14609964e06c6373ca9dc1fabe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an SE3 <code>pose</code> to a <code>geometry_msgs/Transform</code> message. <br /></td></tr>
+<tr class="separator:a810ecd14609964e06c6373ca9dc1fabe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac75df4ddd23e20d80305d159c5bc3d0c"><td class="memTemplParams" colspan="2"><a id="ac75df4ddd23e20d80305d159c5bc3d0c"></a>
 template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a7c54d773fcaa635dc4c00ff079521c69"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a7c54d773fcaa635dc4c00ff079521c69">Sophus::fromMsg</a> (const beluga_ros::msg::Transform &amp;message, Sophus::SE2&lt; Scalar &gt; &amp;pose)</td></tr>
-<tr class="memdesc:a7c54d773fcaa635dc4c00ff079521c69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE2 <code>pose</code> from a <code>geometry_msgs/Transform</code> <code>message</code>. <br /></td></tr>
-<tr class="separator:a7c54d773fcaa635dc4c00ff079521c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b8567c3776fb02ce938f657c6f4d41d"><td class="memTemplParams" colspan="2"><a id="a2b8567c3776fb02ce938f657c6f4d41d"></a>
+<tr class="memitem:ac75df4ddd23e20d80305d159c5bc3d0c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#ac75df4ddd23e20d80305d159c5bc3d0c">Sophus::fromMsg</a> (const geometry_msgs::msg::Transform &amp;message, Sophus::SE2&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:ac75df4ddd23e20d80305d159c5bc3d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE2 <code>pose</code> from a <code>geometry_msgs/Transform</code> <code>message</code>. <br /></td></tr>
+<tr class="separator:ac75df4ddd23e20d80305d159c5bc3d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9444c6fb262f8612da97f42574b180a"><td class="memTemplParams" colspan="2"><a id="aa9444c6fb262f8612da97f42574b180a"></a>
 template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a2b8567c3776fb02ce938f657c6f4d41d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a2b8567c3776fb02ce938f657c6f4d41d">Sophus::fromMsg</a> (const beluga_ros::msg::Transform &amp;message, Sophus::SE3&lt; Scalar &gt; &amp;pose)</td></tr>
-<tr class="memdesc:a2b8567c3776fb02ce938f657c6f4d41d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE3 <code>pose</code> from a <code>geometry_msgs/Transform</code> <code>message</code>. <br /></td></tr>
-<tr class="separator:a2b8567c3776fb02ce938f657c6f4d41d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19b5cbaf126d6d81a8075a5428fcc52c"><td class="memTemplParams" colspan="2"><a id="a19b5cbaf126d6d81a8075a5428fcc52c"></a>
+<tr class="memitem:aa9444c6fb262f8612da97f42574b180a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#aa9444c6fb262f8612da97f42574b180a">Sophus::fromMsg</a> (const geometry_msgs::msg::Transform &amp;message, Sophus::SE3&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:aa9444c6fb262f8612da97f42574b180a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE3 <code>pose</code> from a <code>geometry_msgs/Transform</code> <code>message</code>. <br /></td></tr>
+<tr class="separator:aa9444c6fb262f8612da97f42574b180a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfedeb11fbecaa351ca8929d7407443f"><td class="memTemplParams" colspan="2"><a id="abfedeb11fbecaa351ca8929d7407443f"></a>
 template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a19b5cbaf126d6d81a8075a5428fcc52c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a19b5cbaf126d6d81a8075a5428fcc52c">Sophus::fromMsg</a> (const beluga_ros::msg::Pose &amp;message, Sophus::SE2&lt; Scalar &gt; &amp;pose)</td></tr>
-<tr class="memdesc:a19b5cbaf126d6d81a8075a5428fcc52c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE2 <code>pose</code> from a <code>geometry_msgs/Pose</code> <code>message</code>. <br /></td></tr>
-<tr class="separator:a19b5cbaf126d6d81a8075a5428fcc52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98875ce46c31bbba5aa6cfddf0701e8e"><td class="memTemplParams" colspan="2"><a id="a98875ce46c31bbba5aa6cfddf0701e8e"></a>
+<tr class="memitem:abfedeb11fbecaa351ca8929d7407443f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#abfedeb11fbecaa351ca8929d7407443f">Sophus::fromMsg</a> (const geometry_msgs::msg::Pose &amp;message, Sophus::SE2&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:abfedeb11fbecaa351ca8929d7407443f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE2 <code>pose</code> from a <code>geometry_msgs/Pose</code> <code>message</code>. <br /></td></tr>
+<tr class="separator:abfedeb11fbecaa351ca8929d7407443f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51938ef138c45d59b60a1f45e8854bbf"><td class="memTemplParams" colspan="2"><a id="a51938ef138c45d59b60a1f45e8854bbf"></a>
 template&lt;class Scalar &gt; </td></tr>
-<tr class="memitem:a98875ce46c31bbba5aa6cfddf0701e8e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a98875ce46c31bbba5aa6cfddf0701e8e">Sophus::fromMsg</a> (const beluga_ros::msg::Pose &amp;message, Sophus::SE3&lt; Scalar &gt; &amp;pose)</td></tr>
-<tr class="memdesc:a98875ce46c31bbba5aa6cfddf0701e8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE3 <code>pose</code> from a <code>geometry_msgs/Pose</code> <code>message</code>. <br /></td></tr>
-<tr class="separator:a98875ce46c31bbba5aa6cfddf0701e8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51938ef138c45d59b60a1f45e8854bbf"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSophus.html#a51938ef138c45d59b60a1f45e8854bbf">Sophus::fromMsg</a> (const geometry_msgs::msg::Pose &amp;message, Sophus::SE3&lt; Scalar &gt; &amp;pose)</td></tr>
+<tr class="memdesc:a51938ef138c45d59b60a1f45e8854bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts an SE3 <code>pose</code> from a <code>geometry_msgs/Pose</code> <code>message</code>. <br /></td></tr>
+<tr class="separator:a51938ef138c45d59b60a1f45e8854bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Message conversion API overloads for <code><a class="el" href="namespaceSophus.html" title="Sophus namespace extension for message conversion function overload resolution (ADL enabled).">Sophus</a></code> types. </p>
@@ -645,7 +649,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;.
+  Last updated on &#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;.
   <br/>
 </p>
   </div>

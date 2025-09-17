@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;"/>
   </head>
   
   
@@ -455,36 +455,29 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_ROS_TF2_EIGEN_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ROS_TF2_EIGEN_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#if BELUGA_ROS_VERSION == 2</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;tf2_eigen/tf2_eigen.hpp&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;tf2_geometry_msgs/tf2_geometry_msgs.hpp&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#elif BELUGA_ROS_VERSION == 1</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;tf2_eigen/tf2_eigen.h&gt;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;tf2_geometry_msgs/tf2_geometry_msgs.h&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#error BELUGA_ROS_VERSION is not defined or invalid</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;beluga_ros/messages.hpp&gt;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;Eigen/Core&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="namespacetf2.html">   38</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetf2.html">tf2</a> {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">   46</a></span>&#160;<span class="keyword">inline</span> beluga_ros::msg::Point <a class="code" href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">toMsg</a>(<span class="keyword">const</span> Eigen::Matrix&lt;Scalar, 2, 1&gt;&amp; in) {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  beluga_ros::msg::Point out;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  out.x = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(in.x());</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  out.y = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(in.y());</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keywordflow">return</span> out;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}  <span class="comment">// namespace tf2</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_ROS_TF2_EIGEN_HPP</span></div>
-<div class="ttc" id="anamespacetf2_html"><div class="ttname"><a href="namespacetf2.html">tf2</a></div><div class="ttdoc">tf2 namespace extension for message conversion overload resolution.</div><div class="ttdef"><b>Definition:</b> tf2_eigen.hpp:38</div></div>
-<div class="ttc" id="anamespacetf2_html_a566dca2143ff3a8cddb13ee0fa9cfc23"><div class="ttname"><a href="namespacetf2.html#a566dca2143ff3a8cddb13ee0fa9cfc23">tf2::toMsg</a></div><div class="ttdeci">beluga_ros::msg::Point toMsg(const Eigen::Matrix&lt; Scalar, 2, 1 &gt; &amp;in)</div><div class="ttdoc">Converts an Eigen Vector2 type to a Point message.</div><div class="ttdef"><b>Definition:</b> tf2_eigen.hpp:46</div></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;tf2_eigen/tf2_eigen.hpp&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;tf2_geometry_msgs/tf2_geometry_msgs.hpp&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;geometry_msgs/msg/point.hpp&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;Eigen/Core&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="namespacetf2.html">   31</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetf2.html">tf2</a> {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="namespacetf2.html#a613d46544122f3c70a216d8092025ce2">   39</a></span>&#160;<span class="keyword">inline</span> geometry_msgs::msg::Point <a class="code" href="namespacetf2.html#a613d46544122f3c70a216d8092025ce2">toMsg</a>(<span class="keyword">const</span> Eigen::Matrix&lt;Scalar, 2, 1&gt;&amp; in) {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  geometry_msgs::msg::Point out;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  out.x = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(in.x());</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  out.y = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(in.y());</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keywordflow">return</span> out;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}  <span class="comment">// namespace tf2</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_ROS_TF2_EIGEN_HPP</span></div>
+<div class="ttc" id="anamespacetf2_html"><div class="ttname"><a href="namespacetf2.html">tf2</a></div><div class="ttdoc">tf2 namespace extension for message conversion overload resolution.</div><div class="ttdef"><b>Definition:</b> tf2_eigen.hpp:31</div></div>
+<div class="ttc" id="anamespacetf2_html_a613d46544122f3c70a216d8092025ce2"><div class="ttname"><a href="namespacetf2.html#a613d46544122f3c70a216d8092025ce2">tf2::toMsg</a></div><div class="ttdeci">geometry_msgs::msg::Point toMsg(const Eigen::Matrix&lt; Scalar, 2, 1 &gt; &amp;in)</div><div class="ttdoc">Converts an Eigen Vector2 type to a Point message.</div><div class="ttdef"><b>Definition:</b> tf2_eigen.hpp:39</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -541,7 +534,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;.
+  Last updated on &#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;.
   <br/>
 </p>
   </div>

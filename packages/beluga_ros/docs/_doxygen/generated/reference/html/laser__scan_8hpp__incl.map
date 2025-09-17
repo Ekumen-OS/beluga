@@ -1,8 +1,11 @@
 <map id="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/laser_scan.hpp" name="/home/runner/work/beluga/beluga/beluga_ros/include/beluga_ros/laser_scan.hpp">
-<area shape="rect" id="node1" title="Implementation of sensor_msgs/LaserScan wrapper type." alt="" coords="381,5,579,61"/>
+<area shape="rect" id="node1" title="Implementation of sensor_msgs/LaserScan wrapper type." alt="" coords="494,5,693,61"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,117,176,143"/>
 <area shape="rect" id="node3" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$laser__scan_8hpp.html.html" title=" " alt="" coords="200,109,347,151"/>
 <area shape="rect" id="node4" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$take__evenly_8hpp.html.html" title=" " alt="" coords="371,117,589,143"/>
 <area shape="rect" id="node5" href="$messages_8hpp_source.html" title=" " alt="" coords="613,117,803,143"/>
-<area shape="rect" id="node6" title=" " alt="" coords="828,117,951,143"/>
+<area shape="rect" id="node8" title=" " alt="" coords="828,117,951,143"/>
+<area shape="rect" id="node9" title=" " alt="" coords="975,109,1150,151"/>
+<area shape="rect" id="node6" title=" " alt="" coords="537,199,708,240"/>
+<area shape="rect" id="node7" title=" " alt="" coords="732,206,855,233"/>
 </map>

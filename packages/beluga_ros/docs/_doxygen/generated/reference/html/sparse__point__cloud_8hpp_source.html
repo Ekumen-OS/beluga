@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;"/>
   </head>
   
   
@@ -456,106 +456,109 @@ $(function() {
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ROS_SPARSE_POINT_CLOUD_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;Eigen/Dense&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sparse__point__cloud_8hpp.html">beluga/sensor/data/sparse_point_cloud.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/take__evenly_8hpp.html">beluga/views/take_evenly.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;beluga_ros/messages.hpp&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;beluga/eigen_compatibility.hpp&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sparse__point__cloud_8hpp.html">beluga/sensor/data/sparse_point_cloud.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/take__evenly_8hpp.html">beluga/views/take_evenly.hpp</a>&gt;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/any_view.hpp&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/iota.hpp&gt;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;sophus/se3.hpp&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;beluga/eigen_compatibility.hpp&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga__ros.html">beluga_ros</a> {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keywordtype">bool</span> Strict = true&gt;</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html">   50</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3</a> : <span class="keyword">public</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1BaseSparsePointCloud.html">beluga::BaseSparsePointCloud</a>&lt;SparsePointCloud3&lt;T&gt;&gt; {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#a0df589a1304be63346a23a352626bfca">   53</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a0df589a1304be63346a23a352626bfca">Scalar</a> = T;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="comment">// Assert fields&#39; type is floating point</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  static_assert(</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      std::is_same_v&lt;Scalar, float&gt; || std::is_same_v&lt;Scalar, double&gt;,</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      <span class="stringliteral">&quot;SparsePointCloud3 only supports floating point types&quot;</span>);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#af477bce6c0984772972124746c1d0a2f">   65</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#af477bce6c0984772972124746c1d0a2f">SparsePointCloud3</a>(beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">origin</a> = Sophus::SE3d())</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      : cloud_(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::move(cloud)), origin_(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::move(<a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">origin</a>)) {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    assert(cloud_ != <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span> (cloud_-&gt;fields.size() &lt; 3) {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;point cloud must have at least 3 fields&quot;</span>);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; field_0 = cloud_-&gt;fields.at(0);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; field_1 = cloud_-&gt;fields.at(1);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; field_2 = cloud_-&gt;fields.at(2);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">if</span> (field_0.name != <span class="stringliteral">&quot;x&quot;</span> || field_1.name != <span class="stringliteral">&quot;y&quot;</span> || field_2.name != <span class="stringliteral">&quot;z&quot;</span>) {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;point cloud layout is not xyz...&quot;</span>);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">if</span> (field_0.datatype != field_1.datatype || field_1.datatype != field_2.datatype) {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;point cloud xyz datatypes are not all the same&quot;</span>);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;sensor_msgs/msg/point_cloud2.hpp&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;sensor_msgs/point_cloud2_iterator.hpp&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;sensor_msgs/point_field_conversion.hpp&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga__ros.html">beluga_ros</a> {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keywordtype">bool</span> Strict = true&gt;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html">   53</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3</a> : <span class="keyword">public</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1BaseSparsePointCloud.html">beluga::BaseSparsePointCloud</a>&lt;SparsePointCloud3&lt;T&gt;&gt; {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#a0df589a1304be63346a23a352626bfca">   56</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a0df589a1304be63346a23a352626bfca">Scalar</a> = T;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="comment">// Assert fields&#39; type is floating point</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  static_assert(</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      std::is_same_v&lt;Scalar, float&gt; || std::is_same_v&lt;Scalar, double&gt;,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      <span class="stringliteral">&quot;SparsePointCloud3 only supports floating point types&quot;</span>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#ac127e0ede5519c34164b83dd8f07feb3">   68</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#ac127e0ede5519c34164b83dd8f07feb3">SparsePointCloud3</a>(sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud, Sophus::SE3d <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">origin</a> = Sophus::SE3d())</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      : cloud_(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::move(cloud)), origin_(<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a>::move(<a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">origin</a>)) {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    assert(cloud_ != <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">if</span> (cloud_-&gt;fields.size() &lt; 3) {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;point cloud must have at least 3 fields&quot;</span>);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; field_0 = cloud_-&gt;fields.at(0);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; field_1 = cloud_-&gt;fields.at(1);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; field_2 = cloud_-&gt;fields.at(2);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">if</span> (field_0.name != <span class="stringliteral">&quot;x&quot;</span> || field_1.name != <span class="stringliteral">&quot;y&quot;</span> || field_2.name != <span class="stringliteral">&quot;z&quot;</span>) {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;point cloud layout is not xyz...&quot;</span>);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">if</span> constexpr (Strict) {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      <span class="keywordflow">if</span> (field_0.datatype != sensor_msgs::typeAsPointFieldType&lt;Scalar&gt;::value) {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;xyz datatype does not match the expected type&quot;</span>);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keywordflow">if</span> (field_0.datatype != sensor_msgs::typeAsPointFieldType&lt;float&gt;::value &amp;&amp;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;          field_0.datatype != sensor_msgs::typeAsPointFieldType&lt;double&gt;::value) {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;xyz datatype is not floating point&quot;</span>);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#ac4fed97e4071888b3ef502f24eae955f">   93</a></span>&#160;  [[nodiscard]] std::size_t <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#ac4fed97e4071888b3ef502f24eae955f">size</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(cloud_-&gt;width) * cloud_-&gt;height; }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">if</span> (field_0.datatype != field_1.datatype || field_1.datatype != field_2.datatype) {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;point cloud xyz datatypes are not all the same&quot;</span>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">if</span> constexpr (Strict) {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      <span class="keywordflow">if</span> (field_0.datatype != sensor_msgs::typeAsPointFieldType&lt;Scalar&gt;::value) {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;xyz datatype does not match the expected type&quot;</span>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      }</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <span class="keywordflow">if</span> (field_0.datatype != sensor_msgs::typeAsPointFieldType&lt;float&gt;::value &amp;&amp;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;          field_0.datatype != sensor_msgs::typeAsPointFieldType&lt;double&gt;::value) {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;xyz datatype is not floating point&quot;</span>);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      }</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  }</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">   96</a></span>&#160;  [[nodiscard]] <span class="keyword">const</span> <span class="keyword">auto</span>&amp; <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">origin</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> origin_; }</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#ac4fed97e4071888b3ef502f24eae955f">   96</a></span>&#160;  [[nodiscard]] std::size_t <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#ac4fed97e4071888b3ef502f24eae955f">size</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(cloud_-&gt;width) * cloud_-&gt;height; }</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#a68b10fdf198aa03eac08953592f53736">   99</a></span>&#160;  [[nodiscard]] <span class="keyword">auto</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a68b10fdf198aa03eac08953592f53736">points</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">if</span> constexpr (!Strict) {</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      constexpr <span class="keyword">auto</span> kCategory = ranges::category::sized | ranges::category::forward;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> datatype = cloud_-&gt;fields.at(0).datatype;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;      <span class="keywordflow">if</span> (datatype != sensor_msgs::typeAsPointFieldType&lt;Scalar&gt;::value) {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordflow">if</span> (datatype == sensor_msgs::typeAsPointFieldType&lt;float&gt;::value) {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;          <span class="keywordflow">return</span> ranges::any_view&lt;Eigen::Vector3&lt;Scalar&gt;, kCategory&gt;(</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;              points_view&lt;float&gt;(*cloud_) |</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;              ranges::views::transform([](<span class="keyword">auto</span> point) { <span class="keywordflow">return</span> point.template cast&lt;Scalar&gt;(); }));</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        assert(datatype == sensor_msgs::typeAsPointFieldType&lt;double&gt;::value);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordflow">return</span> ranges::any_view&lt;Eigen::Vector3&lt;Scalar&gt;, kCategory&gt;(</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            points_view&lt;double&gt;(*cloud_) |</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            ranges::views::transform([](<span class="keyword">auto</span> point) { <span class="keywordflow">return</span> point.template cast&lt;Scalar&gt;(); }));</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;      }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;      <span class="keywordflow">return</span> ranges::any_view&lt;Eigen::Vector3&lt;Scalar&gt;, kCategory&gt;(points_view&lt;Scalar&gt;(*cloud_));</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;      <span class="keywordflow">return</span> points_view&lt;Scalar&gt;(*cloud_);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    }</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U&gt;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  <span class="keyword">static</span> <span class="keyword">auto</span> points_view(<span class="keyword">const</span> beluga_ros::msg::PointCloud2&amp; cloud) {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    beluga_ros::msg::PointCloud2ConstIterator&lt;U&gt; iter_points(cloud, <span class="stringliteral">&quot;x&quot;</span>);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordflow">return</span> ranges::views::iota(0, <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(cloud.width * cloud.height)) |</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;           ranges::views::transform(</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;               [iter_points](<span class="keywordtype">int</span> i) <span class="keyword">mutable</span> { <span class="keywordflow">return</span> Eigen::Map&lt;const Eigen::Vector3&lt;U&gt;&gt;(&amp;(iter_points + i)[0]); });</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  }</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;  beluga_ros::msg::PointCloud2ConstSharedPtr cloud_;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  Sophus::SE3d origin_;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;};</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a11afdefe42b9868067180dadb0da8a8b">  134</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3d</a> = <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3&lt;double, false&gt;</a>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">   99</a></span>&#160;  [[nodiscard]] <span class="keyword">const</span> <span class="keyword">auto</span>&amp; <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">origin</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> origin_; }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="classbeluga__ros_1_1SparsePointCloud3.html#a68b10fdf198aa03eac08953592f53736">  102</a></span>&#160;  [[nodiscard]] <span class="keyword">auto</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html#a68b10fdf198aa03eac08953592f53736">points</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">if</span> constexpr (!Strict) {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;      constexpr <span class="keyword">auto</span> kCategory = ranges::category::sized | ranges::category::forward;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> datatype = cloud_-&gt;fields.at(0).datatype;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      <span class="keywordflow">if</span> (datatype != sensor_msgs::typeAsPointFieldType&lt;Scalar&gt;::value) {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keywordflow">if</span> (datatype == sensor_msgs::typeAsPointFieldType&lt;float&gt;::value) {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;          <span class="keywordflow">return</span> ranges::any_view&lt;Eigen::Vector3&lt;Scalar&gt;, kCategory&gt;(</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;              points_view&lt;float&gt;(*cloud_) |</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;              ranges::views::transform([](<span class="keyword">auto</span> point) { <span class="keywordflow">return</span> point.template cast&lt;Scalar&gt;(); }));</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        }</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        assert(datatype == sensor_msgs::typeAsPointFieldType&lt;double&gt;::value);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keywordflow">return</span> ranges::any_view&lt;Eigen::Vector3&lt;Scalar&gt;, kCategory&gt;(</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            points_view&lt;double&gt;(*cloud_) |</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            ranges::views::transform([](<span class="keyword">auto</span> point) { <span class="keywordflow">return</span> point.template cast&lt;Scalar&gt;(); }));</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;      }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      <span class="keywordflow">return</span> ranges::any_view&lt;Eigen::Vector3&lt;Scalar&gt;, kCategory&gt;(points_view&lt;Scalar&gt;(*cloud_));</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      <span class="keywordflow">return</span> points_view&lt;Scalar&gt;(*cloud_);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U&gt;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  <span class="keyword">static</span> <span class="keyword">auto</span> points_view(<span class="keyword">const</span> sensor_msgs::msg::PointCloud2&amp; cloud) {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    sensor_msgs::PointCloud2ConstIterator&lt;U&gt; iter_points(cloud, <span class="stringliteral">&quot;x&quot;</span>);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">return</span> ranges::views::iota(0, <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(cloud.width * cloud.height)) |</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;           ranges::views::transform(</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;               [iter_points](<span class="keywordtype">int</span> i) <span class="keyword">mutable</span> { <span class="keywordflow">return</span> Eigen::Map&lt;const Eigen::Vector3&lt;U&gt;&gt;(&amp;(iter_points + i)[0]); });</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud_;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  Sophus::SE3d origin_;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;};</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00137"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a730b74280619ab41ecea2d96959a7c29">  137</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3f</a> = <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3&lt;float, false&gt;</a>;</div>
+<div class="line"><a name="l00137"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a11afdefe42b9868067180dadb0da8a8b">  137</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3d</a> = <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3&lt;double, false&gt;</a>;</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;}  <span class="comment">// namespace beluga_ros</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_ROS_SPARSE_POINT_CLOUD_HPP</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a730b74280619ab41ecea2d96959a7c29">  140</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3f</a> = <a class="code" href="classbeluga__ros_1_1SparsePointCloud3.html">SparsePointCloud3&lt;float, false&gt;</a>;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;}  <span class="comment">// namespace beluga_ros</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_ROS_SPARSE_POINT_CLOUD_HPP</span></div>
 <div class="ttc" id="aclassbeluga_1_1BaseSparsePointCloud_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1BaseSparsePointCloud.html">beluga::BaseSparsePointCloud</a></div></div>
-<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html">beluga_ros::SparsePointCloud3</a></div><div class="ttdoc">Thin wrapper for 3D sensor_msgs/PointCloud2 messages with potentially sparse layouts.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:50</div></div>
-<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_a0df589a1304be63346a23a352626bfca"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#a0df589a1304be63346a23a352626bfca">beluga_ros::SparsePointCloud3::Scalar</a></div><div class="ttdeci">T Scalar</div><div class="ttdoc">Expected PointCloud2 fields type.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:53</div></div>
-<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_a68b10fdf198aa03eac08953592f53736"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#a68b10fdf198aa03eac08953592f53736">beluga_ros::SparsePointCloud3::points</a></div><div class="ttdeci">auto points() const</div><div class="ttdoc">Get the range of cartesian points in the point cloud.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:99</div></div>
-<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_a854baaa635b637f82e49d898202f29f4"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">beluga_ros::SparsePointCloud3::origin</a></div><div class="ttdeci">const auto &amp; origin() const</div><div class="ttdoc">Get the point cloud frame origin in the filter frame.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:96</div></div>
-<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_ac4fed97e4071888b3ef502f24eae955f"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#ac4fed97e4071888b3ef502f24eae955f">beluga_ros::SparsePointCloud3::size</a></div><div class="ttdeci">std::size_t size() const</div><div class="ttdoc">Get the point cloud size.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:93</div></div>
-<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_af477bce6c0984772972124746c1d0a2f"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#af477bce6c0984772972124746c1d0a2f">beluga_ros::SparsePointCloud3::SparsePointCloud3</a></div><div class="ttdeci">SparsePointCloud3(beluga_ros::msg::PointCloud2ConstSharedPtr cloud, Sophus::SE3d origin=Sophus::SE3d())</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:65</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html">beluga_ros::SparsePointCloud3</a></div><div class="ttdoc">Thin wrapper for 3D sensor_msgs/PointCloud2 messages with potentially sparse layouts.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:53</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_a0df589a1304be63346a23a352626bfca"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#a0df589a1304be63346a23a352626bfca">beluga_ros::SparsePointCloud3::Scalar</a></div><div class="ttdeci">T Scalar</div><div class="ttdoc">Expected PointCloud2 fields type.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:56</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_a68b10fdf198aa03eac08953592f53736"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#a68b10fdf198aa03eac08953592f53736">beluga_ros::SparsePointCloud3::points</a></div><div class="ttdeci">auto points() const</div><div class="ttdoc">Get the range of cartesian points in the point cloud.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:102</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_a854baaa635b637f82e49d898202f29f4"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#a854baaa635b637f82e49d898202f29f4">beluga_ros::SparsePointCloud3::origin</a></div><div class="ttdeci">const auto &amp; origin() const</div><div class="ttdoc">Get the point cloud frame origin in the filter frame.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:99</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_ac127e0ede5519c34164b83dd8f07feb3"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#ac127e0ede5519c34164b83dd8f07feb3">beluga_ros::SparsePointCloud3::SparsePointCloud3</a></div><div class="ttdeci">SparsePointCloud3(sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud, Sophus::SE3d origin=Sophus::SE3d())</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:68</div></div>
+<div class="ttc" id="aclassbeluga__ros_1_1SparsePointCloud3_html_ac4fed97e4071888b3ef502f24eae955f"><div class="ttname"><a href="classbeluga__ros_1_1SparsePointCloud3.html#ac4fed97e4071888b3ef502f24eae955f">beluga_ros::SparsePointCloud3::size</a></div><div class="ttdeci">std::size_t size() const</div><div class="ttdoc">Get the point cloud size.</div><div class="ttdef"><b>Definition:</b> sparse_point_cloud.hpp:96</div></div>
 <div class="ttc" id="anamespacebeluga__ros_html"><div class="ttname"><a href="namespacebeluga__ros.html">beluga_ros</a></div><div class="ttdoc">The main Beluga ROS namespace.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:47</div></div>
 <div class="ttc" id="asparse__point__cloud_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sparse__point__cloud_8hpp.html">sparse_point_cloud.hpp</a></div></div>
 <div class="ttc" id="astructstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structstd_1_1hash_3_01beluga_1_1Numeric_3_01T_00_01PhantomType_01_4_01_4.html">std</a></div></div>
@@ -616,7 +619,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;.
+  Last updated on &#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;.
   <br/>
 </p>
   </div>

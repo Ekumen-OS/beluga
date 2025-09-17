@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;"/>
   </head>
   
   
@@ -455,79 +455,80 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_ROS_NDT_ELLIPSOID_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ROS_NDT_ELLIPSOID_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;beluga_ros/messages.hpp&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;Eigen/Core&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;beluga/eigen_compatibility.hpp&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;Eigen/Core&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;beluga/eigen_compatibility.hpp&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/enumerate.hpp&gt;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;range/v3/view/enumerate.hpp&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;beluga/sensor/data/ndt_cell.hpp&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sparse__value__grid_8hpp.html">beluga/sensor/data/sparse_value_grid.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga__ros.html">beluga_ros</a> {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span>detail {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="ndt__ellipsoid_8hpp.html#a3f3f31fee5bfaf9fc65f4c4cbb067147">   45</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="ndt__ellipsoid_8hpp.html#a3f3f31fee5bfaf9fc65f4c4cbb067147">use_mean_covariance</a>(</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    Eigen::SelfAdjointEigenSolver&lt;Eigen::Matrix&lt;double, 3, 3&gt;&gt;&amp; eigen_solver,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1NDTCell.html">beluga::NDTCell&lt;3&gt;</a> cell,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    beluga_ros::msg::Marker&amp; marker);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="ndt__ellipsoid_8hpp.html#a93c6acc2bf1deddc0af3bf3fa733990e">   56</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="ndt__ellipsoid_8hpp.html#a93c6acc2bf1deddc0af3bf3fa733990e">use_cell_size</a>(<span class="keyword">const</span> Eigen::Vector&lt;int, 3&gt;&amp; position, <span class="keywordtype">double</span> size, beluga_ros::msg::Marker&amp; marker);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}  <span class="comment">// namespace detail</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> MapType, <span class="keywordtype">int</span> NDim&gt;</div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#a8f564d4e978f42ad3895af7b0b2e52b8">   72</a></span>&#160;std::pair&lt;beluga_ros::msg::MarkerArray, bool&gt; <a class="code" href="namespacebeluga__ros.html#a8f564d4e978f42ad3895af7b0b2e52b8">assign_obstacle_map</a>(</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid&lt;MapType, NDim&gt;</a>&amp; grid,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    beluga_ros::msg::MarkerArray&amp; message) {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keywordtype">bool</span> cubes_generated = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="comment">// Get data from the grid</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keyword">auto</span>&amp; map = grid.<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html#a4d4b72a98178d90b3b1794569f2c9b89">data</a>();</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="comment">// Clean up the message</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  beluga_ros::msg::Marker marker;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  marker.ns = <span class="stringliteral">&quot;obstacles&quot;</span>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  marker.action = beluga_ros::msg::Marker::DELETEALL;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  message.markers.push_back(marker);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="comment">// Add the markers</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  Eigen::SelfAdjointEigenSolver&lt;Eigen::Matrix&lt;double, 3, 3&gt;&gt; eigen_solver;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> [index, entry] : ranges::views::enumerate(map)) {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; [cell_center, cell] = entry;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    beluga_ros::msg::Marker marker;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    marker.header.frame_id = <span class="stringliteral">&quot;map&quot;</span>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    marker.id = index + 1;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    marker.ns = <span class="stringliteral">&quot;obstacles&quot;</span>;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// Try to create an ellipsoid with values of the cell</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">if</span> (!beluga_ros::detail::use_mean_covariance(eigen_solver, cell, marker)) {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      <span class="comment">// Create a cube based on the resolution of the grid</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      cubes_generated = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      beluga_ros::detail::use_cell_size(cell_center, grid.<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html#a231f7410c0a4ccc893a0f3385c69013d">resolution</a>(), marker);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">// Add the marker</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    message.markers.push_back(marker);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keywordflow">return</span> {message, cubes_generated};</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;}</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}  <span class="comment">// namespace beluga_ros</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_ROS_NDT_ELLIPSOID_HPP</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;beluga/sensor/data/ndt_cell.hpp&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sparse__value__grid_8hpp.html">beluga/sensor/data/sparse_value_grid.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;visualization_msgs/msg/marker.hpp&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;visualization_msgs/msg/marker_array.hpp&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga__ros.html">beluga_ros</a> {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="ndt__ellipsoid_8hpp.html#a6e40a1dfc0ba2fb99494a4534423bbd2">   46</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="ndt__ellipsoid_8hpp.html#a6e40a1dfc0ba2fb99494a4534423bbd2">use_mean_covariance</a>(</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    Eigen::SelfAdjointEigenSolver&lt;Eigen::Matrix&lt;double, 3, 3&gt;&gt;&amp; eigen_solver,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1NDTCell.html">beluga::NDTCell&lt;3&gt;</a> cell,</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    visualization_msgs::msg::Marker&amp; marker);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="ndt__ellipsoid_8hpp.html#a390ef3bc6bb87867bfcadadc012b8fc0">   57</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="ndt__ellipsoid_8hpp.html#a390ef3bc6bb87867bfcadadc012b8fc0">use_cell_size</a>(<span class="keyword">const</span> Eigen::Vector&lt;int, 3&gt;&amp; position, <span class="keywordtype">double</span> size, visualization_msgs::msg::Marker&amp; marker);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> MapType, <span class="keywordtype">int</span> NDim&gt;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="namespacebeluga__ros.html#af6b924da047dbd7e58dd6f7f02cf165b">   73</a></span>&#160;std::pair&lt;visualization_msgs::msg::MarkerArray, bool&gt; <a class="code" href="namespacebeluga__ros.html#af6b924da047dbd7e58dd6f7f02cf165b">assign_obstacle_map</a>(</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid&lt;MapType, NDim&gt;</a>&amp; grid,</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    visualization_msgs::msg::MarkerArray&amp; message) {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keywordtype">bool</span> cubes_generated = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="comment">// Get data from the grid</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keyword">auto</span>&amp; map = grid.<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html#a4d4b72a98178d90b3b1794569f2c9b89">data</a>();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="comment">// Clean up the message</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  visualization_msgs::msg::Marker marker;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  marker.ns = <span class="stringliteral">&quot;obstacles&quot;</span>;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  marker.action = visualization_msgs::msg::Marker::DELETEALL;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  message.markers.push_back(marker);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="comment">// Add the markers</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  Eigen::SelfAdjointEigenSolver&lt;Eigen::Matrix&lt;double, 3, 3&gt;&gt; eigen_solver;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> [index, entry] : ranges::views::enumerate(map)) {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; [cell_center, cell] = entry;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    visualization_msgs::msg::Marker marker;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    marker.header.frame_id = <span class="stringliteral">&quot;map&quot;</span>;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    marker.id = index + 1;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    marker.ns = <span class="stringliteral">&quot;obstacles&quot;</span>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">// Try to create an ellipsoid with values of the cell</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">if</span> (!beluga_ros::detail::use_mean_covariance(eigen_solver, cell, marker)) {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      <span class="comment">// Create a cube based on the resolution of the grid</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      cubes_generated = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      beluga_ros::detail::use_cell_size(cell_center, grid.<a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html#a231f7410c0a4ccc893a0f3385c69013d">resolution</a>(), marker);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">// Add the marker</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    message.markers.push_back(marker);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keywordflow">return</span> {message, cubes_generated};</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}  <span class="comment">// namespace beluga_ros</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_ROS_NDT_ELLIPSOID_HPP</span></div>
 <div class="ttc" id="aclassbeluga_1_1SparseValueGrid_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a></div></div>
 <div class="ttc" id="aclassbeluga_1_1SparseValueGrid_html_a231f7410c0a4ccc893a0f3385c69013d"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html#a231f7410c0a4ccc893a0f3385c69013d">beluga::SparseValueGrid::resolution</a></div><div class="ttdeci">double resolution() const</div></div>
 <div class="ttc" id="aclassbeluga_1_1SparseValueGrid_html_a4d4b72a98178d90b3b1794569f2c9b89"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html#a4d4b72a98178d90b3b1794569f2c9b89">beluga::SparseValueGrid::data</a></div><div class="ttdeci">const map_type &amp; data() const</div></div>
 <div class="ttc" id="anamespacebeluga__ros_html"><div class="ttname"><a href="namespacebeluga__ros.html">beluga_ros</a></div><div class="ttdoc">The main Beluga ROS namespace.</div><div class="ttdef"><b>Definition:</b> amcl.hpp:47</div></div>
-<div class="ttc" id="anamespacebeluga__ros_html_a8f564d4e978f42ad3895af7b0b2e52b8"><div class="ttname"><a href="namespacebeluga__ros.html#a8f564d4e978f42ad3895af7b0b2e52b8">beluga_ros::assign_obstacle_map</a></div><div class="ttdeci">std::pair&lt; beluga_ros::msg::MarkerArray, bool &gt; assign_obstacle_map(const beluga::SparseValueGrid&lt; MapType, NDim &gt; &amp;grid, beluga_ros::msg::MarkerArray &amp;message)</div><div class="ttdef"><b>Definition:</b> ndt_ellipsoid.hpp:72</div></div>
-<div class="ttc" id="andt__ellipsoid_8hpp_html_a3f3f31fee5bfaf9fc65f4c4cbb067147"><div class="ttname"><a href="ndt__ellipsoid_8hpp.html#a3f3f31fee5bfaf9fc65f4c4cbb067147">beluga_ros::detail::use_mean_covariance</a></div><div class="ttdeci">bool use_mean_covariance(Eigen::SelfAdjointEigenSolver&lt; Eigen::Matrix&lt; double, 3, 3 &gt;&gt; &amp;eigen_solver, beluga::NDTCell&lt; 3 &gt; cell, beluga_ros::msg::Marker &amp;marker)</div><div class="ttdoc">Create an ellipoid based on NDT cell data (eigenvalues and eigenvectors) contained in the received ma...</div></div>
-<div class="ttc" id="andt__ellipsoid_8hpp_html_a93c6acc2bf1deddc0af3bf3fa733990e"><div class="ttname"><a href="ndt__ellipsoid_8hpp.html#a93c6acc2bf1deddc0af3bf3fa733990e">beluga_ros::detail::use_cell_size</a></div><div class="ttdeci">void use_cell_size(const Eigen::Vector&lt; int, 3 &gt; &amp;position, double size, beluga_ros::msg::Marker &amp;marker)</div><div class="ttdoc">Create a cube contained in the received marker.</div></div>
+<div class="ttc" id="anamespacebeluga__ros_html_af6b924da047dbd7e58dd6f7f02cf165b"><div class="ttname"><a href="namespacebeluga__ros.html#af6b924da047dbd7e58dd6f7f02cf165b">beluga_ros::assign_obstacle_map</a></div><div class="ttdeci">std::pair&lt; visualization_msgs::msg::MarkerArray, bool &gt; assign_obstacle_map(const beluga::SparseValueGrid&lt; MapType, NDim &gt; &amp;grid, visualization_msgs::msg::MarkerArray &amp;message)</div><div class="ttdef"><b>Definition:</b> ndt_ellipsoid.hpp:73</div></div>
+<div class="ttc" id="andt__ellipsoid_8hpp_html_a390ef3bc6bb87867bfcadadc012b8fc0"><div class="ttname"><a href="ndt__ellipsoid_8hpp.html#a390ef3bc6bb87867bfcadadc012b8fc0">beluga_ros::detail::use_cell_size</a></div><div class="ttdeci">void use_cell_size(const Eigen::Vector&lt; int, 3 &gt; &amp;position, double size, visualization_msgs::msg::Marker &amp;marker)</div><div class="ttdoc">Create a cube contained in the received marker.</div></div>
+<div class="ttc" id="andt__ellipsoid_8hpp_html_a6e40a1dfc0ba2fb99494a4534423bbd2"><div class="ttname"><a href="ndt__ellipsoid_8hpp.html#a6e40a1dfc0ba2fb99494a4534423bbd2">beluga_ros::detail::use_mean_covariance</a></div><div class="ttdeci">bool use_mean_covariance(Eigen::SelfAdjointEigenSolver&lt; Eigen::Matrix&lt; double, 3, 3 &gt;&gt; &amp;eigen_solver, beluga::NDTCell&lt; 3 &gt; cell, visualization_msgs::msg::Marker &amp;marker)</div><div class="ttdoc">Create an ellipoid based on NDT cell data (eigenvalues and eigenvectors) contained in the received ma...</div></div>
 <div class="ttc" id="asparse__value__grid_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/sparse__value__grid_8hpp.html">sparse_value_grid.hpp</a></div></div>
 <div class="ttc" id="astructbeluga_1_1NDTCell_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/structbeluga_1_1NDTCell.html">beluga::NDTCell</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -586,7 +587,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Sep 11 17:15:15 2025 -0300, 7bd5344&#39;.
+  Last updated on &#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;.
   <br/>
 </p>
   </div>
