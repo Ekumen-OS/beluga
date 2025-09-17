@@ -6,6 +6,7 @@ logs/
 
 # Bazel build
 bazel-*
+user.bazelrc
 
 # Python related
 __pycache__/
