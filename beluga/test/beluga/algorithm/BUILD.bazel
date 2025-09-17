@@ -12,32 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
-
-cc_library(
-    name = "utils",
-    srcs = glob(["include/**/*.hpp"]),
-    includes = ["include"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "//:beluga",
-    ],
-)
+load("@rules_cc//cc:defs.bzl", "cc_test")
 
 [
     cc_test(
-        name = file.replace(".cpp", ""),
+        name = file.replace("/", "_").replace(".cpp", ""),
         size = "small",
-        srcs = [file],
+        srcs = [
+            file,
+        ],
         deps = [
-            ":utils",
             "//:beluga",
+            "//test/beluga:utils",
             "@googletest//:gtest_main",
         ],
     )
     for file in [
-        "test_3d_embedding.cpp",
-        "test_primitives.cpp",
-        "test_spatial_hash.cpp",
+        "raycasting/test_bresenham.cpp",
+        "test_amcl_core.cpp",
+        "test_cluster_based_estimation.cpp",
+        "test_distance_map.cpp",
+        "test_effective_sample_size.cpp",
+        "test_estimation.cpp",
+        "test_exponential_filter.cpp",
+        "test_raycasting.cpp",
+        "test_thrun_recovery_probability_estimator.cpp",
+        "test_unscented_transform.cpp",
     ]
 ]

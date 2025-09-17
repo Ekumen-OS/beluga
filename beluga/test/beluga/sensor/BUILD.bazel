@@ -12,32 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
-
-cc_library(
-    name = "utils",
-    srcs = glob(["include/**/*.hpp"]),
-    includes = ["include"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "//:beluga",
-    ],
-)
+load("@rules_cc//cc:defs.bzl", "cc_test")
 
 [
     cc_test(
         name = file.replace(".cpp", ""),
         size = "small",
-        srcs = [file],
+        srcs = [
+            file,
+        ],
         deps = [
-            ":utils",
             "//:beluga",
+            "//test/beluga:utils",
             "@googletest//:gtest_main",
         ],
     )
     for file in [
-        "test_3d_embedding.cpp",
-        "test_primitives.cpp",
-        "test_spatial_hash.cpp",
+        "test_beam_model.cpp",
+        "test_bearing_sensor_model.cpp",
+        "test_landmark_sensor_model.cpp",
+        "test_lfm_with_unknown_space.cpp",
+        "test_likelihood_field_model.cpp",
+        "test_likelihood_field_model_base.cpp",
+        "test_likelihood_field_prob_model.cpp",
+        # "test_ndt_model.cpp",  # requires HDF5 support
     ]
 ]

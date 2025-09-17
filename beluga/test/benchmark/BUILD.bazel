@@ -13,20 +13,36 @@
 # limitations under the License.
 
 load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("@rules_multirun//:defs.bzl", "multirun")
 
-cc_binary(
-    name = "benchmark",
-    srcs = [
+[
+    cc_binary(
+        name = file.replace(".cpp", ""),
+        srcs = [
+            file,
+        ],
+        deps = [
+            "//:beluga",
+            "//test/beluga:utils",
+            "@google_benchmark//:benchmark_main",
+        ],
+    )
+    for file in [
         "benchmark_likelihood_field_model.cpp",
-        "benchmark_main.cpp",
         "benchmark_raycasting.cpp",
         "benchmark_spatial_hash.cpp",
         "benchmark_take_while_kld.cpp",
         "benchmark_tuple_vector.cpp",
-    ],
-    deps = [
-        "//:beluga",
-        "//test/beluga:utils",
-        "@google_benchmark//:benchmark",
+    ]
+]
+
+multirun(
+    name = "benchmark",
+    commands = [
+        ":benchmark_likelihood_field_model",
+        ":benchmark_raycasting",
+        ":benchmark_spatial_hash",
+        ":benchmark_take_while_kld",
+        ":benchmark_tuple_vector",
     ],
 )
