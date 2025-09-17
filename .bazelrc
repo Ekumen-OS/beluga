@@ -21,8 +21,6 @@ build:linux --cxxopt=-Werror
 build:linux --cxxopt=-Wextra
 build:linux --cxxopt=-Wpedantic
 
-build:windows --cxxopt=/std:c++17
-
 # Bazel picks up host-OS-specific config lines from bazelrc files. For example, if the host OS is
 # Linux and you run bazel build, Bazel picks up lines starting with build:linux. Supported OS
 # identifiers are `linux`, `macos`, `windows`, `freebsd`, and `openbsd`. Enabling this flag is

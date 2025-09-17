@@ -19,7 +19,6 @@ jobs:
         image:
           - ubuntu-22.04
           - ubuntu-22.04-arm
-          - windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
