@@ -49,28 +49,6 @@ class Numeric final {
   /// \overload
   constexpr operator const T&() const noexcept { return value_; }  // NOLINT
 
-  constexpr Numeric& operator++() noexcept {
-    ++value_;
-    return *this;
-  }
-
-  constexpr Numeric operator++(int) noexcept {
-    Numeric tmp(*this);
-    ++value_;
-    return tmp;
-  }
-
-  constexpr Numeric& operator--() noexcept {
-    --value_;
-    return *this;
-  }
-
-  constexpr Numeric operator--(int) noexcept {
-    Numeric tmp(*this);
-    --value_;
-    return tmp;
-  }
-
  private:
   T value_{0};  // Underlying primitive type.
 };

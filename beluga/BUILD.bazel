@@ -21,6 +21,10 @@ cc_library(
         "parse_headers",
     ],
     includes = ["include"],
+    # Range-v3 does not support Windows.
+    # There is https://github.com/microsoft/Range-V3-VS2015
+    # But it is not available on the BCR.
+    target_compatible_with = ["@platforms//os:linux"],
     visibility = ["//visibility:public"],
     deps = [
         "@eigen",
