@@ -35,6 +35,12 @@ using ::testing::AllOf;
 using ::testing::DoubleNear;
 using ::testing::Property;
 
+/// Helper to cast a method to a const accessor.
+template <class Class, class Return>
+constexpr auto ConstAccessor(Return& (Class::*method)() const) {
+  return static_cast<const Return& (Class::*)() const>(method);
+}
+
 /// Vector2 element matcher.
 /**
  * \tparam Scalar The scalar type.
@@ -44,8 +50,8 @@ using ::testing::Property;
 template <class Scalar>
 inline auto Vector2Near(const Sophus::Vector2<Scalar>& t, Scalar e) {
   return AllOf(
-      Property("x", &Sophus::Vector2<Scalar>::x, DoubleNear(t.x(), e)),
-      Property("y", &Sophus::Vector2<Scalar>::y, DoubleNear(t.y(), e)));
+      Property("x", ConstAccessor(&Sophus::Vector2<Scalar>::x), DoubleNear(t.x(), e)),
+      Property("y", ConstAccessor(&Sophus::Vector2<Scalar>::y), DoubleNear(t.y(), e)));
 }
 
 /// Vector3 element matcher.
@@ -57,9 +63,9 @@ inline auto Vector2Near(const Sophus::Vector2<Scalar>& t, Scalar e) {
 template <class Scalar>
 inline auto Vector3Near(const Sophus::Vector3<Scalar>& t, Scalar e) {
   return AllOf(
-      Property("x", &Sophus::Vector3<Scalar>::x, DoubleNear(t.x(), e)),
-      Property("y", &Sophus::Vector3<Scalar>::y, DoubleNear(t.y(), e)),
-      Property("z", &Sophus::Vector3<Scalar>::z, DoubleNear(t.z(), e)));
+      Property("x", ConstAccessor(&Sophus::Vector3<Scalar>::x), DoubleNear(t.x(), e)),
+      Property("y", ConstAccessor(&Sophus::Vector3<Scalar>::y), DoubleNear(t.y(), e)),
+      Property("z", ConstAccessor(&Sophus::Vector3<Scalar>::z), DoubleNear(t.z(), e)));
 }
 
 /// SO2 element matcher.
@@ -70,7 +76,7 @@ inline auto Vector3Near(const Sophus::Vector3<Scalar>& t, Scalar e) {
  */
 template <class Scalar>
 inline auto SO2Near(const Sophus::SO2<Scalar>& t, Scalar e) {
-  return Property("unit_complex", &Sophus::SO2<Scalar>::unit_complex, Vector2Near(t.unit_complex(), e));
+  return Property("unit_complex", ConstAccessor(&Sophus::SO2<Scalar>::unit_complex), Vector2Near(t.unit_complex(), e));
 }
 
 /// SE2 element matcher.
@@ -82,8 +88,8 @@ inline auto SO2Near(const Sophus::SO2<Scalar>& t, Scalar e) {
 template <class Scalar>
 inline auto SE2Near(const Sophus::SE2<Scalar>& t, Scalar e) {
   return AllOf(
-      Property("translation", &Sophus::SE2<Scalar>::translation, Vector2Near(t.translation(), e)),
-      Property("so2", &Sophus::SE2<Scalar>::so2, SO2Near(t.so2(), e)));
+      Property("translation", ConstAccessor(&Sophus::SE2<Scalar>::translation), Vector2Near(t.translation(), e)),
+      Property("so2", ConstAccessor(&Sophus::SE2<Scalar>::so2), SO2Near(t.so2(), e)));
 }
 
 /// \overload
