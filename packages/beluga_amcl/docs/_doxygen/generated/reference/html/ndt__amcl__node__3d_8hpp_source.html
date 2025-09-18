@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Sep 18 06:44:46 2025 -0700, 84bbbad&#39;"/>
   </head>
   
   
@@ -491,14 +491,14 @@ $(function() {
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">using</span> <a class="code" href="ndt__amcl__node_8hpp.html#a82dbb2d02fdc9998c479c6d5b3948283">NDTMapRepresentation</a> =</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid3&lt;std::unordered_map&lt;Eigen::Vector3i, beluga::NDTCell3d, beluga::detail::CellHasher&lt;3&gt;</a>&gt;&gt;;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="ndt__amcl__node__3d_8hpp.html#aeacd155c7f9687b6d5ff814f09714e58">   61</a></span>&#160;<span class="keyword">using</span> <a class="code" href="ndt__amcl__node__3d_8hpp.html#aeacd155c7f9687b6d5ff814f09714e58">StateType</a> = <span class="keyword">typename</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">beluga::NDTSensorModel&lt;NDTMapRepresentation&gt;::state_type</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="ndt__amcl__node__3d_8hpp.html#aeacd155c7f9687b6d5ff814f09714e58">   61</a></span>&#160;<span class="keyword">using</span> <a class="code" href="ndt__amcl__node__3d_8hpp.html#aeacd155c7f9687b6d5ff814f09714e58">StateType</a> = <span class="keyword">typename</span> beluga::NDTSensorModel&lt;NDTMapRepresentation&gt;::state_type;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">using</span> <a class="code" href="ndt__amcl__node_8hpp.html#abdbc8a9bd8694d5d2b63d83a43f7ca30">RandomStateGenerator</a> = std::function&lt;<a class="code" href="ndt__amcl__node__3d_8hpp.html#aeacd155c7f9687b6d5ff814f09714e58">StateType</a>()&gt;;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> MotionModel, <span class="keyword">class</span> ExecutionPolicy&gt;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">using</span> <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">NdtAmcl</a> = <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">beluga::Amcl</a>&lt;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    MotionModel,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel&lt;NDTMapRepresentation&gt;</a>,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    beluga::NDTSensorModel&lt;NDTMapRepresentation&gt;,</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="ndt__amcl__node_8hpp.html#abdbc8a9bd8694d5d2b63d83a43f7ca30">RandomStateGenerator</a>,</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="codeRef" href="../../../../../../beluga/docs/_doxygen/generated/reference/html/namespacebeluga.html#a7804cf035e3e2c218773a71ee9f3b0de">beluga::Weight</a>,</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    std::tuple&lt;StateType, beluga::Weight&gt;,</div>
@@ -560,8 +560,6 @@ $(function() {
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP</span></div>
 <div class="ttc" id="abeluga_8hpp.html_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/beluga_8hpp.html">beluga.hpp</a></div></div>
 <div class="ttc" id="aclassbeluga_1_1Amcl_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1Amcl.html">beluga::Amcl</a></div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html">beluga::NDTSensorModel</a></div></div>
-<div class="ttc" id="aclassbeluga_1_1NDTSensorModel_html_adb32c32e4342f012e9a98be93bd0c018"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1NDTSensorModel.html#adb32c32e4342f012e9a98be93bd0c018">beluga::NDTSensorModel::state_type</a></div><div class="ttdeci">std::conditional_t&lt; ndt_cell_type::num_dim==2, Sophus::SE2&lt; typename ndt_cell_type::scalar_type &gt;, Sophus::SE3&lt; typename ndt_cell_type::scalar_type &gt; &gt; state_type</div></div>
 <div class="ttc" id="aclassbeluga_1_1SparseValueGrid_html"><div class="ttname"><a href="../../../../../../beluga/docs/_doxygen/generated/reference/html/classbeluga_1_1SparseValueGrid.html">beluga::SparseValueGrid</a></div></div>
 <div class="ttc" id="aclassbeluga__amcl_1_1BaseAMCLNode_html"><div class="ttname"><a href="classbeluga__amcl_1_1BaseAMCLNode.html">beluga_amcl::BaseAMCLNode</a></div><div class="ttdef"><b>Definition:</b> ros2_common.hpp:59</div></div>
 <div class="ttc" id="aclassbeluga__amcl_1_1NdtAmclNode3D_html"><div class="ttname"><a href="classbeluga__amcl_1_1NdtAmclNode3D.html">beluga_amcl::NdtAmclNode3D</a></div><div class="ttdoc">3D NDT AMCL as a ROS 2 composable lifecycle node.</div><div class="ttdef"><b>Definition:</b> ndt_amcl_node_3d.hpp:85</div></div>
@@ -654,7 +652,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;.
+  Last updated on &#39;Thu Sep 18 06:44:46 2025 -0700, 84bbbad&#39;.
   <br/>
 </p>
   </div>

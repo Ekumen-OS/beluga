@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Thu Sep 18 06:44:46 2025 -0700, 84bbbad&#39;"/>
   </head>
   
   
@@ -460,9 +460,12 @@ $(function() {
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="landmark__sensor__model_8hpp.html">beluga/sensor/landmark_sensor_model.hpp</a>&gt;</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="likelihood__field__model_8hpp.html">beluga/sensor/likelihood_field_model.hpp</a>&gt;</span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="likelihood__field__prob__model_8hpp.html">beluga/sensor/likelihood_field_prob_model.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#include &lt;beluga/sensor/ndt_sensor_model.hpp&gt;</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#ifdef BELUGA_HAS_HDF5</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#include &lt;beluga/sensor/ndt_sensor_model.hpp&gt;</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_HAS_HDF5</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="abeam__model_8hpp_html"><div class="ttname"><a href="beam__model_8hpp.html">beam_model.hpp</a></div><div class="ttdoc">Implementation of a beam sensor model for range finders.</div></div>
 <div class="ttc" id="abearing__sensor__model_8hpp_html"><div class="ttname"><a href="bearing__sensor__model_8hpp.html">bearing_sensor_model.hpp</a></div><div class="ttdoc">Implementation of a discrete landmark bearing sensor model.</div></div>
 <div class="ttc" id="alandmark__sensor__model_8hpp_html"><div class="ttname"><a href="landmark__sensor__model_8hpp.html">landmark_sensor_model.hpp</a></div><div class="ttdoc">Implementation of a discrete landmark sensor model.</div></div>
@@ -524,7 +527,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Sep 17 12:42:20 2025 -0300, 1a70091&#39;.
+  Last updated on &#39;Thu Sep 18 06:44:46 2025 -0700, 84bbbad&#39;.
   <br/>
 </p>
   </div>

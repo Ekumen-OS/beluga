@@ -14,7 +14,7 @@
 <g id="a_node1"><a xlink:href="structbeluga_1_1spatial__hash.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-30.5 117,-30.5 117,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::spatial_hash</text>
-<text text-anchor="middle" x="58.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Sophus::SE2d &gt;</text>
+<text text-anchor="middle" x="58.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; state_type &gt;</text>
 </a>
 </g>
 </g>

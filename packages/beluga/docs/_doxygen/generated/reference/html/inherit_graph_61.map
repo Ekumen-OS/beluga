@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structbeluga_1_1policies_1_1detail_1_1every__n__policy.html" title="Implementation detail for the every_n_policy." alt="" coords="5,5,175,47"/>
+<area shape="rect" id="node1" href="$structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html" title="Primary template for the on_motion_policy_base class." alt="" coords="5,5,188,61"/>
+<area shape="rect" id="node2" href="$structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html" title="Base implementation for the on_motion_policy algorithm." alt="" coords="236,13,443,54"/>
 </map>

@@ -1,7 +1,0 @@
-<map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/sparse_value_grid.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/sparse_value_grid.hpp">
-<area shape="rect" id="node1" title="Implementation of generic sparse value regular grid." alt="" coords="25,5,222,76"/>
-<area shape="rect" id="node2" href="$ndt__sensor__model_8hpp_source.html" title=" " alt="" coords="27,124,220,195"/>
-<area shape="rect" id="node3" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="27,243,220,299"/>
-<area shape="rect" id="node4" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="27,347,220,403"/>
-<area shape="rect" id="node5" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="5,451,241,507"/>
-</map>
