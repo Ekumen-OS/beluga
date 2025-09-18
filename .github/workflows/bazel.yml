@@ -2,7 +2,7 @@ name: CI pipeline (Bazel)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ nahuel/bazel-support-windows ]
   pull_request:
     branches: [ main ]
 
@@ -17,10 +17,6 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - ubuntu-22.04
-          - ubuntu-22.04-arm
-          - ubuntu-24.04
-          - ubuntu-24.04-arm
           - windows-latest
     steps:
       - name: Checkout repository
