@@ -44,8 +44,8 @@ using ::testing::Property;
 template <class Scalar>
 inline auto Vector2Near(const Sophus::Vector2<Scalar>& t, Scalar e) {
   return AllOf(
-      Property("x", &Sophus::Vector2<Scalar>::x, DoubleNear(t.x(), e)),
-      Property("y", &Sophus::Vector2<Scalar>::y, DoubleNear(t.y(), e)));
+      Property("x", &Eigen::DenseCoeffsBase<Sophus::Vector2<Scalar>>::x, DoubleNear(t.x(), e)),
+      Property("y", &Eigen::DenseCoeffsBase<Sophus::Vector2<Scalar>>::y, DoubleNear(t.y(), e)));
 }
 
 /// Vector3 element matcher.
@@ -57,9 +57,9 @@ inline auto Vector2Near(const Sophus::Vector2<Scalar>& t, Scalar e) {
 template <class Scalar>
 inline auto Vector3Near(const Sophus::Vector3<Scalar>& t, Scalar e) {
   return AllOf(
-      Property("x", &Sophus::Vector3<Scalar>::x, DoubleNear(t.x(), e)),
-      Property("y", &Sophus::Vector3<Scalar>::y, DoubleNear(t.y(), e)),
-      Property("z", &Sophus::Vector3<Scalar>::z, DoubleNear(t.z(), e)));
+      Property("x", &Eigen::DenseCoeffsBase<Sophus::Vector3<Scalar>>::x, DoubleNear(t.x(), e)),
+      Property("y", &Eigen::DenseCoeffsBase<Sophus::Vector3<Scalar>>::y, DoubleNear(t.y(), e)),
+      Property("z", &Eigen::DenseCoeffsBase<Sophus::Vector3<Scalar>>::z, DoubleNear(t.z(), e)));
 }
 
 /// SO2 element matcher.
