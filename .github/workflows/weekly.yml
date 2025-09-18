@@ -1,36 +1,23 @@
-name: CI pipeline
+name: Weekly pipeline
 
 on:
   push:
     branches: [ main ]
+    paths: '.github/workflows/weekly.yml'
   pull_request:
     branches: [ main ]
+    paths: '.github/workflows/weekly.yml'
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
-  lint:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup python
-        uses: actions/setup-python@v6
-        with:
-          cache: pip
-
-      - name: Install python packages
-        run: pip install pre-commit==2.20.0
-
-      - name: Lint
-        run: pre-commit run --all-files --verbose --show-diff-on-failure
-
   build-test:
-    runs-on: ubuntu-22.04
-    needs: lint
+    if: github.repository == 'Ekumen-OS/beluga'
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -38,6 +25,7 @@ jobs:
           - humble
           - jazzy
           - kilted
+          - rolling
         include:
           - ros_distro: humble
             upload_artifacts: true
@@ -115,73 +103,4 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
-        if: ${{ matrix.upload_artifacts && !github.event.pull_request.head.repo.fork }}
-
-  build-docs:
-    needs: build-test
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup python
-        uses: actions/setup-python@v6
-        with:
-          cache: pip
-
-      - name: Install tooling dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            doxygen \
-            git \
-            graphviz \
-            make \
-            texlive-latex-base
-          pip install -r docs/requirements.txt
-
-      - name: Build documentation
-        run: make -C docs html
-
-      - name: Upload documentation artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: docs-${{ github.sha }}
-          path: ./docs/_build/html/
-          overwrite: true
-          include-hidden-files: true
-          retention-days: 7
-
-  deploy-docs:
-    needs: build-docs
-    runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    steps:
-      - name: Checkout documentation branch
-        uses: actions/checkout@v5
-        with:
-          ref: gh-pages
-
-      - name: Configure username
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Remove current documentation
-        run: |
-          git rm -rf .
-
-      - name: Download documentation artifacts
-        uses: actions/download-artifact@v5
-        with:
-          name: docs-${{ github.sha }}
-          merge-multiple: true
-
-      - name: Deploy documentation
-        env:
-          COMMIT_MESSAGE: "Triggered by commit ${{ github.sha }}."
-          COMMIT_CO_AUTHOR: "Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
-        run: |
-          git add --all
-          git commit -m "Update documentation" -m "${{ env.COMMIT_MESSAGE }}" -m "${{ env.COMMIT_CO_AUTHOR }}" || true
-          git push
+        if: ${{ matrix.upload_artifacts && github.event_name == 'schedule' }}

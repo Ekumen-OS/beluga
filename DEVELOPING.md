@@ -74,7 +74,7 @@ For more advanced tooling, check repository [tools](./tools).
 
 ## CI/CD
 
-Every pull request and every push to the project repository `main` branch will be subject to a [continuous integration workflow](./.github/workflows/ci_pipeline.yml). This workflow will lint project sources, static analyze, build, and test project packages against the project platform support matrix, enforcing its code coverage policy, and build project documentation (which will be deployed to Github Pages when pushing to `main`).
+Every pull request and every push to the project repository `main` branch will be subject to a [continuous integration workflow](./.github/workflows/colcon.yml). This workflow will lint project sources, static analyze, build, and test project packages against the project platform support matrix, enforcing its code coverage policy, and build project documentation (which will be deployed to Github Pages when pushing to `main`).
 
 Pull request acceptance is predicated on these checks passing.
 

@@ -40,10 +40,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
 endif()
 
 find_package(Eigen3 REQUIRED NO_MODULE)
-find_package(
-  HDF5
-  COMPONENTS CXX
-  REQUIRED)
+find_package(HDF5 COMPONENTS CXX)
 find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
@@ -52,8 +49,7 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
   ${PROJECT_NAME}
   INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-            "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-            "${HDF5_INCLUDE_DIRS}")
+            "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
 target_link_libraries(
   ${PROJECT_NAME}
   INTERFACE Eigen3::Eigen
@@ -64,6 +60,14 @@ target_link_libraries(
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG
                                                      SOPHUS_USE_BASIC_LOGGING)
+
+if(HDF5_FOUND)
+  target_include_directories(${PROJECT_NAME} INTERFACE ${HDF5_INCLUDE_DIRS})
+  target_compile_definitions(${PROJECT_NAME} INTERFACE BELUGA_HAS_HDF5)
+else()
+  message(
+    WARNING "HDF5 not found. HDF5-related functionality will be disabled.")
+endif()
 
 add_executable(clang_tidy_findable)
 target_sources(clang_tidy_findable PRIVATE src/clang_tidy_findable.cpp)

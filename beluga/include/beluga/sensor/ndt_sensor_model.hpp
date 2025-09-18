@@ -15,6 +15,12 @@
 #ifndef BELUGA_SENSOR_NDT_SENSOR_MODEL_HPP
 #define BELUGA_SENSOR_NDT_SENSOR_MODEL_HPP
 
+#ifndef BELUGA_HAS_HDF5
+
+#error "This file requires HDF5. Please install HDF5 and recompile Beluga with it."
+
+#else
+
 #include <cassert>
 #include <cstdint>
 #include <filesystem>
@@ -57,9 +63,9 @@ struct CellHasher {
 
 /// Fit a vector of points to an NDT cell, by computing its mean and covariance.
 template <int NDim, typename Scalar = double>
-inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Vector<Scalar, NDim>>& points) {
+inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Vector<Scalar, NDim> >& points) {
   static constexpr double kMinVariance = 1e-5;
-  Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic>> points_view(
+  Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic> > points_view(
       reinterpret_cast<const Scalar*>(points.data()), NDim, static_cast<int64_t>(points.size()));
   const Eigen::Vector<Scalar, NDim> mean = points_view.rowwise().mean();
   const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic> centered = points_view.colwise() - mean;
@@ -78,18 +84,18 @@ inline NDTCell<NDim, Scalar> fit_points(const std::vector<Eigen::Vector<Scalar, 
 /// points using 'resolution' and fitting a normal distribution to each of the resulting clusters if they contain a
 /// minimum number of points in them.
 template <int NDim, typename Scalar = double>
-inline std::vector<NDTCell<NDim, Scalar>> to_cells(
-    const std::vector<Eigen::Vector<Scalar, NDim>>& points,
+inline std::vector<NDTCell<NDim, Scalar> > to_cells(
+    const std::vector<Eigen::Vector<Scalar, NDim> >& points,
     const double resolution) {
   static constexpr int kMinPointsPerCell = 5;
 
-  const Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic>> points_view(
+  const Eigen::Map<const Eigen::Matrix<Scalar, NDim, Eigen::Dynamic> > points_view(
       reinterpret_cast<const Scalar*>(points.data()), NDim, static_cast<int64_t>(points.size()));
 
-  std::vector<NDTCell<NDim, Scalar>> ret;
+  std::vector<NDTCell<NDim, Scalar> > ret;
   ret.reserve(static_cast<size_t>(points_view.cols()) / kMinPointsPerCell);
 
-  std::unordered_map<Eigen::Vector<int, NDim>, std::vector<Eigen::Vector<Scalar, NDim>>, CellHasher<NDim>> cell_grid;
+  std::unordered_map<Eigen::Vector<int, NDim>, std::vector<Eigen::Vector<Scalar, NDim> >, CellHasher<NDim> > cell_grid;
   for (const Eigen::Vector<Scalar, NDim>& col : points) {
     cell_grid[(col / resolution).template cast<int>()].emplace_back(col);
   }
@@ -131,7 +137,7 @@ const std::vector<Eigen::Vector3i> kDefaultNeighborKernel3d = {
 
 /// Helper to get the default neighbors kernel
 template <int NDim>
-constexpr std::conditional_t<NDim == 2, std::vector<Eigen::Vector2i>, std::vector<Eigen::Vector3i>>
+constexpr std::conditional_t<NDim == 2, std::vector<Eigen::Vector2i>, std::vector<Eigen::Vector3i> >
 get_default_neighbors_kernel() {
   if constexpr (NDim == 2) {
     return kDefaultNeighborKernel2d;
@@ -153,7 +159,7 @@ struct NDTModelParam {
   /// Scaling parameter d2 in literature, used for scaling likelihoods.
   double d2 = 1.0;
   /// Neighbor kernel used for likelihood computation.
-  std::conditional_t<NDim == 2, std::vector<Eigen::Vector2i>, std::vector<Eigen::Vector3i>> neighbors_kernel =
+  std::conditional_t<NDim == 2, std::vector<Eigen::Vector2i>, std::vector<Eigen::Vector3i> > neighbors_kernel =
       detail::get_default_neighbors_kernel<NDim>();
 };
 
@@ -181,11 +187,11 @@ class NDTSensorModel {
   using state_type = std::conditional_t<
       ndt_cell_type::num_dim == 2,
       Sophus::SE2<typename ndt_cell_type::scalar_type>,
-      Sophus::SE3<typename ndt_cell_type::scalar_type>>;
+      Sophus::SE3<typename ndt_cell_type::scalar_type> >;
   /// Weight type of the particle.
   using weight_type = double;
   /// Measurement type of the sensor: a point cloud for the range finder.
-  using measurement_type = std::vector<Eigen::Vector<typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim>>;
+  using measurement_type = std::vector<Eigen::Vector<typename ndt_cell_type::scalar_type, ndt_cell_type::num_dim> >;
   /// Map representation type.
   using map_type = SparseGridT;
   /// Parameter type that the constructor uses to configure the NDT sensor model.
@@ -286,7 +292,7 @@ NDTMapRepresentationT load_from_hdf5(const std::filesystem::path& path_to_hdf5_f
   means_dataset.read(means_matrix.data(), H5::PredType::NATIVE_DOUBLE);
   cells_dataset.read(cells_matrix.data(), H5::PredType::NATIVE_INT);
 
-  std::vector<Eigen::Array<double, kNumDim, kNumDim>> covariances(dims[0]);
+  std::vector<Eigen::Array<double, kNumDim, kNumDim> > covariances(dims[0]);
   covariances_dataset.read(covariances.data(), H5::PredType::NATIVE_DOUBLE);
 
   double resolution;
@@ -307,5 +313,7 @@ NDTMapRepresentationT load_from_hdf5(const std::filesystem::path& path_to_hdf5_f
 }  // namespace io
 
 }  // namespace beluga
+
+#endif  // BELUGA_HAS_HDF5
 
 #endif

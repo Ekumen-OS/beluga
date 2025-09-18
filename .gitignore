@@ -4,6 +4,10 @@ install/
 lcov/
 logs/
 
+# Bazel build
+bazel-*
+user.bazelrc
+
 # Python related
 __pycache__/
 **/venv/
