@@ -312,9 +312,11 @@ TEST(AverageQuaternion, AgainstSophusImpl) {
     auto quats_as_so3_view =
         quaternions | ranges::views::transform([](const Eigen::Quaterniond& q) { return SO3d{q}; });
     const auto avg_quaternion = beluga::mean(quaternions, std::array{1., 1., 1.});
+    const auto avg_quaternion_neg = Eigen::Quaterniond{-avg_quaternion.coeffs()};
     const auto avg_quat_sophus = Sophus::details::averageUnitQuaternion(quats_as_so3_view | ranges::to<std::vector>);
-    ASSERT_TRUE(avg_quaternion.isApprox(avg_quat_sophus)) << "Expected: " << avg_quat_sophus.coeffs().transpose()
-                                                          << "\n  Actual: " << avg_quaternion.coeffs().transpose();
+    ASSERT_TRUE(avg_quaternion.isApprox(avg_quat_sophus) || avg_quaternion_neg.isApprox(avg_quat_sophus))
+        << "Expected: " << avg_quat_sophus.coeffs().transpose()
+        << "\n  Actual: " << avg_quaternion.coeffs().transpose();
   }
 
   {
