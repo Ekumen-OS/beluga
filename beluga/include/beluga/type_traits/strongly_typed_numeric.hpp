@@ -1,4 +1,4 @@
-// Copyright 2023 Ekumen, Inc.
+// Copyright 2023-2025 Ekumen, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 #include <functional>
 #include <limits>
 #include <type_traits>
+
 /**
  * \file
  * \brief Implementation of a strongly typed numeric helper.
@@ -25,7 +26,8 @@
 namespace beluga {
 
 /// Helper for creating strongly typed numeric types.
-/** Usage:
+/**
+ * Usage:
  *    using YOUR_TYPE = Numeric< UNDERLYING_TYPE , struct UNDERLYING_TYPETag >;
  *
  * Types resulting from this pattern will allow for implicit conversions in both ways (from underlying type, and to
@@ -39,32 +41,39 @@ class Numeric final {
  public:
   /// Default constructor.
   constexpr Numeric() noexcept = default;
+
   /// Constructs a new Numeric object.
   /**
    *  \param t built-in arithmetic type value.
    */
   constexpr Numeric(const T t) noexcept : value_{t} {};  // NOLINT
+
   /// Implicit conversion to the underlying type.
   constexpr operator T&() noexcept { return value_; }  // NOLINT
+
   /// \overload
   constexpr operator const T&() const noexcept { return value_; }  // NOLINT
 
+  /// Pre-increment operator.
   constexpr Numeric& operator++() noexcept {
     ++value_;
     return *this;
   }
 
+  /// Post-increment operator.
   constexpr Numeric operator++(int) noexcept {
     Numeric tmp(*this);
     ++value_;
     return tmp;
   }
 
+  /// Pre-decrement operator.
   constexpr Numeric& operator--() noexcept {
     --value_;
     return *this;
   }
 
+  /// Post-decrement operator.
   constexpr Numeric operator--(int) noexcept {
     Numeric tmp(*this);
     --value_;
