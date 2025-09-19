@@ -74,6 +74,9 @@ common:ci --show_progress_rate_limit=60
 # This makes it easier to reason about what were the slowest steps on CI.
 common:ci --show_timestamps
 
+# On CI, try to build as much as possible even in the face of errors.
+common:ci --keep_going
+
 # Load any settings & overrides specific to the current user from `user.bazelrc`.
 # This file should appear in `.gitignore` so that settings are not shared with team members.
 # This should be last statement in this config so the user configuration overrides anything above.
