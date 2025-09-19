@@ -165,7 +165,7 @@ TYPED_TEST(ContainerTest, DoubleElementTuple) {
 }
 
 TEST(TupleVectorTest, ConceptChecks) {
-  auto container = beluga::TupleVector<std::tuple<float>>{std::make_tuple(1)};
+  auto container = beluga::TupleVector<std::tuple<float>>{std::make_tuple(1.0f)};
 
   static_assert(ranges::sized_range<decltype(container)>);
   static_assert(ranges::random_access_range<decltype(container)>);
