@@ -24,7 +24,6 @@ build:linux --cxxopt=-Wpedantic
 build:windows --cxxopt=/std:c++17
 build:windows --cxxopt=/permissive-
 build:windows --cxxopt=/WX
-build:windows --cxxopt=/D_USE_MATH_DEFINES
 
 # For an automatic variable, if there exists a path from the function entry to a use of the variable
 # that is initialized, but there exist some other paths for which the variable is not initialized,

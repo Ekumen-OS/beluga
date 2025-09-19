@@ -17,6 +17,10 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 cc_library(
     name = "beluga",
     hdrs = glob(["include/**/*.hpp"]),
+    defines = select({
+        "@rules_cc//cc/compiler:msvc-cl": ["_USE_MATH_DEFINES"],
+        "//conditions:default": [],
+    }),
     features = [
         "parse_headers",
     ],
