@@ -83,12 +83,16 @@ TEST(OccupancyGrid2, ObstacleMask) {
   const auto grid = StaticOccupancyGrid<5, 2>{{false, false, false, false, true, false, false, false, true, false}};
 
 // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=111118
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
   // Data and obstacle data are equivalent in this case
   ASSERT_THAT(grid.obstacle_mask() | ranges::to<std::vector>, testing::Pointwise(testing::Eq(), grid.data()));
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 }
 
 TEST(OccupancyGrid2, UnknownMask) {
@@ -96,12 +100,16 @@ TEST(OccupancyGrid2, UnknownMask) {
 
   const auto expected_unknown_mask = std::vector{true, true, true, true, false, false, false, false, false, false};
 // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=111118
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
   // Data and unkwnown data are equivalent in this case
   ASSERT_THAT(grid.unknown_mask() | ranges::to<std::vector>, testing::Pointwise(testing::Eq(), expected_unknown_mask));
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 }
 
 TEST(OccupancyGrid2, GlobalCoordinatesForCells) {

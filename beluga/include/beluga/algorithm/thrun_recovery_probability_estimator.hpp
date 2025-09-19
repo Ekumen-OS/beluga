@@ -15,6 +15,8 @@
 #ifndef BELUGA_ALGORITHM_THRUN_RECOVERY_PROBABILITY_ESTIMATOR_HPP
 #define BELUGA_ALGORITHM_THRUN_RECOVERY_PROBABILITY_ESTIMATOR_HPP
 
+#include <algorithm>
+
 #include <beluga/algorithm/exponential_filter.hpp>
 #include <beluga/type_traits/particle_traits.hpp>
 #include <beluga/views/particles.hpp>

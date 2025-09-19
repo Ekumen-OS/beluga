@@ -17,6 +17,7 @@
 
 #include <cmath>
 #include <functional>
+#include <numeric>
 #include <random>
 #include <tuple>
 #include <utility>

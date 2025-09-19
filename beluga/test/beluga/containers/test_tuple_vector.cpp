@@ -154,18 +154,18 @@ TYPED_TEST(ContainerTest, SingleElementTuple) {
 
 TYPED_TEST(ContainerTest, DoubleElementTuple) {
   auto container = typename TestFixture::template TemplateParam<int, float>{};
-  container.push_back({2, 0.5});
-  container.push_back({2, 0.5});
-  container.push_back({2, 0.5});
+  container.push_back({2, 0.5F});
+  container.push_back({2, 0.5F});
+  container.push_back({2, 0.5F});
   EXPECT_EQ(container.size(), 3);
   for (auto&& [integer, real] : container) {
     ASSERT_EQ(integer, 2);
-    ASSERT_EQ(real, 0.5);
+    ASSERT_EQ(real, 0.5F);
   }
 }
 
 TEST(TupleVectorTest, ConceptChecks) {
-  auto container = beluga::TupleVector<std::tuple<float>>{std::make_tuple(1)};
+  auto container = beluga::TupleVector<std::tuple<float>>{std::make_tuple(1.0F)};
 
   static_assert(ranges::sized_range<decltype(container)>);
   static_assert(ranges::random_access_range<decltype(container)>);
@@ -218,7 +218,7 @@ TEST(TupleVectorTest, TraitConsistency) {
 }
 
 TEST(TupleVectorTest, ConstCorrectness) {
-  auto container = beluga::TupleVector<std::tuple<float>>{std::make_tuple(1)};
+  auto container = beluga::TupleVector<std::tuple<float>>{std::make_tuple(1.0F)};
   static_assert(std::is_same_v<decltype(*ranges::begin(container)), ranges::common_tuple<float&>>);
   static_assert(std::is_same_v<decltype(*ranges::begin(std::as_const(container))), ranges::common_tuple<const float&>>);
 }
