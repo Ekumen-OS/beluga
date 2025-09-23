@@ -132,3 +132,96 @@ source devel/setup.bash
 :::
 
 ::::
+
+## Building from source (with Bazel)
+
+In addition to [`colcon`](https://colcon.readthedocs.io/en/released/), Beluga also supports [`bazel`](https://bazel.build/).
+
+:::{important}
+Only the `beluga` core library, which is ROS-agnostic, can be built and tested with Bazel.
+:::
+
+### Install Bazel
+
+[Bazelisk](https://github.com/bazelbuild/bazelisk) is the recommended way to install Bazel on Ubuntu, Windows, and macOS. It automatically downloads and installs the appropriate version of Bazel. Follow the [installation instructions](https://github.com/bazelbuild/bazelisk#installation) in the official Bazelisk repository.
+
+The [official Bazel documentation](https://bazel.build/install) also provides alternative installation methods. The required Bazel version can be found in the [.bazelversion](https://github.com/Ekumen-OS/beluga/blob/main/.bazelversion) file.
+
+You should also have a modern C++ compiler on your system, which Bazel will detect.
+
+### Clone Beluga repository
+
+Clone the Beluga project source code:
+
+::::{tab-set}
+
+:::{tab-item} Ubuntu
+```bash
+git clone https://github.com/Ekumen-OS/beluga.git
+```
+:::
+
+:::{tab-item} Windows
+```bash
+git clone https://github.com/Ekumen-OS/beluga.git
+```
+:::
+
+::::
+
+### Build and run tests
+
+The following command will build and run all the unit tests in the project.
+
+::::{tab-set}
+
+:::{tab-item} Ubuntu
+```bash
+bazel test //...
+```
+:::
+
+:::{tab-item} Windows
+```bash
+bazel test //...
+```
+:::
+
+::::
+
+You can inspect the available Bazel targets with:
+
+::::{tab-set}
+
+:::{tab-item} Ubuntu
+```bash
+bazel query //...
+```
+:::
+
+:::{tab-item} Windows
+```bash
+bazel query //...
+```
+:::
+
+::::
+
+### Depending on Beluga as a bzlmod dependency
+
+[Bzlmod](https://bazel.build/external/module) is the new package manager for Bazel modules.
+You can depend on `beluga` by adding the following lines to your `MODULE.bazel` file:
+
+```starlark
+bazel_dep(name = "beluga", version = "2.0.2")
+
+git_override(
+    module_name = "beluga",
+    commit = "...",
+    remote = "https://github.com/Ekumen-OS/beluga.git",
+)
+```
+
+:::{note}
+The `git_override` is required because Beluga is not yet in the [Bazel Central Registry](https://registry.bazel.build/).
+:::
