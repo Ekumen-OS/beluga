@@ -55,8 +55,6 @@ Within a development environment:
     colcon test
     ```
 
-    You may also use `catkin_make_isolated` and `catkin-tools` for ROS 1 distributions.
-
 2. **Update package dependencies**. Listed in `package.xml` files.
 
     ```bash

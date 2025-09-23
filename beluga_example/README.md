@@ -15,13 +15,6 @@ The following examples are easier to run in [Beluga development containers](../D
     ros2 launch beluga_example perfect_odometry.launch.xml
     ```
 
-    For ROS 1 distributions, run:
-    ```bash
-    cd /ws
-    source devel*/setup.bash
-    roslaunch beluga_example perfect_odometry.launch
-    ```
-
 1. **Run an example application using a simulation and teleop controls**.
 
     For ROS 2 distributions, in two separate terminals run:
@@ -32,16 +25,6 @@ The following examples are easier to run in [Beluga development containers](../D
     ```
     ```bash
     ros2 run teleop_twist_keyboard teleop_twist_keyboard
-    ```
-
-    For ROS 1 distributions, in two separate terminals run:
-    ```bash
-    cd /ws
-    source devel*/setup.bash
-    roslaunch beluga_example simulation.launch
-    ```
-    ```bash
-    rosrun teleop_twist_keyboard teleop_twist_keyboard
     ```
 
     Note that this example uses [Flatland](https://flatland-simulator.readthedocs.io) for simulation.
@@ -55,11 +38,6 @@ The following examples are easier to run in [Beluga development containers](../D
    ros2 launch beluga_example localization_launch.py use_composition:=True localization_params_file:=<PARAMS_PATH> localization_map:=<MAP_YAML_PATH>
    ```
 
-   For ROS 1 distributions, run:
-   ```bash
-   roslaunch beluga_example localization.launch localization_params_file:=<PARAMS_PATH> localization_map:=<MAP_YAML_PATH>
-   ```
-
    The `localization_params_file` argument can be ommited if the [default AMCL parameters](beluga_example/params/default.ros2.yaml) are compatible with the robot.
 
 1. **Use RViz to visualize the localization output**.
@@ -67,11 +45,6 @@ The following examples are easier to run in [Beluga development containers](../D
    For ROS 2 distributions, run:
    ```bash
    rviz2 -d $(ros2 pkg prefix --share beluga_example)/rviz/amcl.ros2.rviz
-   ```
-
-   For ROS 1 distributions, run:
-   ```bash
-   rviz -d $(rospack find beluga_example)/rviz/amcl.ros.rviz
    ```
 
    **Quality of Service**

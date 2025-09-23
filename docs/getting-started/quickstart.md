@@ -18,12 +18,6 @@ ros2 launch beluga_example perfect_odometry.launch.xml
 ```
 :::
 
-:::{tab-item} ROS 1
-```bash
-roslaunch beluga_example perfect_odometry.launch
-```
-:::
-
 ::::
 
 ## Run Beluga in simulation
@@ -51,15 +45,6 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard  # for teleoperation!
 ```
 :::
 
-:::{tab-item} ROS 1
-```bash
-roslaunch beluga_example simulation.launch
-```
-```bash
-rosrun teleop_twist_keyboard teleop_twist_keyboard.py  # for teleoperation!
-```
-:::
-
 ::::
 
 ## Run Beluga on a robot
@@ -68,19 +53,13 @@ rosrun teleop_twist_keyboard teleop_twist_keyboard.py  # for teleoperation!
 Don't have an robot at home to play with? There are plenty open source and/or open hardware alternatives you can acquire or build. Our proposal is [Andino](https://github.com/Ekumen-OS/andino).
 :::
 
-Eventually, we have to hit the hardware. This example assumes a fully functional ROS (1) or ROS 2 powered robot, equipped with a 2D lidar and already publishing odometry estimates. Furthermore, a 2D map is necessary. Any suitable SLAM solution may be used to build one. [SLAM Toolbox](https://github.com/SteveMacenski/slam_toolbox), [Cartographer ROS](https://google-cartographer-ros.readthedocs.io/en/latest/), and [RTABMap ROS](https://github.com/introlab/rtabmap_ros) are quite popular. Once you are all set, on a terminal you can just run:
+Eventually, we have to hit the hardware. This example assumes a fully functional ROS 2 powered robot, equipped with a 2D lidar and already publishing odometry estimates. Furthermore, a 2D map is necessary. Any suitable SLAM solution may be used to build one. [SLAM Toolbox](https://github.com/SteveMacenski/slam_toolbox), [Cartographer ROS](https://google-cartographer-ros.readthedocs.io/en/latest/), and [RTABMap ROS](https://github.com/introlab/rtabmap_ros) are quite popular. Once you are all set, on a terminal you can just run:
 
 ::::{tab-set}
 
 :::{tab-item} ROS 2
 ```bash
 ros2 launch beluga_example localization_launch.py use_composition:=True localization_params_file:=<PARAMS_PATH> localization_map:=<MAP_YAML_PATH>
-```
-:::
-
-:::{tab-item} ROS 1
-```bash
-roslaunch beluga_example localization.launch localization_params_file:=<PARAMS_PATH> localization_map:=<MAP_YAML_PATH>
 ```
 :::
 
@@ -99,12 +78,6 @@ A picture is worth a thousand words. Probabilistic algorithms are no exception. 
 :::{tab-item} ROS 2
 ```bash
 rviz2 -d $(ros2 pkg prefix --share beluga_example)/rviz/amcl.ros2.rviz
-```
-:::
-
-:::{tab-item} ROS 1
-```bash
-rviz -d $(rospack find beluga_example)/rviz/amcl.ros.rviz
 ```
 :::
 
