@@ -17,6 +17,7 @@
 
 #include <cmath>
 #include <functional>
+#include <numeric>
 #include <random>
 #include <sophus/se3.hpp>
 #include <tuple>
