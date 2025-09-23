@@ -56,7 +56,7 @@
     <link rel="prev" title="Overview" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Sep 23 08:04:01 2025 -0700, d455761&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Sep 23 09:58:50 2025 -0700, d803cbd&#39;"/>
   </head>
   
   
@@ -385,6 +385,13 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-source-workspace">Build and source workspace</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-from-source-with-bazel">Building from source (with Bazel)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-bazel">Install Bazel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Clone Beluga repository</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-run-tests">Build and run tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#depending-on-beluga-as-a-bzlmod-dependency">Depending on Beluga as a bzlmod dependency</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -500,6 +507,95 @@ ROS 2</label><div class="sd-tab-content docutils">
 </div>
 </section>
 </section>
+<section id="building-from-source-with-bazel">
+<h2>Building from source (with Bazel)<a class="headerlink" href="#building-from-source-with-bazel" title="Link to this heading">#</a></h2>
+<p>In addition to <a class="reference external" href="https://colcon.readthedocs.io/en/released/"><code class="docutils literal notranslate"><span class="pre">colcon</span></code></a>, Beluga also supports <a class="reference external" href="https://bazel.build/"><code class="docutils literal notranslate"><span class="pre">bazel</span></code></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Only the <code class="docutils literal notranslate"><span class="pre">beluga</span></code> core library, which is ROS-agnostic, can be built and tested with Bazel.</p>
+</div>
+<section id="install-bazel">
+<h3>Install Bazel<a class="headerlink" href="#install-bazel" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://github.com/bazelbuild/bazelisk">Bazelisk</a> is the recommended way to install Bazel on Ubuntu, Windows, and macOS. It automatically downloads and installs the appropriate version of Bazel. Follow the <a class="reference external" href="https://github.com/bazelbuild/bazelisk#installation">installation instructions</a> in the official Bazelisk repository.</p>
+<p>The <a class="reference external" href="https://bazel.build/install">official Bazel documentation</a> also provides alternative installation methods. The required Bazel version can be found in the <a class="reference external" href="https://github.com/Ekumen-OS/beluga/blob/main/.bazelversion">.bazelversion</a> file.</p>
+<p>You should also have a modern C++ compiler on your system, which Bazel will detect.</p>
+</section>
+<section id="id1">
+<h3>Clone Beluga repository<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>Clone the Beluga project source code:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-7">
+Ubuntu</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ekumen-OS/beluga.git
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-8" name="sd-tab-set-7" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-8">
+Windows</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Ekumen-OS/beluga.git
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="build-and-run-tests">
+<h3>Build and run tests<a class="headerlink" href="#build-and-run-tests" title="Link to this heading">#</a></h3>
+<p>The following command will build and run all the unit tests in the project.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-8" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-9">
+Ubuntu</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>//...
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-10" name="sd-tab-set-8" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-10">
+Windows</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>//...
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can inspect the available Bazel targets with:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-9" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-11">
+Ubuntu</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span>query<span class="w"> </span>//...
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-12" name="sd-tab-set-9" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-12">
+Windows</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span>query<span class="w"> </span>//...
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="depending-on-beluga-as-a-bzlmod-dependency">
+<h3>Depending on Beluga as a bzlmod dependency<a class="headerlink" href="#depending-on-beluga-as-a-bzlmod-dependency" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://bazel.build/external/module">Bzlmod</a> is the new package manager for Bazel modules.
+You can depend on <code class="docutils literal notranslate"><span class="pre">beluga</span></code> by adding the following lines to your <code class="docutils literal notranslate"><span class="pre">MODULE.bazel</span></code> file:</p>
+<div class="highlight-starlark notranslate"><div class="highlight"><pre><span></span><span class="n">bazel_dep</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;beluga&quot;</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;2.0.2&quot;</span><span class="p">)</span>
+
+<span class="n">git_override</span><span class="p">(</span>
+    <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;beluga&quot;</span><span class="p">,</span>
+    <span class="n">commit</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+    <span class="n">remote</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/Ekumen-OS/beluga.git&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">git_override</span></code> is required because Beluga is not yet in the <a class="reference external" href="https://registry.bazel.build/">Bazel Central Registry</a>.</p>
+</div>
+</section>
+</section>
 </section>
 
 
@@ -555,6 +651,13 @@ ROS 2</label><div class="sd-tab-content docutils">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-source-workspace">Build and source workspace</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-from-source-with-bazel">Building from source (with Bazel)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-bazel">Install Bazel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Clone Beluga repository</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-run-tests">Build and run tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#depending-on-beluga-as-a-bzlmod-dependency">Depending on Beluga as a bzlmod dependency</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
@@ -588,7 +691,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Sep 23 08:04:01 2025 -0700, d455761&#39;.
+  Last updated on &#39;Tue Sep 23 09:58:50 2025 -0700, d803cbd&#39;.
   <br/>
 </p>
   </div>
