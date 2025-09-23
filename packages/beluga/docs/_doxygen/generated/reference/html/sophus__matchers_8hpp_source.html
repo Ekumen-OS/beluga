@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Sep 18 06:44:46 2025 -0700, 84bbbad&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Sep 23 04:41:58 2025 -0700, e04aa57&#39;"/>
   </head>
   
   
@@ -470,46 +470,48 @@ $(function() {
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
 <div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="sophus__matchers_8hpp.html#a5bf64b89833b7deae50d7c976be91f01">   45</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code" href="sophus__matchers_8hpp.html#a5bf64b89833b7deae50d7c976be91f01">Vector2Near</a>(<span class="keyword">const</span> Sophus::Vector2&lt;Scalar&gt;&amp; t, Scalar e) {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordflow">return</span> AllOf(</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      Property(<span class="stringliteral">&quot;x&quot;</span>, &amp;Sophus::Vector2&lt;Scalar&gt;::x, DoubleNear(t.x(), e)),</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      Property(<span class="stringliteral">&quot;y&quot;</span>, &amp;Sophus::Vector2&lt;Scalar&gt;::y, DoubleNear(t.y(), e)));</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="sophus__matchers_8hpp.html#a9a7c218ed573298b2f89bcc970cbfdee">   58</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code" href="sophus__matchers_8hpp.html#a9a7c218ed573298b2f89bcc970cbfdee">Vector3Near</a>(<span class="keyword">const</span> Sophus::Vector3&lt;Scalar&gt;&amp; t, Scalar e) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keywordflow">return</span> AllOf(</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      Property(<span class="stringliteral">&quot;x&quot;</span>, &amp;Sophus::Vector3&lt;Scalar&gt;::x, DoubleNear(t.x(), e)),</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      Property(<span class="stringliteral">&quot;y&quot;</span>, &amp;Sophus::Vector3&lt;Scalar&gt;::y, DoubleNear(t.y(), e)),</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      Property(<span class="stringliteral">&quot;z&quot;</span>, &amp;Sophus::Vector3&lt;Scalar&gt;::z, DoubleNear(t.z(), e)));</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keyword">using</span> Derived = Sophus::Vector2&lt;Scalar&gt;;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordflow">return</span> AllOf(</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      Property(<span class="stringliteral">&quot;x&quot;</span>, &amp;Eigen::DenseCoeffsBase&lt;Derived, Eigen::ReadOnlyAccessors&gt;::x, DoubleNear(t.x(), e)),</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      Property(<span class="stringliteral">&quot;y&quot;</span>, &amp;Eigen::DenseCoeffsBase&lt;Derived, Eigen::ReadOnlyAccessors&gt;::y, DoubleNear(t.y(), e)));</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="sophus__matchers_8hpp.html#a9a7c218ed573298b2f89bcc970cbfdee">   59</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code" href="sophus__matchers_8hpp.html#a9a7c218ed573298b2f89bcc970cbfdee">Vector3Near</a>(<span class="keyword">const</span> Sophus::Vector3&lt;Scalar&gt;&amp; t, Scalar e) {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">using</span> Derived = Sophus::Vector3&lt;Scalar&gt;;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keywordflow">return</span> AllOf(</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      Property(<span class="stringliteral">&quot;x&quot;</span>, &amp;Eigen::DenseCoeffsBase&lt;Derived, Eigen::ReadOnlyAccessors&gt;::x, DoubleNear(t.x(), e)),</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      Property(<span class="stringliteral">&quot;y&quot;</span>, &amp;Eigen::DenseCoeffsBase&lt;Derived, Eigen::ReadOnlyAccessors&gt;::y, DoubleNear(t.y(), e)),</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      Property(<span class="stringliteral">&quot;z&quot;</span>, &amp;Eigen::DenseCoeffsBase&lt;Derived, Eigen::ReadOnlyAccessors&gt;::z, DoubleNear(t.z(), e)));</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="sophus__matchers_8hpp.html#a29d062deb0428290ff56ac81a5ed17e8">   72</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code" href="sophus__matchers_8hpp.html#a29d062deb0428290ff56ac81a5ed17e8">SO2Near</a>(<span class="keyword">const</span> Sophus::SO2&lt;Scalar&gt;&amp; t, Scalar e) {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keywordflow">return</span> Property(<span class="stringliteral">&quot;unit_complex&quot;</span>, &amp;Sophus::SO2&lt;Scalar&gt;::unit_complex, <a class="code" href="sophus__matchers_8hpp.html#a5bf64b89833b7deae50d7c976be91f01">Vector2Near</a>(t.unit_complex(), e));</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="sophus__matchers_8hpp.html#a29d062deb0428290ff56ac81a5ed17e8">   74</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code" href="sophus__matchers_8hpp.html#a29d062deb0428290ff56ac81a5ed17e8">SO2Near</a>(<span class="keyword">const</span> Sophus::SO2&lt;Scalar&gt;&amp; t, Scalar e) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keywordflow">return</span> Property(<span class="stringliteral">&quot;unit_complex&quot;</span>, &amp;Sophus::SO2&lt;Scalar&gt;::unit_complex, <a class="code" href="sophus__matchers_8hpp.html#a5bf64b89833b7deae50d7c976be91f01">Vector2Near</a>(t.unit_complex(), e));</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="sophus__matchers_8hpp.html#a94fb440b377c4d801de4016cc6f74a3f">   83</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code" href="sophus__matchers_8hpp.html#a94fb440b377c4d801de4016cc6f74a3f">SE2Near</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; t, Scalar e) {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="keywordflow">return</span> AllOf(</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      Property(<span class="stringliteral">&quot;translation&quot;</span>, &amp;Sophus::SE2&lt;Scalar&gt;::translation, <a class="code" href="sophus__matchers_8hpp.html#a5bf64b89833b7deae50d7c976be91f01">Vector2Near</a>(t.translation(), e)),</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      Property(<span class="stringliteral">&quot;so2&quot;</span>, &amp;Sophus::SE2&lt;Scalar&gt;::so2, <a class="code" href="sophus__matchers_8hpp.html#a29d062deb0428290ff56ac81a5ed17e8">SO2Near</a>(t.so2(), e)));</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="sophus__matchers_8hpp.html#a445bfdf34d3185308938f53b8c06ae4f">   91</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code" href="sophus__matchers_8hpp.html#a94fb440b377c4d801de4016cc6f74a3f">SE2Near</a>(<span class="keyword">const</span> Sophus::SO2&lt;Scalar&gt;&amp; r, <span class="keyword">const</span> Sophus::Vector2&lt;Scalar&gt;&amp; t, Scalar e) {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keywordflow">return</span> SE2Near&lt;Scalar&gt;(Sophus::SE2&lt;Scalar&gt;{r, t}, e);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}  <span class="comment">// namespace beluga::testing</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="sophus__matchers_8hpp.html#a94fb440b377c4d801de4016cc6f74a3f">   85</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code" href="sophus__matchers_8hpp.html#a94fb440b377c4d801de4016cc6f74a3f">SE2Near</a>(<span class="keyword">const</span> Sophus::SE2&lt;Scalar&gt;&amp; t, Scalar e) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordflow">return</span> AllOf(</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      Property(<span class="stringliteral">&quot;translation&quot;</span>, &amp;Sophus::SE2&lt;Scalar&gt;::translation, <a class="code" href="sophus__matchers_8hpp.html#a5bf64b89833b7deae50d7c976be91f01">Vector2Near</a>(t.translation(), e)),</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      Property(<span class="stringliteral">&quot;so2&quot;</span>, &amp;Sophus::SE2&lt;Scalar&gt;::so2, <a class="code" href="sophus__matchers_8hpp.html#a29d062deb0428290ff56ac81a5ed17e8">SO2Near</a>(t.so2(), e)));</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Scalar&gt;</div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="sophus__matchers_8hpp.html#a445bfdf34d3185308938f53b8c06ae4f">   93</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code" href="sophus__matchers_8hpp.html#a94fb440b377c4d801de4016cc6f74a3f">SE2Near</a>(<span class="keyword">const</span> Sophus::SO2&lt;Scalar&gt;&amp; r, <span class="keyword">const</span> Sophus::Vector2&lt;Scalar&gt;&amp; t, Scalar e) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keywordflow">return</span> SE2Near&lt;Scalar&gt;(Sophus::SE2&lt;Scalar&gt;{r, t}, e);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="asophus__matchers_8hpp_html_a29d062deb0428290ff56ac81a5ed17e8"><div class="ttname"><a href="sophus__matchers_8hpp.html#a29d062deb0428290ff56ac81a5ed17e8">beluga::testing::SO2Near</a></div><div class="ttdeci">auto SO2Near(const Sophus::SO2&lt; Scalar &gt; &amp;t, Scalar e)</div><div class="ttdoc">SO2 element matcher.</div><div class="ttdef"><b>Definition:</b> sophus_matchers.hpp:72</div></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}  <span class="comment">// namespace beluga::testing</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="asophus__matchers_8hpp_html_a29d062deb0428290ff56ac81a5ed17e8"><div class="ttname"><a href="sophus__matchers_8hpp.html#a29d062deb0428290ff56ac81a5ed17e8">beluga::testing::SO2Near</a></div><div class="ttdeci">auto SO2Near(const Sophus::SO2&lt; Scalar &gt; &amp;t, Scalar e)</div><div class="ttdoc">SO2 element matcher.</div><div class="ttdef"><b>Definition:</b> sophus_matchers.hpp:74</div></div>
 <div class="ttc" id="asophus__matchers_8hpp_html_a5bf64b89833b7deae50d7c976be91f01"><div class="ttname"><a href="sophus__matchers_8hpp.html#a5bf64b89833b7deae50d7c976be91f01">beluga::testing::Vector2Near</a></div><div class="ttdeci">auto Vector2Near(const Sophus::Vector2&lt; Scalar &gt; &amp;t, Scalar e)</div><div class="ttdoc">Vector2 element matcher.</div><div class="ttdef"><b>Definition:</b> sophus_matchers.hpp:45</div></div>
-<div class="ttc" id="asophus__matchers_8hpp_html_a94fb440b377c4d801de4016cc6f74a3f"><div class="ttname"><a href="sophus__matchers_8hpp.html#a94fb440b377c4d801de4016cc6f74a3f">beluga::testing::SE2Near</a></div><div class="ttdeci">auto SE2Near(const Sophus::SE2&lt; Scalar &gt; &amp;t, Scalar e)</div><div class="ttdoc">SE2 element matcher.</div><div class="ttdef"><b>Definition:</b> sophus_matchers.hpp:83</div></div>
-<div class="ttc" id="asophus__matchers_8hpp_html_a9a7c218ed573298b2f89bcc970cbfdee"><div class="ttname"><a href="sophus__matchers_8hpp.html#a9a7c218ed573298b2f89bcc970cbfdee">beluga::testing::Vector3Near</a></div><div class="ttdeci">auto Vector3Near(const Sophus::Vector3&lt; Scalar &gt; &amp;t, Scalar e)</div><div class="ttdoc">Vector3 element matcher.</div><div class="ttdef"><b>Definition:</b> sophus_matchers.hpp:58</div></div>
+<div class="ttc" id="asophus__matchers_8hpp_html_a94fb440b377c4d801de4016cc6f74a3f"><div class="ttname"><a href="sophus__matchers_8hpp.html#a94fb440b377c4d801de4016cc6f74a3f">beluga::testing::SE2Near</a></div><div class="ttdeci">auto SE2Near(const Sophus::SE2&lt; Scalar &gt; &amp;t, Scalar e)</div><div class="ttdoc">SE2 element matcher.</div><div class="ttdef"><b>Definition:</b> sophus_matchers.hpp:85</div></div>
+<div class="ttc" id="asophus__matchers_8hpp_html_a9a7c218ed573298b2f89bcc970cbfdee"><div class="ttname"><a href="sophus__matchers_8hpp.html#a9a7c218ed573298b2f89bcc970cbfdee">beluga::testing::Vector3Near</a></div><div class="ttdeci">auto Vector3Near(const Sophus::Vector3&lt; Scalar &gt; &amp;t, Scalar e)</div><div class="ttdoc">Vector3 element matcher.</div><div class="ttdef"><b>Definition:</b> sophus_matchers.hpp:59</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -566,7 +568,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Sep 18 06:44:46 2025 -0700, 84bbbad&#39;.
+  Last updated on &#39;Tue Sep 23 04:41:58 2025 -0700, e04aa57&#39;.
   <br/>
 </p>
   </div>

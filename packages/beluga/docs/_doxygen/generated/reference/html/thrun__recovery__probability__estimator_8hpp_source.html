@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Sep 18 06:44:46 2025 -0700, 84bbbad&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Sep 23 04:41:58 2025 -0700, e04aa57&#39;"/>
   </head>
   
   
@@ -455,68 +455,70 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_ALGORITHM_THRUN_RECOVERY_PROBABILITY_ESTIMATOR_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_ALGORITHM_THRUN_RECOVERY_PROBABILITY_ESTIMATOR_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="exponential__filter_8hpp.html">beluga/algorithm/exponential_filter.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="particle__traits_8hpp.html">beluga/type_traits/particle_traits.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="particles_8hpp.html">beluga/views/particles.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;range/v3/numeric/accumulate.hpp&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="exponential__filter_8hpp.html">beluga/algorithm/exponential_filter.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="particle__traits_8hpp.html">beluga/type_traits/particle_traits.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="particles_8hpp.html">beluga/views/particles.hpp</a>&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;range/v3/numeric/accumulate.hpp&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html">   38</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html">ThrunRecoveryProbabilityEstimator</a> {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a495cb1a41b1ae21cab0302ff5e87bd76">   45</a></span>&#160;  constexpr <a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a495cb1a41b1ae21cab0302ff5e87bd76">ThrunRecoveryProbabilityEstimator</a>(<span class="keywordtype">double</span> alpha_slow, <span class="keywordtype">double</span> alpha_fast) noexcept</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      : slow_filter_{alpha_slow}, fast_filter_{alpha_fast} {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    assert(0 &lt;= alpha_slow);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    assert(alpha_slow &lt;= alpha_fast);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html">ThrunRecoveryProbabilityEstimator</a> {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a495cb1a41b1ae21cab0302ff5e87bd76">   47</a></span>&#160;  constexpr <a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a495cb1a41b1ae21cab0302ff5e87bd76">ThrunRecoveryProbabilityEstimator</a>(<span class="keywordtype">double</span> alpha_slow, <span class="keywordtype">double</span> alpha_fast) noexcept</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      : slow_filter_{alpha_slow}, fast_filter_{alpha_fast} {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    assert(0 &lt;= alpha_slow);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    assert(alpha_slow &lt;= alpha_fast);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  }</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">   56</a></span>&#160;  constexpr <span class="keywordtype">void</span> <a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">reset</a>() noexcept {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    slow_filter_.<a class="code" href="classbeluga_1_1ExponentialFilter.html#a73c0118e45ba2411d50bce06171ae015">reset</a>();</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    fast_filter_.<a class="code" href="classbeluga_1_1ExponentialFilter.html#a73c0118e45ba2411d50bce06171ae015">reset</a>();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  }</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">   58</a></span>&#160;  constexpr <span class="keywordtype">void</span> <a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">reset</a>() noexcept {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    slow_filter_.<a class="code" href="classbeluga_1_1ExponentialFilter.html#a73c0118e45ba2411d50bce06171ae015">reset</a>();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    fast_filter_.<a class="code" href="classbeluga_1_1ExponentialFilter.html#a73c0118e45ba2411d50bce06171ae015">reset</a>();</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  }</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range&gt;</div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#ab14f6c477d8e6baa0fea5a95144a9ad6">   67</a></span>&#160;  constexpr <span class="keywordtype">double</span> <a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#ab14f6c477d8e6baa0fea5a95144a9ad6">operator()</a>(Range&amp;&amp; range) {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    static_assert(ranges::sized_range&lt;Range&gt;);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    static_assert(beluga::is_particle_range_v&lt;Range&gt;);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> std::size_t size = range.size();</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (size == 0) {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      <a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">reset</a>();</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="keywordflow">return</span> 0.0;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> total_weight = ranges::accumulate(beluga::views::weights(range), 0.0);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> average_weight = total_weight / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(size);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> fast_average = fast_filter_(average_weight);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> slow_average = slow_filter_(average_weight);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">if</span> (std::abs(slow_average) &lt; std::numeric_limits&lt;double&gt;::epsilon()) {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      <span class="keywordflow">return</span> 0.0;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">return</span> std::clamp(1.0 - fast_average / slow_average, 0.0, 1.0);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  }</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <a class="code" href="classbeluga_1_1ExponentialFilter.html">ExponentialFilter</a> slow_filter_;  </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <a class="code" href="classbeluga_1_1ExponentialFilter.html">ExponentialFilter</a> fast_filter_;  </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> Range&gt;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#ab14f6c477d8e6baa0fea5a95144a9ad6">   69</a></span>&#160;  constexpr <span class="keywordtype">double</span> <a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#ab14f6c477d8e6baa0fea5a95144a9ad6">operator()</a>(Range&amp;&amp; range) {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    static_assert(ranges::sized_range&lt;Range&gt;);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    static_assert(beluga::is_particle_range_v&lt;Range&gt;);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> std::size_t size = range.size();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">if</span> (size == 0) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      <a class="code" href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">reset</a>();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keywordflow">return</span> 0.0;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> total_weight = ranges::accumulate(beluga::views::weights(range), 0.0);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> average_weight = total_weight / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(size);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> fast_average = fast_filter_(average_weight);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> slow_average = slow_filter_(average_weight);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">if</span> (std::abs(slow_average) &lt; std::numeric_limits&lt;double&gt;::epsilon()) {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keywordflow">return</span> 0.0;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">return</span> std::clamp(1.0 - fast_average / slow_average, 0.0, 1.0);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <a class="code" href="classbeluga_1_1ExponentialFilter.html">ExponentialFilter</a> slow_filter_;  </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <a class="code" href="classbeluga_1_1ExponentialFilter.html">ExponentialFilter</a> fast_filter_;  </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;};</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassbeluga_1_1ExponentialFilter_html"><div class="ttname"><a href="classbeluga_1_1ExponentialFilter.html">beluga::ExponentialFilter</a></div><div class="ttdoc">Callable type implementing an exponential filter.</div><div class="ttdef"><b>Definition:</b> exponential_filter.hpp:26</div></div>
 <div class="ttc" id="aclassbeluga_1_1ExponentialFilter_html_a73c0118e45ba2411d50bce06171ae015"><div class="ttname"><a href="classbeluga_1_1ExponentialFilter.html#a73c0118e45ba2411d50bce06171ae015">beluga::ExponentialFilter::reset</a></div><div class="ttdeci">constexpr void reset() noexcept</div><div class="ttdoc">Resets the output of the exponential filter to zero.</div><div class="ttdef"><b>Definition:</b> exponential_filter.hpp:35</div></div>
-<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html"><div class="ttname"><a href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html">beluga::ThrunRecoveryProbabilityEstimator</a></div><div class="ttdoc">Random particle probability estimator.</div><div class="ttdef"><b>Definition:</b> thrun_recovery_probability_estimator.hpp:38</div></div>
-<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html_a3a5f7b123f1a2065e4f50e0ea46126ea"><div class="ttname"><a href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">beluga::ThrunRecoveryProbabilityEstimator::reset</a></div><div class="ttdeci">constexpr void reset() noexcept</div><div class="ttdoc">Reset the internal state of the estimator.</div><div class="ttdef"><b>Definition:</b> thrun_recovery_probability_estimator.hpp:56</div></div>
-<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html_a495cb1a41b1ae21cab0302ff5e87bd76"><div class="ttname"><a href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a495cb1a41b1ae21cab0302ff5e87bd76">beluga::ThrunRecoveryProbabilityEstimator::ThrunRecoveryProbabilityEstimator</a></div><div class="ttdeci">constexpr ThrunRecoveryProbabilityEstimator(double alpha_slow, double alpha_fast) noexcept</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> thrun_recovery_probability_estimator.hpp:45</div></div>
-<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html_ab14f6c477d8e6baa0fea5a95144a9ad6"><div class="ttname"><a href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#ab14f6c477d8e6baa0fea5a95144a9ad6">beluga::ThrunRecoveryProbabilityEstimator::operator()</a></div><div class="ttdeci">constexpr double operator()(Range &amp;&amp;range)</div><div class="ttdoc">Update the estimation based on a particle range.</div><div class="ttdef"><b>Definition:</b> thrun_recovery_probability_estimator.hpp:67</div></div>
+<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html"><div class="ttname"><a href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html">beluga::ThrunRecoveryProbabilityEstimator</a></div><div class="ttdoc">Random particle probability estimator.</div><div class="ttdef"><b>Definition:</b> thrun_recovery_probability_estimator.hpp:40</div></div>
+<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html_a3a5f7b123f1a2065e4f50e0ea46126ea"><div class="ttname"><a href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a3a5f7b123f1a2065e4f50e0ea46126ea">beluga::ThrunRecoveryProbabilityEstimator::reset</a></div><div class="ttdeci">constexpr void reset() noexcept</div><div class="ttdoc">Reset the internal state of the estimator.</div><div class="ttdef"><b>Definition:</b> thrun_recovery_probability_estimator.hpp:58</div></div>
+<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html_a495cb1a41b1ae21cab0302ff5e87bd76"><div class="ttname"><a href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#a495cb1a41b1ae21cab0302ff5e87bd76">beluga::ThrunRecoveryProbabilityEstimator::ThrunRecoveryProbabilityEstimator</a></div><div class="ttdeci">constexpr ThrunRecoveryProbabilityEstimator(double alpha_slow, double alpha_fast) noexcept</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> thrun_recovery_probability_estimator.hpp:47</div></div>
+<div class="ttc" id="aclassbeluga_1_1ThrunRecoveryProbabilityEstimator_html_ab14f6c477d8e6baa0fea5a95144a9ad6"><div class="ttname"><a href="classbeluga_1_1ThrunRecoveryProbabilityEstimator.html#ab14f6c477d8e6baa0fea5a95144a9ad6">beluga::ThrunRecoveryProbabilityEstimator::operator()</a></div><div class="ttdeci">constexpr double operator()(Range &amp;&amp;range)</div><div class="ttdoc">Update the estimation based on a particle range.</div><div class="ttdef"><b>Definition:</b> thrun_recovery_probability_estimator.hpp:69</div></div>
 <div class="ttc" id="aexponential__filter_8hpp_html"><div class="ttname"><a href="exponential__filter_8hpp.html">exponential_filter.hpp</a></div><div class="ttdoc">Implementation of an exponential filter.</div></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
 <div class="ttc" id="aparticle__traits_8hpp_html"><div class="ttname"><a href="particle__traits_8hpp.html">particle_traits.hpp</a></div><div class="ttdoc">Implementation of traits for particle types, see the Particle named requirements.</div></div>
@@ -577,7 +579,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Sep 18 06:44:46 2025 -0700, 84bbbad&#39;.
+  Last updated on &#39;Tue Sep 23 04:41:58 2025 -0700, e04aa57&#39;.
   <br/>
 </p>
   </div>
