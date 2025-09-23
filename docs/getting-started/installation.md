@@ -91,25 +91,13 @@ rosdep install -r --from-paths ~/ws/src/beluga -y -i -t build -t exec
 
 ### Build and source workspace
 
-For ROS 2 and ROS 1 distributions alike, `colcon` can be used to build:
+For ROS 2 distributions, `colcon` can be used to build:
 
 ::::{tab-set}
 
 :::{tab-item} Ubuntu
 ```bash
 colcon build --packages-up-to beluga_example --cmake-args -DBUILD_TESTING=OFF
-```
-:::
-
-::::
-
-Alternatively, for ROS 1 distributions, you may use `catkin_make_isolated` instead:
-
-::::{tab-set}
-
-:::{tab-item} Ubuntu
-```bash
-catkin_make_isolated --only-pkg-with-deps beluga_example --install --cmake-args -DBUILD_TESTING=OFF
 ```
 :::
 
@@ -122,12 +110,6 @@ After building, don't forget to source the environment:
 :::{tab-item} ROS 2
 ```bash
 source install/setup.bash
-```
-:::
-
-:::{tab-item} ROS 1
-```bash
-source devel/setup.bash
 ```
 :::
 
