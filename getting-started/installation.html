@@ -56,7 +56,7 @@
     <link rel="prev" title="Overview" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Sep 23 04:41:58 2025 -0700, e04aa57&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Sep 23 08:04:01 2025 -0700, d455761&#39;"/>
   </head>
   
   
@@ -478,7 +478,7 @@ rosdep<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> 
 </section>
 <section id="build-and-source-workspace">
 <h3>Build and source workspace<a class="headerlink" href="#build-and-source-workspace" title="Link to this heading">#</a></h3>
-<p>For ROS 2 and ROS 1 distributions alike, <code class="docutils literal notranslate"><span class="pre">colcon</span></code> can be used to build:</p>
+<p>For ROS 2 distributions, <code class="docutils literal notranslate"><span class="pre">colcon</span></code> can be used to build:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
 <label class="sd-tab-label" for="sd-tab-item-5">
@@ -488,29 +488,12 @@ Ubuntu</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </div>
-<p>Alternatively, for ROS 1 distributions, you may use <code class="docutils literal notranslate"><span class="pre">catkin_make_isolated</span></code> instead:</p>
+<p>After building, don’t forget to source the environment:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
 <label class="sd-tab-label" for="sd-tab-item-6">
-Ubuntu</label><div class="sd-tab-content docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>catkin_make_isolated<span class="w"> </span>--only-pkg-with-deps<span class="w"> </span>beluga_example<span class="w"> </span>--install<span class="w"> </span>--cmake-args<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
-</pre></div>
-</div>
-</div>
-</div>
-<p>After building, don’t forget to source the environment:</p>
-<div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
-<label class="sd-tab-label" for="sd-tab-item-7">
 ROS 2</label><div class="sd-tab-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>install/setup.bash
-</pre></div>
-</div>
-</div>
-<input id="sd-tab-item-8" name="sd-tab-set-7" type="radio">
-<label class="sd-tab-label" for="sd-tab-item-8">
-ROS 1</label><div class="sd-tab-content docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>devel/setup.bash
 </pre></div>
 </div>
 </div>
@@ -605,7 +588,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Sep 23 04:41:58 2025 -0700, e04aa57&#39;.
+  Last updated on &#39;Tue Sep 23 08:04:01 2025 -0700, d455761&#39;.
   <br/>
 </p>
   </div>
