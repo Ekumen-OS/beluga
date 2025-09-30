@@ -38,11 +38,12 @@ namespace beluga {
  */
 class StationaryModel {
  public:
-  /// Current and previous odometry estimates as motion model control action.
-  using control_type = std::tuple<Sophus::SE2d, Sophus::SE2d>;
   /// 2D pose as motion model state (to match that of the particles).
   using state_type = Sophus::SE2d;
-
+  /// Time point type for motion model control actions.
+  using timestamped_state_type = TimeStamped<state_type>;
+  /// Current and previous odometry estimates as motion model control action.
+  using control_type = std::tuple<timestamped_state_type, timestamped_state_type>;
   /// Computes a state sampling function conditioned on a given control action.
   /**
    * The updated state will be centered around `state` with some covariance.

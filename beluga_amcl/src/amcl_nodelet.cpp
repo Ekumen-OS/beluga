@@ -417,10 +417,10 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
     NODELET_ERROR("Could not transform from base to laser: %s", error.what());
     return;
   }
-
+  const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto new_estimate = particle_filter_->update(
-      base_pose_in_odom,  //
+      {base_pose_in_odom, laser_scan_stamp},  //
       beluga_ros::LaserScan{
           laser_scan,
           laser_pose_in_base,

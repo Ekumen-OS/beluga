@@ -15,6 +15,7 @@
 #ifndef BELUGA_MOTION_HPP
 #define BELUGA_MOTION_HPP
 
+#include <beluga/motion/ackerman_drive_model.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
@@ -22,6 +23,10 @@
 /**
  * \file
  * \brief Includes all Beluga motion models.
+ *
+ * Motion models in Beluga can be classified into two categories:
+ * - Position-based models: Use pose differences (DifferentialDriveModel, OmnidirectionalDriveModel, StationaryModel)
+ * - Velocity-based models: Use timestamped poses to calculate velocities (VelocityDriveModel)
  */
 
 /**
@@ -61,6 +66,7 @@
  * - beluga::DifferentialDriveModel
  * - beluga::OmnidirectionalDriveModel
  * - beluga::StationaryModel
+ * - beluga::VelocityDriveModel
  */
 
 #endif

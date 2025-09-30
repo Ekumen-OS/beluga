@@ -330,10 +330,11 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
                        return Eigen::Vector2d((scan.origin() * Sophus::Vector3d{p.x(), p.y(), 0}).head<2>());
                      }) |
                      ranges::to<std::vector>;
+  const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
   const auto new_estimate = std::visit(
-      [base_pose_in_odom, measurement = std::move(measurement)](auto& particle_filter) {
+      [base_pose_in_odom, laser_scan_stamp, measurement = std::move(measurement)](auto& particle_filter) {
         return particle_filter.update(
-            base_pose_in_odom,  //
+            {base_pose_in_odom, laser_scan_stamp},  //
             std::move(measurement));
       },
       *particle_filter_);

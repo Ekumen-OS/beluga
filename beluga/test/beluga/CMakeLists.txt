@@ -33,6 +33,7 @@ add_executable(
   algorithm/test_unscented_transform.cpp
   containers/test_circular_array.cpp
   containers/test_tuple_vector.cpp
+  motion/test_ackerman_drive_model.cpp
   motion/test_differential_drive_model.cpp
   motion/test_omnidirectional_drive_model.cpp
   policies/test_every_n.cpp

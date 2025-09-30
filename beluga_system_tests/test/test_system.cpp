@@ -136,7 +136,7 @@ void particle_filter_test(
   std::size_t update_count = 0;
 
   for (auto [measurement, odom, ground_truth] : datapoints) {
-    const auto estimate = filter.update(std::move(odom), std::move(measurement));
+    const auto estimate = filter.update(beluga::TimeStamped<Sophus::SE2d>{std::move(odom)}, std::move(measurement));
 
     if (!estimate.has_value()) {
       continue;

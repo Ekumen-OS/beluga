@@ -393,12 +393,12 @@ void NdtAmclNode3D::laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr
   for (; iter_x != iter_x.end() && iter_y != iter_y.end() && iter_z != iter_z.end(); ++iter_x, ++iter_y, ++iter_z) {
     measurement.emplace_back(laser_pose_in_base * Eigen::Vector3d{*iter_x, *iter_y, *iter_z});
   };
-
+  const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
   RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Processing %ld points.", measurement.size());
   const auto new_estimate = std::visit(
-      [base_pose_in_odom, measurement = measurement](auto& particle_filter) {
+      [base_pose_in_odom, laser_scan_stamp, measurement = measurement](auto& particle_filter) {
         return particle_filter.update(
-            base_pose_in_odom,  //
+            {base_pose_in_odom, laser_scan_stamp},  //
             std::move(measurement));
       },
       *particle_filter_);

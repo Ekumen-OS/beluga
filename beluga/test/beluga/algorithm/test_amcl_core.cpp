@@ -28,11 +28,12 @@
 #include "beluga/sensor/beam_model.hpp"
 #include "beluga/sensor/likelihood_field_model.hpp"
 #include "beluga/test/static_occupancy_grid.hpp"
+#include "beluga/utility/time_stamped.hpp"
 #include "beluga/views/particles.hpp"
 
 namespace {
 
-const auto kDummyControl = Sophus::SE2d{};
+const auto kDummyControl = beluga::TimeStamped<Sophus::SE2d>{};
 const std::vector kDummyMeasurement = {
     std::make_pair(0.0, 0.0),
     std::make_pair(0.0, 0.0),

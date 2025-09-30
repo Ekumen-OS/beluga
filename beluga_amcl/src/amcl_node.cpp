@@ -57,6 +57,7 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 
+#include <beluga/motion/ackerman_drive_model.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
@@ -335,6 +336,16 @@ auto AmclNode::get_motion_model(std::string_view name) const -> beluga_ros::Amcl
     params.strafe_noise_from_translation = get_parameter("alpha5").as_double();
     return beluga::OmnidirectionalDriveModel{params};
   }
+  if (name == kAckermanDriveModelName) {
+    auto params = beluga::VelocityDriveModelParam{};
+    params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
+    params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
+    params.translation_noise_from_translation = get_parameter("alpha3").as_double();
+    params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
+    params.orientation_noise_from_translation = get_parameter("alpha6").as_double();
+    params.orientation_noise_from_rotation = get_parameter("alpha7").as_double();
+    return beluga::VelocityDriveModel{params};
+  }
   if (name == kStationaryModelName) {
     return beluga::StationaryModel{};
   }
@@ -497,16 +508,16 @@ void AmclNode::odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom) {
   const auto time = tf2_ros::fromMsg(odom->header.stamp);
   auto base_pose_in_odom = Sophus::SE2d{};
   tf2::convert(odom->pose.pose, base_pose_in_odom);
-  odometry_motion_buffer_.emplace_back(time, base_pose_in_odom);
+  odometry_motion_buffer_.emplace_back(base_pose_in_odom, time);
 }
 
 void AmclNode::process_buffered_odometry_until(const tf2::TimePoint& until) {
   while (!odometry_motion_buffer_.empty()) {
-    const auto& [odom_time, odom_pose] = odometry_motion_buffer_.front();
-    if (odom_time > until) {
+    const auto& timestamped = odometry_motion_buffer_.front();
+    if (timestamped.timestamp > until) {
       break;
     }
-    particle_filter_->update(odom_pose);
+    particle_filter_->update(timestamped);
     odometry_motion_buffer_.pop_front();
   }
 }
@@ -555,7 +566,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto new_estimate = particle_filter_->update(
-      base_pose_in_odom,  //
+      {base_pose_in_odom, laser_scan_stamp},  //
       beluga_ros::LaserScan{
           laser_scan,
           laser_pose_in_base,
