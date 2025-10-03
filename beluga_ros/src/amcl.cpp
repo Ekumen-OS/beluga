@@ -67,7 +67,7 @@ auto Amcl::update(beluga::TimeStamped<Sophus::SE2d> base_pose_timestamp_in_odom,
     return std::nullopt;
   }
 
-  if (!update_policy_(base_pose_timestamp_in_odom.value) && !force_update_) {
+  if (!update_policy_(base_pose_timestamp_in_odom) && !force_update_) {
     return std::nullopt;
   }
 

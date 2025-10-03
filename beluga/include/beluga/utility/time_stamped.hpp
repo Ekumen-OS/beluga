@@ -66,6 +66,13 @@ struct TimeStamped {
    * with both TimeStamped<T> and T types.
    */
   operator const T&() const { return value; }
+
+  /// Pointer-like access operator.
+  /**
+   * This allows TimeStamped<T> to be used with -> syntax for accessing
+   * methods of the wrapped value.
+   */
+  const T* operator->() const { return &value; }
 };
 
 }  // namespace beluga

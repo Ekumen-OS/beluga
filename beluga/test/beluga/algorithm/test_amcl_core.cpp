@@ -27,6 +27,7 @@
 #include "beluga/motion/differential_drive_model.hpp"
 #include "beluga/sensor/beam_model.hpp"
 #include "beluga/sensor/likelihood_field_model.hpp"
+#include "beluga/test/motion_utils.hpp"
 #include "beluga/test/static_occupancy_grid.hpp"
 #include "beluga/utility/time_stamped.hpp"
 #include "beluga/views/particles.hpp"
