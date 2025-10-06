@@ -358,16 +358,14 @@ void NdtAmclNode3D::laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr
 
   auto base_pose_in_odom = Sophus::SE3d{};
   auto laser_pose_in_base = Sophus::SE3d{};
+  geometry_msgs::msg::TransformStamped odom_to_base_transform;
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
-    tf2::convert(
-        tf_buffer_
-            ->lookupTransform(
-                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
-                tf2_ros::fromMsg(laser_scan->header.stamp))
-            .transform,
-        base_pose_in_odom);
+    odom_to_base_transform = tf_buffer_->lookupTransform(
+        get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
+        tf2_ros::fromMsg(laser_scan->header.stamp));
+    tf2::convert(odom_to_base_transform.transform, base_pose_in_odom);
     tf2::convert(
         tf_buffer_
             ->lookupTransform(
@@ -393,12 +391,13 @@ void NdtAmclNode3D::laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr
   for (; iter_x != iter_x.end() && iter_y != iter_y.end() && iter_z != iter_z.end(); ++iter_x, ++iter_y, ++iter_z) {
     measurement.emplace_back(laser_pose_in_base * Eigen::Vector3d{*iter_x, *iter_y, *iter_z});
   };
-  const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
+  auto timestamped_pose =
+      beluga::TimeStamped<Sophus::SE3d>{base_pose_in_odom, tf2_ros::fromMsg(odom_to_base_transform.header.stamp)};
   RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Processing %ld points.", measurement.size());
   const auto new_estimate = std::visit(
-      [base_pose_in_odom, laser_scan_stamp, measurement = measurement](auto& particle_filter) {
+      [timestamped_pose, measurement = measurement](auto& particle_filter) {
         return particle_filter.update(
-            {base_pose_in_odom, laser_scan_stamp},  //
+            timestamped_pose,  //
             std::move(measurement));
       },
       *particle_filter_);

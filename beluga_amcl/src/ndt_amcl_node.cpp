@@ -290,16 +290,14 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
   }
 
   auto base_pose_in_odom = Sophus::SE2d{};
+  geometry_msgs::msg::TransformStamped odom_to_base_transform;
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
-    tf2::convert(
-        tf_buffer_
-            ->lookupTransform(
-                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
-                tf2_ros::fromMsg(laser_scan->header.stamp))
-            .transform,
-        base_pose_in_odom);
+    odom_to_base_transform = tf_buffer_->lookupTransform(
+        get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
+        tf2_ros::fromMsg(laser_scan->header.stamp));
+    tf2::convert(odom_to_base_transform.transform, base_pose_in_odom);
   } catch (const tf2::TransformException& error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
     return;
@@ -330,11 +328,12 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
                        return Eigen::Vector2d((scan.origin() * Sophus::Vector3d{p.x(), p.y(), 0}).head<2>());
                      }) |
                      ranges::to<std::vector>;
-  const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
+  auto timestamped_pose =
+      beluga::TimeStamped<Sophus::SE2d>{base_pose_in_odom, tf2_ros::fromMsg(odom_to_base_transform.header.stamp)};
   const auto new_estimate = std::visit(
-      [base_pose_in_odom, laser_scan_stamp, measurement = std::move(measurement)](auto& particle_filter) {
+      [timestamped_pose, measurement = std::move(measurement)](auto& particle_filter) {
         return particle_filter.update(
-            {base_pose_in_odom, laser_scan_stamp},  //
+            timestamped_pose,  //
             std::move(measurement));
       },
       *particle_filter_);

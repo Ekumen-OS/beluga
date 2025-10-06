@@ -57,8 +57,8 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 
-#include <beluga/motion/ackerman_drive_model.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
+#include <beluga/motion/differential_velocity_drive_model.hpp>
 #include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
 #include <beluga/sensor/beam_model.hpp>
@@ -337,14 +337,14 @@ auto AmclNode::get_motion_model(std::string_view name) const -> beluga_ros::Amcl
     return beluga::OmnidirectionalDriveModel{params};
   }
   if (name == kAckermanDriveModelName) {
-    auto params = beluga::VelocityDriveModelParam{};
+    auto params = beluga::DifferentialVelocityDriveModelParam{};
     params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
     params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
     params.translation_noise_from_translation = get_parameter("alpha3").as_double();
     params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
     params.orientation_noise_from_translation = get_parameter("alpha6").as_double();
     params.orientation_noise_from_rotation = get_parameter("alpha7").as_double();
-    return beluga::VelocityDriveModel{params};
+    return beluga::DifferentialVelocityDriveModel{params};
   }
   if (name == kStationaryModelName) {
     return beluga::StationaryModel{};
@@ -529,22 +529,16 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
-  // If use_odometry_propagation is enabled, process odometry buffer up to lidar timestamp
-  const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
-  process_buffered_odometry_until(laser_scan_stamp);
-
   // Get base pose in odom frame at laser scan timestamp
   auto base_pose_in_odom = Sophus::SE2d{};
+  geometry_msgs::msg::TransformStamped odom_to_base_transform;
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
-    tf2::convert(
-        tf_buffer_
-            ->lookupTransform(
-                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
-                tf2_ros::fromMsg(laser_scan->header.stamp))
-            .transform,
-        base_pose_in_odom);
+    odom_to_base_transform = tf_buffer_->lookupTransform(
+        get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
+        tf2_ros::fromMsg(laser_scan->header.stamp));
+    tf2::convert(odom_to_base_transform.transform, base_pose_in_odom);
   } catch (const tf2::TransformException& error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
     return;
@@ -564,9 +558,14 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
+  // If use_odometry_propagation is enabled, process odometry buffer up to lidar timestamp
+  process_buffered_odometry_until(tf2_ros::fromMsg(odom_to_base_transform.header.stamp));
+
+  auto timestamped_pose =
+      beluga::TimeStamped<Sophus::SE2d>{base_pose_in_odom, tf2_ros::fromMsg(odom_to_base_transform.header.stamp)};
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto new_estimate = particle_filter_->update(
-      {base_pose_in_odom, laser_scan_stamp},  //
+      timestamped_pose,  //
       beluga_ros::LaserScan{
           laser_scan,
           laser_pose_in_base,

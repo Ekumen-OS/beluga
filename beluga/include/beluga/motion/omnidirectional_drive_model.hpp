@@ -80,10 +80,8 @@ class OmnidirectionalDriveModel {
  public:
   /// 2D pose as motion model state (to match that of the particles).
   using state_type = Sophus::SE2d;
-  /// Time point type for motion model control actions.
-  using timestamped_state_type = TimeStamped<state_type>;
   /// Current and previous odometry estimates as motion model control action.
-  using control_type = std::tuple<timestamped_state_type, timestamped_state_type>;
+  using control_type = std::tuple<state_type, state_type>;
   /// Parameter type that the constructor uses to configure the motion model.
   using param_type = OmnidirectionalDriveModelParam;
 

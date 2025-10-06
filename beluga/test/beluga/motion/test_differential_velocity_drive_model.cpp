@@ -33,7 +33,7 @@
 #include <range/v3/view/take_exactly.hpp>
 
 #include "beluga/3d_embedding.hpp"
-#include "beluga/motion/ackerman_drive_model.hpp"
+#include "beluga/motion/differential_velocity_drive_model.hpp"
 #include "beluga/test/motion_utils.hpp"
 #include "beluga/testing/sophus_matchers.hpp"
 
@@ -48,13 +48,13 @@ using beluga::testing::SE2Near;
 
 using UUT = beluga::VelocityDriveModel2d;
 
-class VelocityDriveModelTest : public ::testing::Test {
+class DifferentialVelocityDriveModelTest : public ::testing::Test {
  protected:
-  const UUT motion_model_{beluga::VelocityDriveModelParam{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+  const UUT motion_model_{beluga::DifferentialVelocityDriveModelParam{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
   std::mt19937 generator_{std::random_device()()};
 };
 
-TEST_F(VelocityDriveModelTest, OneUpdate) {
+TEST_F(DifferentialVelocityDriveModelTest, OneUpdate) {
   constexpr double kTolerance = 0.001;
   const auto base_pose_in_odom = SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}};
@@ -67,7 +67,7 @@ TEST_F(VelocityDriveModelTest, OneUpdate) {
   ASSERT_THAT(state_sampling_function(pose, generator_), SE2Near(pose, kTolerance));
 }
 
-TEST_F(VelocityDriveModelTest, Translate) {
+TEST_F(DifferentialVelocityDriveModelTest, Translate) {
   constexpr double kTolerance = 0.001;
   const auto base_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{1.0, 0.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
@@ -83,7 +83,7 @@ TEST_F(VelocityDriveModelTest, Translate) {
   ASSERT_THAT(result2, SE2Near(SO2d{0.0}, Vector2d{1.0, 3.0}, kTolerance));
 }
 
-TEST_F(VelocityDriveModelTest, ArcOfCircumference) {
+TEST_F(DifferentialVelocityDriveModelTest, ArcOfCircumference) {
   constexpr double kTolerance = 0.001;
   const auto base_pose_in_odom = SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
@@ -100,7 +100,7 @@ TEST_F(VelocityDriveModelTest, ArcOfCircumference) {
       result2, SE2Near(SO2d{0.0}, Vector2d{2.0 + std::sqrt(2.0) / 2.0, 3.0 - std::sqrt(2.0) / 2.0}, kTolerance));
 }
 
-TEST_F(VelocityDriveModelTest, Rotate) {
+TEST_F(DifferentialVelocityDriveModelTest, Rotate) {
   constexpr double kTolerance = 0.001;
   const auto base_pose_in_odom = SE2d{SO2d{Constants::pi() / 4}, Vector2d{0.0, 0.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
@@ -129,13 +129,13 @@ auto get_statistics(Range&& range) {
   return std::pair{mean, stddev};
 }
 
-TEST(VelocityDriveModelSamples, Translate) {
+TEST(DifferentialVelocityDriveModelSamples, Translate) {
   const double tolerance = 0.015;
   const double alpha = 0.2;
   const double origin = 5.0;
   const double distance = 3.0;
   const double delta_time = 0.1;
-  const auto motion_model = UUT{beluga::VelocityDriveModelParam{0.0, 0.0, alpha, 0.0, 0.0, 0.0}};
+  const auto motion_model = UUT{beluga::DifferentialVelocityDriveModelParam{0.0, 0.0, alpha, 0.0, 0.0, 0.0}};
   auto generator = std::mt19937{std::random_device()()};
   const auto base_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{distance, 0.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
@@ -154,13 +154,13 @@ TEST(VelocityDriveModelSamples, Translate) {
   ASSERT_NEAR(stddev, std::sqrt(alpha * distance * delta_time), tolerance);
 }
 
-TEST(VelocityDriveModelSamples, RotateFirstQuadrant) {
+TEST(DifferentialVelocityDriveModelSamples, RotateFirstQuadrant) {
   const double tolerance = 0.01;
   const double alpha = 0.2;
   const double initial_angle = Constants::pi() / 6;
   const double motion_angle = Constants::pi() / 4;
   const double delta_time = 0.1;
-  const auto motion_model = UUT{beluga::VelocityDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0, 0.0}};
+  const auto motion_model = UUT{beluga::DifferentialVelocityDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0, 0.0}};
   auto generator = std::mt19937{std::random_device()()};
   const auto base_pose_in_odom = SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
@@ -179,13 +179,13 @@ TEST(VelocityDriveModelSamples, RotateFirstQuadrant) {
   ASSERT_NEAR(stddev, std::sqrt(alpha * motion_angle * delta_time), tolerance);
 }
 
-TEST(VelocityDriveModelSamples, RotateThirdQuadrant) {
+TEST(DifferentialVelocityDriveModelSamples, RotateThirdQuadrant) {
   const double tolerance = 0.01;
   const double alpha = 0.2;
   const double initial_angle = Constants::pi() / 6;
   const double motion_angle = -Constants::pi() * 3 / 4;
   const double delta_time = 0.1;
-  const auto motion_model = UUT{beluga::VelocityDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0, 0.0}};
+  const auto motion_model = UUT{beluga::DifferentialVelocityDriveModelParam{alpha, 0.0, 0.0, 0.0, 0.0, 0.0}};
   auto generator = std::mt19937{std::random_device()()};
   const auto base_pose_in_odom = SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
@@ -205,11 +205,11 @@ TEST(VelocityDriveModelSamples, RotateThirdQuadrant) {
   ASSERT_NEAR(stddev, std::sqrt(alpha * std::abs(motion_angle) * delta_time), tolerance);
 }
 
-TEST(VelocityDriveModelSamples, ArcOfCircumference) {
+TEST(DifferentialVelocityDriveModelSamples, ArcOfCircumference) {
   const double tolerance = 0.015;
   const double alpha = 0.2;
   const double delta_time = 0.1;
-  const auto motion_model = UUT{beluga::VelocityDriveModelParam{0.0, 0.0, 0.0, alpha, 0.0, 0.0}};
+  const auto motion_model = UUT{beluga::DifferentialVelocityDriveModelParam{0.0, 0.0, 0.0, alpha, 0.0, 0.0}};
   auto generator = std::mt19937{std::random_device()()};
   const auto base_pose_in_odom = SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 2.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{2.0, 0.0}};
