@@ -21,7 +21,6 @@
 #include <type_traits>
 
 #include <beluga/type_traits/tuple_traits.hpp>
-#include <beluga/utility/time_stamped.hpp>
 
 #include <sophus/se2.hpp>
 #include <sophus/so2.hpp>
@@ -80,8 +79,10 @@ class OmnidirectionalDriveModel {
  public:
   /// 2D pose as motion model state (to match that of the particles).
   using state_type = Sophus::SE2d;
+
   /// Current and previous odometry estimates as motion model control action.
   using control_type = std::tuple<state_type, state_type>;
+
   /// Parameter type that the constructor uses to configure the motion model.
   using param_type = OmnidirectionalDriveModelParam;
 

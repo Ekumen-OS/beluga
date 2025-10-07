@@ -20,7 +20,6 @@
 #include <tuple>
 
 #include <beluga/type_traits/tuple_traits.hpp>
-#include <beluga/utility/time_stamped.hpp>
 
 #include <beluga/3d_embedding.hpp>
 #include <sophus/se2.hpp>
@@ -86,8 +85,10 @@ class DifferentialDriveModel {
  public:
   /// 2D or flattened 3D pose as motion model state (to match that of the particles).
   using state_type = StateType;
+
   /// Current and previous odometry estimates as motion model control action.
   using control_type = std::tuple<state_type, state_type>;
+
   /// Parameter type that the constructor uses to configure the motion model.
   using param_type = DifferentialDriveModelParam;
 
