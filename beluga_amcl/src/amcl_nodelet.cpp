@@ -395,14 +395,13 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
     return;
   }
 
-  auto base_pose_in_odom = Sophus::SE2d{};
-  geometry_msgs::TransformStamped odom_to_base_transform;
+  auto base_pose_in_odom = beluga::TimeStamped<Sophus::SE2d>{};
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
-    odom_to_base_transform =
+    const auto odom_to_base_transform =
         tf_buffer_->lookupTransform(config_.odom_frame_id, config_.base_frame_id, laser_scan->header.stamp);
-    tf2::convert(odom_to_base_transform.transform, base_pose_in_odom);
+    tf2::convert(odom_to_base_transform, base_pose_in_odom);
   } catch (const tf2::TransformException& error) {
     NODELET_ERROR("Could not transform from odom to base: %s", error.what());
     return;
@@ -418,11 +417,9 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
     NODELET_ERROR("Could not transform from base to laser: %s", error.what());
     return;
   }
-  auto timestamped_pose =
-      beluga::TimeStamped<Sophus::SE2d>{base_pose_in_odom, tf2_ros::fromMsg(odom_to_base_transform.header.stamp)};
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto new_estimate = particle_filter_->update(
-      timestamped_pose,  //
+      base_pose_in_odom,  //
       beluga_ros::LaserScan{
           laser_scan,
           laser_pose_in_base,
@@ -435,7 +432,7 @@ void AmclNodelet::laser_callback(const sensor_msgs::LaserScan::ConstPtr& laser_s
 
   if (new_estimate.has_value()) {
     const auto& [base_pose_in_map, _] = new_estimate.value();
-    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.value.inverse();
     last_known_estimate_ = new_estimate;
 
     NODELET_INFO(

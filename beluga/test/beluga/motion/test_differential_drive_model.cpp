@@ -55,8 +55,21 @@ class DifferentialDriveModelTest : public ::testing::Test {
 
 TEST_F(DifferentialDriveModelTest, OneUpdate) {
   constexpr double kTolerance = 0.001;
-  const auto control_action = beluga::testing::make_control_action(
+  const auto control_action = std::make_tuple(
       SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}}, SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}});
+  const auto state_sampling_function = motion_model_(control_action);
+  const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
+  ASSERT_THAT(state_sampling_function(pose, generator_), SE2Near(pose, kTolerance));
+}
+
+TEST_F(DifferentialDriveModelTest, OneUpdateTimeStamp) {
+  constexpr double kTolerance = 0.001;
+  const auto base_pose_in_odom = SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}};
+  const auto previous_pose_in_odom = SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}};
+  const auto laser_scan_stamp = std::chrono::system_clock::now();
+  const auto previous_stamp = laser_scan_stamp - std::chrono::milliseconds(100);
+  const auto control_action =
+      beluga::testing::make_control_action(base_pose_in_odom, previous_pose_in_odom, laser_scan_stamp, previous_stamp);
   const auto state_sampling_function = motion_model_(control_action);
   const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
   ASSERT_THAT(state_sampling_function(pose, generator_), SE2Near(pose, kTolerance));
@@ -64,8 +77,7 @@ TEST_F(DifferentialDriveModelTest, OneUpdate) {
 
 TEST_F(DifferentialDriveModelTest, Translate) {
   constexpr double kTolerance = 0.001;
-  const auto control_action =
-      beluga::testing::make_control_action(SE2d{SO2d{0.0}, Vector2d{1.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  const auto control_action = std::make_tuple(SE2d{SO2d{0.0}, Vector2d{1.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   const auto state_sampling_function = motion_model_(control_action);
 
   const auto result1 = state_sampling_function(SE2d{SO2d{0.0}, Vector2d{2.0, 0.0}}, generator_);
@@ -76,8 +88,8 @@ TEST_F(DifferentialDriveModelTest, Translate) {
 
 TEST_F(DifferentialDriveModelTest, RotateTranslate) {
   constexpr double kTolerance = 0.001;
-  const auto control_action = beluga::testing::make_control_action(
-      SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  const auto control_action =
+      std::make_tuple(SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   const auto state_sampling_function = motion_model_(control_action);
 
   const auto result1 = state_sampling_function(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}, generator_);
@@ -88,8 +100,8 @@ TEST_F(DifferentialDriveModelTest, RotateTranslate) {
 
 TEST_F(DifferentialDriveModelTest, Rotate) {
   constexpr double kTolerance = 0.001;
-  const auto control_action = beluga::testing::make_control_action(
-      SE2d{SO2d{Constants::pi() / 4}, Vector2d{0.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  const auto control_action =
+      std::make_tuple(SE2d{SO2d{Constants::pi() / 4}, Vector2d{0.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   const auto state_sampling_function = motion_model_(control_action);
   const auto result1 = state_sampling_function(SE2d{SO2d{Constants::pi()}, Vector2d{0.0, 0.0}}, generator_);
   ASSERT_THAT(result1, SE2Near(SO2d{Constants::pi() * 5 / 4}, Vector2d{0.0, 0.0}, kTolerance));
@@ -99,8 +111,8 @@ TEST_F(DifferentialDriveModelTest, Rotate) {
 
 TEST_F(DifferentialDriveModelTest, RotateTranslateRotate) {
   constexpr double kTolerance = 0.001;
-  const auto control_action = beluga::testing::make_control_action(
-      SE2d{SO2d{-Constants::pi() / 2}, Vector2d{1.0, 2.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  const auto control_action =
+      std::make_tuple(SE2d{SO2d{-Constants::pi() / 2}, Vector2d{1.0, 2.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   const auto state_sampling_function = motion_model_(control_action);
   const auto result = state_sampling_function(SE2d{SO2d{Constants::pi()}, Vector2d{3.0, 4.0}}, generator_);
   ASSERT_THAT(result, SE2Near(SO2d{Constants::pi() / 2}, Vector2d{2.0, 2.0}, kTolerance));
@@ -127,8 +139,8 @@ TEST(DifferentialDriveModelSamples, Translate) {
   const double distance = 3.0;
   const auto motion_model = UUT{beluga::DifferentialDriveModelParam{0.0, 0.0, alpha, 0.0}};  // Translation variance
   auto generator = std::mt19937{std::random_device()()};
-  const auto control_action = beluga::testing::make_control_action(
-      SE2d{SO2d{0.0}, Vector2d{distance, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  const auto control_action =
+      std::make_tuple(SE2d{SO2d{0.0}, Vector2d{distance, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   const auto state_sampling_function = motion_model(control_action);
   auto view = ranges::views::generate([&]() {
                 const auto pose = SE2d{SO2d{0.0}, Vector2d{origin, 0.0}};
@@ -147,8 +159,8 @@ TEST(DifferentialDriveModelSamples, RotateFirstQuadrant) {
   const double motion_angle = Constants::pi() / 4;
   const auto motion_model = UUT{beluga::DifferentialDriveModelParam{alpha, 0.0, 0.0, 0.0}};  // Rotation variance
   auto generator = std::mt19937{std::random_device()()};
-  const auto control_action = beluga::testing::make_control_action(
-      SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  const auto control_action =
+      std::make_tuple(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   const auto state_sampling_function = motion_model(control_action);
   auto view = ranges::views::generate([&]() {
                 const auto pose = SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}};
@@ -170,8 +182,8 @@ TEST(DifferentialDriveModel3DSamples, RotateFirstQuadrant) {
   const auto motion_model = beluga::DifferentialDriveModel<Sophus::SE3d>{
       beluga::DifferentialDriveModelParam{alpha, 0.0, 0.0, 0.0}};  // Rotation variance
   auto generator = std::mt19937{std::random_device()()};
-  const auto control_action = beluga::testing::make_control_action(
-      To3d(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}}), To3d(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}));
+  const auto control_action =
+      std::make_tuple(To3d(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}}), To3d(SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}}));
   const auto state_sampling_function = motion_model(control_action);
   auto view = ranges::views::generate([&]() {
                 const auto pose = To3d(SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}});
@@ -190,8 +202,8 @@ TEST(DifferentialDriveModelSamples, RotateThirdQuadrant) {
   const double motion_angle = -Constants::pi() * 3 / 4;
   const auto motion_model = UUT{beluga::DifferentialDriveModelParam{alpha, 0.0, 0.0, 0.0}};  // Rotation variance
   auto generator = std::mt19937{std::random_device()()};
-  const auto control_action = beluga::testing::make_control_action(
-      SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  const auto control_action =
+      std::make_tuple(SE2d{SO2d{motion_angle}, Vector2d{0.0, 0.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   const auto state_sampling_function = motion_model(control_action);
   auto view = ranges::views::generate([&]() {
                 const auto pose = SE2d{SO2d{initial_angle}, Vector2d{0.0, 0.0}};
@@ -212,8 +224,7 @@ TEST(DifferentialDriveModelSamples, RotateTranslateRotateFirstQuadrant) {
   const auto motion_model =
       UUT{beluga::DifferentialDriveModelParam{0.0, 0.0, 0.0, alpha}};  // Translation variance from rotation
   auto generator = std::mt19937{std::random_device()()};
-  const auto control_action =
-      beluga::testing::make_control_action(SE2d{SO2d{0.0}, Vector2d{1.0, 1.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+  const auto control_action = std::make_tuple(SE2d{SO2d{0.0}, Vector2d{1.0, 1.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   const auto state_sampling_function = motion_model(control_action);
   auto view = ranges::views::generate([&]() {
                 const auto pose = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
@@ -239,7 +250,7 @@ TEST(DifferentialDriveModelSamples, RotateTranslateRotateThirdQuadrant) {
       UUT{beluga::DifferentialDriveModelParam{0.0, 0.0, 0.0, alpha}};  // Translation variance from rotation
   auto generator = std::mt19937{std::random_device()()};
   const auto control_action =
-      beluga::testing::make_control_action(SE2d{SO2d{0.0}, Vector2d{-1.0, -1.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
+      std::make_tuple(SE2d{SO2d{0.0}, Vector2d{-1.0, -1.0}}, SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}});
   const auto state_sampling_function = motion_model(control_action);
   auto view = ranges::views::generate([&]() {
                 const auto pose = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};

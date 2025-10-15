@@ -530,15 +530,14 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   }
 
   // Get base pose in odom frame at laser scan timestamp
-  auto base_pose_in_odom = Sophus::SE2d{};
-  geometry_msgs::msg::TransformStamped odom_to_base_transform;
+  auto base_pose_in_odom = beluga::TimeStamped<Sophus::SE2d>{};
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
-    odom_to_base_transform = tf_buffer_->lookupTransform(
+    const auto odom_to_base_transform = tf_buffer_->lookupTransform(
         get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
         tf2_ros::fromMsg(laser_scan->header.stamp));
-    tf2::convert(odom_to_base_transform.transform, base_pose_in_odom);
+    tf2::convert(odom_to_base_transform, base_pose_in_odom);
   } catch (const tf2::TransformException& error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
     return;
@@ -559,13 +558,11 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
   }
 
   // If use_odometry_propagation is enabled, process odometry buffer up to lidar timestamp
-  process_buffered_odometry_until(tf2_ros::fromMsg(odom_to_base_transform.header.stamp));
+  process_buffered_odometry_until(base_pose_in_odom.timestamp);
 
-  auto timestamped_pose =
-      beluga::TimeStamped<Sophus::SE2d>{base_pose_in_odom, tf2_ros::fromMsg(odom_to_base_transform.header.stamp)};
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto new_estimate = particle_filter_->update(
-      timestamped_pose,  //
+      base_pose_in_odom,  //
       beluga_ros::LaserScan{
           laser_scan,
           laser_pose_in_base,
@@ -578,7 +575,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   if (new_estimate.has_value()) {
     const auto& [base_pose_in_map, _] = new_estimate.value();
-    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.value.inverse();
     last_known_estimate_ = new_estimate;
 
     RCLCPP_INFO(

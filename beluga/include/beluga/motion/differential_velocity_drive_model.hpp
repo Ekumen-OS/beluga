@@ -82,6 +82,13 @@ struct DifferentialVelocityDriveModelParam {
    * Also known as `alpha7`.
    */
   double orientation_noise_from_rotation;
+
+  /// Threshold for distinguishing between straight-line and circular motion.
+  /**
+   * Below this threshold (~0.57 degrees), motion is treated as straight-line to avoid
+   * numerical instabilities in radius calculations for nearly-zero angular velocities.
+   */
+  static constexpr double small_angle_threshold = 0.01;
 };
 
 /// Sampled velocity model for a differential drive.
@@ -131,52 +138,43 @@ class DifferentialVelocityDriveModel {
     const auto& pose = timestamped.value;
     const auto& previous_pose = previous_timestamped.value;
 
-    auto time = timestamped.timestamp;
-    auto previous_time = previous_timestamped.timestamp;
-    const auto delta_time = std::chrono::duration<double>(time - previous_time).count();
-    if constexpr (std::is_same_v<state_type, Sophus::SE2d>) {
-      return sampling_fn_2d(pose, previous_pose, delta_time);
-    } else {
-      return sampling_fn_3d(pose, previous_pose, delta_time);
-    }
+    const auto time = timestamped.timestamp;
+    const auto previous_time = previous_timestamped.timestamp;
+    const auto delta_time = std::chrono::duration<double>(time - previous_time);
+    return sampling_fn_2d(pose, previous_pose, delta_time);
   }
 
  private:
   using control_type_2d = std::tuple<Sophus::SE2d, Sophus::SE2d>;
-  using control_type_3d = std::tuple<Sophus::SE3d, Sophus::SE3d>;
 
-  [[nodiscard]] auto sampling_fn_3d(const Sophus::SE3d& pose, const Sophus::SE3d& previous_pose, double delta_time)
-      const {
-    const auto current_pose_2d = To2d(pose);
-    const auto previous_pose_pose_2d = To2d(previous_pose);
-    const auto two_d_sampling_fn = sampling_fn_2d(current_pose_2d, previous_pose_pose_2d, delta_time);
-    return [=](const state_type& state, auto& gen) { return To3d(two_d_sampling_fn(To2d(state), gen)); };
-  }
-
-  [[nodiscard]] auto sampling_fn_2d(const Sophus::SE2d& pose, const Sophus::SE2d& previous_pose, double delta_time)
-      const {
+  [[nodiscard]] auto sampling_fn_2d(
+      const Sophus::SE2d& pose,
+      const Sophus::SE2d& previous_pose,
+      std::chrono::duration<double> delta_time) const {
     // Calculate velocities from poses
     const auto velocity = calculate_velocities(pose, previous_pose, delta_time);
 
-    using DistributionParam = typename std::normal_distribution<double>::param_type;
-
     // Velocity noise parameters (following velocity motion model from Probabilistic Robotics)
-    const auto linear_velocity_params = DistributionParam{
+    // Use temporary distributions to safely extract param_type objects
+    const auto linear_velocity_distribution = std::normal_distribution<double>{
         velocity.v, std::sqrt(
-                        params_.translation_noise_from_translation * std::abs(velocity.v) +
-                        params_.translation_noise_from_rotation * std::abs(velocity.w))};
+                        params_.translation_noise_from_translation * velocity.v * velocity.v +
+                        params_.translation_noise_from_rotation * velocity.w * velocity.w)};
+    const auto linear_velocity_params = linear_velocity_distribution.param();
 
-    const auto angular_velocity_params = DistributionParam{
+    const auto angular_velocity_distribution = std::normal_distribution<double>{
         velocity.w, std::sqrt(
-                        params_.rotation_noise_from_translation * std::abs(velocity.v) +
-                        params_.rotation_noise_from_rotation * std::abs(velocity.w))};
+                        params_.rotation_noise_from_translation * velocity.v * velocity.v +
+                        params_.rotation_noise_from_rotation * velocity.w * velocity.w)};
+    const auto angular_velocity_params = angular_velocity_distribution.param();
 
     // Additional orientation noise (gamma_hat) using rotation parameters
-    const auto gamma_params = DistributionParam{
+    const auto gamma_distribution = std::normal_distribution<double>{
         0.0,  // zero mean
         std::sqrt(
-            params_.orientation_noise_from_translation * std::abs(velocity.v) +
-            params_.orientation_noise_from_rotation * std::abs(velocity.w))};
+            params_.orientation_noise_from_translation * velocity.v * velocity.v +
+            params_.orientation_noise_from_rotation * velocity.w * velocity.w)};
+    const auto gamma_params = gamma_distribution.param();
 
     return [=](const auto& state, auto& gen) {
       static thread_local auto distribution = std::normal_distribution<double>{};
@@ -192,7 +190,12 @@ class DifferentialVelocityDriveModel {
   }
 
   /// Calculate linear and angular velocities from two poses and delta time
-  Velocity calculate_velocities(const Sophus::SE2d& pose, const Sophus::SE2d& previous_pose, double delta_time) const {
+  Velocity calculate_velocities(
+      const Sophus::SE2d& pose,
+      const Sophus::SE2d& previous_pose,
+      std::chrono::duration<double> delta_time) const {
+    const double delta_t_sec = delta_time.count();
+
     // Euclidean distance (chord length between poses)
     const auto translation = pose.translation() - previous_pose.translation();
     const double chord_distance = translation.norm();
@@ -200,18 +203,17 @@ class DifferentialVelocityDriveModel {
     // Angular velocity from orientation change
     const auto angular_change = pose.so2() * previous_pose.so2().inverse();
     const double angle_change = angular_change.log();
-    const double angular_velocity = angle_change / delta_time;
+    const double angular_velocity = angle_change / delta_t_sec;
 
     // Determine direction sign (forward/backward motion)
-    const auto forward_direction =
-        Eigen::Vector2d{std::cos(previous_pose.so2().log()), std::sin(previous_pose.so2().log())};
-    const double dot_product = translation.dot(forward_direction);
-    const double sign = (dot_product >= 0) ? 1.0 : -1.0;
+    const auto relative_transform = previous_pose.inverse() * pose;
+    const double dx = relative_transform.translation().x();
+    const double sign = (dx >= 0.0) ? 1.0 : -1.0;
 
     // Linear velocity calculation
     double linear_velocity = 0.0;
 
-    if (std::abs(angle_change) > std::numeric_limits<double>::epsilon()) {
+    if (std::abs(angle_change) > params_.small_angle_threshold) {
       // Circular motion: calculate radius from chord and angle
       // For an arc: chord = 2r·sin(θ/2), therefore r = chord / (2·sin(θ/2))
       const double radius = chord_distance / (2.0 * std::sin(std::abs(angle_change) / 2.0));
@@ -220,11 +222,11 @@ class DifferentialVelocityDriveModel {
       const double arc_distance = radius * std::abs(angle_change);
 
       // Linear velocity with direction sign
-      linear_velocity = sign * arc_distance / delta_time;
+      linear_velocity = sign * arc_distance / delta_t_sec;
 
     } else {
       // Straight line motion: v = distance / time
-      linear_velocity = sign * chord_distance / delta_time;
+      linear_velocity = sign * chord_distance / delta_t_sec;
     }
 
     return Velocity{linear_velocity, angular_velocity};
@@ -235,25 +237,27 @@ class DifferentialVelocityDriveModel {
       double v_hat,
       double omega_hat,
       double gamma_hat,
-      double delta_time) const {
+      std::chrono::duration<double> delta_time) const {
+    const double delta_t_sec = delta_time.count();
+
     const auto current_theta = state.so2().log();
 
     Sophus::SE2d new_pose;
 
-    if (std::abs(omega_hat) < std::numeric_limits<double>::epsilon()) {
+    if (std::abs(omega_hat) < params_.small_angle_threshold) {
       // Nearly straight line motion
       const auto translation =
-          Eigen::Vector2d{v_hat * delta_time * std::cos(current_theta), v_hat * delta_time * std::sin(current_theta)};
-      const auto new_theta = current_theta + gamma_hat * delta_time;
+          Eigen::Vector2d{v_hat * delta_t_sec * std::cos(current_theta), v_hat * delta_t_sec * std::sin(current_theta)};
+      const auto new_theta = current_theta + gamma_hat * delta_t_sec;
       new_pose = Sophus::SE2d{Sophus::SO2d{new_theta}, state.translation() + translation};
     } else {
       // Circular motion (following velocity motion model equations)
       const auto dx = -(v_hat / omega_hat) * std::sin(current_theta) +
-                      (v_hat / omega_hat) * std::sin(current_theta + omega_hat * delta_time);
+                      (v_hat / omega_hat) * std::sin(current_theta + omega_hat * delta_t_sec);
       const auto dy = (v_hat / omega_hat) * std::cos(current_theta) -
-                      (v_hat / omega_hat) * std::cos(current_theta + omega_hat * delta_time);
+                      (v_hat / omega_hat) * std::cos(current_theta + omega_hat * delta_t_sec);
       const auto translation = Eigen::Vector2d{dx, dy};
-      const auto new_theta = current_theta + omega_hat * delta_time + gamma_hat * delta_time;
+      const auto new_theta = current_theta + omega_hat * delta_t_sec + gamma_hat * delta_t_sec;
       new_pose = Sophus::SE2d{Sophus::SO2d{new_theta}, state.translation() + translation};
     }
 
@@ -265,10 +269,6 @@ class DifferentialVelocityDriveModel {
 
 /// Alias for a 2D velocity drive model, for convenience.
 using VelocityDriveModel2d = DifferentialVelocityDriveModel<Sophus::SE2d>;
-
-/// Alias for a 3D velocity drive model, for convenience.
-using VelocityDriveModel3d = DifferentialVelocityDriveModel<Sophus::SE3d>;
-
 }  // namespace beluga
 
 #endif

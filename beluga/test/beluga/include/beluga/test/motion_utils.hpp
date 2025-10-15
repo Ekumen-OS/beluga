@@ -26,13 +26,6 @@
  */
 
 namespace beluga::testing {
-
-/// Helper function to create a control action tuple with TimeStamped values for testing
-template <typename T>
-auto make_control_action(const T& current, const T& previous) {
-  return std::make_tuple(TimeStamped{current}, TimeStamped{previous});
-}
-
 /// Helper function to create a control action tuple with TimeStamped values and explicit timestamps for testing
 template <typename T, typename ClockT = std::chrono::system_clock>
 auto make_control_action(

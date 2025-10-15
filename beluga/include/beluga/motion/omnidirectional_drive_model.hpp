@@ -101,14 +101,16 @@ class OmnidirectionalDriveModel {
    */
   template <class Control, typename = common_tuple_type_t<Control, control_type>>
   [[nodiscard]] auto operator()(Control&& action) const {
-    const auto& [pose, previous_pose] = action;
+    const auto& [pose_stamped, previous_pose_stamped] = action;
+    const state_type& pose = pose_stamped;
+    const state_type& previous_pose = previous_pose_stamped;
 
-    const auto translation = pose->translation() - previous_pose->translation();
+    const auto translation = pose.translation() - previous_pose.translation();
     const double distance = translation.norm();
     const double distance_variance = distance * distance;
 
-    const auto& previous_orientation = previous_pose->so2();
-    const auto& current_orientation = pose->so2();
+    const auto& previous_orientation = previous_pose.so2();
+    const auto& current_orientation = pose.so2();
     const auto rotation = current_orientation * previous_orientation.inverse();
 
     const auto heading_rotation = Sophus::SO2d{std::atan2(translation.y(), translation.x())};
