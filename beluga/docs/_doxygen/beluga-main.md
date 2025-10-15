@@ -36,6 +36,7 @@ They are lazily evaluated range adaptor objects compatible with the Range-v3 lib
 | | |
 |-|-|
 | [beluga::views::elements](@ref views/elements.hpp) | Takes a view of tuple-like values and a number N and produces a view of Nth element of each tuple |
+| [beluga::views::likelihoods](@ref views/likelihoods.hpp) | Produces a view of the likelihoods obtained after applying a specific model to a range of particles
 | [beluga::views::random_intersperse](@ref views/random_intersperse.hpp) | Inserts values from a generator function between contiguous elements based on a given probability |
 | [beluga::views::sample](@ref views/sample.hpp) | Implements multinomial resampling for a given range of particles or distribution |
 | [beluga::views::states](@ref views/particles.hpp) | Produces a view of the states of a range of particles |
