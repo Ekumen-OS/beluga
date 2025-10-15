@@ -38,50 +38,30 @@ namespace detail {
 
 /// Implementation detail for a reweight range adaptor object.
 struct reweight_base_fn {
-  /// Overload that implements the reweight algorithm.
+  /// Primary overload that applies a given range of likelihoods to a particle range.
   /**
+   * This is the core implementation of the reweighting logic. It iterates over a
+   * particle range and a likelihood range simultaneously, updating each particle's
+   * weight by multiplying it with the corresponding likelihood.
+   *
    * \tparam ExecutionPolicy An [execution policy](https://en.cppreference.com/w/cpp/algorithm/execution_policy_tag_t).
    * \tparam Range An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) of particles.
-   * \tparam Model A callable that can compute the importance weight given a particle state.
+   * \tparam LikelihoodRange An [input range](https://en.cppreference.com/w/cpp/ranges/input_range) of likelihoods.
    * \param policy The execution policy to use.
    * \param range An existing range of particles to apply this action to.
-   * \param model A callable instance to compute the weights given the particle states.
-   *
-   * For each particle, we multiply the current weight by the new importance weight to accumulate information from
-   * sensor updates.
+   * \param likelihoods A range of likelihood values to apply to the particles.
    */
-  template <
-      class ExecutionPolicy,
-      class Range,
-      class Model,
-      std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0,
-      std::enable_if_t<ranges::range<Range>, int> = 0,
-      // This overload is disabled if `Model` is a range.
-      std::enable_if_t<!ranges::range<Model>, int> = 0>
-  constexpr auto operator()(ExecutionPolicy&& policy, Range& range, Model model) const -> Range& {
-    static_assert(beluga::is_particle_range_v<Range>);
-    auto states = range | beluga::views::states | ranges::views::common;
-    auto weights = range | beluga::views::weights | ranges::views::common;
-    std::transform(
-        policy,               //
-        std::begin(states),   //
-        std::end(states),     //
-        std::begin(weights),  //
-        std::begin(weights),  //
-        [model = std::move(model)](const auto& s, auto w) { return w * model(s); });
-    return range;
-  }
-
-  /// Overload that takes a likelihood range and directly applies it
   template <
       class ExecutionPolicy,
       class Range,
       class LikelihoodRange,
       std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0,
+      std::enable_if_t<ranges::range<Range>, int> = 0,
       std::enable_if_t<ranges::range<LikelihoodRange>, int> = 0>
   constexpr auto operator()(ExecutionPolicy&& policy, Range& range, const LikelihoodRange& likelihoods) const
       -> Range& {
     static_assert(beluga::is_particle_range_v<Range>);
+    // ranges::views::zip creates a new range where each element is a tuple
     auto zipped_view = ranges::views::zip(range, likelihoods);
     std::for_each(policy, std::begin(zipped_view), std::end(zipped_view), [](auto&& tuple) {
       auto& particle = std::get<0>(tuple);
@@ -89,6 +69,25 @@ struct reweight_base_fn {
       beluga::weight(particle) *= likelihood;
     });
     return range;
+  }
+
+  /// \brief Convenience overload that reweights particles using a sensor model.
+  /**
+   * This overload calculates likelihoods on the fly using `beluga::views::likelihoods`
+   * and then delegates the actual reweighting to the primary overload.
+   *
+   * \tparam Model A callable that can compute the importance weight given a particle state.
+   */
+  template <
+      class ExecutionPolicy,
+      class Range,
+      class Model,
+      std::enable_if_t<std::is_execution_policy_v<std::decay_t<ExecutionPolicy>>, int> = 0,
+      std::enable_if_t<ranges::range<Range>, int> = 0,
+      std::enable_if_t<!ranges::range<Model>, int> = 0>
+  constexpr auto operator()(ExecutionPolicy&& policy, Range& range, Model model) const -> Range& {
+    // Create a lazy view of likelihoods and delegate to the primary overload.
+    return (*this)(std::forward<ExecutionPolicy>(policy), range, range | beluga::views::likelihoods(std::move(model)));
   }
 
   /// Overload that re-orders arguments from a view closure.
