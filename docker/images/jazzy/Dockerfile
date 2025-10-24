@@ -106,10 +106,11 @@ ENV PIP_BREAK_SYSTEM_PACKAGES 1
 RUN apt-get update \
   && apt-get -y dist-upgrade \
   && . /opt/ros/jazzy/setup.sh \
+  && rosdep init || true \
   && rosdep update \
   && rosdep install -i -y --from-path src \
   && rosdep install -i -y --from-path src -t doc \
-  && sudo rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/
 
