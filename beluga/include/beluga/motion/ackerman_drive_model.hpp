@@ -177,7 +177,6 @@ class AckermannDriveModel {
                           params_.rotation_noise_from_rotation * velocity.phi * velocity.phi)};
     const auto steering_angle_params = steering_angle_distribution.param();
 
-    // TODO: check if velocity.w is necessary to calculate gamma_params
     // Additional orientation noise (gamma_hat) using rotation parameters
     const auto gamma_distribution = std::normal_distribution<double>{
         0.0,  // zero mean
@@ -244,7 +243,6 @@ class AckermannDriveModel {
 
     if (std::abs(linear_velocity) > params_.small_angle_threshold) {
       const double ratio = params_.wheelbase * angular_velocity / linear_velocity;
-      // TODO: use Taylor series for small angles to avoid atan?
       steering_angle = std::atan(ratio);
     }
 
