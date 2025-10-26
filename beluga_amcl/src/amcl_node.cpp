@@ -57,8 +57,8 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 
+#include <beluga/motion/ackerman_drive_model.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
-#include <beluga/motion/differential_velocity_drive_model.hpp>
 #include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
 #include <beluga/sensor/beam_model.hpp>
@@ -337,14 +337,15 @@ auto AmclNode::get_motion_model(std::string_view name) const -> beluga_ros::Amcl
     return beluga::OmnidirectionalDriveModel{params};
   }
   if (name == kAckermanDriveModelName) {
-    auto params = beluga::DifferentialVelocityDriveModelParam{};
+    auto params = beluga::AckermannDriveModelParam{};
     params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
     params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
     params.translation_noise_from_translation = get_parameter("alpha3").as_double();
     params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
     params.orientation_noise_from_translation = get_parameter("alpha6").as_double();
     params.orientation_noise_from_rotation = get_parameter("alpha7").as_double();
-    return beluga::DifferentialVelocityDriveModel{params};
+    params.wheelbase = get_parameter("wheelbase").as_double();
+    return beluga::AckermannDriveModel{params};
   }
   if (name == kStationaryModelName) {
     return beluga::StationaryModel{};

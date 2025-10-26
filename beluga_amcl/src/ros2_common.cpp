@@ -292,6 +292,16 @@ BaseAMCLNode::BaseAMCLNode(
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Length of the robot for the Ackerman drive model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    this->declare_parameter("wheelbase", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Rotational movement required before performing a filter update.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;

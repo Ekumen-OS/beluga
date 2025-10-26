@@ -109,7 +109,7 @@ class Amcl {
       beluga::DifferentialDriveModel2d,   //
       beluga::OmnidirectionalDriveModel,  //
       beluga::StationaryModel,            //
-      beluga::VelocityDriveModel2d>;
+      beluga::AckermannDriveModel2d>;
 
   /// Sensor model variant type for runtime selection support.
   using sensor_model_variant = std::variant<

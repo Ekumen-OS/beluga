@@ -152,6 +152,9 @@ Also available as a standalone `amcl_node` executable.
 : Expected process noise in odometry's orientation noise from rotational velocity for the `ackerman_drive` model. Must be nonnegative.
 : Defaults to `0.2`.
 
+`wheelbase` _(`float`)_
+: Expected length of the robot for the `ackerman_drive` model. Must be nonnegative.
+: Defaults to `0.5`.
 ##### Observation Model Parameters
 
 `laser_model_type` _(`string`)_
