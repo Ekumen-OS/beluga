@@ -108,9 +108,23 @@ ENV USER_WS /ws
 
 WORKDIR $USER_WS
 
-RUN colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
-  && colcon mixin update default
-COPY --chown=$USER:$GROUP docker/files/colcon_defaults.yaml /home/$USER/.colcon/defaults.yaml
+# The following isn't temporarely working 
+# RUN colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
+#  && colcon mixin update default
+# COPY --chown=$USER:$GROUP docker/files/colcon_defaults.yaml /home/$USER/.colcon/defaults.yaml
+
+# Hacked way to override the githubusercontent throttle issues
+RUN cd /home/$USER \
+ && git clone https://github.com/ros/rosdistro.git -b master --depth 1 \
+ && mkdir -p /home/$USER/rosdistro/rosdep/sources.list.d \
+ && sed -i s#https://raw.githubusercontent.com/ros/rosdistro/master/#file:///home/$USER/rosdistro/# \
+    /home/$USER/rosdistro/rosdep/sources.list.d/20-default.list \
+ && sed -i "/fuerte/d" /home/$USER/rosdistro/rosdep/sources.list.d/20-default.list
+ENV ROSDISTRO_INDEX_URL="file:///home/$USER/rosdistro/index-v4.yaml"
+ENV ROSDEP_SOURCE_PATH=/home/$USER/rosdistro/rosdep/sources.list.d
+RUN bash -c 'rosdep update'
+#----
+
 RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 
 COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
