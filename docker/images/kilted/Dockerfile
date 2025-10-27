@@ -102,7 +102,7 @@ USER $USER:$GROUP
 ENV USER_WS=/ws
 WORKDIR $USER_WS
 
-# The following isn't temporarely working 
+# The following isn't temporarely working
 # Colcon mixins and workspace setup
 #RUN colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
 #  && colcon mixin update default

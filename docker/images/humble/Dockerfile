@@ -108,7 +108,7 @@ ENV USER_WS /ws
 
 WORKDIR $USER_WS
 
-# The following isn't temporarely working 
+# The following isn't temporarely working
 # RUN colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
 #  && colcon mixin update default
 # COPY --chown=$USER:$GROUP docker/files/colcon_defaults.yaml /home/$USER/.colcon/defaults.yaml
