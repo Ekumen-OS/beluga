@@ -68,7 +68,7 @@ RUN apt-get update \
     python3-colcon-lcov-result \
     python3-pip \
     tmux \
-  && rm -rf /var/lib/apt/lists/*
+  && sudo rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
   evo==1.21.0 \
@@ -136,7 +136,7 @@ RUN sudo apt-get update \
   && rosdep update \
   && rosdep install -i -y --from-path src \
   && rosdep install -i -y --from-path src -t doc \
-  && rm -rf /var/lib/apt/lists/*
+  && sudo rm -rf /var/lib/apt/lists/*
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/
 
