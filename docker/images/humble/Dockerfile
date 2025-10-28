@@ -68,7 +68,7 @@ RUN apt-get update \
     python3-colcon-lcov-result \
     python3-pip \
     tmux \
-  && sudo rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/*
 
 RUN pip install \
   evo==1.21.0 \

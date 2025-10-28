@@ -55,7 +55,7 @@ RUN apt-get update \
     python3-colcon-lcov-result \
     python3-pip \
     tmux \
-  && sudo rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/*
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
 RUN pip install \
@@ -136,7 +136,7 @@ RUN apt-get update \
   && rosdep update \
   && rosdep install -i -y --from-path src --skip-keys 'slam_toolbox' \
   && rosdep install -i -y --from-path src -t doc \
-  && sudo rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/*
 
 # Final source copy
 USER $USER:$GROUP
