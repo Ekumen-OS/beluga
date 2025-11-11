@@ -272,6 +272,36 @@ BaseAMCLNode::BaseAMCLNode(
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Orientation noise from translational velocity for the Ackermann drive model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    this->declare_parameter("alpha6", rclcpp::ParameterValue(0.2), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Orientation noise from rotational velocity for the Ackermann drive model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    this->declare_parameter("alpha7", rclcpp::ParameterValue(0.2), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Length of the robot for the Ackermann drive model.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    this->declare_parameter("wheelbase", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Rotational movement required before performing a filter update.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;

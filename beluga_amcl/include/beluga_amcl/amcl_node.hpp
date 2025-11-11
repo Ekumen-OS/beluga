@@ -43,7 +43,6 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include "beluga_amcl/message_filters.hpp"
 #include "beluga_amcl/ros2_common.hpp"
-
 /**
  * \file
  * \brief ROS 2 integration of the 2D AMCL algorithm.
@@ -61,8 +60,8 @@ class AmclNode : public BaseAMCLNode {
   ~AmclNode() override;
 
  protected:
-  /// Type Buffer for queued odometry motions (timestamp, pose)
-  using OdometryMotion = std::pair<tf2::TimePoint, Sophus::SE2d>;
+  /// Type Buffer for queued odometry motions using TimeStamped structure
+  using OdometryMotion = beluga::TimeStamped<Sophus::SE2d>;
 
   /// Callback for lifecycle transitions from the INACTIVE state to the ACTIVE state.
   void do_activate(const rclcpp_lifecycle::State&) override;

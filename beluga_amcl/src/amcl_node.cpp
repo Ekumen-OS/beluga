@@ -57,6 +57,7 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 
+#include <beluga/motion/ackermann_drive_model.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
@@ -335,6 +336,17 @@ auto AmclNode::get_motion_model(std::string_view name) const -> beluga_ros::Amcl
     params.strafe_noise_from_translation = get_parameter("alpha5").as_double();
     return beluga::OmnidirectionalDriveModel{params};
   }
+  if (name == kAckermannDriveModelName) {
+    auto params = beluga::AckermannDriveModelParam{};
+    params.steering_noise_from_steering = get_parameter("alpha1").as_double();
+    params.steering_noise_from_velocity = get_parameter("alpha2").as_double();
+    params.velocity_noise_from_velocity = get_parameter("alpha3").as_double();
+    params.velocity_noise_from_steering = get_parameter("alpha4").as_double();
+    params.orientation_noise_from_velocity = get_parameter("alpha6").as_double();
+    params.orientation_noise_from_steering = get_parameter("alpha7").as_double();
+    params.wheelbase = get_parameter("wheelbase").as_double();
+    return beluga::AckermannDriveModel{params};
+  }
   if (name == kStationaryModelName) {
     return beluga::StationaryModel{};
   }
@@ -497,16 +509,16 @@ void AmclNode::odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom) {
   const auto time = tf2_ros::fromMsg(odom->header.stamp);
   auto base_pose_in_odom = Sophus::SE2d{};
   tf2::convert(odom->pose.pose, base_pose_in_odom);
-  odometry_motion_buffer_.emplace_back(time, base_pose_in_odom);
+  odometry_motion_buffer_.emplace_back(base_pose_in_odom, time);
 }
 
 void AmclNode::process_buffered_odometry_until(const tf2::TimePoint& until) {
   while (!odometry_motion_buffer_.empty()) {
-    const auto& [odom_time, odom_pose] = odometry_motion_buffer_.front();
-    if (odom_time > until) {
+    const auto& timestamped = odometry_motion_buffer_.front();
+    if (timestamped.timestamp > until) {
       break;
     }
-    particle_filter_->update(odom_pose);
+    particle_filter_->update(timestamped);
     odometry_motion_buffer_.pop_front();
   }
 }
@@ -518,22 +530,15 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
-  // If use_odometry_propagation is enabled, process odometry buffer up to lidar timestamp
-  const auto laser_scan_stamp = tf2_ros::fromMsg(laser_scan->header.stamp);
-  process_buffered_odometry_until(laser_scan_stamp);
-
   // Get base pose in odom frame at laser scan timestamp
-  auto base_pose_in_odom = Sophus::SE2d{};
+  auto base_pose_in_odom = beluga::TimeStamped<Sophus::SE2d>{};
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
-    tf2::convert(
-        tf_buffer_
-            ->lookupTransform(
-                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
-                tf2_ros::fromMsg(laser_scan->header.stamp))
-            .transform,
-        base_pose_in_odom);
+    const auto odom_to_base_transform = tf_buffer_->lookupTransform(
+        get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
+        tf2_ros::fromMsg(laser_scan->header.stamp));
+    tf2::convert(odom_to_base_transform, base_pose_in_odom);
   } catch (const tf2::TransformException& error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
     return;
@@ -553,6 +558,9 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
     return;
   }
 
+  // If use_odometry_propagation is enabled, process odometry buffer up to lidar timestamp
+  process_buffered_odometry_until(base_pose_in_odom.timestamp);
+
   const auto update_start_time = std::chrono::high_resolution_clock::now();
   const auto new_estimate = particle_filter_->update(
       base_pose_in_odom,  //
@@ -568,7 +576,7 @@ void AmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_
 
   if (new_estimate.has_value()) {
     const auto& [base_pose_in_map, _] = new_estimate.value();
-    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.value.inverse();
     last_known_estimate_ = new_estimate;
 
     RCLCPP_INFO(

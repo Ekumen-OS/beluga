@@ -50,23 +50,24 @@ void Amcl::update_map(beluga_ros::OccupancyGrid map) {
   std::visit([&](auto& sensor_model) { sensor_model.update_map(std::move(map)); }, sensor_model_);
 }
 
-void Amcl::update(Sophus::SE2d base_pose_in_odom) {
+void Amcl::update(beluga::TimeStamped<Sophus::SE2d> base_pose_timestamp_in_odom) {
   if (!particles_.empty()) {
     std::visit(
         [&, this](auto& policy, auto& motion_model) {
-          particles_ |= beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_in_odom));
+          particles_ |=
+              beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_timestamp_in_odom));
         },
         execution_policy_, motion_model_);
   }
 }
 
-auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan)
+auto Amcl::update(beluga::TimeStamped<Sophus::SE2d> base_pose_timestamp_in_odom, beluga_ros::LaserScan laser_scan)
     -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>> {
   if (particles_.empty()) {
     return std::nullopt;
   }
 
-  if (!update_policy_(base_pose_in_odom) && !force_update_) {
+  if (!update_policy_(base_pose_timestamp_in_odom) && !force_update_) {
     return std::nullopt;
   }
 
@@ -80,10 +81,10 @@ auto Amcl::update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_sc
 
   std::visit(
       [&, this](auto& policy, auto& motion_model, auto& sensor_model) {
-        particles_ |=
-            beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_in_odom)) |  //
-            beluga::actions::reweight(policy, sensor_model(std::move(measurement))) |                        //
-            beluga::actions::normalize(policy);
+        particles_ |= beluga::actions::propagate(
+                          policy, motion_model(control_action_window_ << base_pose_timestamp_in_odom)) |  //
+                      beluga::actions::reweight(policy, sensor_model(std::move(measurement))) |           //
+                      beluga::actions::normalize(policy);
       },
       execution_policy_, motion_model_, sensor_model_);
 

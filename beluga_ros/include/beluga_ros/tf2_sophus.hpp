@@ -17,17 +17,22 @@
 
 #include <beluga/algorithm/unscented_transform.hpp>
 #include <beluga/eigen_compatibility.hpp>
+#include <beluga/utility/time_stamped.hpp>
 #include <cmath>
 #include <sophus/common.hpp>
 #include <tf2/convert.hpp>
 #include <tf2/utils.hpp>
 
 #if BELUGA_ROS_VERSION == 2
+#include <tf2_ros/buffer_interface.h>
+#include <geometry_msgs/msg/transform_stamped.hpp>
 #include <tf2_eigen/tf2_eigen.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #elif BELUGA_ROS_VERSION == 1
+#include <geometry_msgs/TransformStamped.h>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_ros/buffer_interface.h>
 #else
 #error BELUGA_ROS_VERSION is not defined or invalid
 #endif
@@ -192,6 +197,12 @@ inline void fromMsg(const beluga_ros::msg::Transform& msg, Sophus::SE3<Scalar>& 
   }};
 }
 
+/// Converts a Transform message to a TimeStamped Sophus SE3d with current time
+inline void fromMsg(const beluga_ros::msg::Transform& msg, beluga::TimeStamped<Sophus::SE3d>& out) {
+  Sophus::SE3d pose;
+  fromMsg(msg, pose);  // Use existing Transform -> SE3d conversion
+  out = beluga::TimeStamped<Sophus::SE3d>{pose, std::chrono::system_clock::now()};
+}
 /// Converts a Pose message type to a Sophus SE2 type.
 /**
  * This function is a specialization of the fromMsg template defined in tf2/convert.h.
@@ -370,6 +381,20 @@ inline void fromMsg(const beluga_ros::msg::Pose& message, Sophus::SE2<Scalar>& p
 template <class Scalar>
 inline void fromMsg(const beluga_ros::msg::Pose& message, Sophus::SE3<Scalar>& pose) {
   tf2::fromMsg(message, pose);
+}
+
+/// Converts TransformStamped to TimeStamped Sophus types
+// Handle the exact type that lookupTransform returns
+inline void fromMsg(const geometry_msgs::msg::TransformStamped& msg, beluga::TimeStamped<Sophus::SE2<double>>& out) {
+  Sophus::SE2<double> pose;
+  fromMsg(msg.transform, pose);
+  out = beluga::TimeStamped<Sophus::SE2<double>>{pose, tf2_ros::fromMsg(msg.header.stamp)};
+}
+
+inline void fromMsg(const geometry_msgs::msg::TransformStamped& msg, beluga::TimeStamped<Sophus::SE3<double>>& out) {
+  Sophus::SE3<double> pose;
+  fromMsg(msg.transform, pose);
+  out = beluga::TimeStamped<Sophus::SE3<double>>{pose, tf2_ros::fromMsg(msg.header.stamp)};
 }
 
 }  // namespace Sophus

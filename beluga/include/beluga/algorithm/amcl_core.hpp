@@ -87,6 +87,7 @@ class Amcl {
   using measurement_type = typename SensorModel::measurement_type;
   using state_type = typename SensorModel::state_type;
   using map_type = typename SensorModel::map_type;
+  using control_type = TimeStamped<state_type>;
   using spatial_hasher_type = spatial_hash<state_type>;
   using random_state_generator_type = RandomStateGenerator;
   using estimation_type = std::invoke_result_t<beluga::detail::estimate_fn, std::vector<state_type>>;
@@ -162,7 +163,7 @@ class Amcl {
    * \return An optional pair containing the estimated pose and covariance after the update,
    *         or std::nullopt if no update was performed.
    */
-  auto update(state_type control_action, measurement_type measurement) -> std::optional<estimation_type> {
+  auto update(control_type control_action, measurement_type measurement) -> std::optional<estimation_type> {
     if (particles_.empty()) {
       return std::nullopt;
     }
@@ -227,7 +228,7 @@ class Amcl {
 
   random_state_generator_type random_state_generator_;
 
-  beluga::RollingWindow<state_type, 2> control_action_window_;
+  beluga::RollingWindow<control_type, 2> control_action_window_;
 
   bool force_update_{true};
 };

@@ -33,6 +33,7 @@
 #include <beluga/sensor.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
 #include <beluga/sensor/primitives.hpp>
+#include <beluga/utility/time_stamped.hpp>
 #include <beluga/views/sample.hpp>
 
 #include <beluga_ros/laser_scan.hpp>
@@ -107,7 +108,8 @@ class Amcl {
   using motion_model_variant = std::variant<
       beluga::DifferentialDriveModel2d,   //
       beluga::OmnidirectionalDriveModel,  //
-      beluga::StationaryModel>;
+      beluga::StationaryModel,            //
+      beluga::AckermannDriveModel2d>;
 
   /// Sensor model variant type for runtime selection support.
   using sensor_model_variant = std::variant<
@@ -218,7 +220,7 @@ class Amcl {
    *
    * \param base_pose_in_odom Base pose in the odometry frame.
    */
-  void update(Sophus::SE2d base_pose_in_odom);
+  void update(beluga::TimeStamped<Sophus::SE2d> base_pose_in_odom);
 
   /// Update particles based on motion and sensor information.
   /**
@@ -233,7 +235,7 @@ class Amcl {
    * \return An optional pair containing the estimated pose and covariance after the update,
    *         or std::nullopt if no update was performed.
    */
-  auto update(Sophus::SE2d base_pose_in_odom, beluga_ros::LaserScan laser_scan)
+  auto update(beluga::TimeStamped<Sophus::SE2d> base_pose_in_odom, beluga_ros::LaserScan laser_scan)
       -> std::optional<std::pair<Sophus::SE2d, Sophus::Matrix3d>>;
 
   /// Force a manual update of the particles on the next iteration of the filter.
@@ -253,7 +255,7 @@ class Amcl {
   beluga::any_policy<Sophus::SE2d> update_policy_;
   beluga::any_policy<decltype(particles_)> resample_policy_;
 
-  beluga::RollingWindow<Sophus::SE2d, 2> control_action_window_;
+  beluga::RollingWindow<beluga::TimeStamped<Sophus::SE2d>, 2> control_action_window_;
 
   bool force_update_{true};
 };

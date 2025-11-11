@@ -77,10 +77,11 @@ struct OmnidirectionalDriveModelParam {
  */
 class OmnidirectionalDriveModel {
  public:
-  /// Current and previous odometry estimates as motion model control action.
-  using control_type = std::tuple<Sophus::SE2d, Sophus::SE2d>;
   /// 2D pose as motion model state (to match that of the particles).
   using state_type = Sophus::SE2d;
+
+  /// Current and previous odometry estimates as motion model control action.
+  using control_type = std::tuple<state_type, state_type>;
 
   /// Parameter type that the constructor uses to configure the motion model.
   using param_type = OmnidirectionalDriveModelParam;
@@ -100,7 +101,9 @@ class OmnidirectionalDriveModel {
    */
   template <class Control, typename = common_tuple_type_t<Control, control_type>>
   [[nodiscard]] auto operator()(Control&& action) const {
-    const auto& [pose, previous_pose] = action;
+    const auto& [pose_stamped, previous_pose_stamped] = action;
+    const state_type& pose = pose_stamped;
+    const state_type& previous_pose = previous_pose_stamped;
 
     const auto translation = pose.translation() - previous_pose.translation();
     const double distance = translation.norm();

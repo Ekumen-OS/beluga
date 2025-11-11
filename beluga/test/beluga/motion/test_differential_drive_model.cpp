@@ -33,6 +33,7 @@
 
 #include "beluga/3d_embedding.hpp"
 #include "beluga/motion/differential_drive_model.hpp"
+#include "beluga/test/motion_utils.hpp"
 #include "beluga/testing/sophus_matchers.hpp"
 
 namespace {
@@ -56,6 +57,19 @@ TEST_F(DifferentialDriveModelTest, OneUpdate) {
   constexpr double kTolerance = 0.001;
   const auto control_action = std::make_tuple(
       SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}}, SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}});
+  const auto state_sampling_function = motion_model_(control_action);
+  const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
+  ASSERT_THAT(state_sampling_function(pose, generator_), SE2Near(pose, kTolerance));
+}
+
+TEST_F(DifferentialDriveModelTest, OneUpdateTimeStamp) {
+  constexpr double kTolerance = 0.001;
+  const auto base_pose_in_odom = SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}};
+  const auto previous_pose_in_odom = SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}};
+  const auto laser_scan_stamp = std::chrono::system_clock::now();
+  const auto previous_stamp = laser_scan_stamp - std::chrono::milliseconds(100);
+  const auto control_action =
+      beluga::testing::make_control_action(base_pose_in_odom, previous_pose_in_odom, laser_scan_stamp, previous_stamp);
   const auto state_sampling_function = motion_model_(control_action);
   const auto pose = SE2d{SO2d{Constants::pi() / 3}, Vector2d{2.0, 5.0}};
   ASSERT_THAT(state_sampling_function(pose, generator_), SE2Near(pose, kTolerance));

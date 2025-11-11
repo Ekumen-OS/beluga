@@ -356,18 +356,15 @@ void NdtAmclNode3D::laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr
     return;
   }
 
-  auto base_pose_in_odom = Sophus::SE3d{};
+  auto base_pose_in_odom = beluga::TimeStamped<Sophus::SE3d>{};
   auto laser_pose_in_base = Sophus::SE3d{};
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
-    tf2::convert(
-        tf_buffer_
-            ->lookupTransform(
-                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
-                tf2_ros::fromMsg(laser_scan->header.stamp))
-            .transform,
-        base_pose_in_odom);
+    const auto odom_to_base_transform = tf_buffer_->lookupTransform(
+        get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
+        tf2_ros::fromMsg(laser_scan->header.stamp));
+    tf2::convert(odom_to_base_transform, base_pose_in_odom);
     tf2::convert(
         tf_buffer_
             ->lookupTransform(
@@ -393,7 +390,6 @@ void NdtAmclNode3D::laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr
   for (; iter_x != iter_x.end() && iter_y != iter_y.end() && iter_z != iter_z.end(); ++iter_x, ++iter_y, ++iter_z) {
     measurement.emplace_back(laser_pose_in_base * Eigen::Vector3d{*iter_x, *iter_y, *iter_z});
   };
-
   RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Processing %ld points.", measurement.size());
   const auto new_estimate = std::visit(
       [base_pose_in_odom, measurement = measurement](auto& particle_filter) {
@@ -408,7 +404,7 @@ void NdtAmclNode3D::laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr
 
   if (new_estimate.has_value()) {
     const auto& [base_pose_in_map, _] = new_estimate.value();
-    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.value.inverse();
     last_known_estimate_ = new_estimate;
 
     const auto num_particles =

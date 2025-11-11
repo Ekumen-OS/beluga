@@ -121,29 +121,40 @@ Also available as a standalone `amcl_node` executable.
 ##### Motion Model Parameters
 
 `robot_model_type` _(`string`)_
-: Which odometry motion model to use. Supported models are `differential_drive` {cite}`thrun2005probabilistic`, `omnidirectional_drive` and `stationary`.
+: Which odometry motion model to use. Supported models are `differential_drive` {cite}`thrun2005probabilistic`, `omnidirectional_drive`, `ackermann_drive` and `stationary`.
 : Defaults to `differential_drive`.
 
 `alpha1` _(`float`)_
-: Expected process noise in odometry’s rotation estimate from rotation for the `differential_drive` and `omnidirectional_drive` models. Must be nonnegative.
+: Expected process noise in odometry’s rotation estimate from rotation for the `differential_drive`, `ackermann_drive` and `omnidirectional_drive` models. Must be nonnegative.
 : Defaults to `0.2`.
 
 `alpha2` _(`float`)_
-: Expected process noise in odometry’s rotation estimate from translation for the `differential_drive` and `omnidirectional_drive` models. Must be nonnegative.
+: Expected process noise in odometry’s rotation estimate from translation for the `differential_drive`, `ackermann_drive` and `omnidirectional_drive` models. Must be nonnegative.
 : Defaults to `0.2`.
 
 `alpha3` _(`float`)_
-: Expected process noise in odometry’s translation estimate from translation for the `differential_drive` and `omnidirectional_drive` models. Must be nonnegative.
+: Expected process noise in odometry’s translation estimate from translation for the `differential_drive`, `ackermann_drive` and `omnidirectional_drive` models. Must be nonnegative.
 : Defaults to `0.2`.
 
 `alpha4` _(`float`)_
-: Expected process noise in odometry’s translation estimate from rotation for the `differential_drive` and `omnidirectional_drive` models. Must be nonnegative.
+: Expected process noise in odometry’s translation estimate from rotation for the `differential_drive`, `ackermann_drive` and `omnidirectional_drive` models. Must be nonnegative.
 : Defaults to `0.2`.
 
 `alpha5` _(`float`)_
 : Expected process noise in odometry's strafe estimate from translation for the `omnidirectional_drive` model. Must be nonnegative.
 : Defaults to `0.2`.
 
+`alpha6` _(`float`)_
+: Expected process noise in odometry's orientation noise from translational velocity for the `ackermann_drive` model. Must be nonnegative.
+: Defaults to `0.2`.
+
+`alpha7` _(`float`)_
+: Expected process noise in odometry's orientation noise from rotational velocity for the `ackermann_drive` model. Must be nonnegative.
+: Defaults to `0.2`.
+
+`wheelbase` _(`float`)_
+: Expected length of the robot for the `ackermann_drive` model. Must be nonnegative.
+: Defaults to `0.5`.
 ##### Observation Model Parameters
 
 `laser_model_type` _(`string`)_

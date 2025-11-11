@@ -289,17 +289,14 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
     return;
   }
 
-  auto base_pose_in_odom = Sophus::SE2d{};
+  auto base_pose_in_odom = beluga::TimeStamped<Sophus::SE2d>{};
   try {
     // Use the lookupTransform overload with no timeout since we're not using a dedicated
     // tf thread. The message filter we are using avoids the need for it.
-    tf2::convert(
-        tf_buffer_
-            ->lookupTransform(
-                get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
-                tf2_ros::fromMsg(laser_scan->header.stamp))
-            .transform,
-        base_pose_in_odom);
+    const auto odom_to_base_transform = tf_buffer_->lookupTransform(
+        get_parameter("odom_frame_id").as_string(), get_parameter("base_frame_id").as_string(),
+        tf2_ros::fromMsg(laser_scan->header.stamp));
+    tf2::convert(odom_to_base_transform, base_pose_in_odom);
   } catch (const tf2::TransformException& error) {
     RCLCPP_ERROR(get_logger(), "Could not transform from odom to base: %s", error.what());
     return;
@@ -343,7 +340,7 @@ void NdtAmclNode::laser_callback(sensor_msgs::msg::LaserScan::ConstSharedPtr las
 
   if (new_estimate.has_value()) {
     const auto& [base_pose_in_map, _] = new_estimate.value();
-    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
+    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.value.inverse();
     last_known_estimate_ = new_estimate;
 
     const auto num_particles =

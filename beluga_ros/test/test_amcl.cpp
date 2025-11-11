@@ -102,7 +102,7 @@ TEST(TestAmcl, InitializeFromPose) {
 TEST(TestAmcl, UpdateWithNoParticles) {
   auto amcl = make_amcl();
   ASSERT_EQ(amcl.particles().size(), 0);
-  auto estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
+  auto estimate = amcl.update(beluga::TimeStamped<Sophus::SE2d>{}, make_dummy_laser_scan());
   ASSERT_FALSE(estimate.has_value());
 }
 
@@ -111,7 +111,7 @@ TEST(TestAmcl, UpdateWithParticles) {
   ASSERT_EQ(amcl.particles().size(), 0);
   amcl.initialize_from_map();
   ASSERT_EQ(amcl.particles().size(), 50UL);
-  auto estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
+  auto estimate = amcl.update(beluga::TimeStamped<Sophus::SE2d>{}, make_dummy_laser_scan());
   ASSERT_TRUE(estimate.has_value());
 }
 
@@ -120,9 +120,9 @@ TEST(TestAmcl, UpdateWithParticlesWithMotion) {
   ASSERT_EQ(amcl.particles().size(), 0);
   amcl.initialize_from_map();
   ASSERT_EQ(amcl.particles().size(), 50UL);
-  auto estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
+  auto estimate = amcl.update(beluga::TimeStamped<Sophus::SE2d>{}, make_dummy_laser_scan());
   ASSERT_TRUE(estimate.has_value());
-  estimate = amcl.update(Sophus::SE2d{0.0, {1.0, 0.0}}, make_dummy_laser_scan());
+  estimate = amcl.update(beluga::TimeStamped<Sophus::SE2d>{Sophus::SE2d{0.0, {1.0, 0.0}}}, make_dummy_laser_scan());
   ASSERT_TRUE(estimate.has_value());
 }
 
@@ -131,9 +131,9 @@ TEST(TestAmcl, UpdateWithParticlesNoMotion) {
   ASSERT_EQ(amcl.particles().size(), 0);
   amcl.initialize_from_map();
   ASSERT_EQ(amcl.particles().size(), 50UL);
-  auto estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
+  auto estimate = amcl.update(beluga::TimeStamped<Sophus::SE2d>{}, make_dummy_laser_scan());
   ASSERT_TRUE(estimate.has_value());
-  estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
+  estimate = amcl.update(beluga::TimeStamped<Sophus::SE2d>{}, make_dummy_laser_scan());
   ASSERT_FALSE(estimate.has_value());
 }
 
@@ -142,10 +142,10 @@ TEST(TestAmcl, UpdateWithParticlesForced) {
   ASSERT_EQ(amcl.particles().size(), 0);
   amcl.initialize_from_map();
   ASSERT_EQ(amcl.particles().size(), 50UL);
-  auto estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
+  auto estimate = amcl.update(beluga::TimeStamped<Sophus::SE2d>{}, make_dummy_laser_scan());
   ASSERT_TRUE(estimate.has_value());
   amcl.force_update();
-  estimate = amcl.update(Sophus::SE2d{}, make_dummy_laser_scan());
+  estimate = amcl.update(beluga::TimeStamped<Sophus::SE2d>{}, make_dummy_laser_scan());
   ASSERT_TRUE(estimate.has_value());
 }
 
