@@ -33,7 +33,7 @@
 #include <range/v3/view/take_exactly.hpp>
 
 #include "beluga/3d_embedding.hpp"
-#include "beluga/motion/ackerman_drive_model.hpp"
+#include "beluga/motion/ackermann_drive_model.hpp"
 #include "beluga/test/motion_utils.hpp"
 #include "beluga/testing/sophus_matchers.hpp"
 
@@ -48,13 +48,13 @@ using beluga::testing::SE2Near;
 
 using UUT = beluga::AckermannDriveModel2d;
 
-class AckermanDriveModelTest : public ::testing::Test {
+class AckermannDriveModelTest : public ::testing::Test {
  protected:
   const UUT motion_model_{beluga::AckermannDriveModelParam{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5}};
   std::mt19937 generator_{std::random_device()()};
 };
 
-TEST_F(AckermanDriveModelTest, OneUpdate) {
+TEST_F(AckermannDriveModelTest, OneUpdate) {
   constexpr double kTolerance = 0.001;
   const auto base_pose_in_odom = SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{Constants::pi()}, Vector2d{1.0, -2.0}};
@@ -67,7 +67,7 @@ TEST_F(AckermanDriveModelTest, OneUpdate) {
   ASSERT_THAT(state_sampling_function(pose, generator_), SE2Near(pose, kTolerance));
 }
 
-TEST_F(AckermanDriveModelTest, Translate) {
+TEST_F(AckermannDriveModelTest, Translate) {
   constexpr double kTolerance = 0.001;
   const auto base_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{1.0, 0.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
@@ -83,7 +83,7 @@ TEST_F(AckermanDriveModelTest, Translate) {
   ASSERT_THAT(result2, SE2Near(SO2d{0.0}, Vector2d{1.0, 3.0}, kTolerance));
 }
 
-TEST_F(AckermanDriveModelTest, ArcOfCircumference) {
+TEST_F(AckermannDriveModelTest, ArcOfCircumference) {
   constexpr double kTolerance = 0.001;
   const auto base_pose_in_odom = SE2d{SO2d{Constants::pi() / 2}, Vector2d{0.0, 1.0}};
   const auto previous_pose_in_odom = SE2d{SO2d{0.0}, Vector2d{0.0, 0.0}};
@@ -114,7 +114,7 @@ auto get_statistics(Range&& range) {
   return std::pair{mean, stddev};
 }
 
-TEST(AckermanDriveModelSamples, Translate) {
+TEST(AckermannDriveModelSamples, Translate) {
   const double tolerance = 0.015;
   const double alpha = 0.2;
   const double origin = 5.0;
@@ -140,7 +140,7 @@ TEST(AckermanDriveModelSamples, Translate) {
   ASSERT_NEAR(stddev, std::sqrt(alpha * expected_velocity * expected_velocity) * delta_time, tolerance);
 }
 
-TEST(AckermanDriveModelSamples, ArcOfCircumference) {
+TEST(AckermannDriveModelSamples, ArcOfCircumference) {
   const double tolerance = 0.1;
   const double alpha = 0.2;
   const auto motion_model = UUT{beluga::AckermannDriveModelParam{0.0, 0.0, 0.0, alpha, 0.0, 0.0, 0.5}};
@@ -176,8 +176,8 @@ TEST(AckermanDriveModelSamples, ArcOfCircumference) {
   ASSERT_NEAR(orientation_mean, Constants::pi() / 2, tolerance);
 
   // Noise propagation: φ̂ = φ + N(0, α₄ω²) through ω̂ = v̂ * tan(φ̂) / L affects final orientation
-  // The steering angle model produces this empirically observed noise level
-  const double expected_orientation_stddev = 0.35;
+  // The Ackermann steering angle model produces this empirically observed noise level
+  const double expected_orientation_stddev = 0.006;
   ASSERT_NEAR(orientation_stddev, expected_orientation_stddev, tolerance);
 }
 }  // namespace

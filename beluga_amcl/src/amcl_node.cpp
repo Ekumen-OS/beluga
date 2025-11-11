@@ -57,7 +57,7 @@
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/empty.hpp>
 
-#include <beluga/motion/ackerman_drive_model.hpp>
+#include <beluga/motion/ackermann_drive_model.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
@@ -336,14 +336,14 @@ auto AmclNode::get_motion_model(std::string_view name) const -> beluga_ros::Amcl
     params.strafe_noise_from_translation = get_parameter("alpha5").as_double();
     return beluga::OmnidirectionalDriveModel{params};
   }
-  if (name == kAckermanDriveModelName) {
+  if (name == kAckermannDriveModelName) {
     auto params = beluga::AckermannDriveModelParam{};
-    params.rotation_noise_from_rotation = get_parameter("alpha1").as_double();
-    params.rotation_noise_from_translation = get_parameter("alpha2").as_double();
-    params.translation_noise_from_translation = get_parameter("alpha3").as_double();
-    params.translation_noise_from_rotation = get_parameter("alpha4").as_double();
-    params.orientation_noise_from_translation = get_parameter("alpha6").as_double();
-    params.orientation_noise_from_rotation = get_parameter("alpha7").as_double();
+    params.steering_noise_from_steering = get_parameter("alpha1").as_double();
+    params.steering_noise_from_velocity = get_parameter("alpha2").as_double();
+    params.velocity_noise_from_velocity = get_parameter("alpha3").as_double();
+    params.velocity_noise_from_steering = get_parameter("alpha4").as_double();
+    params.orientation_noise_from_velocity = get_parameter("alpha6").as_double();
+    params.orientation_noise_from_steering = get_parameter("alpha7").as_double();
     params.wheelbase = get_parameter("wheelbase").as_double();
     return beluga::AckermannDriveModel{params};
   }

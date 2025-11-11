@@ -48,8 +48,8 @@ constexpr std::string_view kStationaryModelName = "stationary";
 constexpr std::string_view kNav2DifferentialModelName = "nav2_amcl::DifferentialMotionModel";
 /// String identifier for a omnidirectional model name.
 constexpr std::string_view kNav2OmnidirectionalModelName = "nav2_amcl::OmniMotionModel";
-/// String identifier for a ackerman drive model.
-constexpr std::string_view kAckermanDriveModelName = "ackerman_drive";
+/// String identifier for a ackermann drive model.
+constexpr std::string_view kAckermannDriveModelName = "ackermann_drive";
 /// Supported execution policies.
 using ExecutionPolicyVariant = std::variant<std::execution::sequenced_policy, std::execution::parallel_policy>;
 

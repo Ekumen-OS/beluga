@@ -15,7 +15,7 @@
 #ifndef BELUGA_MOTION_HPP
 #define BELUGA_MOTION_HPP
 
-#include <beluga/motion/ackerman_drive_model.hpp>
+#include <beluga/motion/ackermann_drive_model.hpp>
 #include <beluga/motion/differential_drive_model.hpp>
 #include <beluga/motion/omnidirectional_drive_model.hpp>
 #include <beluga/motion/stationary_model.hpp>
