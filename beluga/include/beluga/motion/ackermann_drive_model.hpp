@@ -229,9 +229,10 @@ class AckermannDriveModel {
 
       // Linear velocity with direction sign
       linear_velocity = sign * arc_distance / delta_t_sec;
-
-      const double ratio = params_.wheelbase * angular_velocity / linear_velocity;
-      steering_angle = std::atan(ratio);
+      if (std::abs(linear_velocity) > small_angle_threshold) {
+        const double ratio = params_.wheelbase * angular_velocity / linear_velocity;
+        steering_angle = std::atan(ratio);
+      }
     } else {
       // Straight line motion: v = distance / time
       linear_velocity = sign * chord_distance / delta_t_sec;
