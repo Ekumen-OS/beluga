@@ -326,9 +326,20 @@ def grid_to_point_cloud(occupancy_grid: OccupancyGrid) -> np.ndarray:
         np.where(occupancy_grid.grid == 0)
     )  # in ROS maps 0 == occupied.
     res = occupancy_grid.resolution
+    height, _ = occupancy_grid.grid.shape
 
-    # Discretized occupied cells using the center of the cell.
-    points = occupied_cells_indices * res + (res / 2)
+    # Image coordinates: row 0 is at top, column 0 is at left
+    # ROS coordinates: y=0 is at bottom, x=0 is at left
+    # So we need to:
+    # - Use column indices as x coordinates
+    # - Flip row indices to get y coordinates (height - row - 1)    
+    row_indices = occupied_cells_indices[0]
+    col_indices = occupied_cells_indices[1]
+    # Convert to ROS coordinate system
+    x_coords = col_indices * res + (res / 2)
+    y_coords = (height - row_indices - 1) * res + (res / 2)
+    points = np.vstack([x_coords, y_coords])
+    
     # Compensate for origin
     points[0] += occupancy_grid.origin[0]
     points[1] += occupancy_grid.origin[1]
