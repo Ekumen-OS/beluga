@@ -52,6 +52,12 @@ def _parse_args() -> argparse.Namespace:
         default=1.0,
         help="Cell side length in meters of the final NDT map.",
     )
+    arg_parser.add_argument(
+        '--plot',
+        '-p',
+        action='store_true',
+        help="Plot the NDT map for visualization.",
+    )
     return arg_parser.parse_args()
 
 
@@ -68,14 +74,14 @@ def main():
     print(
         f"Extracted a pointcloud of {pc.shape[1]} points from the occupancy grid... \n"
     )
-    ndt = point_cloud_to_ndt_2d(pc, args.cell_size)
+    ndt = point_cloud_to_ndt_2d(pc, args.cell_size, args.plot)
     print(
         f"Constructed a NDT representation of the point cloud with {len(ndt.grid)} cells.\n"
     )
-
-    ndt.plot()
-    output_plot_name = out_dir / f"{yaml_file.stem}.png"
-    plt.savefig(output_plot_name.absolute())
+    if args.plot:
+        ndt.plot()
+        output_plot_name = out_dir / f"{yaml_file.stem}.png"
+        plt.savefig(output_plot_name.absolute())
     output_hdf5_name = out_dir / f"{yaml_file.stem}.hdf5"
     ndt.to_hdf5(output_hdf5_name)
 

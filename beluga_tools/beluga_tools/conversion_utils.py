@@ -18,6 +18,8 @@ import yaml
 from typing import Dict, Optional
 from pathlib import Path
 from scipy.stats import multivariate_normal
+from matplotlib.patches import Ellipse
+import matplotlib.transforms as transforms
 
 from dataclasses import dataclass
 
@@ -213,6 +215,9 @@ class NDTMap2D:
 
         Optionally show the plot based on the 'show' parameter.
         """
+        plt.figure("ndt_2d_plot", clear=True)
+        plt.ion()
+        plt.axis('equal')
         xx, yy, pos = self._get_plot_bounds()
 
         for ndt in self.grid.values():
@@ -222,9 +227,10 @@ class NDTMap2D:
                 ndt.to_scipy().pdf(pos),
                 [0.1, 0.5],
                 alpha=0.2,
-                linewidths=3,
+                linewidths=1,
                 extend="max",
             )
+            plt.pause(0.1)
         if show:
             plt.show()
         return plt.gcf()
@@ -372,8 +378,35 @@ def fit_normal_distribution(
         covariance[2, 2] = max(covariance[2, 2], min_variance)
     return NormalDistribution(mean=mean, covariance=covariance)
 
+def confidence_ellipse(mean_x, mean_y, cov, n_std=3.0, facecolor='none', **kwargs):
+    pearson = cov[0, 1]/np.sqrt(cov[0, 0] * cov[1, 1])
+    # Using a special case to obtain the eigenvalues of this
+    # two-dimensionl dataset.
+    ell_radius_x = np.sqrt(1 + pearson)
+    ell_radius_y = np.sqrt(1 - pearson)
+    ellipse = Ellipse((0, 0),
+        width=ell_radius_x * 2,
+        height=ell_radius_y * 2,
+        facecolor=facecolor,
+        **kwargs)
 
-def point_cloud_to_ndt_2d(pc: np.ndarray, cell_size=1.0) -> NDTMap2D:
+    # Calculating the stdandard deviation of x from
+    # the squareroot of the variance and multiplying
+    # with the given number of standard deviations.
+    scale_x = np.sqrt(cov[0, 0]) * n_std
+
+    # calculating the stdandard deviation of y ...
+    scale_y = np.sqrt(cov[1, 1]) * n_std
+
+    transf = transforms.Affine2D() \
+        .rotate_deg(45) \
+        .scale(scale_x, scale_y) \
+        .translate(mean_x, mean_y)
+
+    ellipse.set_transform(transf + plt.gca().transData)
+    return plt.gca().add_patch(ellipse)
+
+def point_cloud_to_ndt_2d(pc: np.ndarray, cell_size=1.0, plot=False) -> NDTMap2D:
     """
     Convert a 2D point cloud into a NDT map representation.
 
@@ -390,11 +423,22 @@ def point_cloud_to_ndt_2d(pc: np.ndarray, cell_size=1.0) -> NDTMap2D:
         points_clusters[DiscreteCell2D(x=cell[0], y=cell[1])] = pc[:, pts_in_cell]
 
     ret = NDTMap2D(resolution=cell_size)
-
+    
+    if plot:
+        plt.figure("ndt_2d_plot")
+        plt.ion()  # Turn on interactive mode
+        plt.axis('equal')
+        plt.scatter(pc[0], pc[1], color='blue', s=1)
     for cell, points in points_clusters.items():
         dist = fit_normal_distribution(points)
         if dist is not None:
             ret.add_distribution(cell=cell, ndt=dist)
+            if plot:
+                plt.scatter(points[0], points[1], color='red', s=1)
+                confidence_ellipse(dist.mean[0], dist.mean[1], dist.covariance, color='red')
+                plt.pause(0.1)
+                plt.scatter(points[0], points[1], color='green', s=1)
+            print(f"fitted {points.shape[1]} points in cell {cell} with mean {dist.mean} and covariance {dist.covariance}")
     return ret
 
 
