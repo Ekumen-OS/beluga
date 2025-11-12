@@ -18,6 +18,7 @@ import yaml
 from typing import Dict, Optional
 from pathlib import Path
 from scipy.stats import multivariate_normal
+from tqdm import tqdm
 from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 
@@ -120,7 +121,7 @@ class NDTMap3D:
             means_dataset = fp.create_dataset("means", (num_cells, 3), chunks=True)
             covariances_dataset = fp.create_dataset("covariances", (num_cells, 3, 3))
 
-            for idx, distribution in enumerate(self.grid.values()):
+            for idx, distribution in tqdm(enumerate(self.grid.values())):
                 means_dataset[idx] = distribution.mean
                 covariances_dataset[idx] = distribution.covariance
             fp.create_dataset("resolution", data=np.asarray(self._resolution))
@@ -418,7 +419,7 @@ def point_cloud_to_ndt_2d(pc: np.ndarray, cell_size=1.0, plot=False) -> NDTMap2D
     discretized_points = np.floor(pc / cell_size).astype(np.int64)
     cells = np.unique(discretized_points, axis=-1).T
 
-    for cell in cells:
+    for cell in tqdm(cells):
         pts_in_cell = np.all(discretized_points.T == cell, axis=1)
         points_clusters[DiscreteCell2D(x=cell[0], y=cell[1])] = pc[:, pts_in_cell]
 
@@ -429,7 +430,7 @@ def point_cloud_to_ndt_2d(pc: np.ndarray, cell_size=1.0, plot=False) -> NDTMap2D
         plt.ion()  # Turn on interactive mode
         plt.axis('equal')
         plt.scatter(pc[0], pc[1], color='blue', s=1)
-    for cell, points in points_clusters.items():
+    for cell, points in tqdm(points_clusters.items()):
         dist = fit_normal_distribution(points)
         if dist is not None:
             ret.add_distribution(cell=cell, ndt=dist)
