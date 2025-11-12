@@ -96,3 +96,7 @@ def main():
           this is a bug."
 
     print("Integrity check OK!")
+
+
+if __name__ == "__main__":
+    main()
