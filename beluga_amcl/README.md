@@ -14,6 +14,7 @@ The compatibility between `beluga_amcl` and its longstanding counterparts in the
     - [Published Transforms](#published-transforms)
     - [Advertised Services](#advertised-services)
   - [Performance](#performance)
+  - [Compatibility](#compatibility-notes)
   - [Next Steps](#next-steps)
 
 ## ROS Interface
@@ -21,7 +22,7 @@ The compatibility between `beluga_amcl` and its longstanding counterparts in the
 ### Parameters
 
 Beluga AMCL currently supports the majority of ROS parameters used in [Navigation 2 AMCL][nav2_amcl].<br/>
-See [Beluga AMCL documentation](https://ekumen-os.github.io/beluga/packages/beluga_amcl/docs) for further reference.
+See [Beluga AMCL documentation](https://ekumen-os.github.io/beluga/packages/beluga_amcl/docs/ros2-reference.html) for further reference.
 
 ### Subscribed Topics
 
@@ -66,17 +67,22 @@ Defaults are `map`, `odom` and `base`.
 
 ## Performance
 
-Performance reports are periodically generated and uploaded to track performance improvements and regressions. These reports are generated using a set of scripts in the [beluga_benchmark](../beluga_benchmark) package which can be used to compare the performance of `beluga_amcl` against that of `nav2_amcl` using a synthetic dataset.
+Performance reports are periodically generated to track improvements and regressions. These reports are produced using the scripts in the [beluga_benchmark](../beluga_benchmark) package, which allow comparing the performance of `beluga_amcl` against `nav2_amcl` using a synthetic dataset.
 
-The following plot displays the RSS (Resident Set Size), CPU usage, APE (Absolute Pose Error) and processing latency statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `likelihood field`.
+<figure>
+  <img src="/beluga_amcl/docs/_images/beluga_vs_nav2.png" alt="Beluga Vs Nav2">
+  <figcaption><strong>Typical trajectory plot</strong>: the ground-truth and both AMCL trajectories are so close that they effectively overlap.</figcaption>
+</figure>
 
-![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-09-02/likelihood_beluga_vs_beluga_vs_amcl.png)
+Further details on the benchmarking methodology and datasets can be found in the blog post [Big shoes to fill: Validating the performance of Beluga AMCL](https://ekumenlabs.com/blog/posts/big-shoes-to-fill-beluga-performance-report/)
 
-The following plot displays the RSS (Resident Set Size), CPU usage, APE (Absolute Pose Error) and processing latency statistics for both  `beluga_amcl` and `nav2_amcl`, with particle sizes ranging between 250 and 200000 and sensor model `beam`.
+The most recent [performance report](https://github.com/user-attachments/files/19375155/report.pdf), published in March 2025, includes a broader benchmark than the one presented in the blog.
 
-![Beluga vs Nav2 AMCL](../beluga_benchmark/docs/reports/2023-09-02/beam_beluga_vs_beluga_vs_amcl.png)
+## Compatibility notes
 
-Further details can be found in [the reports folder here](../beluga_benchmark/docs/reports/).
+Beluga AMCL is a feature-by-feature re-implemention of the existing Nav2 AMCL package in ROS, but using the Beluga library as the underlying engine.
+
+Notes on parameter and feature availability between Beluga AMCL and Nav2 AMCL can be found [here](https://ekumen-os.github.io/beluga/packages/beluga_amcl/docs/ros2-reference.html#compatibility-notes).
 
 ## Next Steps
 
