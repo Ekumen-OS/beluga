@@ -46,6 +46,7 @@ find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(message_filters REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 add_library(beluga_amcl_ros2_common SHARED)
 target_sources(beluga_amcl_ros2_common PRIVATE src/ros2_common.cpp)
@@ -62,6 +63,7 @@ target_link_libraries(
          rclcpp::rclcpp
          rclcpp_components::component
          rclcpp_lifecycle::rclcpp_lifecycle
+         tf2_ros::tf2_ros
          ${std_srvs_TARGETS})
 
 target_compile_definitions(

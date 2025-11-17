@@ -15,10 +15,10 @@
 #ifndef BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP
 #define BELUGA_AMCL_NDT_AMCL_NODE_3D_HPP
 
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/message_filter.h>
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/transform_listener.h>
+#include <tf2_ros/buffer.hpp>
+#include <tf2_ros/message_filter.hpp>
+#include <tf2_ros/transform_broadcaster.hpp>
+#include <tf2_ros/transform_listener.hpp>
 
 #include <beluga/algorithm/amcl_core.hpp>
 #include <beluga/beluga.hpp>

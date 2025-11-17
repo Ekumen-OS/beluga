@@ -104,9 +104,9 @@ WORKDIR $USER_WS
 
 # Colcon mixins and workspace setup
 RUN colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
-  && colcon mixin update default
-
+ && colcon mixin update default
 COPY --chown=$USER:$GROUP docker/files/colcon_defaults.yaml /home/$USER/.colcon/defaults.yaml
+
 RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 
 # Copy only minimal files from the cache stage for rosdep install
