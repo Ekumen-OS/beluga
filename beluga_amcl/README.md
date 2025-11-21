@@ -76,8 +76,6 @@ Performance reports are periodically generated to track improvements and regress
 
 Further details on the benchmarking methodology and datasets can be found in the blog post [Big shoes to fill: Validating the performance of Beluga AMCL](https://ekumenlabs.com/blog/posts/big-shoes-to-fill-beluga-performance-report/)
 
-The most recent [performance report](https://github.com/user-attachments/files/19375155/report.pdf), published in March 2025, includes a broader benchmark than the one presented in the blog.
-
 ## Compatibility notes
 
 Beluga AMCL is a feature-by-feature re-implemention of the existing Nav2 AMCL package in ROS, but using the Beluga library as the underlying engine.
