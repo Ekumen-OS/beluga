@@ -16,6 +16,7 @@
 #define BELUGA_VIEWS_HPP
 
 #include <beluga/views/elements.hpp>
+#include <beluga/views/low_variance_sample.hpp>
 #include <beluga/views/particles.hpp>
 #include <beluga/views/random_intersperse.hpp>
 #include <beluga/views/sample.hpp>

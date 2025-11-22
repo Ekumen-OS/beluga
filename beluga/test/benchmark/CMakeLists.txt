@@ -18,6 +18,7 @@ option(BELUGA_RUN_PERFORMANCE_TESTS
 add_executable(
   benchmark_beluga
   benchmark_likelihood_field_model.cpp
+  benchmark_low_variance_sample.cpp
   benchmark_main.cpp
   benchmark_raycasting.cpp
   benchmark_spatial_hash.cpp
