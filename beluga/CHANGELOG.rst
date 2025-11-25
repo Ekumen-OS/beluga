@@ -7,7 +7,6 @@ Changelog for package beluga
 * Beluga compiles with MSVC on Windows (`#523 <https://github.com/Ekumen-OS/beluga/issues/523>`_)
 * Add support for Bazel builds (`#521 <https://github.com/Ekumen-OS/beluga/issues/521>`_)
 * Expose model_unknown_space parameter to ROS2 (`#448 <https://github.com/Ekumen-OS/beluga/issues/448>`_)
-  Co-authored-by: Diego Palma <diego.palma@ekumenlabs.com>
 * Add likelihood prob sensor model and enable Beluga's flavour of clustering (`#476 <https://github.com/Ekumen-OS/beluga/issues/476>`_)
 * Add 2D state type to likelihood field sensor model for beluga_vdb (`#480 <https://github.com/Ekumen-OS/beluga/issues/480>`_)
 * Fix to likelihood map pre-calculation performance for large maps (`#471 <https://github.com/Ekumen-OS/beluga/issues/471>`_)

@@ -5,21 +5,6 @@ Changelog for package beluga_benchmark
 2.1.0 (2025-11-25)
 ------------------
 * Drop Noetic support (`#520 <https://github.com/Ekumen-OS/beluga/issues/520>`_)
-  ### Proposed changes
-  Precisely what the title says. Closes `#486 <https://github.com/Ekumen-OS/beluga/issues/486>`_.
-  #### Type of change
-  - [ ] 🐛 Bugfix (change which fixes an issue)
-  - [ ] 🚀 Feature (change which adds functionality)
-  - [x] 📚 Documentation (change which fixes or extends documentation)
-  💥 **Breaking change!** This is dropping support for an entire (EOL'd)
-  distribution.
-  ### Checklist
-  - [x] Lint and unit tests (if any) pass locally with my changes
-  - [x] I have added tests that prove my fix is effective or that my
-  feature works
-  - [x] I have added necessary documentation (if appropriate)
-  - [x] All commits have been signed for
-  [DCO](https://developercertificate.org/)
 * Contributors: Michel Hidalgo
 
 2.0.2 (2024-06-18)
