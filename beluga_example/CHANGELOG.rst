@@ -2,6 +2,13 @@
 Changelog for package beluga_example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove ROS 1 references and documentation (`#528 <https://github.com/Ekumen-OS/beluga/issues/528>`_)
+* Drop Noetic support (`#520 <https://github.com/Ekumen-OS/beluga/issues/520>`_)
+* Expose model_unknown_space parameter to ROS2 (`#448 <https://github.com/Ekumen-OS/beluga/issues/448>`_)
+* Contributors: Diego Palma, Michel Hidalgo, Nahuel Espinosa
+
 2.0.2 (2024-06-18)
 ------------------
 * Change NDT sensor model default params (`#397 <https://github.com/Ekumen-OS/beluga/issues/397>`_)

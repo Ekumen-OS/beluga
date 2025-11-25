@@ -2,6 +2,9 @@
 Changelog for package beluga_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.0.2 (2024-06-18)
 ------------------
 * Add scripts for beluga_tutorial visualizations (`#387 <https://github.com/Ekumen-OS/beluga/issues/387>`_)

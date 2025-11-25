@@ -2,6 +2,12 @@
 Changelog for package beluga_system_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Drop Noetic support (`#520 <https://github.com/Ekumen-OS/beluga/issues/520>`_)
+* Add ROS Kilted Kaiju support (`#485 <https://github.com/Ekumen-OS/beluga/issues/485>`_)
+* Contributors: Andrés Brumovsky, Michel Hidalgo
+
 2.0.2 (2024-06-18)
 ------------------
 
