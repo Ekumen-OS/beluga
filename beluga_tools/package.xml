@@ -6,6 +6,7 @@
 
   <description>Set of miscellaneous tools to work with beluga.</description>
 
+  <maintainer email="andres.brumovsky@ekumenlabs.com">Andres Brumovsky</maintainer>
   <maintainer email="serraramiro@ekumenlabs.com">Ramiro Serra</maintainer>
 
   <license>Apache License 2.0</license>
