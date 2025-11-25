@@ -2,8 +2,8 @@
 Changelog for package beluga_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2025-11-25)
+------------------
 * Remove ROS 1 references and documentation (`#528 <https://github.com/Ekumen-OS/beluga/issues/528>`_)
 * Drop Noetic support (`#520 <https://github.com/Ekumen-OS/beluga/issues/520>`_)
 * Add support for point clouds in beluga_amcl (`#491 <https://github.com/Ekumen-OS/beluga/issues/491>`_)

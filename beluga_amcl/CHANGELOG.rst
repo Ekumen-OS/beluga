@@ -2,8 +2,8 @@
 Changelog for package beluga_amcl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2025-11-25)
+------------------
 * Beluga AMCL documentation update (`#536 <https://github.com/Ekumen-OS/beluga/issues/536>`_)
 * Deal with deprecated headers in Rolling (`#531 <https://github.com/Ekumen-OS/beluga/issues/531>`_)
 * Drop Noetic support (`#520 <https://github.com/Ekumen-OS/beluga/issues/520>`_)

@@ -2,8 +2,8 @@
 Changelog for package beluga
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2025-11-25)
+------------------
 * Beluga compiles with MSVC on Windows (`#523 <https://github.com/Ekumen-OS/beluga/issues/523>`_)
 * Add support for Bazel builds (`#521 <https://github.com/Ekumen-OS/beluga/issues/521>`_)
 * Expose model_unknown_space parameter to ROS2 (`#448 <https://github.com/Ekumen-OS/beluga/issues/448>`_)

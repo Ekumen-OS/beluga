@@ -2,8 +2,8 @@
 Changelog for package beluga_example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2025-11-25)
+------------------
 * Remove ROS 1 references and documentation (`#528 <https://github.com/Ekumen-OS/beluga/issues/528>`_)
 * Drop Noetic support (`#520 <https://github.com/Ekumen-OS/beluga/issues/520>`_)
 * Expose model_unknown_space parameter to ROS2 (`#448 <https://github.com/Ekumen-OS/beluga/issues/448>`_)

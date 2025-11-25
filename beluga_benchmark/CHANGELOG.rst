@@ -2,8 +2,8 @@
 Changelog for package beluga_benchmark
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2025-11-25)
+------------------
 * Drop Noetic support (`#520 <https://github.com/Ekumen-OS/beluga/issues/520>`_)
   ### Proposed changes
   Precisely what the title says. Closes `#486 <https://github.com/Ekumen-OS/beluga/issues/486>`_.
