@@ -2,10 +2,11 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>beluga_tools</name>
-  <version>0.0.0</version>
+  <version>2.1.0</version>
 
   <description>Set of miscellaneous tools to work with beluga.</description>
 
+  <maintainer email="andres.brumovsky@ekumenlabs.com">Andres Brumovsky</maintainer>
   <maintainer email="serraramiro@ekumenlabs.com">Ramiro Serra</maintainer>
 
   <license>Apache License 2.0</license>
