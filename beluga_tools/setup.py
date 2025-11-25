@@ -18,7 +18,7 @@ package_name = 'beluga_tools'
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='2.0.2',
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
