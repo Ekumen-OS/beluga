@@ -57,6 +57,8 @@ struct LikelihoodFieldModelBaseParam {
   double sigma_hit = 0.2;
   /// Whether to model unknown space or assume it free.
   bool model_unknown_space = false;
+  /// Wheter to pre-process thick walls or not.
+  bool pre_process_thick_walls = false;
 };
 
 /// Likelihood field common sensor model for range finders.
@@ -145,11 +147,44 @@ class LikelihoodFieldModelBase {
 
     const auto squared_max_distance = static_cast<float>(params.max_obstacle_distance * params.max_obstacle_distance);
 
-    // determine distances to obstacles and calculate likelihood values in-place
-    // to minimize memory usage when dealing with large maps
-    auto distance_map =
-        nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
+    std::vector<float> distance_map;
 
+    // Pre-process Thick walls
+    if (params.pre_process_thick_walls) {
+      // Build a new mask that contains only boundary obstacles
+      std::vector<bool> boundary_mask(grid.size(), false);
+      // Build a new mask for unknown_space cells that contains also inner-wall cells
+      std::vector<bool> effective_unknown_mask{std::begin(grid.unknown_mask()), std::end(grid.unknown_mask())};
+
+      for (std::size_t idx = 0; idx < grid.size(); ++idx) {
+        if (!grid.obstacle_mask()[idx])
+          continue;  // skip free cells
+
+        // Check if any 4-neighbor is NOT an obstacle (free or unknown)
+        bool is_boundary = false;
+        for (auto n : grid.neighborhood4(idx)) {
+          if (!grid.obstacle_mask()[n]) {
+            is_boundary = true;
+            break;
+          }
+        }
+        boundary_mask[idx] = is_boundary;
+        // Mark as unknown space if not a boundary (inner wall)
+        if (!is_boundary) {
+          effective_unknown_mask[idx] = true;
+        }
+      }
+      // determine distances to obstacles and calculate likelihood values in-place
+      // to minimize memory usage when dealing with large maps
+      distance_map = nearest_obstacle_distance_map(boundary_mask, squared_distance, neighborhood, squared_max_distance);
+    } else {
+      // determine distances to obstacles and calculate likelihood values in-place
+      // to minimize memory usage when dealing with large maps
+      distance_map =
+          nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
+    }
+
+    // Handling unknown_space cells
     if (params.model_unknown_space) {
       const auto inverse_max_distance = 1 / params.max_laser_distance;
       const auto squared_background_distance =
