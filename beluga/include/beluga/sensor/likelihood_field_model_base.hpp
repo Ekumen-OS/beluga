@@ -23,6 +23,7 @@
 #include <cmath>
 #include <random>
 #include <range/v3/action/transform.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <sophus/se2.hpp>
 #include <vector>
 
@@ -151,6 +152,7 @@ class LikelihoodFieldModelBase {
 
     // Pre-process Thick walls
     if (params.pre_process_thick_walls) {
+      RCLCPP_INFO(rclcpp::get_logger("LikelihoodFieldModelBase"), "Pre-processing thick walls is enabled");
       // Build a new mask that contains only boundary obstacles
       std::vector<bool> boundary_mask(grid.size(), false);
       // Build a new mask for unknown_space cells that contains also inner-wall cells
