@@ -135,6 +135,13 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Whether to pre-process thick walls, keeping borders and setting inner cells to unknown space, or not.";
+    declare_parameter("pre_process_thick_walls", false, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Mixture weight for the probability of getting max range measurements.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
