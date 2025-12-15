@@ -172,7 +172,7 @@ jobs:
           git rm -rf .
 
       - name: Download documentation artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: docs-${{ github.sha }}
           merge-multiple: true
