@@ -21,7 +21,6 @@
 #include <beluga/sensor/data/occupancy_grid.hpp>
 #include <beluga/sensor/data/value_grid.hpp>
 #include <cmath>
-#include <iostream>
 #include <random>
 #include <range/v3/action/transform.hpp>
 #include <sophus/se2.hpp>
@@ -59,7 +58,7 @@ struct LikelihoodFieldModelBaseParam {
   /// Whether to model unknown space or assume it free.
   bool model_unknown_space = false;
   /// Wheter to pre-process thick walls or not.
-  bool pre_process_thick_walls = true; //false;
+  bool pre_process_thick_walls = false;
 };
 
 /// Likelihood field common sensor model for range finders.
@@ -150,12 +149,8 @@ class LikelihoodFieldModelBase {
 
     std::vector<float> distance_map;
 
-    // DEBUG
-    std::cout << "[DEBUG] pre_process_thick_walls = " << params.pre_process_thick_walls << std::endl;
     // Pre-process Thick walls
     if (params.pre_process_thick_walls) {
-      // DEBUG
-      std::cout << "[DEBUG] Thick wall preprocessing enabled" << std::endl;
       // Build a new mask that contains only boundary obstacles
       std::vector<bool> boundary_mask(grid.size(), false);
       // Build a new mask for unknown_space cells that contains also inner-wall cells

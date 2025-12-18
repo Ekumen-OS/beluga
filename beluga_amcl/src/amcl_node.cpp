@@ -381,6 +381,7 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
     params.z_random = get_parameter("z_rand").as_double();
     params.sigma_hit = get_parameter("sigma_hit").as_double();
     params.model_unknown_space = get_parameter("model_unknown_space").as_bool();
+    params.pre_process_thick_walls = get_parameter("pre_process_thick_walls").as_bool();
     return beluga::LikelihoodFieldModel{params, beluga_ros::OccupancyGrid{map}};
   }
   if (name == kLikelihoodFieldProbModelName) {
