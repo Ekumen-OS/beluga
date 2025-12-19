@@ -23,6 +23,7 @@
 #include <cmath>
 #include <random>
 #include <range/v3/action/transform.hpp>
+#include <range/v3/algorithm.hpp>
 #include <sophus/se2.hpp>
 #include <vector>
 
@@ -153,7 +154,7 @@ class LikelihoodFieldModelBase {
     if (params.pre_process_thick_walls) {
       // Build a new mask that contains only boundary obstacles
       std::vector<bool> boundary_mask(grid.size(), false);
-      // Build a new mask for unknown_space cells that contains also inner-wall cells
+      // Build a new mask for unknown_space cells possibly containing also inner-wall cells
       std::vector<bool> effective_unknown_mask{std::begin(grid.unknown_mask()), std::end(grid.unknown_mask())};
 
       for (std::size_t idx = 0; idx < grid.size(); ++idx) {
@@ -161,13 +162,12 @@ class LikelihoodFieldModelBase {
           continue;  // skip free cells
 
         // Check if any 4-neighbor is NOT an obstacle (free or unknown)
-        bool is_boundary = false;
-        for (auto n : grid.neighborhood4(idx)) {
-          if (!grid.obstacle_mask()[n]) {
-            is_boundary = true;
-            break;
-          }
-        }
+        const bool is_boundary = ranges::any_of(
+          grid.neighborhood4(static_cast<std::size_t>(idx)),
+          [&](auto n) {
+            return !grid.obstacle_mask()[n];
+          });
+
         boundary_mask[idx] = is_boundary;
         // Mark as unknown space if not a boundary (inner wall)
         if (!is_boundary) {
@@ -177,12 +177,6 @@ class LikelihoodFieldModelBase {
       // determine distances to obstacles and calculate likelihood values in-place
       // to minimize memory usage when dealing with large maps
       distance_map = nearest_obstacle_distance_map(boundary_mask, squared_distance, neighborhood, squared_max_distance);
-    } else {
-      // determine distances to obstacles and calculate likelihood values in-place
-      // to minimize memory usage when dealing with large maps
-      distance_map =
-          nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
-    }
 
     // Handling unknown_space cells
     if (params.model_unknown_space) {
@@ -191,7 +185,26 @@ class LikelihoodFieldModelBase {
           -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
 
       distance_map |= beluga::actions::overlay(
-          grid.unknown_mask(), std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
+            effective_unknown_mask,
+            std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
+    }
+
+    } else {
+      // determine distances to obstacles and calculate likelihood values in-place
+      // to minimize memory usage when dealing with large maps
+      distance_map =
+          nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
+
+      // Handling unknown_space cells
+      if (params.model_unknown_space) {
+        const auto inverse_max_distance = 1 / params.max_laser_distance;
+        const auto squared_background_distance =
+            -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
+
+        distance_map |= beluga::actions::overlay(
+              grid.unknown_mask(),
+              std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
+      }
     }
 
     auto likelihood_values = std::move(distance_map) |  //
