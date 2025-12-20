@@ -85,6 +85,8 @@ namespace beluga {
 template <typename Derived>
 class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
  public:
+  using BaseLinearGrid2<Derived>::self;
+
   /// Coordinate frames.
   enum class Frame : std::uint8_t { kLocal, kGlobal };
 
@@ -95,11 +97,11 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    * \param index Grid cell index.
    */
   [[nodiscard]] bool free_at(std::size_t index) const {
-    const auto data = this->self().data_at(index);
+    const auto data = self().data_at(index);
     if (!data.has_value()) {
       return false;
     }
-    return this->self().value_traits().is_free(data.value());
+    return self().value_traits().is_free(data.value());
   }
 
   /// Checks if cell is free.
@@ -109,7 +111,7 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    * \param xi Grid cell x-axis coordinate.
    * \param yi Grid cell y-axis coordinate.
    */
-  [[nodiscard]] bool free_at(int xi, int yi) const { return this->self().free_at(this->self().index_at(xi, yi)); }
+  [[nodiscard]] bool free_at(int xi, int yi) const { return self().free_at(self().index_at(xi, yi)); }
 
   /// Checks if cell is free.
   /**
@@ -117,7 +119,7 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    *
    * \param pi Grid cell coordinates.
    */
-  [[nodiscard]] bool free_at(const Eigen::Vector2i& pi) const { return this->self().free_at(pi.x(), pi.y()); }
+  [[nodiscard]] bool free_at(const Eigen::Vector2i& pi) const { return self().free_at(pi.x(), pi.y()); }
 
   /// Checks if nearest cell is free.
   /**
@@ -127,7 +129,7 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    * \param y Plane y-axis coordinate.
    */
   [[nodiscard]] bool free_near(double x, double y) const {
-    return this->self().free_at(this->self().cell_near(Eigen::Vector2d{x, y}));
+    return self().free_at(self().cell_near(Eigen::Vector2d{x, y}));
   }
 
   /// Checks if nearest cell is free.
@@ -136,7 +138,7 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    *
    * \param p Plane coordinates.
    */
-  [[nodiscard]] bool free_near(const Eigen::Vector2d& p) const { return this->self().free_near(p.x(), p.y()); }
+  [[nodiscard]] bool free_near(const Eigen::Vector2d& p) const { return self().free_near(p.x(), p.y()); }
 
   using BaseLinearGrid2<Derived>::coordinates_at;
 
@@ -147,9 +149,9 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    * \return Plane coordinates in the corresponding `frame`.
    */
   [[nodiscard]] auto coordinates_at(std::size_t index, Frame frame) const {
-    auto position = this->self().coordinates_at(index);
+    auto position = self().coordinates_at(index);
     if (frame == Frame::kGlobal) {
-      position = this->self().origin() * position;
+      position = self().origin() * position;
     }
     return position;
   }
@@ -162,14 +164,14 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
    */
   template <class Range>
   [[nodiscard]] auto coordinates_for(Range&& cells, Frame frame) const {
-    return cells | ranges::views::transform(
-                       [this, frame](const auto& cell) { return this->self().coordinates_at(cell, frame); });
+    return cells |
+           ranges::views::transform([this, frame](const auto& cell) { return self().coordinates_at(cell, frame); });
   }
 
   /// Retrieves range of free grid cell indices.
   [[nodiscard]] auto free_cells() const {
-    return ranges::views::enumerate(this->self().data()) |
-           ranges::views::filter([value_traits = this->self().value_traits()](const auto& tuple) {
+    return ranges::views::enumerate(self().data()) |
+           ranges::views::filter([value_traits = self().value_traits()](const auto& tuple) {
              return value_traits.is_free(std::get<1>(tuple));
            }) |
            ranges::views::transform([](const auto& tuple) { return std::get<0>(tuple); });
@@ -177,18 +179,16 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
 
   /// Retrieves a mask over occupied cells in the grid.
   [[nodiscard]] auto obstacle_mask() const {
-    return this->self().data() |
-           ranges::views::transform([value_traits = this->self().value_traits()](const auto& value) {
-             return value_traits.is_occupied(value);
-           });
+    return self().data() |  //
+           ranges::views::transform(
+               [value_traits = self().value_traits()](const auto& value) { return value_traits.is_occupied(value); });
   }
 
   /// Retrieves a mask over unknown cells in the grid.
   [[nodiscard]] auto unknown_mask() const {
-    return this->self().data() |
-           ranges::views::transform([value_traits = this->self().value_traits()](const auto& value) {
-             return value_traits.is_unknown(value);
-           });
+    return self().data() |  //
+           ranges::views::transform(
+               [value_traits = self().value_traits()](const auto& value) { return value_traits.is_unknown(value); });
   }
 };
 
