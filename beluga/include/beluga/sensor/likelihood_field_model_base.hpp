@@ -160,14 +160,15 @@ class LikelihoodFieldModelBase {
       using index_t = std::ptrdiff_t;
 
       for (std::size_t idx = 0; idx < grid.size(); ++idx) {
-        const index_t sidx = static_cast<index_t>(idx);
+        const auto sidx = static_cast<index_t>(idx);
 
-        if (!grid.obstacle_mask()[sidx])
+        if (!grid.obstacle_mask()[sidx]) {
           continue;  // skip free cells
+        }
 
         // Check if any 4-neighbor is NOT an obstacle (free or unknown)
         const bool is_boundary = ranges::any_of(
-            grid.neighborhood4(static_cast<std::size_t>(idx)), [&](auto n) { return !grid.obstacle_mask()[n]; });
+            grid.neighborhood4(sidx), [&](index_t n) { return !grid.obstacle_mask()[n]; });
 
         boundary_mask[idx] = is_boundary;
         // Mark as unknown space if not a boundary (inner wall)
