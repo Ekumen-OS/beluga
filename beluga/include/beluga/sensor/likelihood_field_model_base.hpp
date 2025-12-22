@@ -163,10 +163,7 @@ class LikelihoodFieldModelBase {
 
         // Check if any 4-neighbor is NOT an obstacle (free or unknown)
         const bool is_boundary = ranges::any_of(
-          grid.neighborhood4(static_cast<std::size_t>(idx)),
-          [&](auto n) {
-            return !grid.obstacle_mask()[n];
-          });
+            grid.neighborhood4(static_cast<std::size_t>(idx)), [&](auto n) { return !grid.obstacle_mask()[n]; });
 
         boundary_mask[idx] = is_boundary;
         // Mark as unknown space if not a boundary (inner wall)
@@ -178,16 +175,15 @@ class LikelihoodFieldModelBase {
       // to minimize memory usage when dealing with large maps
       distance_map = nearest_obstacle_distance_map(boundary_mask, squared_distance, neighborhood, squared_max_distance);
 
-    // Handling unknown_space cells
-    if (params.model_unknown_space) {
-      const auto inverse_max_distance = 1 / params.max_laser_distance;
-      const auto squared_background_distance =
-          -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
+      // Handling unknown_space cells
+      if (params.model_unknown_space) {
+        const auto inverse_max_distance = 1 / params.max_laser_distance;
+        const auto squared_background_distance =
+            -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
 
-      distance_map |= beluga::actions::overlay(
-            effective_unknown_mask,
-            std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
-    }
+        distance_map |= beluga::actions::overlay(
+            effective_unknown_mask, std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
+      }
 
     } else {
       // determine distances to obstacles and calculate likelihood values in-place
@@ -202,8 +198,7 @@ class LikelihoodFieldModelBase {
             -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
 
         distance_map |= beluga::actions::overlay(
-              grid.unknown_mask(),
-              std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
+            grid.unknown_mask(), std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
       }
     }
 
