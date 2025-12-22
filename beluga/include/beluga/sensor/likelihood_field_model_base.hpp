@@ -167,8 +167,8 @@ class LikelihoodFieldModelBase {
         }
 
         // Check if any 4-neighbor is NOT an obstacle (free or unknown)
-        const bool is_boundary = ranges::any_of(
-            grid.neighborhood4(sidx), [&](index_t n) { return !grid.obstacle_mask()[n]; });
+        const bool is_boundary =
+            ranges::any_of(grid.neighborhood4(sidx), [&](index_t n) { return !grid.obstacle_mask()[n]; });
 
         boundary_mask[idx] = is_boundary;
         // Mark as unknown space if not a boundary (inner wall)
