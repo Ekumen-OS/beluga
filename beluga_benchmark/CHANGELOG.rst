@@ -2,6 +2,11 @@
 Changelog for package beluga_benchmark
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.1.0 (2025-11-25)
+------------------
+* Drop Noetic support (`#520 <https://github.com/Ekumen-OS/beluga/issues/520>`_)
+* Contributors: Michel Hidalgo
+
 2.0.2 (2024-06-18)
 ------------------
 

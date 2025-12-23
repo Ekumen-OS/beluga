@@ -2,6 +2,17 @@
 Changelog for package beluga_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.1.0 (2025-11-25)
+------------------
+* Remove ROS 1 references and documentation (`#528 <https://github.com/Ekumen-OS/beluga/issues/528>`_)
+* Drop Noetic support (`#520 <https://github.com/Ekumen-OS/beluga/issues/520>`_)
+* Add support for point clouds in beluga_amcl (`#491 <https://github.com/Ekumen-OS/beluga/issues/491>`_)
+* Add support for ROS 2 nodes test isolation (`#497 <https://github.com/Ekumen-OS/beluga/issues/497>`_)
+* Expose model_unknown_space parameter to ROS2 (`#448 <https://github.com/Ekumen-OS/beluga/issues/448>`_)
+* Add ROS Kilted Kaiju support (`#485 <https://github.com/Ekumen-OS/beluga/issues/485>`_)
+* Add likelihood prob sensor model and enable Beluga's flavour of clustering (`#476 <https://github.com/Ekumen-OS/beluga/issues/476>`_)
+* Contributors: Andrés Brumovsky, Diego Palma, Michel Hidalgo, Nahuel Espinosa, Xavi Ruiz, Florencia Battocchia
+
 2.0.2 (2024-06-18)
 ------------------
 

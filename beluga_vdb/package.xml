@@ -2,13 +2,14 @@
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>beluga_vdb</name>
-  <version>1.0.0</version>
+  <version>2.1.0</version>
 
   <description>A beluga extension to facilitate the use of OpenVDB.</description>
 
   <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
   <maintainer email="ivanpauno@ekumenlabs.com">Ivan Paunovic</maintainer>
   <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
+  <maintainer email="andres.brumovsky@ekumenlabs.com">Andres Brumovsky</maintainer>
 
   <license>Apache License 2.0</license>
 
