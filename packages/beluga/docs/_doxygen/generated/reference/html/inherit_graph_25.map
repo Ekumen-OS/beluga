@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classbeluga_1_1ExponentialFilter.html" title="Callable type implementing an exponential filter." alt="" coords="5,5,189,32"/>
+<area shape="rect" id="node1" href="$structbeluga_1_1enable__self.html" title="An implementation of a mixin that provides downcasting methods." alt="" coords="5,13,155,54"/>
+<area shape="rect" id="node2" href="$classbeluga_1_1BaseRegularGrid.html" title=" " alt="" coords="203,5,424,61"/>
+<area shape="rect" id="node3" href="$classbeluga_1_1SparseValueGrid.html" title="Generic N dimensional sparse value regular grid." alt="" coords="472,13,653,54"/>
 </map>

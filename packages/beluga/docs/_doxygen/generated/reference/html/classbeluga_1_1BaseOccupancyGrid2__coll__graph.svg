@@ -68,10 +68,10 @@
 <!-- Node5 -->
 <g id="node5" class="node">
 <title>Node5</title>
-<g id="a_node5"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="31.5,-257.5 31.5,-287.5 133.5,-287.5 133.5,-257.5 31.5,-257.5"/>
-<text text-anchor="start" x="39.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">ciabatta::ciabatta</text>
-<text text-anchor="middle" x="82.5" y="-264.5" font-family="Helvetica,sans-Serif" font-size="10.00">_top&lt; Derived &gt;</text>
+<g id="a_node5"><a xlink:href="structbeluga_1_1enable__self.html" target="_top" xlink:title=" ">
+<polygon fill="none" stroke="black" points="26.5,-257.5 26.5,-287.5 138.5,-287.5 138.5,-257.5 26.5,-257.5"/>
+<text text-anchor="start" x="34.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::enable_self</text>
+<text text-anchor="middle" x="82.5" y="-264.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
 </a>
 </g>
 </g>

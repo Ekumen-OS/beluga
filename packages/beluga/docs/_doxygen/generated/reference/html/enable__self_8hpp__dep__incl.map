@@ -1,0 +1,21 @@
+<map id="/home/runner/work/beluga/beluga/beluga/include/beluga/mixins/enable_self.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/mixins/enable_self.hpp">
+<area shape="rect" id="node1" title="Implementation of a CRTP utility to enable downcasting to the most derived class." alt="" coords="425,5,649,61"/>
+<area shape="rect" id="node2" href="$mixins_8hpp_source.html" title=" " alt="" coords="5,117,199,173"/>
+<area shape="rect" id="node3" href="$laser__scan_8hpp.html" title="Implementation of a laser scan interface." alt="" coords="223,109,416,180"/>
+<area shape="rect" id="node4" href="$point__cloud_8hpp.html" title="Implementation of a point cloud interface with memory&#45;aligned data." alt="" coords="440,109,633,180"/>
+<area shape="rect" id="node5" href="$regular__grid_8hpp.html" title="Concepts and abstract implementations of regular grids." alt="" coords="658,109,858,180"/>
+<area shape="rect" id="node19" href="$sparse__point__cloud_8hpp.html" title="Implementation of a sparse point cloud interface without memory&#45;aligned data." alt="" coords="882,109,1079,180"/>
+<area shape="rect" id="node6" href="$dense__grid_8hpp.html" title="Concepts and abstract implementations of dense grids." alt="" coords="552,228,745,299"/>
+<area shape="rect" id="node18" href="$sparse__value__grid_8hpp.html" title="Implementation of generic sparse value regular grid." alt="" coords="770,228,967,299"/>
+<area shape="rect" id="node7" href="$linear__grid_8hpp.html" title="Concepts and abstract implementations of linear (ie. contiguous storage) grids." alt="" coords="552,347,745,417"/>
+<area shape="rect" id="node8" href="$occupancy__grid_8hpp.html" title="Concepts and abstract implementations of occupancy grids." alt="" coords="421,465,644,536"/>
+<area shape="rect" id="node17" href="$value__grid_8hpp.html" title="Implementation of generic value grid." alt="" coords="668,465,861,536"/>
+<area shape="rect" id="node9" href="$multivariate__uniform__distribution_8hpp.html" title="Implementation of a multivariate uniform distribution for SE(2) and SE(3) spaces." alt="" coords="429,584,637,655"/>
+<area shape="rect" id="node13" href="$likelihood__field__model__base_8hpp.html" title="Implementation of a likelihood field common sensor model for range finders." alt="" coords="664,584,857,655"/>
+<area shape="rect" id="node10" href="$random_8hpp.html" title="Includes all Beluga random distributions." alt="" coords="436,821,629,877"/>
+<area shape="rect" id="node11" href="$beluga_8hpp.html" title="Includes all the Beluga API." alt="" coords="544,925,737,981"/>
+<area shape="rect" id="node12" href="$amcl__core_8hpp_source.html" title=" " alt="" coords="523,1029,759,1085"/>
+<area shape="rect" id="node14" href="$likelihood__field__model_8hpp.html" title="Implementation of a likelihood field sensor model for range finders." alt="" coords="612,703,805,773"/>
+<area shape="rect" id="node16" href="$likelihood__field__prob__model_8hpp.html" title="Implementation of a likelihood field prob sensor model for range finders." alt="" coords="829,703,1023,773"/>
+<area shape="rect" id="node15" href="$sensor_8hpp.html" title="Includes all Beluga sensor models and their interfaces." alt="" coords="653,821,847,877"/>
+</map>

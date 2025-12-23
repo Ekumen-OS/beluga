@@ -1,9 +1,9 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/regular_grid.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/regular_grid.hpp">
-<area shape="rect" id="node1" title="Concepts and abstract implementations of regular grids." alt="" coords="282,5,482,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,124,68,151"/>
-<area shape="rect" id="node3" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="93,124,253,151"/>
-<area shape="rect" id="node4" title=" " alt="" coords="277,124,487,151"/>
-<area shape="rect" id="node5" title=" " alt="" coords="512,124,604,151"/>
-<area shape="rect" id="node6" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="628,124,853,151"/>
-<area shape="rect" id="node7" title=" " alt="" coords="689,199,792,225"/>
+<area shape="rect" id="node1" title="Concepts and abstract implementations of regular grids." alt="" coords="273,5,473,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,131,68,158"/>
+<area shape="rect" id="node3" title=" " alt="" coords="91,131,302,158"/>
+<area shape="rect" id="node4" title=" " alt="" coords="327,131,419,158"/>
+<area shape="rect" id="node5" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="443,131,668,158"/>
+<area shape="rect" id="node7" href="$enable__self_8hpp.html" title="Implementation of a CRTP utility to enable downcasting to the most derived class." alt="" coords="693,124,855,165"/>
+<area shape="rect" id="node6" title=" " alt="" coords="504,213,607,240"/>
 </map>

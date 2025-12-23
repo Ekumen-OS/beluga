@@ -1,14 +1,14 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/linear_grid.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/linear_grid.hpp">
-<area shape="rect" id="node1" title="Concepts and abstract implementations of linear (ie. contiguous storage) grids." alt="" coords="237,5,431,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="179,131,246,158"/>
-<area shape="rect" id="node3" title=" " alt="" coords="225,221,299,247"/>
-<area shape="rect" id="node4" title=" " alt="" coords="324,221,387,247"/>
-<area shape="rect" id="node5" href="$dense__grid_8hpp.html" title="Concepts and abstract implementations of dense grids." alt="" coords="371,124,518,165"/>
-<area shape="rect" id="node10" title=" " alt="" coords="760,303,852,329"/>
-<area shape="rect" id="node6" href="$regular__grid_8hpp.html" title="Concepts and abstract implementations of regular grids." alt="" coords="462,213,609,255"/>
-<area shape="rect" id="node11" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="5,303,231,329"/>
-<area shape="rect" id="node7" title=" " alt="" coords="488,303,551,329"/>
-<area shape="rect" id="node8" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="575,303,735,329"/>
-<area shape="rect" id="node9" title=" " alt="" coords="254,303,465,329"/>
-<area shape="rect" id="node12" title=" " alt="" coords="67,377,169,404"/>
+<area shape="rect" id="node1" title="Concepts and abstract implementations of linear (ie. contiguous storage) grids." alt="" coords="197,5,391,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="139,131,206,158"/>
+<area shape="rect" id="node3" title=" " alt="" coords="185,221,259,247"/>
+<area shape="rect" id="node4" title=" " alt="" coords="284,221,347,247"/>
+<area shape="rect" id="node5" href="$dense__grid_8hpp.html" title="Concepts and abstract implementations of dense grids." alt="" coords="331,124,478,165"/>
+<area shape="rect" id="node9" title=" " alt="" coords="764,310,856,337"/>
+<area shape="rect" id="node6" href="$regular__grid_8hpp.html" title="Concepts and abstract implementations of regular grids." alt="" coords="422,213,569,255"/>
+<area shape="rect" id="node10" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="5,310,231,337"/>
+<area shape="rect" id="node7" title=" " alt="" coords="443,310,505,337"/>
+<area shape="rect" id="node8" title=" " alt="" coords="529,310,739,337"/>
+<area shape="rect" id="node12" href="$enable__self_8hpp.html" title="Implementation of a CRTP utility to enable downcasting to the most derived class." alt="" coords="255,303,418,344"/>
+<area shape="rect" id="node11" title=" " alt="" coords="67,392,169,419"/>
 </map>

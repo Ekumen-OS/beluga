@@ -1,6 +1,6 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/sparse_point_cloud.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/sparse_point_cloud.hpp">
-<area shape="rect" id="node1" title="Implementation of a sparse point cloud interface without memory&#45;aligned data." alt="" coords="74,5,271,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,124,68,151"/>
-<area shape="rect" id="node3" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="93,124,253,151"/>
-<area shape="rect" id="node4" title=" " alt="" coords="277,124,413,151"/>
+<area shape="rect" id="node1" title="Implementation of a sparse point cloud interface without memory&#45;aligned data." alt="" coords="75,5,273,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,131,68,158"/>
+<area shape="rect" id="node3" href="$enable__self_8hpp.html" title="Implementation of a CRTP utility to enable downcasting to the most derived class." alt="" coords="93,124,255,165"/>
+<area shape="rect" id="node4" title=" " alt="" coords="279,131,415,158"/>
 </map>

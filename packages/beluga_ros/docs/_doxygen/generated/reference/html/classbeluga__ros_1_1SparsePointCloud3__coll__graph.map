@@ -1,4 +1,5 @@
 <map id="beluga_ros::SparsePointCloud3&lt; T, Strict &gt;" name="beluga_ros::SparsePointCloud3&lt; T, Strict &gt;">
-<area shape="rect" id="node1" title="Thin wrapper for 3D sensor_msgs/PointCloud2 messages with potentially sparse layouts." alt="" coords="5,95,228,136"/>
-<area shape="rect" id="node2" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseSparsePointCloud.html" title=" " alt="" coords="7,5,227,47"/>
+<area shape="rect" id="node1" title="Thin wrapper for 3D sensor_msgs/PointCloud2 messages with potentially sparse layouts." alt="" coords="5,169,228,211"/>
+<area shape="rect" id="node2" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseSparsePointCloud.html" title=" " alt="" coords="7,80,227,121"/>
+<area shape="rect" id="node3" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$structbeluga_1_1enable__self.html" title=" " alt="" coords="27,5,206,32"/>
 </map>

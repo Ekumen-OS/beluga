@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Nov 25 16:13:42 2025 -0300, c0b2740&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Dec 23 11:26:20 2025 -0300, ea24cbd&#39;"/>
   </head>
   
   
@@ -457,7 +457,7 @@ $(function() {
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;ciabatta/ciabatta.hpp&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="enable__self_8hpp.html">beluga/mixins/enable_self.hpp</a>&gt;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;sophus/types.hpp&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
@@ -465,13 +465,15 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Derived&gt;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classbeluga_1_1BasePointCloud.html">   56</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1BasePointCloud.html">BasePointCloud</a> : <span class="keyword">public</span> ciabatta::ciabatta_top&lt;Derived&gt; {};</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classbeluga_1_1BasePointCloud.html">   56</a></span>&#160;<span class="keyword">class </span><a class="code" href="classbeluga_1_1BasePointCloud.html">BasePointCloud</a> : <span class="keyword">public</span> <a class="code" href="structbeluga_1_1enable__self.html">enable_self</a>&lt;Derived&gt; {};</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}  <span class="comment">// namespace beluga</span></div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassbeluga_1_1BasePointCloud_html"><div class="ttname"><a href="classbeluga_1_1BasePointCloud.html">beluga::BasePointCloud</a></div><div class="ttdoc">Point Cloud 3D base type.</div><div class="ttdef"><b>Definition:</b> point_cloud.hpp:56</div></div>
+<div class="ttc" id="aenable__self_8hpp_html"><div class="ttname"><a href="enable__self_8hpp.html">enable_self.hpp</a></div><div class="ttdoc">Implementation of a CRTP utility to enable downcasting to the most derived class.</div></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
+<div class="ttc" id="astructbeluga_1_1enable__self_html"><div class="ttname"><a href="structbeluga_1_1enable__self.html">beluga::enable_self</a></div><div class="ttdoc">An implementation of a mixin that provides downcasting methods.</div><div class="ttdef"><b>Definition:</b> enable_self.hpp:63</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -528,7 +530,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Nov 25 16:13:42 2025 -0300, c0b2740&#39;.
+  Last updated on &#39;Tue Dec 23 11:26:20 2025 -0300, ea24cbd&#39;.
   <br/>
 </p>
   </div>

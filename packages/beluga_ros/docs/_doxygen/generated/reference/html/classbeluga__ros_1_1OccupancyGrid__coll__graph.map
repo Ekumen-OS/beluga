@@ -1,7 +1,8 @@
 <map id="beluga_ros::OccupancyGrid" name="beluga_ros::OccupancyGrid">
-<area shape="rect" id="node1" title="Thin wrapper type for 2D nav_msgs/OccupancyGrid messages." alt="" coords="12,363,211,389"/>
-<area shape="rect" id="node2" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseOccupancyGrid2.html" title=" " alt="" coords="5,273,217,315"/>
-<area shape="rect" id="node3" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseLinearGrid2.html" title=" " alt="" coords="21,184,202,225"/>
-<area shape="rect" id="node4" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseDenseGrid2.html" title=" " alt="" coords="20,95,203,136"/>
-<area shape="rect" id="node5" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseRegularGrid.html" title=" " alt="" coords="20,5,203,47"/>
+<area shape="rect" id="node1" title="Thin wrapper type for 2D nav_msgs/OccupancyGrid messages." alt="" coords="12,437,211,464"/>
+<area shape="rect" id="node2" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseOccupancyGrid2.html" title=" " alt="" coords="5,348,217,389"/>
+<area shape="rect" id="node3" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseLinearGrid2.html" title=" " alt="" coords="21,259,202,300"/>
+<area shape="rect" id="node4" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseDenseGrid2.html" title=" " alt="" coords="20,169,203,211"/>
+<area shape="rect" id="node5" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseRegularGrid.html" title=" " alt="" coords="20,80,203,121"/>
+<area shape="rect" id="node6" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$structbeluga_1_1enable__self.html" title=" " alt="" coords="22,5,201,32"/>
 </map>

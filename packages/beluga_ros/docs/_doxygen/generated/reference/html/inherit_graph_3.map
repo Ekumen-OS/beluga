@@ -1,4 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseSparsePointCloud.html" title=" " alt="" coords="5,5,225,47"/>
-<area shape="rect" id="node2" href="$classbeluga__ros_1_1SparsePointCloud3.html" title="Thin wrapper for 3D sensor_msgs/PointCloud2 messages with potentially sparse layouts." alt="" coords="273,5,496,47"/>
+<area shape="rect" id="node1" href="$structbeluga__ros_1_1detail_1_1almost__equal__to_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html" title="std::equal_to equivalent specialized for SE(3) types, with user resolutions." alt="" coords="5,5,205,61"/>
 </map>

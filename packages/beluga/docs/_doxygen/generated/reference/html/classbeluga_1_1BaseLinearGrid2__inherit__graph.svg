@@ -84,10 +84,10 @@
 <!-- Node4 -->
 <g id="node4" class="node">
 <title>Node4</title>
-<g id="a_node4"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="79.5,-257.5 79.5,-287.5 181.5,-287.5 181.5,-257.5 79.5,-257.5"/>
-<text text-anchor="start" x="87.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">ciabatta::ciabatta</text>
-<text text-anchor="middle" x="130.5" y="-264.5" font-family="Helvetica,sans-Serif" font-size="10.00">_top&lt; Derived &gt;</text>
+<g id="a_node4"><a xlink:href="structbeluga_1_1enable__self.html" target="_top" xlink:title=" ">
+<polygon fill="none" stroke="black" points="74.5,-257.5 74.5,-287.5 186.5,-287.5 186.5,-257.5 74.5,-257.5"/>
+<text text-anchor="start" x="82.5" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::enable_self</text>
+<text text-anchor="middle" x="130.5" y="-264.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
 </a>
 </g>
 </g>

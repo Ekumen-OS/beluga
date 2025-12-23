@@ -1,0 +1,14 @@
+.. meta::7bb354693073740dc5d981884d71e914f93e9face941a95579408ce3bdfebece6a3e9abd000ef9947b4ba921306e7ea22624d6ab0b81911bcf5564082d0c1175
+
+:orphan:
+
+.. title:: Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data -&gt; mixins Relation
+
+/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data -&gt; mixins Relation
+=======================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: dir_000013_000008.html

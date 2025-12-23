@@ -21,10 +21,10 @@
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="15,-67.5 15,-97.5 117,-97.5 117,-67.5 15,-67.5"/>
-<text text-anchor="start" x="23" y="-85.5" font-family="Helvetica,sans-Serif" font-size="10.00">ciabatta::ciabatta</text>
-<text text-anchor="middle" x="66" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">_top&lt; Derived &gt;</text>
+<g id="a_node2"><a xlink:href="structbeluga_1_1enable__self.html" target="_top" xlink:title=" ">
+<polygon fill="none" stroke="black" points="10,-67.5 10,-97.5 122,-97.5 122,-67.5 10,-67.5"/>
+<text text-anchor="start" x="18" y="-85.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::enable_self</text>
+<text text-anchor="middle" x="66" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
 </a>
 </g>
 </g>

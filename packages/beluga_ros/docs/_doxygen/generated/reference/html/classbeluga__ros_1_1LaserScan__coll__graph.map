@@ -1,4 +1,5 @@
 <map id="beluga_ros::LaserScan" name="beluga_ros::LaserScan">
-<area shape="rect" id="node1" title="Thin wrapper type for 2D sensor_msgs/LaserScan messages." alt="" coords="8,95,175,121"/>
-<area shape="rect" id="node2" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseLaserScan.html" title=" " alt="" coords="5,5,177,47"/>
+<area shape="rect" id="node1" title="Thin wrapper type for 2D sensor_msgs/LaserScan messages." alt="" coords="11,169,178,196"/>
+<area shape="rect" id="node2" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$classbeluga_1_1BaseLaserScan.html" title=" " alt="" coords="9,80,181,121"/>
+<area shape="rect" id="node3" href="/home/runner/work/beluga/beluga/beluga/docs/_doxygen/generated/reference/html/tagfile.xml$structbeluga_1_1enable__self.html" title=" " alt="" coords="5,5,184,32"/>
 </map>

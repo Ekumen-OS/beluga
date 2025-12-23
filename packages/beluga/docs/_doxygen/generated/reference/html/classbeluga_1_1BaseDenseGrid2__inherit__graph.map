@@ -1,10 +1,10 @@
 <map id="beluga::BaseDenseGrid2&lt; Derived &gt;" name="beluga::BaseDenseGrid2&lt; Derived &gt;">
-<area shape="rect" id="node1" title="Dense 2D grid base type." alt="" coords="457,39,640,80"/>
-<area shape="rect" id="node4" href="$classbeluga_1_1BaseLinearGrid2.html" title=" " alt="" coords="688,5,869,47"/>
-<area shape="rect" id="node6" href="$classbeluga_1_1BaseLinearGrid2.html" title="Linear 2D grid base type." alt="" coords="688,71,869,112"/>
-<area shape="rect" id="node2" href="$classbeluga_1_1BaseRegularGrid.html" title="Regularly spaced N dimensional grid base type." alt="" coords="189,46,409,73"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,39,141,80"/>
-<area shape="rect" id="node5" href="$classbeluga_1_1ValueGrid2.html" title="Generic 2D linear value grid." alt="" coords="932,13,1115,39"/>
-<area shape="rect" id="node7" href="$classbeluga_1_1ValueGrid2.html" title=" " alt="" coords="951,67,1096,108"/>
-<area shape="rect" id="node8" href="$classbeluga_1_1BaseOccupancyGrid2.html" title="Occupancy 2D grid base type." alt="" coords="917,132,1129,173"/>
+<area shape="rect" id="node1" title="Dense 2D grid base type." alt="" coords="471,39,653,80"/>
+<area shape="rect" id="node4" href="$classbeluga_1_1BaseLinearGrid2.html" title=" " alt="" coords="701,5,883,47"/>
+<area shape="rect" id="node6" href="$classbeluga_1_1BaseLinearGrid2.html" title="Linear 2D grid base type." alt="" coords="701,71,883,112"/>
+<area shape="rect" id="node2" href="$classbeluga_1_1BaseRegularGrid.html" title="Regularly spaced N dimensional grid base type." alt="" coords="203,46,423,73"/>
+<area shape="rect" id="node3" href="$structbeluga_1_1enable__self.html" title=" " alt="" coords="5,39,155,80"/>
+<area shape="rect" id="node5" href="$classbeluga_1_1ValueGrid2.html" title="Generic 2D linear value grid." alt="" coords="945,13,1128,39"/>
+<area shape="rect" id="node7" href="$classbeluga_1_1ValueGrid2.html" title=" " alt="" coords="964,67,1109,108"/>
+<area shape="rect" id="node8" href="$classbeluga_1_1BaseOccupancyGrid2.html" title="Occupancy 2D grid base type." alt="" coords="931,132,1143,173"/>
 </map>

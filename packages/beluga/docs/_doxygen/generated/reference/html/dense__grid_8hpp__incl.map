@@ -1,12 +1,12 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/dense_grid.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/dense_grid.hpp">
-<area shape="rect" id="node1" title="Concepts and abstract implementations of dense grids." alt="" coords="351,5,544,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="187,131,262,158"/>
-<area shape="rect" id="node3" title=" " alt="" coords="287,131,349,158"/>
-<area shape="rect" id="node4" href="$regular__grid_8hpp.html" title="Concepts and abstract implementations of regular grids." alt="" coords="374,124,521,165"/>
-<area shape="rect" id="node8" title=" " alt="" coords="512,213,604,240"/>
-<area shape="rect" id="node9" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="628,213,853,240"/>
-<area shape="rect" id="node5" title=" " alt="" coords="5,213,68,240"/>
-<area shape="rect" id="node6" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="93,213,253,240"/>
-<area shape="rect" id="node7" title=" " alt="" coords="277,213,487,240"/>
-<area shape="rect" id="node10" title=" " alt="" coords="689,288,792,315"/>
+<area shape="rect" id="node1" title="Concepts and abstract implementations of dense grids." alt="" coords="352,5,545,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="189,131,263,158"/>
+<area shape="rect" id="node3" title=" " alt="" coords="288,131,351,158"/>
+<area shape="rect" id="node4" href="$regular__grid_8hpp.html" title="Concepts and abstract implementations of regular grids." alt="" coords="375,124,522,165"/>
+<area shape="rect" id="node7" title=" " alt="" coords="513,221,605,247"/>
+<area shape="rect" id="node8" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="629,221,855,247"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,221,68,247"/>
+<area shape="rect" id="node6" title=" " alt="" coords="91,221,302,247"/>
+<area shape="rect" id="node10" href="$enable__self_8hpp.html" title="Implementation of a CRTP utility to enable downcasting to the most derived class." alt="" coords="326,213,489,255"/>
+<area shape="rect" id="node9" title=" " alt="" coords="691,303,793,329"/>
 </map>

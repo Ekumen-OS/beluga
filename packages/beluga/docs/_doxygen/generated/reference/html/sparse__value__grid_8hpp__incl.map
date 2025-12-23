@@ -1,12 +1,12 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/sparse_value_grid.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/sparse_value_grid.hpp">
 <area shape="rect" id="node1" title="Implementation of generic sparse value regular grid." alt="" coords="246,5,443,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,213,97,240"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,221,97,247"/>
 <area shape="rect" id="node3" title=" " alt="" coords="442,131,517,158"/>
 <area shape="rect" id="node4" title=" " alt="" coords="541,131,633,158"/>
-<area shape="rect" id="node5" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="121,213,347,240"/>
+<area shape="rect" id="node5" href="$eigen__compatibility_8hpp_source.html" title=" " alt="" coords="121,221,347,247"/>
 <area shape="rect" id="node7" href="$regular__grid_8hpp.html" title="Concepts and abstract implementations of regular grids." alt="" coords="271,124,418,165"/>
-<area shape="rect" id="node6" title=" " alt="" coords="183,288,285,315"/>
-<area shape="rect" id="node8" title=" " alt="" coords="371,213,433,240"/>
-<area shape="rect" id="node9" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="458,213,618,240"/>
-<area shape="rect" id="node10" title=" " alt="" coords="642,213,853,240"/>
+<area shape="rect" id="node6" title=" " alt="" coords="183,303,285,329"/>
+<area shape="rect" id="node8" title=" " alt="" coords="371,221,433,247"/>
+<area shape="rect" id="node9" title=" " alt="" coords="457,221,667,247"/>
+<area shape="rect" id="node10" href="$enable__self_8hpp.html" title="Implementation of a CRTP utility to enable downcasting to the most derived class." alt="" coords="691,213,854,255"/>
 </map>

@@ -1,10 +1,10 @@
-.. meta::4c088eba56525814bb16022bb8ee99f7ee57c98165b8ee37f647435104370dd2627e522e37c4a0481d7be091a97488ba832b6861e31d2dd8a0365b397442c795
+.. meta::088411c9a0bcc9395cb958ca74e8f74ec55f3ef5249e8cbc9685f1764de7af6eb90b60452f93c52469f871f4820f9611126094580cd5d94e0c2c2bec84f6ebd6
 
 :orphan:
 
-.. title:: Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga -&gt; motion Relation
+.. title:: Beluga: /home/runner/work/beluga/beluga/beluga/include/beluga -&gt; mixins Relation
 
-/home/runner/work/beluga/beluga/beluga/include/beluga -&gt; motion Relation
+/home/runner/work/beluga/beluga/beluga/include/beluga -&gt; mixins Relation
 ===========================================================================
 
 .. container:: doxygen-content

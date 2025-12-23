@@ -102,10 +102,10 @@
 <!-- Node7 -->
 <g id="node7" class="node">
 <title>Node7</title>
-<g id="a_node7"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="180,-339.5 180,-369.5 282,-369.5 282,-339.5 180,-339.5"/>
-<text text-anchor="start" x="188" y="-357.5" font-family="Helvetica,sans-Serif" font-size="10.00">ciabatta::ciabatta</text>
-<text text-anchor="middle" x="231" y="-346.5" font-family="Helvetica,sans-Serif" font-size="10.00">_top&lt; Derived &gt;</text>
+<g id="a_node7"><a xlink:href="structbeluga_1_1enable__self.html" target="_top" xlink:title=" ">
+<polygon fill="none" stroke="black" points="175,-339.5 175,-369.5 287,-369.5 287,-339.5 175,-339.5"/>
+<text text-anchor="start" x="183" y="-357.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::enable_self</text>
+<text text-anchor="middle" x="231" y="-346.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Derived &gt;</text>
 </a>
 </g>
 </g>

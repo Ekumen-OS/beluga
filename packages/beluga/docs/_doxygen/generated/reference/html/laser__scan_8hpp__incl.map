@@ -1,9 +1,9 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/laser_scan.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/sensor/data/laser_scan.hpp">
-<area shape="rect" id="node1" title="Implementation of a laser scan interface." alt="" coords="337,5,531,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,124,68,151"/>
-<area shape="rect" id="node3" href="$ciabatta_8hpp_source.html" title=" " alt="" coords="93,124,253,151"/>
-<area shape="rect" id="node4" title=" " alt="" coords="277,124,413,151"/>
-<area shape="rect" id="node5" title=" " alt="" coords="437,124,612,151"/>
-<area shape="rect" id="node6" title=" " alt="" coords="637,124,847,151"/>
-<area shape="rect" id="node7" title=" " alt="" coords="871,124,1037,151"/>
+<area shape="rect" id="node1" title="Implementation of a laser scan interface." alt="" coords="340,5,533,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,131,68,158"/>
+<area shape="rect" id="node3" href="$enable__self_8hpp.html" title="Implementation of a CRTP utility to enable downcasting to the most derived class." alt="" coords="93,124,255,165"/>
+<area shape="rect" id="node4" title=" " alt="" coords="279,131,415,158"/>
+<area shape="rect" id="node5" title=" " alt="" coords="440,131,615,158"/>
+<area shape="rect" id="node6" title=" " alt="" coords="639,131,850,158"/>
+<area shape="rect" id="node7" title=" " alt="" coords="874,131,1039,158"/>
 </map>
