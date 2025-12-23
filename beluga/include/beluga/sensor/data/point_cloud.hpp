@@ -17,7 +17,7 @@
 
 #include <cmath>
 
-#include <ciabatta/ciabatta.hpp>
+#include <beluga/mixins/enable_self.hpp>
 
 #include <sophus/types.hpp>
 
@@ -53,7 +53,7 @@ namespace beluga {
  * as described in \ref PointCloudPage.
  */
 template <typename Derived>
-class BasePointCloud : public ciabatta::ciabatta_top<Derived> {};
+class BasePointCloud : public enable_self<Derived> {};
 
 }  // namespace beluga
 
