@@ -156,19 +156,17 @@ class LikelihoodFieldModelBase {
       std::vector<bool> boundary_mask(grid.size(), false);
       // Build a new mask for unknown_space cells possibly containing also inner-wall cells
       std::vector<bool> effective_unknown_mask{std::begin(grid.unknown_mask()), std::end(grid.unknown_mask())};
-
-      using index_t = std::ptrdiff_t;
+      // Containerizing the view for obstacle_mask (to avoid indexing issues).
+      const std::vector<bool> obstacle_mask{std::begin(grid.obstacle_mask()), std::end(grid.obstacle_mask())};
 
       for (std::size_t idx = 0; idx < grid.size(); ++idx) {
-        const auto sidx = static_cast<index_t>(idx);
-
-        if (!grid.obstacle_mask()[idx]) {
+        if (!obstacle_mask[idx]) {
           continue;  // skip free cells
         }
 
         // Check if any 4-neighbor is NOT an obstacle (free or unknown)
         const bool is_boundary = ranges::any_of(
-            grid.neighborhood4(sidx), [&](index_t n) { return !grid.obstacle_mask()[static_cast<std::size_t>(n)]; });
+            grid.neighborhood4(idx), [&](std::size_t n) { return !obstacle_mask[n]; });
 
         boundary_mask[idx] = is_boundary;
         // Mark as unknown space if not a boundary (inner wall)
