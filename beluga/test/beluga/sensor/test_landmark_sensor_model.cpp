@@ -48,6 +48,7 @@ LandmarkModelParam get_default_model_params() {
   LandmarkModelParam ret;
   ret.sigma_range = 1.0;
   ret.sigma_bearing = Sophus::Constants<double>::pi() / 2.0;  // 90 degrees
+  ret.random_prob = 1e-4;
   return ret;
 }
 
