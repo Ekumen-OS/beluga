@@ -76,7 +76,7 @@ TEST(LikelihoodFieldModelBase, PreProcessThickWalls) {
       1.0};
 
   auto params = beluga::LikelihoodFieldModelBaseParam{};
-  params.pre_process_thick_walls = true;
+  params.likelihood_from_strict_obstacle_edges = true;
   params.max_obstacle_distance = 10.0;
   params.sigma_hit = 0.2;
   params.z_hit = 0.5;
@@ -87,7 +87,7 @@ TEST(LikelihoodFieldModelBase, PreProcessThickWalls) {
 
   const auto& likelihood_field = model.likelihood_field();
 
-  // With pre_process_thick_walls=true, the center obstacle cell (12) at (2,2)
+  // With likelihood_from_strict_obstacle_edges=true, the center obstacle cell (12) at (2,2)
   // should be treated as unknown, and its distance should be calculated
   // from the boundary cells (e.g., cell 7 at (2,1)), which is 1.0 m.
   // The boundary cells themselves should have a distance of 0.

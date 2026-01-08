@@ -24,6 +24,7 @@
 #include <random>
 #include <range/v3/action/transform.hpp>
 #include <range/v3/algorithm.hpp>
+#include <range/v3/view/zip.hpp>
 #include <sophus/se2.hpp>
 #include <vector>
 
@@ -58,8 +59,8 @@ struct LikelihoodFieldModelBaseParam {
   double sigma_hit = 0.2;
   /// Whether to model unknown space or assume it free.
   bool model_unknown_space = false;
-  /// Wheter to pre-process thick walls or not.
-  bool pre_process_thick_walls = false;
+  /// Whether to pre-process thick walls or not.
+  bool likelihood_from_strict_obstacle_edges = false;
 };
 
 /// Likelihood field common sensor model for range finders.
@@ -148,61 +149,33 @@ class LikelihoodFieldModelBase {
 
     const auto squared_max_distance = static_cast<float>(params.max_obstacle_distance * params.max_obstacle_distance);
 
-    std::vector<float> distance_map;
+    // determine distances to obstacles and calculate likelihood values in-place to minimize memory usage when dealing
+    // with large maps
+    auto distance_map =
+        params.likelihood_from_strict_obstacle_edges
+            ? nearest_obstacle_distance_map(
+                  grid.obstacle_edge_mask(), squared_distance, neighborhood, squared_max_distance)
+            : nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
 
-    // Pre-process Thick walls
-    if (params.pre_process_thick_walls) {
-      // Build a new mask that contains only boundary obstacles
-      std::vector<bool> boundary_mask(grid.size(), false);
-      // Build a new mask for unknown_space cells possibly containing also inner-wall cells
-      std::vector<bool> effective_unknown_mask{std::begin(grid.unknown_mask()), std::end(grid.unknown_mask())};
-      // Containerizing the view for obstacle_mask (to avoid indexing issues).
-      const std::vector<bool> obstacle_mask{std::begin(grid.obstacle_mask()), std::end(grid.obstacle_mask())};
+    if (params.model_unknown_space) {
+      const auto inverse_max_distance = 1 / params.max_laser_distance;
+      const auto squared_background_distance =
+          -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
 
-      for (std::size_t idx = 0; idx < grid.size(); ++idx) {
-        if (!obstacle_mask[idx]) {
-          continue;  // skip free cells
-        }
+      const auto get_effective_unknown_value = [likelihood_from_strict_obstacle_edges =
+                                                    params.likelihood_from_strict_obstacle_edges](auto&& tuple) {
+        auto [is_obstacle, is_obstacle_edge, is_unknown] = tuple;
+        return likelihood_from_strict_obstacle_edges                     //
+                   ? (is_unknown || (is_obstacle && !is_obstacle_edge))  // unknown or inner wall
+                   : is_unknown;                                         // mirror the unknown mask
+      };
 
-        // Check if any 4-neighbor is NOT an obstacle (free or unknown)
-        const bool is_boundary =
-            ranges::any_of(grid.neighborhood4(idx), [&](std::size_t n) { return !obstacle_mask[n]; });
+      auto effective_unknown_mask =
+          ranges::views::zip(grid.obstacle_mask(), grid.obstacle_edge_mask(), grid.unknown_mask()) |  //
+          ranges::views::transform(get_effective_unknown_value);
 
-        boundary_mask[idx] = is_boundary;
-        // Mark as unknown space if not a boundary (inner wall)
-        if (!is_boundary) {
-          effective_unknown_mask[idx] = true;
-        }
-      }
-      // determine distances to obstacles and calculate likelihood values in-place
-      // to minimize memory usage when dealing with large maps
-      distance_map = nearest_obstacle_distance_map(boundary_mask, squared_distance, neighborhood, squared_max_distance);
-
-      // Handling unknown_space cells
-      if (params.model_unknown_space) {
-        const auto inverse_max_distance = 1 / params.max_laser_distance;
-        const auto squared_background_distance =
-            -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
-
-        distance_map |= beluga::actions::overlay(
-            effective_unknown_mask, std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
-      }
-
-    } else {
-      // determine distances to obstacles and calculate likelihood values in-place
-      // to minimize memory usage when dealing with large maps
-      distance_map =
-          nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
-
-      // Handling unknown_space cells
-      if (params.model_unknown_space) {
-        const auto inverse_max_distance = 1 / params.max_laser_distance;
-        const auto squared_background_distance =
-            -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
-
-        distance_map |= beluga::actions::overlay(
-            grid.unknown_mask(), std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
-      }
+      distance_map |= beluga::actions::overlay(
+          effective_unknown_mask, std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
     }
 
     auto likelihood_values = std::move(distance_map) |  //
