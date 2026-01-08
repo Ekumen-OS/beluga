@@ -51,22 +51,51 @@ TEST(LikelihoodFieldModelUnknownSpace, LikelihoodField) {
   constexpr auto kModelUnknownSpace = true;
   constexpr auto kUnknownSpaceLikelihood = 1 / kParamMaxLaserDistance;
 
-  auto params = beluga::LikelihoodFieldModelParam{kMaxObstacleDistance, kParamMaxLaserDistance,   kLaserHitProbability,
-                                                  kWightForRandomNoise, kStdForObstaclesBeingHit, kModelUnknownSpace};
-  auto sensor_model = UUT{params, grid};
+  {
+    constexpr auto kPreProcessThickWalls = false;
 
-  // clang-format off
- const double expected_likelihood_field[] = {  // NOLINT(modernize-avoid-c-arrays)
+    auto params = beluga::LikelihoodFieldModelParam{
+        kMaxObstacleDistance,     kParamMaxLaserDistance, kLaserHitProbability, kWightForRandomNoise,
+        kStdForObstaclesBeingHit, kModelUnknownSpace,     kPreProcessThickWalls};
+    auto sensor_model = UUT{params, grid};
+
+    // clang-format off
+    const double expected_likelihood_field[] = {  // NOLINT(modernize-avoid-c-arrays)
     kUnknownSpaceLikelihood, kUnknownSpaceLikelihood, kUnknownSpaceLikelihood, 1.022, 1.022,
     kUnknownSpaceLikelihood, 0.025                  , 0.027                  , 0.069, 1.022,
     kUnknownSpaceLikelihood, 0.027                  , 0.025                  , 0.069, 1.022,
     1.022                  , 0.069                  , 0.069                  , 0.069, 1.022,
-    1.022                  , 1.022                  , 1.022                  , 1.022, 1.022};
-  // clang-format on
+    1.022                  , 1.022                  , 1.022                  , 1.022, 1.022,
+  };
+    // clang-format on
 
-  ASSERT_THAT(
-      sensor_model.likelihood_field().data(),
-      testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
+    ASSERT_THAT(
+        sensor_model.likelihood_field().data(),
+        testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
+  }
+
+  {
+    constexpr auto kPreProcessThickWalls = true;
+
+    auto params = beluga::LikelihoodFieldModelParam{
+        kMaxObstacleDistance,     kParamMaxLaserDistance, kLaserHitProbability, kWightForRandomNoise,
+        kStdForObstaclesBeingHit, kModelUnknownSpace,     kPreProcessThickWalls};
+    auto sensor_model = UUT{params, grid};
+
+    // clang-format off
+  const double expected_likelihood_field[] = {  // NOLINT(modernize-avoid-c-arrays)
+    kUnknownSpaceLikelihood, kUnknownSpaceLikelihood, kUnknownSpaceLikelihood, 1.022, kUnknownSpaceLikelihood,
+    kUnknownSpaceLikelihood, 0.025                  , 0.027                  , 0.069, 1.022,
+    kUnknownSpaceLikelihood, 0.027                  , 0.025                  , 0.069, 1.022,
+    1.022                  , 0.069                  , 0.069                  , 0.069, 1.022,
+    kUnknownSpaceLikelihood, 1.022                  , 1.022                  , 1.022, kUnknownSpaceLikelihood,
+  };
+    // clang-format on
+
+    ASSERT_THAT(
+        sensor_model.likelihood_field().data(),
+        testing::Pointwise(testing::DoubleNear(0.003), expected_likelihood_field));
+  }
 }
 
 TEST(LikelihoodFieldModelUnknownSpace, LikelihoodField2) {
