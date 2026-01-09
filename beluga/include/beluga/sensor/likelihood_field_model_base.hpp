@@ -60,7 +60,7 @@ struct LikelihoodFieldModelBaseParam {
   /// Whether to model unknown space or assume it free.
   bool model_unknown_space = false;
   /// Whether to pre-process thick walls or not.
-  bool pre_process_thick_walls = false;
+  bool likelihood_from_strict_obstacle_edges = false;
 };
 
 /// Likelihood field common sensor model for range finders.
@@ -152,7 +152,7 @@ class LikelihoodFieldModelBase {
     // determine distances to obstacles and calculate likelihood values in-place to minimize memory usage when dealing
     // with large maps
     auto distance_map =
-        params.pre_process_thick_walls
+        params.likelihood_from_strict_obstacle_edges
             ? nearest_obstacle_distance_map(
                   grid.obstacle_edge_mask(), squared_distance, neighborhood, squared_max_distance)
             : nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
@@ -162,10 +162,10 @@ class LikelihoodFieldModelBase {
       const auto squared_background_distance =
           -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
 
-      const auto get_effective_unknown_value = [pre_process_thick_walls =
-                                                    params.pre_process_thick_walls](auto&& tuple) {
+      const auto get_effective_unknown_value = [likelihood_from_strict_obstacle_edges =
+                                                    params.likelihood_from_strict_obstacle_edges](auto&& tuple) {
         auto [is_obstacle, is_obstacle_edge, is_unknown] = tuple;
-        return pre_process_thick_walls                                   //
+        return likelihood_from_strict_obstacle_edges                     //
                    ? (is_unknown || (is_obstacle && !is_obstacle_edge))  // unknown or inner wall
                    : is_unknown;                                         // mirror the unknown mask
       };
