@@ -17,12 +17,11 @@
 
 #include <cmath>
 
-#include <ciabatta/ciabatta.hpp>
-
 #include <range/v3/view/transform.hpp>
 
 #include <Eigen/Core>
 #include <beluga/eigen_compatibility.hpp>
+#include <beluga/mixins/enable_self.hpp>
 
 /**
  * \file
@@ -62,8 +61,10 @@ namespace beluga {
  * \tparam NDim Dimension of the grid.
  */
 template <typename Derived, int NDim>
-class BaseRegularGrid : public ciabatta::ciabatta_top<Derived> {
+class BaseRegularGrid : public enable_self<Derived> {
  public:
+  using enable_self<Derived>::self;
+
   /// Compute nearest grid cell coordinates given plane coordinates.
   /**
    * Note this is a surjective function.
@@ -72,7 +73,7 @@ class BaseRegularGrid : public ciabatta::ciabatta_top<Derived> {
    * \return Grid cell coordinates.
    */
   [[nodiscard]] Eigen::Vector<int, NDim> cell_near(const Eigen::Vector<double, NDim>& p) const {
-    const auto inv_resolution = 1. / this->self().resolution();
+    const auto inv_resolution = 1. / self().resolution();
     return (p * inv_resolution).array().floor().template cast<int>();
   }
 
@@ -84,7 +85,7 @@ class BaseRegularGrid : public ciabatta::ciabatta_top<Derived> {
    * \return Plane coordinates of the cell centroid.
    */
   [[nodiscard]] Eigen::Vector<double, NDim> coordinates_at(const Eigen::Vector<int, NDim>& pi) const {
-    return (pi.template cast<double>() + Eigen::Vector<double, NDim>::Ones() * 0.5) * this->self().resolution();
+    return (pi.template cast<double>() + Eigen::Vector<double, NDim>::Ones() * 0.5) * self().resolution();
   }
 
   /// Compute plane coordinates given a range of cell coordinates.
@@ -94,7 +95,7 @@ class BaseRegularGrid : public ciabatta::ciabatta_top<Derived> {
    */
   template <class Range>
   [[nodiscard]] auto coordinates_for(Range&& cells) const {
-    return cells | ranges::views::transform([this](const auto& cell) { return this->self().coordinates_at(cell); });
+    return cells | ranges::views::transform([this](const auto& cell) { return self().coordinates_at(cell); });
   }
 };
 /// Convenience alias for a 2D base regular grid.

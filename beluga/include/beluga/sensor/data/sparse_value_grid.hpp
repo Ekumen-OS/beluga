@@ -45,6 +45,8 @@ namespace beluga {
 template <typename MapType, int NDim>
 class SparseValueGrid : public BaseRegularGrid<SparseValueGrid<MapType, NDim>, NDim> {
  public:
+  using BaseRegularGrid<SparseValueGrid<MapType, NDim>, NDim>::self;
+
   /// Construct without data and with a 1 cell/meter resolution.
   SparseValueGrid() = default;
   /// Underlying associative container.
@@ -84,7 +86,7 @@ class SparseValueGrid : public BaseRegularGrid<SparseValueGrid<MapType, NDim>, N
 
   /// Gets grid data at real coordinates 'coordinates' or std::nullopt if it's not present.
   [[nodiscard]] std::optional<mapped_type> data_near(const Eigen::Vector<double, NDim>& coordinates) const {
-    return data_at(this->self().cell_near(coordinates));
+    return data_at(self().cell_near(coordinates));
   }
 
  private:

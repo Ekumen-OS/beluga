@@ -63,20 +63,22 @@ namespace beluga {
 template <typename Derived>
 class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
  public:
+  using BaseDenseGrid2<Derived>::self;
+
   /// Computes index for given grid cell coordinates.
   /*
    * \param xi Grid cell x-axis coordinate.
    * \param yi Grid cell y-axis coordinate.
    */
   [[nodiscard]] std::size_t index_at(int xi, int yi) const {
-    return static_cast<std::size_t>(yi) * this->self().width() + static_cast<std::size_t>(xi);
+    return static_cast<std::size_t>(yi) * self().width() + static_cast<std::size_t>(xi);
   }
 
   /// Computes index for given grid cell coordinates.
   /**
    * \param pi Grid cell coordinates.
    */
-  [[nodiscard]] std::size_t index_at(const Eigen::Vector2i& pi) const { return this->self().index_at(pi.x(), pi.y()); }
+  [[nodiscard]] std::size_t index_at(const Eigen::Vector2i& pi) const { return self().index_at(pi.x(), pi.y()); }
 
   using BaseDenseGrid2<Derived>::coordinates_at;
 
@@ -86,8 +88,8 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
    * \return Plane coordinates of the cell centroid.
    */
   [[nodiscard]] Eigen::Vector2d coordinates_at(std::size_t index) const {
-    return this->self().coordinates_at(Eigen::Vector2i{
-        static_cast<int>(index % this->self().width()), static_cast<int>(index / this->self().width())});
+    return self().coordinates_at(
+        Eigen::Vector2i{static_cast<int>(index % self().width()), static_cast<int>(index / self().width())});
   }
 
   using BaseDenseGrid2<Derived>::data_at;
@@ -98,7 +100,7 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
    * \return Cell data if included, `std::nullopt` otherwise.
    */
   [[nodiscard]] auto data_at(std::size_t index) const {
-    return index < this->self().size() ? std::make_optional(this->self().data()[index]) : std::nullopt;
+    return index < self().size() ? std::make_optional(self().data()[index]) : std::nullopt;
   }
 
   using BaseDenseGrid2<Derived>::neighborhood4;
@@ -110,19 +112,19 @@ class BaseLinearGrid2 : public BaseDenseGrid2<Derived> {
    */
   [[nodiscard]] auto neighborhood4(std::size_t index) const {
     auto result = std::vector<std::size_t>{};
-    const std::size_t xi = index % this->self().width();
-    const std::size_t yi = index / this->self().width();
-    if (xi < (this->self().width() - 1)) {
+    const std::size_t xi = index % self().width();
+    const std::size_t yi = index / self().width();
+    if (xi < (self().width() - 1)) {
       result.push_back(index + 1);
     }
-    if (yi < (this->self().height() - 1)) {
-      result.push_back(index + this->self().width());
+    if (yi < (self().height() - 1)) {
+      result.push_back(index + self().width());
     }
     if (xi > 0) {
       result.push_back(index - 1);
     }
     if (yi > 0) {
-      result.push_back(index - this->self().width());
+      result.push_back(index - self().width());
     }
     return result;
   }

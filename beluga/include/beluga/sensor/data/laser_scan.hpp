@@ -17,7 +17,7 @@
 
 #include <cmath>
 
-#include <ciabatta/ciabatta.hpp>
+#include <beluga/mixins/enable_self.hpp>
 
 #include <sophus/types.hpp>
 
@@ -56,11 +56,13 @@ namespace beluga {
  * as described in \ref LaserScanPage.
  */
 template <typename Derived>
-class BaseLaserScan : public ciabatta::ciabatta_top<Derived> {
+class BaseLaserScan : public enable_self<Derived> {
  public:
+  using enable_self<Derived>::self;
+
   /// View points in cartesian coordinates in sensor frame.
   [[nodiscard]] auto points_in_cartesian_coordinates() const {
-    return this->self().points_in_polar_coordinates() | ranges::views::transform([](const auto& vector) {
+    return self().points_in_polar_coordinates() | ranges::views::transform([](const auto& vector) {
              using std::cos, std::sin;
              return Sophus::Vector2<typename Derived::Scalar>{
                  vector.x() * cos(vector.y()), vector.x() * sin(vector.y())};
@@ -73,13 +75,13 @@ class BaseLaserScan : public ciabatta::ciabatta_top<Derived> {
    * Same for NaN values.
    */
   [[nodiscard]] auto points_in_polar_coordinates() const {
-    static_assert(std::is_floating_point_v<ranges::range_value_t<decltype(this->self().ranges())>>);
-    static_assert(std::is_floating_point_v<ranges::range_value_t<decltype(this->self().angles())>>);
-    return ranges::views::zip(this->self().ranges(), this->self().angles()) |
+    static_assert(std::is_floating_point_v<ranges::range_value_t<decltype(self().ranges())>>);
+    static_assert(std::is_floating_point_v<ranges::range_value_t<decltype(self().angles())>>);
+    return ranges::views::zip(self().ranges(), self().angles()) |  //
            ranges::views::filter([this](const auto& tuple) {
              const auto [range, theta] = tuple;
              using std::isnan;
-             return !isnan(range) && range >= this->self().min_range() && range <= this->self().max_range();
+             return !isnan(range) && range >= self().min_range() && range <= self().max_range();
            }) |
            ranges::views::transform([](const auto& tuple) {
              const auto [range, theta] = tuple;

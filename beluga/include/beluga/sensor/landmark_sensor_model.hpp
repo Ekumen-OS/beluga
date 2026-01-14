@@ -44,6 +44,7 @@ namespace beluga {
 struct LandmarkModelParam {
   double sigma_range{1.0};    ///< Standard deviation of the range error.
   double sigma_bearing{1.0};  ///< Standard deviation of the bearing error.
+  double random_prob{1e-4};   ///< Probability of a random measurement.
 };
 
 /// Generic landmark model for discrete detection sensors (both 2D and 3D).
@@ -121,9 +122,9 @@ class LandmarkSensorModel {
         const auto opt_landmark_position_in_world =
             landmark_map_.find_nearest_landmark(detection_position_in_world, detection_category);
 
-        // if we did not find a matching landmark, return 0.0
+        // if we did not find a matching landmark
         if (!opt_landmark_position_in_world) {
-          return 0.0;
+          return params_.random_prob;
         }
 
         // convert landmark pose to world frame
@@ -147,8 +148,8 @@ class LandmarkSensorModel {
         const auto bearing_error_prob =
             std::exp(-bearing_error * bearing_error / (2. * params_.sigma_bearing * params_.sigma_bearing));
 
-        // We'll assume the probability of identification error to be zero
-        return range_error_prob * bearing_error_prob;
+        // We'll add a random probability to account for false positive measurements
+        return range_error_prob * bearing_error_prob + params_.random_prob;
       };
 
       return std::transform_reduce(detections.cbegin(), detections.cend(), 1.0, std::multiplies{}, detection_weight);

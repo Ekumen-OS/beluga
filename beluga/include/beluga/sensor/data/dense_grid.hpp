@@ -82,14 +82,16 @@ namespace beluga {
 template <typename Derived>
 class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
  public:
+  using BaseRegularGrid2<Derived>::self;
+
   /// Checks if a cell is included in the grid.
   /**
    * \param xi Grid cell x-axis coordinate.
    * \param yi Grid cell y-axis coordinate.
    */
   [[nodiscard]] bool contains(int xi, int yi) const {
-    const auto width = static_cast<int>(this->self().width());
-    const auto height = static_cast<int>(this->self().height());
+    const auto width = static_cast<int>(self().width());
+    const auto height = static_cast<int>(self().height());
     return xi >= 0 && yi >= 0 && xi < width && yi < height;
   }
 
@@ -97,7 +99,7 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
   /**
    * \param pi Grid cell coordinates.
    */
-  [[nodiscard]] bool contains(const Eigen::Vector2i& pi) const { return this->self().contains(pi.x(), pi.y()); }
+  [[nodiscard]] bool contains(const Eigen::Vector2i& pi) const { return self().contains(pi.x(), pi.y()); }
 
   /// Gets cell data, if included.
   /**
@@ -106,8 +108,7 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \return Cell data if included, `std::nullopt` otherwise.
    */
   [[nodiscard]] auto data_at(int xi, int yi) const {
-    return this->self().contains(xi, yi) ? this->self().data_at(this->self().index_at(Eigen::Vector2i{xi, yi}))
-                                         : std::nullopt;
+    return self().contains(xi, yi) ? self().data_at(self().index_at(Eigen::Vector2i{xi, yi})) : std::nullopt;
   }
 
   /// Gets cell data, if included.
@@ -115,7 +116,7 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \param pi Grid cell coordinates.
    * \return Cell data if included, `std::nullopt` otherwise.
    */
-  [[nodiscard]] auto data_at(const Eigen::Vector2i& pi) const { return this->self().data_at(pi.x(), pi.y()); }
+  [[nodiscard]] auto data_at(const Eigen::Vector2i& pi) const { return self().data_at(pi.x(), pi.y()); }
 
   /// Gets nearest cell data, if included.
   /**
@@ -124,7 +125,7 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \return Cell data if included, `std::nullopt` otherwise.
    */
   [[nodiscard]] auto data_near(double x, double y) const {
-    return this->self().data_at(this->self().cell_near(Eigen::Vector2d{x, y}));
+    return self().data_at(self().cell_near(Eigen::Vector2d{x, y}));
   }
 
   /// Gets nearest cell data, if included.
@@ -132,7 +133,7 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \param p Plane coordinates.
    * \return Cell data if included, `std::nullopt` otherwise.
    */
-  [[nodiscard]] auto data_near(const Eigen::Vector2d& p) const { return this->self().data_near(p.x(), p.y()); }
+  [[nodiscard]] auto data_near(const Eigen::Vector2d& p) const { return self().data_near(p.x(), p.y()); }
 
   /// Computes 4-connected neighborhood for cell.
   /**
@@ -142,10 +143,10 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    */
   [[nodiscard]] auto neighborhood4(int xi, int yi) const {
     auto result = std::vector<Eigen::Vector2i>{};
-    if (xi < static_cast<int>(this->self().width() - 1)) {
+    if (xi < static_cast<int>(self().width() - 1)) {
       result.emplace_back(xi + 1, yi);
     }
-    if (yi < static_cast<int>(this->self().height() - 1)) {
+    if (yi < static_cast<int>(self().height() - 1)) {
       result.emplace_back(xi, yi + 1);
     }
     if (xi > 0) {
@@ -162,9 +163,7 @@ class BaseDenseGrid2 : public BaseRegularGrid2<Derived> {
    * \param pi Grid cell coordinates.
    * \return range of neighbor cells.
    */
-  [[nodiscard]] auto neighborhood4(const Eigen::Vector2i& pi) const {
-    return this->self().neighborhood4(pi.x(), pi.y());
-  }
+  [[nodiscard]] auto neighborhood4(const Eigen::Vector2i& pi) const { return self().neighborhood4(pi.x(), pi.y()); }
 };
 
 }  // namespace beluga

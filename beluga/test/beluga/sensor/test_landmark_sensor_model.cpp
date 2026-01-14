@@ -48,6 +48,7 @@ LandmarkModelParam get_default_model_params() {
   LandmarkModelParam ret;
   ret.sigma_range = 1.0;
   ret.sigma_bearing = Sophus::Constants<double>::pi() / 2.0;  // 90 degrees
+  ret.random_prob = 1e-4;
   return ret;
 }
 
@@ -166,9 +167,19 @@ TYPED_TEST(LandmarkSensorModelTests, NoSuchLandmark) {
   const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
   // test case where there is not landmark in the map of the detected id
   auto map = LandmarkMap(default_map_boundaries, {{{0.0, 1.0, 0.0}, 99}});
-  auto sensor_model = TypeParam{get_default_model_params(), std::move(map)};
-  auto state_weighting_function = sensor_model({{{0.0, 2.0, 0.0}, 88}});
-  EXPECT_NEAR(expected_aggregate_probability({0.0}), state_weighting_function(pose), 1e-02);
+  auto params = get_default_model_params();
+  auto sensor_model = TypeParam{params, std::move(map)};
+  auto state_weighting_function = sensor_model({{{0.0, 2.0, 0.0}, 88}});  // Measurement with different id
+  EXPECT_NEAR(params.random_prob, state_weighting_function(pose), 1e-06);
+}
+
+TYPED_TEST(LandmarkSensorModelTests, FalsePositiveLandmark) {
+  const auto pose = get_robot_pose_in_world<typename TypeParam::state_type>();
+  auto map = LandmarkMap(default_map_boundaries, {{{0.0, 1.0, 0.0}, 0}});
+  auto params = get_default_model_params();
+  auto sensor_model = TypeParam{params, std::move(map)};
+  auto state_weighting_function = sensor_model({{{0.0, 10.0, 0.0}, 0}});  // Detection far from landmark map entry
+  EXPECT_NEAR(params.random_prob, state_weighting_function(pose), 1e-06);
 }
 
 }  // namespace
