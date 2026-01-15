@@ -190,11 +190,13 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
   /// Retrieves a mask over obstacle cells at the edge with free space in the grid.
   [[nodiscard]] auto obstacle_edge_mask() const {
     const auto is_boundary_cell = [this, value_traits = this->self().value_traits()](const auto& idx) {
-      const auto cell_value = this->self().data()[idx];
+      const auto index = static_cast<std::size_t>(idx);
+      const auto cell_value = this->self().data()[index];
       const auto neighbor_is_free = [this, value_traits](auto neighbour_idx) {
         return value_traits.is_free(this->self().data()[neighbour_idx]);
       };
-      return value_traits.is_occupied(cell_value) && ranges::any_of(this->self().neighborhood4(idx), neighbor_is_free);
+      return value_traits.is_occupied(cell_value) &&
+             ranges::any_of(this->self().neighborhood4(index), neighbor_is_free);
     };
     // Since enumerate does not return a range we can call size on, we create
     // a range of numbers instead. The cast is because without that ranges
