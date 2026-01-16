@@ -23,6 +23,8 @@
 #include <cmath>
 #include <random>
 #include <range/v3/action/transform.hpp>
+#include <range/v3/algorithm.hpp>
+#include <range/v3/view/zip.hpp>
 #include <sophus/se2.hpp>
 #include <vector>
 
@@ -57,6 +59,8 @@ struct LikelihoodFieldModelBaseParam {
   double sigma_hit = 0.2;
   /// Whether to model unknown space or assume it free.
   bool model_unknown_space = false;
+  /// Whether to pre-process thick walls or not.
+  bool likelihood_from_strict_obstacle_edges = false;
 };
 
 /// Likelihood field common sensor model for range finders.
@@ -145,18 +149,33 @@ class LikelihoodFieldModelBase {
 
     const auto squared_max_distance = static_cast<float>(params.max_obstacle_distance * params.max_obstacle_distance);
 
-    // determine distances to obstacles and calculate likelihood values in-place
-    // to minimize memory usage when dealing with large maps
+    // determine distances to obstacles and calculate likelihood values in-place to minimize memory usage when dealing
+    // with large maps
     auto distance_map =
-        nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
+        params.likelihood_from_strict_obstacle_edges
+            ? nearest_obstacle_distance_map(
+                  grid.obstacle_edge_mask(), squared_distance, neighborhood, squared_max_distance)
+            : nearest_obstacle_distance_map(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);
 
     if (params.model_unknown_space) {
       const auto inverse_max_distance = 1 / params.max_laser_distance;
       const auto squared_background_distance =
           -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
 
+      const auto get_effective_unknown_value = [likelihood_from_strict_obstacle_edges =
+                                                    params.likelihood_from_strict_obstacle_edges](auto&& tuple) {
+        auto [is_obstacle, is_obstacle_edge, is_unknown] = tuple;
+        return likelihood_from_strict_obstacle_edges                     //
+                   ? (is_unknown || (is_obstacle && !is_obstacle_edge))  // unknown or inner wall
+                   : is_unknown;                                         // mirror the unknown mask
+      };
+
+      auto effective_unknown_mask =
+          ranges::views::zip(grid.obstacle_mask(), grid.obstacle_edge_mask(), grid.unknown_mask()) |  //
+          ranges::views::transform(get_effective_unknown_value);
+
       distance_map |= beluga::actions::overlay(
-          grid.unknown_mask(), std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
+          effective_unknown_mask, std::min(squared_max_distance, static_cast<float>(squared_background_distance)));
     }
 
     auto likelihood_values = std::move(distance_map) |  //

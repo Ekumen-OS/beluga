@@ -21,8 +21,10 @@
 
 #include <beluga/sensor/data/linear_grid.hpp>
 
+#include <range/v3/algorithm/any_of.hpp>
 #include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/filter.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/view/transform.hpp>
 
 #include <Eigen/Core>
@@ -179,9 +181,28 @@ class BaseOccupancyGrid2 : public BaseLinearGrid2<Derived> {
 
   /// Retrieves a mask over occupied cells in the grid.
   [[nodiscard]] auto obstacle_mask() const {
-    return self().data() |  //
-           ranges::views::transform(
-               [value_traits = self().value_traits()](const auto& value) { return value_traits.is_occupied(value); });
+    const auto is_occupied = [value_traits = this->self().value_traits()](const auto& value) {
+      return value_traits.is_occupied(value);
+    };
+    return this->self().data() | ranges::views::transform(is_occupied);
+  }
+
+  /// Retrieves a mask over obstacle cells at the edge with free space in the grid.
+  [[nodiscard]] auto obstacle_edge_mask() const {
+    const auto is_boundary_cell = [this, value_traits = this->self().value_traits()](const auto& idx) {
+      const auto index = static_cast<std::size_t>(idx);
+      const auto cell_value = this->self().data()[index];
+      const auto neighbor_is_free = [this, value_traits](auto neighbour_idx) {
+        return value_traits.is_free(this->self().data()[neighbour_idx]);
+      };
+      return value_traits.is_occupied(cell_value) &&
+             ranges::any_of(this->self().neighborhood4(index), neighbor_is_free);
+    };
+    // Since enumerate does not return a range we can call size on, we create
+    // a range of numbers instead. The cast is because without that ranges
+    // does not find iota.
+    return ranges::views::iota(0, static_cast<int>(this->self().size())) |  //
+           ranges::views::transform(is_boundary_cell);
   }
 
   /// Retrieves a mask over unknown cells in the grid.

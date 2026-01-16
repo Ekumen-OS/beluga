@@ -135,6 +135,13 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Whether to regard inner obstacle cells as unknown space when calculating the likelihood field.";
+    declare_parameter("likelihood_from_strict_obstacle_edges", false, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "Mixture weight for the probability of getting max range measurements.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
@@ -374,6 +381,7 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
     params.z_random = get_parameter("z_rand").as_double();
     params.sigma_hit = get_parameter("sigma_hit").as_double();
     params.model_unknown_space = get_parameter("model_unknown_space").as_bool();
+    params.likelihood_from_strict_obstacle_edges = get_parameter("likelihood_from_strict_obstacle_edges").as_bool();
     return beluga::LikelihoodFieldModel{params, beluga_ros::OccupancyGrid{map}};
   }
   if (name == kLikelihoodFieldProbModelName) {
