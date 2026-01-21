@@ -67,6 +67,7 @@ add_executable(
   type_traits/test_tuple_traits.cpp
   utility/test_forward_like.cpp
   utility/test_indexing_iterator.cpp
+  views/test_low_variance_sample.cpp
   views/test_random_intersperse.cpp
   views/test_sample.cpp
   views/test_take_evenly.cpp
