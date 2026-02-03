@@ -56,7 +56,7 @@
     <link rel="prev" title="Overview" href="../../../../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Fri Jan 16 16:21:02 2026 -0300, 16ae447&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Feb 3 15:53:19 2026 +0100, 92096e1&#39;"/>
   </head>
   
   
@@ -446,10 +446,10 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__doxygen_beluga_main"></a> This is the API reference for Beluga. It extends concepts from the C++ standard library (STL), emphasizing support for ranges of particles.</p>
-<h2><a class="anchor" id="autotoc_md1"></a>
+<h2><a class="anchor" id="autotoc_md2"></a>
 Components</h2>
 <p>Explore the library's components organized by concept:</p>
-<h3><a class="anchor" id="autotoc_md2"></a>
+<h3><a class="anchor" id="autotoc_md3"></a>
 Sensor models</h3>
 <p>Probabilistic sensor models that describe the likelihood of obtaining a certain measurement given a specific state of the system. They all satisfy the <a class="el" href="SensorModelPage.html">sensor model named requirements</a>.</p>
 <table class="markdownTable">
@@ -464,7 +464,7 @@ Sensor models</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1BearingSensorModel.html" title="Generic bearing sensor model, for both 2D and 3D state types.">beluga::BearingSensorModel</a>   </td><td class="markdownTableBodyNone">Generic bearing sensor model for discrete detection sensors (both 2D and 3D)   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md3"></a>
+<h3><a class="anchor" id="autotoc_md4"></a>
 Motion models</h3>
 <p>Probabilistic motion models that describe how the state of the system evolves over time. They satisfy the <a class="el" href="MotionModelPage.html">motion model named requirements</a>.</p>
 <table class="markdownTable">
@@ -475,7 +475,7 @@ Motion models</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html" title="Sampled odometry model for an omnidirectional drive.">beluga::OmnidirectionalDriveModel</a>   </td><td class="markdownTableBodyNone">Sampled odometry model for an omnidirectional drive   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md4"></a>
+<h3><a class="anchor" id="autotoc_md5"></a>
 Range views</h3>
 <p>Useful views for working with ranges of particles. They are lazily evaluated range adaptor objects compatible with the Range-v3 library.</p>
 <table class="markdownTable">
@@ -484,21 +484,23 @@ Range views</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="elements_8hpp.html">beluga::views::elements</a>   </td><td class="markdownTableBodyNone">Takes a view of tuple-like values and a number N and produces a view of Nth element of each tuple    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="likelihoods_8hpp.html">beluga::views::likelihoods</a>   </td><td class="markdownTableBodyNone">Produces a view of the likelihoods obtained after applying a specific model to a range of particles    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="random__intersperse_8hpp.html">beluga::views::random_intersperse</a>   </td><td class="markdownTableBodyNone">Inserts values from a generator function between contiguous elements based on a given probability    </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="sample_8hpp.html">beluga::views::sample</a>   </td><td class="markdownTableBodyNone">Implements multinomial resampling for a given range of particles or distribution    </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="particles_8hpp.html">beluga::views::states</a>   </td><td class="markdownTableBodyNone">Produces a view of the states of a range of particles    </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="take__evenly_8hpp.html">beluga::views::take_evenly</a>   </td><td class="markdownTableBodyNone">Returns a range consisting of <code>count</code> elements evenly spaced over the source range    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="take__while__kld_8hpp.html">beluga::views::take_while_kld</a>   </td><td class="markdownTableBodyNone">Take elements from a range while the KLD condition is statisfied    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="particles_8hpp.html">beluga::views::weights</a>   </td><td class="markdownTableBodyNone">Produces a view of the weights of a range of particles    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="take__while__kld_8hpp.html">beluga::views::take_while_kld</a>   </td><td class="markdownTableBodyNone">Take elements from a range while the KLD condition is statisfied    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="particles_8hpp.html">beluga::views::weights</a>   </td><td class="markdownTableBodyNone">Produces a view of the weights of a range of particles    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="zip_8hpp.html">beluga::views::zip</a>   </td><td class="markdownTableBodyNone">Given N ranges, return a new range where the Mth element is a tuple of the Mth elements of all N ranges   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md5"></a>
+<h3><a class="anchor" id="autotoc_md6"></a>
 Range actions</h3>
 <p>Useful actions for working with ranges of particles. They are eagerly evaluated range adaptor objects compatible with the Range-v3 library.</p>
 <table class="markdownTable">
@@ -513,7 +515,7 @@ Range actions</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="reweight_8hpp.html">beluga::actions::reweight</a>   </td><td class="markdownTableBodyNone">Updates particle weights based on a given measurement likelihood function   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md6"></a>
+<h3><a class="anchor" id="autotoc_md7"></a>
 Policies</h3>
 <p>Policies that can be used to decide when to update the particle filter or resample the current set of particles. They are lazily-evaluated possibly stateful predicate that can be composed with others using overloaded boolean operators.</p>
 <table class="markdownTable">
@@ -526,7 +528,7 @@ Policies</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="on__motion_8hpp.html">beluga::policies::on_motion</a>   </td><td class="markdownTableBodyNone">Triggers on the detected motion   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md7"></a>
+<h3><a class="anchor" id="autotoc_md8"></a>
 Containers</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -536,7 +538,7 @@ Containers</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="classbeluga_1_1TupleVector.html" title="Shorthand for a tuple of vectors with the default allocator.">beluga::TupleVector</a>   </td><td class="markdownTableBodyNone">An implementation of a tuple of containers with an interface that looks like a container of tuples   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md8"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Distributions</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -621,7 +623,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Fri Jan 16 16:21:02 2026 -0300, 16ae447&#39;.
+  Last updated on &#39;Tue Feb 3 15:53:19 2026 +0100, 92096e1&#39;.
   <br/>
 </p>
   </div>
