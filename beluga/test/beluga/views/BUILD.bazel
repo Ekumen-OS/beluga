@@ -28,6 +28,7 @@ load("@rules_cc//cc:defs.bzl", "cc_test")
         ],
     )
     for file in [
+        "test_likelihoods.cpp",
         "test_random_intersperse.cpp",
         "test_sample.cpp",
         "test_take_evenly.cpp",
