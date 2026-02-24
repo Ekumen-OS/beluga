@@ -137,7 +137,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
         "Whether to regard inner obstacle cells as unknown space when calculating the likelihood field.";
-    declare_parameter("likelihood_from_strict_obstacle_edges", false, descriptor);
+    declare_parameter("likelihood_from_strict_obstacle_edges", true, descriptor);
   }
 
   {
