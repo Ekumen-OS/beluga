@@ -19,6 +19,7 @@
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/transform.hpp>
 
+#include <Eigen/Eigenvalues>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
 #include <sophus/so3.hpp>
