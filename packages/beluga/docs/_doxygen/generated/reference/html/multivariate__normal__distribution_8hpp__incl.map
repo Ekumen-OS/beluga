@@ -1,10 +1,11 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/random/multivariate_normal_distribution.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/random/multivariate_normal_distribution.hpp">
-<area shape="rect" id="node1" title="Implementation of a multivariate normal distribution." alt="" coords="28,5,236,76"/>
+<area shape="rect" id="node1" title="Implementation of a multivariate normal distribution." alt="" coords="91,5,299,76"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,131,77,158"/>
 <area shape="rect" id="node3" title=" " alt="" coords="102,131,162,158"/>
-<area shape="rect" id="node4" href="$multivariate__distribution__traits_8hpp.html" title="Implementation of multivariate distribution traits." alt="" coords="186,124,390,165"/>
-<area shape="rect" id="node5" title=" " alt="" coords="37,213,129,240"/>
-<area shape="rect" id="node6" title=" " alt="" coords="153,213,276,240"/>
-<area shape="rect" id="node7" title=" " alt="" coords="300,213,423,240"/>
-<area shape="rect" id="node8" title=" " alt="" coords="447,213,569,240"/>
+<area shape="rect" id="node4" title=" " alt="" coords="187,131,328,158"/>
+<area shape="rect" id="node5" href="$multivariate__distribution__traits_8hpp.html" title="Implementation of multivariate distribution traits." alt="" coords="353,124,557,165"/>
+<area shape="rect" id="node6" title=" " alt="" coords="203,213,295,240"/>
+<area shape="rect" id="node7" title=" " alt="" coords="320,213,443,240"/>
+<area shape="rect" id="node8" title=" " alt="" coords="467,213,589,240"/>
+<area shape="rect" id="node9" title=" " alt="" coords="613,213,736,240"/>
 </map>
