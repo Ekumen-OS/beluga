@@ -18,6 +18,7 @@
 #include <random>
 #include <utility>
 
+#include <Eigen/Eigenvalues>
 #include <beluga/random/multivariate_distribution_traits.hpp>
 
 /**
