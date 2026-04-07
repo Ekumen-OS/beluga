@@ -44,6 +44,9 @@ find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
 
+# Older Eigen version doing fancy (or unorthodox) stuff
+set_target_properties(Eigen3::Eigen PROPERTIES INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${EIGEN_INCLUDE_DIRS}")
+
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
   ${PROJECT_NAME}
