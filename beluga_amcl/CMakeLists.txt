@@ -60,7 +60,6 @@ set(_deps
     rclcpp::rclcpp
     rclcpp_components::component
     rclcpp_lifecycle::rclcpp_lifecycle
-    std_srvs::std_srvs_library
     message_filters::message_filters
     ${std_srvs_TARGETS}
     tf2_ros::tf2_ros)
@@ -79,7 +78,7 @@ target_sources(beluga_amcl_ros2_common PRIVATE src/ros2_common.cpp)
 target_include_directories(
   beluga_amcl_ros2_common
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:include/${PROJECT_NAME}> ${std_srvs_INCLUDE_DIRS})
+         $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
 target_link_libraries(beluga_amcl_ros2_common
                       PUBLIC beluga::beluga beluga_ros::beluga_ros ${_deps})
