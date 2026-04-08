@@ -10,6 +10,7 @@ services:
       - DISPLAY
       - QT_X11_NO_MITSHM=1
       - XAUTHORITY=/tmp/.docker.xauth
+      - BELUGA_PARANOID=1
     stdin_open: true
     tty: true
     user: ${USERID:-1000}:${GROUPID:-1000}

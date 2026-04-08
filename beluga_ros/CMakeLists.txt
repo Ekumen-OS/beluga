@@ -25,13 +25,20 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "Build type" FORCE)
 endif()
 
+set(DEFAULT_PARANOID OFF)
+if(DEFINED ENV{BELUGA_PARANOID})
+  set(DEFAULT_PARANOID $ENV{BELUGA_PARANOID})
+endif()
+option(PARANOID "Enable paranoid mode" ${DEFAULT_PARANOID})
+unset(DEFAULT_PARANOID)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(
     -Wall
     -Wconversion
     -Wextra
-    -Werror
-    -Wpedantic)
+    -Wpedantic
+    $<$<BOOL:${PARANOID}>:-Werror>)
 endif()
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   add_compile_options(-fno-inline)
@@ -48,23 +55,30 @@ find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
+set(_deps
+    ${geometry_msgs_TARGETS}
+    ${nav_msgs_TARGETS}
+    ${sensor_msgs_TARGETS}
+    ${std_msgs_TARGETS}
+    ${visualization_msgs_TARGETS}
+    tf2::tf2
+    tf2_eigen::tf2_eigen
+    tf2_geometry_msgs::tf2_geometry_msgs)
+
+if(NOT PARANOID)
+  foreach(target IN ITEMS ${_deps})
+    if(TARGET ${target})
+      set_target_properties(${target} PROPERTIES SYSTEM ON)
+    endif()
+  endforeach()
+endif()
+
 add_library(beluga_ros)
 target_sources(beluga_ros PRIVATE src/amcl.cpp src/ndt_ellipsoid.cpp)
 target_include_directories(
   beluga_ros PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                     $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(beluga_ros PUBLIC beluga::beluga)
-target_link_libraries(
-  beluga_ros
-  PUBLIC ${geometry_msgs_TARGETS}
-         ${nav_msgs_TARGETS}
-         ${sensor_msgs_TARGETS}
-         ${std_msgs_TARGETS}
-         ${visualization_msgs_TARGETS}
-         sensor_msgs::sensor_msgs_library
-         tf2::tf2
-         tf2_eigen::tf2_eigen
-         tf2_geometry_msgs::tf2_geometry_msgs)
+target_link_libraries(beluga_ros PUBLIC beluga::beluga ${_deps})
 target_compile_features(beluga_ros PUBLIC cxx_std_17)
 
 set_target_properties(beluga_ros PROPERTIES POSITION_INDEPENDENT_CODE ON)

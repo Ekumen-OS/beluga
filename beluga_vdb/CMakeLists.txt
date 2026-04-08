@@ -29,11 +29,14 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "Build type" FORCE)
 endif()
 
-find_package(beluga REQUIRED)
+set(DEFAULT_PARANOID OFF)
+if(DEFINED ENV{BELUGA_PARANOID})
+  set(DEFAULT_PARANOID $ENV{BELUGA_PARANOID})
+endif()
+option(PARANOID "Enable paranoid mode" ${DEFAULT_PARANOID})
+unset(DEFAULT_PARANOID)
 
-find_package(Eigen3 REQUIRED NO_MODULE)
-find_package(range-v3 REQUIRED)
-find_package(Sophus REQUIRED)
+find_package(beluga REQUIRED)
 
 if(NOT OPENVDB_CMAKE_MODULE_PATH)
   file(
@@ -65,6 +68,10 @@ if(OPENVDB_CMAKE_MODULE_PATH)
   list(POP_BACK CMAKE_MODULE_PATH)
 endif()
 
+if(NOT PARANOID)
+  set_target_properties(OpenVDB::openvdb PROPERTIES SYSTEM ON)
+endif()
+
 add_library(${PROJECT_NAME} INTERFACE)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -73,8 +80,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     INTERFACE -Wall
               -Wconversion
               -Wextra
-              -Werror
-              -Wpedantic)
+              -Wpedantic
+              $<$<BOOL:${PARANOID}>:-Werror>)
 endif()
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   target_compile_options(${PROJECT_NAME} INTERFACE -fno-inline)

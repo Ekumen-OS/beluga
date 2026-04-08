@@ -25,13 +25,20 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "Build type" FORCE)
 endif()
 
+set(DEFAULT_PARANOID OFF)
+if(DEFINED ENV{BELUGA_PARANOID})
+  set(DEFAULT_PARANOID $ENV{BELUGA_PARANOID})
+endif()
+option(PARANOID "Enable paranoid mode" ${DEFAULT_PARANOID})
+unset(DEFAULT_PARANOID)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(
     -Wall
     -Wconversion
-    -Werror
     -Wextra
-    -Wpedantic)
+    -Wpedantic
+    $<$<BOOL:${PARANOID}>:-Werror>)
 endif()
 
 option(BUILD_TESTING "Build the testing tree." ON)

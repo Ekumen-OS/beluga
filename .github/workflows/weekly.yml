@@ -31,6 +31,8 @@ jobs:
             upload_artifacts: true
     container:
       image: ros:${{ matrix.ros_distro }}-ros-base
+    env:
+      BELUGA_PARANOID: "1"
     steps:
       - name: Install debian packages
         run: >-

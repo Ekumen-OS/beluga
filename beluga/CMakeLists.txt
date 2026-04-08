@@ -25,15 +25,22 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "Build type" FORCE)
 endif()
 
+set(DEFAULT_PARANOID OFF)
+if(DEFINED ENV{BELUGA_PARANOID})
+  set(DEFAULT_PARANOID $ENV{BELUGA_PARANOID})
+endif()
+option(PARANOID "Enable paranoid mode" ${DEFAULT_PARANOID})
+unset(DEFAULT_PARANOID)
+
 add_library(beluga_compile_options INTERFACE)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   target_compile_options(
     beluga_compile_options
     INTERFACE -Wall
               -Wconversion
-              -Werror
               -Wextra
-              -Wpedantic)
+              -Wpedantic
+              $<$<BOOL:${PARANOID}>:-Werror>)
 endif()
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   target_compile_options(beluga_compile_options INTERFACE -fno-inline)
@@ -45,24 +52,37 @@ find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
 
+set(_deps
+    Eigen3::Eigen
+    range-v3::range-v3
+    Sophus::Sophus
+    TBB::tbb)
+if(NOT PARANOID)
+  foreach(target IN ITEMS ${_deps})
+    if(TARGET ${target})
+      set_target_properties(${target} PROPERTIES SYSTEM ON)
+    endif()
+  endforeach()
+endif()
+
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
   ${PROJECT_NAME}
   INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
             "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
-target_link_libraries(
-  ${PROJECT_NAME}
-  INTERFACE Eigen3::Eigen
-            ${HDF5_CXX_LIBRARIES}
-            Sophus::Sophus
-            TBB::tbb
-            range-v3::range-v3)
+target_link_libraries(${PROJECT_NAME} INTERFACE ${_deps})
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} INTERFACE EIGEN_NO_DEBUG
                                                      SOPHUS_USE_BASIC_LOGGING)
 
 if(HDF5_FOUND)
-  target_include_directories(${PROJECT_NAME} INTERFACE ${HDF5_INCLUDE_DIRS})
+  if(PARANOID)
+    target_include_directories(${PROJECT_NAME} INTERFACE ${HDF5_INCLUDE_DIRS})
+  else()
+    target_include_directories(${PROJECT_NAME} SYSTEM
+                               INTERFACE ${HDF5_INCLUDE_DIRS})
+  endif()
+  target_link_libraries(${PROJECT_NAME} INTERFACE ${HDF5_CXX_LIBRARIES})
   target_compile_definitions(${PROJECT_NAME} INTERFACE BELUGA_HAS_HDF5)
 else()
   message(

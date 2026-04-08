@@ -25,13 +25,20 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "Build type" FORCE)
 endif()
 
+set(DEFAULT_PARANOID OFF)
+if(DEFINED ENV{BELUGA_PARANOID})
+  set(DEFAULT_PARANOID $ENV{BELUGA_PARANOID})
+endif()
+option(PARANOID "Enable paranoid mode" ${DEFAULT_PARANOID})
+unset(DEFAULT_PARANOID)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(
     -Wall
     -Wconversion
     -Wextra
-    -Werror
-    -Wpedantic)
+    -Wpedantic
+    $<$<BOOL:${PARANOID}>:-Werror>)
 endif()
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   add_compile_options(-fno-inline)
@@ -48,6 +55,24 @@ find_package(std_srvs REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(tf2_ros REQUIRED)
 
+set(_deps
+    bondcpp::bondcpp
+    rclcpp::rclcpp
+    rclcpp_components::component
+    rclcpp_lifecycle::rclcpp_lifecycle
+    std_srvs::std_srvs_library
+    message_filters::message_filters
+    ${std_srvs_TARGETS}
+    tf2_ros::tf2_ros)
+
+if(NOT PARANOID)
+  foreach(target IN ITEMS ${_deps})
+    if(TARGET ${target})
+      set_target_properties(${target} PROPERTIES SYSTEM ON)
+    endif()
+  endforeach()
+endif()
+
 add_library(beluga_amcl_ros2_common SHARED)
 target_sources(beluga_amcl_ros2_common PRIVATE src/ros2_common.cpp)
 
@@ -56,15 +81,8 @@ target_include_directories(
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
          $<INSTALL_INTERFACE:include/${PROJECT_NAME}> ${std_srvs_INCLUDE_DIRS})
 
-target_link_libraries(
-  beluga_amcl_ros2_common
-  PUBLIC beluga_ros::beluga_ros
-         bondcpp::bondcpp
-         rclcpp::rclcpp
-         rclcpp_components::component
-         rclcpp_lifecycle::rclcpp_lifecycle
-         tf2_ros::tf2_ros
-         ${std_srvs_TARGETS})
+target_link_libraries(beluga_amcl_ros2_common
+                      PUBLIC beluga::beluga beluga_ros::beluga_ros ${_deps})
 
 target_compile_definitions(
   beluga_amcl_ros2_common
@@ -92,15 +110,8 @@ target_link_libraries(amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
 target_compile_features(amcl_node_component PUBLIC cxx_std_17)
 
-target_link_libraries(
-  amcl_node_component
-  PUBLIC beluga::beluga
-         beluga_ros::beluga_ros
-         bondcpp::bondcpp
-         rclcpp::rclcpp
-         rclcpp_components::component
-         rclcpp_lifecycle::rclcpp_lifecycle
-         ${std_srvs_TARGETS})
+target_link_libraries(amcl_node_component
+                      PUBLIC beluga::beluga beluga_ros::beluga_ros ${_deps})
 
 rclcpp_components_register_node(
   amcl_node_component
@@ -129,15 +140,8 @@ target_compile_features(ndt_amcl_node_component PUBLIC cxx_std_17)
 
 target_link_libraries(ndt_amcl_node_component PUBLIC beluga_amcl_ros2_common)
 
-target_link_libraries(
-  ndt_amcl_node_component
-  PUBLIC beluga::beluga
-         beluga_ros::beluga_ros
-         bondcpp::bondcpp
-         rclcpp::rclcpp
-         rclcpp_components::component
-         rclcpp_lifecycle::rclcpp_lifecycle
-         ${std_srvs_TARGETS})
+target_link_libraries(ndt_amcl_node_component
+                      PUBLIC beluga::beluga beluga_ros::beluga_ros ${_deps})
 
 rclcpp_components_register_node(
   ndt_amcl_node_component
@@ -165,15 +169,8 @@ target_compile_features(ndt_amcl_node_3d_component PUBLIC cxx_std_17)
 
 target_link_libraries(ndt_amcl_node_3d_component PUBLIC beluga_amcl_ros2_common)
 
-target_link_libraries(
-  ndt_amcl_node_3d_component
-  PUBLIC beluga::beluga
-         beluga_ros::beluga_ros
-         bondcpp::bondcpp
-         rclcpp::rclcpp
-         rclcpp_components::component
-         rclcpp_lifecycle::rclcpp_lifecycle
-         ${std_srvs_TARGETS})
+target_link_libraries(ndt_amcl_node_3d_component
+                      PUBLIC beluga::beluga beluga_ros::beluga_ros ${_deps})
 
 rclcpp_components_register_node(
   ndt_amcl_node_3d_component

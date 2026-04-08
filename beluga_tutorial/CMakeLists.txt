@@ -25,13 +25,20 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "Build type" FORCE)
 endif()
 
+set(DEFAULT_PARANOID OFF)
+if(DEFINED ENV{BELUGA_PARANOID})
+  set(DEFAULT_PARANOID $ENV{BELUGA_PARANOID})
+endif()
+option(PARANOID "Enable paranoid mode" ${DEFAULT_PARANOID})
+unset(DEFAULT_PARANOID)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(
     -Wall
     -Wconversion
     -Wextra
-    -Werror
-    -Wpedantic)
+    -Wpedantic
+    $<$<BOOL:${PARANOID}>:-Werror>)
 endif()
 
 find_package(beluga REQUIRED)
@@ -46,6 +53,9 @@ target_include_directories(
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
          $<INSTALL_INTERFACE:include> ${yaml_cpp_vendor_INCLUDE_DIRS})
 
+if(NOT PARANOID)
+  set_target_properties(yaml-cpp PROPERTIES SYSTEM ON)
+endif()
 target_link_libraries(${PROJECT_NAME} beluga::beluga yaml-cpp)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib/${PROJECT_NAME})
