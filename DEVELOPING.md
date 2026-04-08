@@ -44,6 +44,9 @@ To bring up a development environment:
 
 The Beluga project started as a ROS 2 project and therefore relies on a typical ROS 2 workflow. In particular, the Beluga project subscribes to [REP-2004](https://ros.org/reps/rep-2004.html) and aims for Quality Level 1. For development, this translates to mandatory API documentation and a 95% code coverage policy for unit and integration testing.
 
+> [!IMPORTANT]
+> Quality standards are enforced by CI/CD pipelines and within development containers. In particular, `$BELUGA_PARANOID` is always set to `1` in both environments, heightening code scrutiny. This is equivalent to forcing `-DPARANOID:BOOL=ON` for `colcon` builds in other settings.
+
 Within a development environment:
 
 1. **Build and test the project**. You will usually use `colcon`.
