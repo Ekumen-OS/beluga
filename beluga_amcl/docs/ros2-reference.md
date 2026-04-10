@@ -319,4 +319,4 @@ Also available as a standalone `amcl_node` executable.
 | `beam_skip_threshold` | Minimum percentage of particles for which a particular beam must match the map to not be skipped. Beluga AMCL does not support beam skipping. | ✅ |  |  |
 | `beam_skip_error_threshold` | Maximum percentage of skipped beams. Too many skipped beams trigger a full update to recover in case of bad convergence. Beluga AMCL does not support beam skipping. | ✅ |  |  |
 | `model_unknown_space` | Whether to model unknown space or assume it free. Default is `false`. |  | ✅ |  |
-| `likelihood_from_strict_obstacle_edges` | Whether to regard inner obstacle cells as unknown space when calculating the likelihood field. Default is `true`. |  | ✅ |  |
+| `only_obstacle_boundaries` | Whether to treat inner obstacle cells as unknown space, particularly when calculating likelihood fields. Default is `true`. |  | ✅ |  |

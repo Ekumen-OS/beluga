@@ -93,7 +93,7 @@ TEST(LikelihoodFieldModelBase, ThickWallsCombinations) {
   // Case 1: strict=false, unknown=false
   // Inner obstacles are treated as obstacles.
   {
-    params.likelihood_from_strict_obstacle_edges = false;
+    params.only_obstacle_boundaries = false;
     params.model_unknown_space = false;
     auto model = UUT{params, grid};
     const auto& field = model.likelihood_field();
@@ -107,7 +107,7 @@ TEST(LikelihoodFieldModelBase, ThickWallsCombinations) {
   // Case 2: strict=true, unknown=false
   // Inner obstacles are treated as free space (distance to nearest edge).
   {
-    params.likelihood_from_strict_obstacle_edges = true;
+    params.only_obstacle_boundaries = true;
     params.model_unknown_space = false;
     auto model = UUT{params, grid};
     const auto& field = model.likelihood_field();
@@ -123,7 +123,7 @@ TEST(LikelihoodFieldModelBase, ThickWallsCombinations) {
   // Case 3: strict=false, unknown=true
   // Inner obstacles are treated as obstacles. Unknown modeling doesn't affect known obstacles.
   {
-    params.likelihood_from_strict_obstacle_edges = false;
+    params.only_obstacle_boundaries = false;
     params.model_unknown_space = true;
     auto model = UUT{params, grid};
     const auto& field = model.likelihood_field();
@@ -137,7 +137,7 @@ TEST(LikelihoodFieldModelBase, ThickWallsCombinations) {
   // Case 4: strict=true, unknown=true
   // Inner obstacles are treated as unknown space.
   {
-    params.likelihood_from_strict_obstacle_edges = true;
+    params.only_obstacle_boundaries = true;
     params.model_unknown_space = true;
     auto model = UUT{params, grid};
     const auto& field = model.likelihood_field();
@@ -175,7 +175,7 @@ TEST(LikelihoodFieldModelBase, HollowThickWalls) {
   params.z_hit = 0.5;
   params.z_random = 0.5;
   params.max_laser_distance = 2.0;
-  params.likelihood_from_strict_obstacle_edges = true;
+  params.only_obstacle_boundaries = true;
 
   const double two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit;
   const double amplitude = params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()));
