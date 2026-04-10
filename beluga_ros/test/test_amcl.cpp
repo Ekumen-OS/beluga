@@ -168,4 +168,53 @@ TEST(TestAmcl, UpdateWithParticlesForced) {
   ASSERT_TRUE(estimate.has_value());
 }
 
+TEST(TestAmcl, RandomProbabilityEstimatorReset) {
+  constexpr std::size_t kWidth = 10;
+  constexpr std::size_t kHeight = 10;
+
+  auto message = std::make_shared<nav_msgs::msg::OccupancyGrid>();
+  message->info.resolution = 1.0F;
+  message->info.width = kWidth;
+  message->info.height = kHeight;
+  message->info.origin.position.x = 0.0;
+  message->info.origin.position.y = 0.0;
+  message->info.origin.position.z = 0.0;
+  message->data = std::vector<std::int8_t>(kWidth * kHeight, 0);
+  message->data[5 * kWidth + 5] = 100;  // Add an obstacle at (5, 5)
+
+  auto map = beluga_ros::OccupancyGrid{message};
+
+  auto params = beluga_ros::AmclParams{};
+  params.max_particles = 50UL;
+  params.alpha_slow = 0.001;
+  params.alpha_fast = 0.1;
+  params.resample_interval = 1;
+
+  auto amcl = beluga_ros::Amcl{
+      map,
+      beluga::DifferentialDriveModel{beluga::DifferentialDriveModelParam{}},
+      beluga::LikelihoodFieldModel{beluga::LikelihoodFieldModelParam{}, map},
+      params,
+      std::execution::seq,
+  };
+
+  // Cluster particles near (4, 5) pointing towards the obstacle at (5, 5)
+  amcl.initialize(Sophus::SE2d{0.0, {4.0, 5.0}}, (Eigen::Vector3d::Ones() * 0.01).asDiagonal());
+
+  auto good_scan_msg = std::make_shared<sensor_msgs::msg::LaserScan>();
+  good_scan_msg->ranges = std::vector<float>{1.0F};  // Exact distance to the obstacle
+  good_scan_msg->range_min = 0.0F;
+  good_scan_msg->range_max = 100.F;
+  amcl.force_update();
+  amcl.update(Sophus::SE2d{}, beluga_ros::LaserScan(good_scan_msg));
+
+  auto bad_scan_msg = std::make_shared<sensor_msgs::msg::LaserScan>();
+  bad_scan_msg->ranges = std::vector<float>{99.0F};  // Complete miss
+  bad_scan_msg->range_min = 0.0F;
+  bad_scan_msg->range_max = 100.F;
+  amcl.force_update();
+  auto estimate = amcl.update(Sophus::SE2d{}, beluga_ros::LaserScan(bad_scan_msg));
+  ASSERT_TRUE(estimate.has_value());
+}
+
 }  // namespace
