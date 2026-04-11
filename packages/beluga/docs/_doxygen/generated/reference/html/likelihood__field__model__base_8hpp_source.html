@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Apr 8 11:48:38 2026 -0300, e6a4a71&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Apr 10 22:41:54 2026 -0300, 3fa8ce3&#39;"/>
   </head>
   
   
@@ -480,7 +480,7 @@ $(function() {
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a848036674b931f8d5b1704315bd0ac2d">   59</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a848036674b931f8d5b1704315bd0ac2d">sigma_hit</a> = 0.2;</div>
 <div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#aded182623a1a864248907d2ad69024ec">   61</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#aded182623a1a864248907d2ad69024ec">model_unknown_space</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a306c79a14076460b0af3e6afb1cc1a2f">   63</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a306c79a14076460b0af3e6afb1cc1a2f">likelihood_from_strict_obstacle_edges</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a77ca1b93e081b29cc881f8488f22c599">   63</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a77ca1b93e081b29cc881f8488f22c599">only_obstacle_boundaries</a> = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
@@ -535,7 +535,7 @@ $(function() {
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="comment">// determine distances to obstacles and calculate likelihood values in-place to minimize memory usage when dealing</span></div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="comment">// with large maps</span></div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keyword">auto</span> distance_map =</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a306c79a14076460b0af3e6afb1cc1a2f">likelihood_from_strict_obstacle_edges</a></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a77ca1b93e081b29cc881f8488f22c599">only_obstacle_boundaries</a></div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            ? <a class="code" href="namespacebeluga.html#a3514fb728a6d09abf3ee1be194fb1394">nearest_obstacle_distance_map</a>(</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                  grid.obstacle_edge_mask(), squared_distance, neighborhood, squared_max_distance)</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            : <a class="code" href="namespacebeluga.html#a3514fb728a6d09abf3ee1be194fb1394">nearest_obstacle_distance_map</a>(grid.obstacle_mask(), squared_distance, neighborhood, squared_max_distance);</div>
@@ -545,10 +545,10 @@ $(function() {
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> squared_background_distance =</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;          -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> get_effective_unknown_value = [likelihood_from_strict_obstacle_edges =</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                                                    params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a306c79a14076460b0af3e6afb1cc1a2f">likelihood_from_strict_obstacle_edges</a>](<span class="keyword">auto</span>&amp;&amp; tuple) {</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> get_effective_unknown_value = [only_obstacle_boundaries =</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                                                    params.<a class="code" href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a77ca1b93e081b29cc881f8488f22c599">only_obstacle_boundaries</a>](<span class="keyword">auto</span>&amp;&amp; tuple) {</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keyword">auto</span> [is_obstacle, is_obstacle_edge, is_unknown] = tuple;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordflow">return</span> likelihood_from_strict_obstacle_edges                     <span class="comment">//</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordflow">return</span> only_obstacle_boundaries                                  <span class="comment">//</span></div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;                   ? (is_unknown || (is_obstacle &amp;&amp; !is_obstacle_edge))  <span class="comment">// unknown or inner wall</span></div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;                   : is_unknown;                                         <span class="comment">// mirror the unknown mask</span></div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      };</div>
@@ -590,8 +590,8 @@ $(function() {
 <div class="ttc" id="aoverlay_8hpp_html"><div class="ttname"><a href="overlay_8hpp.html">overlay.hpp</a></div><div class="ttdoc">Implementation of the overlay range adaptor object.</div></div>
 <div class="ttc" id="astructbeluga_1_1LikelihoodFieldModelBaseParam_html"><div class="ttname"><a href="structbeluga_1_1LikelihoodFieldModelBaseParam.html">beluga::LikelihoodFieldModelBaseParam</a></div><div class="ttdoc">Parameters used to construct a LikelihoodFieldModelBase instance.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model_base.hpp:42</div></div>
 <div class="ttc" id="astructbeluga_1_1LikelihoodFieldModelBaseParam_html_a273a0e2d137dadd7fc63868ec9ee03f6"><div class="ttname"><a href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a273a0e2d137dadd7fc63868ec9ee03f6">beluga::LikelihoodFieldModelBaseParam::max_laser_distance</a></div><div class="ttdeci">double max_laser_distance</div><div class="ttdoc">Maximum range of a laser ray.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model_base.hpp:50</div></div>
-<div class="ttc" id="astructbeluga_1_1LikelihoodFieldModelBaseParam_html_a306c79a14076460b0af3e6afb1cc1a2f"><div class="ttname"><a href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a306c79a14076460b0af3e6afb1cc1a2f">beluga::LikelihoodFieldModelBaseParam::likelihood_from_strict_obstacle_edges</a></div><div class="ttdeci">bool likelihood_from_strict_obstacle_edges</div><div class="ttdoc">Whether to pre-process thick walls or not.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model_base.hpp:63</div></div>
 <div class="ttc" id="astructbeluga_1_1LikelihoodFieldModelBaseParam_html_a3ff8346bdc614152df7d4d1dac86126e"><div class="ttname"><a href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a3ff8346bdc614152df7d4d1dac86126e">beluga::LikelihoodFieldModelBaseParam::max_obstacle_distance</a></div><div class="ttdeci">double max_obstacle_distance</div><div class="ttdoc">Maximum distance to obstacle.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model_base.hpp:48</div></div>
+<div class="ttc" id="astructbeluga_1_1LikelihoodFieldModelBaseParam_html_a77ca1b93e081b29cc881f8488f22c599"><div class="ttname"><a href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a77ca1b93e081b29cc881f8488f22c599">beluga::LikelihoodFieldModelBaseParam::only_obstacle_boundaries</a></div><div class="ttdeci">bool only_obstacle_boundaries</div><div class="ttdoc">Whether to pre-process thick walls or not.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model_base.hpp:63</div></div>
 <div class="ttc" id="astructbeluga_1_1LikelihoodFieldModelBaseParam_html_a816956044cfe8bca3e6a0cb2730018d7"><div class="ttname"><a href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a816956044cfe8bca3e6a0cb2730018d7">beluga::LikelihoodFieldModelBaseParam::z_hit</a></div><div class="ttdeci">double z_hit</div><div class="ttdoc">Weight used to combine the probability of hitting an obstacle.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model_base.hpp:52</div></div>
 <div class="ttc" id="astructbeluga_1_1LikelihoodFieldModelBaseParam_html_a848036674b931f8d5b1704315bd0ac2d"><div class="ttname"><a href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#a848036674b931f8d5b1704315bd0ac2d">beluga::LikelihoodFieldModelBaseParam::sigma_hit</a></div><div class="ttdeci">double sigma_hit</div><div class="ttdoc">Standard deviation of a gaussian centered arounds obstacles.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model_base.hpp:59</div></div>
 <div class="ttc" id="astructbeluga_1_1LikelihoodFieldModelBaseParam_html_ac4e2292d1fd888996c527a273e968502"><div class="ttname"><a href="structbeluga_1_1LikelihoodFieldModelBaseParam.html#ac4e2292d1fd888996c527a273e968502">beluga::LikelihoodFieldModelBaseParam::z_random</a></div><div class="ttdeci">double z_random</div><div class="ttdoc">Weight used to combine the probability of random noise in perception.</div><div class="ttdef"><b>Definition:</b> likelihood_field_model_base.hpp:54</div></div>
@@ -653,7 +653,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Apr 8 11:48:38 2026 -0300, e6a4a71&#39;.
+  Last updated on &#39;Fri Apr 10 22:41:54 2026 -0300, 3fa8ce3&#39;.
   <br/>
 </p>
   </div>
