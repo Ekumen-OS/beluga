@@ -2,8 +2,8 @@
 Changelog for package beluga_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.1 (2026-04-20)
+------------------
 * Add paranoid mode (`#557 <https://github.com/Ekumen-OS/beluga/issues/557>`_)
 * Contributors: Michel Hidalgo
 

@@ -2,8 +2,8 @@
 Changelog for package beluga
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.1 (2026-04-20)
+------------------
 * Change default of the strict boundaries setting to true (`#555 <https://github.com/Ekumen-OS/beluga/issues/555>`_)
 * Add paranoid mode (`#557 <https://github.com/Ekumen-OS/beluga/issues/557>`_)
 * Add missing Eigen/Eigenvalues include for GCC 15 / Eigen5 compatibility (`#553 <https://github.com/Ekumen-OS/beluga/issues/553>`_)

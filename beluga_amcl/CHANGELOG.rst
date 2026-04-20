@@ -2,8 +2,8 @@
 Changelog for package beluga_amcl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.1 (2026-04-20)
+------------------
 * Change default of the strict boundaries setting to true (`#555 <https://github.com/Ekumen-OS/beluga/issues/555>`_)
 * Add paranoid mode (`#557 <https://github.com/Ekumen-OS/beluga/issues/557>`_)
 * Thick walls pre-processing feature added (`#541 <https://github.com/Ekumen-OS/beluga/issues/541>`_)
