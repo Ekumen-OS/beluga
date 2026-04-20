@@ -2,6 +2,11 @@
 Changelog for package beluga_vdb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add paranoid mode (`#557 <https://github.com/Ekumen-OS/beluga/issues/557>`_)
+* Contributors: Michel Hidalgo
+
 2.1.0 (2025-11-25)
 ------------------
 * Add ROS Kilted Kaiju support (`#485 <https://github.com/Ekumen-OS/beluga/issues/485>`_)

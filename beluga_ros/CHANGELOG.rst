@@ -2,6 +2,12 @@
 Changelog for package beluga_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Change default of the strict boundaries setting to true (`#555 <https://github.com/Ekumen-OS/beluga/issues/555>`_)
+* Add paranoid mode (`#557 <https://github.com/Ekumen-OS/beluga/issues/557>`_)
+* Contributors: Gerardo Puga, Michel Hidalgo
+
 2.1.0 (2025-11-25)
 ------------------
 * Remove ROS 1 references and documentation (`#528 <https://github.com/Ekumen-OS/beluga/issues/528>`_)

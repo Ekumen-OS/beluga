@@ -2,6 +2,9 @@
 Changelog for package beluga_example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.1.0 (2025-11-25)
 ------------------
 * Remove ROS 1 references and documentation (`#528 <https://github.com/Ekumen-OS/beluga/issues/528>`_)
