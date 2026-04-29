@@ -104,6 +104,11 @@ struct low_variance_sample_view
 
     /// Position the current iterator.
     constexpr void next() {
+      if (M_ == 1) {
+        // If there's only one element, we can skip the sampling logic and just return it repeatedly.
+        ++m_;
+        return;
+      }
       // A number U in [0, 1] that points to exactly one particle in the range.
       // Where the particle i satisfies with i=argmin_j \sum_1^j w^m >= U.
       const double U = r_ + static_cast<double>(m_) / static_cast<double>(M_);
