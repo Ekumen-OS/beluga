@@ -95,6 +95,15 @@ struct AmclParams {
 
   /// \brief Spatial resolution around the z-axis to create buckets for KLD resampling.
   double spatial_resolution_theta = 10 * Sophus::Constants<double>::pi() / 180;
+
+  /// \brief Expected standard deviation of x in a healthy particle distribution, used for quality estimation [m].
+  double expected_pose_x_stddev = 0.1;
+
+  /// \brief Expected standard deviation of y in a healthy particle distribution, used for quality estimation [m].
+  double expected_pose_y_stddev = 0.1;
+
+  /// \brief Expected standard deviation of yaw in a healthy particle distribution, used for quality estimation [rad].
+  double expected_pose_yaw_stddev = 0.05;
 };
 
 /// Implementation of the 2D Adaptive Monte Carlo Localization (AMCL) algorithm.
@@ -262,6 +271,14 @@ class Amcl {
   /// Force a manual update of the particles on the next iteration of the filter.
   void force_update() { force_update_ = true; }
 
+  /// Returns the localization quality score from the last filter update.
+  /**
+   * The score is in [0, 1], where close to 1 means the filter covariance is within the expected
+   * and values approaching 0 indicate the filter may be diverging.
+   * Returns 1.0 before the first successful update.
+   */
+  [[nodiscard]] double quality() const { return last_quality_; }
+
  private:
   beluga::TupleVector<particle_type> particles_;
 
@@ -279,6 +296,9 @@ class Amcl {
   beluga::RollingWindow<Sophus::SE2d, 2> control_action_window_;
 
   bool force_update_{true};
+  double last_quality_{1.0};
+
+  double compute_quality(const Sophus::Matrix3d& actual_covariance);
 };
 
 }  // namespace beluga_ros

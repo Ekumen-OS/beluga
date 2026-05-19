@@ -21,7 +21,11 @@
 #include <beluga/algorithm/cluster_based_estimation.hpp>
 #include <beluga/views/random_intersperse.hpp>
 #include <beluga/views/take_while_kld.hpp>
+#include <algorithm>
 #include <cmath>
+#include <limits>
+#include <random>
+#include <vector>
 
 namespace beluga_ros {
 
@@ -122,7 +126,47 @@ auto Amcl::update(
   }
 
   force_update_ = false;
-  return beluga::cluster_based_estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
+  auto estimate =
+      beluga::cluster_based_estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
+  last_quality_ = compute_quality(estimate.second);
+  return estimate;
+}
+
+double Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
+  const std::size_t N = params_.min_particles;
+
+  // a known seed is required to provide the exact same reference each time quality is computed.
+  std::mt19937 gen{42};
+  std::normal_distribution<double> dx{0.0, params_.expected_pose_x_stddev};
+  std::normal_distribution<double> dy{0.0, params_.expected_pose_y_stddev};
+  std::normal_distribution<double> dyaw{0.0, params_.expected_pose_yaw_stddev};
+
+  std::vector<Sophus::SE2d> ref_states;
+  ref_states.reserve(N);
+  for (std::size_t i = 0; i < N; ++i) {
+    ref_states.emplace_back(Sophus::SO2d{dyaw(gen)}, Sophus::Vector2d{dx(gen), dy(gen)});
+  }
+
+  std::visit(
+      [&](const auto& motion_model) {
+        auto sampling_fn = motion_model(control_action_window_);
+        for (auto& state : ref_states) {
+          state = sampling_fn(state, gen);
+        }
+      },
+      motion_model_);
+
+  const std::vector<double> uniform_weights(N, 1.0);
+  const auto [ref_mean, ref_covariance] = beluga::estimate(ref_states, uniform_weights);
+
+  double quality = 1.0;
+  for (int i = 0; i < 3; ++i) {
+    const double actual = actual_covariance.coeff(i, i);
+    if (actual > std::numeric_limits<double>::epsilon()) {
+      quality = std::min(quality, ref_covariance.coeff(i, i) / actual);
+    }
+  }
+  return std::clamp(quality, 0.0, 1.0);
 }
 
 }  // namespace beluga_ros
