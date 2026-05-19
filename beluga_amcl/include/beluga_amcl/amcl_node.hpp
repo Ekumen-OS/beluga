@@ -36,6 +36,7 @@
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+#include <std_msgs/msg/float64.hpp>
 #include <std_srvs/srv/empty.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
@@ -152,6 +153,9 @@ class AmclNode : public BaseAMCLNode {
 
   /// Likelihood field publisher
   rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr likelihood_field_pub_;
+
+  /// Localization quality publisher
+  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr quality_pub_;
 
   /// Global relocalization service server.
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr global_localization_server_;

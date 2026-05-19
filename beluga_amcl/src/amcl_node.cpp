@@ -58,6 +58,7 @@
 #include <nav_msgs/msg/occupancy_grid.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/msg/point_field.hpp>
+#include <std_msgs/msg/float64.hpp>
 #include <std_srvs/srv/empty.hpp>
 
 #include <beluga/motion/differential_drive_model.hpp>
@@ -201,6 +202,28 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
         "increase resource usage and potentially degrade performance.";
     declare_parameter("debug", false, descriptor);
   }
+
+  {
+    const auto defaults = beluga_ros::AmclParams{};
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0.0;
+    descriptor.floating_point_range[0].to_value = 1.0;
+    descriptor.floating_point_range[0].step = 0.0;
+
+    descriptor.description =
+        "Expected standard deviation of x in a healthy particle distribution, used for quality estimation [m].";
+    declare_parameter("expected_pose_x_stddev", rclcpp::ParameterValue(defaults.expected_pose_x_stddev), descriptor);
+
+    descriptor.description =
+        "Expected standard deviation of y in a healthy particle distribution, used for quality estimation [m].";
+    declare_parameter("expected_pose_y_stddev", rclcpp::ParameterValue(defaults.expected_pose_y_stddev), descriptor);
+
+    descriptor.description =
+        "Expected standard deviation of yaw in a healthy particle distribution, used for quality estimation [rad].";
+    declare_parameter(
+        "expected_pose_yaw_stddev", rclcpp::ParameterValue(defaults.expected_pose_yaw_stddev), descriptor);
+  }
 }
 
 AmclNode::~AmclNode() {
@@ -214,6 +237,9 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_activate();
   }
+
+  quality_pub_ = create_publisher<std_msgs::msg::Float64>("localization_quality", rclcpp::SystemDefaultsQoS());
+  quality_pub_->on_activate();
 
   {
     map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
@@ -311,6 +337,9 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_deactivate();
   }
+  if (quality_pub_) {
+    quality_pub_->on_deactivate();
+  }
 }
 
 void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
@@ -318,6 +347,7 @@ void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   particle_filter_.reset();
   enable_tf_broadcast_ = false;
   likelihood_field_pub_.reset();
+  quality_pub_.reset();
 }
 
 auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
@@ -423,6 +453,9 @@ auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   params.spatial_resolution_x = get_parameter("spatial_resolution_x").as_double();
   params.spatial_resolution_y = get_parameter("spatial_resolution_y").as_double();
   params.spatial_resolution_theta = get_parameter("spatial_resolution_theta").as_double();
+  params.expected_pose_x_stddev = get_parameter("expected_pose_x_stddev").as_double();
+  params.expected_pose_y_stddev = get_parameter("expected_pose_y_stddev").as_double();
+  params.expected_pose_yaw_stddev = get_parameter("expected_pose_yaw_stddev").as_double();
 
   return std::make_unique<beluga_ros::Amcl>(
       beluga_ros::OccupancyGrid{map},                                        //
@@ -644,6 +677,10 @@ void AmclNode::sensor_callback(const std::shared_ptr<const MessageT>& sensor_msg
     tf2::toMsg(base_pose_in_map, message.pose.pose);
     tf2::covarianceEigenToRowMajor(base_pose_covariance, message.pose.covariance);
     pose_pub_->publish(message);
+
+    auto quality_msg = std_msgs::msg::Float64{};
+    quality_msg.data = particle_filter_->quality();
+    quality_pub_->publish(quality_msg);
   }
 }
 
