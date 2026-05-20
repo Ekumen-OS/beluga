@@ -14,6 +14,7 @@
 
 #include <beluga_ros/amcl.hpp>
 
+#include <algorithm>
 #include <beluga/actions/assign.hpp>
 #include <beluga/actions/normalize.hpp>
 #include <beluga/actions/propagate.hpp>
@@ -21,7 +22,6 @@
 #include <beluga/algorithm/cluster_based_estimation.hpp>
 #include <beluga/views/random_intersperse.hpp>
 #include <beluga/views/take_while_kld.hpp>
-#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <random>
@@ -126,8 +126,7 @@ auto Amcl::update(
   }
 
   force_update_ = false;
-  auto estimate =
-      beluga::cluster_based_estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
+  auto estimate = beluga::cluster_based_estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
   last_quality_ = compute_quality(estimate.second);
   return estimate;
 }
