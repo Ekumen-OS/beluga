@@ -132,7 +132,7 @@ auto Amcl::update(
 }
 
 double Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
-  const std::size_t N = params_.min_particles;
+  const std::size_t n = params_.min_particles;
 
   // a known seed is required to provide the exact same reference each time quality is computed.
   std::mt19937 gen{42};
@@ -141,8 +141,8 @@ double Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
   std::normal_distribution<double> dyaw{0.0, params_.expected_pose_yaw_stddev};
 
   std::vector<Sophus::SE2d> ref_states;
-  ref_states.reserve(N);
-  for (std::size_t i = 0; i < N; ++i) {
+  ref_states.reserve(n);
+  for (std::size_t i = 0; i < n; ++i) {
     ref_states.emplace_back(Sophus::SO2d{dyaw(gen)}, Sophus::Vector2d{dx(gen), dy(gen)});
   }
 
@@ -155,7 +155,7 @@ double Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
       },
       motion_model_);
 
-  const std::vector<double> uniform_weights(N, 1.0);
+  const std::vector<double> uniform_weights(n, 1.0);
   const auto [ref_mean, ref_covariance] = beluga::estimate(ref_states, uniform_weights);
 
   double quality = 1.0;
