@@ -208,7 +208,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0.0;
-    descriptor.floating_point_range[0].to_value = 1.0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
     descriptor.floating_point_range[0].step = 0.0;
 
     descriptor.description =

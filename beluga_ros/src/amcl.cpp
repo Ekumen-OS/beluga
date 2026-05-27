@@ -47,6 +47,17 @@ Amcl::Amcl(
   if (params_.selective_resampling) {
     resample_policy_ = resample_policy_ && beluga::policies::on_effective_size_drop;
   }
+
+  Sophus::Matrix3d covariance = Sophus::Matrix3d::Zero();
+  covariance(0, 0) = params_.expected_pose_x_stddev * params_.expected_pose_x_stddev;
+  covariance(1, 1) = params_.expected_pose_y_stddev * params_.expected_pose_y_stddev;
+  covariance(2, 2) = params_.expected_pose_yaw_stddev * params_.expected_pose_yaw_stddev;
+  auto dist = beluga::MultivariateNormalDistribution<Sophus::SE2d>{covariance};
+  std::mt19937 gen{42};
+  ref_states_.reserve(params_.min_particles);
+  for (std::size_t i = 0; i < params_.min_particles; ++i) {
+    ref_states_.emplace_back(dist(gen));
+  }
 }
 
 void Amcl::update_map(beluga_ros::OccupancyGrid map) {
@@ -132,30 +143,20 @@ auto Amcl::update(
 }
 
 double Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
-  const std::size_t n = params_.min_particles;
-
-  // a known seed is required to provide the exact same reference each time quality is computed.
-  std::mt19937 gen{42};
-  std::normal_distribution<double> dx{0.0, params_.expected_pose_x_stddev};
-  std::normal_distribution<double> dy{0.0, params_.expected_pose_y_stddev};
-  std::normal_distribution<double> dyaw{0.0, params_.expected_pose_yaw_stddev};
-
   std::vector<Sophus::SE2d> ref_states;
-  ref_states.reserve(n);
-  for (std::size_t i = 0; i < n; ++i) {
-    ref_states.emplace_back(Sophus::SO2d{dyaw(gen)}, Sophus::Vector2d{dx(gen), dy(gen)});
-  }
+  ref_states.reserve(ref_states_.size());
 
+  std::mt19937 gen{42};
   std::visit(
       [&](const auto& motion_model) {
         auto sampling_fn = motion_model(control_action_window_);
-        for (auto& state : ref_states) {
-          state = sampling_fn(state, gen);
+        for (const auto& state : ref_states_) {
+          ref_states.push_back(sampling_fn(state, gen));
         }
       },
       motion_model_);
 
-  const std::vector<double> uniform_weights(n, 1.0);
+  const std::vector<double> uniform_weights(ref_states.size(), 1.0);
   const auto [ref_mean, ref_covariance] = beluga::estimate(ref_states, uniform_weights);
 
   double quality = 1.0;

@@ -18,6 +18,7 @@
 #include <optional>
 #include <utility>
 #include <variant>
+#include <vector>
 
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/take_exactly.hpp>
@@ -297,6 +298,7 @@ class Amcl {
 
   bool force_update_{true};
   double last_quality_{1.0};
+  std::vector<Sophus::SE2d> ref_states_;
 
   double compute_quality(const Sophus::Matrix3d& actual_covariance);
 };
