@@ -238,8 +238,12 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     likelihood_field_pub_->on_activate();
   }
 
-  quality_pub_ = create_publisher<std_msgs::msg::Float64>("localization_quality", rclcpp::SystemDefaultsQoS());
-  quality_pub_->on_activate();
+  quality_x_pub_ = create_publisher<std_msgs::msg::Float64>("localization_quality_x", rclcpp::SystemDefaultsQoS());
+  quality_x_pub_->on_activate();
+  quality_y_pub_ = create_publisher<std_msgs::msg::Float64>("localization_quality_y", rclcpp::SystemDefaultsQoS());
+  quality_y_pub_->on_activate();
+  quality_yaw_pub_ = create_publisher<std_msgs::msg::Float64>("localization_quality_yaw", rclcpp::SystemDefaultsQoS());
+  quality_yaw_pub_->on_activate();
 
   {
     map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
@@ -337,8 +341,14 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_deactivate();
   }
-  if (quality_pub_) {
-    quality_pub_->on_deactivate();
+  if (quality_x_pub_) {
+    quality_x_pub_->on_deactivate();
+  }
+  if (quality_y_pub_) {
+    quality_y_pub_->on_deactivate();
+  }
+  if (quality_yaw_pub_) {
+    quality_yaw_pub_->on_deactivate();
   }
 }
 
@@ -347,7 +357,9 @@ void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   particle_filter_.reset();
   enable_tf_broadcast_ = false;
   likelihood_field_pub_.reset();
-  quality_pub_.reset();
+  quality_x_pub_.reset();
+  quality_y_pub_.reset();
+  quality_yaw_pub_.reset();
 }
 
 auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
@@ -678,9 +690,14 @@ void AmclNode::sensor_callback(const std::shared_ptr<const MessageT>& sensor_msg
     tf2::covarianceEigenToRowMajor(base_pose_covariance, message.pose.covariance);
     pose_pub_->publish(message);
 
+    const auto quality = particle_filter_->quality();
     auto quality_msg = std_msgs::msg::Float64{};
-    quality_msg.data = particle_filter_->quality();
-    quality_pub_->publish(quality_msg);
+    quality_msg.data = quality[0];
+    quality_x_pub_->publish(quality_msg);
+    quality_msg.data = quality[1];
+    quality_y_pub_->publish(quality_msg);
+    quality_msg.data = quality[2];
+    quality_yaw_pub_->publish(quality_msg);
   }
 }
 

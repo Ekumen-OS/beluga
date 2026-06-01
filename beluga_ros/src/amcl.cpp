@@ -142,7 +142,7 @@ auto Amcl::update(
   return estimate;
 }
 
-double Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
+std::array<double, 3> Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
   std::vector<Sophus::SE2d> ref_states;
   ref_states.reserve(ref_states_.size());
 
@@ -159,14 +159,14 @@ double Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
   const std::vector<double> uniform_weights(ref_states.size(), 1.0);
   const auto [ref_mean, ref_covariance] = beluga::estimate(ref_states, uniform_weights);
 
-  double quality = 1.0;
+  std::array<double, 3> quality{1.0, 1.0, 1.0};
   for (int i = 0; i < 3; ++i) {
     const double actual = actual_covariance.coeff(i, i);
     if (actual > std::numeric_limits<double>::epsilon()) {
-      quality = std::min(quality, ref_covariance.coeff(i, i) / actual);
+      quality[i] = std::clamp(ref_covariance.coeff(i, i) / actual, 0.0, 1.0);
     }
   }
-  return std::clamp(quality, 0.0, 1.0);
+  return quality;
 }
 
 }  // namespace beluga_ros
