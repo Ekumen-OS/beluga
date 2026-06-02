@@ -212,15 +212,18 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
     descriptor.floating_point_range[0].step = 0.0;
 
     descriptor.description =
-        "Expected standard deviation of x in a healthy particle distribution, used for quality estimation [m].";
+        "Typical standard deviation of x in the output covariance matrix of a healthy filter, used for quality "
+        "estimation [m].";
     declare_parameter("expected_pose_x_stddev", rclcpp::ParameterValue(defaults.expected_pose_x_stddev), descriptor);
 
     descriptor.description =
-        "Expected standard deviation of y in a healthy particle distribution, used for quality estimation [m].";
+        "Typical standard deviation of y in the output covariance matrix of a healthy filter, used for quality "
+        "estimation [m].";
     declare_parameter("expected_pose_y_stddev", rclcpp::ParameterValue(defaults.expected_pose_y_stddev), descriptor);
 
     descriptor.description =
-        "Expected standard deviation of yaw in a healthy particle distribution, used for quality estimation [rad].";
+        "Typical standard deviation of yaw in the output covariance matrix of a healthy filter, used for quality "
+        "estimation [rad].";
     declare_parameter(
         "expected_pose_yaw_stddev", rclcpp::ParameterValue(defaults.expected_pose_yaw_stddev), descriptor);
   }

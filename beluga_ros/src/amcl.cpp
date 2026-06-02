@@ -24,7 +24,6 @@
 #include <beluga/views/take_while_kld.hpp>
 #include <cmath>
 #include <limits>
-#include <random>
 #include <vector>
 
 namespace beluga_ros {
@@ -46,17 +45,6 @@ Amcl::Amcl(
       resample_policy_{beluga::policies::every_n(params_.resample_interval)} {
   if (params_.selective_resampling) {
     resample_policy_ = resample_policy_ && beluga::policies::on_effective_size_drop;
-  }
-
-  Sophus::Matrix3d covariance = Sophus::Matrix3d::Zero();
-  covariance(0, 0) = params_.expected_pose_x_stddev * params_.expected_pose_x_stddev;
-  covariance(1, 1) = params_.expected_pose_y_stddev * params_.expected_pose_y_stddev;
-  covariance(2, 2) = params_.expected_pose_yaw_stddev * params_.expected_pose_yaw_stddev;
-  auto dist = beluga::MultivariateNormalDistribution<Sophus::SE2d>{covariance};
-  std::mt19937 gen{42};
-  ref_states_.reserve(params_.min_particles);
-  for (std::size_t i = 0; i < params_.min_particles; ++i) {
-    ref_states_.emplace_back(dist(gen));
   }
 }
 
@@ -143,27 +131,16 @@ auto Amcl::update(
 }
 
 std::array<double, 3> Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
-  std::vector<Sophus::SE2d> ref_states;
-  ref_states.reserve(ref_states_.size());
-
-  std::mt19937 gen{42};
-  std::visit(
-      [&](const auto& motion_model) {
-        auto sampling_fn = motion_model(control_action_window_);
-        for (const auto& state : ref_states_) {
-          ref_states.push_back(sampling_fn(state, gen));
-        }
-      },
-      motion_model_);
-
-  const std::vector<double> uniform_weights(ref_states.size(), 1.0);
-  const auto [ref_mean, ref_covariance] = beluga::estimate(ref_states, uniform_weights);
-
+  const std::array<double, 3> expected_variance = {
+      params_.expected_pose_x_stddev * params_.expected_pose_x_stddev,
+      params_.expected_pose_y_stddev * params_.expected_pose_y_stddev,
+      params_.expected_pose_yaw_stddev * params_.expected_pose_yaw_stddev,
+  };
   std::array<double, 3> quality{1.0, 1.0, 1.0};
   for (int i = 0; i < 3; ++i) {
     const double actual = actual_covariance.coeff(i, i);
     if (actual > std::numeric_limits<double>::epsilon()) {
-      quality[i] = std::clamp(ref_covariance.coeff(i, i) / actual, 0.0, 1.0);
+      quality[i] = std::clamp(expected_variance[i] / actual, 0.0, 1.0);
     }
   }
   return quality;

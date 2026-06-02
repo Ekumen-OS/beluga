@@ -98,13 +98,16 @@ struct AmclParams {
   /// \brief Spatial resolution around the z-axis to create buckets for KLD resampling.
   double spatial_resolution_theta = 10 * Sophus::Constants<double>::pi() / 180;
 
-  /// \brief Expected standard deviation of x in a healthy particle distribution, used for quality estimation [m].
+  /// \brief Typical standard deviation of x in the output covariance matrix of a healthy filter, used for quality
+  /// estimation [m].
   double expected_pose_x_stddev = 0.1;
 
-  /// \brief Expected standard deviation of y in a healthy particle distribution, used for quality estimation [m].
+  /// \brief Typical standard deviation of y in the output covariance matrix of a healthy filter, used for quality
+  /// estimation [m].
   double expected_pose_y_stddev = 0.1;
 
-  /// \brief Expected standard deviation of yaw in a healthy particle distribution, used for quality estimation [rad].
+  /// \brief Typical standard deviation of yaw in the output covariance matrix of a healthy filter, used for quality
+  /// estimation [rad].
   double expected_pose_yaw_stddev = 0.05;
 };
 
@@ -300,7 +303,6 @@ class Amcl {
 
   bool force_update_{true};
   std::array<double, 3> last_quality_{1.0, 1.0, 1.0};
-  std::vector<Sophus::SE2d> ref_states_;
 
   std::array<double, 3> compute_quality(const Sophus::Matrix3d& actual_covariance);
 };
