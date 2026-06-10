@@ -58,7 +58,7 @@
     <link rel="prev" title="Benchmarking Beluga" href="../guides/benchmarking-beluga.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Tue Apr 21 12:14:14 2026 -0300, b06f906&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Jun 10 15:37:33 2026 -0300, 84f1c39&#39;"/>
   </head>
   
   
@@ -413,7 +413,7 @@ document.write(`
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>In this tutorial, we will show how to implement a custom <abbr title="Monte Carlo Localization">MCL</abbr> algorithm using Beluga.</p>
-<p>This tutorial takes after the one-dimensional particle filter example given in <span id="id1">[<a class="reference internal" href="../resources/bibliography.html#id2" title="S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. ISBN 9780262201629. URL: https://books.google.com.ar/books?id=jtSMEAAAQBAJ.">TBF05</a>, page 200, figure 8.11]</span>. There are walls and there are doors in our one-dimensional world, and our one-dimensional robot is free to move along this world. The last two plots in the animation shown above depict this world, where the blue bars are the walls, the red bars are the doors, and the green bar is the robot. While moving, our robot scans for doors and measures its distance to them. There is uncertainty in those measurements, however. There is also uncertainty in our robot’s proprioception (i.e. its sense of self-movement). We wish to estimate the robot’s position over time while acknowledging that uncertainty. So we will use a particle filter. The first two plots in the animation show how that position estimate or distribution evolves as the robot moves.</p>
+<p>This tutorial takes after the one-dimensional particle filter example given in <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../resources/bibliography.html#id2" title="S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. ISBN 9780262201629. URL: https://books.google.com.ar/books?id=jtSMEAAAQBAJ.">TBF05</a>, page 200, figure 8.11]</span>. There are walls and there are doors in our one-dimensional world, and our one-dimensional robot is free to move along this world. The last two plots in the animation shown above depict this world, where the blue bars are the walls, the red bars are the doors, and the green bar is the robot. While moving, our robot scans for doors and measures its distance to them. There is uncertainty in those measurements, however. There is also uncertainty in our robot’s proprioception (i.e. its sense of self-movement). We wish to estimate the robot’s position over time while acknowledging that uncertainty. So we will use a particle filter. The first two plots in the animation show how that position estimate or distribution evolves as the robot moves.</p>
 <p>To implement this particle filter in Beluga, we will need a map, a motion model, a sensor model, and a prior or initial position estimate. We can then write an <abbr title="Monte Carlo Localization">MCL</abbr> algorithm to estimate the robot’s position over time.</p>
 </section>
 <section id="requirements">
@@ -900,7 +900,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Tue Apr 21 12:14:14 2026 -0300, b06f906&#39;.
+  Last updated on &#39;Wed Jun 10 15:37:33 2026 -0300, 84f1c39&#39;.
   <br/>
 </p>
   </div>
