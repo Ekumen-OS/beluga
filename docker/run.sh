@@ -21,10 +21,10 @@ set -o errexit
 cd $(dirname "$(readlink -f "$0")")
 
 [[ ! -z "${WITHIN_DEV}" ]] && echo "Already in the development environment!" && exit 1
-HELP="Usage: $(basename $0) [-b|--build] [-p|--privileged]"
+HELP="Usage: $(basename $0) [-b|--build] [-n|--no-cache] [-p|--privileged]"
 
 set +o errexit
-VALID_ARGS=$(OPTERR=1 getopt -o bph --long build,privileged,help -- "$@")
+VALID_ARGS=$(OPTERR=1 getopt -o bnph --long build,no-cache,privileged,help -- "$@")
 RET_CODE=$?
 set -o errexit
 
@@ -38,6 +38,7 @@ if [[ $RET_CODE -ne 0 ]]; then
 fi
 
 BUILD=false
+NO_CACHE=false
 PRIVILEGED_CONTAINER=false
 
 eval set -- "$VALID_ARGS"
@@ -45,6 +46,10 @@ while [[ "$1" != "" ]]; do
     case "$1" in
     -b | --build)
         BUILD=true
+        shift
+        ;;
+    -n | --no-cache)
+        NO_CACHE=true
         shift
         ;;
     -p | --privileged)
@@ -66,8 +71,16 @@ while [[ "$1" != "" ]]; do
     esac
 done
 
+BUILD_ARGS=""
+if [[ "$NO_CACHE" = true ]]; then
+    BUILD_ARGS="--no-cache"
+fi
+
 # Kill the container JIC it already exists, if building, to ensure we don't attach to an old container.
-[[ "$BUILD" = true ]] && docker compose build dev && docker compose rm -fs dev 2>/dev/null
+if [[ "$BUILD" = true ]]; then
+    docker compose build $BUILD_ARGS dev
+    docker compose rm -fs dev 2>/dev/null
+fi
 
 # Start up dev container in the background (a no-op if configuration has not changed).
 PRIVILEGED_CONTAINER=$PRIVILEGED_CONTAINER USERID=$(id -u) GROUPID=$(id -g) docker compose up --detach dev

@@ -60,8 +60,7 @@ RUN apt-get update \
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
 RUN pip install \
   evo==1.21.0 \
-  pre-commit==2.20.0 \
-  plyfile==1.0.3
+  pre-commit==2.20.0
 
 # Install timem from previous stage
 COPY --from=timem-builder --chown=developer:ekumen /opt/timemory/ /opt/timemory

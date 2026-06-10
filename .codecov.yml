@@ -75,4 +75,3 @@ ignore:
   - "beluga_amcl/test"
   - "beluga_ros/test"
   - "beluga_system_tests/test"
-  - "beluga_tools/test"

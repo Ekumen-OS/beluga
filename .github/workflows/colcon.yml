@@ -60,8 +60,7 @@ jobs:
       - name: Install python packages
         run: |
              export PIP_BREAK_SYSTEM_PACKAGES=1
-             pip install pre-commit==2.20.0 \
-             h5py==3.11.0
+             pip install pre-commit==2.20.0
 
       - name: Checkout repository
         uses: actions/checkout@v6
