@@ -55,8 +55,7 @@ RUN apt-get update \
 ENV PIP_BREAK_SYSTEM_PACKAGES 1
 RUN pip install \
   evo==1.21.0 \
-  pre-commit==2.20.0 \
-  plyfile==1.0.3
+  pre-commit==2.20.0
 
 COPY --from=timem-builder --chown=$USER:$GROUP /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
