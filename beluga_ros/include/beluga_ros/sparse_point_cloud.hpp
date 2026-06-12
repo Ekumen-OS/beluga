@@ -15,6 +15,8 @@
 #ifndef BELUGA_ROS_SPARSE_POINT_CLOUD_HPP
 #define BELUGA_ROS_SPARSE_POINT_CLOUD_HPP
 
+#include <array>
+
 #include <Eigen/Dense>
 #include <beluga/eigen_compatibility.hpp>
 #include <beluga/sensor/data/sparse_point_cloud.hpp>
@@ -123,10 +125,23 @@ class SparsePointCloud3 : public beluga::BaseSparsePointCloud<SparsePointCloud3<
  private:
   template <typename U>
   static auto points_view(const sensor_msgs::msg::PointCloud2& cloud) {
+    static constexpr std::array<U, 3> kDummyData{0, 0, 0};
+    const auto num_points = static_cast<int>(cloud.width * cloud.height);
+    constexpr auto kCategory = ranges::category::sized | ranges::category::forward;
+
+    if (num_points == 0) {
+      // For empty clouds, avoid creating iterator and use dummy data
+      return ranges::any_view<Eigen::Map<const Eigen::Vector3<U>>, kCategory>(
+          ranges::views::iota(0, 0) |
+          ranges::views::transform([](int) { return Eigen::Map<const Eigen::Vector3<U>>(kDummyData.data()); }));
+    }
+
+    // For non-empty clouds, create iterator
     sensor_msgs::PointCloud2ConstIterator<U> iter_points(cloud, "x");
-    return ranges::views::iota(0, static_cast<int>(cloud.width * cloud.height)) |
-           ranges::views::transform(
-               [iter_points](int i) mutable { return Eigen::Map<const Eigen::Vector3<U>>(&(iter_points + i)[0]); });
+    return ranges::any_view<Eigen::Map<const Eigen::Vector3<U>>, kCategory>(
+        ranges::views::iota(0, num_points) | ranges::views::transform([iter_points](int i) mutable {
+          return Eigen::Map<const Eigen::Vector3<U>>(&(iter_points + i)[0]);
+        }));
   }
 
   sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud_;

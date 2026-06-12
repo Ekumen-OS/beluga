@@ -24,7 +24,7 @@ CMAKE_EXTRA_ARGS=""
 COLCON_EXTRA_ARGS=""
 
 ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
-if [ "${ROS_DISTRO}" != "humble" ] && [ "${ROS_DISTRO}" != "iron" ]; then
+if [ "${ROS_DISTRO}" != "humble" ]; then
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
 fi
 

@@ -25,13 +25,18 @@ set -o errexit
 CMAKE_EXTRA_ARGS=""
 COLCON_EXTRA_ARGS=""
 
-if [ "${ROS_DISTRO}" != "jazzy" ] && [ "${ROS_DISTRO}" != "rolling" ]; then
+if [ "${ROS_DISTRO}" != "rolling" ]; then
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
-else
-    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
-    if [ "${ROS_DISTRO}" != "humble" ] && [ "${ROS_DISTRO}" != "iron" ]; then
-        ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
+    CPP_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
+    # beluga_vdb is not supported in humble
+    if [ "${ROS_DISTRO}" != "humble" ]; then
+        ROS_PACKAGES="${ROS_PACKAGES} beluga_vdb"
+        CPP_PACKAGES="${CPP_PACKAGES} beluga_vdb"
     fi
+else
+    # rolling doesn't include benchmark and example
+    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
+    CPP_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
 fi
 
 if [ "${CMAKE_EXTRA_ARGS}" != "" ]; then
@@ -75,7 +80,7 @@ echo ::group::Test
 colcon lcov-result \
     --initial \
     --lcov-config-file ${LCOV_CONFIG_PATH} \
-    --packages-select ${ROS_PACKAGES}
+    --packages-select ${CPP_PACKAGES}
 colcon test \
     --packages-select ${ROS_PACKAGES} \
     --event-handlers console_cohesion+ \
@@ -85,7 +90,7 @@ echo ::endgroup::
 
 echo ::group::Generate code coverage results
 colcon lcov-result \
-    --packages-select ${ROS_PACKAGES} \
+    --packages-select ${CPP_PACKAGES} \
     --lcov-config-file ${LCOV_CONFIG_PATH}
 colcon coveragepy-result \
     --packages-select ${ROS_PACKAGES} \

@@ -138,20 +138,24 @@ class DifferentialDriveModel {
         distance > params_.distance_threshold ? heading_rotation * previous_orientation.inverse() : Sophus::SO2d{};
     const auto second_rotation = current_orientation * previous_orientation.inverse() * first_rotation.inverse();
 
+    // Add minimum variance to avoid zero stddev in std::normal_distribution
+    constexpr double kMinVariance = 1e-9;
+
     using DistributionParam = typename std::normal_distribution<double>::param_type;
     const auto first_rotation_params = DistributionParam{
         first_rotation.log(), std::sqrt(
                                   params_.rotation_noise_from_rotation * rotation_variance(first_rotation) +
-                                  params_.rotation_noise_from_translation * distance_variance)};
+                                  params_.rotation_noise_from_translation * distance_variance + kMinVariance)};
     const auto translation_params = DistributionParam{
         distance, std::sqrt(
                       params_.translation_noise_from_translation * distance_variance +
                       params_.translation_noise_from_rotation *
-                          (rotation_variance(first_rotation) + rotation_variance(second_rotation)))};
+                          (rotation_variance(first_rotation) + rotation_variance(second_rotation)) +
+                      kMinVariance)};
     const auto second_rotation_params = DistributionParam{
         second_rotation.log(), std::sqrt(
                                    params_.rotation_noise_from_rotation * rotation_variance(second_rotation) +
-                                   params_.rotation_noise_from_translation * distance_variance)};
+                                   params_.rotation_noise_from_translation * distance_variance + kMinVariance)};
 
     return [=](const auto& state, auto& gen) {
       static thread_local auto distribution = std::normal_distribution<double>{};

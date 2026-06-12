@@ -39,6 +39,8 @@ namespace beluga {
 using Sensor2D = beluga::BearingSensorModel2d<LandmarkMap>;
 using Sensor3D = beluga::BearingSensorModel3d<LandmarkMap>;
 
+namespace {
+
 LandmarkMapBoundaries default_map_boundaries{Eigen::Vector3d{-10.0, -10.0, 0.0}, Eigen::Vector3d{10.0, 10.0, 0.0}};
 
 double expected_aggregate_probability(std::vector<double> landmark_probs) {
@@ -53,13 +55,7 @@ BearingModelParam get_default_model_params() {
   return ret;
 }
 
-auto make_sensor_data(std::vector<std::tuple<double, double, double, uint32_t>> detections) {
-  const auto conversion_function = [](const auto& t) {
-    const auto [x, y, z, category] = t;
-    return LandmarkBearingDetection{Eigen::Vector3d{x, y, z}, category};
-  };
-  return detections | ranges::views::transform(conversion_function) | ranges::to<std::vector>;
-}
+}  // namespace
 
 template <typename T>
 T get_robot_pose_in_world();
