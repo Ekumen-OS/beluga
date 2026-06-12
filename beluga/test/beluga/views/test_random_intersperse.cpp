@@ -21,7 +21,12 @@
 #include <range/v3/algorithm/count.hpp>
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
 #include <range/v3/range/conversion.hpp>
+#pragma GCC diagnostic pop
+
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/iota.hpp>

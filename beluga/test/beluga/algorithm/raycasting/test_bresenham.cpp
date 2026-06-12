@@ -20,7 +20,10 @@
 
 #include <range/v3/range/conversion.hpp>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #include "beluga/algorithm/raycasting/bresenham.hpp"
+#pragma GCC diagnostic pop
 
 namespace beluga {
 

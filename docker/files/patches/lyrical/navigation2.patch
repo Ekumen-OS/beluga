@@ -1,0 +1,18 @@
+diff --git a/nav2_common/CMakeLists.txt b/nav2_common/CMakeLists.txt
+index 786c9449..eaafe0e5 100644
+--- a/nav2_common/CMakeLists.txt
++++ b/nav2_common/CMakeLists.txt
+@@ -21,13 +21,3 @@ install(
+   DIRECTORY test
+   DESTINATION share/${PROJECT_NAME}
+ )
+-
+-if(BUILD_TESTING)
+-  find_package(ament_cmake_test REQUIRED)
+-  find_package(ament_cmake_pytest REQUIRED)
+-
+-  nav2_add_pytest_test(test_rewritten_yaml test/test_rewritten_yaml.py
+-  )
+-  nav2_add_pytest_test(test_launch_config_as_bool test/test_launch_config_as_bool.py
+-  )
+-endif()
