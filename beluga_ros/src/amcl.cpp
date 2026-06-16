@@ -125,25 +125,51 @@ auto Amcl::update(
   }
 
   force_update_ = false;
-  auto estimate = beluga::cluster_based_estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
-  last_quality_ = compute_quality(estimate.second);
-  return estimate;
-}
 
-std::array<double, 3> Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
-  const std::array<double, 3> expected_variance = {
-      params_.expected_pose_x_stddev * params_.expected_pose_x_stddev,
+  // Build reference covariance from expected stddev parameters
+  Sophus::Matrix3d ref_cov = Sophus::Matrix3d::Zero();
+  ref_cov.diagonal() << params_.expected_pose_x_stddev * params_.expected_pose_x_stddev,
       params_.expected_pose_y_stddev * params_.expected_pose_y_stddev,
-      params_.expected_pose_yaw_stddev * params_.expected_pose_yaw_stddev,
-  };
-  std::array<double, 3> quality{1.0, 1.0, 1.0};
-  for (int i = 0; i < 3; ++i) {
-    const double actual = actual_covariance.coeff(i, i);
-    if (actual > std::numeric_limits<double>::epsilon()) {
-      quality[i] = std::clamp(expected_variance[i] / actual, 0.0, 1.0);
+      params_.expected_pose_yaw_stddev * params_.expected_pose_yaw_stddev;
+
+  // Build kernel configuration
+  beluga::MmdKernelConfig kernel_config;
+  kernel_config.sigma_kx = params_.quality_kernel_stddev_x;
+  kernel_config.sigma_ky = params_.quality_kernel_stddev_y;
+  kernel_config.sigma_yaw = params_.quality_kernel_yaw_stddev;
+
+  // Raw quality: computed from the particle cloud before clustering.
+  {
+    const auto particle_mean = beluga::mean(beluga::views::states(particles_), beluga::views::weights(particles_));
+
+    try {
+      last_raw_quality_ = beluga::mmd_quality(
+          particles_,      // weighted particle range
+          particle_mean,   // reference mean (weighted particle centroid)
+          ref_cov,         // reference covariance (expected healthy stddev)
+          kernel_config);  // kernel configuration (uses particle count as sample count)
+    } catch (const std::runtime_error&) {
+      last_raw_quality_ = 1.0;
     }
   }
-  return quality;
+
+  auto estimate = beluga::cluster_based_estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
+
+  // Quality: computed from the clustered posterior estimate.
+  try {
+    last_quality_ = beluga::mmd_quality(
+        estimate.first,   // posterior mean
+        estimate.second,  // posterior covariance
+        estimate.first,   // reference mean (same as posterior estimate)
+        ref_cov,          // reference covariance (expected healthy stddev)
+        kernel_config);   // kernel configuration
+  } catch (const std::runtime_error&) {
+    // If the posterior covariance is degenerate (e.g., all-zero weights),
+    // fall back to default quality.
+    last_quality_ = 1.0;
+  }
+
+  return estimate;
 }
 
 }  // namespace beluga_ros

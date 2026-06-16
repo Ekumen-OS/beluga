@@ -15,8 +15,8 @@
 #ifndef BELUGA_ROS_AMCL_HPP
 #define BELUGA_ROS_AMCL_HPP
 
-#include <array>
 #include <optional>
+#include <random>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -26,6 +26,7 @@
 
 #include <sophus/se2.hpp>
 
+#include <beluga/algorithm/mmd_quality.hpp>
 #include <beluga/algorithm/spatial_hash.hpp>
 #include <beluga/algorithm/thrun_recovery_probability_estimator.hpp>
 #include <beluga/containers.hpp>
@@ -109,6 +110,15 @@ struct AmclParams {
   /// \brief Typical standard deviation of yaw in the output covariance matrix of a healthy filter, used for quality
   /// estimation [rad].
   double expected_pose_yaw_stddev = 0.05;
+
+  /// \brief MMD kernel bandwidth for x [m]. Default matches expected_pose_x_stddev.
+  double quality_kernel_stddev_x = 0.1;
+
+  /// \brief MMD kernel bandwidth for y [m]. Default matches expected_pose_y_stddev.
+  double quality_kernel_stddev_y = 0.1;
+
+  /// \brief MMD kernel yaw standard deviation [rad]. Default matches expected_pose_yaw_stddev.
+  double quality_kernel_yaw_stddev = 0.05;
 };
 
 /// Implementation of the 2D Adaptive Monte Carlo Localization (AMCL) algorithm.
@@ -276,14 +286,26 @@ class Amcl {
   /// Force a manual update of the particles on the next iteration of the filter.
   void force_update() { force_update_ = true; }
 
-  /// Returns the per-axis localization quality scores from the last filter update.
+  /// Returns the localization quality p-value from the last filter update.
   /**
-   * Each element is in [0, 1]: index 0 = x, 1 = y, 2 = yaw.
-   * A value close to 1 means the filter covariance for that axis is within the expected range;
-   * values approaching 0 indicate the filter may be diverging on that axis.
-   * Returns {1.0, 1.0, 1.0} before the first successful update.
+   * The quality is a p-value in [0, 1] computed via Gretton's linear-time
+   * paired MMD test (Theorem 10) on the clustered posterior estimate.
+   * A value close to 1 means the posterior distribution is consistent with
+   * the expected reference distribution (healthy filter).
+   * Values approaching 0 indicate the filter may be diverging.
+   * Returns 1.0 before the first successful update.
    */
-  [[nodiscard]] std::array<double, 3> quality() const { return last_quality_; }
+  [[nodiscard]] double quality() const { return last_quality_; }
+
+  /// Returns the raw localization quality p-value from the last filter update.
+  /**
+   * Same as quality(), but computed directly from the particle cloud
+   * before clustering. A low value here paired with a high value from
+   * quality() suggests the particles are widely dispersed but the
+   * cluster-based estimate recovered a good pose.
+   * Returns 1.0 before the first successful update.
+   */
+  [[nodiscard]] double raw_quality() const { return last_raw_quality_; }
 
  private:
   beluga::TupleVector<particle_type> particles_;
@@ -302,9 +324,8 @@ class Amcl {
   beluga::RollingWindow<Sophus::SE2d, 2> control_action_window_;
 
   bool force_update_{true};
-  std::array<double, 3> last_quality_{1.0, 1.0, 1.0};
-
-  std::array<double, 3> compute_quality(const Sophus::Matrix3d& actual_covariance);
+  double last_quality_{1.0};
+  double last_raw_quality_{1.0};
 };
 
 }  // namespace beluga_ros

@@ -34,6 +34,7 @@ load("@rules_cc//cc:defs.bzl", "cc_test")
         "test_distance_map.cpp",
         "test_effective_sample_size.cpp",
         "test_estimation.cpp",
+        "test_mmd_quality.cpp",
         "test_exponential_filter.cpp",
         "test_raycasting.cpp",
         "test_thrun_recovery_probability_estimator.cpp",

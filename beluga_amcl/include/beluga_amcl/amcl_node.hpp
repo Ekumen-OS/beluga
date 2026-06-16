@@ -154,10 +154,11 @@ class AmclNode : public BaseAMCLNode {
   /// Likelihood field publisher
   rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr likelihood_field_pub_;
 
-  /// Per-axis localization quality publishers (x, y, yaw).
-  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr quality_x_pub_;
-  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr quality_y_pub_;
-  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr quality_yaw_pub_;
+  /// Localization quality publisher (from clustered estimate).
+  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr quality_pub_;
+
+  /// Raw localization quality publisher (from particle cloud before clustering).
+  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr raw_quality_pub_;
 
   /// Global relocalization service server.
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr global_localization_server_;

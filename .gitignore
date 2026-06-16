@@ -19,3 +19,7 @@ __pycache__/
 # Sphinx / Doxygen related
 _build
 generated
+
+# AI related
+AGENTS.md
+.codegraph/

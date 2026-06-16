@@ -227,6 +227,29 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
     declare_parameter(
         "expected_pose_yaw_stddev", rclcpp::ParameterValue(defaults.expected_pose_yaw_stddev), descriptor);
   }
+
+  {
+    const auto defaults = beluga_ros::AmclParams{};
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0.0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0.0;
+
+    descriptor.description =
+        "MMD kernel bandwidth for x. Controls the sensitivity of the quality metric to position errors [m].";
+    declare_parameter("quality_kernel_stddev_x", rclcpp::ParameterValue(defaults.quality_kernel_stddev_x), descriptor);
+
+    descriptor.description =
+        "MMD kernel bandwidth for y. Controls the sensitivity of the quality metric to position errors [m].";
+    declare_parameter("quality_kernel_stddev_y", rclcpp::ParameterValue(defaults.quality_kernel_stddev_y), descriptor);
+
+    descriptor.description =
+        "MMD kernel yaw standard deviation [rad]. Controls the sensitivity of the quality metric to "
+        "orientation errors.";
+    declare_parameter(
+        "quality_kernel_yaw_stddev", rclcpp::ParameterValue(defaults.quality_kernel_yaw_stddev), descriptor);
+  }
 }
 
 AmclNode::~AmclNode() {
@@ -241,12 +264,11 @@ void AmclNode::do_activate(const rclcpp_lifecycle::State&) {
     likelihood_field_pub_->on_activate();
   }
 
-  quality_x_pub_ = create_publisher<std_msgs::msg::Float64>("localization_quality_x", rclcpp::SystemDefaultsQoS());
-  quality_x_pub_->on_activate();
-  quality_y_pub_ = create_publisher<std_msgs::msg::Float64>("localization_quality_y", rclcpp::SystemDefaultsQoS());
-  quality_y_pub_->on_activate();
-  quality_yaw_pub_ = create_publisher<std_msgs::msg::Float64>("localization_quality_yaw", rclcpp::SystemDefaultsQoS());
-  quality_yaw_pub_->on_activate();
+  quality_pub_ = create_publisher<std_msgs::msg::Float64>("quality", rclcpp::SystemDefaultsQoS());
+  quality_pub_->on_activate();
+
+  raw_quality_pub_ = create_publisher<std_msgs::msg::Float64>("raw_quality", rclcpp::SystemDefaultsQoS());
+  raw_quality_pub_->on_activate();
 
   {
     map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
@@ -344,14 +366,11 @@ void AmclNode::do_deactivate(const rclcpp_lifecycle::State&) {
   if (likelihood_field_pub_) {
     likelihood_field_pub_->on_deactivate();
   }
-  if (quality_x_pub_) {
-    quality_x_pub_->on_deactivate();
+  if (quality_pub_) {
+    quality_pub_->on_deactivate();
   }
-  if (quality_y_pub_) {
-    quality_y_pub_->on_deactivate();
-  }
-  if (quality_yaw_pub_) {
-    quality_yaw_pub_->on_deactivate();
+  if (raw_quality_pub_) {
+    raw_quality_pub_->on_deactivate();
   }
 }
 
@@ -360,9 +379,8 @@ void AmclNode::do_cleanup(const rclcpp_lifecycle::State&) {
   particle_filter_.reset();
   enable_tf_broadcast_ = false;
   likelihood_field_pub_.reset();
-  quality_x_pub_.reset();
-  quality_y_pub_.reset();
-  quality_yaw_pub_.reset();
+  quality_pub_.reset();
+  raw_quality_pub_.reset();
 }
 
 auto AmclNode::get_initial_estimate() const -> std::optional<std::pair<Sophus::SE2d, Eigen::Matrix3d>> {
@@ -471,6 +489,9 @@ auto AmclNode::make_particle_filter(nav_msgs::msg::OccupancyGrid::SharedPtr map)
   params.expected_pose_x_stddev = get_parameter("expected_pose_x_stddev").as_double();
   params.expected_pose_y_stddev = get_parameter("expected_pose_y_stddev").as_double();
   params.expected_pose_yaw_stddev = get_parameter("expected_pose_yaw_stddev").as_double();
+  params.quality_kernel_stddev_x = get_parameter("quality_kernel_stddev_x").as_double();
+  params.quality_kernel_stddev_y = get_parameter("quality_kernel_stddev_y").as_double();
+  params.quality_kernel_yaw_stddev = get_parameter("quality_kernel_yaw_stddev").as_double();
 
   return std::make_unique<beluga_ros::Amcl>(
       beluga_ros::OccupancyGrid{map},                                        //
@@ -693,14 +714,13 @@ void AmclNode::sensor_callback(const std::shared_ptr<const MessageT>& sensor_msg
     tf2::covarianceEigenToRowMajor(base_pose_covariance, message.pose.covariance);
     pose_pub_->publish(message);
 
-    const auto quality = particle_filter_->quality();
+    auto raw_quality_msg = std_msgs::msg::Float64{};
+    raw_quality_msg.data = particle_filter_->raw_quality();
+    raw_quality_pub_->publish(raw_quality_msg);
+
     auto quality_msg = std_msgs::msg::Float64{};
-    quality_msg.data = quality[0];
-    quality_x_pub_->publish(quality_msg);
-    quality_msg.data = quality[1];
-    quality_y_pub_->publish(quality_msg);
-    quality_msg.data = quality[2];
-    quality_yaw_pub_->publish(quality_msg);
+    quality_msg.data = particle_filter_->quality();
+    quality_pub_->publish(quality_msg);
   }
 }
 
