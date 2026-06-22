@@ -53,7 +53,7 @@ jobs:
              pip install pre-commit==2.20.0
 
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: ${{ github.workspace }}/src/beluga
 
