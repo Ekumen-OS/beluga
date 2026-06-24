@@ -17,7 +17,12 @@
 #include <memory>
 #include <vector>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waggressive-loop-optimizations"
+
 #include <range/v3/range/conversion.hpp>
+
+#pragma GCC diagnostic pop
 
 #include <Eigen/Dense>
 
