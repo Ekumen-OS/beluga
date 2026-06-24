@@ -22,10 +22,14 @@
 #include <range/v3/range/access.hpp>
 #include <range/v3/range/concepts.hpp>
 
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
+#endif
 #include <range/v3/range/conversion.hpp>
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 
 #include <range/v3/range/primitives.hpp>
 #include <range/v3/view/generate.hpp>
