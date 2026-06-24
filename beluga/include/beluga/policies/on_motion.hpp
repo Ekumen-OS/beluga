@@ -15,7 +15,7 @@
 #ifndef BELUGA_POLICIES_ON_MOTION_HPP
 #define BELUGA_POLICIES_ON_MOTION_HPP
 
-#include <Eigen/src/Geometry/AngleAxis.h>
+#include <Eigen/Geometry>
 #include <beluga/policies/policy.hpp>
 #include <sophus/se2.hpp>
 #include <sophus/se3.hpp>
@@ -117,23 +117,40 @@ struct on_motion_policy : public on_motion_policy_base<Pose> {
   using on_motion_policy_base<Pose>::on_motion_policy_base;
   using on_motion_policy_base<Pose>::operator();
 
+  // Workaround: use unique_ptr instead of optional to avoid a GCC 14+ bug where
+  // synthesizing a constexpr move constructor for std::optional<SE3d> fails with
+  // Eigen 5 (where SE3d became trivially destructible, changing optional's union
+  // storage path).  unique_ptr has no constexpr move constructor, breaking the chain.
+  on_motion_policy(const on_motion_policy& other)
+      : on_motion_policy_base<Pose>(other),
+        latest_pose_(other.latest_pose_ ? std::make_unique<Pose>(*other.latest_pose_) : nullptr) {}
+
+  on_motion_policy& operator=(const on_motion_policy& other) {
+    on_motion_policy_base<Pose>::operator=(other);
+    latest_pose_ = other.latest_pose_ ? std::make_unique<Pose>(*other.latest_pose_) : nullptr;
+    return *this;
+  }
+
+  on_motion_policy(on_motion_policy&&) = default;
+  on_motion_policy& operator=(on_motion_policy&&) = default;
+
   /// Return true if motion has been detected.
-  constexpr bool operator()(const Pose& pose) {
+  bool operator()(const Pose& pose) {
     if (!latest_pose_) {
-      latest_pose_ = pose;
+      latest_pose_ = std::make_unique<Pose>(pose);
       return true;
     }
 
     const bool moved = (*this)(*latest_pose_, pose);
     if (moved) {
-      latest_pose_ = pose;
+      *latest_pose_ = pose;
     }
 
     return moved;
   }
 
  private:
-  std::optional<Pose> latest_pose_;  ///< The latest pose for motion comparison.
+  std::unique_ptr<Pose> latest_pose_;  ///< The latest pose for motion comparison.
 };
 
 /// Implementation detail for the on_motion_fn object.
@@ -143,7 +160,7 @@ struct on_motion_fn {
   /**
    * This policy triggers an action based on motion.
    */
-  constexpr auto operator()(typename StateType::Scalar min_distance, typename StateType::Scalar min_angle) const {
+  auto operator()(typename StateType::Scalar min_distance, typename StateType::Scalar min_angle) const {
     return beluga::make_policy(on_motion_policy<StateType>{min_distance, min_angle});
   }
 };
