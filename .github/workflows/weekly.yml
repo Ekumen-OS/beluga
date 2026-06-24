@@ -25,6 +25,7 @@ jobs:
           - humble
           - jazzy
           - kilted
+          - lyrical
           - rolling
         include:
           - ros_distro: humble
@@ -59,9 +60,22 @@ jobs:
 
       - name: Import external repositories
         working-directory: ${{ github.workspace }}/src
+        shell: bash
         run: |
           vcs import < ./beluga/docker/files/${{ matrix.ros_distro }}.repos
           rm -rf ./flatland
+          if [ -d ./beluga/docker/files/patches/${{ matrix.ros_distro }} ]; then
+            cp -r ./beluga/docker/files/patches/${{ matrix.ros_distro }} /tmp/patches
+            for subdep in */; do
+              subdep=${subdep%/}
+              if [ -f /tmp/patches/${subdep}.sh ]; then
+                echo "Post-processing $subdep source dependency"
+                pushd $subdep
+                /bin/bash /tmp/patches/${subdep}.sh
+                popd
+              fi
+            done
+          fi
 
       - name: Install dependencies
         run: |

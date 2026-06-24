@@ -25,6 +25,7 @@ jobs:
           - humble
           - jazzy
           - kilted
+          - lyrical
           - rolling
     steps:
       - name: Checkout repository

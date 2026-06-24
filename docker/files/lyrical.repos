@@ -1,0 +1,9 @@
+repositories:
+  navigation2:
+    type: git
+    url: https://github.com/ros-navigation/navigation2.git
+    version: 3ecd10af3f0bf24d7a4d67b14ce263976e5552e9
+  ompl:
+    type: git
+    url: https://github.com/ompl/ompl.git
+    version: 92db5a31e0233e781602022c287be5ff60bb5bd0
