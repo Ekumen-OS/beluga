@@ -60,6 +60,7 @@ jobs:
 
       - name: Import external repositories
         working-directory: ${{ github.workspace }}/src
+        shell: bash
         run: |
           vcs import < ./beluga/docker/files/${{ matrix.ros_distro }}.repos
           rm -rf ./flatland
