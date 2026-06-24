@@ -48,5 +48,6 @@ cc_build_error_test(
         "test_likelihood_field_model.cpp",
         "test_likelihood_field_model_base.cpp",
         "test_likelihood_field_prob_model.cpp",
+        "test_pose_sensor_model.cpp",
     ]
 ]

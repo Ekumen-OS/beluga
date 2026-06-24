@@ -57,6 +57,7 @@
  * - beluga::BeamSensorModel
  * - beluga::LandmarkSensorModel
  * - beluga::BearingSensorModel
+ * - beluga::PoseSensorModel
  */
 
 #include <beluga/sensor/beam_model.hpp>
@@ -64,6 +65,7 @@
 #include <beluga/sensor/landmark_sensor_model.hpp>
 #include <beluga/sensor/likelihood_field_model.hpp>
 #include <beluga/sensor/likelihood_field_prob_model.hpp>
+#include <beluga/sensor/pose_sensor_model.hpp>
 
 #ifdef BELUGA_HAS_HDF5
 #include <beluga/sensor/ndt_sensor_model.hpp>
