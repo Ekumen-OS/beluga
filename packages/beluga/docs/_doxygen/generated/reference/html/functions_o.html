@@ -56,7 +56,7 @@
     <link rel="prev" title="Class Members" href="functions_n.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Jun 24 17:01:35 2026 -0300, 6761cfb&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Fri Jul 3 17:55:52 2026 -0300, 87f71ba&#39;"/>
   </head>
   
   
@@ -457,6 +457,9 @@ $(function() {
 <li>OmnidirectionalDriveModel()
 : <a class="el" href="classbeluga_1_1OmnidirectionalDriveModel.html#a9bd35a27690615a4a0713ca12de746e4">beluga::OmnidirectionalDriveModel</a>
 </li>
+<li>on_motion_policy()
+: <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a228570baeee17eaded1a3a388c9d0cba">beluga::policies::detail::on_motion_policy&lt; Pose &gt;</a>
+</li>
 <li>on_motion_policy_base()
 : <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#a7635bba21c07ecedbdc84a630e4fc69c">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE2&lt; Scalar &gt; &gt;</a>
 , <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html#acf19bce8d58ff6dd5b5c86fd8a1e165f">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE3&lt; Scalar &gt; &gt;</a>
@@ -511,8 +514,8 @@ $(function() {
 , <a class="el" href="structbeluga_1_1policies_1_1detail_1_1every__n__fn.html#abbb5d0b10ca6cc1b4a2c42298db9e680">beluga::policies::detail::every_n_fn</a>
 , <a class="el" href="structbeluga_1_1policies_1_1detail_1_1every__n__policy.html#a6be34f70df0aef03b92ad356a99d6b9a">beluga::policies::detail::every_n_policy</a>
 , <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__effective__size__drop__policy.html#a61bf85e33defa393a1e264964c2cebc1">beluga::policies::detail::on_effective_size_drop_policy</a>
-, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#a7d0a2d00f25799ca63b1e2244d5df179">beluga::policies::detail::on_motion_fn&lt; StateType &gt;</a>
-, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a13815a93b8b9f2754055b76325e55dac">beluga::policies::detail::on_motion_policy&lt; Pose &gt;</a>
+, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__fn.html#a16750692b538f6eaf9faf515fd6c766d">beluga::policies::detail::on_motion_fn&lt; StateType &gt;</a>
+, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#a4dad152f8237ffa4baa642dc2d6a9743">beluga::policies::detail::on_motion_policy&lt; Pose &gt;</a>
 , <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html#ac36600763c7e6df543d8a35fca493dc6">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE2&lt; Scalar &gt; &gt;</a>
 , <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE3_3_01Scalar_01_4_01_4.html#a846f3781c0c1055bc1869b9b4aa032e0">beluga::policies::detail::on_motion_policy_base&lt; Sophus::SE3&lt; Scalar &gt; &gt;</a>
 , <a class="el" href="structbeluga_1_1policy.html#a6578daeb127a8d5f2163478ec319bdc8">beluga::policy&lt; PolicyFn &gt;</a>
@@ -537,13 +540,13 @@ $(function() {
 , <a class="el" href="classbeluga_1_1IndexingIterator.html#a028cfc5665149358c6ded2a22da0aa2d">beluga::IndexingIterator&lt; Indexable, Index &gt;</a>
 , <a class="el" href="structbeluga_1_1NDTCell.html#a1aaa8bd0c50cfe192e58293476fb5faf">beluga::NDTCell&lt; NDim, Scalar &gt;</a>
 </li>
-<li>operator+
-: <a class="el" href="classbeluga_1_1IndexingIterator.html#a29bb4b80e6008dac2cdf609687066142">beluga::IndexingIterator&lt; Indexable, Index &gt;</a>
+<li>operator+()
+: <a class="el" href="classbeluga_1_1IndexingIterator.html#acc8f84b110d60a548b42213ab4b19ce6">beluga::IndexingIterator&lt; Indexable, Index &gt;</a>
 </li>
 <li>operator++()
 : <a class="el" href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a94688db75926d607047ad4c79dc862cf">beluga::Bresenham2i::Line&lt; Vector2, Integer &gt;::iterator</a>
 , <a class="el" href="classbeluga_1_1IndexingIterator.html#a6ef9cd1e6ba0f945808cb96a90192b75">beluga::IndexingIterator&lt; Indexable, Index &gt;</a>
-, <a class="el" href="classbeluga_1_1Numeric.html#af60ee0b78ac9918fa269ac89daa92897">beluga::Numeric&lt; T, PhantomType, typename &gt;</a>
+, <a class="el" href="classbeluga_1_1Numeric.html#ac24ff801a3a5abde9fcacc62aa54a497">beluga::Numeric&lt; T, PhantomType, typename &gt;</a>
 </li>
 <li>operator+=()
 : <a class="el" href="classbeluga_1_1IndexingIterator.html#ac0314400b4228606f85e4f2effed12e3">beluga::IndexingIterator&lt; Indexable, Index &gt;</a>
@@ -552,7 +555,7 @@ $(function() {
 : <a class="el" href="classbeluga_1_1IndexingIterator.html#a36e3be1ae530492dc527226b37d37dcb">beluga::IndexingIterator&lt; Indexable, Index &gt;</a>
 </li>
 <li>operator--()
-: <a class="el" href="classbeluga_1_1IndexingIterator.html#a37c34f18d5a0e256b0ea97f4cb1ac7e1">beluga::IndexingIterator&lt; Indexable, Index &gt;</a>
+: <a class="el" href="classbeluga_1_1IndexingIterator.html#ad11722378da4aacb22a340925b3fbd18">beluga::IndexingIterator&lt; Indexable, Index &gt;</a>
 , <a class="el" href="classbeluga_1_1Numeric.html#aa03b485906bc00edbd4728c489381ecd">beluga::Numeric&lt; T, PhantomType, typename &gt;</a>
 </li>
 <li>operator-=()
@@ -574,6 +577,7 @@ $(function() {
 <li>operator=()
 : <a class="el" href="classbeluga_1_1Bresenham2i.html#afeb64616ef96ed1bd9a599f75c9bad9d">beluga::Bresenham2i</a>
 , <a class="el" href="classbeluga_1_1MultivariateNormalDistribution.html#a5e7a83d42f14be4cb860c9915091f37d">beluga::MultivariateNormalDistribution&lt; T &gt;</a>
+, <a class="el" href="structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html#afba9bf97c0d0dfa7328b79a9338414b6">beluga::policies::detail::on_motion_policy&lt; Pose &gt;</a>
 </li>
 <li>operator==()
 : <a class="el" href="classbeluga_1_1Bresenham2i_1_1Line_1_1iterator.html#a2cb9342085bbaa166c710706f818b8d4">beluga::Bresenham2i::Line&lt; Vector2, Integer &gt;::iterator</a>
@@ -674,7 +678,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Jun 24 17:01:35 2026 -0300, 6761cfb&#39;.
+  Last updated on &#39;Fri Jul 3 17:55:52 2026 -0300, 87f71ba&#39;.
   <br/>
 </p>
   </div>

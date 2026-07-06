@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 975;
+var viewWidth = 957;
 var viewHeight = 430;
 var sectionId = 'dynsection-0';
 </script>
@@ -431,47 +431,46 @@ var sectionId = 'dynsection-0';
 <g id="node22" class="node">
 <title>Node22</title>
 <g id="a_node22"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="633.5,-246.5 633.5,-276.5 746.5,-276.5 746.5,-246.5 633.5,-246.5"/>
-<text text-anchor="start" x="641.5" y="-264.5" font-family="Helvetica,sans-Serif" font-size="10.00">Eigen/src/Geometry</text>
-<text text-anchor="middle" x="690" y="-253.5" font-family="Helvetica,sans-Serif" font-size="10.00">/AngleAxis.h</text>
+<polygon fill="none" stroke="#bfbfbf" points="633.5,-252 633.5,-271 728.5,-271 728.5,-252 633.5,-252"/>
+<text text-anchor="middle" x="681" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00">Eigen/Geometry</text>
 </a>
 </g>
 </g>
 <!-- Node21&#45;&gt;Node22 -->
 <g id="edge28" class="edge">
 <title>Node21&#45;&gt;Node22</title>
-<path fill="none" stroke="midnightblue" d="M692.35,-313.4C691.99,-305.64 691.54,-295.81 691.12,-286.86"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="694.61,-286.4 690.65,-276.58 687.61,-286.73 694.61,-286.4"/>
+<path fill="none" stroke="midnightblue" d="M690.4,-313.4C688.65,-303.96 686.34,-291.45 684.45,-281.19"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="687.86,-280.39 682.61,-271.19 680.98,-281.66 687.86,-280.39"/>
 </g>
 <!-- Node23 -->
 <g id="node23" class="node">
 <title>Node23</title>
 <g id="a_node23"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="765,-252 765,-271 857,-271 857,-252 765,-252"/>
-<text text-anchor="middle" x="811" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se2.hpp</text>
+<polygon fill="none" stroke="#bfbfbf" points="747,-252 747,-271 839,-271 839,-252 747,-252"/>
+<text text-anchor="middle" x="793" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se2.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node21&#45;&gt;Node23 -->
 <g id="edge30" class="edge">
 <title>Node21&#45;&gt;Node23</title>
-<path fill="none" stroke="midnightblue" d="M718.6,-313.4C738.85,-302.24 766.92,-286.78 786.79,-275.83"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="788.49,-278.9 795.56,-271.01 785.11,-272.77 788.49,-278.9"/>
+<path fill="none" stroke="midnightblue" d="M714.7,-313.4C731.47,-302.5 754.57,-287.48 771.33,-276.58"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="773.44,-279.39 779.91,-271.01 769.62,-273.52 773.44,-279.39"/>
 </g>
 <!-- Node24 -->
 <g id="node24" class="node">
 <title>Node24</title>
 <g id="a_node24"><a xlink:title=" ">
-<polygon fill="none" stroke="#bfbfbf" points="875,-252 875,-271 967,-271 967,-252 875,-252"/>
-<text text-anchor="middle" x="921" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se3.hpp</text>
+<polygon fill="none" stroke="#bfbfbf" points="857,-252 857,-271 949,-271 949,-252 857,-252"/>
+<text text-anchor="middle" x="903" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00">sophus/se3.hpp</text>
 </a>
 </g>
 </g>
 <!-- Node21&#45;&gt;Node24 -->
 <g id="edge31" class="edge">
 <title>Node21&#45;&gt;Node24</title>
-<path fill="none" stroke="midnightblue" d="M742.19,-313.48C783.77,-301.62 842.57,-284.86 881.23,-273.84"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="882.43,-277.14 891.08,-271.03 880.51,-270.4 882.43,-277.14"/>
+<path fill="none" stroke="midnightblue" d="M738.31,-313.48C776.28,-301.72 829.84,-285.14 865.46,-274.12"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="866.93,-277.33 875.45,-271.03 864.86,-270.64 866.93,-277.33"/>
 </g>
 </g>
 </svg>

@@ -1,8 +1,8 @@
 <map id="/home/runner/work/beluga/beluga/beluga/include/beluga/policies/on_motion.hpp" name="/home/runner/work/beluga/beluga/beluga/include/beluga/policies/on_motion.hpp">
-<area shape="rect" id="node1" title="Defines a policy for triggering an action based on motion." alt="" coords="252,5,477,61"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,109,156,151"/>
-<area shape="rect" id="node3" href="$policy_8hpp_source.html" title=" " alt="" coords="181,117,370,143"/>
-<area shape="rect" id="node5" title=" " alt="" coords="394,117,517,143"/>
-<area shape="rect" id="node6" title=" " alt="" coords="541,117,663,143"/>
-<area shape="rect" id="node4" title=" " alt="" coords="229,199,321,225"/>
+<area shape="rect" id="node1" title="Defines a policy for triggering an action based on motion." alt="" coords="228,5,453,61"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,109,132,136"/>
+<area shape="rect" id="node3" href="$policy_8hpp_source.html" title=" " alt="" coords="157,109,346,136"/>
+<area shape="rect" id="node5" title=" " alt="" coords="370,109,493,136"/>
+<area shape="rect" id="node6" title=" " alt="" coords="517,109,639,136"/>
+<area shape="rect" id="node4" title=" " alt="" coords="205,184,297,211"/>
 </map>
