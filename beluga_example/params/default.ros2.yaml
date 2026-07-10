@@ -50,7 +50,7 @@ amcl:
     # Maximum angle difference from last resample for resampling to happen again.
     update_min_d: 0.25
     # Laser sensor model type.
-    laser_model_type: likelihood_field
+    laser_model_type: likelihood_field_prob
     # Maximum distance of an obstacle (if the distance is higher, this one will be used in the likelihood map).
     laser_likelihood_max_dist: 2.0
     # Maximum range of the laser.
@@ -69,6 +69,16 @@ amcl:
     z_max: 0.05
     # Standard deviation of a gaussian centered arounds obstacles.
     sigma_hit: 0.2
+    # Whether to enable beam skipping (likelihood_field_prob only). When enabled, beams that
+    # disagree with the map across most particles (e.g. unmapped or dynamic obstacles) are
+    # ignored. Disabled by default; only beneficial in scenes with unmapped/dynamic obstacles.
+    do_beamskip: true
+    # Distance to the nearest obstacle below which a beam is considered to agree with the map.
+    beam_skip_distance: 0.5
+    # Fraction of particles that must agree on a beam for it to be kept.
+    beam_skip_threshold: 0.3
+    # Fraction of skipped beams above which beam skipping is disabled for that update.
+    beam_skip_error_threshold: 0.9
     # Whether to broadcast map to odom transform or not.
     tf_broadcast: true
     # Transform tolerance allowed.
