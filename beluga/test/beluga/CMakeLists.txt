@@ -57,6 +57,7 @@ add_executable(
   sensor/test_likelihood_field_model_base.cpp
   sensor/test_likelihood_field_prob_model.cpp
   sensor/test_ndt_model.cpp
+  sensor/test_pose_sensor_model.cpp
   test_3d_embedding.cpp
   test_primitives.cpp
   test_spatial_hash.cpp
