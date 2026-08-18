@@ -19,5 +19,6 @@ if(NOT TARGET Sophus::Sophus)
     Sophus_CMAKE_DIR
     NAMES SophusTargets.cmake
     PATH_SUFFIXES share/sophus/cmake REQUIRED)
+  find_package(fmt REQUIRED)
   include("${Sophus_CMAKE_DIR}/SophusTargets.cmake")
 endif()
