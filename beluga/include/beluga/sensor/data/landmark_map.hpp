@@ -77,15 +77,31 @@ class LandmarkMap {
     }
   }
 
-  /// @brief Copy constructor deleted.
-  /// @details LandmarkMap is move-only because copying would require expensive
-  /// reconstruction of the cached kd-tree indices. Use move semantics instead.
-  LandmarkMap(const LandmarkMap&) = delete;
+  /// @brief Copy constructor.
+  /// @details Copying requires expensive reconstruction of the cached kd-tree indices.
+  /// @deprecated Use move semantics (std::move) instead to avoid performance overhead.
+  /// @param other Landmark map to copy from.
+  [[deprecated("LandmarkMap copying is expensive. Use std::move() instead.")]]
+  LandmarkMap(const LandmarkMap& other)
+      : landmarks_(other.landmarks_), map_boundaries_(other.map_boundaries_) {
+    build_category_indices();
+  }
 
-  /// @brief Copy assignment operator deleted.
-  /// @details LandmarkMap is move-only because copying would require expensive
-  /// reconstruction of the cached kd-tree indices. Use move semantics instead.
-  LandmarkMap& operator=(const LandmarkMap&) = delete;
+  /// @brief Copy assignment operator.
+  /// @details Copying requires expensive reconstruction of the cached kd-tree indices.
+  /// @deprecated Use move semantics (std::move) instead to avoid performance overhead.
+  /// @param other Landmark map to copy from.
+  /// @return Reference to this landmark map.
+  [[deprecated("LandmarkMap copying is expensive. Use std::move() instead.")]]
+  LandmarkMap& operator=(const LandmarkMap& other) {
+    if (this != &other) {
+      landmarks_ = other.landmarks_;
+      map_boundaries_ = other.map_boundaries_;
+      category_indices_.clear();
+      build_category_indices();
+    }
+    return *this;
+  }
 
   /// @brief Move constructor.
   /// @details Explicitly defaulted so landmark data and cached kd-tree indices
