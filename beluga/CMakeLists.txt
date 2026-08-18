@@ -49,7 +49,7 @@ endif()
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(HDF5 COMPONENTS CXX)
 find_package(range-v3 REQUIRED)
-include(cmake/LoadSophusTarget.cmake)  # Find package with Eigen5 support
+include(cmake/LoadSophusTarget.cmake) # Find package with Eigen5 support
 find_package(TBB REQUIRED)
 
 set(_deps
