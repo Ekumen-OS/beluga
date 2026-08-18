@@ -48,12 +48,14 @@ endif()
 
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(HDF5 COMPONENTS CXX)
+find_package(nanoflann REQUIRED)
 find_package(range-v3 REQUIRED)
 find_package(Sophus REQUIRED)
 find_package(TBB REQUIRED)
 
 set(_deps
     Eigen3::Eigen
+    nanoflann::nanoflann
     range-v3::range-v3
     Sophus::Sophus
     TBB::tbb)
