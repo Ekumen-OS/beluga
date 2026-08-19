@@ -16,7 +16,12 @@
 #define BELUGA_SENSOR_DATA_LANDMARK_MAP_HPP
 
 // external
+// Bazel exposes nanoflann with a prefix, CMake does not
+#if __has_include(<nanoflann/nanoflann.hpp>)
+#include <nanoflann/nanoflann.hpp>
+#else
 #include <nanoflann.hpp>
+#endif
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/tail.hpp>
 #include <sophus/se3.hpp>
