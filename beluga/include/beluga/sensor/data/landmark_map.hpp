@@ -51,8 +51,7 @@ class LandmarkMap {
   /// @param boundaries Limits of the map.
   /// @param landmarks List of landmarks that can be expected to be detected.
   explicit LandmarkMap(const LandmarkMapBoundaries& boundaries, landmarks_set_position_data landmarks)
-      : landmarks_(std::move(landmarks)), map_boundaries_(std::move(boundaries))
-  {
+      : landmarks_(std::move(landmarks)), map_boundaries_(std::move(boundaries)) {
     build_category_indices();
   }
 
@@ -81,8 +80,7 @@ class LandmarkMap {
   /// @details Copying requires expensive reconstruction of the cached kd-tree indices.
   /// @deprecated Use move semantics (std::move) instead to avoid performance overhead.
   /// @param other Landmark map to copy from.
-  [[deprecated("LandmarkMap copying is expensive. Use std::move() instead.")]]
-  LandmarkMap(const LandmarkMap& other)
+  [[deprecated("LandmarkMap copying is expensive. Use std::move() instead.")]] LandmarkMap(const LandmarkMap& other)
       : landmarks_(other.landmarks_), map_boundaries_(other.map_boundaries_) {
     build_category_indices();
   }
@@ -92,8 +90,8 @@ class LandmarkMap {
   /// @deprecated Use move semantics (std::move) instead to avoid performance overhead.
   /// @param other Landmark map to copy from.
   /// @return Reference to this landmark map.
-  [[deprecated("LandmarkMap copying is expensive. Use std::move() instead.")]]
-  LandmarkMap& operator=(const LandmarkMap& other) {
+  [[deprecated("LandmarkMap copying is expensive. Use std::move() instead.")]] LandmarkMap& operator=(
+      const LandmarkMap& other) {
     if (this != &other) {
       landmarks_ = other.landmarks_;
       map_boundaries_ = other.map_boundaries_;
@@ -131,9 +129,7 @@ class LandmarkMap {
     }
     const auto& index = *it->second;
     const double query[3] = {
-        detection_position_in_world.x(),
-        detection_position_in_world.y(),
-        detection_position_in_world.z()};
+        detection_position_in_world.x(), detection_position_in_world.y(), detection_position_in_world.z()};
     CategoryIndexType result_idx;
     double result_dist_sq;
     if (index.tree->knnSearch(query, 1, &result_idx, &result_dist_sq) == 0) {
@@ -200,7 +196,9 @@ class LandmarkMap {
     std::size_t kdtree_get_point_count() const { return pts.size(); }
     double kdtree_get_pt(std::size_t i, std::size_t dim) const { return pts[i](static_cast<int>(dim)); }
     template <class BBox>
-    bool kdtree_get_bbox(BBox&) const { return false; }
+    bool kdtree_get_bbox(BBox&) const {
+      return false;
+    }
   };
 
   /// Index type used by the category kd-trees.
@@ -208,7 +206,10 @@ class LandmarkMap {
 
   /// kd-tree type used to query landmarks within each category.
   using CategoryKDTree = nanoflann::KDTreeSingleIndexAdaptor<
-      nanoflann::L2_Simple_Adaptor<double, PositionCloud>, PositionCloud, 3, CategoryIndexType>;
+      nanoflann::L2_Simple_Adaptor<double, PositionCloud>,
+      PositionCloud,
+      3,
+      CategoryIndexType>;
 
   /// Cached landmark positions and search tree for a single category.
   struct CategoryIndex {
@@ -221,11 +222,12 @@ class LandmarkMap {
   std::unordered_map<LandmarkCategory, std::unique_ptr<CategoryIndex>> category_indices_;
 
   /// @brief Builds per-category kd-tree indices for nearest-neighbor search.
-  void build_category_indices()
-  {
+  void build_category_indices() {
     for (const auto& l : landmarks_) {
       auto& entry = category_indices_[l.category];
-      if (!entry) entry = std::make_unique<CategoryIndex>();
+      if (!entry) {
+        entry = std::make_unique<CategoryIndex>();
+      }
       entry->cloud.pts.push_back(l.detection_position_in_robot);
     }
     for (auto& [_, entry] : category_indices_) {
