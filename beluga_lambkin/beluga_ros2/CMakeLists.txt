@@ -19,16 +19,7 @@ find_package(beluga_amcl REQUIRED)
 find_package(nav2_map_server REQUIRED)
 find_package(nav2_lifecycle_manager REQUIRED)
 
+install(DIRECTORY launch params DESTINATION share/${PROJECT_NAME})
 
-
-install(
-  DIRECTORY
-    launch
-    params
-  DESTINATION share/${PROJECT_NAME})
-
-ament_export_dependencies(
-  launch
-  launch_ros
-)
+ament_export_dependencies(launch launch_ros)
 ament_package()

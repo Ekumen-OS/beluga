@@ -28,7 +28,7 @@ default_yaml_path = os.path.join(pkg_dir, "params", "default.ros2.yaml")
 
 
 def generate_launch_description():
-    """Generates the launch description for the Beluga AMCL benchmarking environment.
+    """Generate the launch description for the Beluga AMCL benchmarking environment.
 
     Declares launch arguments for the map path, laser model type,
     and maximum particles, and configures the required ROS 2 nodes:
@@ -86,12 +86,14 @@ def generate_launch_description():
         parameters=[{"autostart": True, "node_names": ["map_server", "beluga_amcl"]}],
     )
 
-    return LaunchDescription([
-        config_file_arg,
-        map_path_arg,
-        laser_model_arg,
-        max_particles_arg,
-        beluga_node,
-        map_server_node,
-        lifecycle_manager_node,
-    ])
+    return LaunchDescription(
+        [
+            config_file_arg,
+            map_path_arg,
+            laser_model_arg,
+            max_particles_arg,
+            beluga_node,
+            map_server_node,
+            lifecycle_manager_node,
+        ]
+    )
