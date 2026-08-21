@@ -133,7 +133,7 @@ class LandmarkMap {
       return std::nullopt;
     }
     const auto& index = *it->second;
-    const double query[3] = {
+    const std::array<double, 3> query = {
         detection_position_in_world.x(), detection_position_in_world.y(), detection_position_in_world.z()};
     CategoryIndexType result_idx;
     double result_dist_sq;
@@ -198,8 +198,8 @@ class LandmarkMap {
   /// Point cloud adapter used by the category kd-trees.
   struct PositionCloud {
     std::vector<LandmarkPosition3> pts;
-    std::size_t kdtree_get_point_count() const { return pts.size(); }
-    double kdtree_get_pt(std::size_t i, std::size_t dim) const { return pts[i](static_cast<int>(dim)); }
+    [[nodiscard]] std::size_t kdtree_get_point_count() const { return pts.size(); }
+    [[nodiscard]] double kdtree_get_pt(std::size_t i, std::size_t dim) const { return pts[i](static_cast<int>(dim)); }
     template <class BBox>
     bool kdtree_get_bbox(BBox&) const {
       return false;
