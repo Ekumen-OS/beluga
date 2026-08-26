@@ -56,7 +56,7 @@
     <link rel="prev" title="Architecture" href="../concepts/architecture.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Jul 30 12:10:31 2026 -0300, 72dd73f&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Aug 26 21:53:17 2026 +0200, d281c55&#39;"/>
   </head>
   
   
@@ -475,15 +475,15 @@ document.write(`
 </div>
 <p>Here’s a sample <code class="docutils literal notranslate"><span class="pre">launch</span></code> file in XML format you can use:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;launch&gt;</span>
-<span class="w">    </span><span class="nt">&lt;arg</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;map_path&quot;</span><span class="w"> </span><span class="na">description=</span><span class="s">&quot;Path to you map.yaml file.&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;arg</span><span class="w"> </span><span class="na">name=</span><span class="s">"map_path"</span><span class="w"> </span><span class="na">description=</span><span class="s">"Path to you map.yaml file."</span><span class="w"> </span><span class="nt">/&gt;</span>
 
 <span class="w">    </span><span class="cm">&lt;!-- Load map --&gt;</span>
-<span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">pkg=</span><span class="s">&quot;nav2_map_server&quot;</span><span class="w"> </span><span class="na">exec=</span><span class="s">&quot;map_server&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;map_server&quot;</span><span class="w"> </span><span class="na">output=</span><span class="s">&quot;screen&quot;</span><span class="nt">&gt;</span>
-<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;yaml_filename&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;$(var map_path)&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">pkg=</span><span class="s">"nav2_map_server"</span><span class="w"> </span><span class="na">exec=</span><span class="s">"map_server"</span><span class="w"> </span><span class="na">name=</span><span class="s">"map_server"</span><span class="w"> </span><span class="na">output=</span><span class="s">"screen"</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">"yaml_filename"</span><span class="w"> </span><span class="na">value=</span><span class="s">"$(var map_path)"</span><span class="w"> </span><span class="nt">/&gt;</span>
 <span class="w">    </span><span class="nt">&lt;/node&gt;</span>
 
 <span class="w">    </span><span class="cm">&lt;!-- Start AMCL --&gt;</span>
-<span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">pkg=</span><span class="s">&quot;beluga&quot;</span><span class="w"> </span><span class="na">exec=</span><span class="s">&quot;amcl&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;amcl&quot;</span><span class="w"> </span><span class="na">output=</span><span class="s">&quot;screen&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">pkg=</span><span class="s">"beluga"</span><span class="w"> </span><span class="na">exec=</span><span class="s">"amcl"</span><span class="w"> </span><span class="na">name=</span><span class="s">"amcl"</span><span class="w"> </span><span class="na">output=</span><span class="s">"screen"</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/launch&gt;</span>
 </pre></div>
 </div>
@@ -642,7 +642,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Jul 30 12:10:31 2026 -0300, 72dd73f&#39;.
+  Last updated on &#39;Wed Aug 26 21:53:17 2026 +0200, d281c55&#39;.
   <br/>
 </p>
   </div>

@@ -56,7 +56,7 @@
     <link rel="prev" title="Using Beluga AMCL" href="using-beluga-amcl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Thu Jul 30 12:10:31 2026 -0300, 72dd73f&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Wed Aug 26 21:53:17 2026 +0200, d281c55&#39;"/>
   </head>
   
   
@@ -447,7 +447,7 @@ document.write(`
 <span class="c1">// Example of a simple velocity-based motion model using Sophus and Eigen.</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">VelocityMotionModel</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="k">public</span><span class="o">:</span>
-<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">       </span><span class="c1">// Represents the particle&#39;s state as SE(2) pose.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">       </span><span class="c1">// Represents the particle's state as SE(2) pose.</span>
 <span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">control_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">;</span><span class="w">  </span><span class="c1">// Represents control input: [linear_velocity, angular_velocity].</span>
 
 <span class="w">  </span><span class="c1">// Constructor to initialize noise parameters for linear and angular velocities.</span>
@@ -499,7 +499,7 @@ document.write(`
 <span class="c1">// Example of a simple velocity-based motion model using Sophus and Eigen.</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">VelocityMotionModel</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="k">public</span><span class="o">:</span>
-<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">       </span><span class="c1">// Represents the particle&#39;s state as SE(2) pose.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">       </span><span class="c1">// Represents the particle's state as SE(2) pose.</span>
 <span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">control_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">;</span><span class="w">  </span><span class="c1">// Represents control input: [linear_velocity, angular_velocity].</span>
 </pre></div>
 </div>
@@ -566,7 +566,7 @@ document.write(`
 <span class="c1">// Example of a simple range-based sensor model.</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RangeSensorModel</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="k">public</span><span class="o">:</span>
-<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents the particle&#39;s state as SE(2) pose.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents the particle's state as SE(2) pose.</span>
 <span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">weight_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">;</span><span class="w">             </span><span class="c1">// Particle weight, based on measurement likelihood.</span>
 <span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">measurement_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents a distance measurement.</span>
 
@@ -578,7 +578,7 @@ document.write(`
 <span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">measurement_type</span><span class="w"> </span><span class="n">measurement</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Returns a lambda satisfying the StateWeightingFunction requirements.</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">measurement</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">state_type</span><span class="o">&amp;</span><span class="w"> </span><span class="n">current_state</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">weight_type</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="c1">// Calculate the expected sensor position based on the robot&#39;s pose.</span>
+<span class="w">      </span><span class="c1">// Calculate the expected sensor position based on the robot's pose.</span>
 <span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">expected_measurement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_state</span><span class="p">.</span><span class="n">translation</span><span class="p">().</span><span class="n">norm</span><span class="p">();</span>
 
 <span class="w">      </span><span class="c1">// Calculate weight based on a Gaussian kernel.</span>
@@ -612,7 +612,7 @@ document.write(`
 <span class="c1">// Example of a simple range-based sensor model.</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RangeSensorModel</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="k">public</span><span class="o">:</span>
-<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents the particle&#39;s state as SE(2) pose.</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">state_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sophus</span><span class="o">::</span><span class="n">SE2d</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents the particle's state as SE(2) pose.</span>
 <span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">weight_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">;</span><span class="w">             </span><span class="c1">// Particle weight, based on measurement likelihood.</span>
 <span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">measurement_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">;</span><span class="w">        </span><span class="c1">// Represents a distance measurement.</span>
 </pre></div>
@@ -628,7 +628,7 @@ document.write(`
 <span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">measurement_type</span><span class="w"> </span><span class="n">measurement</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Returns a lambda satisfying the StateWeightingFunction requirements.</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">measurement</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">state_type</span><span class="o">&amp;</span><span class="w"> </span><span class="n">current_state</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">weight_type</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="c1">// Calculate the expected sensor position based on the robot&#39;s pose.</span>
+<span class="w">      </span><span class="c1">// Calculate the expected sensor position based on the robot's pose.</span>
 <span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">expected_measurement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_state</span><span class="p">.</span><span class="n">translation</span><span class="p">().</span><span class="n">norm</span><span class="p">();</span>
 </pre></div>
 </div>
@@ -897,7 +897,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Thu Jul 30 12:10:31 2026 -0300, 72dd73f&#39;.
+  Last updated on &#39;Wed Aug 26 21:53:17 2026 +0200, d281c55&#39;.
   <br/>
 </p>
   </div>
