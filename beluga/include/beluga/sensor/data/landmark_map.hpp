@@ -137,7 +137,7 @@ class LandmarkMap {
         detection_position_in_world.x(), detection_position_in_world.y(), detection_position_in_world.z()};
     CategoryIndexType result_idx;
     double result_dist_sq;
-    if (index.tree->knnSearch(query, 1, &result_idx, &result_dist_sq) == 0) {
+    if (index.tree->knnSearch(query.data(), 1, &result_idx, &result_dist_sq) == 0) {
       return std::nullopt;
     }
     return index.cloud.pts[result_idx];
