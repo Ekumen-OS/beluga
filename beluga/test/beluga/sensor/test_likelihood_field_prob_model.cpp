@@ -43,7 +43,7 @@ TEST(LikelihoodFieldProbModel, ImportanceWeight) {
     kResolution};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}};
   auto sensor_model = UUT{params, grid};
 
   {
@@ -86,7 +86,7 @@ TEST(LikelihoodFieldProbModel, GridWithOffset) {
     Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{-5, -5}}};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}};
   auto sensor_model = UUT{params, grid};
 
   {
@@ -113,7 +113,7 @@ TEST(LikelihoodFieldProbModel, GridWithRotation) {
     Sophus::SE2d{Sophus::SO2d{Sophus::Constants<double>::pi() / 2}, Eigen::Vector2d{0.0, 0.0}}};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}};
   auto sensor_model = UUT{params, grid};
 
   {
@@ -143,7 +143,7 @@ TEST(LikelihoodFieldProbModel, GridWithRotationAndOffset) {
     origin};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}};
   auto sensor_model = UUT{params, grid};
 
   {
@@ -171,7 +171,7 @@ TEST(LikelihoodFieldProbModel, GridUpdates) {
     kResolution, origin};
   // clang-format on
 
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}};
   auto sensor_model = UUT{params, std::move(grid)};
 
   {
@@ -215,7 +215,7 @@ StaticOccupancyGrid<5, 5> make_beamskip_grid() {
 TEST(LikelihoodFieldProbModelBeamSkip, DisabledMatchesBaseline) {
   const auto grid = make_beamskip_grid();
   // do_beamskip defaults to false when omitted from the aggregate initializer.
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}};
   auto sensor_model = UUT{params, grid};
 
   // prepare() is a no-op while skipping is disabled: the mask stays empty and weights are unchanged.
@@ -230,7 +230,7 @@ TEST(LikelihoodFieldProbModelBeamSkip, DisabledMatchesBaseline) {
 
 TEST(LikelihoodFieldProbModelBeamSkip, ExcludesDivergentBeam) {
   const auto grid = make_beamskip_grid();
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2, true, 0.5, 0.3, 0.9};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}, true, 0.5, 0.3, 0.9};
   auto sensor_model = UUT{params, grid};
 
   // One beam hits the obstacle (agrees with the map), the other consistently misses it
@@ -250,7 +250,7 @@ TEST(LikelihoodFieldProbModelBeamSkip, ExcludesDivergentBeam) {
 
 TEST(LikelihoodFieldProbModelBeamSkip, KeepsAgreedBeam) {
   const auto grid = make_beamskip_grid();
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2, true, 0.5, 0.3, 0.9};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}, true, 0.5, 0.3, 0.9};
   auto sensor_model = UUT{params, grid};
 
   // 7 of 10 particles agree on the obstacle beam (0.7 > beam_skip_threshold), so it is kept.
@@ -266,7 +266,7 @@ TEST(LikelihoodFieldProbModelBeamSkip, ThresholdBoundary) {
   const auto grid = make_beamskip_grid();
   // beam_skip_error_threshold = 1.0 so the single-beam case is decided purely by beam_skip_threshold
   // and never triggers the all-beams-skipped fallback.
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2, true, 0.5, 0.3, 1.0};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}, true, 0.5, 0.3, 1.0};
   auto sensor_model = UUT{params, grid};
 
   const auto agreeing = grid.origin();
@@ -296,7 +296,7 @@ TEST(LikelihoodFieldProbModelBeamSkip, ErrorThresholdFallback) {
   const auto grid = make_beamskip_grid();
   // All beams miss the map, so all would be skipped; that exceeds beam_skip_error_threshold (0.9)
   // and the heuristic falls back to using every beam.
-  const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2, true, 0.5, 0.3, 0.9};
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}, true, 0.5, 0.3, 0.9};
   auto sensor_model = UUT{params, grid};
 
   const auto points = std::vector<std::pair<double, double>>{{2.25, 2.25}, {2.30, 2.30}, {2.35, 2.35}};
@@ -308,7 +308,7 @@ TEST(LikelihoodFieldProbModelBeamSkip, ErrorThresholdFallback) {
   EXPECT_TRUE(sensor_model.beam_mask()[2]);
 
   // The weight matches the model with skipping disabled (all beams integrated).
-  const auto baseline_params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2};
+  const auto baseline_params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}};
   auto baseline_model = UUT{baseline_params, grid};
 
   const auto weight_with_fallback = sensor_model(std::vector<std::pair<double, double>>{points})(grid.origin());
@@ -326,7 +326,7 @@ TEST(LikelihoodFieldProbModelBeamSkip, DistanceToLikelihoodThreshold) {
 
   // Small beam_skip_distance -> high likelihood threshold -> the beam does not agree -> skipped.
   {
-    const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2, true, 0.3, 0.3, 1.0};
+    const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}, true, 0.3, 0.3, 1.0};
     auto sensor_model = UUT{params, grid};
     sensor_model.prepare(points, states);
     ASSERT_EQ(sensor_model.beam_mask().size(), 1U);
@@ -335,7 +335,7 @@ TEST(LikelihoodFieldProbModelBeamSkip, DistanceToLikelihoodThreshold) {
 
   // Larger beam_skip_distance -> lower likelihood threshold -> the beam agrees -> kept.
   {
-    const auto params = beluga::LikelihoodFieldProbModelParam{2.0, 20.0, 0.5, 0.5, 0.2, true, 0.8, 0.3, 1.0};
+    const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}, true, 0.8, 0.3, 1.0};
     auto sensor_model = UUT{params, grid};
     sensor_model.prepare(points, states);
     ASSERT_EQ(sensor_model.beam_mask().size(), 1U);

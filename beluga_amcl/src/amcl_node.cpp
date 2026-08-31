@@ -191,8 +191,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Distance to the nearest obstacle below which a beam agrees with the map, used for beam "
-                            "skipping.";
+    descriptor.description = "Distance threshold for beam-skipping to consider hit a likely true static map hit";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
@@ -202,8 +201,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Fraction of particles that must agree on a beam for it to be kept, used for beam "
-                            "skipping.";
+    descriptor.description = "Agreement threshold above which beam-skipping considers a hit a static map hit";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
@@ -214,7 +212,7 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
-        "Fraction of skipped beams above which beam skipping is disabled for that update, preventing divergence.";
+        "If more than this fraction of beam disagree with the map, assume localization error and disable beam skipping.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
