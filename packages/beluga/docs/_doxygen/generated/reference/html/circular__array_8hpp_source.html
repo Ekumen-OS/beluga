@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Aug 26 21:53:17 2026 +0200, d281c55&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Sep 1 10:45:16 2026 -0300, 22adc90&#39;"/>
   </head>
   
   
@@ -753,7 +753,7 @@ $(function() {
 <div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160; </div>
 <div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160; </div>
 <div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, std::<span class="keywordtype">size_t</span> N, CircularArrayFeatureFlags F&gt;</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;<a class="code" href="classbeluga_1_1CircularArray.html">CircularArray&lt;T, N, F&gt;</a>&amp; <a class="code" href="namespacebeluga.html#ac1c2126fbec7a8720dc2ea5d06c60dd0">operator&lt;&lt;</a>(<a class="code" href="classbeluga_1_1CircularArray.html">CircularArray&lt;T, N, F&gt;</a>&amp; array, T value) {</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;<a class="code" href="classbeluga_1_1CircularArray.html">CircularArray&lt;T, N, F&gt;</a>&amp; <a class="code" href="namespacebeluga.html#ac1c2126fbec7a8720dc2ea5d06c60dd0">operator&lt;&lt;</a>(<a class="code" href="classbeluga_1_1CircularArray.html">CircularArray&lt;T, N, F&gt;</a>&amp; array, T value) {  <span class="comment">// NOLINT(google-readability-casting)</span></div>
 <div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;  <span class="keywordflow">if</span> constexpr (F &amp; <a class="code" href="namespacebeluga.html#af4335f481449a38c85a391979273825ca65589df174cbdb08dcee4d419d84912f">CircularArrayFeatureFlags::kLayoutReversal</a>) {</div>
 <div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;    array.<a class="code" href="classbeluga_1_1CircularArray.html#ac3c14a36d750f07acff1121182ffae67">push_front</a>(std::move(value));</div>
 <div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;  } <span class="keywordflow">else</span> {</div>
@@ -926,7 +926,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Aug 26 21:53:17 2026 +0200, d281c55&#39;.
+  Last updated on &#39;Tue Sep 1 10:45:16 2026 -0300, 22adc90&#39;.
   <br/>
 </p>
   </div>

@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Wed Aug 26 21:53:17 2026 +0200, d281c55&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Sep 1 10:45:16 2026 -0300, 22adc90&#39;"/>
   </head>
   
   
@@ -651,7 +651,7 @@ $(function() {
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    clusterizer_detail::assign_clusters(map, [<span class="keyword">this</span>](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; <a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>) { <span class="keywordflow">return</span> <a class="code" href="classbeluga_1_1ParticleClusterizer.html#a660f327f8f3dbd66135e8c970ac6da61">neighbors</a>(<a class="code" href="namespacebeluga.html#a706431bba3d6cfb1ee0690221f3a9af9">state</a>); });</div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <span class="keywordflow">return</span> hashes |  <span class="comment">//</span></div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;           ranges::views::transform([&amp;map](std::size_t hash) { <span class="keywordflow">return</span> map[hash].cluster_id.value(); }) |</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;           ranges::views::transform([&amp;map](std::size_t hash) { <span class="keywordflow">return</span> *map[hash].cluster_id; }) |</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;           ranges::to&lt;std::vector&gt;;</div>
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;  }</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
@@ -849,7 +849,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Wed Aug 26 21:53:17 2026 +0200, d281c55&#39;.
+  Last updated on &#39;Tue Sep 1 10:45:16 2026 -0300, 22adc90&#39;.
   <br/>
 </p>
   </div>
