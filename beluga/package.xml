@@ -17,6 +17,7 @@
 
   <depend>eigen</depend>
   <depend>libhdf5-dev</depend>
+  <depend>libnanoflann-dev</depend>
   <depend>range-v3</depend>
   <depend>sophus</depend>
   <depend>tbb</depend>
