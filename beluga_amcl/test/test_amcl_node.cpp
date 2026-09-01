@@ -322,6 +322,32 @@ TEST_F(TestNode, NoBroadcastWhenInitialPoseInvalid) {
   ASSERT_FALSE(tester_node_->can_transform("map", "odom"));
 }
 
+TEST_F(TestNode, BeamSkipInitializes) {
+  // The beam skipping parameters must be declared/parsed and the likelihood_field_prob model
+  // built with skipping enabled without error.
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_model_type", "likelihood_field_prob"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"do_beamskip", true});
+  amcl_node_->set_parameter(rclcpp::Parameter{"min_particles", 10});
+  amcl_node_->set_parameter(rclcpp::Parameter{"max_particles", 30});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+}
+
+TEST_F(TestNode, BeamSkipEstimatesPose) {
+  // Drives a full update through the two-pass prepare()->reweight() path and checks that a pose
+  // estimate is produced.
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_model_type", "likelihood_field_prob"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"do_beamskip", true});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+  tester_node_->publish_laser_scan();
+  ASSERT_TRUE(wait_for_pose_estimate());
+}
+
 TEST_F(TestNode, FirstMapOnly) {
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   amcl_node_->set_parameter(rclcpp::Parameter{"always_reset_initial_pose", true});

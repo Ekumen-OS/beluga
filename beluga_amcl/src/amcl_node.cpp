@@ -182,6 +182,46 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "Whether to enable beam skipping, ignoring beams that disagree with the map across most "
+        "particles (e.g. caused by unmapped or dynamic obstacles). Only used by the "
+        "likelihood_field_prob model.";
+    declare_parameter("do_beamskip", false, descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Distance threshold for beam-skipping to consider hit a likely true static map hit";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("beam_skip_distance", rclcpp::ParameterValue(0.5), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description = "Agreement threshold above which beam-skipping considers a hit a static map hit";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("beam_skip_threshold", rclcpp::ParameterValue(0.3), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
+    descriptor.description =
+        "If more than this fraction of beam disagree with the map, assume localization error and disable beam skipping.";
+    descriptor.floating_point_range.resize(1);
+    descriptor.floating_point_range[0].from_value = 0;
+    descriptor.floating_point_range[0].to_value = 1;
+    descriptor.floating_point_range[0].step = 0;
+    declare_parameter("beam_skip_error_threshold", rclcpp::ParameterValue(0.9), descriptor);
+  }
+
+  {
+    auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description = "If false, AMCL will use the last known pose to initialize when a new map is received.";
     declare_parameter("always_reset_initial_pose", false, descriptor);
   }
@@ -391,6 +431,10 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
     params.z_hit = get_parameter("z_hit").as_double();
     params.z_random = get_parameter("z_rand").as_double();
     params.sigma_hit = get_parameter("sigma_hit").as_double();
+    params.do_beamskip = get_parameter("do_beamskip").as_bool();
+    params.beam_skip_distance = get_parameter("beam_skip_distance").as_double();
+    params.beam_skip_threshold = get_parameter("beam_skip_threshold").as_double();
+    params.beam_skip_error_threshold = get_parameter("beam_skip_error_threshold").as_double();
     return beluga::LikelihoodFieldProbModel{params, beluga_ros::OccupancyGrid{map}};
   }
   if (name == kBeamSensorModelName) {

@@ -69,6 +69,16 @@ amcl:
     z_max: 0.05
     # Standard deviation of a gaussian centered arounds obstacles.
     sigma_hit: 0.2
+    # Whether to enable beam skipping (likelihood_field_prob only). When enabled, beams that
+    # disagree with the map across most particles (e.g. unmapped or dynamic obstacles) are
+    # ignored. Disabled by default; only beneficial in scenes with unmapped/dynamic obstacles.
+    do_beamskip: true
+    # Distance threshold for beam-skipping to consider hit a likely true static map hit.
+    beam_skip_distance: 0.5
+    # Agreement threshold above which beam-skipping considers a hit a static map hit.
+    beam_skip_threshold: 0.3
+    # If more than this fraction of beam disagree with the map, assume localization error and disable beam skipping
+    beam_skip_error_threshold: 0.9
     # Whether to broadcast map to odom transform or not.
     tf_broadcast: true
     # Transform tolerance allowed.
