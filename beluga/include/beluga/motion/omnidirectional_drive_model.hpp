@@ -114,21 +114,24 @@ class OmnidirectionalDriveModel {
     const auto first_rotation =
         distance > params_.distance_threshold ? heading_rotation * previous_orientation.inverse() : Sophus::SO2d{};
 
+    // Add minimum variance to avoid zero stddev in std::normal_distribution
+    constexpr double kMinVariance = 1e-9;
+
     using DistributionParam = typename std::normal_distribution<double>::param_type;
     const auto rotation_params = DistributionParam{
         rotation.log(), std::sqrt(
                             params_.rotation_noise_from_rotation * rotation_variance(rotation) +
-                            params_.rotation_noise_from_translation * distance_variance)};
+                            params_.rotation_noise_from_translation * distance_variance + kMinVariance)};
 
     const auto translation_params = DistributionParam{
         distance, std::sqrt(
                       params_.translation_noise_from_translation * distance_variance +
-                      params_.translation_noise_from_rotation * rotation_variance(rotation))};
+                      params_.translation_noise_from_rotation * rotation_variance(rotation) + kMinVariance)};
 
     const auto strafe_params = DistributionParam{
         0.0, std::sqrt(
                  params_.strafe_noise_from_translation * distance_variance +
-                 params_.translation_noise_from_rotation * rotation_variance(rotation))};
+                 params_.translation_noise_from_rotation * rotation_variance(rotation) + kMinVariance)};
 
     return [=](const state_type& state, auto& gen) {
       static thread_local auto distribution = std::normal_distribution<double>{};

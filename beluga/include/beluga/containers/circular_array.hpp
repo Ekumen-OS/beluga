@@ -470,7 +470,7 @@ using RollingWindow = CircularArray<
  * reversal feature is enabled).
  */
 template <typename T, std::size_t N, CircularArrayFeatureFlags F>
-CircularArray<T, N, F>& operator<<(CircularArray<T, N, F>& array, T value) {
+CircularArray<T, N, F>& operator<<(CircularArray<T, N, F>& array, T value) {  // NOLINT(google-readability-casting)
   if constexpr (F & CircularArrayFeatureFlags::kLayoutReversal) {
     array.push_front(std::move(value));
   } else {
