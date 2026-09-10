@@ -27,8 +27,6 @@ jobs:
         with:
           pixi-version: v0.80.0
           cache: true
-          auth-host: prefix.dev
-          auth-token: ${{ secrets.PREFIX_DEV_TOKEN }}
       - name: Run Pixi tests
         run: |-
           pixi global install pixi-ros
