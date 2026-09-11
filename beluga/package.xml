@@ -21,6 +21,9 @@
   <depend>sophus</depend>
   <depend>tbb</depend>
 
+  <depend>libceres-dev</depend>
+
+
   <test_depend>clang-format</test_depend>
   <test_depend>clang-tidy</test_depend>
   <test_depend>benchmark</test_depend>
