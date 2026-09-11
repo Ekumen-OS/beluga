@@ -22,6 +22,7 @@
   <depend>tbb</depend>
 
   <depend>libceres-dev</depend>
+  <depend>fmt</depend>
 
 
   <test_depend>clang-format</test_depend>
