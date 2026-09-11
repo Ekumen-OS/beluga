@@ -27,8 +27,10 @@ jobs:
         with:
           pixi-version: v0.80.0
           cache: false
+          run-install: false  # No pixi.toml in this repo
+          global-environments: |
+            pixi-ros
       - name: Run Pixi tests
         run: |-
-          pixi global install pixi-ros
           pixi-ros init --distro jazzy --platform linux-64
           pixi run build --packages-up-to beluga_ros  # Should become `pixi run test` in the end
