@@ -12,12 +12,15 @@ concurrency:
 
 jobs:
   pixi:
-    runs-on: ${{ matrix.image }}
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
-        image:
-          - ubuntu-24.04
+        distro:
+          - humble
+          - jazzy
+          - kilted
+          - lyrical
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -32,5 +35,5 @@ jobs:
             pixi-ros
       - name: Run Pixi tests
         run: |-
-          pixi-ros init --distro jazzy --platform linux-64
-          pixi run build --packages-up-to beluga_ros  # Should become `pixi run test` in the end
+          pixi-ros init --distro ${{ matrix.distro }} --platform linux-64 --platform linux-aarch64
+          pixi run test --packages-up-to beluga_amcl
