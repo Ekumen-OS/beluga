@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         distro:
-          - humble
+          # - humble  # gtest <cstdint> issue
           - jazzy
           - kilted
           - lyrical
@@ -33,9 +33,11 @@ jobs:
           run-install: false  # No pixi.toml in this repo
           global-environments: |
             pixi-ros
-      - name: Run Pixi tests
-        run: |-
-          pixi-ros init --distro ${{ matrix.distro }} --platform linux-64 --platform linux-aarch64
-          pixi install
-          pixi run build --packages-up-to beluga_amcl
-          pixi run test --packages-up-to beluga_amcl
+      - name: pixi-ros init
+        run: pixi-ros init --distro ${{ matrix.distro }} --platform linux-64 --platform linux-aarch64
+      - name: pixi install
+        run: pixi install
+      - name: pixi build
+        run: pixi run build --packages-up-to beluga_amcl
+      - name: pixi test
+        run: pixi run test --packages-up-to beluga_amcl
