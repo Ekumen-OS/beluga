@@ -13,6 +13,10 @@ concurrency:
 jobs:
   pixi:
     runs-on: ubuntu-24.04
+    env:
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
     strategy:
       fail-fast: false
       matrix:
@@ -25,6 +29,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      - name: Setup compiler cache
+        uses: Chocobo1/setup-ccache-action@v1
+        with:
+          api_token: ${{ secrets.GITHUB_TOKEN }}
+          update_packager_index: false
+          override_cache_key: ccache-pixi-${{ matrix.distro }}
+
       - name: Setup Pixi
         uses: prefix-dev/setup-pixi@v0.10.2
         with:
@@ -32,6 +43,7 @@ jobs:
           cache: false
           run-install: false  # No pixi.toml in this repo
           global-environments: |
+            ccache
             pixi-ros
       - name: pixi-ros init
         run: pixi-ros init --distro ${{ matrix.distro }} --platform linux-64 --platform linux-aarch64
