@@ -36,4 +36,6 @@ jobs:
       - name: Run Pixi tests
         run: |-
           pixi-ros init --distro ${{ matrix.distro }} --platform linux-64 --platform linux-aarch64
-          pixi run test --packages-up-to beluga_amcl
+          pixi install
+          pixi run build
+          pixi run test
