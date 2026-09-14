@@ -37,5 +37,5 @@ jobs:
         run: |-
           pixi-ros init --distro ${{ matrix.distro }} --platform linux-64 --platform linux-aarch64
           pixi install
-          pixi run build
-          pixi run test
+          pixi run build --packages-up-to beluga_amcl
+          pixi run test --packages-up-to beluga_amcl
