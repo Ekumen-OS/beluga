@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-test:
+  pixi:
     runs-on: ${{ matrix.image }}
     strategy:
       fail-fast: false
