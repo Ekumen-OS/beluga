@@ -129,11 +129,11 @@ Beluga AMCL running on an [Andino](https://github.com/Ekumen-OS/andino) robot (R
 - Adaptive resampling policies
 - Motion models for wheeled robots
 - Sensor models for 2D rangers
-- ROS 1 and ROS 2 integration
+- ROS 2 integration
 
 ## Support
 
-Beluga is supported on a number of ROS 1 and ROS 2 distributions, primarily on Linux platforms:
+Beluga is supported on a number of ROS 2 distributions, primarily on Linux platforms:
 
 ::::{grid}
 :::{grid-item-card} ROS 2 Humble Hawksbill
