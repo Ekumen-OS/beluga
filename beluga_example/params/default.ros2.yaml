@@ -72,8 +72,9 @@ amcl:
     # Whether to enable beam skipping (likelihood_field_prob only). When enabled, beams that
     # disagree with the map across most particles (e.g. unmapped or dynamic obstacles) are
     # ignored. Disabled by default; only beneficial in scenes with unmapped/dynamic obstacles.
-    do_beamskip: true
+    do_beamskip: false
     # Distance threshold for beam-skipping to consider hit a likely true static map hit.
+    # It cannot be greater than laser_likelihood_max_dist.
     beam_skip_distance: 0.5
     # Agreement threshold above which beam-skipping considers a hit a static map hit.
     beam_skip_threshold: 0.3

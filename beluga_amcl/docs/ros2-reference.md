@@ -194,6 +194,23 @@ Also available as a standalone `amcl_node` executable.
 : Maximum distance, in meters, to do obstacle inflation on map used in the `likelihood_field` model.
 : Defaults to `2.0`.
 
+`do_beamskip` _(`boolean`)_
+: Whether to enable beam skipping, ignoring beams that disagree with the map across most particles (e.g. caused by unmapped or dynamic obstacles). Only used by the `likelihood_field_prob` model.
+: Defaults to `false`.
+
+`beam_skip_distance` _(`float`)_
+: Distance, in meters, to the nearest mapped obstacle below which a beam is considered to agree with the map. Only used by the `likelihood_field_prob` model.
+: It cannot be greater than `laser_likelihood_max_dist`. Beam agreement is evaluated on the likelihood field, which saturates at `laser_likelihood_max_dist` and is flat beyond it, so a larger `beam_skip_distance` would make every distant beam count as agreeing with the map. The node will refuse to initialize the particle filter if this constraint is violated while `do_beamskip` is `true`.
+: Defaults to `0.5`.
+
+`beam_skip_threshold` _(`float`)_
+: Fraction of particles that must agree on a beam for that beam to be integrated. Beams below it are skipped. Only used by the `likelihood_field_prob` model.
+: Defaults to `0.3`.
+
+`beam_skip_error_threshold` _(`float`)_
+: Fraction of skipped beams above which a localization error is assumed and beam skipping is disabled for that update, to prevent filter divergence. Only used by the `likelihood_field_prob` model.
+: Defaults to `0.9`.
+
 ##### Misc Parameters
 
 `autostart` _(`boolean`)_
@@ -314,9 +331,9 @@ Also available as a standalone `amcl_node` executable.
 | `z_short` |  | ✅ | ✅ |  |
 | `lambda_short` |  | ✅ | ✅ |  |
 | `laser_likelihood_max_dist` |  | ✅ | ✅ |  |
-| `do_beamskip` | Whether to ignore the beams for which the majority of the particles do not match the map in the likelihood field model. Beluga AMCL does not support beam skipping. | ✅ |  |  |
-| `beam_skip_distance` | Maximum distance to an obstacle to consider that a beam coincides with the map. Beluga AMCL does not support beam skipping. | ✅ |  |  |
-| `beam_skip_threshold` | Minimum percentage of particles for which a particular beam must match the map to not be skipped. Beluga AMCL does not support beam skipping. | ✅ |  |  |
-| `beam_skip_error_threshold` | Maximum percentage of skipped beams. Too many skipped beams trigger a full update to recover in case of bad convergence. Beluga AMCL does not support beam skipping. | ✅ |  |  |
+| `do_beamskip` | Whether to ignore the beams for which the majority of the particles do not match the map in the likelihood field model. Beluga AMCL only supports beam skipping in the `likelihood_field_prob` sensor model. | ✅ | ✅ |  |
+| `beam_skip_distance` | Maximum distance to an obstacle to consider that a beam coincides with the map. Beluga AMCL only supports beam skipping in the `likelihood_field_prob` sensor model, and requires this value to be no greater than `laser_likelihood_max_dist`. | ✅ | ✅ |  |
+| `beam_skip_threshold` | Minimum percentage of particles for which a particular beam must match the map to not be skipped. Beluga AMCL only supports beam skipping in the `likelihood_field_prob` sensor model. | ✅ | ✅ |  |
+| `beam_skip_error_threshold` | Maximum percentage of skipped beams. Too many skipped beams trigger a full update to recover in case of bad convergence. Beluga AMCL only supports beam skipping in the `likelihood_field_prob` sensor model. | ✅ | ✅ |  |
 | `model_unknown_space` | Whether to model unknown space or assume it free. Default is `false`. |  | ✅ |  |
 | `only_obstacle_boundaries` | Whether to treat inner obstacle cells as unknown space, particularly when calculating likelihood fields. Default is `true`. |  | ✅ |  |

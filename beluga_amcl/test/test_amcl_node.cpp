@@ -348,6 +348,43 @@ TEST_F(TestNode, BeamSkipEstimatesPose) {
   ASSERT_TRUE(wait_for_pose_estimate());
 }
 
+TEST_F(TestNode, BeamSkipDistanceBeyondLikelihoodMaxDist) {
+  // Beam agreement is evaluated on the likelihood field, which is flat beyond
+  // laser_likelihood_max_dist, so a larger beam_skip_distance is rejected.
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_model_type", "likelihood_field_prob"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"do_beamskip", true});
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_likelihood_max_dist", 2.0});
+  amcl_node_->set_parameter(rclcpp::Parameter{"beam_skip_distance", 3.0});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_FALSE(wait_for_initialization());
+}
+
+TEST_F(TestNode, BeamSkipDistanceEqualToLikelihoodMaxDist) {
+  // The constraint allows equality.
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_model_type", "likelihood_field_prob"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"do_beamskip", true});
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_likelihood_max_dist", 2.0});
+  amcl_node_->set_parameter(rclcpp::Parameter{"beam_skip_distance", 2.0});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+}
+
+TEST_F(TestNode, BeamSkipDistanceIgnoredWhenSkippingDisabled) {
+  // The constraint only applies when beam skipping is enabled.
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_model_type", "likelihood_field_prob"});
+  amcl_node_->set_parameter(rclcpp::Parameter{"do_beamskip", false});
+  amcl_node_->set_parameter(rclcpp::Parameter{"laser_likelihood_max_dist", 2.0});
+  amcl_node_->set_parameter(rclcpp::Parameter{"beam_skip_distance", 3.0});
+  amcl_node_->configure();
+  amcl_node_->activate();
+  tester_node_->publish_map();
+  ASSERT_TRUE(wait_for_initialization());
+}
+
 TEST_F(TestNode, FirstMapOnly) {
   amcl_node_->set_parameter(rclcpp::Parameter{"set_initial_pose", true});
   amcl_node_->set_parameter(rclcpp::Parameter{"always_reset_initial_pose", true});

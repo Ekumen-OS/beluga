@@ -218,10 +218,13 @@ TEST(LikelihoodFieldProbModelBeamSkip, DisabledMatchesBaseline) {
   const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}};
   auto sensor_model = UUT{params, grid};
 
-  // prepare() is a no-op while skipping is disabled: the mask stays empty and weights are unchanged.
+  // While skipping is disabled prepare() only sizes the mask, leaving every beam enabled, and
+  // weights are unchanged.
   const auto points = std::vector<std::pair<double, double>>{{1.25, 1.25}, {2.25, 2.25}};
   sensor_model.prepare(points, std::vector<Sophus::SE2d>(10, grid.origin()));
-  EXPECT_TRUE(sensor_model.beam_mask().empty());
+  ASSERT_EQ(sensor_model.beam_mask().size(), 2U);
+  EXPECT_TRUE(sensor_model.beam_mask()[0]);
+  EXPECT_TRUE(sensor_model.beam_mask()[1]);
 
   auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{points});
   // Both beams contribute: 1.022 (obstacle) * 0.025 (floor).
@@ -269,7 +272,7 @@ TEST(LikelihoodFieldProbModelBeamSkip, ThresholdBoundary) {
   const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}, true, 0.5, 0.3, 1.0};
   auto sensor_model = UUT{params, grid};
 
-  const auto agreeing = grid.origin();
+  const auto& agreeing = grid.origin();
   const auto missing = Sophus::SE2d{Sophus::SO2d{}, Eigen::Vector2d{10., 10.}};
   const auto points = std::vector<std::pair<double, double>>{{1.25, 1.25}};
 
@@ -341,6 +344,24 @@ TEST(LikelihoodFieldProbModelBeamSkip, DistanceToLikelihoodThreshold) {
     ASSERT_EQ(sensor_model.beam_mask().size(), 1U);
     EXPECT_TRUE(sensor_model.beam_mask()[0]);
   }
+}
+
+TEST(LikelihoodFieldProbModelBeamSkip, WithoutPrepareIntegratesEveryBeam) {
+  const auto grid = make_beamskip_grid();
+  // Beam skipping is enabled, but the model is used standalone, without the prepare() pass that
+  // populates the mask. Every beam must be integrated, matching the model with skipping disabled.
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}, true, 0.5, 0.3, 0.9};
+  auto sensor_model = UUT{params, grid};
+  ASSERT_TRUE(sensor_model.beam_mask().empty());
+
+  const auto points = std::vector<std::pair<double, double>>{{1.25, 1.25}, {2.25, 2.25}};
+
+  const auto baseline_params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}};
+  auto baseline_model = UUT{baseline_params, grid};
+
+  const auto weight = sensor_model(std::vector<std::pair<double, double>>{points})(grid.origin());
+  const auto weight_baseline = baseline_model(std::vector<std::pair<double, double>>{points})(grid.origin());
+  EXPECT_NEAR(weight, weight_baseline, 1e-9);
 }
 
 }  // namespace
