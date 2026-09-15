@@ -26,7 +26,7 @@ CMAKE_EXTRA_ARGS=""
 COLCON_EXTRA_ARGS=""
 
 if [ "${ROS_DISTRO}" != "rolling" ]; then
-    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_benchmark beluga_example beluga_system_tests"
+    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_example beluga_system_tests"
     CPP_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
     # beluga_vdb is not supported in humble
     if [ "${ROS_DISTRO}" != "humble" ]; then
