@@ -121,6 +121,37 @@ class LikelihoodFieldModelBase {
   Sophus::SE2d world_to_likelihood_field_transform_; /*!< Transformation from world coordinates to the likelihood field
                                                         coordinate system. */
 
+  /// Gaussian likelihood profile: maps a squared distance-to-obstacle to a likelihood value.
+  /**
+   * Holds the gaussian coefficients derived from the model parameters so they are computed once
+   * and reused. Shared between `make_likelihood_field()` (applied over every grid cell) and
+   * derived models that need the likelihood value at a specific distance (see
+   * beluga::LikelihoodFieldProbModel).
+   */
+  struct LikelihoodProfile {
+    double amplitude;          ///< Peak contribution of the obstacle-hit gaussian.
+    double two_squared_sigma;  ///< 2 * sigma_hit^2, the gaussian denominator.
+    double offset;             ///< Constant contribution of random perception noise.
+
+    /// Returns the likelihood value for a given squared distance to the nearest obstacle.
+    [[nodiscard]] double operator()(double squared_distance) const {
+      return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
+    }
+  };
+
+  /// Builds the likelihood profile (gaussian coefficients) from the model parameters.
+  [[nodiscard]] static LikelihoodProfile make_likelihood_profile(const param_type& params) {
+    const double two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit;
+    assert(two_squared_sigma > 0.0);
+
+    const double amplitude = params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()));
+    assert(amplitude > 0.0);
+
+    const double offset = params.z_random / params.max_laser_distance;
+
+    return LikelihoodProfile{amplitude, two_squared_sigma, offset};
+  }
+
   /// Creates a likelihood field from an occupancy grid.
   /**
    * \param params Parameters to configure the likelihood field.
@@ -132,18 +163,7 @@ class LikelihoodFieldModelBase {
       return static_cast<float>((grid.coordinates_at(first) - grid.coordinates_at(second)).squaredNorm());
     };
 
-    /// Pre-computed variables
-    const double two_squared_sigma = 2 * params.sigma_hit * params.sigma_hit;
-    assert(two_squared_sigma > 0.0);
-
-    const double amplitude = params.z_hit / (params.sigma_hit * std::sqrt(2 * Sophus::Constants<double>::pi()));
-    assert(amplitude > 0.0);
-
-    const double offset = params.z_random / params.max_laser_distance;
-
-    const auto to_likelihood = [amplitude, two_squared_sigma, offset](double squared_distance) {
-      return amplitude * std::exp(-squared_distance / two_squared_sigma) + offset;
-    };
+    const auto profile = make_likelihood_profile(params);
 
     const auto neighborhood = [&grid](std::size_t index) { return grid.neighborhood4(index); };
 
@@ -160,7 +180,7 @@ class LikelihoodFieldModelBase {
     if (params.model_unknown_space) {
       const auto inverse_max_distance = 1 / params.max_laser_distance;
       const auto squared_background_distance =
-          -two_squared_sigma * std::log((inverse_max_distance - offset) / amplitude);
+          -profile.two_squared_sigma * std::log((inverse_max_distance - profile.offset) / profile.amplitude);
 
       const auto get_effective_unknown_value = [only_obstacle_boundaries =
                                                     params.only_obstacle_boundaries](auto&& tuple) {
@@ -179,7 +199,7 @@ class LikelihoodFieldModelBase {
     }
 
     auto likelihood_values = std::move(distance_map) |  //
-                             ranges::actions::transform(to_likelihood);
+                             ranges::actions::transform(profile);
 
     return ValueGrid2<float>{std::move(likelihood_values), grid.width(), grid.resolution()};
   }
