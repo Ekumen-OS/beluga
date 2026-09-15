@@ -38,6 +38,7 @@ The current set of features includes:
 Beluga is built on top of the following open source libraries:
 
 - [Eigen](https://gitlab.com/libeigen/eigen): A well-known C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
+- [nanoflann](https://github.com/jlblancoc/nanoflann): A C++11 header-only library for building KD-Trees.
 - [Sophus](https://github.com/strasdat/Sophus): A C++ implementation of Lie groups using Eigen.
 - [Range](https://github.com/ericniebler/range-v3): The basis library for C++20's `std::ranges`.
 
