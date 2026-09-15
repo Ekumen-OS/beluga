@@ -191,7 +191,10 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
 
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
-    descriptor.description = "Distance threshold for beam-skipping to consider hit a likely true static map hit";
+    descriptor.description =
+        "Distance threshold for beam-skipping to consider hit a likely true static map hit. It cannot be "
+        "greater than laser_likelihood_max_dist, as the likelihood field does not resolve distances beyond "
+        "that point.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = std::numeric_limits<double>::max();
@@ -212,7 +215,8 @@ AmclNode::AmclNode(const rclcpp::NodeOptions& options) : BaseAMCLNode{"amcl", ""
   {
     auto descriptor = rcl_interfaces::msg::ParameterDescriptor();
     descriptor.description =
-        "If more than this fraction of beam disagree with the map, assume localization error and disable beam skipping.";
+        "If more than this fraction of beam disagree with the map, assume localization error and disable beam "
+        "skipping.";
     descriptor.floating_point_range.resize(1);
     descriptor.floating_point_range[0].from_value = 0;
     descriptor.floating_point_range[0].to_value = 1;
@@ -435,6 +439,15 @@ auto AmclNode::get_sensor_model(std::string_view name, nav_msgs::msg::OccupancyG
     params.beam_skip_distance = get_parameter("beam_skip_distance").as_double();
     params.beam_skip_threshold = get_parameter("beam_skip_threshold").as_double();
     params.beam_skip_error_threshold = get_parameter("beam_skip_error_threshold").as_double();
+    // Beam skipping decides whether a beam agrees with the map by evaluating the likelihood field at
+    // the beam endpoint. The likelihood field saturates at laser_likelihood_max_dist, so past that
+    // distance it is flat and the test would silently count every far away beam as agreeing.
+    if (params.do_beamskip && params.beam_skip_distance > params.max_obstacle_distance) {
+      throw std::invalid_argument(
+          "beam_skip_distance (" + std::to_string(params.beam_skip_distance) +
+          ") cannot be greater than laser_likelihood_max_dist (" + std::to_string(params.max_obstacle_distance) +
+          ") when beam skipping is enabled");
+    }
     return beluga::LikelihoodFieldProbModel{params, beluga_ros::OccupancyGrid{map}};
   }
   if (name == kBeamSensorModelName) {
