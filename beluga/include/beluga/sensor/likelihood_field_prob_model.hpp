@@ -17,10 +17,14 @@
 
 #include <algorithm>
 #include <beluga/sensor/likelihood_field_model_base.hpp>
+#include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <random>
+#include <range/v3/numeric/accumulate.hpp>
+#include <range/v3/view/zip.hpp>
 #include <vector>
 
 #include <sophus/se2.hpp>
@@ -46,6 +50,12 @@ struct LikelihoodFieldProbModelParam : public LikelihoodFieldModelBaseParam {
   /// Whether to enable the beam skipping heuristic.
   bool do_beamskip = false;
   /// Distance to the nearest obstacle below which a beam is considered to agree with the map.
+  /**
+   * Must not be greater than `max_obstacle_distance` when `do_beamskip` is enabled. The likelihood
+   * field saturates at `max_obstacle_distance`, so beyond that distance it is flat and the agreement
+   * test (evaluated on the likelihood field, see beluga::LikelihoodFieldProbModel) stops
+   * discriminating: every beam landing further away would be counted as agreeing with the map.
+   */
   double beam_skip_distance = 0.5;
   /// Fraction of particles that must agree on a beam for it to be kept.
   double beam_skip_threshold = 0.3;
@@ -78,6 +88,9 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
    * \param grid Occupancy grid representing the static map that the sensor model
    *  uses to compute a likelihood field for lidar hits and compute importance weights
    *  for particle states.
+   *
+   * When beam skipping is enabled, `params.beam_skip_distance` must not be greater than
+   * `params.max_obstacle_distance`. See beluga::LikelihoodFieldProbModelParam::beam_skip_distance.
    */
   explicit LikelihoodFieldProbModel(const param_type& params, const map_type& grid)
       : LikelihoodFieldModelBase<OccupancyGrid>(params, grid),
@@ -94,7 +107,8 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
    * for which that fraction falls below `beam_skip_threshold` are masked out and ignored by
    * the subsequent weight computation in `operator()`. If skipping would discard more than
    * `beam_skip_error_threshold` of the beams, the mask is reset so that all beams are used,
-   * preventing filter divergence. This is a no-op when beam skipping is disabled.
+   * preventing filter divergence. When beam skipping is disabled this only sizes the mask to the
+   * measurement, leaving every beam enabled.
    *
    * Must be called once per update, after motion propagation and before reweighting.
    *
@@ -104,13 +118,12 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
    */
   template <class StateRange>
   void prepare(const measurement_type& points, StateRange&& states) {
-    if (!do_beamskip_) {
-      return;
-    }
-
+    // The mask is always sized to match the measurement, so that `operator()` can consume it
+    // unconditionally: when beam skipping is disabled every beam stays enabled.
     const std::size_t num_beams = points.size();
     beam_mask_.assign(num_beams, std::uint8_t{1});
-    if (num_beams == 0) {
+
+    if (!do_beamskip_ || num_beams == 0) {
       return;
     }
 
@@ -163,8 +176,8 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
 
   /// Returns the current beam skipping mask (one flag per beam, non-zero means the beam is used).
   /**
-   * The mask is populated by `prepare()`. It is empty until the first call, which is
-   * equivalent to using every beam. Mainly useful for introspection and testing.
+   * The mask is populated by `prepare()`. It is empty until the first call, which `operator()`
+   * treats as using every beam. Mainly useful for introspection and testing.
    *
    * A `std::vector<std::uint8_t>` is used instead of `std::vector<bool>` to avoid the bit-packed
    * specialization: the mask is read once per beam per particle in the reweight hot path, where a
@@ -179,7 +192,16 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
    *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
   [[nodiscard]] auto operator()(measurement_type&& points) const {
-    return [this, points = std::move(points)](const state_type& state) -> weight_type {
+    // Beams masked out by prepare() contribute nothing to the weight. The mask is resolved once
+    // here, so that the per-particle loop below can zip it against the measurement without any
+    // further bookkeeping. When prepare() was not called for this measurement (e.g. when the model
+    // is used standalone, outside the two pass update) every beam is integrated, reproducing the
+    // plain likelihood field prob behavior.
+    auto mask = beam_mask_.size() == points.size()  //
+                    ? beam_mask_
+                    : std::vector<std::uint8_t>(points.size(), std::uint8_t{1});
+
+    return [this, points = std::move(points), mask = std::move(mask)](const state_type& state) -> weight_type {
       const auto transform = this->world_to_likelihood_field_transform_ * state;
       const auto x_offset = transform.translation().x();
       const auto y_offset = transform.translation().y();
@@ -187,33 +209,31 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
       const auto sin_theta = transform.so2().unit_complex().y();
       const auto unknown_space_occupancy_prob = static_cast<float>(1. / this->params_.max_laser_distance);
 
-      double log_weight = 0.0;
-      for (std::size_t i = 0; i < points.size(); ++i) {
-        // Skip beams that were masked out by prepare(). When beam skipping is disabled (or
-        // prepare() was never called) the mask is not consulted and every beam contributes,
-        // reproducing the plain likelihood field prob behavior.
-        if (do_beamskip_ && i < beam_mask_.size() && !beam_mask_[i]) {
-          continue;
+      const auto beam_log_likelihood = [this, x_offset, y_offset, cos_theta, sin_theta,
+                                        unknown_space_occupancy_prob](const auto& tuple) {
+        const auto& [point, is_beam_used] = tuple;
+        if (!is_beam_used) {
+          return 0.0;  // Neutral element of the log-likelihood sum below.
         }
         // Transform the end point of the laser to the grid local coordinate system.
         // Not using Eigen/Sophus because they make the routine x10 slower.
         // See `benchmark_likelihood_field_model.cpp` for reference.
-        const auto& point = points[i];
         const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
         const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
         const auto pz =
             static_cast<double>(this->likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob));
-        log_weight += std::log(pz);
-      }
-      return std::exp(log_weight);
+        return std::log(pz);
+      };
+
+      return std::exp(ranges::accumulate(ranges::views::zip(points, mask), 0.0, std::plus{}, beam_log_likelihood));
     };
   }
 
  private:
-  bool do_beamskip_;                  ///< Whether the beam skipping heuristic is enabled.
-  double beam_skip_threshold_;        ///< Fraction of particles that must agree for a beam to be kept.
-  double beam_skip_error_threshold_;  ///< Skipped-beam fraction above which skipping is disabled.
-  float likelihood_threshold_;        ///< Likelihood equivalent of `beam_skip_distance`.
+  bool do_beamskip_;                     ///< Whether the beam skipping heuristic is enabled.
+  double beam_skip_threshold_;           ///< Fraction of particles that must agree for a beam to be kept.
+  double beam_skip_error_threshold_;     ///< Skipped-beam fraction above which skipping is disabled.
+  float likelihood_threshold_;           ///< Likelihood equivalent of `beam_skip_distance`.
   std::vector<std::uint8_t> beam_mask_;  ///< Per-beam mask computed by `prepare()` (non-zero means used).
 
   /// Converts `beam_skip_distance` into the equivalent likelihood field value.
@@ -221,8 +241,13 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
    * Reuses the base class likelihood profile (the same gaussian used to build the likelihood
    * field), so that the "distance to obstacle < beam_skip_distance" agreement test can be
    * evaluated directly on the precomputed likelihood field without keeping the distance map around.
+   *
+   * That equivalence only holds within the range the likelihood field actually resolves distances
+   * in, hence `beam_skip_distance <= max_obstacle_distance` is a requirement of the configuration.
    */
   static float compute_likelihood_threshold(const param_type& params) {
+    assert(!params.do_beamskip || params.beam_skip_distance <= params.max_obstacle_distance);
+
     const auto profile = LikelihoodFieldModelBase<OccupancyGrid>::make_likelihood_profile(params);
     const double squared_distance = params.beam_skip_distance * params.beam_skip_distance;
     return static_cast<float>(profile(squared_distance));
