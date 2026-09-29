@@ -67,11 +67,11 @@ RUN pip install \
 COPY beluga_lambkin/requirements.txt /tmp/lambkin-requirements.txt
 RUN set -eu; \
     for delay in 1 2 4 8; do \
-      pip install --no-cache-dir --break-system-packages -r /tmp/lambkin-requirements.txt && exit 0; \
+      pip install --no-cache-dir --break-system-packages --ignore-installed -r /tmp/lambkin-requirements.txt && exit 0; \
       echo "pip install failed, retrying in ${delay}s..." >&2; \
       sleep "$delay"; \
     done; \
-    pip install --no-cache-dir --break-system-packages -r /tmp/lambkin-requirements.txt
+    pip install --no-cache-dir --break-system-packages --ignore-installed -r /tmp/lambkin-requirements.txt
 
 # Install timem from previous stage
 COPY --from=timem-builder --chown=developer:ekumen /opt/timemory/ /opt/timemory
