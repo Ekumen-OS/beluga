@@ -17,7 +17,7 @@ We will only keep the Beluga-specific benchmark files from Lambkin's `examples/b
   - Do NOT create `beluga_lambkin/Dockerfile`.
 
 ## 2. Docker Configuration Updates
-We will integrate the Lambkin installation directly into the main Beluga development Dockerfiles. 
+We will integrate the Lambkin installation directly into the main Beluga development Dockerfiles.
 
 - **Target Distributions**: Update `docker/images/jazzy/Dockerfile`, `docker/images/kilted/Dockerfile`, and `docker/images/rolling/Dockerfile`.
 - **Humble**: Do NOT update `docker/images/humble/Dockerfile` (Humble is explicitly excluded from this integration to avoid `uv-build` compatibility issues).
