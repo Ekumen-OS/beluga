@@ -54,19 +54,9 @@ RUN apt-get update \
 
 ENV PIP_BREAK_SYSTEM_PACKAGES 1
 RUN pip install \
-  "evo>=1.34.3" \
+  evo==1.21.0 \
   numpy==1.26.4 \
   pre-commit==2.20.0
-
-# Install Lambkin SDK (pinned in beluga_lambkin/requirements.txt), retrying on transient failures.
-COPY beluga_lambkin/requirements.txt /tmp/lambkin-requirements.txt
-RUN set -eu; \
-    for delay in 1 2 4 8; do \
-      pip install --no-cache-dir --break-system-packages -r /tmp/lambkin-requirements.txt && exit 0; \
-      echo "pip install failed, retrying in ${delay}s..." >&2; \
-      sleep "$delay"; \
-    done; \
-    pip install --no-cache-dir --break-system-packages -r /tmp/lambkin-requirements.txt
 
 COPY --from=timem-builder --chown=$USER:$GROUP /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
