@@ -54,9 +54,13 @@ RUN apt-get update \
 
 ENV PIP_BREAK_SYSTEM_PACKAGES 1
 RUN pip install \
-  evo==1.21.0 \
+  evo==1.34.3 \
   numpy==1.26.4 \
   pre-commit==2.20.0
+
+# Install Lambkin SDK (pinned in beluga_lambkin/requirements.txt).
+COPY beluga_lambkin/requirements.txt /tmp/lambkin-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/lambkin-requirements.txt
 
 COPY --from=timem-builder --chown=$USER:$GROUP /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
