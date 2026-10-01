@@ -20,12 +20,14 @@ import lambkin
 
 @lambkin.benchmark(
     variants=lambkin.common.named_product(
-        sensor_model=["beam", "likelihood_field"], num_particles=[10, 20, 100]
+        laser_model_type=["beam", "likelihood_field"], max_particles=[10, 20, 100]
     ),
     num_iterations=2,
 )
 @lambkin.option("--clock-rate", default=1.0)
-@lambkin.option("--sensor-topic", default="/scan")
+@lambkin.option("--sensor-topic", default="scan_front")
+@lambkin.option("--dataset", default="/data/datasets/input")
+@lambkin.option("--map", default="/data/maps/map.yaml")
 def nominal(ctx):
     """Run a nominal Beluga AMCL benchmark across sensor models and particle counts.
 
@@ -47,10 +49,11 @@ def nominal(ctx):
     ):
         with lambkin.process.background(
             ctx.shell.ros2.launch,
-            "beluga_ros2",
+            "beluga_inference_ros2",
             "beluga.launch.py",
-            f"laser_model_type:={ctx.variant.sensor_model}",
-            f"max_particles:={ctx.variant.num_particles}",
+            f"laser_model_type:={ctx.variant.laser_model_type}",
+            f"max_particles:={ctx.variant.max_particles}",
+            f"scan_topic:={ctx.options.sensor_topic}",
             f"map_path:={ctx.inputs.map}",
         ):
             ctx.shell.ros2.bag.play(
@@ -70,13 +73,13 @@ def nominal(ctx):
 @nominal.input
 def dataset(ctx):
     """Return the path to the MCAP dataset used as input for the benchmark."""
-    return "/data/datasets/input"
+    return ctx.options.dataset
 
 
 @nominal.input
 def map(ctx):
     """Return the path to the map file used for localization."""
-    return "/data/maps/map.yaml"
+    return ctx.options.map
 
 
 @nominal.output

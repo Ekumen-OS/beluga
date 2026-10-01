@@ -22,7 +22,7 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
-pkg_dir = get_package_share_directory("beluga_ros2")
+pkg_dir = get_package_share_directory("beluga_inference_ros2")
 
 default_yaml_path = os.path.join(pkg_dir, "params", "default.ros2.yaml")
 
@@ -31,7 +31,7 @@ def generate_launch_description():
     """Generate the launch description for the Beluga AMCL benchmarking environment.
 
     Declares launch arguments for the map path, laser model type,
-    and maximum particles, and configures the required ROS 2 nodes:
+    maximum particles, and scan topic, and configures the required ROS 2 nodes:
     beluga_amcl, map_server, and lifecycle_manager.
 
     Returns:
@@ -56,6 +56,12 @@ def generate_launch_description():
         "max_particles", default_value="2000", description="Max number of particles"
     )
 
+    scan_topic_arg = DeclareLaunchArgument(
+        "scan_topic",
+        default_value="scan_front",
+        description="Sensor scan topic",
+    )
+
     beluga_node = Node(
         package="beluga_amcl",
         executable="amcl_node",
@@ -66,6 +72,7 @@ def generate_launch_description():
             {
                 "laser_model_type": LaunchConfiguration("laser_model_type"),
                 "max_particles": LaunchConfiguration("max_particles"),
+                "scan_topic": LaunchConfiguration("scan_topic"),
             },
         ],
     )
@@ -92,6 +99,7 @@ def generate_launch_description():
             map_path_arg,
             laser_model_arg,
             max_particles_arg,
+            scan_topic_arg,
             beluga_node,
             map_server_node,
             lifecycle_manager_node,
