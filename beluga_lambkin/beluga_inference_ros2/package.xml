@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>beluga_ros2</name>
+  <name>beluga_inference_ros2</name>
   <version>1.0.0</version>
   <description>ROS2 launch for Beluga Localization</description>
 
-  <maintainer email="teresa.ortega@gethen.io">Maria Teresa Ortega</maintainer>
+  <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
+  <maintainer email="ivanpauno@ekumenlabs.com">Ivan Paunovic</maintainer>
+  <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
+  <maintainer email="andres.brumovsky@ekumenlabs.com">Andres Brumovsky</maintainer>
   <license>Apache-2.0</license>
 
   <exec_depend>launch</exec_depend>

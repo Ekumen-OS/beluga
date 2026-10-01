@@ -13,7 +13,7 @@
 # limitations under the License.
 
 cmake_minimum_required(VERSION 3.16)
-project(beluga_ros2)
+project(beluga_inference_ros2)
 find_package(ament_cmake REQUIRED)
 find_package(beluga_amcl REQUIRED)
 find_package(nav2_map_server REQUIRED)
