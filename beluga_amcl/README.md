@@ -14,7 +14,7 @@ The compatibility between `beluga_amcl` and its longstanding counterparts in the
     - [Published Transforms](#published-transforms)
     - [Advertised Services](#advertised-services)
   - [Performance](#performance)
-  - [Compatibility](#compatibility-notes)
+  - [Compatibility notes](#compatibility-notes)
   - [Next Steps](#next-steps)
 
 ## ROS Interface
@@ -67,14 +67,7 @@ Defaults are `map`, `odom` and `base`.
 
 ## Performance
 
-Performance reports are periodically generated to track improvements and regressions. These reports are produced using the scripts in the [beluga_benchmark](../beluga_benchmark) package, which allow comparing the performance of `beluga_amcl` against `nav2_amcl` using a synthetic dataset.
-
-<figure>
-  <img src="/beluga_amcl/docs/_images/beluga_vs_nav2.png" alt="Beluga Vs Nav2">
-  <figcaption><strong>Typical trajectory plot</strong>: the ground-truth and both AMCL trajectories are so close that they effectively overlap.</figcaption>
-</figure>
-
-Further details on the benchmarking methodology and datasets can be found in the blog post [Big shoes to fill: Validating the performance of Beluga AMCL](https://ekumenlabs.com/blog/posts/big-shoes-to-fill-beluga-performance-report/)
+Performance reports are periodically generated to track improvements and regressions. Further details on the benchmarking methodology and datasets can be found in the blog post [Big shoes to fill: Validating the performance of Beluga AMCL](https://ekumenlabs.com/blog/posts/big-shoes-to-fill-beluga-performance-report/)
 
 ## Compatibility notes
 
@@ -85,7 +78,6 @@ Notes on parameter and feature availability between Beluga AMCL and Nav2 AMCL ca
 ## Next Steps
 
 - See [example launch files](../beluga_example) showing how to run Beluga-based nodes.
-- See [available benchmarks](../beluga_benchmark) for scripts and comparison with other AMCL implementations.
 
 [nav2_amcl]: https://github.com/ros-planning/navigation2/tree/main/nav2_amcl
 [nav2_configuration_guide]: https://navigation.ros.org/configuration/packages/configuring-amcl.html
