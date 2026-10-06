@@ -58,7 +58,7 @@
     <link rel="prev" title="Overview" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon Sep 14 12:20:16 2026 -0400, 4db5294&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 6 09:04:09 2026 -0700, 8454bec&#39;"/>
   </head>
   
   
@@ -578,7 +578,7 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 <section id="observation-model-parameters">
 <h5>Observation Model Parameters<a class="headerlink" href="#observation-model-parameters" title="Link to this heading">#</a></h5>
 <dl class="simple myst">
-<dt><code class="docutils literal notranslate"><span class="pre">laser_model_type</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>Which observation model to use. Supported models are <code class="docutils literal notranslate"><span class="pre">beam</span></code> and <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> as described in <span class="bibtex-citation" id="id8">[<a class="reference internal" href="../../../resources/bibliography.html#id2" title="S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. ISBN 9780262201629. URL: https://books.google.com.ar/books?id=jtSMEAAAQBAJ.">TBF05</a>]</span> with the same aggregation formula used in Nav2 AMCL.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">laser_model_type</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">string</span></code>)</em></dt><dd><p>Which observation model to use. Supported models are <code class="docutils literal notranslate"><span class="pre">beam</span></code>, <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> and <code class="docutils literal notranslate"><span class="pre">likelihood_field_prob</span></code> as described in <span class="bibtex-citation" id="id8">[<a class="reference internal" href="../../../resources/bibliography.html#id2" title="S. Thrun, W. Burgard, and D. Fox. Probabilistic Robotics. Intelligent Robotics and Autonomous Agents series. MIT Press, 2005. ISBN 9780262201629. URL: https://books.google.com.ar/books?id=jtSMEAAAQBAJ.">TBF05</a>]</span> with the same aggregation formula used in Nav2 AMCL.</p>
 </dd>
 <dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code>.</p>
 </dd>
@@ -1006,13 +1006,13 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model_unknown_space</span></code></p></td>
-<td><p>Whether to model unknown space or assume it free. Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></td>
+<td><p>Whether to model unknown space or assume it free. Only applicable to the <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> model. Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></td>
 <td class="text-center"><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">only_obstacle_boundaries</span></code></p></td>
-<td><p>Whether to treat inner obstacle cells as unknown space, particularly when calculating likelihood fields. Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></td>
+<td><p>Whether to treat inner obstacle cells as unknown space, particularly when calculating likelihood fields. Only applicable to the <code class="docutils literal notranslate"><span class="pre">likelihood_field</span></code> model. Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></td>
 <td class="text-center"><p></p></td>
 <td class="text-center"><p>✅</p></td>
 <td><p></p></td>
@@ -1122,7 +1122,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Sep 14 12:20:16 2026 -0400, 4db5294&#39;.
+  Last updated on &#39;Tue Oct 6 09:04:09 2026 -0700, 8454bec&#39;.
   <br/>
 </p>
   </div>
