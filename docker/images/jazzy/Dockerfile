@@ -59,7 +59,7 @@ RUN pip install \
 
 # Install Lambkin SDK (pinned in beluga_lambkin/requirements.txt).
 COPY beluga_lambkin/requirements.txt /tmp/lambkin-requirements.txt
-RUN pip install --no-cache-dir -r /tmp/lambkin-requirements.txt
+RUN pip install --no-cache-dir --ignore-installed -r /tmp/lambkin-requirements.txt
 
 COPY --from=timem-builder --chown=$USER:$GROUP /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
