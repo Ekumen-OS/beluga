@@ -380,43 +380,51 @@ void NdtAmclNode3D::laser_callback(sensor_msgs::msg::PointCloud2::ConstSharedPtr
     return;
   }
 
-  const auto update_start_time = std::chrono::high_resolution_clock::now();
+  std::optional<std::pair<Sophus::SE3d, Sophus::Matrix6d>> new_estimate;
+  const auto num_points = laser_scan->height * laser_scan->width;
 
-  std::vector<Eigen::Vector3d> measurement;
-  measurement.reserve(laser_scan->height * laser_scan->width);
+  // Only perform particle filter update if point cloud is not empty
+  if (num_points > 0) {
+    const auto update_start_time = std::chrono::high_resolution_clock::now();
 
-  // Accessing XYZ as suggested here:
-  // https://docs.ros.org/en/jade/api/sensor_msgs/html/classsensor__msgs_1_1PointCloud2Iterator.html
-  auto iter_x = sensor_msgs::PointCloud2ConstIterator<float>(*laser_scan, "x");
-  auto iter_y = sensor_msgs::PointCloud2ConstIterator<float>(*laser_scan, "y");
-  auto iter_z = sensor_msgs::PointCloud2ConstIterator<float>(*laser_scan, "z");
-  for (; iter_x != iter_x.end() && iter_y != iter_y.end() && iter_z != iter_z.end(); ++iter_x, ++iter_y, ++iter_z) {
-    measurement.emplace_back(laser_pose_in_base * Eigen::Vector3d{*iter_x, *iter_y, *iter_z});
-  };
+    std::vector<Eigen::Vector3d> measurement;
+    measurement.reserve(num_points);
 
-  RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Processing %ld points.", measurement.size());
-  const auto new_estimate = std::visit(
-      [base_pose_in_odom, measurement = measurement](auto& particle_filter) {
-        return particle_filter.update(
-            base_pose_in_odom,  //
-            std::move(measurement));
-      },
-      *particle_filter_);
+    // Accessing XYZ as suggested here:
+    // https://docs.ros.org/en/jade/api/sensor_msgs/html/classsensor__msgs_1_1PointCloud2Iterator.html
+    auto iter_x = sensor_msgs::PointCloud2ConstIterator<float>(*laser_scan, "x");
+    auto iter_y = sensor_msgs::PointCloud2ConstIterator<float>(*laser_scan, "y");
+    auto iter_z = sensor_msgs::PointCloud2ConstIterator<float>(*laser_scan, "z");
+    for (; iter_x != iter_x.end() && iter_y != iter_y.end() && iter_z != iter_z.end(); ++iter_x, ++iter_y, ++iter_z) {
+      measurement.emplace_back(laser_pose_in_base * Eigen::Vector3d{*iter_x, *iter_y, *iter_z});
+    }
 
-  const auto update_stop_time = std::chrono::high_resolution_clock::now();
-  const auto update_duration = update_stop_time - update_start_time;
+    RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Processing %ld points.", measurement.size());
+    new_estimate = std::visit(
+        [base_pose_in_odom, measurement = measurement](auto& particle_filter) {
+          return particle_filter.update(
+              base_pose_in_odom,  //
+              std::move(measurement));
+        },
+        *particle_filter_);
 
-  if (new_estimate.has_value()) {
-    const auto& [base_pose_in_map, _] = new_estimate.value();
-    last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
-    last_known_estimate_ = new_estimate;
+    const auto update_stop_time = std::chrono::high_resolution_clock::now();
+    const auto update_duration = update_stop_time - update_start_time;
 
-    const auto num_particles =
-        std::visit([](const auto& particle_filter) { return particle_filter.particles().size(); }, *particle_filter_);
+    if (new_estimate.has_value()) {
+      const auto& [base_pose_in_map, _] = new_estimate.value();
+      last_known_odom_transform_in_map_ = base_pose_in_map * base_pose_in_odom.inverse();
+      last_known_estimate_ = new_estimate;
 
-    RCLCPP_INFO(
-        get_logger(), "Particle filter update iteration stats: %ld particles - %.3fms", num_particles,
-        std::chrono::duration<double, std::milli>(update_duration).count());
+      const auto num_particles =
+          std::visit([](const auto& particle_filter) { return particle_filter.particles().size(); }, *particle_filter_);
+
+      RCLCPP_INFO(
+          get_logger(), "Particle filter update iteration stats: %ld particles - %.3fms", num_particles,
+          std::chrono::duration<double, std::milli>(update_duration).count());
+    }
+  } else {
+    RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Received empty point cloud, skipping sensor update.");
   }
 
   if (!last_known_estimate_.has_value()) {

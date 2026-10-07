@@ -184,12 +184,25 @@ class TesterNode : public rclcpp::Node {
     auto scan = sensor_msgs::msg::PointCloud2{};
     scan.header.stamp = timestamp;
     scan.header.frame_id = "laser";
+    scan.height = 1;
+    scan.width = 1;
+    scan.is_dense = true;
+    scan.is_bigendian = false;
+
     // Modifier to describe what the fields are.
     sensor_msgs::PointCloud2Modifier modifier(scan);
-
     modifier.setPointCloud2Fields(
         3, "x", 1, sensor_msgs::msg::PointField::FLOAT32, "y", 1, sensor_msgs::msg::PointField::FLOAT32, "z", 1,
         sensor_msgs::msg::PointField::FLOAT32);
+    modifier.resize(1);
+
+    const sensor_msgs::PointCloud2Iterator<float> iter_x(scan, "x");
+    const sensor_msgs::PointCloud2Iterator<float> iter_y(scan, "y");
+    const sensor_msgs::PointCloud2Iterator<float> iter_z(scan, "z");
+
+    *iter_x = 1.0;
+    *iter_y = 0.0;
+    *iter_z = 0.0;
 
     auto transform_base = geometry_msgs::msg::TransformStamped{};
     transform_base.header.stamp = timestamp;
@@ -324,16 +337,27 @@ class TesterNode : public rclcpp::Node {
     const auto timestamp = now();
 
     auto scan = sensor_msgs::msg::PointCloud2{};
+    scan.header.stamp = timestamp;
+    scan.header.frame_id = "laser";
+    scan.height = 1;
+    scan.width = 1;
+    scan.is_dense = true;
+    scan.is_bigendian = false;
 
     // Modifier to describe what the fields are.
     sensor_msgs::PointCloud2Modifier modifier(scan);
-
     modifier.setPointCloud2Fields(
         3, "x", 1, sensor_msgs::msg::PointField::FLOAT32, "y", 1, sensor_msgs::msg::PointField::FLOAT32, "z", 1,
         sensor_msgs::msg::PointField::FLOAT32);
+    modifier.resize(1);
 
-    scan.header.stamp = timestamp;
-    scan.header.frame_id = "laser";
+    const sensor_msgs::PointCloud2Iterator<float> iter_x(scan, "x");
+    const sensor_msgs::PointCloud2Iterator<float> iter_y(scan, "y");
+    const sensor_msgs::PointCloud2Iterator<float> iter_z(scan, "z");
+
+    *iter_x = 1.0;
+    *iter_y = 0.0;
+    *iter_z = 0.0;
 
     auto transform_base = geometry_msgs::msg::TransformStamped{};
     transform_base.header.stamp = timestamp;

@@ -121,6 +121,8 @@ TEST_F(UnscentedTransformTests, WorksWithEigenExpressions) {
   ASSERT_TRUE(transformed_cov.isApprox(Eigen::Matrix<double, 2, 2>::Identity()));
 }
 
+namespace {
+
 double angular_distance(double angle1, double angle2) {
   const Sophus::SO2<double> rot1(angle1);
   const Sophus::SO2<double> rot2(angle2);
@@ -131,6 +133,8 @@ double angular_distance(double angle1, double angle2) {
   // Ensure the distance is the minimal distance
   return std::min(std::abs(distance), 2 * Sophus::Constants<double>::pi() - std::abs(distance));
 }
+
+}  // namespace
 
 TEST_F(UnscentedTransformTests, DifferentMeanFn) {
   constexpr double kTolerance = 1e-1;

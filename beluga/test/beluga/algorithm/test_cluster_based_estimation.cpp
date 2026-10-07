@@ -244,7 +244,7 @@ TEST_F(ClusterBasedEstimationDetailTesting, MapGridCellsToClustersStep) {
     return spatial_hash_function(state);
   };
 
-  const auto hash_to_id = [&](const auto& hash) { return map[hash].cluster_id.value(); };
+  const auto hash_to_id = [&](const auto& hash) { return *map[hash].cluster_id; };
 
   auto quadrant_1_unique_ids = quadrant_1_view |                          //
                                ranges::views::transform(coord_to_hash) |  //

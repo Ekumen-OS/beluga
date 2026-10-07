@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-#
-# Copyright 2023 Ekumen, Inc.
+# Copyright 2026 Ekumen, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
+# This file can be removed after https://github.com/strasdat/Sophus/pull/558
 
-from beluga_benchmark import compare_results, ScriptError
-
-if __name__ == '__main__':
-    try:
-        compare_results.main()
-    except ScriptError as exc:
-        print(exc)
-        sys.exit(1)
+if(NOT TARGET Sophus::Sophus)
+  find_path(
+    Sophus_CMAKE_DIR
+    NAMES SophusTargets.cmake
+    PATH_SUFFIXES share/sophus/cmake REQUIRED)
+  find_package(Ceres REQUIRED)
+  find_package(fmt REQUIRED)
+  include("${Sophus_CMAKE_DIR}/SophusTargets.cmake")
+endif()

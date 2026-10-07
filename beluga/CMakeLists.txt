@@ -50,7 +50,7 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(HDF5 COMPONENTS CXX)
 find_package(nanoflann REQUIRED)
 find_package(range-v3 REQUIRED)
-find_package(Sophus REQUIRED)
+include(cmake/LoadSophusTarget.cmake) # Find package with Eigen5 support
 find_package(TBB REQUIRED)
 
 set(_deps
@@ -119,6 +119,8 @@ install(
   FILE ${PROJECT_NAME}Targets.cmake
   NAMESPACE ${PROJECT_NAME}::
   DESTINATION ${INSTALL_CMAKEDIR})
+
+install(FILES cmake/LoadSophusTarget.cmake DESTINATION ${INSTALL_CMAKEDIR})
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(

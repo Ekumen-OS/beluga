@@ -299,7 +299,7 @@ class ParticleClusterizer {
     clusterizer_detail::assign_clusters(map, [this](const auto& state) { return neighbors(state); });
 
     return hashes |  //
-           ranges::views::transform([&map](std::size_t hash) { return map[hash].cluster_id.value(); }) |
+           ranges::views::transform([&map](std::size_t hash) { return *map[hash].cluster_id; }) |
            ranges::to<std::vector>;
   }
 

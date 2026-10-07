@@ -9,3 +9,6 @@ QualifierAlignment: Left
 BasedOnStyle: Chromium
 Language: JavaScript
 ...
+---
+Language: Json
+BasedOnStyle: llvm

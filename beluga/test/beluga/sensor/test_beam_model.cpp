@@ -26,6 +26,8 @@ using beluga::testing::StaticOccupancyGrid;
 
 using UUT = beluga::BeamSensorModel<StaticOccupancyGrid<5, 5>>;
 
+namespace {
+
 BeamModelParam GetParams() {
   BeamModelParam ret;
   ret.z_hit = 0.5;
@@ -37,6 +39,9 @@ BeamModelParam GetParams() {
   ret.beam_max_range = 60;
   return ret;
 }
+
+}  // namespace
+
 TEST(BeamSensorModel, ImportanceWeight) {
   constexpr double kResolution = 0.5;
   // clang-format off

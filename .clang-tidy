@@ -19,6 +19,7 @@ Checks: >
   -modernize-return-braced-init-list,
   -modernize-use-trailing-return-type,
   -modernize-avoid-bind,
+  -modernize-use-constraints,
   -performance-move-const-arg,
   -performance-unnecessary-value-param,
   -readability-braces-around-statements,
@@ -29,9 +30,12 @@ Checks: >
   -readability-redundant-declaration,
   -readability-function-cognitive-complexity,
   -readability-suspicious-call-argument,
+  -readability-math-missing-parentheses,
   -bugprone-narrowing-conversions,
   -bugprone-easily-swappable-parameters,
-  -bugprone-implicit-widening-of-multiplication-result
+  -bugprone-implicit-widening-of-multiplication-result,
+  -bugprone-crtp-constructor-accessibility,
+  -portability-template-virtual-member-function
 
 HeaderFilterRegex: '^.*\.hpp$'
 

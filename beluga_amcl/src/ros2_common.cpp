@@ -491,7 +491,7 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn BaseAM
     auto on_bond_broken_callback = [this]() {
       RCLCPP_ERROR(get_logger(), "The bond connection to the lifecycle manager has been broken");
     };
-    bond_ = std::make_unique<bond::Bond>(
+    bond_ = std::make_shared<bond::Bond>(
         "bond", get_name(), shared_from_this(), on_bond_broken_callback, on_bond_formed_callback);
     bond_->setHeartbeatPeriod(0.10);
     const auto heartbeat_timeout_value = get_parameter("bond_timeout").as_double();

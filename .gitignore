@@ -19,3 +19,6 @@ __pycache__/
 # Sphinx / Doxygen related
 _build
 generated
+
+# CMake test discovery files
+**/cmake_test_discovery_*.json

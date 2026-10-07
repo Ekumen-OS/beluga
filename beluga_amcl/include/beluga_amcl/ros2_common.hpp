@@ -123,7 +123,7 @@ class BaseAMCLNode : public rclcpp_lifecycle::LifecycleNode {
   /// Estimated pose publisher.
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pose_pub_;
   /// Node bond with the lifecycle manager.
-  std::unique_ptr<bond::Bond> bond_;
+  std::shared_ptr<bond::Bond> bond_;
   /// Timer for periodic particle cloud updates.
   rclcpp::TimerBase::SharedPtr timer_;
   /// Transforms buffer.

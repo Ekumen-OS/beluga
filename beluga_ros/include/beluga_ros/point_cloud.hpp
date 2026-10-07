@@ -126,10 +126,16 @@ class PointCloud3 : public beluga::BasePointCloud<PointCloud3<T>> {
  private:
   template <typename U>
   static auto points_matrix(const sensor_msgs::msg::PointCloud2& cloud) {
+    const auto num_points = cloud.width * cloud.height;
     const auto stride = static_cast<int>(cloud.point_step / sizeof(U));
+
+    // For empty clouds, avoid creating iterator to prevent accessing empty vector
+    if (num_points == 0) {
+      return Eigen::Map<const Eigen::Matrix3X<U>, 0, Eigen::OuterStride<>>(nullptr, 3, 0, 0);
+    }
+
     const sensor_msgs::PointCloud2ConstIterator<U> iter_points(cloud, "x");
-    return Eigen::Map<const Eigen::Matrix3X<U>, 0, Eigen::OuterStride<>>(
-        &iter_points[0], 3, cloud.width * cloud.height, stride);
+    return Eigen::Map<const Eigen::Matrix3X<U>, 0, Eigen::OuterStride<>>(&iter_points[0], 3, num_points, stride);
   }
 
   sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud_;

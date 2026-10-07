@@ -1,10 +1,10 @@
 # Stage 1: Cache source dependencies
-FROM ros:kilted-ros-base AS cacher
+FROM ros:lyrical-ros-base AS cacher
 
 WORKDIR /ws/src
 
-COPY docker/files/kilted.repos .
-RUN vcs import < kilted.repos
+COPY docker/files/lyrical.repos .
+RUN vcs import < lyrical.repos
 
 COPY . beluga/
 
@@ -15,7 +15,7 @@ RUN mkdir -p /tmp/ws/src \
   || true
 
 # Stage 2: Build timem from timemory
-FROM ros:kilted-ros-base AS timem-builder
+FROM ros:lyrical-ros-base AS timem-builder
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -36,7 +36,7 @@ RUN git clone -b develop https://github.com/NERSC/timemory.git \
   && cmake --build ./build --target timem
 
 # Stage 3: Main builder image
-FROM ros:kilted-ros-base AS builder
+FROM ros:lyrical-ros-base AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -49,6 +49,7 @@ RUN apt-get update \
     gdb \
     git \
     lcov \
+    linux-perf \
     linux-tools-common \
     linux-tools-generic \
     python3-colcon-coveragepy-result \
@@ -59,14 +60,14 @@ RUN apt-get update \
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
 RUN pip install \
-  numpy==1.26.4 \
+  numpy==2.3.5 \
   pre-commit==2.20.0
 
 # Install timem from previous stage
 COPY --from=timem-builder --chown=developer:ekumen /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
 
-# Replace perf tool if needed
+# Check if perf is working, if not replace it with the perf version available
 RUN perf help || ( \
   mv /usr/bin/perf /usr/bin/perf.bkp && \
   ln -s $(ls -d /usr/lib/linux-tools/* | tail -n1)/perf /usr/bin/perf)
@@ -118,7 +119,7 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
 RUN apt-get update \
   && apt-get -y dist-upgrade \
-  && . /opt/ros/kilted/setup.sh \
+  && . /opt/ros/lyrical/setup.sh \
   && rosdep update \
   && rosdep install -i -y --from-path src --skip-keys 'slam_toolbox' \
   && rosdep install -i -y --from-path src -t doc \

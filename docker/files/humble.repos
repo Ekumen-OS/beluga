@@ -2,4 +2,4 @@ repositories:
   flatland:
     type: git
     url: https://github.com/avidbots/flatland.git
-    version: ros2-humble
+    version: fc3f233ed1a8009658f9eed827d1adea1cf6a511
