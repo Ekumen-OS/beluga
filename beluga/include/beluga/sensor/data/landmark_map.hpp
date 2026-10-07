@@ -228,10 +228,16 @@ class LandmarkMap {
 
   /// @brief Builds per-category kd-tree indices for nearest-neighbor search.
   void build_category_indices() {
+    std::unordered_map<LandmarkCategory, std::size_t> category_sizes;
+    for (const auto& l : landmarks_) {
+      ++category_sizes[l.category];
+    }
+
     for (const auto& l : landmarks_) {
       auto& entry = category_indices_[l.category];
       if (!entry) {
         entry = std::make_unique<CategoryIndex>();
+        entry->cloud.pts.reserve(category_sizes.at(l.category));
       }
       entry->cloud.pts.push_back(l.detection_position_in_robot);
     }
