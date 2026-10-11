@@ -16,13 +16,20 @@
 #define BELUGA_SENSOR_DATA_LANDMARK_MAP_HPP
 
 // external
-#include <range/v3/view/filter.hpp>
+// Bazel exposes nanoflann with a prefix, CMake does not
+#if __has_include(<nanoflann/nanoflann.hpp>)
+#include <nanoflann/nanoflann.hpp>
+#else
+#include <nanoflann.hpp>
+#endif
 #include <range/v3/view/tail.hpp>
 #include <sophus/se3.hpp>
 
 // standard library
 #include <algorithm>
 #include <cstdint>
+#include <memory>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -48,7 +55,10 @@ class LandmarkMap {
   /// @param boundaries Limits of the map.
   /// @param landmarks List of landmarks that can be expected to be detected.
   explicit LandmarkMap(const LandmarkMapBoundaries& boundaries, landmarks_set_position_data landmarks)
-      : landmarks_(std::move(landmarks)), map_boundaries_(std::move(boundaries)) {}
+      : map_boundaries_(boundaries) {
+    build_category_clouds(std::move(landmarks));
+    build_category_indices();
+  }
 
   /// @brief Constructor with implicit map boundaries (computed from landmarks).
   /// @details Note that computing map boundaries from landmarks will effectively
@@ -58,17 +68,56 @@ class LandmarkMap {
   /// as a wall, when landmarks are located within a small area at some height
   /// for visibility, etc. Use with care.
   /// @param landmarks List of landmarks that can be expected to be detected.
-  explicit LandmarkMap(landmarks_set_position_data landmarks) : landmarks_(std::move(landmarks)) {
-    if (!landmarks_.empty()) {
-      map_boundaries_.min() = landmarks_[0].detection_position_in_robot;
-      map_boundaries_.max() = landmarks_[0].detection_position_in_robot;
-      for (const auto& landmark : ranges::views::tail(landmarks_)) {
+  explicit LandmarkMap(landmarks_set_position_data landmarks) {
+    if (!landmarks.empty()) {
+      map_boundaries_.min() = landmarks[0].detection_position_in_robot;
+      map_boundaries_.max() = landmarks[0].detection_position_in_robot;
+      for (const auto& landmark : ranges::views::tail(landmarks)) {
         const auto& position = landmark.detection_position_in_robot;
         map_boundaries_.min() = map_boundaries_.min().cwiseMin(position);
         map_boundaries_.max() = map_boundaries_.max().cwiseMax(position);
       }
     }
+    build_category_clouds(std::move(landmarks));
+    build_category_indices();
   }
+
+  /// @brief Copy constructor.
+  /// @details Copying requires expensive reconstruction of the cached kd-tree indices.
+  /// @deprecated Use move semantics (std::move) instead to avoid performance overhead.
+  /// @param other Landmark map to copy from.
+  [[deprecated("LandmarkMap copying is expensive. Use std::move() instead.")]] LandmarkMap(const LandmarkMap& other)
+      : map_boundaries_(other.map_boundaries_) {
+    copy_category_clouds(other);
+    build_category_indices();
+  }
+
+  /// @brief Copy assignment operator.
+  /// @details Copying requires expensive reconstruction of the cached kd-tree indices.
+  /// @deprecated Use move semantics (std::move) instead to avoid performance overhead.
+  /// @param other Landmark map to copy from.
+  /// @return Reference to this landmark map.
+  [[deprecated("LandmarkMap copying is expensive. Use std::move() instead.")]] LandmarkMap& operator=(
+      const LandmarkMap& other) {
+    if (this != &other) {
+      map_boundaries_ = other.map_boundaries_;
+      category_indices_.clear();
+      copy_category_clouds(other);
+      build_category_indices();
+    }
+    return *this;
+  }
+
+  /// @brief Move constructor.
+  /// @details Explicitly defaulted so landmark data and cached kd-tree indices
+  /// can be transferred efficiently while preserving unique ownership semantics.
+  LandmarkMap(LandmarkMap&&) = default;
+
+  /// @brief Move assignment operator.
+  /// @details Explicitly defaulted so ownership of the cached kd-tree indices can
+  /// be transferred efficiently without rebuilding them.
+  /// @return Reference to this landmark map.
+  LandmarkMap& operator=(LandmarkMap&&) = default;
 
   /// @brief Returns the map boundaries.
   /// @return The map boundaries.
@@ -81,32 +130,19 @@ class LandmarkMap {
   [[nodiscard]] std::optional<LandmarkPosition3> find_nearest_landmark(
       const LandmarkPosition3& detection_position_in_world,
       const LandmarkCategory& detection_category) const {
-    // only consider those that have the same id
-    auto same_category_landmarks_view =
-        landmarks_ | ranges::views::filter([detection_category = detection_category](const auto& l) {
-          return detection_category == l.category;
-        });
-
-    // find the landmark that minimizes the distance to the detection position
-    // This is O(n). A spatial data structure should be used instead.
-    auto min = std::min_element(
-        same_category_landmarks_view.begin(), same_category_landmarks_view.end(),
-        [&detection_position_in_world](const auto& a, const auto& b) {
-          const auto& landmark_a_position_in_world = a.detection_position_in_robot;
-          const auto& landmark_b_position_in_world = b.detection_position_in_robot;
-
-          const auto landmark_b_squared_in_world_squared =
-              (landmark_a_position_in_world - detection_position_in_world).squaredNorm();
-          const auto landmark_b_distance_in_world_squared =
-              (landmark_b_position_in_world - detection_position_in_world).squaredNorm();
-          return landmark_b_squared_in_world_squared < landmark_b_distance_in_world_squared;
-        });
-
-    if (min == same_category_landmarks_view.end()) {
+    const auto it = category_indices_.find(detection_category);
+    if (it == category_indices_.end()) {
       return std::nullopt;
     }
-
-    return min->detection_position_in_robot;
+    const auto& index = *it->second;
+    const std::array<double, 3> query = {
+        detection_position_in_world.x(), detection_position_in_world.y(), detection_position_in_world.z()};
+    CategoryIndexType result_idx;
+    double result_dist_sq;
+    if (index.tree->knnSearch(query.data(), 1, &result_idx, &result_dist_sq) == 0) {
+      return std::nullopt;
+    }
+    return index.cloud.pts[result_idx];
   }
 
   /// @brief Finds the landmark that minimizes the bearing error to a given detection and returns its data.
@@ -118,11 +154,11 @@ class LandmarkMap {
       const LandmarkBearing3& detection_bearing_in_sensor,
       const LandmarkCategory& detection_category,
       const world_pose_type& sensor_pose_in_world) const {
-    // only consider those that have the same detection id (category)
-    auto same_category_landmarks_view =
-        landmarks_ | ranges::views::filter([detection_category = detection_category](const auto& l) {
-          return detection_category == l.category;
-        });
+    const auto it = category_indices_.find(detection_category);
+    if (it == category_indices_.end()) {
+      return std::nullopt;
+    }
+    const auto& same_category_landmarks = it->second->cloud.pts;
 
     // find the landmark that minimizes the bearing error
     const auto world_in_sensor_transform = sensor_pose_in_world.inverse();
@@ -132,10 +168,8 @@ class LandmarkMap {
     // This will only work as a proof-of-concept, but it needs to be optimized for large numbers of
     // landmarks.
     const auto minimization_function = [&detection_bearing_in_sensor, &world_in_sensor_transform](
-                                           const auto& a, const auto& b) {
-      const auto& landmark_a_position_in_world = a.detection_position_in_robot;
-      const auto& landmark_b_position_in_world = b.detection_position_in_robot;
-
+                                           const auto& landmark_a_position_in_world,
+                                           const auto& landmark_b_position_in_world) {
       // convert the landmark locations relative to the sensor frame
       const auto landmark_a_bearing_in_sensor = (world_in_sensor_transform * landmark_a_position_in_world).normalized();
       const auto landmark_b_bearing_in_sensor = (world_in_sensor_transform * landmark_b_position_in_world).normalized();
@@ -148,21 +182,84 @@ class LandmarkMap {
       return dot_product_a > dot_product_b;
     };
 
-    auto min = std::min_element(
-        same_category_landmarks_view.begin(), same_category_landmarks_view.end(), minimization_function);
+    auto min = std::min_element(same_category_landmarks.begin(), same_category_landmarks.end(), minimization_function);
 
-    if (min == same_category_landmarks_view.end()) {
+    if (min == same_category_landmarks.end()) {
       return std::nullopt;
     }
 
     // find the normalized bearing vector to the landmark, relative to the sensor frame
-    const auto landmark_position_in_sensor = world_in_sensor_transform * min->detection_position_in_robot;
+    const auto landmark_position_in_sensor = world_in_sensor_transform * *min;
     return landmark_position_in_sensor.normalized();
   }
 
  private:
-  landmarks_set_position_data landmarks_;
+  /// Point cloud adapter used by the category kd-trees.
+  struct PositionCloud {
+    std::vector<LandmarkPosition3> pts;
+    [[nodiscard]] std::size_t kdtree_get_point_count() const { return pts.size(); }
+    [[nodiscard]] double kdtree_get_pt(std::size_t i, std::size_t dim) const { return pts[i](static_cast<int>(dim)); }
+    template <class BBox>
+    bool kdtree_get_bbox(BBox&) const {
+      return false;
+    }
+  };
+
+  /// Index type used by the category kd-trees.
+  using CategoryIndexType = std::uint32_t;
+
+  /// kd-tree type used to query landmarks within each category.
+  using CategoryKDTree = nanoflann::KDTreeSingleIndexAdaptor<
+      nanoflann::L2_Simple_Adaptor<double, PositionCloud>,
+      PositionCloud,
+      3,
+      CategoryIndexType>;
+
+  /// Cached landmark positions and search tree for a single category.
+  struct CategoryIndex {
+    PositionCloud cloud;
+    std::unique_ptr<CategoryKDTree> tree;
+  };
+
   LandmarkMapBoundaries map_boundaries_;
+  std::unordered_map<LandmarkCategory, std::unique_ptr<CategoryIndex>> category_indices_;
+
+  /// @brief Populates per-category point clouds for nearest-neighbor search.
+  void build_category_clouds(landmarks_set_position_data landmarks) {
+    std::unordered_map<LandmarkCategory, std::size_t> category_sizes;
+    for (const auto& l : landmarks) {
+      ++category_sizes[l.category];
+    }
+
+    category_indices_.reserve(category_sizes.size());
+    for (const auto& l : landmarks) {
+      auto& entry = category_indices_[l.category];
+      if (!entry) {
+        entry = std::make_unique<CategoryIndex>();
+        entry->cloud.pts.reserve(category_sizes.at(l.category));
+      }
+      entry->cloud.pts.push_back(l.detection_position_in_robot);
+    }
+  }
+
+  /// @brief Copies per-category point clouds without copying cached kd-trees.
+  void copy_category_clouds(const LandmarkMap& other) {
+    category_indices_.reserve(other.category_indices_.size());
+    for (const auto& [category, other_entry] : other.category_indices_) {
+      auto entry = std::make_unique<CategoryIndex>();
+      entry->cloud.pts = other_entry->cloud.pts;
+      category_indices_.emplace(category, std::move(entry));
+    }
+  }
+
+  /// @brief Builds per-category kd-tree indices for nearest-neighbor search.
+  void build_category_indices() {
+    for (auto& [_, entry] : category_indices_) {
+      entry->tree = std::make_unique<CategoryKDTree>(
+          3, entry->cloud, nanoflann::KDTreeSingleIndexAdaptorParams(/*leaf_max_size=*/10));
+      entry->tree->buildIndex();
+    }
+  }
 };
 
 }  // namespace beluga

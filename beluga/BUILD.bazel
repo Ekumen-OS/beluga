@@ -28,6 +28,7 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "@eigen",
+        "@nanoflann",
         "@onetbb//:tbb",
         "@range-v3",
         "@sophus",
