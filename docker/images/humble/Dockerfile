@@ -70,9 +70,6 @@ RUN apt-get update \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
-RUN pip install \
-  pre-commit==2.20.0
-
 COPY --from=timem-builder --chown=$USER:$GROUP /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
 

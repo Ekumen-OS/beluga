@@ -52,11 +52,6 @@ RUN apt-get update \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
-ENV PIP_BREAK_SYSTEM_PACKAGES 1
-RUN pip install \
-  numpy==1.26.4 \
-  pre-commit==2.20.0
-
 COPY --from=timem-builder --chown=$USER:$GROUP /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
 
@@ -101,7 +96,6 @@ RUN mkdir -p /home/$USER/.ccache $USER_WS/src
 COPY --from=cacher --chown=$USER:$GROUP /tmp/ws/ $USER_WS/
 
 USER root
-ENV PIP_BREAK_SYSTEM_PACKAGES 1
 
 RUN apt-get update \
   && apt-get -y dist-upgrade \
