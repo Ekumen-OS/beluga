@@ -58,11 +58,6 @@ jobs:
             python3-pip \
             python3-vcstool
 
-      - name: Install python packages
-        run: |
-             export PIP_BREAK_SYSTEM_PACKAGES=1
-             pip install pre-commit==2.20.0
-
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
@@ -90,7 +85,6 @@ jobs:
       - name: Install dependencies
         run: |
           . /opt/ros/${{ matrix.ros_distro }}/setup.sh
-          export PIP_BREAK_SYSTEM_PACKAGES=1
           rosdep update
           sudo -E rosdep install -r --from-paths src -y -i -t exec -t build -t doc -t test
           colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/c75e4b34a3959524564afb584e2aa33c7eec323c/index.yaml
