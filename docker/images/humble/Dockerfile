@@ -52,7 +52,10 @@ RUN git clone -b v8.2.0 https://github.com/AcademySoftwareFoundation/openvdb.git
 
 FROM ros:humble-ros-base-jammy AS builder
 
-ENV DEBIAN_FRONTEND noninteractive
+ARG USER=developer
+ARG GROUP=ekumen
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -78,9 +81,6 @@ RUN perf help || ( \
   mv /usr/bin/perf /usr/bin/perf.bkp && \
   ln -s $(ls -d /usr/lib/linux-tools/* | tail -n1)/perf /usr/bin/perf)
 
-ARG USER=developer
-ARG GROUP=ekumen
-
 RUN addgroup --gid 1000 $GROUP \
   && adduser --uid 1000 --ingroup $GROUP --home /home/$USER --shell /bin/sh --disabled-password --gecos "" $USER \
   && adduser $USER sudo \
@@ -99,7 +99,7 @@ RUN cd /opt && git clone https://github.com/brendangregg/FlameGraph
 
 USER $USER:$GROUP
 
-ENV USER_WS /ws
+ENV USER_WS=/ws
 
 WORKDIR $USER_WS
 
@@ -127,7 +127,7 @@ RUN cd /opt/openvdb/build \
     && sudo make install \
     && sudo rm -rf /opt/openvdb
 
-ENV WITHIN_DEV 1
+ENV WITHIN_DEV=1
+ENV SHELL=/bin/bash
 
-ENV SHELL /bin/bash
 ENTRYPOINT ["fixuid", "-q", "/ros_entrypoint.sh", "/bin/bash"]
