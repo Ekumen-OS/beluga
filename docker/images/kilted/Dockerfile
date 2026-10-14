@@ -38,6 +38,9 @@ RUN git clone -b develop https://github.com/NERSC/timemory.git \
 # Stage 3: Main builder image
 FROM ros:kilted-ros-base AS builder
 
+ARG USER=developer
+ARG GROUP=ekumen
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install build/debug/dev tools
@@ -65,10 +68,6 @@ RUN cmake --build /opt/timemory/build --target install
 RUN perf help || ( \
   mv /usr/bin/perf /usr/bin/perf.bkp && \
   ln -s $(ls -d /usr/lib/linux-tools/* | tail -n1)/perf /usr/bin/perf)
-
-# Create developer user
-ARG USER=developer
-ARG GROUP=ekumen
 
 RUN deluser ubuntu
 
