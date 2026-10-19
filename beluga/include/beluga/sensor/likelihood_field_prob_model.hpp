@@ -24,6 +24,7 @@
 #include <functional>
 #include <random>
 #include <range/v3/numeric/accumulate.hpp>
+#include <range/v3/view/repeat.hpp>
 #include <range/v3/view/zip.hpp>
 #include <vector>
 
@@ -119,11 +120,14 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
   template <class StateRange>
   void prepare(const measurement_type& points, StateRange&& states) {
     // The mask is always sized to match the measurement, so that `operator()` can consume it
-    // unconditionally: when beam skipping is disabled every beam stays enabled.
+    // unconditionally: when beam skipping is disabled every beam stays enabled. Clearing keeps
+    // the capacity from previous updates, so the storage is only reallocated if the beam count grows.
     const std::size_t num_beams = points.size();
-    beam_mask_.assign(num_beams, std::uint8_t{1});
+    beam_mask_.clear();
+    beam_mask_.reserve(num_beams);
 
     if (!do_beamskip_ || num_beams == 0) {
+      beam_mask_.resize(num_beams, static_cast<std::uint8_t>(true));
       return;
     }
 
@@ -141,8 +145,6 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
       for (std::size_t i = 0; i < num_beams; ++i) {
         const auto& point = points[i];
         // Transform the end point of the laser to the grid local coordinate system.
-        // Not using Eigen/Sophus because they make the routine x10 slower.
-        // See `benchmark_likelihood_field_model.cpp` for reference.
         const auto x = point.first * cos_theta - point.second * sin_theta + x_offset;
         const auto y = point.first * sin_theta + point.second * cos_theta + y_offset;
         const auto pz = this->likelihood_field_.data_near(x, y).value_or(unknown_space_occupancy_prob);
@@ -155,14 +157,15 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
     }
 
     if (num_states == 0) {
+      beam_mask_.resize(num_beams, static_cast<std::uint8_t>(true));
       return;
     }
 
     std::size_t skipped = 0;
     for (std::size_t i = 0; i < num_beams; ++i) {
       const double ratio = static_cast<double>(obs_count[i]) / static_cast<double>(num_states);
-      beam_mask_[i] = static_cast<std::uint8_t>(ratio > beam_skip_threshold_);
-      if (!beam_mask_[i]) {
+      beam_mask_.push_back(static_cast<std::uint8_t>(ratio > beam_skip_threshold_));
+      if (!beam_mask_.back()) {
         ++skipped;
       }
     }
@@ -170,7 +173,7 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
     // Safety fallback: if too many beams would be skipped, integrate all of them instead.
     const double skipped_ratio = static_cast<double>(skipped) / static_cast<double>(num_beams);
     if (skipped_ratio > beam_skip_error_threshold_) {
-      std::fill(beam_mask_.begin(), beam_mask_.end(), std::uint8_t{1});
+      std::fill(beam_mask_.begin(), beam_mask_.end(), static_cast<std::uint8_t>(true));
     }
   }
 
@@ -192,16 +195,7 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
    *  and borrowing a reference to this sensor model (and thus their lifetime are bound).
    */
   [[nodiscard]] auto operator()(measurement_type&& points) const {
-    // Beams masked out by prepare() contribute nothing to the weight. The mask is resolved once
-    // here, so that the per-particle loop below can zip it against the measurement without any
-    // further bookkeeping. When prepare() was not called for this measurement (e.g. when the model
-    // is used standalone, outside the two pass update) every beam is integrated, reproducing the
-    // plain likelihood field prob behavior.
-    auto mask = beam_mask_.size() == points.size()  //
-                    ? beam_mask_
-                    : std::vector<std::uint8_t>(points.size(), std::uint8_t{1});
-
-    return [this, points = std::move(points), mask = std::move(mask)](const state_type& state) -> weight_type {
+    return [this, points = std::move(points)](const state_type& state) -> weight_type {
       const auto transform = this->world_to_likelihood_field_transform_ * state;
       const auto x_offset = transform.translation().x();
       const auto y_offset = transform.translation().y();
@@ -225,7 +219,17 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
         return std::log(pz);
       };
 
-      return std::exp(ranges::accumulate(ranges::views::zip(points, mask), 0.0, std::plus{}, beam_log_likelihood));
+      // Beams masked out by prepare() contribute nothing to the weight. When prepare() was not called
+      // for this measurement (e.g. when the model is used standalone, outside the two pass update)
+      // every beam is integrated, reproducing the plain likelihood field prob behavior. The mask is
+      // borrowed from this sensor model and the fallback is a lazy view, so no memory is allocated.
+      if (this->beam_mask_.size() == points.size()) {
+        return std::exp(ranges::accumulate(
+            ranges::views::zip(points, this->beam_mask_), 0.0, std::plus{}, beam_log_likelihood));
+      }
+      return std::exp(ranges::accumulate(
+          ranges::views::zip(points, ranges::views::repeat(static_cast<std::uint8_t>(true))), 0.0, std::plus{},
+          beam_log_likelihood));
     };
   }
 

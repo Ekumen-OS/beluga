@@ -346,6 +346,29 @@ TEST(LikelihoodFieldProbModelBeamSkip, DistanceToLikelihoodThreshold) {
   }
 }
 
+TEST(LikelihoodFieldProbModelBeamSkip, EmptyStatesKeepsEveryBeam) {
+  const auto grid = make_beamskip_grid();
+  const auto params = beluga::LikelihoodFieldProbModelParam{{2.0, 20.0, 0.5, 0.5, 0.2}, true, 0.5, 0.3, 0.9};
+  auto sensor_model = UUT{params, grid};
+
+  // A first update skips the divergent beam, leaving a zero in the mask.
+  const auto points = std::vector<std::pair<double, double>>{{1.25, 1.25}, {2.25, 2.25}};
+  sensor_model.prepare(points, std::vector<Sophus::SE2d>(10, grid.origin()));
+  ASSERT_EQ(sensor_model.beam_mask().size(), 2U);
+  ASSERT_FALSE(sensor_model.beam_mask()[1]);
+
+  // Without particle states there is nothing to agree on, so every beam must be used again,
+  // regardless of the mask left behind by the previous update.
+  sensor_model.prepare(points, std::vector<Sophus::SE2d>{});
+  ASSERT_EQ(sensor_model.beam_mask().size(), 2U);
+  EXPECT_TRUE(sensor_model.beam_mask()[0]);
+  EXPECT_TRUE(sensor_model.beam_mask()[1]);
+
+  // Both beams contribute: 1.022 (obstacle) * 0.025 (floor).
+  auto state_weighting_function = sensor_model(std::vector<std::pair<double, double>>{points});
+  ASSERT_NEAR(1.022 * 0.025, state_weighting_function(grid.origin()), 0.003 * 0.025);
+}
+
 TEST(LikelihoodFieldProbModelBeamSkip, WithoutPrepareIntegratesEveryBeam) {
   const auto grid = make_beamskip_grid();
   // Beam skipping is enabled, but the model is used standalone, without the prepare() pass that
