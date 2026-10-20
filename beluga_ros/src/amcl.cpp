@@ -103,11 +103,16 @@ auto Amcl::update(
         if constexpr (beluga::has_beam_skip_v<std::decay_t<decltype(sensor_model)>>) {
           sensor_model.prepare(measurement, beluga::views::states(particles_));
         }
+      },
+      execution_policy_, motion_model_, sensor_model_);
+
+  std::visit(
+      [&, this](auto& policy, auto& sensor_model) {
         particles_ |=                                                                  //
             beluga::actions::reweight(policy, sensor_model(std::move(measurement))) |  //
             beluga::actions::normalize(policy);
       },
-      execution_policy_, motion_model_, sensor_model_);
+      execution_policy_, sensor_model_);
 
   const double random_state_probability = random_probability_estimator_(particles_);
 
