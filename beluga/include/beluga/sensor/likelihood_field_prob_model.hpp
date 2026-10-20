@@ -224,8 +224,8 @@ class LikelihoodFieldProbModel : public LikelihoodFieldModelBase<OccupancyGrid> 
       // every beam is integrated, reproducing the plain likelihood field prob behavior. The mask is
       // borrowed from this sensor model and the fallback is a lazy view, so no memory is allocated.
       if (this->beam_mask_.size() == points.size()) {
-        return std::exp(ranges::accumulate(
-            ranges::views::zip(points, this->beam_mask_), 0.0, std::plus{}, beam_log_likelihood));
+        return std::exp(
+            ranges::accumulate(ranges::views::zip(points, this->beam_mask_), 0.0, std::plus{}, beam_log_likelihood));
       }
       return std::exp(ranges::accumulate(
           ranges::views::zip(points, ranges::views::repeat(static_cast<std::uint8_t>(true))), 0.0, std::plus{},

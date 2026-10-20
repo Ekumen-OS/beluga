@@ -97,14 +97,13 @@ auto Amcl::update(
 
   std::visit(
       [&, this](auto& policy, auto& motion_model, auto& sensor_model) {
-        particles_ |=
-            beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_in_odom));
+        particles_ |= beluga::actions::propagate(policy, motion_model(control_action_window_ << base_pose_in_odom));
         // First pass: let beam-skipping sensor models analyze the propagated particle set and
         // precompute which beams to ignore, before the per-particle reweight below.
         if constexpr (beluga::has_beam_skip_v<std::decay_t<decltype(sensor_model)>>) {
           sensor_model.prepare(measurement, beluga::views::states(particles_));
         }
-        particles_ |=                                                              //
+        particles_ |=                                                                  //
             beluga::actions::reweight(policy, sensor_model(std::move(measurement))) |  //
             beluga::actions::normalize(policy);
       },
