@@ -34,7 +34,10 @@ RUN git clone -b develop https://github.com/NERSC/timemory.git \
 
 FROM ros:rolling-ros-base AS builder
 
-ENV DEBIAN_FRONTEND noninteractive
+ARG USER=developer
+ARG GROUP=ekumen
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
@@ -60,10 +63,7 @@ RUN perf help || ( \
   mv /usr/bin/perf /usr/bin/perf.bkp && \
   ln -s $(ls -d /usr/lib/linux-tools/* | tail -n1)/perf /usr/bin/perf)
 
-ARG USER=developer
-ARG GROUP=ekumen
-
-# Drop ubuntu user to avoid fixuid clashes.
+  # Drop ubuntu user to avoid fixuid clashes.
 RUN deluser ubuntu
 
 RUN addgroup --gid 1001 $GROUP \
@@ -84,7 +84,7 @@ RUN cd /opt && git clone https://github.com/brendangregg/FlameGraph
 
 USER $USER:$GROUP
 
-ENV USER_WS /ws
+ENV USER_WS=/ws
 
 WORKDIR $USER_WS
 
@@ -109,7 +109,7 @@ USER $USER:$GROUP
 
 COPY --from=cacher --chown=$USER:$GROUP /ws/ $USER_WS/
 
-ENV WITHIN_DEV 1
+ENV WITHIN_DEV=1
+ENV SHELL=/bin/bash
 
-ENV SHELL /bin/bash
 ENTRYPOINT ["fixuid", "-q", "/ros_entrypoint.sh", "/bin/bash"]
