@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon Oct 19 08:43:42 2026 +0000, 03f07b7&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 20 14:26:46 2026 -0300, af0ad11&#39;"/>
   </head>
   
   
@@ -479,7 +479,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <tr class="memdesc:abb5530e67bb82e52a22ddf2ec10de91e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map representation type. <br /></td></tr>
 <tr class="separator:abb5530e67bb82e52a22ddf2ec10de91e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac49f10c0b6af3e44c03eeb6c130b0c5a"><td class="memItemLeft" align="right" valign="top"><a id="ac49f10c0b6af3e44c03eeb6c130b0c5a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#ac49f10c0b6af3e44c03eeb6c130b0c5a">param_type</a> = <a class="el" href="namespacebeluga.html#aec2d524f03cd39637b86c9f2b873a904">LikelihoodFieldProbModelParam</a></td></tr>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#ac49f10c0b6af3e44c03eeb6c130b0c5a">param_type</a> = <a class="el" href="structbeluga_1_1LikelihoodFieldProbModelParam.html">LikelihoodFieldProbModelParam</a></td></tr>
 <tr class="memdesc:ac49f10c0b6af3e44c03eeb6c130b0c5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter type that the constructor uses to configure the likelihood field model. <br /></td></tr>
 <tr class="separator:ac49f10c0b6af3e44c03eeb6c130b0c5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classbeluga_1_1LikelihoodFieldModelBase"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classbeluga_1_1LikelihoodFieldModelBase')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classbeluga_1_1LikelihoodFieldModelBase.html">beluga::LikelihoodFieldModelBase&lt; OccupancyGrid &gt;</a></td></tr>
@@ -497,6 +497,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a91040104dbde1af8787713097100462d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#a91040104dbde1af8787713097100462d">LikelihoodFieldProbModel</a> (const <a class="el" href="classbeluga_1_1LikelihoodFieldModelBase.html#a4c9c3ed8155730ae1d9672348808e7d9">param_type</a> &amp;params, const <a class="el" href="classbeluga_1_1LikelihoodFieldModelBase.html#aa46f22b5056ff544c97e85c817e4a76c">map_type</a> &amp;grid)</td></tr>
 <tr class="memdesc:a91040104dbde1af8787713097100462d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html" title="Likelihood field prob sensor model for range finders.">LikelihoodFieldProbModel</a> instance.  <a href="classbeluga_1_1LikelihoodFieldProbModel.html#a91040104dbde1af8787713097100462d">More...</a><br /></td></tr>
 <tr class="separator:a91040104dbde1af8787713097100462d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a417bf2a61d3f55a85b5c1c4874d387c5"><td class="memTemplParams" colspan="2">template&lt;class StateRange &gt; </td></tr>
+<tr class="memitem:a417bf2a61d3f55a85b5c1c4874d387c5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#a417bf2a61d3f55a85b5c1c4874d387c5">prepare</a> (const <a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#a52ff2122de05157f37e5a5728421474f">measurement_type</a> &amp;points, StateRange &amp;&amp;states)</td></tr>
+<tr class="memdesc:a417bf2a61d3f55a85b5c1c4874d387c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precomputes the beam skipping mask from the current particle states.  <a href="classbeluga_1_1LikelihoodFieldProbModel.html#a417bf2a61d3f55a85b5c1c4874d387c5">More...</a><br /></td></tr>
+<tr class="separator:a417bf2a61d3f55a85b5c1c4874d387c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca18eb12e204510d2db498a7157edd15"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::uint8_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#aca18eb12e204510d2db498a7157edd15">beam_mask</a> () const</td></tr>
+<tr class="memdesc:aca18eb12e204510d2db498a7157edd15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current beam skipping mask (one flag per beam, non-zero means the beam is used).  <a href="classbeluga_1_1LikelihoodFieldProbModel.html#aca18eb12e204510d2db498a7157edd15">More...</a><br /></td></tr>
+<tr class="separator:aca18eb12e204510d2db498a7157edd15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8939ef51b751d546e498301ba2d56131"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#a8939ef51b751d546e498301ba2d56131">operator()</a> (<a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#a52ff2122de05157f37e5a5728421474f">measurement_type</a> &amp;&amp;points) const</td></tr>
 <tr class="memdesc:a8939ef51b751d546e498301ba2d56131"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a state weighting function conditioned on 2D lidar hits.  <a href="classbeluga_1_1LikelihoodFieldProbModel.html#a8939ef51b751d546e498301ba2d56131">More...</a><br /></td></tr>
 <tr class="separator:a8939ef51b751d546e498301ba2d56131"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -519,6 +526,10 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_static_methods_classbeluga_1_1LikelihoodFieldModelBase"><td colspan="2" onclick="javascript:toggleInherit('pro_static_methods_classbeluga_1_1LikelihoodFieldModelBase')"><img src="closed.png" alt="-"/>&#160;Static Protected Member Functions inherited from <a class="el" href="classbeluga_1_1LikelihoodFieldModelBase.html">beluga::LikelihoodFieldModelBase&lt; OccupancyGrid &gt;</a></td></tr>
+<tr class="memitem:a5383f39b0af11d067d077f860fe4ebc6 inherit pro_static_methods_classbeluga_1_1LikelihoodFieldModelBase"><td class="memItemLeft" align="right" valign="top"><a id="a5383f39b0af11d067d077f860fe4ebc6"></a>
+static <a class="el" href="structbeluga_1_1LikelihoodFieldModelBase_1_1LikelihoodProfile.html">LikelihoodProfile</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModelBase.html#a5383f39b0af11d067d077f860fe4ebc6">make_likelihood_profile</a> (const <a class="el" href="classbeluga_1_1LikelihoodFieldModelBase.html#a4c9c3ed8155730ae1d9672348808e7d9">param_type</a> &amp;params)</td></tr>
+<tr class="memdesc:a5383f39b0af11d067d077f860fe4ebc6 inherit pro_static_methods_classbeluga_1_1LikelihoodFieldModelBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds the likelihood profile (gaussian coefficients) from the model parameters. <br /></td></tr>
+<tr class="separator:a5383f39b0af11d067d077f860fe4ebc6 inherit pro_static_methods_classbeluga_1_1LikelihoodFieldModelBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e0b6879d719c8c7453703d5c0983c64 inherit pro_static_methods_classbeluga_1_1LikelihoodFieldModelBase"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classbeluga_1_1ValueGrid2.html">ValueGrid2</a>&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeluga_1_1LikelihoodFieldModelBase.html#a4e0b6879d719c8c7453703d5c0983c64">make_likelihood_field</a> (const <a class="el" href="classbeluga_1_1LikelihoodFieldModelBase.html#a4c9c3ed8155730ae1d9672348808e7d9">param_type</a> &amp;params, const OccupancyGrid &amp;grid)</td></tr>
 <tr class="memdesc:a4e0b6879d719c8c7453703d5c0983c64 inherit pro_static_methods_classbeluga_1_1LikelihoodFieldModelBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a likelihood field from an occupancy grid.  <a href="classbeluga_1_1LikelihoodFieldModelBase.html#a4e0b6879d719c8c7453703d5c0983c64">More...</a><br /></td></tr>
 <tr class="separator:a4e0b6879d719c8c7453703d5c0983c64 inherit pro_static_methods_classbeluga_1_1LikelihoodFieldModelBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -580,17 +591,49 @@ template&lt;class OccupancyGrid &gt; </div>
 </div><div class="memdoc">
 
 <p>Constructs a <a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html" title="Likelihood field prob sensor model for range finders.">LikelihoodFieldProbModel</a> instance. </p>
-<p>Constructs a LikelihoodFieldCommonModel instance. </p><dl class="params"><dt>Parameters</dt><dd>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">params</td><td>Parameters to configure this instance. See <a class="el" href="classbeluga_1_1LikelihoodFieldModelBase.html" title="Likelihood field common sensor model for range finders.">beluga::LikelihoodFieldModelBase</a> for details. </td></tr>
-    <tr><td class="paramname">grid</td><td>Occupancy grid representing the static map that the sensor model uses to compute a likelihood field for lidar hits and compute importance weights for particle states. </td></tr>
+    <tr><td class="paramname">params</td><td>Parameters to configure this instance. See <a class="el" href="structbeluga_1_1LikelihoodFieldProbModelParam.html" title="Parameters used to construct a LikelihoodFieldProbModel instance.">beluga::LikelihoodFieldProbModelParam</a> for details. </td></tr>
+    <tr><td class="paramname">grid</td><td>Occupancy grid representing the static map that the sensor model uses to compute a likelihood field for lidar hits and compute importance weights for particle states.</td></tr>
   </table>
   </dd>
 </dl>
+<p>When beam skipping is enabled, <code>params.beam_skip_distance</code> must not be greater than <code>params.max_obstacle_distance</code>. See <a class="el" href="structbeluga_1_1LikelihoodFieldProbModelParam.html#a28da3809cf94b031caa6e1a758b0768e" title="Distance to the nearest obstacle below which a beam is considered to agree with the map.">beluga::LikelihoodFieldProbModelParam::beam_skip_distance</a>. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aca18eb12e204510d2db498a7157edd15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca18eb12e204510d2db498a7157edd15">&#9670;&nbsp;</a></span>beam_mask()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class OccupancyGrid &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt;std::uint8_t&gt;&amp; <a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html">beluga::LikelihoodFieldProbModel</a>&lt; OccupancyGrid &gt;::beam_mask </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current beam skipping mask (one flag per beam, non-zero means the beam is used). </p>
+<p>The mask is populated by <code><a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#a417bf2a61d3f55a85b5c1c4874d387c5" title="Precomputes the beam skipping mask from the current particle states.">prepare()</a></code>. It is empty until the first call, which <code>operator()</code> treats as using every beam. Mainly useful for introspection and testing.</p>
+<p>A <code>std::vector&lt;std::uint8_t&gt;</code> is used instead of <code>std::vector&lt;bool&gt;</code> to avoid the bit-packed specialization: the mask is read once per beam per particle in the reweight hot path, where a plain byte load is faster and more cache friendly than the bit-masking <code>std::vector&lt;bool&gt;</code> does. </p>
+
+</div>
+</div>
 <a id="a8939ef51b751d546e498301ba2d56131"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8939ef51b751d546e498301ba2d56131">&#9670;&nbsp;</a></span>operator()()</h2>
 
@@ -625,6 +668,63 @@ template&lt;class OccupancyGrid &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a state weighting function satisfying <a class="el" href="SensorModelPage.html#StateWeightingFunctionPage">Beluga named requirements: StateWeightingFunction</a> and borrowing a reference to this sensor model (and thus their lifetime are bound). </dd></dl>
+
+</div>
+</div>
+<a id="a417bf2a61d3f55a85b5c1c4874d387c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a417bf2a61d3f55a85b5c1c4874d387c5">&#9670;&nbsp;</a></span>prepare()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class OccupancyGrid &gt; </div>
+<div class="memtemplate">
+template&lt;class StateRange &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html">beluga::LikelihoodFieldProbModel</a>&lt; OccupancyGrid &gt;::prepare </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeluga_1_1LikelihoodFieldProbModel.html#a52ff2122de05157f37e5a5728421474f">measurement_type</a> &amp;&#160;</td>
+          <td class="paramname"><em>points</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">StateRange &amp;&amp;&#160;</td>
+          <td class="paramname"><em>states</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Precomputes the beam skipping mask from the current particle states. </p>
+<p>Runs the first pass of the beam skipping heuristic: for every beam, it counts the fraction of particle states for which the beam endpoint lands close enough to a mapped obstacle (within <code>beam_skip_distance</code>, expressed here as a likelihood threshold). Beams for which that fraction falls below <code>beam_skip_threshold</code> are masked out and ignored by the subsequent weight computation in <code>operator()</code>. If skipping would discard more than <code>beam_skip_error_threshold</code> of the beams, the mask is reset so that all beams are used, preventing filter divergence. When beam skipping is disabled this only sizes the mask to the measurement, leaving every beam enabled.</p>
+<p>Must be called once per update, after motion propagation and before reweighting.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">StateRange</td><td>A range of particle states (Sophus::SE2d). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">points</td><td>2D lidar hit points in the reference frame of particle states. </td></tr>
+    <tr><td class="paramname">states</td><td>Range with the (propagated) particle states for the current update. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -687,7 +787,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Oct 19 08:43:42 2026 +0000, 03f07b7&#39;.
+  Last updated on &#39;Tue Oct 20 14:26:46 2026 -0300, af0ad11&#39;.
   <br/>
 </p>
   </div>

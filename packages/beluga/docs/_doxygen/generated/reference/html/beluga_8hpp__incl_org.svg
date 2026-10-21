@@ -154,18 +154,18 @@
 <path fill="none" stroke="midnightblue" d="M1955.76,-472.26C2115.35,-459.67 2493.81,-429.82 2644,-417.97"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="2644.72,-421.42 2654.42,-417.15 2644.17,-414.45 2644.72,-421.42"/>
 </g>
-<!-- Node124 -->
+<!-- Node126 -->
 <g id="node49" class="node">
-<title>Node124</title>
+<title>Node126</title>
 <g id="a_node49"><a xlink:href="views_8hpp.html" target="_top" xlink:title="Implementation of useful container views.">
 <polygon fill="none" stroke="red" points="918,-341 918,-360 1020,-360 1020,-341 918,-341"/>
 <text text-anchor="middle" x="969" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node124 -->
+<!-- Node1&#45;&gt;Node126 -->
 <g id="edge92" class="edge">
-<title>Node1&#45;&gt;Node124</title>
+<title>Node1&#45;&gt;Node126</title>
 <path fill="none" stroke="midnightblue" d="M1810.44,-472.87C1703.12,-464.81 1495.9,-447.43 1321,-422 1190.23,-402.99 1158.15,-393.97 1029,-366 1023.89,-364.89 1018.56,-363.68 1013.26,-362.45"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="1013.74,-358.96 1003.2,-360.06 1012.13,-365.78 1013.74,-358.96"/>
 </g>
@@ -1003,9 +1003,9 @@
 <path fill="none" stroke="midnightblue" d="M2759.75,-405.9C2830.95,-398.75 2961.98,-384.68 3083.29,-366.2"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="3084.15,-369.61 3093.5,-364.63 3083.08,-362.69 3084.15,-369.61"/>
 </g>
-<!-- Node122 -->
+<!-- Node125 -->
 <g id="node48" class="node">
-<title>Node122</title>
+<title>Node125</title>
 <g id="a_node48"><a xlink:href="pose__sensor__model_8hpp.html" target="_top" xlink:title="Implementation of a pose sensor model for absolute pose measurements.">
 <polygon fill="none" stroke="red" points="2127.5,-56.5 2127.5,-86.5 2238.5,-86.5 2238.5,-56.5 2127.5,-56.5"/>
 <text text-anchor="start" x="2135.5" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/sensor/pose</text>
@@ -1013,9 +1013,9 @@
 </a>
 </g>
 </g>
-<!-- Node110&#45;&gt;Node122 -->
+<!-- Node110&#45;&gt;Node125 -->
 <g id="edge89" class="edge">
-<title>Node110&#45;&gt;Node122</title>
+<title>Node110&#45;&gt;Node125</title>
 <path fill="none" stroke="midnightblue" d="M2684.76,-402.39C2668.8,-395.08 2648.06,-383.03 2636,-366 2613.08,-333.62 2616,-318.68 2616,-279 2616,-279 2616,-279 2616,-204.5 2616,-142.94 2560.88,-146.55 2504,-123 2420.38,-88.38 2315.51,-77.32 2248.86,-73.88"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="2248.65,-70.37 2238.5,-73.4 2248.33,-77.36 2248.65,-70.37"/>
 </g>
@@ -1025,42 +1025,42 @@
 <path fill="none" stroke="midnightblue" d="M2396,-336.34C2392.96,-335.84 2389.95,-335.39 2387,-335 2069.37,-292.97 1984.79,-339.8 1667,-299 1650.1,-296.83 1631.74,-293.3 1615.65,-289.81"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="1615.96,-286.29 1605.44,-287.53 1614.44,-293.12 1615.96,-286.29"/>
 </g>
-<!-- Node122&#45;&gt;Node17 -->
+<!-- Node125&#45;&gt;Node17 -->
 <g id="edge90" class="edge">
-<title>Node122&#45;&gt;Node17</title>
+<title>Node125&#45;&gt;Node17</title>
 <path fill="none" stroke="midnightblue" d="M2127.32,-58.38C2122.49,-57.51 2117.66,-56.7 2113,-56 1951.83,-31.91 1758.47,-18.59 1672.72,-13.47"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="1672.75,-9.97 1662.56,-12.88 1672.34,-16.96 1672.75,-9.97"/>
 </g>
-<!-- Node124&#45;&gt;Node25 -->
+<!-- Node126&#45;&gt;Node25 -->
 <g id="edge96" class="edge">
-<title>Node124&#45;&gt;Node25</title>
+<title>Node126&#45;&gt;Node25</title>
 <path fill="none" stroke="midnightblue" d="M970.15,-340.97C972.97,-323.18 981.76,-281.75 1005,-257 1022.47,-238.39 1048.15,-226.04 1070.2,-218.2"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="1071.34,-221.51 1079.71,-215.02 1069.11,-214.88 1071.34,-221.51"/>
 </g>
-<!-- Node124&#45;&gt;Node30 -->
+<!-- Node126&#45;&gt;Node30 -->
 <g id="edge95" class="edge">
-<title>Node124&#45;&gt;Node30</title>
+<title>Node126&#45;&gt;Node30</title>
 <path fill="none" stroke="midnightblue" d="M984.2,-340.86C1005.31,-328.86 1043.7,-307.03 1068.78,-292.77"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="1070.71,-295.7 1077.67,-287.72 1067.25,-289.62 1070.71,-295.7"/>
 </g>
-<!-- Node125 -->
+<!-- Node127 -->
 <g id="node50" class="node">
-<title>Node125</title>
+<title>Node127</title>
 <g id="a_node50"><a xlink:href="elements_8hpp.html" target="_top" xlink:title="Implementation of the C++20&#39;s std::views::elements view.">
 <polygon fill="none" stroke="red" points="1011.5,-62 1011.5,-81 1162.5,-81 1162.5,-62 1011.5,-62"/>
 <text text-anchor="middle" x="1087" y="-69" font-family="Helvetica,sans-Serif" font-size="10.00">beluga/views/elements.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node124&#45;&gt;Node125 -->
+<!-- Node126&#45;&gt;Node127 -->
 <g id="edge93" class="edge">
-<title>Node124&#45;&gt;Node125</title>
+<title>Node126&#45;&gt;Node127</title>
 <path fill="none" stroke="midnightblue" d="M968.61,-340.83C968.13,-324.15 968.34,-286.61 978,-257 1000.05,-189.4 1049.93,-119.89 1073.8,-89.01"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="1076.64,-91.06 1080.05,-81.04 1071.13,-86.75 1076.64,-91.06"/>
 </g>
-<!-- Node125&#45;&gt;Node16 -->
+<!-- Node127&#45;&gt;Node16 -->
 <g id="edge94" class="edge">
-<title>Node125&#45;&gt;Node16</title>
+<title>Node127&#45;&gt;Node16</title>
 <path fill="none" stroke="midnightblue" d="M1162.82,-65.15C1201.74,-62.41 1249.9,-59.02 1293,-56 1529.79,-39.42 1815.42,-19.58 1908.26,-13.13"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="1908.63,-16.62 1918.36,-12.43 1908.14,-9.63 1908.63,-16.62"/>
 </g>

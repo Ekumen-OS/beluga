@@ -11,11 +11,11 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01OccupancyGrid_01_4.html" target="_top" xlink:title="Specialization of multivariate uniform distribution for occupancy grids.">
+<g id="a_node1"><a xlink:href="classbeluga_1_1MultivariateUniformDistribution_3_01Sophus_1_1SE2d_00_01Eigen_1_1AlignedBox2d_01_4.html" target="_top" xlink:title="Specialization of multivariate uniform distribution for bounding regions in 2D space.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-41.5 155,-41.5 155,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::MultivariateUniform</text>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">Distribution&lt; Sophus::SE2d,</text>
-<text text-anchor="middle" x="77.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00"> OccupancyGrid &gt;</text>
+<text text-anchor="middle" x="77.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00"> Eigen::AlignedBox2d &gt;</text>
 </a>
 </g>
 </g>

@@ -11,13 +11,13 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is14a8f4eaf89c5248a34012104455aef8.html" target="_top" xlink:title="Specialization for types derived from Sophus::SE3Base.">
+<g id="a_node1"><a xlink:href="structbeluga_1_1multivariate__distribution__traits_3_01T_00_01std_1_1enable__if__t_3_01std_1_1ise7ac88d52952e6533296e162494fd0f1.html" target="_top" xlink:title="Specialization for types derived from Sophus::SE2Base.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-63.5 158,-63.5 158,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::multivariate</text>
 <text text-anchor="start" x="8" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00">_distribution_traits</text>
 <text text-anchor="start" x="8" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T, std::enable_if_t</text>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; std::is_base_of_v&lt; Sophus</text>
-<text text-anchor="middle" x="79" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::SE3Base&lt; T &gt;, T &gt; &gt; &gt;</text>
+<text text-anchor="middle" x="79" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::SE2Base&lt; T &gt;, T &gt; &gt; &gt;</text>
 </a>
 </g>
 </g>

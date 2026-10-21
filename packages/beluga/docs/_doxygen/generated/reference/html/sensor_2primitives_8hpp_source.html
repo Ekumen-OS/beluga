@@ -54,7 +54,7 @@
     <link rel="search" title="Search" href="../../../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon Oct 19 08:43:42 2026 +0000, 03f07b7&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 20 14:26:46 2026 -0300, af0ad11&#39;"/>
   </head>
   
   
@@ -455,33 +455,58 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef BELUGA_SENSOR_PRIMITIVES_HPP</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define BELUGA_SENSOR_PRIMITIVES_HPP</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">// /**</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//  * \file</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">//  * \brief Implementation of sensor primitives to abstract member access.</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">//  */</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// Primary template which defaults to `false_type`.</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// A specialization will override this if the method is detected.</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> = <span class="keywordtype">void</span>&gt;</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="structbeluga_1_1has__likelihood__field.html">   28</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1has__likelihood__field.html">has_likelihood_field</a> : std::false_type {};</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// Specialization. Uses SFINAE to detect whether the expression</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// `std::declval&lt;T&gt;().likelihood_field()` is valid.</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// If so, evaluates to `true_type`.</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="structbeluga_1_1has__likelihood__field_3_01T_00_01std_1_1void__t_3_01decltype_07std_1_1declval_30323e42ac79026fd6376eb5a7a94648b.html">   34</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1has__likelihood__field.html">has_likelihood_field</a>&lt;T, std::void_t&lt;decltype(std::declval&lt;T&gt;().likelihood_field())&gt;&gt; : std::true_type {};</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// /**</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">//  * \file</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">//  * \brief Implementation of sensor primitives to abstract member access.</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">//  */</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacebeluga.html">beluga</a> {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// Primary template which defaults to `false_type`.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// A specialization will override this if the method is detected.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> = <span class="keywordtype">void</span>&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="structbeluga_1_1has__likelihood__field.html">   32</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1has__likelihood__field.html">has_likelihood_field</a> : std::false_type {};</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// Specialization. Uses SFINAE to detect whether the expression</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// `std::declval&lt;T&gt;().likelihood_field()` is valid.</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// If so, evaluates to `true_type`.</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="namespacebeluga.html#a463ca9176a8afa80a85319d624a37af5">   38</a></span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> <a class="code" href="namespacebeluga.html#a463ca9176a8afa80a85319d624a37af5">has_likelihood_field_v</a> = <a class="code" href="structbeluga_1_1has__likelihood__field.html">has_likelihood_field&lt;T&gt;::value</a>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="structbeluga_1_1has__likelihood__field_3_01T_00_01std_1_1void__t_3_01decltype_07std_1_1declval_30323e42ac79026fd6376eb5a7a94648b.html">   38</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1has__likelihood__field.html">has_likelihood_field</a>&lt;T, std::void_t&lt;decltype(std::declval&lt;T&gt;().likelihood_field())&gt;&gt; : std::true_type {};</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}  <span class="comment">// namespace beluga</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_SENSOR_PRIMITIVES_HPP</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="namespacebeluga.html#a463ca9176a8afa80a85319d624a37af5">   42</a></span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> <a class="code" href="namespacebeluga.html#a463ca9176a8afa80a85319d624a37af5">has_likelihood_field_v</a> = <a class="code" href="structbeluga_1_1has__likelihood__field.html">has_likelihood_field&lt;T&gt;::value</a>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// Primary template which defaults to `false_type`.</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// A specialization will override this if the method is detected.</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> = <span class="keywordtype">void</span>&gt;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="structbeluga_1_1has__beam__skip.html">   47</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1has__beam__skip.html">has_beam_skip</a> : std::false_type {};</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// Specialization. Uses SFINAE to detect whether a sensor model exposes a</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// `prepare(measurement, states)` method, used to precompute a beam skipping mask over the</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">// whole particle set before per-particle reweighting. The states range is probed with a</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// `std::vector&lt;state_type&gt;`; any range type is accepted by the actual templated method.</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="structbeluga_1_1has__beam__skip_3_01T_00_01std_1_1void__t_3_01decltype_07std_1_1declval_3_01T_01639aea18170dec2a676baf7290135d3d.html">   54</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structbeluga_1_1has__beam__skip.html">has_beam_skip</a>&lt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    T,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    std::void_t&lt;decltype(std::declval&lt;T&amp;&gt;().prepare(</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        std::declval&lt;const typename T::measurement_type&amp;&gt;(),</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        std::declval&lt;const std::vector&lt;typename T::state_type&gt;&amp;&gt;()))&gt;&gt; : std::true_type {};</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="namespacebeluga.html#accfd93742042fae6d5ddb12d852c0e86">   62</a></span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> <a class="code" href="namespacebeluga.html#accfd93742042fae6d5ddb12d852c0e86">has_beam_skip_v</a> = <a class="code" href="structbeluga_1_1has__beam__skip.html">has_beam_skip&lt;T&gt;::value</a>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}  <span class="comment">// namespace beluga</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// BELUGA_SENSOR_PRIMITIVES_HPP</span></div>
 <div class="ttc" id="anamespacebeluga_html"><div class="ttname"><a href="namespacebeluga.html">beluga</a></div><div class="ttdoc">The main Beluga namespace.</div><div class="ttdef"><b>Definition:</b> 3d_embedding.hpp:21</div></div>
-<div class="ttc" id="anamespacebeluga_html_a463ca9176a8afa80a85319d624a37af5"><div class="ttname"><a href="namespacebeluga.html#a463ca9176a8afa80a85319d624a37af5">beluga::has_likelihood_field_v</a></div><div class="ttdeci">constexpr bool has_likelihood_field_v</div><div class="ttdoc">Trait variable that indicates whether a type T has a likelihood_field() method.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:38</div></div>
-<div class="ttc" id="astructbeluga_1_1has__likelihood__field_html"><div class="ttname"><a href="structbeluga_1_1has__likelihood__field.html">beluga::has_likelihood_field</a></div><div class="ttdef"><b>Definition:</b> primitives.hpp:28</div></div>
+<div class="ttc" id="anamespacebeluga_html_a463ca9176a8afa80a85319d624a37af5"><div class="ttname"><a href="namespacebeluga.html#a463ca9176a8afa80a85319d624a37af5">beluga::has_likelihood_field_v</a></div><div class="ttdeci">constexpr bool has_likelihood_field_v</div><div class="ttdoc">Trait variable that indicates whether a type T has a likelihood_field() method.</div><div class="ttdef"><b>Definition:</b> primitives.hpp:42</div></div>
+<div class="ttc" id="anamespacebeluga_html_accfd93742042fae6d5ddb12d852c0e86"><div class="ttname"><a href="namespacebeluga.html#accfd93742042fae6d5ddb12d852c0e86">beluga::has_beam_skip_v</a></div><div class="ttdeci">constexpr bool has_beam_skip_v</div><div class="ttdoc">Trait variable that indicates whether a type T supports beam skipping via prepare().</div><div class="ttdef"><b>Definition:</b> primitives.hpp:62</div></div>
+<div class="ttc" id="astructbeluga_1_1has__beam__skip_html"><div class="ttname"><a href="structbeluga_1_1has__beam__skip.html">beluga::has_beam_skip</a></div><div class="ttdef"><b>Definition:</b> primitives.hpp:47</div></div>
+<div class="ttc" id="astructbeluga_1_1has__likelihood__field_html"><div class="ttname"><a href="structbeluga_1_1has__likelihood__field.html">beluga::has_likelihood_field</a></div><div class="ttdef"><b>Definition:</b> primitives.hpp:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
@@ -538,7 +563,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Oct 19 08:43:42 2026 +0000, 03f07b7&#39;.
+  Last updated on &#39;Tue Oct 20 14:26:46 2026 -0300, af0ad11&#39;.
   <br/>
 </p>
   </div>

@@ -1,0 +1,4 @@
+<map id="beluga::has_beam_skip&lt; T, std::void_t&lt; decltype(std::declval&lt; T &amp; &gt;().prepare(std::declval&lt; const typename T::measurement_type &amp; &gt;(), std::declval&lt; const std::vector&lt; typename T::state_type &gt; &amp; &gt;()))&gt; &gt;" name="beluga::has_beam_skip&lt; T, std::void_t&lt; decltype(std::declval&lt; T &amp; &gt;().prepare(std::declval&lt; const typename T::measurement_type &amp; &gt;(), std::declval&lt; const std::vector&lt; typename T::state_type &gt; &amp; &gt;()))&gt; &gt;">
+<area shape="rect" id="node1" title=" " alt="" coords="5,80,287,195"/>
+<area shape="rect" id="node2" title=" " alt="" coords="90,5,202,32"/>
+</map>

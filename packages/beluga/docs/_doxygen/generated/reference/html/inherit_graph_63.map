@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base_3_01Sophus_1_1SE2_3_01Scalar_01_4_01_4.html" title="Specialization for on_motion_policy_base in SE2 space." alt="" coords="5,5,207,61"/>
+<area shape="rect" id="node1" href="$structbeluga_1_1policies_1_1detail_1_1on__motion__policy__base.html" title="Primary template for the on_motion_policy_base class." alt="" coords="5,5,188,61"/>
+<area shape="rect" id="node2" href="$structbeluga_1_1policies_1_1detail_1_1on__motion__policy.html" title="Base implementation for the on_motion_policy algorithm." alt="" coords="236,13,443,54"/>
 </map>

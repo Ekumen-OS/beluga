@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE3d_00_01void_01_4.html" target="_top" xlink:title=" ">
+<g id="a_node1"><a xlink:href="classbeluga_1_1spatial__hash_3_01Sophus_1_1SE2d_00_01void_01_4.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-30.5 131,-30.5 131,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">beluga::spatial_hash</text>
-<text text-anchor="middle" x="65.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Sophus::SE3d, void &gt;</text>
+<text text-anchor="middle" x="65.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Sophus::SE2d, void &gt;</text>
 </a>
 </g>
 </g>

@@ -58,7 +58,7 @@
     <link rel="prev" title="Overview" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="&#39;Mon Oct 19 08:43:42 2026 +0000, 03f07b7&#39;"/>
+    <meta name="docbuild:last-update" content="&#39;Tue Oct 20 14:26:46 2026 -0300, af0ad11&#39;"/>
   </head>
   
   
@@ -622,6 +622,24 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 </dd>
 <dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
 </dd>
+<dt><code class="docutils literal notranslate"><span class="pre">do_beamskip</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</em></dt><dd><p>Whether to enable beam skipping, ignoring beams that disagree with the map across most particles (e.g. caused by unmapped or dynamic obstacles). Only used by the <code class="docutils literal notranslate"><span class="pre">likelihood_field_prob</span></code> model.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">beam_skip_distance</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Distance, in meters, to the nearest mapped obstacle below which a beam is considered to agree with the map. Only used by the <code class="docutils literal notranslate"><span class="pre">likelihood_field_prob</span></code> model.</p>
+</dd>
+<dd><p>It cannot be greater than <code class="docutils literal notranslate"><span class="pre">laser_likelihood_max_dist</span></code>. Beam agreement is evaluated on the likelihood field, which saturates at <code class="docutils literal notranslate"><span class="pre">laser_likelihood_max_dist</span></code> and is flat beyond it, so a larger <code class="docutils literal notranslate"><span class="pre">beam_skip_distance</span></code> would make every distant beam count as agreeing with the map. The node will refuse to initialize the particle filter if this constraint is violated while <code class="docutils literal notranslate"><span class="pre">do_beamskip</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">beam_skip_threshold</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Fraction of particles that must agree on a beam for that beam to be integrated. Beams below it are skipped. Only used by the <code class="docutils literal notranslate"><span class="pre">likelihood_field_prob</span></code> model.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.3</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">beam_skip_error_threshold</span></code> <em>(<code class="docutils literal notranslate"><span class="pre">float</span></code>)</em></dt><dd><p>Fraction of skipped beams above which a localization error is assumed and beam skipping is disabled for that update, to prevent filter divergence. Only used by the <code class="docutils literal notranslate"><span class="pre">likelihood_field_prob</span></code> model.</p>
+</dd>
+<dd><p>Defaults to <code class="docutils literal notranslate"><span class="pre">0.9</span></code>.</p>
+</dd>
 </dl>
 </section>
 <section id="misc-parameters">
@@ -982,27 +1000,27 @@ and ROS 2 node initialization and shutdown, built around a single ROS 2 agnostic
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">do_beamskip</span></code></p></td>
-<td><p>Whether to ignore the beams for which the majority of the particles do not match the map in the likelihood field model. Beluga AMCL does not support beam skipping.</p></td>
+<td><p>Whether to ignore the beams for which the majority of the particles do not match the map in the likelihood field model. Beluga AMCL only supports beam skipping in the <code class="docutils literal notranslate"><span class="pre">likelihood_field_prob</span></code> sensor model.</p></td>
 <td class="text-center"><p>✅</p></td>
-<td class="text-center"><p></p></td>
+<td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beam_skip_distance</span></code></p></td>
-<td><p>Maximum distance to an obstacle to consider that a beam coincides with the map. Beluga AMCL does not support beam skipping.</p></td>
+<td><p>Maximum distance to an obstacle to consider that a beam coincides with the map. Beluga AMCL only supports beam skipping in the <code class="docutils literal notranslate"><span class="pre">likelihood_field_prob</span></code> sensor model, and requires this value to be no greater than <code class="docutils literal notranslate"><span class="pre">laser_likelihood_max_dist</span></code>.</p></td>
 <td class="text-center"><p>✅</p></td>
-<td class="text-center"><p></p></td>
+<td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">beam_skip_threshold</span></code></p></td>
-<td><p>Minimum percentage of particles for which a particular beam must match the map to not be skipped. Beluga AMCL does not support beam skipping.</p></td>
+<td><p>Minimum percentage of particles for which a particular beam must match the map to not be skipped. Beluga AMCL only supports beam skipping in the <code class="docutils literal notranslate"><span class="pre">likelihood_field_prob</span></code> sensor model.</p></td>
 <td class="text-center"><p>✅</p></td>
-<td class="text-center"><p></p></td>
+<td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beam_skip_error_threshold</span></code></p></td>
-<td><p>Maximum percentage of skipped beams. Too many skipped beams trigger a full update to recover in case of bad convergence. Beluga AMCL does not support beam skipping.</p></td>
+<td><p>Maximum percentage of skipped beams. Too many skipped beams trigger a full update to recover in case of bad convergence. Beluga AMCL only supports beam skipping in the <code class="docutils literal notranslate"><span class="pre">likelihood_field_prob</span></code> sensor model.</p></td>
 <td class="text-center"><p>✅</p></td>
-<td class="text-center"><p></p></td>
+<td class="text-center"><p>✅</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model_unknown_space</span></code></p></td>
@@ -1122,7 +1140,7 @@ By Ekumen Research
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on &#39;Mon Oct 19 08:43:42 2026 +0000, 03f07b7&#39;.
+  Last updated on &#39;Tue Oct 20 14:26:46 2026 -0300, af0ad11&#39;.
   <br/>
 </p>
   </div>
