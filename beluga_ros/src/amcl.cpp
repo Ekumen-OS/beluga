@@ -14,6 +14,7 @@
 
 #include <beluga_ros/amcl.hpp>
 
+#include <algorithm>
 #include <beluga/actions/assign.hpp>
 #include <beluga/actions/normalize.hpp>
 #include <beluga/actions/propagate.hpp>
@@ -22,6 +23,8 @@
 #include <beluga/views/random_intersperse.hpp>
 #include <beluga/views/take_while_kld.hpp>
 #include <cmath>
+#include <limits>
+#include <vector>
 
 namespace beluga_ros {
 
@@ -122,7 +125,25 @@ auto Amcl::update(
   }
 
   force_update_ = false;
-  return beluga::cluster_based_estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
+  auto estimate = beluga::cluster_based_estimate(beluga::views::states(particles_), beluga::views::weights(particles_));
+  last_quality_ = compute_quality(estimate.second);
+  return estimate;
+}
+
+std::array<double, 3> Amcl::compute_quality(const Sophus::Matrix3d& actual_covariance) {
+  const std::array<double, 3> expected_variance = {
+      params_.expected_pose_x_stddev * params_.expected_pose_x_stddev,
+      params_.expected_pose_y_stddev * params_.expected_pose_y_stddev,
+      params_.expected_pose_yaw_stddev * params_.expected_pose_yaw_stddev,
+  };
+  std::array<double, 3> quality{1.0, 1.0, 1.0};
+  for (int i = 0; i < 3; ++i) {
+    const double actual = actual_covariance.coeff(i, i);
+    if (actual > std::numeric_limits<double>::epsilon()) {
+      quality[i] = std::clamp(expected_variance[i] / actual, 0.0, 1.0);
+    }
+  }
+  return quality;
 }
 
 }  // namespace beluga_ros
