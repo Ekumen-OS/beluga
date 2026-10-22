@@ -58,6 +58,12 @@ RUN apt-get update \
     tmux \
   && rm -rf /var/lib/apt/lists/*
 
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+
+# Install Lambkin SDK (pinned in beluga_lambkin/requirements.txt).
+COPY beluga_lambkin/requirements.txt /tmp/lambkin-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/lambkin-requirements.txt
+
 # Install timem from previous stage
 COPY --from=timem-builder --chown=developer:ekumen /opt/timemory/ /opt/timemory
 RUN cmake --build /opt/timemory/build --target install
