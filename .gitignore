@@ -22,3 +22,6 @@ generated
 
 # CMake test discovery files
 **/cmake_test_discovery_*.json
+
+# Lambkin benchmark results
+beluga_lambkin/results/
