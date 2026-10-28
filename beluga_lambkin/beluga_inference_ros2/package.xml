@@ -12,6 +12,8 @@
   <maintainer email="daffer.queque@ekumenlabs.com">Daffer Queque</maintainer>
   <license>Apache-2.0</license>
 
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>beluga_amcl</exec_depend>
