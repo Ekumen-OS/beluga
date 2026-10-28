@@ -4,13 +4,13 @@ Benchmarks [`beluga_amcl`](../beluga_amcl) with [Lambkin](https://github.com/Eku
 
 ## Contents
 
-- `Dockerfile` (extends the dev image with Lambkin and evo)
-- `docker-compose.yml` (benchmark container configuration)
+- `docker/` (`Dockerfile`, `docker-compose.yml`, `requirements.txt`)
 - `beluga_benchmark.py`
-- `requirements.txt` (Lambkin pin)
 - `beluga_inference_ros2/` (launch + params used by the benchmark)
 
 ## Environment
+
+Tested on jazzy, kilted and lyrical. Humble is not supported (its numpy 1.21 is older than Lambkin's minimum, 1.24).
 
 Build the main dev image first:
 ```bash
@@ -19,15 +19,15 @@ ROSDISTRO=jazzy docker/run.sh --build
 
 Then build and start the benchmark container:
 ```bash
-docker compose -f beluga_lambkin/docker-compose.yml up --build -d benchmark
-docker compose -f beluga_lambkin/docker-compose.yml exec benchmark /bin/bash
+docker compose -f beluga_lambkin/docker/docker-compose.yml up --build -d benchmark
+docker compose -f beluga_lambkin/docker/docker-compose.yml exec benchmark /bin/bash
 ```
 
 ## Data
 
 Reference data is mounted automatically by the benchmark compose file at `/data` (`/data/datasets/input` and `/data/maps/map.yaml`) directly from `ekumenlabs/lambkin-beluga-datasets:jazzy`.
 
-To use your own data, mount your data directory to a separate host path (e.g. `/host_data`) in `beluga_lambkin/docker-compose.yml` and pass `--dataset /host_data/... --map /host_data/...`.
+To use your own data, mount your data directory to a separate host path (e.g. `/host_data`) in `beluga_lambkin/docker/docker-compose.yml` and pass `--dataset /host_data/... --map /host_data/...`.
 
 ## Run
 
@@ -46,4 +46,4 @@ python3 src/beluga/beluga_lambkin/beluga_benchmark.py --dataset /data/datasets/i
 
 ## Updating Lambkin
 
-Change the commit SHA in `requirements.txt`, then rebuild the benchmark image.
+Change the commit SHA in `docker/requirements.txt`, then rebuild the benchmark image.
