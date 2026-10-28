@@ -1,0 +1,36 @@
+services:
+  benchmark:
+    build:
+      context: ../..
+      dockerfile: beluga_lambkin/docker/Dockerfile
+      args:
+        - ROSDISTRO=${ROSDISTRO:-jazzy}
+    image: ekumenlabs/beluga-${ROSDISTRO:-jazzy}-benchmark
+    hostname: beluga-${ROSDISTRO:-jazzy}-benchmark
+    container_name: beluga-${ROSDISTRO:-jazzy}-benchmark
+    environment:
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/tmp/.docker.xauth
+      - BELUGA_PARANOID=1
+    stdin_open: true
+    tty: true
+    user: ${USERID:-1000}:${GROUPID:-1000}
+    privileged: true
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth
+      - ../..:/ws/src/beluga
+      - beluga_ccache:/home/developer/.ccache
+      # Reference data, mounted straight from the image:
+      - type: image
+        source: ekumenlabs/lambkin-beluga-datasets:jazzy
+        target: /data
+        image:
+          subpath: data
+      # Optionally, your own data from the host, next to the reference data:
+      # - /path/to/data:/host_data
+    devices:
+      - /dev/dri:/dev/dri
+volumes:
+  beluga_ccache:
