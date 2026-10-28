@@ -28,7 +28,7 @@ RUN uv venv --system-site-packages $VIRTUAL_ENV && chown -R developer:ekumen $VI
 ENV PATH="$VIRTUAL_ENV/bin:/home/developer/.local/bin:$PATH"
 
 # Install Lambkin into the virtual environment from requirements.txt
-COPY beluga_lambkin/requirements.txt /tmp/requirements.txt
+COPY beluga_lambkin/docker/requirements.txt /tmp/requirements.txt
 RUN uv pip install --no-cache -r /tmp/requirements.txt \
     "numpy==$(python3 -c 'import numpy; print(numpy.__version__)')"
 
