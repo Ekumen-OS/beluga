@@ -1,8 +1,8 @@
 services:
   benchmark:
     build:
-      context: ..
-      dockerfile: beluga_lambkin/Dockerfile
+      context: ../..
+      dockerfile: beluga_lambkin/docker/Dockerfile
       args:
         - ROSDISTRO=${ROSDISTRO:-jazzy}
     image: ekumenlabs/beluga-${ROSDISTRO:-jazzy}-benchmark
@@ -20,7 +20,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /tmp/.docker.xauth:/tmp/.docker.xauth
-      - ..:/ws/src/beluga
+      - ../..:/ws/src/beluga
       - beluga_ccache:/home/developer/.ccache
       # Reference data, mounted straight from the image:
       - type: image
