@@ -2,6 +2,11 @@
 Changelog for package beluga_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Stop forcing pip dependencies (`#589 <https://github.com/Ekumen-OS/beluga/pull/589>`_)
+* Contributors: Gerardo Puga
+
 2.1.1 (2026-04-20)
 ------------------
 * Add paranoid mode (`#557 <https://github.com/Ekumen-OS/beluga/issues/557>`_)

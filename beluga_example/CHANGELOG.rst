@@ -2,6 +2,11 @@
 Changelog for package beluga_example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added beam-skipping to likelihood-field-prob (`#577 <https://github.com/Ekumen-OS/beluga/pull/577>`_)
+* Contributors: Rodrigo Alcoberro
+
 2.1.1 (2026-04-20)
 ------------------
 

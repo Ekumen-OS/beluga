@@ -2,6 +2,12 @@
 Changelog for package beluga_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added beam-skipping to likelihood-field-prob (`#577 <https://github.com/Ekumen-OS/beluga/pull/577>`_)
+* Add lyrical build environment (`#565 <https://github.com/Ekumen-OS/beluga/issues/565>`_)
+* Contributors: Gerardo Puga, Rodrigo Alcoberro
+
 2.1.1 (2026-04-20)
 ------------------
 * Change default of the strict boundaries setting to true (`#555 <https://github.com/Ekumen-OS/beluga/issues/555>`_)
