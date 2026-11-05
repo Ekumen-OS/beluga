@@ -2,6 +2,9 @@
 Changelog for package beluga_system_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.2.0 (2026-11-05)
+------------------
+
 2.1.1 (2026-04-20)
 ------------------
 * Add paranoid mode (`#557 <https://github.com/Ekumen-OS/beluga/issues/557>`_)

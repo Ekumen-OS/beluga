@@ -2,6 +2,15 @@
 Changelog for package beluga_amcl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.2.0 (2026-11-05)
+------------------
+* Added beam-skipping to likelihood-field-prob (`#577 <https://github.com/Ekumen-OS/beluga/pull/577>`_)
+* Update documentation (`#586 <https://github.com/Ekumen-OS/beluga/issues/586>`_)
+* Sunset beluga_benchmark, thanks for the ride (`#585 <https://github.com/Ekumen-OS/beluga/issues/585>`_)
+* Add lyrical build environment (`#565 <https://github.com/Ekumen-OS/beluga/issues/565>`_)
+* Add minor dep fix (`#571 <https://github.com/Ekumen-OS/beluga/pull/571>`_)
+* Contributors: Gerardo Puga, Rodrigo Alcoberro
+
 2.1.1 (2026-04-20)
 ------------------
 * Change default of the strict boundaries setting to true (`#555 <https://github.com/Ekumen-OS/beluga/issues/555>`_)
