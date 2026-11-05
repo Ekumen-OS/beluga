@@ -2,8 +2,8 @@
 Changelog for package beluga_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.0 (2026-11-05)
+------------------
 * Stop forcing pip dependencies (`#589 <https://github.com/Ekumen-OS/beluga/pull/589>`_)
 * Contributors: Gerardo Puga
 

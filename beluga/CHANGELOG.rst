@@ -2,8 +2,8 @@
 Changelog for package beluga
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.0 (2026-11-05)
+------------------
 * Added beam-skipping to likelihood-field-prob (`#577 <https://github.com/Ekumen-OS/beluga/pull/577>`_)
 * Use kd tree for landmark map search (`#579 <https://github.com/Ekumen-OS/beluga/issues/579>`_)
 * Fix package.xml (`#584 <https://github.com/Ekumen-OS/beluga/issues/584>`_)

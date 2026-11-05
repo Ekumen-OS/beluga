@@ -2,8 +2,8 @@
 Changelog for package beluga_amcl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.0 (2026-11-05)
+------------------
 * Added beam-skipping to likelihood-field-prob (`#577 <https://github.com/Ekumen-OS/beluga/pull/577>`_)
 * Update documentation (`#586 <https://github.com/Ekumen-OS/beluga/issues/586>`_)
 * Sunset beluga_benchmark, thanks for the ride (`#585 <https://github.com/Ekumen-OS/beluga/issues/585>`_)
