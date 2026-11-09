@@ -57,25 +57,24 @@ auto nearest_obstacle_distance_map(
     DistanceFunction&& distance_function,
     NeighborsFunction&& neighbors_function,
     std::invoke_result_t<DistanceFunction, std::size_t, std::size_t> max_distance_value) {
+  using DistanceType = std::invoke_result_t<DistanceFunction, std::size_t, std::size_t>;
+
   struct IndexPair {
     std::size_t nearest_obstacle_index;
     std::size_t index;
+    DistanceType distance;  // == distance_map[index], which never changes once queued
   };
-
-  using DistanceType = std::invoke_result_t<DistanceFunction, std::size_t, std::size_t>;
   auto distance_map = std::vector<DistanceType>(ranges::size(obstacle_mask), max_distance_value);
   auto visited = std::vector<bool>(ranges::size(obstacle_mask), false);
 
-  auto compare = [&distance_map](const IndexPair& first, const IndexPair& second) {
-    return distance_map[first.index] > distance_map[second.index];
-  };
+  auto compare = [](const IndexPair& first, const IndexPair& second) { return first.distance > second.distance; };
   auto queue = std::priority_queue<IndexPair, std::vector<IndexPair>, decltype(compare)>{compare};
 
   for (auto [index, is_obstacle] : ranges::views::enumerate(obstacle_mask)) {
     if (is_obstacle) {
       visited[index] = true;
       distance_map[index] = 0;
-      queue.push(IndexPair{index, index});  // The nearest obstacle is itself
+      queue.push(IndexPair{index, index, distance_map[index]});  // The nearest obstacle is itself
     }
   }
 
@@ -88,7 +87,7 @@ auto nearest_obstacle_distance_map(
         const auto distance = distance_function(parent.nearest_obstacle_index, index);
         if (distance < max_distance_value) {
           distance_map[index] = distance;
-          queue.push(IndexPair{parent.nearest_obstacle_index, index});
+          queue.push(IndexPair{parent.nearest_obstacle_index, index, distance});
         }
       }
     }

@@ -16,6 +16,7 @@
 #define BELUGA_SENSOR_LIKELIHOOD_FIELD_MODEL_BASE_HPP
 
 #include <algorithm>
+#include <array>
 #include <beluga/actions/overlay.hpp>
 #include <beluga/algorithm/distance_map.hpp>
 #include <beluga/sensor/data/occupancy_grid.hpp>
@@ -165,9 +166,43 @@ class LikelihoodFieldModelBase {
 
     const auto profile = make_likelihood_profile(params);
 
-    const auto neighborhood = [&grid](std::size_t index) { return grid.neighborhood4(index); };
+    // Same cells, in the same order, as grid.neighborhood4(index), without a
+    // heap-allocated std::vector per expanded cell.
+    struct Neighborhood4 {
+      std::array<std::size_t, 4> cells;
+      std::size_t count = 0;
+      [[nodiscard]] const std::size_t* begin() const { return cells.data(); }
+      [[nodiscard]] const std::size_t* end() const { return cells.data() + count; }
+    };
+    const auto neighborhood = [width = grid.width(), height = grid.height()](std::size_t index) {
+      Neighborhood4 result;
+      const std::size_t xi = index % width;
+      const std::size_t yi = index / width;
+      if (xi < (width - 1)) {
+        result.cells[result.count++] = index + 1;
+      }
+      if (yi < (height - 1)) {
+        result.cells[result.count++] = index + width;
+      }
+      if (xi > 0) {
+        result.cells[result.count++] = index - 1;
+      }
+      if (yi > 0) {
+        result.cells[result.count++] = index - width;
+      }
+      return result;
+    };
 
     const auto squared_max_distance = static_cast<float>(params.max_obstacle_distance * params.max_obstacle_distance);
+
+    // Every cell farther than max_obstacle_distance from an obstacle holds
+    // exactly squared_max_distance: evaluate its likelihood once.
+    const double saturated_likelihood = profile(squared_max_distance);
+    const auto to_likelihood = [&profile, saturated_likelihood,
+                                squared_max_distance =
+                                    static_cast<double>(squared_max_distance)](double squared_distance) {
+      return squared_distance == squared_max_distance ? saturated_likelihood : profile(squared_distance);
+    };
 
     // determine distances to obstacles and calculate likelihood values in-place to minimize memory usage when dealing
     // with large maps
@@ -199,7 +234,7 @@ class LikelihoodFieldModelBase {
     }
 
     auto likelihood_values = std::move(distance_map) |  //
-                             ranges::actions::transform(profile);
+                             ranges::actions::transform(to_likelihood);
 
     return ValueGrid2<float>{std::move(likelihood_values), grid.width(), grid.resolution()};
   }
