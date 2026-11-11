@@ -49,7 +49,7 @@ def nominal(ctx):
     ):
         with lambkin.process.background(
             ctx.shell.ros2.launch,
-            "beluga_inference_ros2",
+            "beluga_amcl_benchmark",
             "beluga.launch.py",
             f"laser_model_type:={ctx.variant.laser_model_type}",
             f"max_particles:={ctx.variant.max_particles}",

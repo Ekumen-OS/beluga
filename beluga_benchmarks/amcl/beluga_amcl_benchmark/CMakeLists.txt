@@ -13,7 +13,7 @@
 # limitations under the License.
 
 cmake_minimum_required(VERSION 3.16)
-project(beluga_inference_ros2)
+project(beluga_amcl_benchmark)
 find_package(ament_cmake REQUIRED)
 
 install(DIRECTORY launch params DESTINATION share/${PROJECT_NAME})

@@ -22,7 +22,7 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
-pkg_dir = get_package_share_directory("beluga_inference_ros2")
+pkg_dir = get_package_share_directory("beluga_amcl_benchmark")
 
 default_yaml_path = os.path.join(pkg_dir, "params", "default.ros2.yaml")
 
