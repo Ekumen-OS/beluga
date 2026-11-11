@@ -24,4 +24,4 @@ generated
 **/cmake_test_discovery_*.json
 
 # Lambkin benchmark results
-beluga_lambkin/results/
+beluga_benchmarks/**/results/
