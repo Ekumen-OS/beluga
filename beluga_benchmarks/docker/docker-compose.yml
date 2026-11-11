@@ -2,7 +2,7 @@ services:
   benchmark:
     build:
       context: ../..
-      dockerfile: beluga_lambkin/docker/Dockerfile
+      dockerfile: beluga_benchmarks/docker/Dockerfile
       args:
         - ROSDISTRO=${ROSDISTRO:-jazzy}
     image: ekumenlabs/beluga-${ROSDISTRO:-jazzy}-benchmark
