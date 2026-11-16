@@ -19,10 +19,10 @@
 
 #include <Eigen/Core>
 
-#include "beluga_estimation/distribution_test_utils.hpp"
 #include <beluga_estimation/common/slice.hpp>
 #include <beluga_estimation/core/distribution.hpp>
 #include <beluga_estimation/distributions/normal_distribution.hpp>
+#include "beluga_estimation/distribution_test_utils.hpp"
 
 namespace {
 

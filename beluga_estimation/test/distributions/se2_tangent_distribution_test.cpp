@@ -21,7 +21,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "beluga_estimation/distribution_test_utils.hpp"
 #include <beluga_estimation/common/algebra.hpp>
 #include <beluga_estimation/common/random.hpp>
 #include <beluga_estimation/common/std_future.hpp>
@@ -30,6 +29,7 @@
 #include <beluga_estimation/distributions/normal_distribution.hpp>
 #include <beluga_estimation/distributions/se2_tangent_distribution.hpp>
 #include <beluga_estimation/manifolds/se2_manifold.hpp>
+#include "beluga_estimation/distribution_test_utils.hpp"
 
 namespace beluga_estimation {
 namespace {

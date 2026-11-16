@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include "beluga_estimation/distribution_test_utils.hpp"
 #include <beluga_estimation/common/algebra.hpp>
 #include <beluga_estimation/distributions/se2_normal_distribution.hpp>
+#include "beluga_estimation/distribution_test_utils.hpp"
 
 namespace {
 
