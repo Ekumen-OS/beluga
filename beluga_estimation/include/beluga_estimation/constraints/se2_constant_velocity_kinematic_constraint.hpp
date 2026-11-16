@@ -75,11 +75,11 @@ class SE2ConstantVelocityKinematicConstraint_ : public LocallyNormalConstraint_<
   bool HasConditioningVariables() const override { return true; }
 
   std_future::span<const Identifier> DependentVariables() const override {
-    return {dependent_ids_.data(), dependent_ids_.size()};
+    return std_future::span<const Identifier>(dependent_ids_.data(), dependent_ids_.size());
   }
 
   std_future::span<const Identifier> ConditioningVariables() const override {
-    return {conditioning_ids_.data(), conditioning_ids_.size()};
+    return std_future::span<const Identifier>(conditioning_ids_.data(), conditioning_ids_.size());
   }
 
   [[nodiscard]] std::size_t ResidualSize() const override {

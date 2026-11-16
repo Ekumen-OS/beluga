@@ -68,7 +68,7 @@ class SE2VelocityKinematicConstraint_ : public LocallyNormalConstraint_<T> {
   std_future::span<const Identifier> DependentVariables() const override { return {&pose_j_id_, 1}; }
 
   std_future::span<const Identifier> ConditioningVariables() const override {
-    return {conditioning_ids_.data(), conditioning_ids_.size()};
+    return std_future::span<const Identifier>(conditioning_ids_.data(), conditioning_ids_.size());
   }
 
   [[nodiscard]] std::size_t ResidualSize() const override { return beluga_estimation::SE2<T>::DoF; }
