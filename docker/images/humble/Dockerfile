@@ -97,6 +97,11 @@ RUN /bin/bash -c '\
 
 RUN cd /opt && git clone https://github.com/brendangregg/FlameGraph
 
+RUN git clone -b v1.0.4 https://github.com/cameron314/concurrentqueue.git /tmp/concurrentqueue \
+  && cmake -B /tmp/concurrentqueue/build -S /tmp/concurrentqueue \
+  && cmake --build /tmp/concurrentqueue/build --target install \
+  && rm -rf /tmp/concurrentqueue
+
 USER $USER:$GROUP
 
 ENV USER_WS=/ws
