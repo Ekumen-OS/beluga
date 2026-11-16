@@ -1,0 +1,53 @@
+# Reference configuration for beluga_filter_node.
+#
+# This file demonstrates how to configure the complete beluga_estimation::RecursiveFilter pipeline
+# (init, input, preprocess, solver, and output stages) via ROS 2 parameters.
+
+/**:
+  ros__parameters:
+    method:
+      type: beluga_estimation::RecursiveFilter
+      rate: 10.0
+      init:
+        stages: [prior]
+        prior:
+          type: beluga_estimation::VariablePriorInitializer
+          variables: [pose, velocity]
+          pose:
+            type: se2
+            mean: [0.0, 0.0, 0.0]
+            covariance: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+          velocity:
+            type: euclidean
+            mean: [0.0, 0.0, 0.0]
+            covariance: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+      input:
+        stages: [imu, odometry]
+        imu:
+          type: beluga_estimation::IMUProbe
+          topic_name: /imu/data
+          use_2d_mode: true
+          angular_velocity_mask: [false, false, true]
+        odometry:
+          type: beluga_estimation::OdomProbe
+          topic_name: /odom
+          transform_timeout: 0.05
+      preprocess:
+        stages: [se2_kinematic_state_connector]
+        se2_kinematic_state_connector:
+          type: beluga_estimation::SE2KinematicStateConnector
+      solver:
+        type: beluga_estimation::ExtendedKalmanFilter
+        tracked:
+          variables: [pose, velocity]
+        estimate:
+          name: main
+      output:
+        stages: [broadcaster]
+        broadcaster:
+          type: beluga_estimation::SE2PoseBroadcaster
+          variable_name: pose
+          max_broadcast_rate: 10.0
+          target_frame: map
+          source_frame: odom
+          target_estimate: main
