@@ -28,15 +28,15 @@ COLCON_EXTRA_ARGS=""
 if [ "${ROS_DISTRO}" != "rolling" ]; then
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_example beluga_system_tests"
     CPP_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
-    # beluga_vdb is not supported in humble
+    # beluga_vdb and beluga_estimation are not supported in humble
     if [ "${ROS_DISTRO}" != "humble" ]; then
-        ROS_PACKAGES="${ROS_PACKAGES} beluga_vdb"
-        CPP_PACKAGES="${CPP_PACKAGES} beluga_vdb"
+        ROS_PACKAGES="${ROS_PACKAGES} beluga_vdb beluga_estimation beluga_estimation_ros"
+        CPP_PACKAGES="${CPP_PACKAGES} beluga_vdb beluga_estimation beluga_estimation_ros"
     fi
 else
     # rolling doesn't include benchmark and example
-    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
-    CPP_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
+    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb beluga_estimation beluga_estimation_ros"
+    CPP_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb beluga_estimation beluga_estimation_ros"
 fi
 
 if [ "${CMAKE_EXTRA_ARGS}" != "" ]; then
