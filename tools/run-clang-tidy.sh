@@ -23,9 +23,9 @@ set -o errexit -o xtrace
 CMAKE_EXTRA_ARGS=""
 COLCON_EXTRA_ARGS=""
 
-ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
+ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_estimation beluga_estimation_ros"
 if [ "${ROS_DISTRO}" != "humble" ]; then
-    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
+    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb beluga_estimation beluga_estimation_ros"
 fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
