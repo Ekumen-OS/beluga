@@ -43,6 +43,6 @@ echo ${ROS_PACKAGES} |
         -j=4 \
         -fix \
         -extra-arg='-Wno-gnu-zero-variadic-macro-arguments' \
-        -header-filter='.*/src/.*' \
+        -header-filter='.*/src/beluga/.*' \
         -p=./build/{} \
-        '.*/src/.*'
+        '.*/src/beluga/.*'

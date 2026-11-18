@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BELUGA_ESTIMATION_ROS_INTERFACES_PARAMETERS_HPP
+#define BELUGA_ESTIMATION_ROS_INTERFACES_PARAMETERS_HPP
+
+#include <utility>
 
 #include <rclcpp/node_interfaces/node_parameters.hpp>
 
@@ -33,7 +36,7 @@ class Parameters : public beluga_estimation::ParametersInterface {
    * @param node_parameters The ROS 2 node parameters interface to wrap.
    */
   explicit Parameters(rclcpp::node_interfaces::NodeParametersInterface::SharedPtr node_parameters)
-      : node_parameters_(node_parameters) {}
+      : node_parameters_(std::move(node_parameters)) {}
 
   using beluga_estimation::ParametersInterface::DeclareParameter;
   using beluga_estimation::ParametersInterface::GetParameter;
@@ -58,3 +61,5 @@ class Parameters : public beluga_estimation::ParametersInterface {
 };
 
 }  // namespace beluga_estimation_ros
+
+#endif  // BELUGA_ESTIMATION_ROS_INTERFACES_PARAMETERS_HPP
