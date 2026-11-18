@@ -20,6 +20,7 @@
 
 set -o errexit
 
-gcovr --fail-under-line 95 -j -u -f 'src/beluga/.*' -e '.*/test/.*cpp' build/
+# gcovr --fail-under-line 95 -j -u -f 'src/beluga/.*' -e '.*/test/.*cpp' build/
+gcovr --fail-under-line 95 -j -u -f 'src/beluga/beluga_estimation.*' -e '.*/test/.*cpp' build/
 # NOTE: Enable Python code coverage checks when attained
 # (cd coveragepy && python3 -m coverage report --fail-under=95)

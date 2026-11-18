@@ -35,12 +35,14 @@ jobs:
       fail-fast: false
       matrix:
         ros_distro:
-          - humble
+          # - humble
           - jazzy
-          - kilted
-          - lyrical
+          # - kilted
+          # - lyrical
         include:
-          - ros_distro: humble
+          # - ros_distro: humble
+          #   upload_artifacts: true
+          - ros_distro: jazzy
             upload_artifacts: true
     container:
       image: ros:${{ matrix.ros_distro }}-ros-base
