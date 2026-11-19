@@ -42,6 +42,8 @@ jobs:
         include:
           - ros_distro: humble
             upload_artifacts: true
+          - ros_distro: jazzy
+            upload_artifacts: true
     container:
       image: ros:${{ matrix.ros_distro }}-ros-base
     steps:

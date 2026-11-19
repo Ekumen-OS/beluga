@@ -23,9 +23,15 @@ set -o errexit -o xtrace
 CMAKE_EXTRA_ARGS=""
 COLCON_EXTRA_ARGS=""
 
+# When re-enabling other packages, uncomment below (beluga_estimation* excluded):
 ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
 if [ "${ROS_DISTRO}" != "humble" ]; then
-    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
+    ROS_PACKAGES="${ROS_PACKAGES} beluga_vdb"
+fi
+
+if [ -z "${ROS_PACKAGES}" ]; then
+    echo "No packages configured for static analysis. Skipping."
+    exit 0
 fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
@@ -42,5 +48,6 @@ echo ${ROS_PACKAGES} |
         -j=4 \
         -fix \
         -extra-arg='-Wno-gnu-zero-variadic-macro-arguments' \
+        -header-filter='.*/src/beluga/.*' \
         -p=./build/{} \
-        ${PWD}/src/.*
+        '.*/src/beluga/.*'

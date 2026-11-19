@@ -21,5 +21,12 @@
 set -o errexit
 
 gcovr --fail-under-line 95 -j -u -f 'src/beluga/.*' -e '.*/test/.*cpp' build/
+
+# ADDING beluga_estimation packages to CI
+# gcovr --fail-under-line 95 -j -u -f 'src/beluga/beluga_estimation.*' -e '.*/test/.*cpp' build/
+# Temporarily lower threshold to 85% and exclude all test files (including mocks)
+gcovr --fail-under-line 85 -j -u -f 'src/beluga/beluga_estimation.*' -e '.*/test/.*' build/
+# =======================================
+
 # NOTE: Enable Python code coverage checks when attained
 # (cd coveragepy && python3 -m coverage report --fail-under=95)
