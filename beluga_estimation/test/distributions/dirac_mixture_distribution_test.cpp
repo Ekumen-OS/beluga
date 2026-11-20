@@ -25,10 +25,10 @@
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/take.hpp>
 
-#include "beluga_estimation/distribution_test_utils.hpp"
 #include <beluga_estimation/common/slice.hpp>
 #include <beluga_estimation/distributions/dirac_mixture_distribution.hpp>
 #include <beluga_estimation/mocks/mock_distribution.hpp>
+#include "beluga_estimation/distribution_test_utils.hpp"
 
 namespace {
 

@@ -18,9 +18,9 @@
 
 #include <gtest/gtest.h>
 
-#include "test_data_plugins.hpp"
 #include <beluga_estimation/common/result.hpp>
 #include <beluga_estimation_ros/common/registry.hpp>
+#include "test_data_plugins.hpp"
 
 namespace beluga_estimation_ros::test {
 
