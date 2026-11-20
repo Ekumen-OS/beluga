@@ -15,6 +15,7 @@
 #pragma once
 
 #include <algorithm>
+#include <chrono>
 #include <memory>
 #include <optional>
 #include <set>
@@ -62,6 +63,10 @@ namespace beluga_estimation {
  *    skipping either one when the target variable is already conditioned by some other
  *    constraint (e.g. an odometry process model or an IMU step constraint).
  *
+ * The configured process noise covariances are continuous-time (per second). Each
+ * constraint uses them scaled by the time step between its pair, so the process model
+ * does not depend on how many variables the timeline holds.
+ *
  * The operation is stateful and incremental: it remembers the latest timestamp it
  * completed and, on subsequent invocations, only looks at data from that timestamp
  * onwards. The lower bound is closed so that the pair spanning the boundary between
@@ -81,7 +86,7 @@ class SE2KinematicStateConnector_ : public BayesianOperation_<T> {
    * @brief Configuration for the SE(2) kinematic state connector.
    */
   struct Configuration {
-    /// Default isotropic process noise used by both the kinematic and random-walk factors.
+    /// Default isotropic process noise per second used by both the kinematic and random-walk factors.
     static constexpr double kDefaultProcessNoiseCovariance = 0.01;
     /// Default variable name used for SE2 pose states in the DBN.
     static constexpr std::string_view kDefaultPoseVariableName = kPoseVariableName;
@@ -119,10 +124,10 @@ class SE2KinematicStateConnector_ : public BayesianOperation_<T> {
 
     std::string pose_variable_name{kDefaultPoseVariableName};
     std::string velocity_variable_name{kDefaultVelocityVariableName};
-    /// Process noise of the kinematic constraint, over the SE(2) tangent [x, y, theta].
+    /// Process noise per second of the kinematic constraint, over the SE(2) tangent [x, y, theta].
     beluga_estimation::Matrix3<T> pose_covariance{
         beluga_estimation::Matrix3<T>::Identity() * static_cast<T>(kDefaultProcessNoiseCovariance)};
-    /// Covariance of the velocity random walk, over [vx, vy, omega].
+    /// Covariance per second of the velocity random walk, over [vx, vy, omega].
     beluga_estimation::Matrix3<T> velocity_covariance{
         beluga_estimation::Matrix3<T>::Identity() * static_cast<T>(kDefaultProcessNoiseCovariance)};
   };
@@ -162,8 +167,6 @@ class SE2KinematicStateConnector_ : public BayesianOperation_<T> {
     // connectors can coexist in one DBN without colliding on (name, timestamp).
     kinematic_constraint_name_ = config_.pose_variable_name + "/kinematics";
     normal_constraint_name_ = config_.velocity_variable_name + "/random_walk";
-    velocity_distribution_ =
-        std::make_shared<const beluga_estimation::NormalDistribution_<T, 3>>(config_.velocity_covariance);
   }
 
   /**
@@ -275,11 +278,14 @@ class SE2KinematicStateConnector_ : public BayesianOperation_<T> {
       const auto& [next_pose_id, next_velocity_id] = window[1];
       BELUGA_ESTIMATION_ASSERT(prev_pose_id.timestamp == prev_velocity_id.timestamp);
       BELUGA_ESTIMATION_ASSERT(next_pose_id.timestamp == next_velocity_id.timestamp);
+      // Timestamps are sorted and unique, so the step is positive.
+      const T dt =
+          std::chrono::duration_cast<std::chrono::duration<T>>(next_pose_id.timestamp - prev_pose_id.timestamp).count();
 
       if (!context.dbn.HasConditioningConstraints(next_pose_id)) {
         const Identifier constraint_id{kinematic_constraint_name_, next_pose_id.timestamp};
         auto added = context.dbn.template Add<beluga_estimation::SE2VelocityKinematicConstraint_<T>>(
-            constraint_id, prev_pose_id, prev_velocity_id, next_pose_id, config_.pose_covariance);
+            constraint_id, prev_pose_id, prev_velocity_id, next_pose_id, config_.pose_covariance * dt);
         // The target pose is unconditioned, so a failed insertion means the
         // identifier is taken by an unrelated constraint. Reporting the conflict
         // is required: skipping would leave the pose without a process model.
@@ -302,7 +308,8 @@ class SE2KinematicStateConnector_ : public BayesianOperation_<T> {
       if (!context.dbn.HasConditioningConstraints(next_velocity_id)) {
         const Identifier constraint_id{normal_constraint_name_, next_velocity_id.timestamp};
         auto added = context.dbn.template Add<beluga_estimation::NormalConstraint_<T, 3>>(
-            constraint_id, prev_velocity_id, next_velocity_id, velocity_distribution_);
+            constraint_id, prev_velocity_id, next_velocity_id,
+            std::make_shared<const beluga_estimation::NormalDistribution_<T, 3>>(config_.velocity_covariance * dt));
         if (!added) {
           middleware_->Error(
               "SE2KinematicStateConnector: could not add velocity constraint at timestamp {}.",
@@ -441,8 +448,6 @@ class SE2KinematicStateConnector_ : public BayesianOperation_<T> {
   std::string kinematic_constraint_name_;
   /// Cached random-walk constraint name, derived from the velocity variable name.
   std::string normal_constraint_name_;
-  /// Cached random-walk distribution shared by the velocity constraints.
-  std::shared_ptr<const beluga_estimation::NormalDistribution_<T, 3>> velocity_distribution_;
   /// Pose identifiers of the slice currently being processed (reused buffer).
   std::vector<Identifier> pose_ids_;
   /// Velocity identifiers of the slice currently being processed (reused buffer).

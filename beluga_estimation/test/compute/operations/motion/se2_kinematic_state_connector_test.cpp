@@ -15,6 +15,7 @@
 #include <chrono>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -224,6 +225,42 @@ TEST_F(SE2KinematicStateConnectorTest, HandlesUnpairedIntermediateTimestamps) {
   // Timeline is [t0, t1, t3]: two consecutive pairs, each with both factors.
   EXPECT_EQ(CountConstraints(kKinematicConstraintName), 2u);
   EXPECT_EQ(CountConstraints(kNormalConstraintName), 2u);
+}
+
+TEST_F(SE2KinematicStateConnectorTest, ScalesProcessNoiseWithTimeStep) {
+  const auto t0 = MakeTime(0);
+  const auto t2 = MakeTime(2);
+  const auto t5 = MakeTime(5);
+
+  for (const auto t : {t0, t2, t5}) {
+    AddPoseVariable(t);
+    AddVelocityVariable(t);
+  }
+
+  ASSERT_TRUE(connector_->Execute(context_, ComputeBudget::Unlimited()));
+
+  // The fixture configures 0.01 per second for both process noise covariances.
+  for (const auto& [t, dt] : {std::pair{t2, 2.0}, std::pair{t5, 3.0}}) {
+    const Matrix3d expected = Matrix3d::Identity() * 0.01 * dt;
+
+    auto kinematic_result = context_.dbn.GetConstraint<SE2VelocityKinematicConstraint>(
+        Identifier{std::string(kKinematicConstraintName), t});
+    ASSERT_TRUE(kinematic_result);
+    auto kinematic = Unwrap(kinematic_result);
+    ASSERT_NE(kinematic, nullptr);
+    Matrix3d kinematic_covariance;
+    kinematic->CalcCovariance(kinematic_covariance);
+    EXPECT_TRUE(kinematic_covariance.isApprox(expected));
+
+    auto random_walk_result =
+        context_.dbn.GetConstraint<NormalConstraint_<double, 3>>(Identifier{std::string(kNormalConstraintName), t});
+    ASSERT_TRUE(random_walk_result);
+    auto random_walk = Unwrap(random_walk_result);
+    ASSERT_NE(random_walk, nullptr);
+    Matrix3d random_walk_covariance;
+    random_walk->CalcCovariance(random_walk_covariance);
+    EXPECT_TRUE(random_walk_covariance.isApprox(expected));
+  }
 }
 
 TEST_F(SE2KinematicStateConnectorTest, RejectsVelocityOfWrongDimension) {
