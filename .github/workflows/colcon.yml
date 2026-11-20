@@ -40,7 +40,7 @@ jobs:
           - kilted
           - lyrical
         include:
-          - ros_distro: humble
+          - ros_distro: humble # Change to jazzy whenever we want to evaluate codecoverage in that distro
             upload_artifacts: true
     container:
       image: ros:${{ matrix.ros_distro }}-ros-base
