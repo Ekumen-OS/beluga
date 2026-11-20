@@ -28,10 +28,10 @@ ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
 if [ "${ROS_DISTRO}" != "humble" ]; then
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
 fi
-# packages included in case of jazzy
-if [ "${ROS_DISTRO}" = "jazzy" ]; then
-    ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb beluga_estimation beluga_estimation_ros"
-fi
+# packages included in case of jazzy (We will apply this later)
+# if [ "${ROS_DISTRO}" = "jazzy" ]; then
+#     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb beluga_estimation beluga_estimation_ros"
+# fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 
