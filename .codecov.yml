@@ -53,6 +53,27 @@ component_management:
           threshold: 1%
           only_pulls: true
 
+    - component_id: package_beluga_estimation
+      name: beluga_estimation
+      paths:
+        - beluga_estimation/**
+
+    - component_id: package_beluga_estimation_ros
+      name: beluga_estimation_ros
+      paths:
+        - beluga_estimation_ros/**
+      statuses:
+        # Beluga_estimation_ros has its own statutes since it currently has lower coverage.
+        # See `default_rules` for details.
+        - type: project
+          target: 90%
+          removed_code_behavior: fully_covered_patch
+
+        - type: patch
+          target: auto
+          threshold: 1%
+          only_pulls: true
+
 coverage:
   # Disable project and patch level coverage status check in favor of
   # individual component status checks.
@@ -75,3 +96,5 @@ ignore:
   - "beluga_amcl/test"
   - "beluga_ros/test"
   - "beluga_system_tests/test"
+  - "beluga_estimation/test"
+  - "beluga_estimation_ros/test"

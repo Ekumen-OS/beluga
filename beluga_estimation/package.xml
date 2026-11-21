@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+  <name>beluga_estimation</name>
+  <version>3.0.0</version>
+
+  <description>A localization and mapping framework for robotics (beluga_estimation).</description>
+
+  <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
+  <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
+  <maintainer email="andres.brumovsky@ekumenlabs.com">Andres Brumovsky</maintainer>
+  <maintainer email="michel@ekumenlabs.com">Michel Hidalgo</maintainer>
+
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>cmake</buildtool_depend>
+
+  <depend>eigen</depend>
+  <depend>fmt</depend>
+  <depend>libconcurrentqueue-dev</depend>
+  <depend>libexpected-dev</depend>
+  <depend>range-v3</depend>
+  <depend>sophus</depend>
+  <!-- <depend>mdspan</depend> -->
+
+  <test_depend>clang-format</test_depend>
+  <test_depend>clang-tidy</test_depend>
+  <test_depend>benchmark</test_depend>
+  <test_depend>gtest</test_depend>
+  <test_depend>libgmock-dev</test_depend>
+
+  <doc_depend>doxygen</doc_depend>
+  <doc_depend>graphviz</doc_depend>
+  <doc_depend>texlive-latex-base</doc_depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
