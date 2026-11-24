@@ -22,11 +22,16 @@ set -o errexit -o xtrace
 
 CMAKE_EXTRA_ARGS=""
 COLCON_EXTRA_ARGS=""
-
+# default packages for humble
 ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests"
+# packages included if not humble (with the exception of jazzy below)
 if [ "${ROS_DISTRO}" != "humble" ]; then
     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb"
 fi
+# packages included in case of jazzy (We will apply this later)
+# if [ "${ROS_DISTRO}" = "jazzy" ]; then
+#     ROS_PACKAGES="beluga beluga_ros beluga_amcl beluga_system_tests beluga_vdb beluga_estimation beluga_estimation_ros"
+# fi
 
 source /opt/ros/${ROS_DISTRO}/setup.sh
 
