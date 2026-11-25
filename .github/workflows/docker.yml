@@ -2,12 +2,12 @@ name: Docker CI pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
     paths:
       - 'docker/**'
       - '**/package.xml'
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
     paths:
       - 'docker/**'
       - '**/package.xml'

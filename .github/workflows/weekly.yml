@@ -2,10 +2,10 @@ name: Weekly pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
     paths: '.github/workflows/weekly.yml'
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
     paths: '.github/workflows/weekly.yml'
   schedule:
     - cron: '0 0 * * 0'  # Weekly on Sunday
