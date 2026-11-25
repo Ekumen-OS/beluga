@@ -1,0 +1,25 @@
+name: beluga-estimation-benchmark
+services:
+  benchmark:
+    build:
+      context: ../..
+      dockerfile: beluga_estimation_benchmark/docker/Dockerfile
+      args:
+        - ROSDISTRO=${ROSDISTRO:-jazzy}
+    image: ekumenlabs/beluga-estimation-${ROSDISTRO:-jazzy}-benchmark
+    hostname: beluga-estimation-${ROSDISTRO:-jazzy}-benchmark
+    container_name: beluga-estimation-${ROSDISTRO:-jazzy}-benchmark
+    stdin_open: true
+    tty: true
+    user: ${USERID:-1000}:${GROUPID:-1000}
+    privileged: true
+    volumes:
+      - ../..:/ws/src/beluga
+      - beluga_estimation_ccache:/home/developer/.ccache
+      - type: image
+        source: ekumenlabs/lambkin-beluga-datasets:jazzy
+        target: /data
+        image:
+          subpath: data
+volumes:
+  beluga_estimation_ccache:
