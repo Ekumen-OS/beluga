@@ -1,0 +1,5 @@
+geometry_msgs/Vector3 delta
+geometry_msgs/Vector3 covariance_diag
+uint32 inlier_count
+uint8 status
+string failure_reason
