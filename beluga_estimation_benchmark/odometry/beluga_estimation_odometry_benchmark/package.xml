@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>beluga_estimation_odometry_benchmark</name>
+  <version>3.0.0</version>
+  <description>EKF odometry benchmark package for Beluga.</description>
+  <maintainer email="glpuga@ekumenlabs.com">Gerardo Puga</maintainer>
+  <maintainer email="michel@ekumenlabs.com">Michel Hidalgo</maintainer>
+  <maintainer email="nespinosa@ekumenlabs.com">Nahuel Espinosa</maintainer>
+  <maintainer email="andres.brumovsky@ekumenlabs.com">Andres Brumovsky</maintainer>
+  <maintainer email="daffer.queque@ekumenlabs.com">Daffer Queque</maintainer>
+  <license>Apache License 2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>beluga_estimation_ros</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

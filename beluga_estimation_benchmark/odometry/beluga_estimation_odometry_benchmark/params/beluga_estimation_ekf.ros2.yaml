@@ -1,0 +1,58 @@
+# beluga_estimation_ekf variant of the EKF odometry benchmark: beluga_estimation::RecursiveFilter with
+# beluga_estimation::ExtendedKalmanFilter fusing wheel odometry twist and IMU yaw rate,
+# the same inputs as the rl_ekf variant.
+/**:
+  ros__parameters:
+    use_sim_time: true
+    method:
+      type: beluga_estimation::RecursiveFilter
+      rate: 50.0
+      init:
+        stages: [prior]
+        prior:
+          type: beluga_estimation::VariablePriorInitializer
+          variables: [pose, velocity]
+          pose:
+            type: se2
+            mean: [0.0, 0.0, 0.0]
+            covariance: [1.0e-9, 0.0, 0.0, 0.0, 1.0e-9, 0.0, 0.0, 0.0, 1.0e-9]
+          velocity:
+            type: euclidean
+            mean: [0.0, 0.0, 0.0]
+            covariance: [1.0e-9, 0.0, 0.0, 0.0, 1.0e-9, 0.0, 0.0, 0.0, 1.0e-9]
+      input:
+        stages: [imu, odometry]
+        imu:
+          type: beluga_estimation::IMUProbe
+          topic_name: /imu/data_raw_transformed
+          use_2d_mode: true
+          # The dataset IMU orientation is an invalid placeholder; only the yaw rate is used.
+          angular_velocity_mask: [false, false, true]
+        odometry:
+          type: beluga_estimation::OdomProbe
+          topic_name: /odom
+          # The odometry pose is not fused: its heading drifts and would anchor the estimate.
+          use_pose: false
+          twist_mask: [true, true, true]
+      preprocess:
+        stages: [se2_kinematic_state_connector]
+        se2_kinematic_state_connector:
+          type: beluga_estimation::SE2KinematicStateConnector
+          pose_covariance: [0.05, 0.0, 0.0, 0.0, 0.05, 0.0, 0.0, 0.0, 0.06]
+          velocity_covariance: [0.025, 0.0, 0.0, 0.0, 0.025, 0.0, 0.0, 0.0, 0.02]
+      solver:
+        type: beluga_estimation::ExtendedKalmanFilter
+        tracked:
+          variables: [pose, velocity]
+        estimate:
+          name: main
+      output:
+        stages: [broadcaster]
+        broadcaster:
+          type: beluga_estimation::SE2PoseBroadcaster
+          variable_name: pose
+          max_broadcast_rate: 50.0
+          # Dedicated frames so the estimate does not collide with the recorded odom tree.
+          target_frame: beluga_odom
+          source_frame: beluga_base_footprint
+          target_estimate: main
