@@ -23,9 +23,9 @@ Inside the container:
 ```bash
 cd /ws
 source /opt/ros/jazzy/setup.bash
-colcon build --packages-up-to beluga_estimation_ekf_benchmark
+colcon build --packages-up-to beluga_estimation_odometry_benchmark
 source install/setup.bash
-cd src/beluga/beluga_estimation_benchmark/ekf
+cd src/beluga/beluga_estimation_benchmark/odometry
 python3 benchmark.py
 ```
 
@@ -33,7 +33,7 @@ The benchmark uses the bag at `/data/datasets/input` and the TUM ground truth at
 
 ## Outputs
 
-Files are written under `ekf/results/`.
+Files are written under `odometry/results/`.
 
 - `var_N/iter_M/` contains the resampled trajectory `estimate.tum` and the evo result archives `output.rpe.zip` and `output.rpe_rot.zip` for that run.
 - `reference.tum` contains the shared reference trajectory, and `plots.png` shows the trajectories and relative pose errors.

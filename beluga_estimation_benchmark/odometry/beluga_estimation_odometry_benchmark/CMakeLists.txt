@@ -13,7 +13,7 @@
 # limitations under the License.
 
 cmake_minimum_required(VERSION 3.16)
-project(beluga_estimation_ekf_benchmark)
+project(beluga_estimation_odometry_benchmark)
 
 find_package(ament_cmake REQUIRED)
 find_package(robot_localization REQUIRED)

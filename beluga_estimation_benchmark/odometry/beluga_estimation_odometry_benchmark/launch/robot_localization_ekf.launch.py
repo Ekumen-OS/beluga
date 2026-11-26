@@ -12,7 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Launch file for the beluga_estimation_ekf variant of the EKF odometry benchmark."""
+"""Launch file for the rl_ekf variant of the EKF odometry benchmark.
+
+Launches robot_localization's ekf_node fusing wheel odometry twist and IMU yaw rate.
+"""
 
 import os
 
@@ -24,10 +27,10 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    """Generate launch description for the Beluga node."""
-    pkg_share = get_package_share_directory("beluga_estimation_ekf_benchmark")
+    """Generate launch description for EKF odometry filter."""
+    pkg_share = get_package_share_directory("beluga_estimation_odometry_benchmark")
     default_params = os.path.join(
-        pkg_share, "params", "beluga_estimation_ekf.ros2.yaml"
+        pkg_share, "params", "robot_localization_ekf.ros2.yaml"
     )
 
     return LaunchDescription(
@@ -35,14 +38,14 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 "params_file",
                 default_value=default_params,
-                description="Full path to the ROS 2 parameters file for the Beluga node",
+                description="Full path to the ROS 2 parameters file for ekf_node",
             ),
             Node(
-                package="beluga_estimation_ros",
-                executable="node",
-                name="beluga",
+                package="robot_localization",
+                executable="ekf_node",
+                name="ekf_filter_node",
                 parameters=[LaunchConfiguration("params_file")],
-                output="screen",
+                remappings=[("odometry/filtered", "odom_filtered")],
             ),
         ]
     )

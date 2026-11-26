@@ -78,7 +78,7 @@ def record_estimator(ctx, launch_file, topic):
         topic,
     ):
         with lambkin.process.background(
-            ctx.shell.ros2.launch, "beluga_estimation_ekf_benchmark", launch_file
+            ctx.shell.ros2.launch, "beluga_estimation_odometry_benchmark", launch_file
         ):
             # The dataset publishes its own /clock.
             ctx.shell.ros2.bag.play(ctx.inputs.dataset, "-r", ctx.options.clock_rate)

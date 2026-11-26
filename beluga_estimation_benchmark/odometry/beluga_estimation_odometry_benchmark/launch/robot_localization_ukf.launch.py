@@ -28,7 +28,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     """Generate launch description for UKF odometry filter."""
-    pkg_share = get_package_share_directory("beluga_estimation_ekf_benchmark")
+    pkg_share = get_package_share_directory("beluga_estimation_odometry_benchmark")
     default_params = os.path.join(
         pkg_share, "params", "robot_localization_ukf.ros2.yaml"
     )
